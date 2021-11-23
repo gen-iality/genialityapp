@@ -26,14 +26,14 @@ export default function RoomConfig(props) {
 
   return (
     <Card>
-      <Row style={{ marginBottom: 24 }}>
-        <Col span={24}>
-          <Form.Item label={'Publicar Actividad'}>
-            <Select defaultValue={isPublished} /* value={isPublished} */ name='isPublished' onChange={(e) => handleChange(e, 'isPublished')}>
+      {/* <Row style={{ marginBottom: 24 }}>
+        <Col span={24}> */}
+          {/* <Form.Item label={'Publicar Actividad'}>
+            <Select defaultValue={isPublished} value={isPublished} name='isPublished' onChange={(e) => handleChange(e, 'isPublished')}>
               <Option value={true}>Si</Option>
               <Option value={false}>No</Option>
             </Select>
-          </Form.Item>
+          </Form.Item> */}
           {/* <label className='label'>Publicar Actividad</label>
           <div className='select is-primary'>
             <select defaultValue={isPublished} value={isPublished} name='isPublished' onChange={handleChange}>
@@ -41,14 +41,14 @@ export default function RoomConfig(props) {
               <option value={false}>No</option>
             </select>
           </div> */}
-        </Col>
-      </Row>
+        {/* </Col>
+      </Row> */}
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
           <Form.Item label={'Plataforma Streaming del evento'}>
             {platform === null || platform === '' ? (
-              <Select defaultValue={platform} /* value={platform} */ name='platform' onChange={(e) => handleChange(e, 'plataform')}>
-                <Option value=''>Seleccionar...</Option>
+              <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => handleChange(e, 'platform')}>
+                <Option value={null}>Seleccionar...</Option>
                 <Option value='zoom'>Zoom</Option>
                 <Option value='zoomExterno'>ZoomExterno</Option>
                 <Option value='vimeo'>Vimeo</Option>
@@ -92,7 +92,7 @@ export default function RoomConfig(props) {
                 <Form.Item label={'Desea seleccionar manualmente el host?'}>
                   <Select
                     defaultValue={select_host_manual}
-                    /* value={select_host_manual} */
+                    value={select_host_manual}
                     name='select_host_manual'
                     onChange={(e) => handleChange(e, 'select_host_manual')}>
                     <Option value={true}>Si</Option>
@@ -119,8 +119,8 @@ export default function RoomConfig(props) {
       {requiresCreateRoom && select_host_manual && !hasVideoconference && (
         <Row style={{ marginBottom: 24 }}>
           <Col span={24}>
-            <Form.Item label={'Seleccione un hos'}>
-              <Select defaultValue={host_id} /* value={host_id} */ name='host_id' onChange={(e) => handleChange(e, 'host_id')}>
+            <Form.Item label={'Seleccione un host'}>
+              <Select defaultValue={host_id} value={host_id} name='host_id' onChange={(e) => handleChange(e, 'host_id')}>
                 <Option value=''>Seleccione</Option>
                 {host_list.length > 0 &&
                   host_list.map((host) => (
@@ -150,7 +150,7 @@ export default function RoomConfig(props) {
         <Col span={24}>
           {!hasVideoconference ? (
             <Form.Item label={'Ingrese id de videoconferencia'}>
-              <Input type='number' name='meeting_id' onChange={handleChange} value={meeting_id} />
+              <Input type='number' name='meeting_id' onChange={(e) => handleChange(e)} value={meeting_id} />
             </Form.Item>
             /*<div className='control'>
               <label className='label'>Ingrese id de videoconferencia</label>

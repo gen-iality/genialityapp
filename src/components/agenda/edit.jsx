@@ -5,13 +5,11 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import { DateTimePicker } from 'react-widgets';
 import Select from 'react-select';
 import Creatable from 'react-select';
-import { FaWhmcs } from 'react-icons/fa';
-import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, message, Row, Col, Checkbox, Space, Typography, Button, Form, Input, InputNumber, Switch } from 'antd';
+import { Tabs, message, Row, Col, Checkbox, Space, Typography, Button, Form, Input, Switch, Empty, Card, Image, Modal } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
-import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
@@ -36,6 +34,7 @@ import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
 const { TabPane } = Tabs;
+const { Confirm } = Modal;
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -107,6 +106,7 @@ class AgendaEdit extends Component {
 
       //Estado para determinar si una actividad requiere registro para ser accedida
       requires_registration: false,
+      isPublished: true,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -208,18 +208,20 @@ class AgendaEdit extends Component {
 
     if (state?.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
+      /* console.log(info, info.isPublished); */
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
         platform: info.platform || event.event_platform,
         info: info,
-        space_id: info.space_id,
+        space_id: info.space_id || '',
         video: info.video,
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
         requires_registration: info.requires_registration || false,
+        isPublished: info.published || true,
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -272,6 +274,14 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = value.target.checked;
     }
+    /* let { name } = e.target ? e.target : nameS;
+    let { value } = e.target ? e.target : e; */
+
+    /* if (name === 'isPublished') {
+      this.setState({ [name]: value }, async () => await this.saveConfig());
+    } else {
+      this.setState({ [name]: value });
+    } */
 
     /* console.log(name, value); */
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
@@ -401,7 +411,7 @@ class AgendaEdit extends Component {
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
         /* console.log('Info agenda: ', info); */
-        this.props.history.push(`/eventadmin/${event._id}/agenda`);
+        /* this.props.history.push(`/eventadmin/${event._id}/agenda`); */
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
       }
@@ -423,7 +433,7 @@ class AgendaEdit extends Component {
         else {
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ activity_id: agenda._id });
-          this.props.history.push(`/eventadmin/${event._id}/agenda`);
+          /* this.props.history.push(`/eventadmin/${event._id}/agenda`); */
         }
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -455,6 +465,7 @@ class AgendaEdit extends Component {
       image,
       length,
       latitude,
+      isPublished,
     } = this.state;
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
@@ -480,6 +491,7 @@ class AgendaEdit extends Component {
       has_date,
       selected_document,
       requires_registration,
+      isPublished,
       length,
       latitude,
     };
@@ -516,6 +528,7 @@ class AgendaEdit extends Component {
       name_host,
       key,
       requires_registration,
+      isPublished,
       length,
       latitude,
     } = this.state;
@@ -563,6 +576,7 @@ class AgendaEdit extends Component {
       name_host,
       key,
       requires_registration,
+      isPublished,
       host_ids,
       length,
       latitude,
@@ -660,314 +674,355 @@ class AgendaEdit extends Component {
       date_start_zoom,
       date_end_zoom,
       length,
+      isPublished,
       latitude,
     } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
-      <Tabs defaultActiveKey='1'>
-        <TabPane tab='Agenda' key='1'>
-          <Form onFinish={this.submit} {...formLayout}>
-            <Header
-              title={'Actividad'}
-              back
-              save
-              form
-              remove={this.remove}
-              edit={this.props.location.state.edit}
-              extra={
-                <Button type='primary' onClick={this.submit2}>
-                  Duplicar para traducir
-                </Button>
-              }
-            />
-
-            <Row justify='center' wrap gutter={12}>
-              <Col span={18}>
-                <Form.Item label={'Nombre'}>
-                  <Input
-                    ref={this.name}
-                    autoFocus
-                    type='text'
-                    name={'name'}
-                    value={name}
-                    onChange={this.handleChange}
-                    placeholder={'Nombre de la actividad'}
-                  />
-                </Form.Item>
-                {/* <Form.Item label={'Subtítulo'}>
-                  <Input
-                    className='input'
-                    type='text'
-                    name={'subtitle'}
-                    value={subtitle}
-                    onChange={this.handleChange}
-                    placeholder={'Ej: Salón 1, Zona Norte, Área de juegos'}
-                  />
-                </Form.Item> */}
-                <Form.Item label={'Día'}>
-                  <SelectAntd
-                    name='date'
-                    options={this.state.days}
-                    /* style={{ width: '100%' }} */
-                    /* defaultValue={date} */
-                    value={date}
-                    onChange={(value) => this.handleChangeDate(value, 'date')}
-                  />
-                </Form.Item>
-                <Row wrap justify='space-between' gutter={[8, 8]}>
-                  <Col>
-                    <Form.Item label={'Hora Inicio'}>
-                      <DateTimePicker
-                        value={hour_start}
-                        dropUp
-                        step={15}
-                        date={false}
-                        onChange={(value) => this.handleChangeDate(value, 'hour_start')}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label={'Hora Fin'}>
-                      <DateTimePicker
-                        value={hour_end}
-                        dropUp
-                        step={15}
-                        date={false}
-                        onChange={(value) => this.handleChangeDate(value, 'hour_end')}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Form.Item label={'Conferencista'}>
-                  <Row wrap gutter={[8, 8]}>
-                    <Col span={23}>
-                      <Select
-                        id={'hosts'}
-                        isClearable
-                        isMulti
-                        styles={creatableStyles}
-                        onChange={this.selectHost}
-                        options={hosts}
-                        value={selectedHosts}
-                      />
+      <>
+        <Form onFinish={this.submit} {...formLayout}>
+          <Header
+            title={`Actividad - ${this.state.name}`}
+            back
+            save
+            form
+            remove={this.remove}
+            edit={this.props.location.state.edit}
+            extra={
+              <Button type='primary' onClick={this.submit2}>
+                Duplicar para traducir
+              </Button>
+            }
+          />
+          <Tabs defaultActiveKey='1'>
+            <TabPane tab='Agenda' key='1'>
+              <Row justify='center' wrap gutter={12}>
+                <Col span={20}>
+                  <Form.Item label={'Nombre'}>
+                    <Input
+                      ref={this.name}
+                      autoFocus
+                      type='text'
+                      name={'name'}
+                      value={name}
+                      onChange={this.handleChange}
+                      placeholder={'Nombre de la actividad'}
+                    />
+                  </Form.Item>
+                  {/* <Form.Item label={'Subtítulo'}>
+                    <Input
+                      className='input'
+                      type='text'
+                      name={'subtitle'}
+                      value={subtitle}
+                      onChange={this.handleChange}
+                      placeholder={'Ej: Salón 1, Zona Norte, Área de juegos'}
+                    />
+                  </Form.Item> */}
+                  <Form.Item label={'Día'}>
+                    <SelectAntd
+                      name='date'
+                      options={this.state.days}
+                      /* style={{ width: '100%' }} */
+                      defaultValue={date}
+                      value={date}
+                      onChange={(value) => this.handleChangeDate(value, 'date')}
+                    />
+                  </Form.Item>
+                  <Row wrap justify='space-between' gutter={[8, 8]}>
+                    <Col>
+                      <Form.Item label={'Hora Inicio'}>
+                        <DateTimePicker
+                          value={hour_start}
+                          dropUp
+                          step={15}
+                          date={false}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_start')}
+                        />
+                      </Form.Item>
                     </Col>
-                    <Col span={1}>
-                      <Button
-                        onClick={() => this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true })}
-                        icon={<SettingOutlined />}
-                      />
+                    <Col>
+                      <Form.Item label={'Hora Fin'}>
+                        <DateTimePicker
+                          value={hour_end}
+                          dropUp
+                          step={15}
+                          date={false}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_end')}
+                        />
+                      </Form.Item>
                     </Col>
                   </Row>
-                </Form.Item>
-                <Form.Item label={'Espacio'}>
-                  <Row wrap gutter={[8, 8]}>
-                    <Col span={23}>
-                      <SelectAntd
-                        name={'space_id'}
-                        value={space_id}
-                        /* value={space_id}  */
-                        onChange={(e) => this.handleChange(e, 'space_id')}>
-                        <Option value={''}>Seleccione un lugar/salón ...</Option>
-                        {spaces.map((space) => (
-                          <Option key={space.value} value={space.value}>
-                            {space.label}
-                          </Option>
-                        ))}
-                      </SelectAntd>
-                    </Col>
-                    <Col span={1}>
-                      <Link to={matchUrl.replace('agenda', 'espacios')}>
-                        <Button icon={<SettingOutlined />} />
-                      </Link>
-                    </Col>
-                  </Row>
-                </Form.Item>
-                <Form.Item label={'¿Tiene espacio físico?'}>
-                  <Switch
-                    checked={this.state.isPhysical}
-                    checkedChildren='Si'
-                    unCheckedChildren='No'
-                    onChange={this.handlePhysical}
-                  />
-                </Form.Item>
-                {this.state.isPhysical && (
-                  <>
-                    <Form.Item label={'Longitud'}>
-                      <Input
-                        ref={this.longitud}
-                        autoFocus
-                        type='number'
-                        name={'length'}
-                        value={length}
-                        onChange={(e) => this.handleChange(e)}
-                        placeholder={'Ej. 4.677027'}
-                      />
-                    </Form.Item>
-                    <Form.Item label={'Latitud'}>
-                      <Input
-                        ref={this.latitud}
-                        autoFocus
-                        type='number'
-                        name={'latitude'}
-                        value={latitude}
-                        onChange={(e) => this.handleChange(e)}
-                        placeholder={'Ej. -74.094086'}
-                      />
-                    </Form.Item>
-                  </>
-                )}
-                {access_restriction_type !== 'OPEN' && (
-                  <Form.Item label={`Asignar a: `}>
-                    <Row wrap justify='space-between'>
-                      <Col span={17}>
+                  <Form.Item label={'Conferencista'}>
+                    <Row wrap gutter={[8, 8]}>
+                      <Col span={23}>
                         <Select
+                          id={'hosts'}
                           isClearable
                           isMulti
                           styles={creatableStyles}
-                          onChange={this.selectRol}
-                          options={roles}
-                          placeholder={'Seleccione al menos un rol...'}
-                          value={selectedRol}
+                          onChange={this.selectHost}
+                          options={hosts}
+                          value={selectedHosts}
                         />
                       </Col>
-                      <Col>
-                        <Button onClick={this.addRoles}>Todos los roles</Button>
-                      </Col>
-                      <Col>
+                      <Col span={1}>
                         <Button
-                          onClick={() => this.goSection(matchUrl.replace('agenda', 'tipo-asistentes'))}
+                          onClick={() => this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true })}
                           icon={<SettingOutlined />}
                         />
                       </Col>
                     </Row>
                   </Form.Item>
-                )}
-                <Form.Item label={'Documentos'}>
-                  <Select
-                    id={'nameDocuments'}
-                    isClearable
-                    isMulti
-                    styles={creatableStyles}
-                    onChange={this.selectDocuments}
-                    options={nameDocuments}
-                    value={selected_document}
-                  />
-                </Form.Item>
-                <Form.Item label={'Link del vídeo'}>
-                  <Input name='video' type='text' value={video} onChange={this.handleChange} />
-                </Form.Item>
-                {/* <Form.Item label={'Texto de email para confirmación de registro'}>
-                  <EviusReactQuill
-                    name='registration_message'
-                    data={this.state.registration_message}
-                    handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
-                  />
-                </Form.Item> */}
-                <Form.Item label={'Descripción'}>
-                  <Space>
-                    <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-                    <Typography.Text type='secondary'>
-                      Esta información no es visible en la Agenda/Actividad en versión Mobile.
-                    </Typography.Text>
-                  </Space>
-                  <EviusReactQuill
-                    name='description'
-                    data={this.state.description}
-                    handleChange={(e) => this.handleChangeReactQuill(e, 'description')}
-                  />
-                </Form.Item>
-                <Form.Item label={'Imagen'}>
-                  <p>Dimensiones: 1000px x 278px</p>
-                  <Dropzone onChange={this.changeImg} onDrop={this.changeImg} accept='image/*' className='zone'>
-                    <span className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</span>
-                  </Dropzone>
-                  {image && <img src={image} alt={`activity_${name}`} />}
-                </Form.Item>
-                {/* <Form.Item label={'Capacidad'}>
-                  <Input
-                    min={0}
-                    type='number'
-                    name={'capacity'}
-                    value={capacity}
-                    onChange={this.handleChange}
-                    placeholder={'Cupo total'}
-                  />
-                </Form.Item> */}
-                <Form.Item label={'Categorías'}>
-                  <Row wrap gutter={[8, 8]}>
-                    <Col span={23}>
-                      <Creatable
-                        isClearable
-                        styles={catStyles}
-                        onChange={this.selectCategory}
-                        onCreateOption={(value) => this.handleCreate(value, 'categories')}
-                        isDisabled={isLoading.categories}
-                        isLoading={isLoading.categories}
-                        isMulti
-                        options={categories}
-                        placeholder={'Sin categoría....'}
-                        value={selectedCategories}
-                      />
-                    </Col>
-                    <Col span={1}>
-                      <Button onClick={() => this.goSection(`${matchUrl}/categorias`)} icon={<SettingOutlined />} />
-                    </Col>
-                  </Row>
-                </Form.Item>
-                <Form.Item label={'Tipo de actividad'}>
-                  <Row wrap gutter={[8, 8]}>
-                    <Col span={23}>
-                      <Creatable
-                        isClearable
-                        styles={creatableStyles}
-                        className='basic-multi-select'
-                        classNamePrefix='select'
-                        isDisabled={isLoading.types}
-                        isLoading={isLoading.types}
-                        onChange={this.selectType}
-                        onCreateOption={(value) => this.handleCreate(value, 'types')}
-                        options={types}
-                        value={selectedType}
-                      />
-                    </Col>
-                    <Col span={1}>
-                      <Link to={`${matchUrl}/tipos`}>
-                        <Button icon={<SettingOutlined />} />
-                      </Link>
-                    </Col>
-                    <br /><br /><br /><br /><br /><br /><br />
-                  </Row>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </TabPane>
-        {/* <TabPane tab='Seleccion de lenguaje' key='2'>
-          <Row justify='center' wrap gutter={12}>
-            <Col span={18}>
-              {this.props.location.state.edit ? (
+                  <Form.Item label={'Espacio'}>
+                    <Row wrap gutter={[8, 8]}>
+                      <Col span={23}>
+                        <SelectAntd
+                          name={'space_id'}
+                          value={space_id}
+                          /* value={space_id}  */
+                          onChange={(e) => this.handleChange(e, 'space_id')}>
+                          <Option value={''}>Seleccione un lugar/salón ...</Option>
+                          {spaces.map((space) => (
+                            <Option key={space.value} value={space.value}>
+                              {space.label}
+                            </Option>
+                          ))}
+                        </SelectAntd>
+                      </Col>
+                      <Col span={1}>
+                        <Link to={matchUrl.replace('agenda', 'espacios')}>
+                          <Button icon={<SettingOutlined />} />
+                        </Link>
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                  <Form.Item label={'¿Tiene espacio físico?'}>
+                    <Switch
+                      checked={this.state.isPhysical}
+                      checkedChildren='Si'
+                      unCheckedChildren='No'
+                      onChange={this.handlePhysical}
+                    />
+                  </Form.Item>
+                  {this.state.isPhysical && (
+                    <>
+                      <Form.Item label={'Longitud'}>
+                        <Input
+                          ref={this.longitud}
+                          autoFocus
+                          type='number'
+                          name={'length'}
+                          value={length}
+                          onChange={(e) => this.handleChange(e)}
+                          placeholder={'Ej. 4.677027'}
+                        />
+                      </Form.Item>
+                      <Form.Item label={'Latitud'}>
+                        <Input
+                          ref={this.latitud}
+                          autoFocus
+                          type='number'
+                          name={'latitude'}
+                          value={latitude}
+                          onChange={(e) => this.handleChange(e)}
+                          placeholder={'Ej. -74.094086'}
+                        />
+                      </Form.Item>
+                    </>
+                  )}
+                  {/* {access_restriction_type !== 'OPEN' && (
+                    <Form.Item label={`Asignar a: `}>
+                      <Row wrap justify='space-between'>
+                        <Col span={17}>
+                          <Select
+                            isClearable
+                            isMulti
+                            styles={creatableStyles}
+                            onChange={this.selectRol}
+                            options={roles}
+                            placeholder={'Seleccione al menos un rol...'}
+                            value={selectedRol}
+                          />
+                        </Col>
+                        <Col>
+                          <Button onClick={this.addRoles}>Todos los roles</Button>
+                        </Col>
+                        <Col>
+                          <Button
+                            onClick={() => this.goSection(matchUrl.replace('agenda', 'tipo-asistentes'))}
+                            icon={<SettingOutlined />}
+                          />
+                        </Col>
+                      </Row>
+                    </Form.Item>
+                  )} */}
+                  <Form.Item label={'Documentos'}>
+                    <Select
+                      id={'nameDocuments'}
+                      isClearable
+                      isMulti
+                      styles={creatableStyles}
+                      onChange={this.selectDocuments}
+                      options={nameDocuments}
+                      value={selected_document}
+                    />
+                  </Form.Item>
+                  <Form.Item label={'Link del vídeo'}>
+                    <Input name='video' type='text' value={video} onChange={this.handleChange} />
+                  </Form.Item>
+                  {/* <Form.Item label={'Texto de email para confirmación de registro'}>
+                    <EviusReactQuill
+                      name='registration_message'
+                      data={this.state.registration_message}
+                      handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
+                    />
+                  </Form.Item> */}
+                  <Form.Item label={'Descripción'}>
+                    <Space>
+                      <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+                      <Typography.Text type='secondary'>
+                        Esta información no es visible en la Agenda/Actividad en versión Mobile.
+                      </Typography.Text>
+                    </Space>
+                    <EviusReactQuill
+                      name='description'
+                      data={this.state.description}
+                      handleChange={(e) => this.handleChangeReactQuill(e, 'description')}
+                    />
+                  </Form.Item>
+                  <Form.Item label={'Imagen'}>
+                    {/* <p>Dimensiones: 600px * 400px, 400px * 600px, 200px * 200px, 400px * 400px </p>
+                    <p></p>
+                    <Dropzone onChange={this.changeImg} onDrop={this.changeImg} accept='image/*' className='zone'>
+                      <span className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</span>
+                    </Dropzone>
+                    {image && <img src={image} alt={`activity_${name}`} />} */}
+                    <Card style={{ textAlign: 'center' }}>
+                      <Form.Item noStyle>
+                        <p>Dimensiones: <b><small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small></b> </p>
+                        <p><small>Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor funcionamiento</small></p>
+                        <p><small>La imagen tarda unos segundos en cargar</small></p>
+                        <Dropzone
+                          style={{ fontSize: '21px', fontWeight: 'bold' }}
+                          onDrop={this.changeImg}
+                          onChange={this.changeImg}
+                          accept='image/*'
+                          className='zone'>
+                          <Row wrap gutter={[8, 8]} justify='center'>
+                            <Col>
+                              <Button type='dashed' danger id='btnImg'>
+                                {image ? 'Cambiar imagen' : 'Subir imagen'}
+                              </Button>
+                            </Col>
+                            <Col>
+                              {
+                                image && (
+                                  <Button danger id='btnRemImg' onClick={() => this.setState({image: ''})}>
+                                    {'Eliminar imagen'}
+                                  </Button>
+                                )
+                              }
+                            </Col>
+                          </Row>
+                        </Dropzone>
+                        <div style={{ marginTop: '10px' }}>
+                          {image ? (
+                            <Image src={image} alt={`activity_${name}`} height={300} width={450} />
+                          ) : (
+                            <Empty image={<UserOutlined style={{ fontSize: '100px' }} />} description='No hay Imagen' />
+                          )}
+                        </div>
+                      </Form.Item>
+                    </Card>
+                  </Form.Item>
+                  <Form.Item label={'Publicar Actividad'}>
+                    <SelectAntd defaultValue={isPublished} value={isPublished} name='isPublished' onChange={(e) => this.handleChange(e, 'isPublished')}>
+                      {/* <Option value={''}>Seleccinar opción...</Option> */}
+                      <Option value={true}>Si</Option>
+                      <Option value={false}>No</Option>
+                    </SelectAntd>
+                  </Form.Item>
+                  {/* <Form.Item label={'Capacidad'}>
+                    <Input
+                      min={0}
+                      type='number'
+                      name={'capacity'}
+                      value={capacity}
+                      onChange={this.handleChange}
+                      placeholder={'Cupo total'}
+                    />
+                  </Form.Item> */}
+                  <Form.Item label={'Categorías'}>
+                    <Row wrap gutter={[8, 8]}>
+                      <Col span={23}>
+                        <Creatable
+                          isClearable
+                          styles={catStyles}
+                          onChange={this.selectCategory}
+                          onCreateOption={(value) => this.handleCreate(value, 'categories')}
+                          isDisabled={isLoading.categories}
+                          isLoading={isLoading.categories}
+                          isMulti
+                          options={categories}
+                          placeholder={'Sin categoría....'}
+                          value={selectedCategories}
+                        />
+                      </Col>
+                      <Col span={1}>
+                        <Button onClick={() => this.goSection(`${matchUrl}/categorias`)} icon={<SettingOutlined />} />
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                  <Form.Item label={'Tipo de actividad'}>
+                    <Row wrap gutter={[8, 8]}>
+                      <Col span={23}>
+                        <Creatable
+                          isClearable
+                          styles={creatableStyles}
+                          className='basic-multi-select'
+                          classNamePrefix='select'
+                          isDisabled={isLoading.types}
+                          isLoading={isLoading.types}
+                          onChange={this.selectType}
+                          onCreateOption={(value) => this.handleCreate(value, 'types')}
+                          options={types}
+                          value={selectedType}
+                        />
+                      </Col>
+                      <Col span={1}>
+                        <Link to={`${matchUrl}/tipos`}>
+                          <Button icon={<SettingOutlined />} />
+                        </Link>
+                      </Col>
+                      <br /><br /><br /><br /><br /><br /><br />
+                    </Row>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </TabPane>
+            {/* <TabPane tab='Seleccion de lenguaje' key='2'>
+              <Row justify='center' wrap gutter={12}>
+                <Col span={20}>
+                {this.props.location.state.edit ? (
                 <AgendaLanguaje
-                  platform={platform}
-                  eventId={this.props.event._id}
-                  activityId={this.props.location.state.edit}
+                platform={platform}
+                eventId={this.props.event._id}
+                activityId={this.props.location.state.edit}
                 />
-              ) : (
-                <p>
+                ) : (
+                  <p>
                   Por favor primero crear la actividad, paso seguido edite la misma para crear las conferencias en
                   diferentes idiomas
-                </p>
-              )}
-            </Col>
-          </Row>
-        </TabPane> */}
-        <TabPane tab='Espacio Virtual' key='3'>
-          <Row justify='center' wrap gutter={12}>
-            <Col span={18}>
-              {loading ? (
-                <Loading />
-              ) : (
-                <>
+                  </p>
+                  )}
+                  </Col>
+                  </Row>
+                </TabPane> */}
+            <TabPane tab='Transmisión' key='3'>
+              <Row justify='center' wrap gutter={12}>
+                <Col span={20}>
                   <RoomManager
                     event_id={this.props.event._id}
                     activity_id={this.state.activity_id}
@@ -978,36 +1033,62 @@ class AgendaEdit extends Component {
                     date_activity={this.state.date}
                     pendingChangesSave={this.state.pendingChangesSave}
                   />
+                  {/* {loading ? (
+                    <Loading />
+                    ) : (
+                      <>
+                      <RoomManager
+                        event_id={this.props.event._id}
+                        activity_id={this.state.activity_id}
+                        activity_name={this.state.name}
+                        firestore={firestore}
+                        date_start_zoom={date_start_zoom}
+                        date_end_zoom={date_end_zoom}
+                        date_activity={this.state.date}
+                        pendingChangesSave={this.state.pendingChangesSave}
+                        />
+                      <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+                      {this.state.isExternal && (
+                        <SurveyExternal
+                        isExternal={this.state.isExternal}
+                        meeting_id={this.state.externalSurveyID}
+                        event_id={this.props.event._id}
+                        activity_id={this.state.activity_id}
+                        />
+                        )}
+                    </>
+                  )} */}
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tab='Avanzado' key='4'>
+              <Row justify='center' wrap gutter={12}>
+                <Col span={20}>
+                  <Checkbox
+                    defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
+                    onChange={(e) => this.handleChange(e, 'requires_registration')}
+                    name='requires_registration'>
+                    La actividad requiere registro
+                  </Checkbox>
+                  <br /><br />
                   <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
                   {this.state.isExternal && (
                     <SurveyExternal
-                      isExternal={this.state.isExternal}
-                      meeting_id={this.state.externalSurveyID}
-                      event_id={this.props.event._id}
-                      activity_id={this.state.activity_id}
+                    isExternal={this.state.isExternal}
+                    meeting_id={this.state.externalSurveyID}
+                    event_id={this.props.event._id}
+                    activity_id={this.state.activity_id}
                     />
                   )}
-                </>
-              )}
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane tab='Avanzado' key='4'>
-          <Row justify='center' wrap gutter={12}>
-            <Col span={18}>
-              <Checkbox
-                defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
-                onChange={(e) => this.handleChange(e, 'requires_registration')}
-                name='requires_registration'>
-                La actividad requiere registro
-              </Checkbox>
-              <Button onClick={this.submit} type='primary'>
-                Guardar
-              </Button>
-            </Col>
-          </Row>
-        </TabPane>
-      </Tabs>
+                  {/* <Button onClick={this.submit} type='primary'>
+                    Guardar
+                  </Button> */}
+                </Col>
+              </Row>
+            </TabPane>
+          </Tabs>
+        </Form>
+      </>
     );
   }
 }
