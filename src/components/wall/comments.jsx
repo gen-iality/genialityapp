@@ -38,7 +38,7 @@ class CommentsList extends Component {
         .collection('comment')
         .doc(postId)
         .collection('comments')
-        .orderBy('date', 'desc'); 
+        .orderBy('date', 'asc'); 
 
       let snapshot = await admincommentsRef.get();      
 
