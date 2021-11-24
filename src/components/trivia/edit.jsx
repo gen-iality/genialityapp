@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import EventContent from '../events/shared/content';
-import { selectOptions } from './constants';
+import { selectOptions, surveyTimeOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
@@ -56,7 +56,7 @@ class triviaEdit extends Component {
 
       // estado de la encuesta
       freezeGame: false,
-      openSurvey: false,
+      openSurvey: 'false',
       publish: false,
 
       time_limit: 0,
@@ -82,13 +82,9 @@ class triviaEdit extends Component {
 
   //Funcion para poder cambiar el value del input o select
   changeInput = (e) => {
-    if (typeof e === 'object') {
-      const { name } = e.target;
-      const { value } = e.target;
-      this.setState({ [name]: value });
-    } else {
-      this.setState({ activity_id: e });
-    }
+    const { name } = e.target;
+    const { value } = e.target;
+    this.setState({ [name]: value });
   };
 
   async componentDidMount() {
@@ -217,6 +213,7 @@ class triviaEdit extends Component {
         hasMinimumScore: data.hasMinimumScore,
         isGlobal: data.isGlobal,
         showNoVotos: data.showNoVotos,
+        time_limit: parseInt(this.state.time_limit),
 
         //survey state
         freezeGame: data.freezeGame,
@@ -302,6 +299,7 @@ class triviaEdit extends Component {
               hasMinimumScore: data.hasMinimumScore,
               isGlobal: data.isGlobal,
               showNoVotos: data.showNoVotos,
+              time_limit: parseInt(this.state.time_limit),
 
               // Survey State
               freezeGame: data.freezeGame,
@@ -648,7 +646,18 @@ class triviaEdit extends Component {
             {this.state.idSurvey && (
               <>
                 <Form.Item label={'Tiempo límite en segundos por pregunta'}>
-                  <InputNumber min={0} defaultValue={time_limit} name={'time'} onChange={this.setTime_limit} />
+                  <Select
+                    name={'time_limit'}
+                    value={time_limit}
+                    onChange={(time) => {
+                      this.setState({ time_limit: time });
+                    }}>
+                    {surveyTimeOptions.map((values, key) => (
+                      <Option key={key} value={values.value}>
+                        {values.text}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
                 <Row justify='space-between' wrap gutter={[8, 8]}>
                   <Col>
@@ -682,7 +691,7 @@ class triviaEdit extends Component {
                     <Form.Item label={'Encuesta abierta'}>
                       <Switch
                         name={'openSurvey'}
-                        checked={openSurvey === 'true' || openSurvey === true}
+                        checked={openSurvey === 'true'}
                         onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -749,7 +758,12 @@ class triviaEdit extends Component {
                   </Form.Item>
                 )}
                 <Form.Item label={'Relacionar esta encuesta a una actividad'}>
-                  <Select name={'activity_id'} value={activity_id} onChange={this.changeInput}>
+                  <Select
+                    name={'activity_id'}
+                    value={activity_id}
+                    onChange={(relation) => {
+                      this.setState({ activity_id: relation });
+                    }}>
                     <Option value='No relacionar'>{'No relacionar'}</Option>
                     {dataAgenda.map((activity, key) => (
                       <Option key={key} value={activity._id}>
