@@ -115,7 +115,7 @@ export default function RoomConfig(props) {
           )}
         </>
       )}
-      {select_host_manual ? 'hola' : 'adios'}
+      {/* {select_host_manual ? 'hola' : 'adios'} */}
       {requiresCreateRoom && select_host_manual && !hasVideoconference && (
         <Row style={{ marginBottom: 24 }}>
           <Col span={24}>
