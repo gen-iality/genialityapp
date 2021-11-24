@@ -201,8 +201,9 @@ class AgendaEdit extends Component {
 
         for (var i = 0; i < date.length; i++) {
           let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
-          days.push({ value: formatDate, label: formatDate });
-        }
+          if(Date.parse(formatDate) >= Date.parse(new Date()))
+            days.push({ value: formatDate, label: formatDate });
+        }s
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
         const init = Moment(event.date_start);
@@ -213,7 +214,8 @@ class AgendaEdit extends Component {
           let formatDate = Moment(init)
             .add(i, 'd')
             .format('YYYY-MM-DD');
-          days.push({ value: formatDate, label: formatDate });
+          if(Date.parse(formatDate) >= Date.parse(new Date()))
+            days.push({ value: formatDate, label: formatDate });
         }
       }
     } catch (e) {
