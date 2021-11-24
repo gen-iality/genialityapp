@@ -5,6 +5,7 @@ import Service from './service';
 import Moment from 'moment';
 import * as Cookie from 'js-cookie';
 import AgendaContext from '../../../Context/AgendaContext';
+import { throwStatement } from '@babel/types';
 
 const { TabPane } = Tabs;
 
@@ -25,9 +26,10 @@ class RoomManager extends Component {
 
       // si este valor esta en false no se muestra el listado de host
       // tambien se termina a partir del valor de la variable si se envia un array por host_ids o un string por host_id
-      select_host_manual: false,
+      //select_host_manual: true,
 
       // campo para pasar por el request de crear room
+      //host_id: null,
       host_ids: [],
       host_list: [
         {
@@ -176,6 +178,14 @@ class RoomManager extends Component {
     let { value } = e.target ? e.target : e;
 
     this.setState({ [name]: value });
+    if(nameS === 'select_host_manual') {
+      this.context.select_host_manual = value;
+      //this.context.setSelect_host_manual(value);
+    }
+    if(nameS === 'host_id') {
+      //this.context.host_id = value;
+      this.context.setHostId(e);
+    }
   };
 
   //Preparacion de la data para guardar en firebase
@@ -213,6 +223,7 @@ class RoomManager extends Component {
     this.context.setHostId(null);
     this.context.setHostName(null);
     this.context.setRoomStatus('');
+    /* this.context.setSelect_host_manual(false); */
     this.setState(
       {
         hasVideoconference: false,
@@ -372,12 +383,13 @@ class RoomManager extends Component {
   };
 
   render() {
-    const { hasVideoconference, select_host_manual, host_list } = this.state;
+    const { hasVideoconference, /* select_host_manual, */ host_list } = this.state;
     return (
       <>
         <RoomConfig
           host_list={host_list}
-          select_host_manual={select_host_manual}
+          /* select_host_manual={this.context.select_host_manual}
+          host_id={this.context.host_id} */
           hasVideoconference={hasVideoconference}
           handleChange={this.handleChange}
           handleClick={this.handleClickSaveConfig}

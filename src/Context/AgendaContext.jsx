@@ -22,6 +22,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [isPublished, setIsPublished] = useState();
   const [meeting_id, setMeetingId] = useState();
   const [roomStatus, setRoomStatus] = useState();
+  const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
@@ -46,6 +47,7 @@ export const AgendaContextProvider = ({ children }) => {
         setHostId(typeof configuration.host_id !== 'undefined' ? configuration.host_id : null);
         setHostName(typeof configuration.host_name !== 'undefined' ? configuration.host_name : null);
         setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
+        setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
       }
     }
   }, [activityEdit]);
@@ -83,6 +85,7 @@ export const AgendaContextProvider = ({ children }) => {
         setMeetingId,
         roomStatus,
         setRoomStatus,
+        select_host_manual,
       }}>
       {children}
     </AgendaContext.Provider>
