@@ -9,7 +9,6 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    Survey.JsonObject.metaData.addProperty('question', 'points');
 
    let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-   console.log("Log. - file: loadSelectedSurvey.jsx - line 12 - dataSurvey", dataSurvey);
 
    /** Posición del botón next*/
    dataSurvey.showNavigationButtons = 'bottom';

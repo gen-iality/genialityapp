@@ -38,7 +38,7 @@ class triviaEdit extends Component {
 
       // estado de la encuesta
       freezeGame: false,
-      openSurvey: false,
+      openSurvey: 'false',
       publish: false,
 
       time_limit: 0,
@@ -621,7 +621,7 @@ class triviaEdit extends Component {
                 Encuesta abierta
               </label>
               <Switch
-                checked={openSurvey === 'true' || openSurvey === true}
+                checked={openSurvey === 'true'}
                 onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
               />
             </div>
