@@ -95,15 +95,19 @@ class CreatePost extends Component {
         : this.props.cUser.value.name
         ? this.props.cUser.value.name
         : this.props.cUser.value.email,
-      authorImage:this.props.cUser.value.picture
+      authorImage:this.props.cUser.value.picture || null
     };
 
     //savepost se realiza para publicar el post  
-    var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
-
-    this.setState({ value: '', image: '', showInfo: true, loadingsave: false,errNote:false });
+    var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);   
+    if(newPost){
+      this.setState({ value: '', image: '', showInfo: true, loadingsave: false,errNote:false });
     this.setState({ showInfo: false, visible: false, keyList: Date.now() });
     message.success('Mensaje Publicado');
+    }else{
+      message.error('Error al guardar');
+    }
+    
     //this.props.addPosts(newPost);
   }else{
     this.setState({errNote:true})

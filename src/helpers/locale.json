@@ -48,6 +48,7 @@
 
     "live.ended": "Event ended",
     "live.ended.video": "Event Ended. Look at the video",
+    "live.ended.video.modify": "Look at the video",
     "live.closed": "Coming soon",
     "live": "Live",
     "registration.title.create": "Register",
@@ -179,6 +180,7 @@
     "live.starts_in": "La sesión inicia en",
     "live.ended": "Evento terminado.",
     "live.ended.video": "Evento Terminado. Mira el vídeo",
+    "live.ended.video.modify": "Mira el vídeo",
     "live.closed": "Iniciará pronto",
     "live": "En vivo",
 
@@ -271,6 +273,7 @@
     "live.ended": "Evento encerrado.",
     "live.ended.video": "Evento encerrado. Olha o vídeo",
     "live.closed": "Em breve",
+    "live.ended.video.modify": "Olha o vídeo",
     "live": "Ao vivo",
     "registration.title.create": "Formulário de Registro",
     "registration.title.update": "Atualizar meus dados",

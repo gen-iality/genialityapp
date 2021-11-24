@@ -126,7 +126,7 @@ export const getCurrentUser = () => {
     //   return;
     // }
 
-    if (!token) {
+    if (!token || token == 'undefined') {
       resolve(null);
     } else {
       try {

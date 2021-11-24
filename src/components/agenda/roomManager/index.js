@@ -178,11 +178,11 @@ class RoomManager extends Component {
     let { value } = e.target ? e.target : e;
 
     this.setState({ [name]: value });
-    if(nameS === 'select_host_manual') {
+    if (nameS === 'select_host_manual') {
       this.context.select_host_manual = value;
       //this.context.setSelect_host_manual(value);
     }
-    if(nameS === 'host_id') {
+    if (nameS === 'host_id') {
       //this.context.host_id = value;
       this.context.setHostId(e);
     }
@@ -367,7 +367,7 @@ class RoomManager extends Component {
   };
 
   //Eliminar trasmisión de zoom
-  deleteZoomRoom = async () => {
+  deleteRoom = async () => {
     const { service, meeting_id, platform } = this.state;
     const { event_id } = this.props;
 
@@ -394,7 +394,7 @@ class RoomManager extends Component {
           handleChange={this.handleChange}
           handleClick={this.handleClickSaveConfig}
           createZoomRoom={this.createZoomRoom}
-          deleteZoomRoom={this.deleteZoomRoom}
+          deleteRoom={this.deleteRoom}
           saveConfig={this.saveConfig}
         />
       </>

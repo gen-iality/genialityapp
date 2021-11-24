@@ -1,37 +1,32 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Card, Row, Col, Alert, Form, Select, Input, Button } from 'antd';
+import { Card, Row, Col, Alert, Form, Select, Input, Button, Radio, Space } from 'antd';
 import AgendaContext from '../../../Context/AgendaContext';
 
 const { Option } = Select;
 
 export default function RoomConfig(props) {
   const [requiresCreateRoom, setRequiresCreateRoom] = useState(false);
+  const [useAlreadyCreated, setUseAlreadyCreated] = useState(false);
   const {
     platform,
     host_name,
     meeting_id,
     host_id,
-    isPublished,
     roomStatus,
     setRoomStatus,
     setPlatform,
     setMeetingId,
-    select_host_manual
+    select_host_manual,
   } = useContext(AgendaContext);
-  const {
-    handleClick,
-    createZoomRoom,
-    /* select_host_manual,
-    host_id, */
-    host_list,
-    hasVideoconference,
-    deleteZoomRoom,
-    handleChange,
-    saveConfig,
-  } = props;
+  const { handleClick, createZoomRoom, host_list, hasVideoconference, deleteRoom, handleChange, saveConfig } = props;
 
   useEffect(() => {
     setRequiresCreateRoom(platform === 'zoom' || platform === 'zoomExterno');
+    if (platform === 'zoom' || platform === 'zoomExterno') {
+      setUseAlreadyCreated(false);
+    } else {
+      setUseAlreadyCreated(true);
+    }
   }, [platform]);
 
   useEffect(() => {
@@ -41,165 +36,143 @@ export default function RoomConfig(props) {
     }
   }, [roomStatus]);
 
-  return (
-    <Card>
-      { meeting_id && (
-        <Row style={{ marginBottom: 24 }}>
-          <Col span={24}>
-            <Form.Item label={'Estado de videoconferencia'}>
-              <Select
-                value={roomStatus}
-                onChange={(value) => {
-                  setRoomStatus(value);
-                }}>
-                <Option value=''>Sin Estado</Option>
-                <Option value='open_meeting_room'>Conferencia Abierta</Option>
-                <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
-                <Option value='ended_meeting_room'>Conferencia Terminada</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-      )}
-      <Row style={{ marginBottom: 24 }}>
-        <Col span={24}>
-          <Form.Item label={'Plataforma Streaming del evento'} 
-            tooltip={(
+  const onChange = (e) => {
+    console.log('radio checked', e.target.value);
+    setUseAlreadyCreated(e.target.value);
+  };
+
+  if (hasVideoconference)
+    return (
+      <Card>
+        <Space direction='vertical'>
+          <Form.Item
+            label={'Estado de videoconferencia'}
+            tooltip={
               <>
                 {'Si desea volver a elegir otra plataforma seleccione el siguiente botón'}
-                <Button type='primary' onClick={deleteZoomRoom}>
+                <Button type='primary' onClick={deleteRoom}>
                   {'Reiniciar selección'}
                 </Button>
               </>
-            )}>
-            {(platform === null || platform === '') && !meeting_id ? (
-              <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
-                <Option value={null}>Seleccionar...</Option>
-                <Option value='zoom'>Zoom</Option>
-                <Option value='zoomExterno'>ZoomExterno</Option>
-                <Option value='vimeo'>Vimeo</Option>
-                <Option value='dolby'>Dolby</Option>
-                <Option value='bigmarker'>BigMaker</Option>
-              </Select>
-            ) : (
-              <>{platform}</>
-            )}
+            }>
+            <Select
+              value={roomStatus}
+              onChange={(value) => {
+                setRoomStatus(value);
+              }}>
+              <Option value=''>Conferencia creada</Option>
+              <Option value='open_meeting_room'>Conferencia Abierta</Option>
+              <Option value='closed_meeting_room'>Conferencia en Preparación</Option>
+              <Option value='ended_meeting_room'>Conferencia Terminada</Option>
+            </Select>
           </Form.Item>
-        </Col>
-      </Row>
 
-      {requiresCreateRoom && !hasVideoconference && (
-        <>
-          {/* <Alert
-            message='Si ya tiene creada una  transmisión ingrese los datos solicitados y haga click en Guardar, en caso que no haga click sobre el boton Crear transmisión'
-            type='info'
-            showIcon
-            style={{ marginBottom: 24 }}
-            closable
-          /> */}
-          {!hasVideoconference && (
-            <Row style={{ marginBottom: 24 }}>
-              <Col span={24}>
-                <Form.Item label={'Desea seleccionar manualmente el host?'}>
-                  <Select
-                    defaultValue={select_host_manual}
-                    value={select_host_manual}
-                    name='select_host_manual'
-                    onChange={(e) => handleChange(e, 'select_host_manual')}>
-                    <Option value={true}>Si</Option>
-                    <Option value={false}>No</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-          )}
-        </>
-      )}
-      {/* {select_host_manual ? 'hola' : 'adios'} */}
-      {requiresCreateRoom && select_host_manual && !hasVideoconference && (
-        <Row style={{ marginBottom: 24 }}>
-          <Col span={24}>
-            <Form.Item label={'Seleccione un host'}>
-              <Select
-                defaultValue={host_id}
-                value={host_id}
-                name='host_id'
-                onChange={(e) => handleChange(e, 'host_id')}>
-                <Option value={null}>Seleccione...</Option>
-                {host_list.length > 0 &&
-                  host_list.map((host) => (
-                    <Option key={host.host_id} value={host.host_id}>
-                      {host.host_name}
-                    </Option>
-                  ))}
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-      )}
+          <Form.Item label={'Platform'}>{platform}</Form.Item>
 
-      {platform && <Alert
-        message={'Si ya tiene creada una transmisión ingrese los datos solicitados '}
-        type='warning'
-        showIcon
-        style={{ marginBottom: 24 }}
-      />}
+          <Form.Item label={'Conference Id'}>{meeting_id}</Form.Item>
 
-      <Row style={{ marginBottom: 24 }}>
-        <Col span={24}>
-          {!hasVideoconference && platform ? (
-            <Form.Item label={'Ingrese id de videoconferencia'}>
-              <Input
-                type='number'
-                name='meeting_id'
-                onChange={(e) => setMeetingId(e.target.value)}
-                value={meeting_id}
-              />
-            </Form.Item>
-          ) : (
-            <>
-              {meeting_id && <Form.Item label={'Id de videoconferencia'}>{meeting_id}</Form.Item>}
-            </>
-          )}
-        </Col>
-      </Row>
+          {requiresCreateRoom && host_name !== null && <Form.Item label={'Host'}>{host_name}</Form.Item>}
 
-      {requiresCreateRoom && host_name !== null && (
-        <Row style={{ marginBottom: 24 }}>
-          <Col span={24}>
-            <Form.Item label={'Host'}>
-              <p>{host_name}</p>
-            </Form.Item>
-          </Col>
-        </Row>
-      )}
+          <Button onClick={deleteRoom} danger>
+            Eliminar transmisión
+          </Button>
+        </Space>
+      </Card>
+    );
 
-      <Row>
-        {!hasVideoconference ? (
+  /**
+   * Creación de una conferencia
+   */
+  return (
+    <Card>
+      {/**Selección plataforma de la conferencia */}
+      <Form onFinish={handleClick} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+        <Form.Item label={'Plataforma Streaming del evento'}>
+          <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
+            <Option value={null}>Seleccionar...</Option>
+            <Option value='vimeo'>Vimeo</Option>
+            <Option value='zoom'>Zoom</Option>
+            <Option value='zoomExterno'>ZoomExterno</Option>
+
+            {/* <Option value='dolby'>Dolby</Option> */}
+          </Select>
+        </Form.Item>
+
+        {requiresCreateRoom && (
           <>
-            {requiresCreateRoom && (
-              <Col span={16}>
-                <Button onClick={createZoomRoom} type='primary'>
-                  Crear transmisión
-                </Button>
-              </Col>
+            {!hasVideoconference && (
+              <Form.Item label={'Desea seleccionar manualmente el host?'}>
+                <Select
+                  defaultValue={select_host_manual}
+                  value={select_host_manual}
+                  name='select_host_manual'
+                  onChange={(e) => handleChange(e, 'select_host_manual')}>
+                  <Option value={true}>Si</Option>
+                  <Option value={false}>No</Option>
+                </Select>
+              </Form.Item>
             )}
-            {!requiresCreateRoom && (
-              <Col span={8}>
-                <Button onClick={handleClick} type='primary'>
-                  {meeting_id ? 'Guardar Configuración' : 'Crear transmisión'}
-                </Button>
-              </Col>
+
+            {select_host_manual && (
+              <Row style={{ marginBottom: 24 }}>
+                <Col span={24}>
+                  <Form.Item label={'Seleccione un host'}>
+                    <Select
+                      defaultValue={host_id}
+                      value={host_id}
+                      name='host_id'
+                      onChange={(e) => handleChange(e, 'host_id')}>
+                      <Option value={null}>Seleccione...</Option>
+                      {host_list.length > 0 &&
+                        host_list.map((host) => (
+                          <Option key={host.host_id} value={host.host_id}>
+                            {host.host_name}
+                          </Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
             )}
           </>
-        ) : (
-          <Col span={16}>
-            <Button onClick={deleteZoomRoom} danger>
-              Eliminar transmisión
-            </Button>
-          </Col>
         )}
-      </Row>
+
+        {platform && (
+          <Space direction='vertical'>
+            <Radio.Group onChange={onChange} value={useAlreadyCreated}>
+              {(platform == 'zoom' || platform == 'zoomExterno') && (
+                <Radio value={false}>Crear nueva transmisión</Radio>
+              )}
+              <Radio value={true}>Tengo ya una transmisión que quiero usar</Radio>
+            </Radio.Group>
+
+            {useAlreadyCreated && (
+              <>
+                <Form.Item name='meeting_id' label={'Ingrese id de videoconferencia'} rules={[{ required: true }]}>
+                  <Input
+                    type='text'
+                    name='meeting_id'
+                    onChange={(e) => setMeetingId(e.target.value)}
+                    value={meeting_id}
+                  />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button type='primary' htmlType='submit'>
+                    Guardar
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+
+            {!useAlreadyCreated && requiresCreateRoom && (
+              <Button onClick={createZoomRoom} type='primary'>
+                Crear nueva transmisión
+              </Button>
+            )}
+          </Space>
+        )}
+      </Form>
     </Card>
   );
 }

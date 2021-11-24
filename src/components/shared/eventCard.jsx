@@ -21,13 +21,13 @@ class EventCard extends Component {
     const { Meta } = Card;
 
     const styleNormal = {
-      fontWeight: 'bold'
-    }
+      fontWeight: 'bold',
+    };
 
     const styleAdmin = {
       fontWeight: 'bold',
-      width:'250px'
-    }
+      width: '250px',
+    };
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -50,9 +50,10 @@ class EventCard extends Component {
             </span>
           }>
           <Link
-            id="go_to_activity"
+            id='go_to_activity'
             // onClick={() => Cookies.set('idevent', event._id)}
-            to={{ pathname: `/event/${encodeURI(event.name)}`, state: { event: event } }}>
+            //to={{ pathname: `/event/${encodeURI(event.name)}`, state: { event: event } }}>
+            to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
             <Card
               bordered={bordered}
               loading={loading}
@@ -96,7 +97,9 @@ class EventCard extends Component {
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
                       </Space>
                     </span>
-                    <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>{event.name}</Typography.Text>
+                    <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
+                      {event.name}
+                    </Typography.Text>
                     <span>
                       {event.organizer?.name
                         ? event.organizer?.name

@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 //custom
 import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpers/request';
 import Moment from 'moment';
-import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography,  } from 'antd';
+import { Card, Avatar, Button, Modal, Row, Col, Typography } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import withContext from '../../Context/withContext';
 
 const { Meta } = Card;
-const { Paragraph, Text, Title  } = Typography;
+const { Paragraph, Text, Title } = Typography;
 
 class Speakers extends Component {
   constructor(props) {
@@ -155,7 +155,7 @@ class Speakers extends Component {
     } = this.state;
 
     let eventId = this.props.cEvent.value._id;
-    
+
     let eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
 
     return (
@@ -248,12 +248,8 @@ class Speakers extends Component {
                                           <div
                                             key={'speaker-description  ' + key}
                                             style={{ minHeight: '100px', textAlign: 'center' }}>
-                                              <Title level={4} >
-                                                {speaker.name}
-                                              </Title>
-                                              <Paragraph>
-                                                {speaker.profession}
-                                              </Paragraph>
+                                            <Title level={4}>{speaker.name}</Title>
+                                            <Paragraph>{speaker.profession}</Paragraph>
                                             {/* <p
                                               style={{
                                                 textOverflow: 'ellipsis',
@@ -284,57 +280,57 @@ class Speakers extends Component {
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
         {/* <div style={{ padding: '40px' }}> */}
-          <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
-            {/* Mapeo de datos para mostrar los Speakers */}
-            {speakersWithoutCategory.length &&
-              speakersWithoutCategory.map((speaker, key) => (
-                <>
-                  {speaker.published && (
-                    <Col key={key} xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                      <Card
-                        onClick={() => {
-                          if (
-                            speaker.description !== '<p><br></p>' &&
-                            speaker.description !== undefined &&
-                            speaker.description !== null
-                          ) {
-                            this.modal(
-                              eventId,
-                              speaker._id,
-                              speaker.image,
-                              speaker.name,
-                              speaker.profession,
-                              speaker.description,
-                              speaker.category
-                            );
-                          }
-                        }}
-                        hoverable={speaker.description ? true : false}
-                        style={{
-                          paddingTop: '30px',
-                          borderRadius: '20px',
-                          /* paddingLeft: '50px',
-                          paddingRight: '50px', */
-                          minHeight: '428px',
-                        }}
-                        cover={
-                          speaker.image ? (
-                            <Avatar
-                              style={{ display: 'block', margin: 'auto' }}
-                              size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
-                              /* size={210} */ src={speaker.image}
-                            />
-                          ) : (
-                            <Avatar
-                              style={{ display: 'block', margin: 'auto' }}
-                              size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
-                              /* size={210} */ icon={<UserOutlined />}
-                            />
-                          )
+        <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
+          {/* Mapeo de datos para mostrar los Speakers */}
+          {speakersWithoutCategory.length &&
+            speakersWithoutCategory.map((speaker, key) => (
+              <>
+                {speaker.published && (
+                  <Col key={key} xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
+                    <Card
+                      onClick={() => {
+                        if (
+                          speaker.description !== '<p><br></p>' &&
+                          speaker.description !== undefined &&
+                          speaker.description !== null
+                        ) {
+                          this.modal(
+                            eventId,
+                            speaker._id,
+                            speaker.image,
+                            speaker.name,
+                            speaker.profession,
+                            speaker.description,
+                            speaker.category
+                          );
                         }
-                        actions={speaker.description && [this.btnViewMore(speaker)]}>
-                        <Meta
-                          /* title={[
+                      }}
+                      hoverable={speaker.description ? true : false}
+                      style={{
+                        paddingTop: '30px',
+                        borderRadius: '20px',
+                        /* paddingLeft: '50px',
+                          paddingRight: '50px', */
+                        minHeight: '428px',
+                      }}
+                      cover={
+                        speaker.image ? (
+                          <Avatar
+                            style={{ display: 'block', margin: 'auto' }}
+                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                            /* size={210} */ src={speaker.image}
+                          />
+                        ) : (
+                          <Avatar
+                            style={{ display: 'block', margin: 'auto' }}
+                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                            /* size={210} */ icon={<UserOutlined />}
+                          />
+                        )
+                      }
+                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                      <Meta
+                        /* title={[
                             <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
                               <Title level={4} >
                                 {speaker.name}
@@ -353,30 +349,24 @@ class Speakers extends Component {
                               </p>
                             </div>,
                           ]} */
-                          description={[
-                            <div
-                              key={'speaker-description  ' + key}
-                              style={{ minHeight: '100px', textAlign: 'center' }}>
-                                <Title level={4} >
-                                  {speaker.name}
-                                </Title>
-                                <Paragraph>
-                                  {speaker.profession}
-                                </Paragraph>
-                              {/* <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                        description={[
+                          <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
+                            <Title level={4}>{speaker.name}</Title>
+                            <Paragraph>{speaker.profession}</Paragraph>
+                            {/* <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                 <Tooltip placement='bottomLeft' title={speaker.profession}>
                                   <span>{speaker.profession}</span>
                                 </Tooltip>
                               </p> */}
-                            </div>,
-                          ]}
-                        />
-                      </Card>
-                    </Col>
-                  )}
-                </>
-              ))}
-          </Row>
+                          </div>,
+                        ]}
+                      />
+                    </Card>
+                  </Col>
+                )}
+              </>
+            ))}
+        </Row>
         {/* </div> */}
 
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}

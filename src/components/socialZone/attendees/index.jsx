@@ -34,9 +34,8 @@ const AttendeList = function(props) {
 
   useEffect(() => {
     let ordenadousers = [];
-
     Object.keys(attendeeList).map((key) => {
-      if (attendeeListPresence[key]!=undefined || attendeeListPresence[key]!=null) {
+      if (attendeeListPresence[key] != undefined || attendeeListPresence[key] != null) {
         if (attendeeList[key].properties) {
           let attendeProfile = {
             uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
@@ -64,9 +63,6 @@ const AttendeList = function(props) {
                   )
                 ),
           };
-
-          console.log("attendeProfile",attendeProfile)
-
 
           if (attendeProfile.status === 'online') {
             ordenadousers.unshift(attendeProfile);
@@ -116,7 +112,6 @@ const AttendeList = function(props) {
     setLoading(false);
     setHasMore(true);
   };
-
 
   return (
     <InfiniteScroll

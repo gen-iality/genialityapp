@@ -1,13 +1,11 @@
-import React, { useState, useContext } from 'react';
-import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover, Col } from 'antd';
-import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
+import React, { useContext } from 'react';
+import { List, Typography, Badge, Tabs, Form, Button, Row, Space, Col } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { InitialsNameUser } from '../hooks';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
 import UsersCard from '../../shared/usersCard';
@@ -15,13 +13,6 @@ const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
 
-const styleItemCard = {
-  backgroundColor: 'white',
-  padding: 15,
-  margin: 6,
-  border: '1px solid #cccccc',
-  borderRadius: '10px',
-};
 
 const styleList = {
   padding: 5,
@@ -40,14 +31,9 @@ const ChatList = (props) => {
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
 
-  let {
-    chatActual,
-    HandleGoToChat,
-    privateChatsList,
-    chatPublicPrivate,
-    HandlePublicPrivate,
-    imageforDefaultProfile,
-  } = useContext(HelperContext);
+  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
+    HelperContext
+  );
 
   const onFinish = (values) => {
     cUser.value = values;
@@ -55,7 +41,6 @@ const ChatList = (props) => {
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
-  let [usuariofriend, setusuariofriend] = useState(null);
 
   function callback(key) {
     if (key === 'public') {
@@ -72,7 +57,6 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
-  // console.log('privateChatsList', privateChatsList);
   if (!cUser.value)
     return (
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
@@ -84,50 +68,11 @@ const ChatList = (props) => {
                 defaultMessage='Registrate para participar en el chat de este evento'
               />
             </Text>
-
-            {/* <h1>
-              <strong>
-                <FormattedMessage
-                  id='form.title.socialzone'
-                  defaultMessage='Ingresa tus datos para participar en el chat'
-                />
-              </strong>
-            </h1> */}
-
-            {/* 
-            <Text type='secondary'>
-              <FormattedMessage
-                id='form.message.socialzone'
-                defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
-              />
-            </Text> */}
           </Col>
         </Row>
-        {/* <Row justify='start' style={{ paddingTop: '10px' }}>
-          <Col>
-            <Form.Item
-              label={intl.formatMessage({ id: 'form.label.name' })}
-              name='name'
-              rules={[{ required: true, message: 'Digita tu nombre' }]}>
-              <Input style={{ width: '100%' }} />
-            </Form.Item>
-
-            <Form.Item
-              name='email'
-              label='Email'
-              rules={[{ required: true, type: 'email', message: 'Digita tu email' }]}>
-              <Input style={{ width: '100%' }} />
-            </Form.Item>
-          </Col>
-        </Row> */}
 
         <Row justify='center'>
           <Space size='small' wrap>
-            {/* <Form.Item>
-              <Button type='dashed' htmlType='submit'>
-                <FormattedMessage id='form.button.enter' defaultMessage='Entrar' />
-              </Button>
-            </Form.Item> */}
             <Form.Item>
               <Button onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
                 <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
@@ -151,11 +96,11 @@ const ChatList = (props) => {
           }
           key='public'>
           <iframe
-          style={{marginTop:'8px'}}
+            style={{ marginTop: '8px' }}
             title='chatevius'
             className='ChatEviusLan'
             src={
-              'https://chatevius.web.app?nombre=' +
+              'https://chatevius.netlify.app?nombre=' +
               userNameActive +
               '&chatid=event_' +
               cEvent.value?._id +
@@ -193,61 +138,7 @@ const ChatList = (props) => {
               className='asistente-list'
               style={styleList}
               dataSource={privateChatsList}
-              renderItem={(item) => (
-                <UsersCard type='privateChat' item={item}/>
-                // <List.Item
-                //   style={styleItemCard}
-                //   extra={[
-                //     <a
-                //       key='list-loadmore-edit'
-                //       onClick={() => {
-                //         HandleGoToChat(
-                //           cUser.value.uid,
-                //           item.id,
-                //           cUser.value.name ? cUser.value.name : cUser.value.names,
-                //           'private',
-                //           item,
-                //           null
-                //         );
-                //       }}>
-                //       <Tooltip title='Chatear'>
-                //         {item.participants &&
-                //         item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes &&
-                //         item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes >
-                //           0 ? (
-                //           <Badge
-                //             count={
-                //               item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]
-                //                 ?.countmessajes
-                //             }>
-                //             <MessageTwoTone style={{ fontSize: '27px' }} />
-                //           </Badge>
-                //         ) : (
-                //           <MessageTwoTone style={{ fontSize: '27px' }} />
-                //         )}
-                //       </Tooltip>
-                //     </a>,
-                //   ]}>
-                //   <List.Item.Meta
-                //     avatar={
-                //       item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl ? (
-                //         <Avatar
-                //           src={
-                //             item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl
-                //           }
-                //         />
-                //       ) : (
-                //         <Avatar src={imageforDefaultProfile} />
-                //       )
-                //     }
-                //     title={
-                //       <Typography.Text  style={{ color: 'black',width:'200px' }} key='list-loadmore-edit'>
-                //         {item.name ? item.name : item.names}
-                //       </Typography.Text>
-                //     }
-                //   />
-                // </List.Item>
-              )}
+              renderItem={(item) => <UsersCard type='privateChat' item={item} />}
             />
           )}
 
@@ -257,7 +148,7 @@ const ChatList = (props) => {
                 title='chatevius'
                 className='ChatEviusLan'
                 src={
-                  'https://chatevius.web.app?iduser=' +
+                  'https://chatevius.netlify.app?iduser=' +
                   chatActual?.idotheruser +
                   '&chatid=' +
                   chatActual?.chatid +
