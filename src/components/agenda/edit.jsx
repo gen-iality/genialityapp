@@ -52,7 +52,7 @@ import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
 import AgendaContext from '../../Context/AgendaContext';
 const { TabPane } = Tabs;
-const { Confirm } = Modal;
+const { confirm } = Modal;
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -177,7 +177,6 @@ class AgendaEdit extends Component {
     let days = [];
     const ticketEvent = [];
     let vimeo_id = '';
-    console.log('intentando que cambie', this.state.platform);
     try {
       const tickets = await eventTicketsApi.getAll(event?._id);
       for (let i = 0; tickets.length > i; i++) {
@@ -312,7 +311,6 @@ class AgendaEdit extends Component {
 
   //FN general para cambio en input
   handleChange = async (value, name) => {
-    console.log(value, name)
     if (!name) {
       name = value.target.name;
       value = value.target.value;
@@ -326,10 +324,6 @@ class AgendaEdit extends Component {
     } else {
       this.setState({ [name]: value });
     }
-
-    /* console.log(name, value); */
-    // BACKLOG -> porque host_id se setea siempre que se setea un estado
-    //this.setState({ [name]: value });
   };
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
@@ -354,6 +348,11 @@ class AgendaEdit extends Component {
   };
   //FN para los select que permiten crear opción
   handleCreate = async (value, name) => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras guarda la información..</>,
+    });
     try {
       this.setState({ isLoading: { ...this.isLoading, [name]: true } });
       //Se revisa a que ruta apuntar
@@ -377,15 +376,29 @@ class AgendaEdit extends Component {
             }));
         }
       );
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <> Información guardada correctamente!</>,
+      });
     } catch (e) {
       this.setState((prevState) => ({
         isLoading: { ...prevState.isLoading, [name]: false },
       }));
-      sweetAlert.showError(handleRequestError(e));
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: handleRequestError(e).message,
+      });
     }
   };
   //FN manejo de imagen input, la carga al sistema y la guarda en base64
   changeImg = async (files) => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras carga la imagen..</>,
+    });
     try {
       const file = files[0];
       if (file) {
@@ -396,8 +409,17 @@ class AgendaEdit extends Component {
           errImg: 'Only images files allowed. Please try again :)',
         });
       }
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <> Imagen cargada correctamente!</>,
+      });
     } catch (e) {
-      sweetAlert.showError(handleRequestError(e));
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: handleRequestError(e).message,
+      });
     }
   };
 
@@ -411,12 +433,16 @@ class AgendaEdit extends Component {
   //Envío de información
 
   submit = async () => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se guarda la información..</>,
+    });
     const validation = this.validForm();
     if (validation) {
       try {
         const info = this.buildInfo();
 
-        sweetAlert.showLoading('Espera (:', 'Guardando...');
         const {
           event,
           location: { state },
@@ -452,16 +478,23 @@ class AgendaEdit extends Component {
         //Se cambia el estado a pendingChangesSave encargado de detectar cambios pendientes en la fecha/hora sin guardar
         this.setState({ pendingChangesSave: false });
 
-        sweetAlert.hideLoading();
-        sweetAlert.showSuccess('Información guardada');
-        /* console.log('Info agenda: ', info); */
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Información guardada correctamente!</>,
+        });
         this.props.history.push(`/eventadmin/${event._id}/agenda`);
       } catch (e) {
-        sweetAlert.showError(handleRequestError(e));
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
       }
     }
   };
 
+  //Función para duplicar la data para traducir, pero esta no funciona actualmente, da error 800
   submit2 = async () => {
     if (this.validForm()) {
       try {
@@ -629,11 +662,41 @@ class AgendaEdit extends Component {
 
   //FN para eliminar la actividad
   remove = async () => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
     if (this.state.activity_id) {
-      if (await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)) {
-        this.setState({ redirect: true });
-        sweetAlert.showSuccess('Correcto', 'Actividad eliminada');
-      }
+      confirm({
+        title: `¿Está seguro de eliminar la información?`,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Una vez eliminado, no lo podrá recuperar',
+        okText: 'Borrar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerRemove = async () => {
+            try {
+              await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)
+              message.destroy(loading.key);
+              message.open({
+                type: 'success',
+                content: <> Se eliminó la información correctamente!</>,
+              });
+              this.setState({ redirect: true })
+              history.push(`${props.matchUrl}`);
+            } catch (e) {
+              message.destroy(loading.key);
+              message.open({
+                type: 'error',
+                content: handleRequestError(e).message,
+              });
+            }
+          }
+          onHandlerRemove();
+        }
+      });
     }
   };
 

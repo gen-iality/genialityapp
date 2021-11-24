@@ -37,7 +37,6 @@ export default function RoomConfig(props) {
   }, [roomStatus]);
 
   const onChange = (e) => {
-    console.log('radio checked', e.target.value);
     setUseAlreadyCreated(e.target.value);
   };
 

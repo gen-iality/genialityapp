@@ -44,14 +44,14 @@ class RoomManager extends Component {
           host_id: 'FIRVnSoZR7WMDajgtzf5Uw',
           host_name: 'host3@evius.co',
         },
-        {
+        /* {  Esto está en ucronio
           host_id: 'YaXq_TW2f791cVpP8og',
           host_name: 'host4@evius.co',
         },
         {
           host_id: 'mSkbi8PmSSqQEWsm6FQiAA',
           host_name: 'host5@evius.co',
-        },
+        }, */
       ],
 
       // Estado de los tabs
@@ -173,18 +173,15 @@ class RoomManager extends Component {
 
   // Encargado de recibir los cambios de los input y select
   handleChange = (e, nameS) => {
-    console.log(e, nameS);
     let { name } = e.target ? e.target : nameS;
     let { value } = e.target ? e.target : e;
 
     this.setState({ [name]: value });
     if (nameS === 'select_host_manual') {
-      this.context.select_host_manual = value;
-      //this.context.setSelect_host_manual(value);
+      this.context.select_host_manual = e;
     }
     if (nameS === 'host_id') {
-      //this.context.host_id = value;
-      this.context.setHostId(e);
+      this.context.host_id = e;
     }
   };
 
@@ -223,7 +220,6 @@ class RoomManager extends Component {
     this.context.setHostId(null);
     this.context.setHostName(null);
     this.context.setRoomStatus('');
-    /* this.context.setSelect_host_manual(false); */
     this.setState(
       {
         hasVideoconference: false,
