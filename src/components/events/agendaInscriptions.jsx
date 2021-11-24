@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Activity, AgendaApi, SpacesApi, SurveysApi, DocumentsApi } from '../../helpers/request';
 import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, notification } from 'antd';
-import AgendaActividadDetalle from './AgendaActividadDetalle';
+import AgendaActividadDetalle from './AgendaActividadDetalle/index';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { firestore } from '../../helpers/firebase';

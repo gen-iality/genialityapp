@@ -38,7 +38,7 @@ import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
 import ResponsePayu from '../registrationForm/responsePayu';
 import { useParams } from 'react-router-dom';
-import AgendaActividadDetalle from '../AgendaActividadDetalle';
+import AgendaActividadDetalle from '../AgendaActividadDetalle/index';
 import MySection from '../newSection';
 
 const EventSectionRoutes = (props) => {
