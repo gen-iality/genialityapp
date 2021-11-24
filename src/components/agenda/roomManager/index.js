@@ -171,7 +171,7 @@ class RoomManager extends Component {
 
   // Encargado de recibir los cambios de los input y select
   handleChange = (e, nameS) => {
-    /* console.log(e, nameS); */
+    console.log(e, nameS);
     let { name } = e.target ? e.target : nameS;
     let { value } = e.target ? e.target : e;
 
@@ -247,10 +247,7 @@ class RoomManager extends Component {
       const { service, platform, meeting_id } = this.state;
 
       // Validación de los campos requeridos
-      if (
-        (!meeting_id && (platform === '' || platform === null)) ||
-        (!platform && (meeting_id === '' || meeting_id === null))
-      ) {
+      if (platform === '' || platform === null || meeting_id === '' || meeting_id === null) {
         message.warning('Seleccione una plataforma e ingrese el id de la videoconferencia');
         return false;
       }

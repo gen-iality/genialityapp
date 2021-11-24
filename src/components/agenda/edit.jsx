@@ -312,6 +312,7 @@ class AgendaEdit extends Component {
 
   //FN general para cambio en input
   handleChange = async (value, name) => {
+    console.log(value, name)
     if (!name) {
       name = value.target.name;
       value = value.target.value;
@@ -722,7 +723,6 @@ class AgendaEdit extends Component {
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
-    console.log(roomInfo, tabs, 'campos-------------');
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, this.state.activity_id, roomInfo, tabs);
       if (result) message.success(result.message);
@@ -818,11 +818,17 @@ class AgendaEdit extends Component {
             form
             remove={this.remove}
             edit={this.props.location.state.edit}
-            /* extra={
-              <Button type='primary' onClick={this.submit2}>
-                Duplicar para traducir
-              </Button>
-            } */
+            extra={
+              <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
+                <Switch
+                  checkedChildren='Sí'
+                  unCheckedChildren='No'
+                  name={'isPublished'}
+                  checked={isPublished}
+                  onChange={(e) => this.handleChange(e, 'isPublished')}
+                />
+              </Form.Item>
+            }
           />
           <Tabs defaultActiveKey='1'>
             <TabPane tab='Agenda' key='1'>
@@ -839,21 +845,10 @@ class AgendaEdit extends Component {
                       placeholder={'Nombre de la actividad'}
                     />
                   </Form.Item>
-                  {/* <Form.Item label={'Subtítulo'}>
-                    <Input
-                      className='input'
-                      type='text'
-                      name={'subtitle'}
-                      value={subtitle}
-                      onChange={this.handleChange}
-                      placeholder={'Ej: Salón 1, Zona Norte, Área de juegos'}
-                    />
-                  </Form.Item> */}
                   <Form.Item label={'Día'}>
                     <SelectAntd
                       name='date'
                       options={this.state.days}
-                      /* style={{ width: '100%' }} */
                       defaultValue={date}
                       value={date}
                       onChange={(value) => this.handleChangeDate(value, 'date')}
@@ -910,7 +905,6 @@ class AgendaEdit extends Component {
                         <SelectAntd
                           name={'space_id'}
                           value={space_id}
-                          /* value={space_id}  */
                           onChange={(e) => this.handleChange(e, 'space_id')}>
                           <Option value={''}>Seleccione un lugar/salón ...</Option>
                           {spaces.map((space) => (
@@ -961,33 +955,7 @@ class AgendaEdit extends Component {
                       </Form.Item>
                     </>
                   )}
-                  {/* {access_restriction_type !== 'OPEN' && (
-                    <Form.Item label={`Asignar a: `}>
-                      <Row wrap justify='space-between'>
-                        <Col span={17}>
-                          <Select
-                            isClearable
-                            isMulti
-                            styles={creatableStyles}
-                            onChange={this.selectRol}
-                            options={roles}
-                            placeholder={'Seleccione al menos un rol...'}
-                            value={selectedRol}
-                          />
-                        </Col>
-                        <Col>
-                          <Button onClick={this.addRoles}>Todos los roles</Button>
-                        </Col>
-                        <Col>
-                          <Button
-                            onClick={() => this.goSection(matchUrl.replace('agenda', 'tipo-asistentes'))}
-                            icon={<SettingOutlined />}
-                          />
-                        </Col>
-                      </Row>
-                    </Form.Item>
-                  )} */}
-                  <Form.Item label={'Documentos'}>
+                  {/* <Form.Item label={'Documentos'}>
                     <Select
                       id={'nameDocuments'}
                       isClearable
@@ -997,17 +965,10 @@ class AgendaEdit extends Component {
                       options={nameDocuments}
                       value={selected_document}
                     />
-                  </Form.Item>
+                  </Form.Item> */}
                   <Form.Item label={'Link del vídeo'}>
                     <Input name='video' type='text' value={video} onChange={this.handleChange} />
                   </Form.Item>
-                  {/* <Form.Item label={'Texto de email para confirmación de registro'}>
-                    <EviusReactQuill
-                      name='registration_message'
-                      data={this.state.registration_message}
-                      handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
-                    />
-                  </Form.Item> */}
                   <Form.Item label={'Descripción'}>
                     <Space>
                       <ExclamationCircleOutlined style={{ color: '#faad14' }} />
@@ -1022,12 +983,6 @@ class AgendaEdit extends Component {
                     />
                   </Form.Item>
                   <Form.Item label={'Imagen'}>
-                    {/* <p>Dimensiones: 600px * 400px, 400px * 600px, 200px * 200px, 400px * 400px </p>
-                    <p></p>
-                    <Dropzone onChange={this.changeImg} onDrop={this.changeImg} accept='image/*' className='zone'>
-                      <span className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</span>
-                    </Dropzone>
-                    {image && <img src={image} alt={`activity_${name}`} />} */}
                     <Card style={{ textAlign: 'center' }}>
                       <Form.Item noStyle>
                         <p>
@@ -1076,27 +1031,6 @@ class AgendaEdit extends Component {
                       </Form.Item>
                     </Card>
                   </Form.Item>
-                  <Form.Item label={'Publicar Actividad'}>
-                    <SelectAntd
-                      defaultValue={isPublished}
-                      value={isPublished}
-                      name='isPublished'
-                      onChange={(e) => this.handleChange(e, 'isPublished')}>
-                      {/* <Option value={''}>Seleccinar opción...</Option> */}
-                      <Option value={true}>Si</Option>
-                      <Option value={false}>No</Option>
-                    </SelectAntd>
-                  </Form.Item>
-                  {/* <Form.Item label={'Capacidad'}>
-                    <Input
-                      min={0}
-                      type='number'
-                      name={'capacity'}
-                      value={capacity}
-                      onChange={this.handleChange}
-                      placeholder={'Cupo total'}
-                    />
-                  </Form.Item> */}
                   <Form.Item label={'Categorías'}>
                     <Row wrap gutter={[8, 8]}>
                       <Col span={23}>
@@ -1151,25 +1085,7 @@ class AgendaEdit extends Component {
                 </Col>
               </Row>
             </TabPane>
-            {/* <TabPane tab='Seleccion de lenguaje' key='2'>
-              <Row justify='center' wrap gutter={12}>
-                <Col span={20}>
-                {this.props.location.state.edit ? (
-                <AgendaLanguaje
-                platform={platform}
-                eventId={this.props.event._id}
-                activityId={this.props.location.state.edit}
-                />
-                ) : (
-                  <p>
-                  Por favor primero crear la actividad, paso seguido edite la misma para crear las conferencias en
-                  diferentes idiomas
-                  </p>
-                  )}
-                  </Col>
-                  </Row>
-                </TabPane> */}
-            <TabPane tab='Transmisión' key='3'>
+            <TabPane tab='Transmisión' key='2'>
               <Row justify='center' wrap gutter={12}>
                 <Col span={20}>
                   <RoomManager
@@ -1183,49 +1099,22 @@ class AgendaEdit extends Component {
                     pendingChangesSave={this.state.pendingChangesSave}
                     updateRoomManager={this.updateRoomManager}
                   />
-                  {/* {loading ? (
-                    <Loading />
-                    ) : (
-                      <>
-                      <RoomManager
-                        event_id={this.props.event._id}
-                        activity_id={this.state.activity_id}
-                        activity_name={this.state.name}
-                        firestore={firestore}
-                        date_start_zoom={date_start_zoom}
-                        date_end_zoom={date_end_zoom}
-                        date_activity={this.state.date}
-                        pendingChangesSave={this.state.pendingChangesSave}
-                        />
-                      <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
-                      {this.state.isExternal && (
-                        <SurveyExternal
-                        isExternal={this.state.isExternal}
-                        meeting_id={this.state.externalSurveyID}
-                        event_id={this.props.event._id}
-                        activity_id={this.state.activity_id}
-                        />
-                        )}
-                    </>
-                  )} */}
                 </Col>
               </Row>
             </TabPane>
-            <TabPane tab='Avanzado' key='4'>
+            <TabPane tab='Juegos' key='3'>
               <Row justify='center' wrap gutter={12}>
                 <Col span={20}>
-                  {/* <Checkbox
-                    defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
-                    onChange={(e) => this.handleChange(e, 'requires_registration')}
-                    name='requires_registration'>
-                    La actividad requiere registro
-                  </Checkbox>*/}
-                  <br />
-                  <br />
                   <RoomController
                     handleGamesSelected={this.handleGamesSelected}
                     handleTabsController={this.handleTabsController}
                   />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tab='Encuestas' key='4'>
+              <Row justify='center' wrap gutter={12}>
+                <Col span={20}>
                   <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
                   {this.state.isExternal && (
                     <SurveyExternal
@@ -1236,9 +1125,23 @@ class AgendaEdit extends Component {
                       roomStatus={this.state.roomStatus}
                     />
                   )}
-                  {/* <Button onClick={this.submit} type='primary'>
-                    Guardar
-                  </Button> */}
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tab='Documentos' key='5'>
+              <Row justify='center' wrap gutter={12}>
+                <Col span={20}>
+                  <Form.Item label={'Documentos'}>
+                    <Select
+                      id={'nameDocuments'}
+                      isClearable
+                      isMulti
+                      styles={creatableStyles}
+                      onChange={this.selectDocuments}
+                      options={nameDocuments}
+                      value={selected_document}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
             </TabPane>
