@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import EventContent from '../events/shared/content';
-import { selectOptions } from './constants';
+import { selectOptions, surveyTimeOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
 import { withRouter } from 'react-router-dom';
@@ -38,7 +38,7 @@ class triviaEdit extends Component {
 
       // estado de la encuesta
       freezeGame: false,
-      openSurvey: false,
+      openSurvey: 'false',
       publish: false,
 
       time_limit: 0,
@@ -65,6 +65,7 @@ class triviaEdit extends Component {
   changeInput = (e) => {
     const { name } = e.target;
     const { value } = e.target;
+
     this.setState({ [name]: value });
   };
 
@@ -188,6 +189,7 @@ class triviaEdit extends Component {
         hasMinimumScore: data.hasMinimumScore,
         isGlobal: data.isGlobal,
         showNoVotos: data.showNoVotos,
+        time_limit: parseInt(this.state.time_limit),
 
         //survey state
         freezeGame: data.freezeGame,
@@ -272,6 +274,7 @@ class triviaEdit extends Component {
               hasMinimumScore: data.hasMinimumScore,
               isGlobal: data.isGlobal,
               showNoVotos: data.showNoVotos,
+              time_limit: parseInt(this.state.time_limit),
 
               // Survey State
               freezeGame: data.freezeGame,
@@ -340,7 +343,7 @@ class triviaEdit extends Component {
 
       this.setState({ question: newListQuestion });
       message.success({ content: response, key: 'updating' });
-    }); 
+    });
   };
 
   // Editar pregunta
@@ -430,11 +433,10 @@ class triviaEdit extends Component {
 
   // Funcion usada para determinar el tiempo limite en segundos de la emcuesta
   setTime_limit = (e) => {
-    var reg = new RegExp('^\\d+$')
+    var reg = new RegExp('^\\d+$');
     const { value } = e.target;
-    if(reg.test(value)){
+    if (reg.test(value)) {
       this.setState({ time_limit: value });
-
     }
     //
   };
@@ -490,7 +492,7 @@ class triviaEdit extends Component {
       isGlobal,
       ranking,
       showNoVotos,
-      displayGraphsInSurveys
+      displayGraphsInSurveys,
     } = this.state;
     const { Option } = Select;
     const columns = [
@@ -564,9 +566,29 @@ class triviaEdit extends Component {
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: '3%' }} className='label'>
-                Tiempo límite en segundos por pregunta
+                Tiempo límite por pregunta
               </label>
-              <input type='number' name='time' id='time' value={time_limit} onChange={this.setTime_limit} pattern="[0-9]+" mim='0'/>
+              <div className='select'>
+                <select name='time_limit' onChange={this.changeInput} defaultValue={time_limit}>
+                  {surveyTimeOptions.map((values) => {
+                    return (
+                      <option key={values.value} value={values.value}>
+                        {values.text}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              {/* <input
+                type='number'
+                name='time'
+                id='time'
+                value={time_limit}
+                onChange={this.setTime_limit}
+                pattern='[0-9]+'
+                mim='0'
+              />  */}
             </div>
           )}
 
@@ -599,7 +621,7 @@ class triviaEdit extends Component {
                 Encuesta abierta
               </label>
               <Switch
-                checked={openSurvey === 'true' || openSurvey === true}
+                checked={openSurvey === 'true'}
                 onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
               />
             </div>
@@ -617,32 +639,32 @@ class triviaEdit extends Component {
           )}
           {this.state.idSurvey && (
             <div>
-                <div>
+              <div>
                 <label style={{ marginTop: '3%' }} className='label'>
-                Mostar gráficas en las encuestas 
+                  Mostar gráficas en las encuestas
                 </label>
                 <Switch
                   checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
                   onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
                 />
               </div>
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Elegir tipo de grafica
-              </label>
-              {/* <Switch
+              <div>
+                <label style={{ marginTop: '3%' }} className='label'>
+                  Elegir tipo de grafica
+                </label>
+                {/* <Switch
                 checked={show_horizontal_bar === 'true' || show_horizontal_bar === true}
                 onChange={(checked) => this.setState({ show_horizontal_bar: checked ? 'true' : 'false' })}
               /> */}
-              <Select
-                defaultValue={this.state.graphyType}
-                style={{ width: 120 }}
-                onChange={(graphy) => this.setState({ graphyType: graphy })}>
-                <Option value='y'>Horizontal</Option>
-                <Option value='x'>vertical</Option>
-                <Option value='pie'>Torta</Option>
-              </Select>
-            </div>
+                <Select
+                  defaultValue={this.state.graphyType}
+                  style={{ width: 120 }}
+                  onChange={(graphy) => this.setState({ graphyType: graphy })}>
+                  <Option value='y'>Horizontal</Option>
+                  <Option value='x'>vertical</Option>
+                  <Option value='pie'>Torta</Option>
+                </Select>
+              </div>
             </div>
           )}
           {this.state.idSurvey && (
