@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import CameraFeed from './cameraFeed';
 
 //custom
@@ -10,17 +10,18 @@ import { message } from 'antd';
 const { TextArea } = Input;
 import withContext from '../../Context/withContext';
 
-const Editor = ({ onChange, onSubmit, submitting, value, loadingsave,errimage,errNote }) => (
-  <div>
-    <Form.Item name="note" rules={[{ required: true, message: 'Por favor ingrese una nota' }]}>
-      <TextArea  placeholder='¿Qué está pasando?' rows={4} onChange={onChange} value={value} />
+const Editor = ({ onSubmit, submitting, value, loadingsave,errimage,errNote,refText}) => (
+
+    <Form ref={refText} onFinish={onSubmit}>
+    <Form.Item name="post">
+      <TextArea  placeholder='¿Qué está pasando?' rows={4} />
     </Form.Item>
     {errimage && (
       <div style={{marginBottom:30}}>
         <Alert type='error' message='Formato de archivo incorrecto!' />
       </div>
     )}
-    {errNote &&   <div  style={{marginBottom:30}} ><Alert type='error' message="Ingrese una texto válido!" /></div>}
+    {errNote &&   <div  style={{marginBottom:30}} ><Alert type='error' message="Ingrese una texto válido o una imagen!" /></div>}
 
     <Form.Item>
       {!loadingsave && (
@@ -28,8 +29,7 @@ const Editor = ({ onChange, onSubmit, submitting, value, loadingsave,errimage,er
           id='submitPost'
           style={{ background: loadingsave ? 'white' : '#333F44' }}
           htmlType='submit'
-          loading={submitting}
-          onClick={onSubmit}
+          loading={submitting}         
           type='primary'>
           Enviar
         </Button>
@@ -41,7 +41,8 @@ const Editor = ({ onChange, onSubmit, submitting, value, loadingsave,errimage,er
         </>
       )}
     </Form.Item>
-  </div>
+    </Form>
+
 );
 
 class CreatePost extends Component {
@@ -71,21 +72,27 @@ class CreatePost extends Component {
     this.previewImage = this.previewImage.bind(this);
     this.cancelUploadImage = this.cancelUploadImage.bind(this);
     this.getImage = this.getImage.bind(this);
+    this.formRef = createRef();
   }
 
   componentDidMount(){
   
   }
 
+  cleanValue(){
+    this.setState({value:''})
+  }
+
   //Funcion para guardar el post y enviar el mensaje de publicacion
-  async savePost() {
-    if(this.state.value!=="" && this.state.value!==null && this.state.value!=undefined){
+  async savePost(values) {
+    
+    if(values.post || this.state.image){
     this.setState({
       loadingsave: true,
     });
     let data = {
       urlImage: this.state.image,
-      post: this.state.value,
+      post: values.post || '',
       author: this.props.cUser.value._id,
       datePost: new Date(),
       likes: 0,
@@ -101,8 +108,10 @@ class CreatePost extends Component {
     //savepost se realiza para publicar el post  
     var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);   
     if(newPost){
-      this.setState({ value: '', image: '', showInfo: true, loadingsave: false,errNote:false });
-    this.setState({ showInfo: false, visible: false, keyList: Date.now() });
+      this.setState({ value: '', image: ''},()=>this.setState({ showInfo: true, loadingsave: false,errNote:false, showInfo: false, visible: false, keyList: Date.now() }));
+    //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
+   //RESET FORMULARIO
+   this.formRef.current.resetFields();
     message.success('Mensaje Publicado');
     }else{
       message.error('Error al guardar');
@@ -279,10 +288,11 @@ class CreatePost extends Component {
             <Comment
               content={
                 <Editor
+                  refText={this.formRef}
                   onChange={this.handleChange}
                   onSubmit={this.savePost}
                   submitting={submitting}
-                  value={value}
+                  value={value}                  
                   errNote={this.state.errNote}
                   errimage={this.state.errimage}
                   loadingsave={this.state.loadingsave}

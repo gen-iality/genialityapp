@@ -18,6 +18,30 @@ export const selectOptions = [
   },
 ];
 
+// Lista de los tiempos predeterminados para el select de la encuesta
+export const surveyTimeOptions = [
+  {
+    value: 0,
+    text: 'Sin limite',
+  },
+  {
+    value: 30,
+    text: '30 segundos',
+  },
+  {
+    value: 60,
+    text: '60 segundos',
+  },
+  {
+    value: 300,
+    text: '5 minutos',
+  },
+  {
+    value: 600,
+    text: '10 minutos',
+  },
+];
+
 // Funcion que filtra los tipos de pregunta para la encuesta
 const filterBy = (data, field, exclude) =>
   exclude ? data.filter(({ value }) => !field.includes(value)) : data.filter(({ value }) => field.includes(value));

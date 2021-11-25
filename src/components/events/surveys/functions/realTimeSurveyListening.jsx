@@ -12,11 +12,11 @@ function RealTimeSurveyListening(idSurvey, currentUser, startingSurveyComponent)
          let surveyRealTime = doc.data();
 
          //revisando si estamos retomando la encuesta en alguna página particular
-         if (currentUser && currentUser.value._id) {
+         if (currentUser && currentUser.value._id && surveyRealTime) {
             currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser.value._id);
             surveyRealTime.currentPage = currentPageNo ? currentPageNo: 0;
+            startingSurveyComponent(surveyRealTime);
          }
-         startingSurveyComponent(surveyRealTime);
       });
 }
 

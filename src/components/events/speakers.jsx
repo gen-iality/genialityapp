@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 //custom
 import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpers/request';
 import Moment from 'moment';
-import { Card, Avatar, Button, Modal, Row, Col, Typography } from 'antd';
+import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import withContext from '../../Context/withContext';
 

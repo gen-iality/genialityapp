@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import EventContent from '../events/shared/content';
-import { selectOptions } from './constants';
+import { selectOptions, surveyTimeOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
@@ -56,7 +56,7 @@ class triviaEdit extends Component {
 
       // estado de la encuesta
       freezeGame: false,
-      openSurvey: false,
+      openSurvey: 'false',
       publish: false,
 
       time_limit: 0,
@@ -217,6 +217,7 @@ class triviaEdit extends Component {
         hasMinimumScore: data.hasMinimumScore,
         isGlobal: data.isGlobal,
         showNoVotos: data.showNoVotos,
+        time_limit: parseInt(this.state.time_limit),
 
         //survey state
         freezeGame: data.freezeGame,
@@ -302,6 +303,7 @@ class triviaEdit extends Component {
               hasMinimumScore: data.hasMinimumScore,
               isGlobal: data.isGlobal,
               showNoVotos: data.showNoVotos,
+              time_limit: parseInt(this.state.time_limit),
 
               // Survey State
               freezeGame: data.freezeGame,
@@ -461,7 +463,7 @@ class triviaEdit extends Component {
   // Funcion usada para determinar el tiempo limite en segundos de la emcuesta
   setTime_limit = (e) => {
     var reg = new RegExp('^\\d+$');
-    const { value } = e;
+    const { value } = e.target;
     if (reg.test(value)) {
       this.setState({ time_limit: value });
     }
@@ -648,7 +650,32 @@ class triviaEdit extends Component {
             {this.state.idSurvey && (
               <>
                 <Form.Item label={'Tiempo límite en segundos por pregunta'}>
-                  <InputNumber min={0} defaultValue={time_limit} name={'time'} onChange={this.setTime_limit} />
+                  <div>
+                    <label style={{ marginTop: '3%' }} className='label'>
+                      Tiempo límite por pregunta
+                    </label>
+                    <div className='select'>
+                      <select name='time_limit' onChange={this.changeInput} defaultValue={time_limit}>
+                        {surveyTimeOptions.map((values) => {
+                          return (
+                            <option key={values.value} value={values.value}>
+                              {values.text}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    {/* <input
+                type='number'
+                name='time'
+                id='time'
+                value={time_limit}
+                onChange={this.setTime_limit}
+                pattern='[0-9]+'
+                mim='0'
+              />  */}
+                  </div>
                 </Form.Item>
                 <Row justify='space-between' wrap gutter={[8, 8]}>
                   <Col>

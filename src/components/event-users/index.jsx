@@ -14,11 +14,35 @@ import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } 
 import EventContent from '../events/shared/content';
 import Moment from 'moment';
 import { TicketsApi } from '../../helpers/request';
-import { Button, Card, Checkbox, Col, Drawer, Image, message, Row, Statistic, Table, Typography, Tag, Select, Input, Space, Tooltip } from 'antd';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Drawer,
+  Image,
+  message,
+  Row,
+  Statistic,
+  Table,
+  Typography,
+  Tag,
+  Select,
+  Input,
+  Space,
+  Tooltip,
+} from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
-import { EditOutlined, FullscreenOutlined, PlusCircleOutlined, UploadOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  FullscreenOutlined,
+  PlusCircleOutlined,
+  UploadOutlined,
+  DownloadOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 
 import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
@@ -98,7 +122,7 @@ class ListEventUser extends Component {
       configfast: {},
       isModalVisible: false,
       fieldsForm: [],
-      typeScanner: 'options'
+      typeScanner: 'options',
     };
   }
 
@@ -106,12 +130,7 @@ class ListEventUser extends Component {
   editcomponent = (text, item, index) => {
     return (
       <Tooltip placement='topLeft' title='Editar'>
-        <Button 
-          type={'primary'} 
-          icon={<EditOutlined />} 
-          size='small' 
-          onClick={() => this.openEditModalUser(item)}
-        />
+        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
       </Tooltip>
       /* <span
         className='icon has-text-grey action_pointer'
@@ -160,7 +179,7 @@ class ListEventUser extends Component {
       <p>{Moment(item.checkedin_at || item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
-        <Checkbox 
+        <Checkbox
           id={'checkinUser' + item._id}
           disabled={item.checkedin_at}
           name={'checkinUser' + item._id}
@@ -452,6 +471,8 @@ class ListEventUser extends Component {
       const errorData = handleRequestError(error);
       this.setState({ timeout: true, errorData });
     }
+
+    console.log('users=>>', this.state.users);
   }
 
   obtenerName = (fileUrl) => {
@@ -568,8 +589,12 @@ class ListEventUser extends Component {
   };
 
   openEditModalUser = (item) => {
-    html.classList.add('is-clipped');    
-    item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
+    html.classList.add('is-clipped');
+    item = {
+      ...item,
+      checked_in: item.properties?.checked_in || item.checked_in,
+      checkedin_at: item.properties?.checkedin_at || item.checkedin_at,
+    };
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
@@ -741,10 +766,11 @@ class ListEventUser extends Component {
 
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
+    // console.log("usersReq",usersReq)
 
     return (
       <React.Fragment>
-        <Header 
+        <Header
           title={'Check In'}
           description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
           búsqueda.`}
@@ -760,10 +786,12 @@ class ListEventUser extends Component {
         )}
 
         {// localChanges &&
-          quantityUsersSync > 0 && localChanges === 'Local' && (
+        quantityUsersSync > 0 && localChanges === 'Local' && (
           <Row gutter={8}>
             <Col>
-              <p><small>Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</small></p>
+              <p>
+                <small>Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</small>
+              </p>
             </Col>
           </Row>
         )}
@@ -771,7 +799,9 @@ class ListEventUser extends Component {
         <Row gutter={8}>
           <Col>
             <p>
-              <small>Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} /></small>
+              <small>
+                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+              </small>
             </p>
           </Col>
         </Row>
@@ -779,22 +809,28 @@ class ListEventUser extends Component {
         <Row wrap gutter={[8, 8]}>
           <Col>
             <Tag>
-              <small>Inscritos: 
-              {inscritos || 0}</small> 
+              <small>
+                Inscritos:
+                {inscritos || 0}
+              </small>
             </Tag>
           </Col>
           <Col>
             <Tag>
-              <small>Participantes: 
-              {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'} </small>
+              <small>
+                Participantes:
+                {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
+              </small>
             </Tag>
           </Col>
           <Col>
             {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
               <>
                 <Tag>
-                  <small>Asistencia por Coeficientes: 
-                  {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}</small>
+                  <small>
+                    Asistencia por Coeficientes:
+                    {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
+                  </small>
                 </Tag>
               </>
             )}
@@ -854,14 +890,13 @@ class ListEventUser extends Component {
             </div>
           </div>
         )}
-       
 
-        <TableA 
+        <TableA
           list={users}
           header={this.state.columns}
-          scroll={{x: 3200}}
+          scroll={{ x: 3200 }}
           loading={this.state.loading}
-          titleTable={(
+          titleTable={
             <Row gutter={[8, 8]}>
               <Col>
                 <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
@@ -876,15 +911,9 @@ class ListEventUser extends Component {
                   onChange={(e) => this.handleChange(e)}
                   /* style={{ width: 220 }} */
                 >
-                  <Option value='options'>
-                    Escanear...
-                  </Option>
-                  <Option value='scanner-qr'>
-                    Escanear QR
-                  </Option>
-                  <Option value='scanner-document'>
-                    Escanear Documento
-                  </Option>
+                  <Option value='options'>Escanear...</Option>
+                  <Option value='scanner-qr'>Escanear QR</Option>
+                  <Option value='scanner-document'>Escanear Documento</Option>
                 </Select>
               </Col>
               <Col>
@@ -902,12 +931,12 @@ class ListEventUser extends Component {
                 </Link>
               </Col>
               <Col>
-                <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addUser}>
+                <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
                   {'Agregar Usuario'}
                 </Button>
               </Col>
             </Row>
-          )}
+          }
         />
 
         {!this.props.loading && editUser && (
