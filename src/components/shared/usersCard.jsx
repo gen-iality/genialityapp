@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
-import { MessageTwoTone, EyeOutlined, CrownFilled, PlayCircleTwoTone } from '@ant-design/icons';
+import { MessageTwoTone, EyeOutlined, CrownFilled, FileImageOutlined } from '@ant-design/icons';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { HelperContext } from '../../Context/HelperContext';
@@ -52,6 +52,8 @@ function UsersCard(props) {
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
   const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time, picture } = props.item;
+
+  const isAnImage = ultimo_mensaje ? ultimo_mensaje.includes('https://firebasestorage.googleapis.com') : false;
 
   function getPrivateChatImg() {
     let userLogo = null;
@@ -167,7 +169,7 @@ function UsersCard(props) {
   function privateChats() {
     setActionCapture(() => {
       /** Validar que la hora se guarde en firebase */
-      return time && <span>{moment(time.seconds * 1000).format('h:mm A')}</span>;
+      return time && <span>{time}</span>;
     });
     setTitle(() => {
       return (
@@ -186,9 +188,15 @@ function UsersCard(props) {
     });
     setDescription(() => {
       return ultimo_mensaje ? (
-        <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
-          {ultimo_mensaje}
-        </Text>
+        isAnImage ? (
+          <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
+            <FileImageOutlined /> Imagen
+          </Text>
+        ) : (
+          <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
+            {ultimo_mensaje}
+          </Text>
+        )
       ) : (
         <Text ellipsis={{ rows: 1 }} style={{ color: '#CCCCCC', width: '90%' }}>
           No hay mensajes nuevos

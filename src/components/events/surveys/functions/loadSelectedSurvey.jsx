@@ -46,7 +46,9 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
       dataSurvey.showTimerPanel = 'top';
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
-      dataSurvey.maxTimeToFinishPage = dataSurvey.time_limit ? dataSurvey.time_limit : 10;
+      if(dataSurvey.time_limit > 0){
+         dataSurvey.maxTimeToFinishPage = dataSurvey.time_limit && dataSurvey.time_limit;
+      }
 
       // Permite usar la primera pagina como introduccion
       dataSurvey.firstPageIsStarted = true;
