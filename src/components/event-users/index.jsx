@@ -35,14 +35,7 @@ import {
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
-import {
-  EditOutlined,
-  FullscreenOutlined,
-  PlusCircleOutlined,
-  UploadOutlined,
-  DownloadOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, FullscreenOutlined, PlusCircleOutlined, UploadOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons';
 
 import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
@@ -122,7 +115,7 @@ class ListEventUser extends Component {
       configfast: {},
       isModalVisible: false,
       fieldsForm: [],
-      typeScanner: 'options',
+      typeScanner: 'options'
     };
   }
 

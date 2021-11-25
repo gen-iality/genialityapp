@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import TipoAsistentes from './TipoAsistentes';
-import TipoAsistente from './TipoAsistente';
+import React, {Fragment} from 'react';
+import {Route, Switch, withRouter} from "react-router-dom";
+import TipoAsistentes from "./TipoAsistentes";
+import TipoAsistente from "./TipoAsistente";
 
-function TipoUsersRoutes(props) {
-  const { event, match } = props;
+function TipoUsersRoutes(props){
+  const {event, match} = props;
   return (
     <Fragment>
       <Switch>

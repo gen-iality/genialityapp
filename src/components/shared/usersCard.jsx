@@ -348,7 +348,7 @@ function UsersCard(props) {
 
   useEffect(() => {
     initComponent();
-  }, [ultimo_mensaje, status, props.item]);
+  }, [props]);
 
   return (
     <List.Item

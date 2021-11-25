@@ -39,13 +39,13 @@ export function CurrentEventProvider({ children }) {
 
         case 'eventadmin':
           eventGlobal = await EventsApi.getOne(event);
-          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event, idEvent: event };
+          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event , idEvent: event};
           break;
       }
       setEventContext(dataevent);
     }
 
-    console.log('event_id', event_id);
+    /* console.log('event_id', event_id); */
 
     if (event_id) {
       fetchEvent('id');
@@ -54,6 +54,7 @@ export function CurrentEventProvider({ children }) {
     } else if (event) {
       fetchEvent('eventadmin');
     }
+    /* console.log("que lelga por params",event_id, event_name, event) */
   }, [event_id, event_name, event]);
 
   return (
