@@ -179,15 +179,15 @@ class UserModal extends Component {
       } else {
         values.checkedin_at = '';
       }
-      const { rol_id, ...datos } = values;
-      const snap = { rol_id: rol_id, properties: datos };
-      if (!this.props.edit) {
-        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
-      } else if (this.props.edit && !this.props.byActivity) {
-        resp = await AttendeeApi.update(this.props.cEvent?.value?._id, snap, this.props.value._id);
-        if (resp) {
-          resp = { ...resp, data: { _id: resp._id } };
-        }
+      console.log("ACA VALUES==>",values)
+      const snap = { properties: values };
+      if(this.props.organizationId){
+        resp = await OrganizationApi.saveUser(this.props.organizationId, snap)
+        console.log("10. resp ", resp)
+      }else{
+        console.log("se va por aca",this.props.cEvent)
+        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id ||  this.props.cEvent?.value?.idEvent);
+        console.log("10. USERADD==>",resp)
       }
       if (this.props.byActivity && resp?.data?._id && !this.props.edit) {
         respActivity = await Activity.Register(

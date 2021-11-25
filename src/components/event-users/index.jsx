@@ -204,6 +204,7 @@ class ListEventUser extends Component {
   };
 
   async componentDidMount() {
+    
     let self = this;
     this.checkFirebasePersistence();
     try {
@@ -452,6 +453,8 @@ class ListEventUser extends Component {
       const errorData = handleRequestError(error);
       this.setState({ timeout: true, errorData });
     }
+
+    console.log("users=>>",this.state.users)
   }
 
   obtenerName = (fileUrl) => {
@@ -568,8 +571,12 @@ class ListEventUser extends Component {
   };
 
   openEditModalUser = (item) => {
-    html.classList.add('is-clipped');    
-    item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
+    html.classList.add('is-clipped');
+    item = {
+      ...item,
+      checked_in: item.properties?.checked_in || item.checked_in,
+      checkedin_at: item.properties?.checkedin_at || item.checkedin_at,
+    };
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
@@ -741,6 +748,7 @@ class ListEventUser extends Component {
 
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
+    // console.log("usersReq",usersReq)
 
     return (
       <React.Fragment>

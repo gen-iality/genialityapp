@@ -99,14 +99,14 @@ export const saveFirebase = {
         idPost: postId,
       });
 
-    let snapshot = await posts.get();
+   /* let snapshot = await posts.get();
     snapshot.forEach((doc) => {
       var data = doc.data();
       data.id = doc.id;
 
       dataPost.push(data);
     });
-    return dataPost;
+    return dataPost;*/
   },
 
   async deletePost(postId, eventId) {
