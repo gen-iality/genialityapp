@@ -618,7 +618,7 @@ class triviaEdit extends Component {
                   type='danger'
                   size='small'
                 />
-              </Tooltip>
+              </Tooltip>  
             </Col>
           </Row>
         ),
