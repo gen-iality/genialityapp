@@ -15,11 +15,14 @@ export const AdminUsers = () => {
   const HandleSearch = () => {
     if (consulta.email !== '' && consulta.event !== '') {
       getUserEventbyEmail(consulta.event, consulta.email).then((res) => {
-        console.log(res[0]._id);
+       if(res.length > 0) {
         EventsApi.getEventUser(res[0]._id, consulta.event).then((user) => {
           setresultSearch(user);
-          console.log('result=>>>', user);
         });
+       }else{
+        setresultSearch(null);
+        message.error('Este usuario no existe dentro de el evento');
+       }
       });
     } else {
       message.error('Por favor ingrese todos los campos');
