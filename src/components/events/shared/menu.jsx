@@ -84,7 +84,7 @@ class MenuConfig extends Component {
             title={
               <span>
                 <UsergroupAddOutlined />
-                <span>Administrar Usarios</span>
+                <span>Administrar Usuarios</span>
               </span>
             }>
             <Menu.Item key='31'>
