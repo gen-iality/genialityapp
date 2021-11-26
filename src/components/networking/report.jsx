@@ -11,6 +11,8 @@ const Report = (props) => {
     {
       title: 'Usuario',
       dataIndex: 'user_name_requesting',
+      ellipsis: true,
+      sorter: (a, b) => a.user_name_requesting.localeCompare(b.user_name_requesting),
       ...getColumnSearchProps('user_name_requesting', columnsData),
       render(val, item) {
         return (
@@ -23,6 +25,8 @@ const Report = (props) => {
     {
       title: 'Usuario Quien responde',
       dataIndex: 'user_name_requested',
+      ellipsis: true,
+      sorter: (a, b) => a.user_name_requested?.localeCompare(b.user_name_requested),
       ...getColumnSearchProps('user_name_requested', columnsData),
       render(val, item) {
         return (
@@ -35,11 +39,15 @@ const Report = (props) => {
     {
       title: 'Estado',
       dataIndex: 'state',
+      ellipsis: true,
+      sorter: (a, b) => a.state?.localeCompare(b.state),
       ...getColumnSearchProps('state', columnsData)
     },
     {
       title: 'Respuesta',
       dataIndex: 'response',
+      ellipsis: true,
+      sorter: (a, b) => a.response?.localeCompare(b.response),
       ...getColumnSearchProps('response', columnsData),
       render(val, item) {
         return (
@@ -52,6 +60,8 @@ const Report = (props) => {
     {
       title: 'Fecha de creación',
       dataIndex: 'created_at',
+      ellipsis: true,
+      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
         return (
@@ -72,6 +82,7 @@ const Report = (props) => {
       search
       setColumnsData={setColumnsData}
       fileName={'Employees'}
+      scroll={{x: 1200}}
     />
   );
 }

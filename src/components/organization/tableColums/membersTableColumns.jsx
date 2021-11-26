@@ -35,11 +35,15 @@ export const columns = (columnsData, editModalUser) => [
     title: 'Nombres',
     dataIndex: 'names',
     /* align: 'center', */
+    ellipsis: true,
+    sorter: (a, b) => a.names.localeCompare(b.names),
     ...membersGetColumnSearchProps('name', columnsData),
   },
   {
     title: 'Correo',
     dataIndex: 'email',
+    ellipsis: true,
+    sorter: (a, b) => a.email.localeCompare(b.email),
     /* align: 'center', */
 
     ...membersGetColumnSearchProps('email', columnsData),
@@ -48,13 +52,17 @@ export const columns = (columnsData, editModalUser) => [
     title: 'Rol',
     dataIndex: 'position',
     /* align: 'center', */
-
+    ellipsis: true,
+    /* sorter: (a, b) => a.position?.localeCompare(b.position), */
     ...membersGetColumnSearchProps('position', columnsData),
   },
   {
     title: 'Creado',
     dataIndex: 'created_at',
     /* align: 'center', */
+    ellipsis: true,
+    sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+    ...membersGetColumnSearchProps('created_at', columnsData),
     render(val, item) {
       return item.created_at;
     },
@@ -63,6 +71,9 @@ export const columns = (columnsData, editModalUser) => [
     title: 'Actualizado',
     dataIndex: 'updated_at',
     /* align: 'center', */
+    ellipsis: true,
+    sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
+    ...membersGetColumnSearchProps('updated_at', columnsData),
     render(val, item) {
       return item.updated_at;
     },
@@ -71,8 +82,8 @@ export const columns = (columnsData, editModalUser) => [
     title: 'Opción',
     dataIndex: 'index',
     /* width: 60,
-    fixed: 'left',
     align: 'center', */
+    fixed: 'right',
     render(val, item, index) {
       return (
         <Tooltip title='Editar'>

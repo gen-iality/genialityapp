@@ -1,11 +1,17 @@
+import { useState } from 'react';
 import { DocumentsApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
+import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
 const Documents = ( props ) => {
+  let [columnsData, setColumnsData] = useState({});
   const columns = [
     {
       title: 'Nombre',
       dataIndex: 'title',
+      ellipsis: true,
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      ...getColumnSearchProps('title', columnsData)
     }
   ];
   
@@ -25,6 +31,8 @@ const Documents = ( props ) => {
       pagination={false}
       actions
       downloadFile
+      search
+      setColumnsData={setColumnsData}
     />
   )
 }

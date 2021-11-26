@@ -96,12 +96,10 @@ const NewCE = (props) => {
   };
 
   const onChangeDate = (date, dateString) => {
-    console.log(date, dateString);
     setNotice({ ...notice, time: date });
   };
 
   const onSubmit = async () => {
-    console.log(notice);
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -171,7 +169,7 @@ const NewCE = (props) => {
   return (
     <Form onFinish={onSubmit} {...formLayout} initialValues={notice}>
       <Header title={'Noticia'} back save form edit={locationState.edit} remove={remove} />
-      {console.log('NOTICIARENDER===>', notice)}
+      
       <Row justify='center' wrap gutter={12}>
         <Col span={16}>
           <Form.Item label={'Título'}>

@@ -11,10 +11,19 @@ const trivia = (props) => {
     {
       title: 'Nombre de la encuesta',
       dataIndex: 'survey',
+      ellipsis: true,
+      sorter: (a, b) => a.survey.localeCompare(b.survey),
+      ...getColumnSearchProps('survey', columnsData)
     },
     {
       title: 'Publicada',
       dataIndex: 'publish',
+      ellipsis: true,
+      sorter: (a, b) => a.publish.localeCompare(b.publish),
+      ...getColumnSearchProps('publish', columnsData),
+      render(val, item) {
+        return <p>{item.publish ? 'Cierto' : 'Falso'}</p>
+      }
     },
   ];
 

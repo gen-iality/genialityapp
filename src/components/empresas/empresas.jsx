@@ -114,6 +114,8 @@ function Empresas({ event, match }) {
     {
       title: 'Nombre',
       dataIndex: 'name',
+      ellipsis: true,
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render(companyName, record) {
         return (
           <Link
@@ -127,11 +129,14 @@ function Empresas({ event, match }) {
     },
     {
       title: 'Tipo de stand',
-      dataIndex: 'stand_type'
+      dataIndex: 'stand_type',
+      ellipsis: true,
+      sorter: (a, b) => a.stand_type.localeCompare(b.stand_type),
     },
     {
       title: 'Visible',
       dataIndex: 'visible',
+      ellipsis: true,
       render(visible) {
         return visible
           ? <Tag color="green">{'Visible'}</Tag>

@@ -7,6 +7,8 @@ export const columns = (goToEvent) => [
    {
       title: 'Nombre del evento',
       dataIndex: 'name',
+      ellipsis: 'true',
+      sorter: (a, b) => a.name.localeCompare(b.name),
       /* align: 'center', */
       /* render(val, item) {
          return (
@@ -37,11 +39,15 @@ export const columns = (goToEvent) => [
       title: 'Total usuarios',
       dataIndex: 'count',
       align: 'center',
+      ellipsis: 'true',
+      sorter: (a, b) => a.count -b.count,
    },
    {
       title: 'Usuarios sin checkIn',
       dataIndex: 'checked_in_not',
       align: 'center',
+      ellipsis: 'true',
+      sorter: (a, b) => a.checked_in_not - b.checked_in_not,
       /* render(val, item) {
          return item.checked_in_not;
       }, */
@@ -50,6 +56,8 @@ export const columns = (goToEvent) => [
       title: 'Usuarios con checkIn',
       dataIndex: 'checked_in',
       align: 'center',
+      ellipsis: 'true',
+      sorter: (a, b) => a.checked_in - b.checked_in,
       /* render(val, item) {
          return item.checked_in;
       }, */

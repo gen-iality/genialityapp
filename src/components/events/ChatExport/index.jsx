@@ -10,6 +10,9 @@ import 'firebase/database';
 import Header from '../../../antdComponents/Header';
 import Table from '../../../antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
+import { getColumnSearchProps } from '../../speakers/getColumnSearch';
+import moment from 'moment';
+
 
 const { confirm } = Modal;
 
@@ -69,18 +72,21 @@ const ChatExport = ({ eventId, event }) => {
 
   let [datamsjevent, setdatamsjevent] = useState([]);
   const [loading, setLoading] = useState(false);
+  let [columnsData, setColumnsData] = useState({});
 
   const renderMensaje = (text, record) => (
     <Tooltip title={record.text} placement='topLeft'>
       <Tag color='#3895FA'>{record.text}</Tag>
     </Tooltip>);
-  const renderFecha = (text) => <a>{text}</a>;
+  const renderFecha = (val, item) => <p>{moment(val).format('DD/MM/YYYY HH:mm')}</p>;
   const columns = [
     {
       title: 'usuario',
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      ...getColumnSearchProps('name', columnsData),
     },
 
     {
@@ -88,12 +94,17 @@ const ChatExport = ({ eventId, event }) => {
       key: 'text',
       dataIndex: 'text',
       ellipsis: true,
+      sorter: (a, b) => a.text.localeCompare(b.text),
+      ...getColumnSearchProps('text', columnsData),
       render: renderMensaje,
     },
     {
       title: 'Fecha',
       dataIndex: 'hora',
       key: 'hora',
+      ellipsis: true,
+      sorter: (a, b) => a.hora.localeCompare(b.hora),
+      ...getColumnSearchProps('hora', columnsData),
       render: renderFecha,
     },
   ];
@@ -123,7 +134,7 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let newtime = timeConverter(doc.data().timestamp);
+          let newtime = timeConverter(doc.data().fecha.seconds);
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,
@@ -212,6 +223,8 @@ const ChatExport = ({ eventId, event }) => {
             </Col>
           </Row>
         )}
+        search
+        setColumnsData={setColumnsData}
       />
       {/* <div className='column is-narrow has-text-centered export button-c is-centered'>
         <button onClick={(e) => exportFile(e)} className='button is-primary' style={{ marginRight: 80 }}>

@@ -13,7 +13,7 @@ const Agenda = (props) => {
       title: 'Fecha y Hora Inicio',
       dataIndex: 'datetime_start',
       ellipsis: true,
-      /* sorter: (a, b) => a.datetime_start - b.datetime_start, */
+      sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
       ...getColumnSearchProps('datetime_start', columnsData),
       render(record, key) {
         return (
@@ -25,7 +25,7 @@ const Agenda = (props) => {
       title: 'Fecha y Hora Fin',
       dataIndex: 'datetime_end',
       ellipsis: true,
-      /* sorter: (a, b) => a.datetime_end - b.datetime_end, */
+      sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),
       ...getColumnSearchProps('datetime_end', columnsData),
       render(record, key) {
         return (
@@ -37,7 +37,7 @@ const Agenda = (props) => {
       title: 'Actividad',
       dataIndex: 'name',
       ellipsis: true,
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', columnsData),
     },
     {
@@ -59,6 +59,7 @@ const Agenda = (props) => {
     {
       title: 'Espacios',
       dataIndex: 'space',
+      ellipsis: true,
       render(record) {
         return (
           <>

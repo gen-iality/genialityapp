@@ -1,21 +1,31 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { eventTicketsApi } from '../../helpers/request';
 import Moment from 'moment';
 import CMS from '../newComponent/CMS';
+import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
 const Tickets = (props) => {
+  let [columnsData, setColumnsData] = useState({});
   const columns = [
     {
       title: 'Id',
       dataIndex: '_id',
+      ellipsis: true,
+      sorter: (a, b) => a._id.localeCompare(b._id),
+      ...getColumnSearchProps('_id', columnsData),
     },
     {
       title: 'Nombre',
       dataIndex: 'title',
+      ellipsis: true,
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      ...getColumnSearchProps('title', columnsData),
     },
     {
       title: 'Permiso de Voto',
       dataIndex: 'allowed_to_vote',
+      ellipsis: true,
+      ...getColumnSearchProps('allowed_to_vote', columnsData),
       render (val, item) {
         return (
           <div>
@@ -27,6 +37,9 @@ const Tickets = (props) => {
     {
       title: 'Fecha de Creación',
       dataIndex: 'created_at',
+      ellipsis: true,
+      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+      ...getColumnSearchProps('created_at', columnsData),
       render (val, item) {
         return (
           <div>
@@ -53,6 +66,8 @@ const Tickets = (props) => {
         editPath={`${props.matchUrl}/ticket`}
         pagination={false}
         actions
+        search
+        setColumnsData={setColumnsData}
       />
     </Fragment>
   );

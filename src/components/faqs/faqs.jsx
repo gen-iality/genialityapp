@@ -1,3 +1,4 @@
+import { at } from 'core-js/core/string';
 import { useState } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
@@ -10,11 +11,15 @@ const Faqs = (props) => {
     {
       title: 'Título',
       dataIndex: 'title',
+      ellipsis: true,
+      sorter: (a, b) => a.title.localeCompare(b.title),
       ...getColumnSearchProps('title', columnsData)
     },
     {
       title: 'Contenido',
       dataIndex: 'content',
+      ellipsis: true,
+      sorter: (a, b) => a.content.localeCompare(b.content),
       ...getColumnSearchProps('content', columnsData),
       render(val, item) {
         return (

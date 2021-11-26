@@ -195,6 +195,7 @@ class Product extends Component {
                      key='_id'
                      title='Nombre'
                      /* align='center' */
+                     sorter={(a, b) => a.name.localeCompare(b.name)}
                      render={(data) => (
                         <Paragraph
                            ellipsis={{
@@ -206,8 +207,8 @@ class Product extends Component {
                         </Paragraph>
                      )}
                   />
-                  <Column key='_id' title='Por' align='center' dataIndex='by' />
-                  <Column key='_id' title='Valor' align='center' dataIndex='price' render={(data,prod)=>(<div>$ {prod.price}</div>)}/>
+                  <Column key='_id' title='Por' align='center' dataIndex='by' ellipsis={true} sorter={(a, b) => a.by?.localeCompare(b.by)} />
+                  <Column key='_id' title='Valor' align='center' dataIndex='price' render={(data,prod)=>(<div>$ {prod.price}</div>)} ellipsis={true}/>
                   {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
                   <Column
                      key='_id'

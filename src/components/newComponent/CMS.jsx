@@ -58,11 +58,14 @@ const CMS = (props) => {
   const getList = async () => {
     const data = await API.byEvent(eventId);
     if (data.data) {
-      setList(data.data);
+      setList(data.data.sort(function(a, b) {
+        return a.created_at.localeCompare(-b.created_at);
+      }));
     } else {
-      setList(data);
+      setList(data.sort(function(a, b) {
+        return a.created_at.localeCompare(-b.created_at);
+      }));
     }
-    /* console.log(list); */
     setLoading(false);
   };
 

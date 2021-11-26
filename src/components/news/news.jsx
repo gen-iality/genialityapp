@@ -1,17 +1,27 @@
+import { useState } from 'react';
 import { NewsFeed } from '../../helpers/request';
 import { withRouter } from 'react-router';
 import moment from 'moment';
 import CMS from '../newComponent/CMS';
+import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
 const News = (props) => {
+  let [columnsData, setColumnsData] = useState({});
+
   const columns = [
     {
       title: 'Título',
       dataIndex: 'title',
+      ellipsis: true,
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      ...getColumnSearchProps('title', columnsData)
     },
     {
       title: 'Fecha de Publicación',
       dataIndex: 'time',
+      ellipsis: true,
+      sorter: (a, b) => a.time.localeCompare(b.time),
+      ...getColumnSearchProps('time', columnsData),
       render(val, item) {
         return <div>{moment(item.time).format('YYYY-DD-MM')}</div>;
       },
@@ -33,6 +43,8 @@ const News = (props) => {
       editPath={`${props.match.url}/new`}
       pagination={false}
       actions
+      search
+      setColumnsData={setColumnsData}
     />
   );
 };

@@ -26,6 +26,7 @@ export const columns = (columnsData) => [
    {
       title: 'Imagen',
       dataIndex: 'image',
+      ellipsis: true,
       render(val, item) {
          /*
           * Dentro de la imagen se realizó al momento de mostrar en la tabla un Avatar, para darle mejor apariencia.
@@ -59,16 +60,20 @@ export const columns = (columnsData) => [
    {
       title: 'Nombre',
       dataIndex: 'name',
+      ellipsis: true,
+      sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', columnsData),
    },
    {
       title: 'Profesión',
       dataIndex: 'profession',
+      ellipsis: true,
       ...getColumnSearchProps('profession', columnsData),
    },
    {
       title: 'Visible',
       dataIndex: 'published',
+      ellipsis: true,
       render(val, item) {
          const [publish, setPublish] = useState(item.published);
          const update = async (checked) => {
@@ -82,6 +87,7 @@ export const columns = (columnsData) => [
    {
       title: 'Opciones',
       dataIndex: 'options',
+      fixed: 'rigth',
       render(val, item) {
          return (
             /*
