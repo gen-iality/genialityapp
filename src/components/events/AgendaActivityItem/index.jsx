@@ -180,7 +180,7 @@ function AgendaActivityItem(props) {
                                   <table>
                                     <tr>
                                       <th>
-                                        <Avatar size={25} src={speaker.image} />
+                                        <Avatar size={28} src={speaker.image} />
                                       </th>
                                       <th style={{ marginRight: '12px' }}>
                                         <div style={{ marginLeft: '12px', fontSize: '9px', marginRight: '12px' }}>
@@ -392,7 +392,7 @@ function AgendaActivityItem(props) {
                               <>
                                 {item.hosts.map((speaker, key) => (
                                   <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
-                                    <Avatar size={25} src={speaker.image} />
+                                    <Avatar size={40} src={speaker.image} />
                                     {speaker.name}
                                     {/* <table>
                                     <tr>
