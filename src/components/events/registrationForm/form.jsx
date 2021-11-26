@@ -191,7 +191,12 @@ const FormRegister = ({
         setareacodeselected(codeValue);
       }
     }
-  }, [extraFields]);
+    let pais= extraFields.filter((field) => field.type == 'country');
+    if(pais[0]){
+      let paisSelected= initialValues && pais[0] ? initialValues[pais[0].name] :'';
+      setCountry(paisSelected);
+    }
+  }, []);
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
