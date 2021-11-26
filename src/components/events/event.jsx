@@ -35,6 +35,7 @@ import withContext from '../../Context/withContext';
 
 //import Test from "../events/testButton"
 import { Layout, Space } from 'antd';
+import { AdminUsers } from 'components/AdminUsers/AdminUsers';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -221,6 +222,9 @@ class Event extends Component {
                 path={`${match.url}/agenda`}
                 render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent} />}
               />
+
+              <Route path={`${match.url}/adminUsers`} render={() => <AdminUsers/>} />
+
               <Route path={`${match.url}/empresas`}>
                 <EmpresasRoutes event={this.state.event} />
               </Route>

@@ -360,6 +360,13 @@ export const getUserEvent = async (id, eventid) => {
   return user;
 };
 
+// OBTENER USUARIO A PARTIR DEL CORREO
+export const getUserEventbyEmail = async (email, eventid) => {
+  const dataUser = await UsersApi.findByEmail(eventid, `?filtered=[{"field":"email","value":"${email}"}]`);
+  // let user = dataUser.data.filter((u) => u.email && u.email.trim() == email.trim())[0];
+  return dataUser;
+};
+
 // OBTENER USUARIO A PARTIR DEL EVENTUSER_ID
 export const getUsersId = async (id, eventid) => {
   const dataUser = await UsersApi.getAll(eventid, `?filtered=[{"field":"_id","value":"${id}"}]`);
