@@ -3,7 +3,7 @@ import EventContent from '../events/shared/content';
 import { selectOptions, surveyTimeOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
+import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
@@ -230,6 +230,13 @@ class triviaEdit extends Component {
 
   async submitWithQuestions(e) {
     //Se recogen los datos a actualizar
+
+    if (this.state.publish === 'true' && this.state.question.length === 0)
+      return message.error({
+        content: 'Esta encuesta no cuenta con respuestas posibles',
+        key: 'updating',
+      });
+
     let isValid = true;
     let isValidInitial = true;
     let initialMessage = this.state.initialMessage;
@@ -513,6 +520,7 @@ class triviaEdit extends Component {
         const onHandlerRemove = async () => {
           try {
             await SurveysApi.deleteOne(self.state.idSurvey, self.props.event._id);
+            await deleteSurvey(self.state.idSurvey);
             message.destroy(loading.key);
             message.open({
               type: 'success',
@@ -618,7 +626,7 @@ class triviaEdit extends Component {
                   type='danger'
                   size='small'
                 />
-              </Tooltip>  
+              </Tooltip>
             </Col>
           </Row>
         ),
