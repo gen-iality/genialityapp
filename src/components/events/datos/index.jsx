@@ -335,7 +335,7 @@ class Datos extends Component {
   };
 
   onChange1 = async (e, plantId) => {
-    console.log('e, radio checked', plantId);
+    /* console.log('e, radio checked', plantId); */
     this.setState({ value: '' });
     await OrganizationPlantillaApi.putOne(this.props.eventID, plantId);
   };
@@ -350,17 +350,21 @@ class Datos extends Component {
       {
         title: '',
         dataIndex: 'sort',
-        /* width: 30, */
+        width: 30,
         className: 'drag-visible',
         render: () => <DragHandle />,
       },
       {
         title: 'Dato',
         dataIndex: 'label',
+        ellipsis: true,
+        sorter: (a, b) => a.label.localeCompare(b.label),
       },
       {
         title: 'Tipo de dato',
         dataIndex: 'type',
+        ellipsis: true,
+        sorter: (a, b) => a.type.localeCompare(b.type)
       },
       {
         title: 'Obligatorio',
@@ -465,6 +469,8 @@ class Datos extends Component {
       {
         title: 'Nombre',
         dataIndex: 'name',
+        ellipsis: true,
+        sorter: (a, b) => a.name.localeCompare(b.name),
       },
     ];
 

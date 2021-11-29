@@ -134,7 +134,7 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let newtime = timeConverter(doc.data().fecha.seconds);
+          let newtime = timeConverter(doc.data().timestamp?.seconds);
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,
