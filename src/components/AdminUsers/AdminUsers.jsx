@@ -16,8 +16,15 @@ export const AdminUsers = () => {
     if (consulta.email !== '' && consulta.event !== '') {
       getUserEventbyEmail(consulta.event, consulta.email).then((res) => {
        if(res.length > 0) {
+         console.log(res);
+
+         UsersApi.getProfile(res[0]._id).then((regue)=>{
+           console.log("reguero=>>",regue);
+         })
+
         EventsApi.getEventUser(res[0]._id, consulta.event).then((user) => {
           setresultSearch(user);
+          console.log("user",user)
         });
        }else{
         setresultSearch(null);
