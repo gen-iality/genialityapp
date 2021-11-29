@@ -218,17 +218,17 @@ function CrearEditarEmpresa( props ) {
       });
     }
   }
-
+  
   if (loadingStandTypes || loadingSocialNetworks || loadingInitialValues) {
     return <Loading />;
   }
 
   return (
     <Formik
-      enableReinitialize
-      initialValues={initialValues}
-      // validationSchema={validationSchema}
-      onSubmit={onSubmit}>
+    enableReinitialize
+    initialValues={initialValues}
+    validationSchema={validationSchema}
+    onSubmit={onSubmit}>
       {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
         /* console.error(errors); */
         return (
@@ -241,6 +241,7 @@ function CrearEditarEmpresa( props ) {
               form
               remove={remove}
               edit={props.location.state.edit}
+              /* extra={(<Field name='visible' component={SwitchField} label='Visible' />)} */
             />
             <Row justify='center'>
               <Col span={20}>
@@ -254,6 +255,8 @@ function CrearEditarEmpresa( props ) {
                 />
 
                 <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
+
+                <Field name='visible' component={SwitchField} label='Visible' />
 
                 <ImageField required name='stand_image' label='Banner de la empresa' />
 
@@ -612,7 +615,6 @@ function CrearEditarEmpresa( props ) {
                   }}
                 />
 
-                <Field name='visible' component={SwitchField} label='Visible' />
 
                 {/* <Form.Item {...buttonsLayout}>
                   <Link to={`/event/${event._id}/empresas`}>

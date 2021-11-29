@@ -12,7 +12,7 @@ export default function AdmininformativeSection1(props) {
 
   const onFinish = (values) => {
     async function save() {
-      console.log('minu', eventContext.value.itemsMenu);
+      /* console.log('minu', eventContext.value.itemsMenu); */
 
       let informativeMenu = {
         name: 'Sección informativa 2',
@@ -35,7 +35,7 @@ export default function AdmininformativeSection1(props) {
           informativeSection1: informativeMenu,
         },
       };
-      console.log('minu', data);
+      /* console.log('minu', data); */
 
       try {
         const result = await EventsApi.editOne(data, eventContext.value._id);
@@ -52,7 +52,7 @@ export default function AdmininformativeSection1(props) {
       setContent(eventContext.value.itemsMenu.informativeSection1?.markup);
   }, [eventContext.value]);
 
-  console.log('EVENTCONTEXT==>', eventContext.value);
+  /* console.log('EVENTCONTEXT==>', eventContext.value); */
 
   const handleChangeReactQuill = (e) => {
     setContent(e);
