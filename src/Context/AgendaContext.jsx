@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
 import { firestore } from '../helpers/firebase';
 import { AgendaApi } from '../helpers/request';
@@ -6,7 +6,12 @@ import { CurrentEventContext } from './eventContext';
 
 export const AgendaContext = createContext();
 
+const initialState = {
+  meeting_id: null,
+};
+
 export const AgendaContextProvider = ({ children }) => {
+  const [activityState, activityDispatch] = useReducer(reducer, initialState);
   const [chat, setChat] = useState(false);
   const [activityEdit, setActivityEdit] = useState();
   const [surveys, setSurveys] = useState(false);
@@ -20,10 +25,34 @@ export const AgendaContextProvider = ({ children }) => {
   const [name_host, setNameHost] = useState('');
   const [avalibleGames, setAvailableGames] = useState();
   const [isPublished, setIsPublished] = useState();
-  const [meeting_id, setMeetingId] = useState();
+  const [meeting_id, setMeetingId] = useState(null);
   const [roomStatus, setRoomStatus] = useState();
   const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventContext);
+
+  function reducer(state, action) {
+    console.log('actiondata', action);
+    switch (action.type) {
+      case 'meeting_created':
+        console.log('meeting_created', action);
+        return { ...state, meeting_id: action.meeting_id };
+
+      case 'stop':
+        return { ...state, isRunning: false };
+      case 'reset':
+        return { isRunning: false, time: 0 };
+      case 'tick':
+        return { ...state, time: state.time + 1 };
+      default:
+        throw new Error();
+    }
+  }
+
+  //Un patch temporal mientras la transisicón a reducer/store
+  useEffect(() => {
+    console.log('meeting_created_local', activityState);
+    setMeetingId(activityState.meeting_id); //esta linea es temporal mejor reeplazarla por el store del reducer
+  }, [activityState.meeting_id]);
 
   useEffect(() => {
     if (activityEdit) {
@@ -86,6 +115,8 @@ export const AgendaContextProvider = ({ children }) => {
         roomStatus,
         setRoomStatus,
         select_host_manual,
+        activityState,
+        activityDispatch,
       }}>
       {children}
     </AgendaContext.Provider>
