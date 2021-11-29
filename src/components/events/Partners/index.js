@@ -29,7 +29,7 @@ export default function Partners() {
   }, []);
 
   return (
-    <Card title='Partners'>
+    <Card title={'Patrocinadores'}>{/* Partners */}
       {viewPartnerDetail ? (
         <PartnersDetail company={partnerDetailSelected} handleClosePartnerDetail={handleClosePartnerDetail} />
       ) : (

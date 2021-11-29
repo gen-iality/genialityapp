@@ -8,7 +8,7 @@ export const CurrentEventContext = React.createContext();
 
 export function CurrentEventProvider({ children }) {
   let { event_id, event_name, event } = useParams();
-  console.log('params=>>', useParams());
+  /* console.log('params=>>', useParams()); */
   let eventNameFormated = null;
   let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };
 
@@ -34,7 +34,7 @@ export function CurrentEventProvider({ children }) {
         case 'name':
           eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
           dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
-          console.log('evne', eventGlobal.data[0]);
+          /* console.log('evne', eventGlobal.data[0]); */
           break;
 
         case 'eventadmin':
