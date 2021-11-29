@@ -20,7 +20,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
   const livestreamQuery = useQuery(['livestream', meeting_id], () => getLiveStream(meeting_id));
 
   useEffect(() => {
-    executer_startMonitorStatus(meeting_id);
+    if (meeting_id) executer_startMonitorStatus(meeting_id);
   }, [meeting_id]);
 
   const executer_createStream = useMutation(createLiveStream, {
@@ -91,6 +91,13 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
     <>
       <br />
       <br />
+      <p>
+        <p>
+          Queda pendiente revisar el estado inicial de la reunión, agregar estados de error a los botones de start,
+          stop,
+        </p>
+        <b>Id:</b> {meeting_id}
+      </p>
       <Button
         onClick={() => {
           executer_startStream();

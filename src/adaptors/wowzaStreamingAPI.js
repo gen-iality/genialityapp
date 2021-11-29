@@ -30,14 +30,14 @@ const stream_config = {
 };
 
 const createLiveStream = async () => {
-  const res = await wowzaCLient.post('live_streams/', stream_config, { timeout: 3000 });
+  const res = await wowzaCLient.post('live_streams/', stream_config, { timeout: 10000 });
   return res.data && res.data.live_stream ? res.data.live_stream : null;
 };
 
 const getLiveStream = async (stream_id) => {
   if (!stream_id) return null;
   console.log('ejecutando', stream_id);
-  const res = await wowzaCLient.get('live_streams/' + stream_id, { timeout: 3000 });
+  const res = await wowzaCLient.get('live_streams/' + stream_id, { timeout: 5000 });
   console.log('ejecutando', res.data);
   return res.data && res.data.live_stream ? res.data.live_stream : null;
 };
@@ -53,7 +53,7 @@ const getLiveStreamStatus = async (stream_id) => {
 };
 
 const getLiveStreamStats = async (stream_id) => {
-  const res = await wowzaCLient.get('live_streams/' + stream_id + '/stats', { timeout: 3000 });
+  const res = await wowzaCLient.get('live_streams/' + stream_id + '/stats', { timeout: 5000 });
 
   if (res.data && res.data.live_stream) {
     return res.data.live_stream;
@@ -63,7 +63,7 @@ const getLiveStreamStats = async (stream_id) => {
 };
 
 const ResetLiveStream = async (stream_id) => {
-  const res = await wowzaCLient.put('live_streams/' + stream_id + '/reset', { timeout: 3000 });
+  const res = await wowzaCLient.put('live_streams/' + stream_id + '/reset', { timeout: 5000 });
 
   if (res.data && res.data.live_stream) {
     return res.data.live_stream;
@@ -73,7 +73,7 @@ const ResetLiveStream = async (stream_id) => {
 };
 
 const startLiveStream = async (stream_id) => {
-  const res = await wowzaCLient.put('live_streams/' + stream_id + '/start', { timeout: 3000 });
+  const res = await wowzaCLient.put('live_streams/' + stream_id + '/start', { timeout: 5000 });
 
   if (res.data && res.data.live_stream) {
     return res.data.live_stream;
@@ -83,7 +83,7 @@ const startLiveStream = async (stream_id) => {
 };
 
 const stopLiveStream = async (stream_id) => {
-  const res = await wowzaCLient.put('live_streams/' + stream_id + '/stop', { timeout: 3000 });
+  const res = await wowzaCLient.put('live_streams/' + stream_id + '/stop', { timeout: 5000 });
 
   if (res.data && res.data.live_stream) {
     return res.data.live_stream;
