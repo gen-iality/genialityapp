@@ -20,6 +20,7 @@ function WOWZAPlayer({ meeting_id }) {
       setWowsaplayer(live_stream.player_id);
       setPlatformurl(url);
     };
+
     asyncfunction();
   }, [meeting_id]);
 

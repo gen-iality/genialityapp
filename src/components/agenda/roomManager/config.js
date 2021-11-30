@@ -45,7 +45,7 @@ export default function RoomConfig(props) {
     setUseAlreadyCreated(e.target.value);
   };
 
-  if (hasVideoconference)
+  if (meeting_id)
     return (
       <Card>
         <ConferenceConfig
@@ -62,6 +62,13 @@ export default function RoomConfig(props) {
   /**
    * Creación de una conferencia
    */
+
+  console.log('GENERAL DATA =>>', {
+    platform: platform,
+    host_name: host_name,
+    meeting_id: meeting_id,
+    hasVideoconference: hasVideoconference,
+  });
   return (
     <Card>
       {/**Selección plataforma de la conferencia */}

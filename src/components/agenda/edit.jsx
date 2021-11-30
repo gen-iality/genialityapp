@@ -198,11 +198,10 @@ class AgendaEdit extends Component {
       if (event.dates && event.dates.length > 0) {
         let date = event.dates;
         Date.parse(date);
-        
+
         for (var i = 0; i < date.length; i++) {
           let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
-          if(Date.parse(formatDate) >= Date.parse(new Date()))
-            days.push({ value: formatDate, label: formatDate });
+          if (Date.parse(formatDate) >= Date.parse(new Date())) days.push({ value: formatDate, label: formatDate });
         }
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
@@ -214,8 +213,7 @@ class AgendaEdit extends Component {
           let formatDate = Moment(init)
             .add(i, 'd')
             .format('YYYY-MM-DD');
-          if(Date.parse(formatDate) >= Date.parse(new Date()))
-            days.push({ value: formatDate, label: formatDate });
+          if (Date.parse(formatDate) >= Date.parse(new Date())) days.push({ value: formatDate, label: formatDate });
         }
       }
     } catch (e) {
@@ -266,7 +264,10 @@ class AgendaEdit extends Component {
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
-      console.log(Object.keys(this.state).map((key) => (info[key])), 'ObjectKey')
+      console.log(
+        Object.keys(this.state).map((key) => info[key]),
+        'ObjectKey'
+      );
       const { date, hour_start, hour_end } = handleDate(info);
 
       let currentUser = await getCurrentUser();
@@ -615,7 +616,7 @@ class AgendaEdit extends Component {
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
     //const description_storage = window.sessionStorage.getItem('description');
-    console.log(date, '========================== date')
+    console.log(date, '========================== date');
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids =
@@ -681,13 +682,13 @@ class AgendaEdit extends Component {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)
+              await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id);
               message.destroy(loading.key);
               message.open({
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              this.setState({ redirect: true })
+              this.setState({ redirect: true });
               history.push(`${props.matchUrl}`);
             } catch (e) {
               message.destroy(loading.key);
@@ -696,9 +697,9 @@ class AgendaEdit extends Component {
                 content: handleRequestError(e).message,
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
   };
@@ -907,7 +908,7 @@ class AgendaEdit extends Component {
                       type='text'
                       name={'name'}
                       value={name}
-                      onChange={this.handleChange}
+                      onChange={() => this.handleChange()}
                       placeholder={'Nombre de la actividad'}
                     />
                   </Form.Item>
@@ -1220,7 +1221,7 @@ class AgendaEdit extends Component {
 
 //FN manejo/parseo de fechas
 function handleDate(info) {
-  console.log(info, 'entro en handleDate')
+  console.log(info, 'entro en handleDate');
   let date, hour_start, hour_end;
   hour_start = Moment(info.datetime_start, 'YYYY-MM-DD HH:mm').toDate();
   hour_end = Moment(info.datetime_end, 'YYYY-MM-DD HH:mm').toDate();
