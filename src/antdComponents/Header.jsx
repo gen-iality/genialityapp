@@ -42,7 +42,7 @@ const Header = ( props ) => {
         )
       }
 
-      <Row wrap justify='end' gutter={[8, 8]}>
+      <Row wrap justify='end' gutter={[8, 8]} style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''}>
         <Col>
           {
             extra && (
@@ -101,6 +101,11 @@ const Header = ( props ) => {
           }
         </Col>
       </Row>
+      {form && (
+        <>
+          <br /><br />
+        </>
+      )}
     </>
   )
 }
