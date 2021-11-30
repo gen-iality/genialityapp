@@ -48,6 +48,34 @@ function WOWZAPlayer({ meeting_id }) {
     setTimeout(checkStreamStatus, 5000);
   };
 
+  // useEffect(() => {
+  //   if (!wowsaplayer) return;
+
+  //   let scripSource = `WowzaPlayer.create('wowza_player',
+  // 	{
+  // 	"license":"AQUI LA LICENCIA CUANDO SE COMPRE",
+  // 	"title":"My Wowza Player Autoplay Test",
+  // 	"description":"This is my Wowza Player Video description.",
+  // 	"sourceURL":"${platformurl}",
+  // 	"autoPlay":true,
+  // 	"mute":true,
+  // 	"loop":false,
+  // 	"audioOnly":false,
+  // 	"uiShowQuickRewind":true,
+  // 	"uiQuickRewindSeconds":"30"
+  // 	}
+  // );`;
+
+  //   const scriptP = document.createElement('script');
+  //   scriptP.id = 'player_embed';
+  //   scriptP.text = scripSource;
+  //   scriptP.async = true;
+  //   document.body.appendChild(scriptP);
+  //   return () => {
+  //     document.body.removeChild(scriptP);
+  //   };
+  // }, [wowsaplayer]);
+
   return (
     <>
       <div id='wowza_player'></div>

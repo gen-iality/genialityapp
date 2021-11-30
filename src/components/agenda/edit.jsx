@@ -146,6 +146,7 @@ class AgendaEdit extends Component {
     const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
+      console.log('configuration', configuration);
       this.setState({
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
@@ -301,6 +302,8 @@ class AgendaEdit extends Component {
 
     this.name?.current?.focus();
     this.validateRoom();
+
+    console.log('isPublished=>>', this.state.isPublished);
   }
 
   async componentDidUpdate(prevProps) {
@@ -318,16 +321,15 @@ class AgendaEdit extends Component {
     if (!name) {
       name = value.target.name;
       value = value.target.value;
-    }
-    if (name === 'requires_registration') {
+    } else if (name === 'requires_registration') {
       value = value.target.checked;
-    }
-
-    if (name === 'isPublished') {
+    } else if (name === 'isPublished') {
       this.setState({ [name]: value }, async () => await this.saveConfig());
     } else {
       this.setState({ [name]: value });
     }
+
+    console.log('entro aqui=>>', value, name);
   };
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
@@ -764,11 +766,12 @@ class AgendaEdit extends Component {
       surveys,
       games,
       attendees,
-      isPublished,
       host_id,
       host_name,
       avalibleGames,
     } = this.context;
+
+    const { isPublished } = this.state;
 
     const roomInfo = {
       platform,
@@ -785,9 +788,6 @@ class AgendaEdit extends Component {
 
   // Método para guarda la información de la configuración
   saveConfig = async () => {
-    /* const { event_id, activity_id } = this.props; */
-
-    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
     try {
@@ -891,7 +891,7 @@ class AgendaEdit extends Component {
                   checkedChildren='Sí'
                   unCheckedChildren='No'
                   name={'isPublished'}
-                  checked={isPublished}
+                  checked={this.state.isPublished}
                   onChange={(e) => this.handleChange(e, 'isPublished')}
                 />
               </Form.Item>
