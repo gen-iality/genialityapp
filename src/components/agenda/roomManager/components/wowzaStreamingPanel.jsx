@@ -1,4 +1,5 @@
-import { Button, Spin, Alert } from 'antd';
+import { Button, Spin, Alert, Typography } from 'antd';
+const { Text, Link, Title } = Typography;
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import WOWZAPlayer from 'components/livetransmision/WOWZAPlayer';
@@ -16,10 +17,24 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
   //const [livestream, setLivestream] = useState(null);
   const [livestreamStatus, setLivestreamStatus] = useState(null);
   const [livestreamStats, setLivestreamStats] = useState(null);
+  const [linkeviusmeets, setLinkeviusmeets] = useState(null);
+
   const queryClient = useQueryClient();
   console.log('innerRender', meeting_id);
   const livestreamQuery = useQuery(['livestream', meeting_id], () => getLiveStream(meeting_id));
 
+  //Link para eviusmeet dónde se origina el video
+  const eviusmeets = `https://eviusmeets.netlify.app/prepare`;
+  useEffect(() => {
+    if (livestreamQuery && livestreamQuery.data) {
+      let rtmplink = livestreamQuery.data.source_connection_information;
+      let linkeviusmeetsi =
+        eviusmeets + `?meetingId=${meeting_id}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}`;
+      setLinkeviusmeets(linkeviusmeetsi);
+    }
+  }, [livestreamQuery.data]);
+
+  console.log('linkeviusmeets', linkeviusmeets);
   useEffect(() => {
     if (meeting_id) executer_startMonitorStatus(meeting_id);
   }, [meeting_id]);
@@ -143,6 +158,14 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
           <br />
         </>
       )}
+
+      <br />
+      {linkeviusmeets && (
+        <Link href={linkeviusmeets} target='_blank'>
+          Entrar a EviusMeets para transmitir
+        </Link>
+      )}
+      <br />
       <br />
       <WOWZAPlayer meeting_id={meeting_id} />
 

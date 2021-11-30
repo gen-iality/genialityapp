@@ -50,7 +50,7 @@ function WOWZAPlayer({ meeting_id }) {
   return (
     <>
       <div id='wowza_player'></div>
-      <ReactPlayer
+      {/* <ReactPlayer
         width={'100%'}
         height={'35vw'}
         style={{
@@ -64,7 +64,7 @@ function WOWZAPlayer({ meeting_id }) {
             forceHLS: true,
           },
         }}
-      />
+      /> */}
 
       <p>
         {streamStatus && (
