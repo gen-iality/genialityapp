@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Alert, Form, Select, Input, Button, Radio, Space } from 'antd';
-import AgendaContext from '../../../Context/AgendaContext';
+import AgendaContext from 'Context/AgendaContext';
 import WowzaStreamingPanel from './components/wowzaStreamingPanel';
+
 import ConferenceConfig from './components/conferenceConfig';
 import PlatformZoomCreate from './components/platformZoomCreate';
 import StoreAlreadyCreatedMeeting from './components/storeAlreadyCreatedMeeting';

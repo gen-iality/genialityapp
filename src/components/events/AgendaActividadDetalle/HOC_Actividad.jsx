@@ -11,7 +11,7 @@ const HCOActividad = () => {
       <div>
         <RenderComponent />
 
-        {currentActivity && currentActivity.secondvideo && <SecondVideoActivity />}
+        {/* {currentActivity && currentActivity.secondvideo && <SecondVideoActivity />} */}
 
         {(currentActivity?.habilitar_ingreso === '' || currentActivity?.habilitar_ingreso == null) &&
           currentActivity?.video == null && <ImageComponentwithContext />}

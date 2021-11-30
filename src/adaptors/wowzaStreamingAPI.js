@@ -26,6 +26,7 @@ const stream_config = {
     transcoder_type: 'transcoded',
     target_delivery_protocol: 'hls-https',
     low_latency: true,
+    player_responsive: true,
   },
 };
 

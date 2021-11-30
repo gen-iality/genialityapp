@@ -420,13 +420,25 @@
   }
 }
 
-.ant-ribbon-corner::after{
-      position: absolute;
-    top: -4px;
-    left: -4px;
-    width: inherit;
-    height: inherit;
-    color: rgba(0, 0, 0, 0) !important;
-    border: inherit;
-    content: '';
+.ant-ribbon-corner::after {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: inherit;
+  height: inherit;
+  color: rgba(0, 0, 0, 0) !important;
+  border: inherit;
+  content: '';
+}
+
+.fcplayer {
+  width: 100% !important;
+  height: 35vw !important;
+
+  @media screen and (max-width: $breakpoint-mobile) {
+    height: auto !important ;
+  }
+  @media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+    height: auto !important ;
+  }
 }

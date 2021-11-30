@@ -1,6 +1,7 @@
 import { Button, Spin, Alert } from 'antd';
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
+import WOWZAPlayer from 'components/livetransmision/WOWZAPlayer';
 import {
   createLiveStream,
   getLiveStream,
@@ -113,6 +114,8 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
       <Button onClick={() => {}}>Reiniciar</Button>
       <br />
       <br />
+
+      <br />
       {livestreamStatus && (
         <>
           <b>Streaming Status: </b>
@@ -141,7 +144,8 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
         </>
       )}
       <br />
-      <br />
+      <WOWZAPlayer meeting_id={meeting_id} />
+
       <p>Coloca estos datos en tu plataforma de captura de video para transmitirlo:</p>
       <ul>
         {/* Algunos datos adicionales que se podrían mostrar
