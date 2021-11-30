@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Alert, Form, Select, Input, Button, Radio, Space } from 'antd';
-import AgendaContext from '../../../Context/AgendaContext';
+import AgendaContext from 'Context/AgendaContext';
 import WowzaStreamingPanel from './components/wowzaStreamingPanel';
+
 import ConferenceConfig from './components/conferenceConfig';
 import PlatformZoomCreate from './components/platformZoomCreate';
 import StoreAlreadyCreatedMeeting from './components/storeAlreadyCreatedMeeting';
@@ -44,7 +45,7 @@ export default function RoomConfig(props) {
     setUseAlreadyCreated(e.target.value);
   };
 
-  if (hasVideoconference)
+  if (meeting_id)
     return (
       <Card>
         <ConferenceConfig
@@ -61,6 +62,13 @@ export default function RoomConfig(props) {
   /**
    * Creación de una conferencia
    */
+
+  console.log('GENERAL DATA =>>', {
+    platform: platform,
+    host_name: host_name,
+    meeting_id: meeting_id,
+    hasVideoconference: hasVideoconference,
+  });
   return (
     <Card>
       {/**Selección plataforma de la conferencia */}

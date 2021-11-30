@@ -146,6 +146,7 @@ class AgendaEdit extends Component {
     const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
+      console.log('configuration', configuration);
       this.setState({
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
@@ -198,11 +199,10 @@ class AgendaEdit extends Component {
       if (event.dates && event.dates.length > 0) {
         let date = event.dates;
         Date.parse(date);
-        
+
         for (var i = 0; i < date.length; i++) {
           let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
-          if(Date.parse(formatDate) >= Date.parse(new Date()))
-            days.push({ value: formatDate, label: formatDate });
+          if (Date.parse(formatDate) >= Date.parse(new Date())) days.push({ value: formatDate, label: formatDate });
         }
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
@@ -214,8 +214,7 @@ class AgendaEdit extends Component {
           let formatDate = Moment(init)
             .add(i, 'd')
             .format('YYYY-MM-DD');
-          if(Date.parse(formatDate) >= Date.parse(new Date()))
-            days.push({ value: formatDate, label: formatDate });
+          if (Date.parse(formatDate) >= Date.parse(new Date())) days.push({ value: formatDate, label: formatDate });
         }
       }
     } catch (e) {
@@ -266,7 +265,10 @@ class AgendaEdit extends Component {
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
-      console.log(Object.keys(this.state).map((key) => (info[key])), 'ObjectKey')
+      console.log(
+        Object.keys(this.state).map((key) => info[key]),
+        'ObjectKey'
+      );
       const { date, hour_start, hour_end } = handleDate(info);
 
       let currentUser = await getCurrentUser();
@@ -300,6 +302,8 @@ class AgendaEdit extends Component {
 
     this.name?.current?.focus();
     this.validateRoom();
+
+    console.log('isPublished=>>', this.state.isPublished);
   }
 
   async componentDidUpdate(prevProps) {
@@ -317,16 +321,15 @@ class AgendaEdit extends Component {
     if (!name) {
       name = value.target.name;
       value = value.target.value;
-    }
-    if (name === 'requires_registration') {
+    } else if (name === 'requires_registration') {
       value = value.target.checked;
-    }
-
-    if (name === 'isPublished') {
+    } else if (name === 'isPublished') {
       this.setState({ [name]: value }, async () => await this.saveConfig());
     } else {
       this.setState({ [name]: value });
     }
+
+    console.log('entro aqui=>>', value, name);
   };
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
@@ -615,7 +618,7 @@ class AgendaEdit extends Component {
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
     //const description_storage = window.sessionStorage.getItem('description');
-    console.log(date, '========================== date')
+    console.log(date, '========================== date');
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids =
@@ -681,13 +684,13 @@ class AgendaEdit extends Component {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)
+              await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id);
               message.destroy(loading.key);
               message.open({
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              this.setState({ redirect: true })
+              this.setState({ redirect: true });
               history.push(`${props.matchUrl}`);
             } catch (e) {
               message.destroy(loading.key);
@@ -696,9 +699,9 @@ class AgendaEdit extends Component {
                 content: handleRequestError(e).message,
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
   };
@@ -763,11 +766,12 @@ class AgendaEdit extends Component {
       surveys,
       games,
       attendees,
-      isPublished,
       host_id,
       host_name,
       avalibleGames,
     } = this.context;
+
+    const { isPublished } = this.state;
 
     const roomInfo = {
       platform,
@@ -784,9 +788,6 @@ class AgendaEdit extends Component {
 
   // Método para guarda la información de la configuración
   saveConfig = async () => {
-    /* const { event_id, activity_id } = this.props; */
-
-    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
     try {
@@ -890,7 +891,7 @@ class AgendaEdit extends Component {
                   checkedChildren='Sí'
                   unCheckedChildren='No'
                   name={'isPublished'}
-                  checked={isPublished}
+                  checked={this.state.isPublished}
                   onChange={(e) => this.handleChange(e, 'isPublished')}
                 />
               </Form.Item>
@@ -907,7 +908,7 @@ class AgendaEdit extends Component {
                       type='text'
                       name={'name'}
                       value={name}
-                      onChange={this.handleChange}
+                      onChange={() => this.handleChange()}
                       placeholder={'Nombre de la actividad'}
                     />
                   </Form.Item>
@@ -1220,7 +1221,7 @@ class AgendaEdit extends Component {
 
 //FN manejo/parseo de fechas
 function handleDate(info) {
-  console.log(info, 'entro en handleDate')
+  console.log(info, 'entro en handleDate');
   let date, hour_start, hour_end;
   hour_start = Moment(info.datetime_start, 'YYYY-MM-DD HH:mm').toDate();
   hour_end = Moment(info.datetime_end, 'YYYY-MM-DD HH:mm').toDate();

@@ -45,14 +45,14 @@ class Service {
             .collection('activities')
             .doc(activity_id)
             .update({
-              habilitar_ingreso: false,
+              habilitar_ingreso,
               platform,
               meeting_id,
               tabs,
-              isPublished: false,
-              host_id: false,
-              host_name: false,
-              avalibleGames: false,
+              isPublished,
+              host_id,
+              host_name,
+              avalibleGames,
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -62,15 +62,15 @@ class Service {
             .collection('activities')
             .doc(activity_id)
             .set({
-              habilitar_ingreso: false,
+              habilitar_ingreso,
               platform,
               meeting_id,
-              isPublished: false,
-              host_id: false,
-              host_name: false,
+              isPublished,
+              host_id,
+              host_name,
               tabs: tabsSchema,
-              avalibleGames: false,
-              roomState: false,
+              avalibleGames,
+              roomState,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
         }
