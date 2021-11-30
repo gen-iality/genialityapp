@@ -11,6 +11,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
+import WOWZAPlayer from 'components/livetransmision/WOWZAPlayer';
 
 const RenderComponent = (props) => {
   let {
@@ -94,7 +95,7 @@ const RenderComponent = (props) => {
   }, [chatAttendeChats]);
 
   function RenderizarComponente(plataforma, actividad_estado, reder_Game) {
-    // console.log('10. si los recibe', plataforma, actividad_estado);
+    console.log('10. si los recibe', plataforma);
     switch (plataforma) {
       case 'vimeo':
         switch (actividad_estado) {
@@ -151,6 +152,27 @@ const RenderComponent = (props) => {
                 );
             }
             return <DolbyCard />;
+
+          case 'closed_meeting_room':
+            return <ImageComponentwithContext />;
+
+          case 'ended_meeting_room':
+            return <VideoActivity />;
+        }
+
+      case 'wowza':
+        switch (actividad_estado) {
+          case 'open_meeting_room':
+            switch (reder_Game) {
+              case 'game':
+                return (
+                  <>
+                    <WOWZAPlayer meeting_id={meetingId} />
+                    <GameDrawer />
+                  </>
+                );
+            }
+            return <WOWZAPlayer meeting_id={meetingId} />;
 
           case 'closed_meeting_room':
             return <ImageComponentwithContext />;
