@@ -465,7 +465,7 @@ class ListEventUser extends Component {
       this.setState({ timeout: true, errorData });
     }
 
-    console.log('users=>>', this.state.users);
+    /* console.log('users=>>', this.state.users); */
   }
 
   obtenerName = (fileUrl) => {
