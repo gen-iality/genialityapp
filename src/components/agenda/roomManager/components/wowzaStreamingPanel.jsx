@@ -29,7 +29,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
     if (livestreamQuery && livestreamQuery.data) {
       let rtmplink = livestreamQuery.data.source_connection_information;
       let linkeviusmeetsi =
-        eviusmeets + `?meetingId=${meeting_id}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}`;
+        eviusmeets + `?meetingId=${'mocion4'}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}`;
       setLinkeviusmeets(linkeviusmeetsi);
     }
   }, [livestreamQuery.data]);
