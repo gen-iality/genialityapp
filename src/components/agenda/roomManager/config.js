@@ -63,19 +63,19 @@ export default function RoomConfig(props) {
    * Creación de una conferencia
    */
 
-  console.log('GENERAL DATA =>>', {
+  /* console.log('GENERAL DATA =>>', {
     platform: platform,
     host_name: host_name,
     meeting_id: meeting_id,
     hasVideoconference: hasVideoconference,
-  });
+  }); */
   return (
     <Card>
       {/**Selección plataforma de la conferencia */}
       <Form onFinish={handleClick} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
         <Form.Item label={'Plataforma'}>
           <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
-            <Option value={null}>Seleccionar...</Option>
+            <Option value={''}>Seleccionar...</Option>
             <Option value='wowza'>Wowza</Option>
             <Option value='vimeo'>Vimeo</Option>
             <Option value='zoom'>Zoom</Option>

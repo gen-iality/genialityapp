@@ -26,12 +26,12 @@ export const AgendaContextProvider = ({ children }) => {
   const [avalibleGames, setAvailableGames] = useState();
   const [isPublished, setIsPublished] = useState();
   const [meeting_id, setMeetingId] = useState(null);
-  const [roomStatus, setRoomStatus] = useState();
+  const [roomStatus, setRoomStatus] = useState('');
   const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventContext);
 
   function reducer(state, action) {
-    console.log('actiondata', action);
+    /* console.log('actiondata', action); */
     switch (action.type) {
       case 'meeting_created':
         console.log('meeting_created', action);
