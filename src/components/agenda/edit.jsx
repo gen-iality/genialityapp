@@ -77,7 +77,7 @@ class AgendaEdit extends Component {
       has_date: '',
       description: '',
       registration_message: '',
-      date: '',
+      date: Moment(new Date()).format('YYYY-MM-DD'),
       hour_start: new Date(),
       hour_end: new Date(),
       key: new Date(),
@@ -202,7 +202,9 @@ class AgendaEdit extends Component {
 
         for (var i = 0; i < date.length; i++) {
           let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
-          if (Date.parse(formatDate) >= Date.parse(new Date())) days.push({ value: formatDate, label: formatDate });
+          if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
+            days.push({ value: formatDate, label: formatDate });
+          }
         }
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
@@ -214,7 +216,9 @@ class AgendaEdit extends Component {
           let formatDate = Moment(init)
             .add(i, 'd')
             .format('YYYY-MM-DD');
-          if (Date.parse(formatDate) >= Date.parse(new Date())) days.push({ value: formatDate, label: formatDate });
+          if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
+            days.push({ value: formatDate, label: formatDate });
+          }
         }
       }
     } catch (e) {
@@ -303,7 +307,7 @@ class AgendaEdit extends Component {
     this.name?.current?.focus();
     this.validateRoom();
 
-    console.log('isPublished=>>', this.state.isPublished);
+    /* console.log('isPublished=>>', this.state.isPublished); */
   }
 
   async componentDidUpdate(prevProps) {
@@ -321,16 +325,16 @@ class AgendaEdit extends Component {
     if (!name) {
       name = value.target.name;
       value = value.target.value;
-    } else if (name === 'requires_registration') {
+    } 
+    if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
       this.setState({ [name]: value }, async () => await this.saveConfig());
     } else {
       this.setState({ [name]: value });
     }
-
-    console.log('entro aqui=>>', value, name);
   };
+
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
     this.setState({ [name]: value, pendingChangesSave: true });
@@ -618,7 +622,7 @@ class AgendaEdit extends Component {
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
     //const description_storage = window.sessionStorage.getItem('description');
-    console.log(date, '========================== date');
+    /* console.log(date, '========================== date'); */
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids =
@@ -719,7 +723,13 @@ class AgendaEdit extends Component {
 
     if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
       title.push('Seleccione una hora de finalización valida');
-
+    
+    if (this.state.hour_start > this.state.hour_end)
+      title.push('La hora de inicio no puede ser mayor a la hora fin');
+  
+    if ((this.state.hour_start < new Date()) && (this.state.date <= Moment(new Date()).format('YYYY-MM-DD')))
+      title.push('La hora no puede ser menor a la hora actual');
+      
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
       title.map((item) => {
@@ -908,7 +918,7 @@ class AgendaEdit extends Component {
                       type='text'
                       name={'name'}
                       value={name}
-                      onChange={() => this.handleChange()}
+                      onChange={(e) => this.handleChange(e)}
                       placeholder={'Nombre de la actividad'}
                     />
                   </Form.Item>
