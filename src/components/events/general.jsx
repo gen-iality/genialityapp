@@ -69,7 +69,7 @@ class General extends Component {
       // Estado inicial de la seccion de formulario de registro
       registerForm: {
         name: 'Registro',
-        position: '',
+        position: 0,
         section: 'tickets',
         icon: 'CreditCardOutlined',
         checked: true,
@@ -1002,6 +1002,7 @@ class General extends Component {
                           <InputNumber
                             /* type='number' */
                             defaultValue={registerForm.position}
+                            value={registerForm.position}
                             onChange={(e) => {
                               this.setState({ registerForm: { ...registerForm, position: e.target } });
                             }}

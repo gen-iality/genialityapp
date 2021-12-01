@@ -95,10 +95,10 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                         </Space>
                       </div>
                       {/* <Meta          
-                title={`${news.title}`}
-                description={news.description_short}
-                style={{fontWeight:'700', marginBottom:'0px'}}
-                /> */}
+                        title={`${news.title}`}
+                        description={news.description_short}
+                        style={{fontWeight:'700', marginBottom:'0px'}}
+                        /> */}
                       <Space direction='horizontal'>
                         <CalendarOutlined style={{ fontSize: '15px' }} />
                         <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${moment(news.time).format(

@@ -433,22 +433,18 @@ class Styles extends Component {
   // banner_image  BackgroundImage  FooterImage event_image
 
   //Se realiza una funcion asincrona submit para enviar los datos a la api
-  async submit(e) {
+  async submit() {
     const loadingSave = message.open({
       key: 'loading',
       type: 'loading',
       content: <> Por favor espere..</>,
     });
-    /* if (e !== undefined ) {
-      console.log(e);
-      e.preventDefault();
-      e.stopPropagation();
-    } */
     let info
     const { eventId } = this.state;
     const thereIsAnOrganization = this.props.org?._id
 
     this.state.data = { styles: this.state.styles };
+    console.log('save data', this.state.data)
     try {
       if(thereIsAnOrganization){
          info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
@@ -458,14 +454,14 @@ class Styles extends Component {
 
       this.setState({ loading: false });
       if (info._id) {
-        toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+        /* toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />); */
         message.destroy(loadingSave.key);
         message.open({
           type: 'success',
           content: <> Información guardada correctamente</>,
         });
       } else {
-        toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+        /* toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />); */
         this.setState({ msg: 'Cant Create', create: false });
         message.destroy(loadingSave.key);
         message.open({
@@ -476,16 +472,16 @@ class Styles extends Component {
     } catch (error) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
-        console.error(error.response);
+        /* console.error(error.response); */
         const { status, data } = error.response;
-        console.error('STATUS', status, status === 401);
+        /* console.error('STATUS', status, status === 401); */
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.error('Error', error.message);
+        /* console.error('Error', error.message); */
         if (error.request) {
-          console.error(error.request);
+          /* console.error(error.request); */
           errorData = error.request;
         }
 
@@ -547,14 +543,15 @@ class Styles extends Component {
       : null;
   }
 
-  handleChange(e, name) {
-    console.log(e, name);
+  handleChange(value, name) {
+    console.log(value, name);
     /* let name = e.target.name; */
     /* let value = e.target.value; */
-    let value = e;
+    /* let value = e; */
 
     let styles = { ...this.state.styles };
     styles[name] = value;
+    console.log(styles[name], styles)
 
     this.setState({ styles: styles });
   }
@@ -571,7 +568,7 @@ class Styles extends Component {
     return (
       <React.Fragment>
         <Form
-          onFinish={(e) => this.submit(e)}
+          onFinish={this.submit}
           {...formLayout}
         >
           <Header 
@@ -639,7 +636,7 @@ class Styles extends Component {
                 <div key={key}>
                   <Form.Item label={item.label}>
                     <Select
-                      /* defaultValue={item.defaultValue} */
+                      defaultValue={item.defaultValue}
                       value={this.state.styles[item.name]}
                       name={item.name}
                       onChange={(e) => this.handleChange(e, item.name)}
@@ -657,6 +654,7 @@ class Styles extends Component {
                     <Form.Item label={'Link de video'}>
                       <Input
                         defaultValue={this.state.styles['data_loader_page']}
+                        value={this.state.styles['data_loader_page']}
                         type='text'
                         onChange={(e) => this.getDataLoaderPage(e.target.value)}
                       />
