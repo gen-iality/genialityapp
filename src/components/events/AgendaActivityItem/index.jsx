@@ -12,6 +12,7 @@ import * as StageActions from '../../../redux/stage/actions';
 import AccessPoint from '@2fd/ant-design-icons/lib/AccessPoint';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
+import {zoomExternoHandleOpen} from '../../../helpers/helperEvent';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -78,7 +79,7 @@ function AgendaActivityItem(props) {
           align='middle'
           onClick={() => {
             if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
-              const { eventUser, zoomExternoHandleOpen } = props;
+              const { eventUser } = props;
               zoomExternoHandleOpen(item, eventUser);
             } else {
               // props.gotoActivity(item);
@@ -433,7 +434,7 @@ function AgendaActivityItem(props) {
                           style={{ marginTop: '10px' }}
                           onClick={() => {
                             if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
-                              const { eventUser, zoomExternoHandleOpen } = props;
+                              const { eventUser } = props;
                               zoomExternoHandleOpen(item, eventUser);
                             } else {
                               // props.gotoActivity(item);

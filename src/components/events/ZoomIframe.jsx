@@ -4,6 +4,8 @@ import { isHost } from '../../helpers/helperEventUser';
 import { UseEventContext } from '../../Context/eventContext';
 
 const getMeetingPath = (platform, name, email, meeting_id, generalTabs, isHost) => {
+  consoe.log('platform=>>>',platform);
+
   if (platform === 'zoom') {
     const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
     return (
