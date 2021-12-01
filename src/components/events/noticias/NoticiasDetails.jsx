@@ -6,8 +6,9 @@ import withContext from '../../../Context/withContext';
 import { withRouter } from 'react-router';
 import { useState } from 'react';
 import { NewsFeed } from '../../../helpers/request';
-import { Card, Row, Spin, Col, Space, Tag, Grid } from 'antd';
+import { Card, Row, Spin, Col, Space, Tag, Grid, Image } from 'antd';
 import NoticiaList from './NoticiasList';
+import ReactPlayer from 'react-player';
 
 const { useBreakpoint } = Grid;
 
@@ -24,20 +25,24 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
     setVirtualConference(false);
     setTopBanner(false);
     window.scrollTo(0, 0)
-  
-    NewsFeed.getOne(match.params.event_id, match.params.id).then((resp) => {
-      if (resp) {
-        setNoticia(resp);
-        setLoading(false);
-        setEventId(match.params.event_id);
-      }
-    });
+
+    getOne();
 
     return () => {
       setVirtualConference(true);
       setTopBanner(true);
     };
   }, [match.params.id]);
+
+  const getOne = async () => {
+    const data = await NewsFeed.getOne(match.params.event_id, match.params.id);
+    if (data) {
+      setNoticia(data);
+      console.log(data, noticia, 'data-noticia')
+      setLoading(false);
+      setEventId(match.params.event_id);
+    }
+  }
 
   return (
     <>
@@ -58,25 +63,47 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
             // title={noticia && noticia.title}
             // extra={noticia && noticia.time}
             bordered={false}
-            cover={
+            /* cover={
               noticia &&
               (noticia.linkYoutube === null || noticia.linkYoutube === '') && (
                 <img
                   style={{ height: `${screens.xs === true ? '25vh' : '55vh'}`, objectFit: 'cover' }}
                   alt='imagen noticia'
-                  src={noticia && noticia.image ?  noticia.image : imgNotFound}
+                  src={noticia && (noticia.image || noticia.picture) ?  (noticia.image || noticia.picture) : imgNotFound}
                 />
               )
-            }>
+            } */
+            cover={
+              noticia && (  
+                noticia.linkYoutube === null || noticia.linkYoutube === '' || noticia.linkYoutube === undefined && (
+                  <img
+                    style={{ height: `${screens.xs === true ? '25vh' : '55vh'}`, objectFit: 'cover' }}
+                    alt='imagen noticia'
+                    src={noticia && (noticia.image || noticia.picture) ?  (noticia.image || noticia.picture) : imgNotFound}
+                  />
+                )
+                
+              )
+            }
+          >
             <div>
               {noticia && noticia.linkYoutube !== null && noticia.linkYoutube !== '' && (
-                <iframe
+                <div className='mediaplayer'>
+                  <ReactPlayer
+                    style={{ height: '500px' }}
+                    width='100%'
+                    height='auto'
+                    url={noticia.linkYoutube}
+                    controls
+                  />
+                </div>
+                /* <iframe
                   style={{ height: '500px' }}
                   width='100%'
                   height='auto'
                   src={noticia.linkYoutube}
                   title='YouTube video player'
-                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'></iframe>
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'></iframe> */
               )}
 
               <Space direction='vertical' style={{ width: '100%' }}>

@@ -62,13 +62,13 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
   return (
     <>
       {loading && <Spin />}
-      <Row style={{ padding: '30px 25px' }} gutter={[8, 8]}>
+      <Row /* style={{ padding: '30px 25px' }} */ gutter={[8, 8]} wrap>
         {noticias &&
           noticias.length > 0 &&
           noticias.map((news) => (
             <>
               {/* {console.log('NOTICIA==>', news)} */}
-              <Col style={{ paddingBottom: '30px' }} xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Col /* style={{ paddingBottom: '30px' }}  */xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                 {moment().format('YYYY-MM-DD') === moment(news.created_at).format('YYYY-MM-DD') ? (
                   <Badge.Ribbon text='Nuevo' color='cyan'>
                     <Card
