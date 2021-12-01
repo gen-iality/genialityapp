@@ -40,11 +40,53 @@ class Styles extends Component {
           fieldColorName: 'toolbarDefaultBg',
           editIsVisible: false,
         },
+        // {
+        //   title: 'Color de fondo para la zona social ',
+        //   fieldColorName: 'toolbarMenuSocial',
+        //   editIsVisible: false,
+        // },
         {
           title: 'Color del texto para el menu',
           fieldColorName: 'textMenu',
           editIsVisible: false,
         },
+        // {
+        //   title: 'Elige un color para los botones',
+        //   fieldColorName: 'bgButtonsEvent',
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: 'Elige un color para seleccion de fecha de la agenda',
+        //   fieldColorName: 'bgCalendarDayEvent',
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: 'Color del texto de los tabs de fechas de la agenda',
+        //   fieldColorName: 'color_tab_agenda',
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: 'Color de los iconos para la zona social',
+        //   fieldColorName: 'color_icon_socialzone',
+        //   editIsVisible: false,
+        // },
+        /*                 
+                {
+                  title: "Elige un color para los botones",
+                  fieldColorName: "brandPrimary",
+                  editIsVisible: false,
+                },
+        
+               {
+                  title: "Elige un color para el texto del menu",
+                  fieldColorName: "textMenu",
+                  editIsVisible: false,
+                },
+                {
+                  title: "Elige un color para item seleccionado del menu",
+                  fieldColorName: "activeText",
+                  editIsVisible: false,
+                }, */
       ],
     };
     //Se establecen las funciones para su posterior uso
@@ -107,8 +149,28 @@ class Styles extends Component {
         width: 600,
         height: 220,
       },
+      //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
     ];
     this.selectsDrawer = [
+      // {
+      //   label: 'Introduccion de inicio',
+      //   defaultValue: 'no',
+      //   name: 'loader_page',
+      //   options: [
+      //     {
+      //       label: 'No',
+      //       value: 'no',
+      //     },
+      //     {
+      //       label: 'Video',
+      //       value: 'text',
+      //     },
+      //     {
+      //       label: 'Texto / Imagen',
+      //       value: 'code',
+      //     },
+      //   ],
+      // },
       {
         label: 'Franja de titulo  y fecha',
         defaultValue: false,
@@ -144,11 +206,11 @@ class Styles extends Component {
       {
         label: 'Habilitar banner Superior',
         name: 'show_banner',
-        defaultValue: 'true',
+        defaultValue: true,
         options: [
           {
             label: 'Si',
-            value: 'true',
+            value: true,
           },
           {
             label: 'No',
@@ -171,6 +233,21 @@ class Styles extends Component {
           },
         ],
       },
+      // {
+      //   label: 'Habilitar inscripción de agenda',
+      //   name: 'show_inscription',
+      //   defaultValue: 'true',
+      //   options: [
+      //     {
+      //       label: 'Si',
+      //       value: true,
+      //     },
+      //     {
+      //       label: 'No',
+      //       value: false,
+      //     },
+      //   ],
+      // },
       {
         label: 'Agrupar la actividades de la agenda en TABS ',
         name: 'hideDatesAgenda',
@@ -201,6 +278,21 @@ class Styles extends Component {
           },
         ],
       },
+      // {
+      //   label: 'Ocultar horas de las actividades de la agenda',
+      //   name: 'hideHoursAgenda',
+      //   defaultValue: false,
+      //   options: [
+      //     {
+      //       label: 'Si',
+      //       value: true,
+      //     },
+      //     {
+      //       label: 'No',
+      //       value: false,
+      //     },
+      //   ],
+      // },
       {
         label: 'Mostrar boton de detalle de la agenda',
         name: 'hideBtnDetailAgenda',
@@ -260,7 +352,7 @@ class Styles extends Component {
           banner_footer: dataStyles.banner_footer || null,
           mobile_banner: dataStyles.mobile_banner || null,
           banner_footer_email: dataStyles.banner_footer_email || null,
-          show_banner: dataStyles.show_banner || false,
+          show_banner: dataStyles.show_banner || true,
           show_title: dataStyles?.show_title  || false,
           show_video_widget: dataStyles?.show_video_widget  || false,
           show_card_banner: dataStyles.show_card_banner || true,

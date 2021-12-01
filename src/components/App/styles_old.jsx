@@ -6,17 +6,11 @@ import { Actions, OrganizationApi } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../shared/logOut';
 import { SketchPicker } from 'react-color';
-import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select } from 'antd';
+import { Button, Card, message, Typography, Modal, Space } from 'antd';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
-import Header from '../../antdComponents/Header';
 
 const { Title, Text } = Typography;
-const { Option } = Select;
-const formLayout = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
 
 class Styles extends Component {
   constructor(props) {
@@ -40,11 +34,53 @@ class Styles extends Component {
           fieldColorName: 'toolbarDefaultBg',
           editIsVisible: false,
         },
+        // {
+        //   title: 'Color de fondo para la zona social ',
+        //   fieldColorName: 'toolbarMenuSocial',
+        //   editIsVisible: false,
+        // },
         {
           title: 'Color del texto para el menu',
           fieldColorName: 'textMenu',
           editIsVisible: false,
         },
+        // {
+        //   title: 'Elige un color para los botones',
+        //   fieldColorName: 'bgButtonsEvent',
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: 'Elige un color para seleccion de fecha de la agenda',
+        //   fieldColorName: 'bgCalendarDayEvent',
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: 'Color del texto de los tabs de fechas de la agenda',
+        //   fieldColorName: 'color_tab_agenda',
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: 'Color de los iconos para la zona social',
+        //   fieldColorName: 'color_icon_socialzone',
+        //   editIsVisible: false,
+        // },
+        /*                 
+                {
+                  title: "Elige un color para los botones",
+                  fieldColorName: "brandPrimary",
+                  editIsVisible: false,
+                },
+        
+               {
+                  title: "Elige un color para el texto del menu",
+                  fieldColorName: "textMenu",
+                  editIsVisible: false,
+                },
+                {
+                  title: "Elige un color para item seleccionado del menu",
+                  fieldColorName: "activeText",
+                  editIsVisible: false,
+                }, */
       ],
     };
     //Se establecen las funciones para su posterior uso
@@ -107,8 +143,28 @@ class Styles extends Component {
         width: 600,
         height: 220,
       },
+      //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
     ];
     this.selectsDrawer = [
+      // {
+      //   label: 'Introduccion de inicio',
+      //   defaultValue: 'no',
+      //   name: 'loader_page',
+      //   options: [
+      //     {
+      //       label: 'No',
+      //       value: 'no',
+      //     },
+      //     {
+      //       label: 'Video',
+      //       value: 'text',
+      //     },
+      //     {
+      //       label: 'Texto / Imagen',
+      //       value: 'code',
+      //     },
+      //   ],
+      // },
       {
         label: 'Franja de titulo  y fecha',
         defaultValue: false,
@@ -148,7 +204,7 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: 'true',
+            value: true,
           },
           {
             label: 'No',
@@ -171,6 +227,21 @@ class Styles extends Component {
           },
         ],
       },
+      // {
+      //   label: 'Habilitar inscripción de agenda',
+      //   name: 'show_inscription',
+      //   defaultValue: 'true',
+      //   options: [
+      //     {
+      //       label: 'Si',
+      //       value: true,
+      //     },
+      //     {
+      //       label: 'No',
+      //       value: false,
+      //     },
+      //   ],
+      // },
       {
         label: 'Agrupar la actividades de la agenda en TABS ',
         name: 'hideDatesAgenda',
@@ -201,6 +272,21 @@ class Styles extends Component {
           },
         ],
       },
+      // {
+      //   label: 'Ocultar horas de las actividades de la agenda',
+      //   name: 'hideHoursAgenda',
+      //   defaultValue: false,
+      //   options: [
+      //     {
+      //       label: 'Si',
+      //       value: true,
+      //     },
+      //     {
+      //       label: 'No',
+      //       value: false,
+      //     },
+      //   ],
+      // },
       {
         label: 'Mostrar boton de detalle de la agenda',
         name: 'hideBtnDetailAgenda',
@@ -341,35 +427,39 @@ class Styles extends Component {
   // banner_image  BackgroundImage  FooterImage event_image
 
   //Se realiza una funcion asincrona submit para enviar los datos a la api
-  async submit() {
+  async submit(e) {
     const loadingSave = message.open({
       key: 'loading',
       type: 'loading',
       content: <> Por favor espere..</>,
     });
+    if (e !== undefined) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     let info
     const { eventId } = this.state;
     const thereIsAnOrganization = this.props.org?._id
 
     this.state.data = { styles: this.state.styles };
-    console.log('save data', this.state.data)
     try {
       if(thereIsAnOrganization){
          info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
+         this.props.setOrganization(info)
       }else{
          info = await Actions.put(`/api/events/${eventId}`, this.state.data);
       }
 
       this.setState({ loading: false });
       if (info._id) {
-        /* toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />); */
+        toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
         message.destroy(loadingSave.key);
         message.open({
           type: 'success',
           content: <> Información guardada correctamente</>,
         });
       } else {
-        /* toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />); */
+        toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
         this.setState({ msg: 'Cant Create', create: false });
         message.destroy(loadingSave.key);
         message.open({
@@ -380,16 +470,16 @@ class Styles extends Component {
     } catch (error) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
-        /* console.error(error.response); */
+        console.error(error.response);
         const { status, data } = error.response;
-        /* console.error('STATUS', status, status === 401); */
+        console.error('STATUS', status, status === 401);
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        /* console.error('Error', error.message); */
+        console.error('Error', error.message);
         if (error.request) {
-          /* console.error(error.request); */
+          console.error(error.request);
           errorData = error.request;
         }
 
@@ -451,15 +541,12 @@ class Styles extends Component {
       : null;
   }
 
-  handleChange(value, name) {
-    console.log(value, name);
-    /* let name = e.target.name; */
-    /* let value = e.target.value; */
-    /* let value = e; */
+  handleChange(e) {
+    let name = e.target.name;
+    let value = e.target.value;
 
     let styles = { ...this.state.styles };
     styles[name] = value;
-    console.log(styles[name], styles)
 
     this.setState({ styles: styles });
   }
@@ -475,138 +562,133 @@ class Styles extends Component {
 
     return (
       <React.Fragment>
-        <Form
-          onFinish={this.submit}
-          {...formLayout}
-        >
-          <Header 
-            title={'Configuración de Estilos'}
-            save
-            form
-          />
-
-          <Row justify='center' wrap gutter={[8, 8]}>
-            <Col span={12}>
-              {this.state.colorDrawer.map((item, key) => (
-                
-                <div key={key}>
-                  {item.editIsVisible && (
-                    <Modal
-                      closable={false}
-                      footer={[
-                        <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
-                          Aceptar
-                        </Button>,
-                      ]}
-                      title={<Title level={5}>{item.title}</Title>}
-                      visible={item.editIsVisible}>
-                      <Space wrap size='large' align='start'>
-                        <SketchPicker
-                          color={this.state.styles[item.fieldColorName]}
-                          onChangeComplete={(color) => {
-                            this.onColorChange(color, item.fieldColorName);
-                          }}
-                        />
-                        <Space direction='vertical'>
-                          <Text
-                            style={{ fontSize: '20px' }}
-                            code
-                            copyable={{
-                              text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
-                              onCopy: () => message.success('Color hexadecimal copiado'),
-                            }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
-                          <Text
-                            style={{ fontSize: '20px' }}
-                            code
-                            copyable={{
-                              text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
-                                this.hexToRgb(this.state.styles[item.fieldColorName])?.g
-                              },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
-                              onCopy: () => message.success('Color rgb copiado'),
-                            }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
-                            this.hexToRgb(this.state.styles[item.fieldColorName])?.g
-                          },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
-                        </Space>
+        <div className='columns general'>
+          <div className='column is-12'>
+            <h2 className='title-section'>Configuración de Estilos</h2>
+            {this.state.colorDrawer.map((item, key) => (
+              <div className='column inner-column' key={key}>
+                {item.editIsVisible && (
+                  <Modal
+                    closable={false}
+                    footer={[
+                      <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
+                        Aceptar
+                      </Button>,
+                    ]}
+                    title={<Title level={5}>{item.title}</Title>}
+                    visible={item.editIsVisible}>
+                    <Space wrap size='large' align='start'>
+                      <SketchPicker
+                        color={this.state.styles[item.fieldColorName]}
+                        onChangeComplete={(color) => {
+                          this.onColorChange(color, item.fieldColorName);
+                        }}
+                      />
+                      <Space direction='vertical'>
+                        <Text
+                          style={{ fontSize: '20px' }}
+                          code
+                          copyable={{
+                            text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
+                            onCopy: () => message.success('Color hexadecimal copiado'),
+                          }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
+                        <Text
+                          style={{ fontSize: '20px' }}
+                          code
+                          copyable={{
+                            text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                              this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                            },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
+                            onCopy: () => message.success('Color rgb copiado'),
+                          }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                          this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                        },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
                       </Space>
-                    </Modal>
-                  )}
+                    </Space>
+                  </Modal>
+                )}
 
-                  <Form.Item label={item.title} onClick={() => this.handleClickSelectColor(key)}>
-                    {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-                    <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]} >
-                      {this.state.styles[item.fieldColorName]}
-                    </Tag>
-                  </Form.Item>
+                <div onClick={() => this.handleClickSelectColor(key)}>
+                  <p className='label'>{item.title}</p>
+                  {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
+                  <input
+                    type='color'
+                    disabled
+                    style={{ marginRight: '3%', width: '5%' }}
+                    value={this.state.styles[item.fieldColorName]}
+                    onChange={() => {}}
+                  />
+                  {/* <button className='button'> {item.editIsVisible ? 'Seleccionar' : 'Escoger'}</button> */}
                 </div>
-              ))}
-
-              {this.selectsDrawer.map((item, key) => (
-                <div key={key}>
-                  <Form.Item label={item.label}>
-                    <Select
-                      defaultValue={this.state.styles[item.name]/* item.defaultValue */}
+              </div>
+            ))}
+            {this.selectsDrawer.map((item, key) => (
+              <div className='column inner-column' key={key}>
+                <p className='label'>{item.label}</p>
+                {
+                  <div className='select'>
+                    <select
+                      defaultValue={item.defaultValue}
                       value={this.state.styles[item.name]}
                       name={item.name}
-                      onChange={(e) => this.handleChange(e, item.name)}
-                      style={{ width: 120 }}
-                    >
-                      {item.options.map((item2, key2) => (
-                        <Option key={key2} value={item2.value}>
+                      onChange={(e) => this.handleChange(e)}
+                      style={{ width: 120 }}>
+                      {item.options.map((item2, key) => (
+                        <option key={key} value={item2.value}>
                           {item2.label}
-                        </Option>
+                        </option>
                       ))}
-                    </Select>
-                  </Form.Item>
-                  
-                  {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
-                    <Form.Item label={'Link de video'}>
-                      <Input
-                        defaultValue={this.state.styles['data_loader_page']}
-                        value={this.state.styles['data_loader_page']}
-                        type='text'
-                        onChange={(e) => this.getDataLoaderPage(e.target.value)}
-                      />
-                    </Form.Item>
-                  )}
-                  {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
-                    <Form.Item>
-                      <ReactQuill
-                        id={item.name}
-                        onChange={this.getDataLoaderPage}
-                        defaultValue={this.state.styles.data_loader_page}
-                        style={{ marginTop: '5%' }}
-                        modules={toolbarEditor}
-                      />
-                    </Form.Item>
-                  )}
-                </div>
-              ))}
-
-              {this.imageDrawer.map((item, key) => (
-                <div key={key}>
-                  <Form.Item label={item.title}>
-                    {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-
-                    <ImageInput
-                      picture={this.state.styles[item.imageFieldName]}
-                      width={item.width}
-                      height={item.height}
-                      changeImg={(files) => {
-                        this.saveEventImage(files, item.imageFieldName);
-                      }}
-                      errImg={this.state.errImg}
+                    </select>
+                  </div>
+                }
+                {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
+                  <div>
+                    <label className='label'>Link de video</label>
+                    <input
+                      defaultValue={this.state.styles['data_loader_page']}
+                      type='text'
+                      className='input'
+                      onChange={(e) => this.getDataLoaderPage(e.target.value)}
                     />
-                    {this.state.styles[item.imageFieldName] && (
-                      <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
-                    )}
-                  </Form.Item>
+                  </div>
+                )}
+                {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
+                  <ReactQuill
+                    onChange={this.getDataLoaderPage}
+                    defaultValue={this.state.styles.data_loader_page}
+                    style={{ marginTop: '5%' }}
+                    modules={toolbarEditor}
+                  />
+                )}
+              </div>
+            ))}
+            {this.imageDrawer.map((item, key) => (
+              <div className='column inner-column' key={key}>
+                <p className='label '>{item.title}</p>
+                {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
 
-                  {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
+                <div className='control'>
+                  <ImageInput
+                    picture={this.state.styles[item.imageFieldName]}
+                    width={item.width}
+                    height={item.height}
+                    changeImg={(files) => {
+                      this.saveEventImage(files, item.imageFieldName);
+                    }}
+                    errImg={this.state.errImg}
+                  />
+                  {this.state.styles[item.imageFieldName] && (
+                    <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
+                  )}
                 </div>
-              ))}
-            </Col>
-          </Row>
-        </Form>
+                {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
+              </div>
+            ))}
+            <Button type='primary' onClick={this.submit}>
+              Guardar
+            </Button>
+          </div>
+        </div>
         {timeout && <LogOut />}
       </React.Fragment>
     );
