@@ -17,6 +17,11 @@ export function CurrentUserEventProvider({ children }) {
 
     app.auth().onAuthStateChanged((user) => {
       if (user) {
+        let user_id = user.uid;
+        console.log('user', user);
+        EventsApi.getEventUser(user_id, event_id).then((res) => {
+          console.log('oe', res);
+        });
         user.getIdToken().then(async function(idToken) {
           console.log('burrito sabanero', idToken);
         });
