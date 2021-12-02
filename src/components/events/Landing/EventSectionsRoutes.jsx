@@ -117,6 +117,10 @@ const EventSectionRoutes = (props) => {
 
   useEffect(() => {
     GetPermissionsEvent();
+
+    if(window.location.pathname.includes('/event/Gorilla-Logic/evento')){
+      window.location.replace("https://app.evius.co/landing/618c502f8ceb9e109464f1c4")
+    }
   }, []);
 
   const validateTypeUrl = () => {

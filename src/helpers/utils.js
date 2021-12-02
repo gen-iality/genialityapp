@@ -100,7 +100,16 @@ export function parseData2Excel(data, fields,roles=null) {
           str = item[name] ?  item[name]:'';
           break;
         case 'complex':
-          str = item.properties[name] ? item.properties[name].response : item?.user[name];
+          console.log("ITEM1==>",item.properties[name])
+          if( item.properties[name]?.includes("url")){
+            //str='Archivo'
+            let document= item.properties[name] && item.properties[name]?.includes("url") && JSON.parse(item.properties[name] )
+            console.log("ITEM===>",document)
+          str =  (document[0] ? document[0]?.url :item.properties[name] ? item.properties[name].response : item?.user[name]).toString();
+          }else{
+            str=''
+          }
+          console.log("")   
           break;
         case 'multiplelist':
           str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
@@ -122,9 +131,10 @@ export function parseData2Excel(data, fields,roles=null) {
       }}
 
       if (type === 'complex' && str) {
-        Object.keys(str).map((prop) => {
+       /* Object.keys(str).map((prop) => {
           return (info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop]);
-        });
+        });*/
+        return info[key][label]=str
       } else return (info[key][label] = str);
 
       return null;
