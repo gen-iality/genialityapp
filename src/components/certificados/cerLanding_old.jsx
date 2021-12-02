@@ -162,8 +162,8 @@ class CertificadoLanding extends Component {
           <Col xs={22} sm={22} md={8} lg={8} xl={8} style={{ margin: '0 auto' }}>
             <Card>
               {/* Alert informativo de certificados disponibles */}
-              {/* {this.props.cUser.value.rol_id == '619d0c9161162b7bd16fcb82' ||
-              this.props.cUser.value.rol_id == '619d0c8a4c361c44e83f4312' ? ( */}
+              {this.props.cUser.value.rol_id == '619d0c9161162b7bd16fcb82' ||
+              this.props.cUser.value.rol_id == '619d0c8a4c361c44e83f4312' ? (
                 <>
                   <Alert message='Certificados disponibles' type='success' />
                   {checkedInUsers.map((user, key) => (
@@ -181,12 +181,12 @@ class CertificadoLanding extends Component {
                     </div>
                   ))}
                 </>
-             {/*  ) : (
+              ) : (
                 <h1
                   style={{
                     fontSize: '27px',
                   }}>{`Hola ${this.props.cUser.value.displayName} 👋, los certificados solo estan Disponibles para usuarios con paquete Universo y Super Heróe  `}</h1>
-              )} */}
+              )}
             </Card>
           </Col>
         )}
