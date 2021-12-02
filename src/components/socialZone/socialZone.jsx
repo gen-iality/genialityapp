@@ -80,7 +80,7 @@ let SocialZone = function(props) {
 
   return (
     <Tabs
-      style={{marginTop:'-25px'}}
+      style={{marginTop:'-20px'}}
       defaultActiveKey='1'
       onChange={callback}
       activeKey={chatAttendeChats}

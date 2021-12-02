@@ -84,7 +84,7 @@ const ChatList = (props) => {
     );
 
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
-
+      console.log('Props',props)
   return (
     <Tabs style={{marginTop:'-15px'}} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -96,7 +96,7 @@ const ChatList = (props) => {
           }
           key='public'>
           <iframe
-            style={{ marginTop: '-75px' }}
+            style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px' }` }}
             title='chatevius'
             className='ChatEviusLan'
             src={

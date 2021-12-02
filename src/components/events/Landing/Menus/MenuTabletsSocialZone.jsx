@@ -61,6 +61,7 @@ const MenuTabletsSocialZone = (props) => {
           tab={1}
           generalTabs={props.generalTabs}
           currentActivity={props.currentActivity}
+          mobile={true}
         />
       </Drawer>
     </>
