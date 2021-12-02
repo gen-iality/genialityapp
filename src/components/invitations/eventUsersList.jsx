@@ -44,16 +44,15 @@ class eventUsersList extends Component {
 
     for (let i = 0; attendees.length > i; i++) {
       if (attendees[i].properties) {
-        attendeeFlattenedData = attendees[i].properties;
-        attendeeFlattenedData.key = attendees[i]._id;
-        attendeeFlattenedData.ticket = attendees[i].ticket ? attendees[i].ticket.title : '';
-        attendeeFlattenedData.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : '';
-        attendeeFlattenedData.created_at = attendees[i].created_at;
-        attendeeFlattenedData.updated_at = attendees[i].updated_at;
+        attendeeFlattenedData = attendees[i]?.properties;
+        attendeeFlattenedData.key = attendees[i]?._id;
+        attendeeFlattenedData.ticket = attendees[i]?.ticket ? attendees[i]?.ticket?.title : '';
+        attendeeFlattenedData.checkedin_at = attendees[i]?.checkedin_at ? attendees[i]?.checkedin_at : '';
+        attendeeFlattenedData.created_at = attendees[i]?.created_at;
+        attendeeFlattenedData.updated_at = attendees[i]?.updated_at;
         attendeesFormatedForTable.push(attendeeFlattenedData);
       }
     }
-
     //verificacion del tipo de dato de los campos, si se recibe un {...} entonces se pasa a array para evitar errores en la renderizacion de la tabla
     return attendeesFormatedForTable;
   }
@@ -101,7 +100,10 @@ class eventUsersList extends Component {
         dataIndex: propertiesTable[i].name,
         width: 300,
         ellipsis: true,
-        ...this.getColumnSearchProps(propertiesTable[i].name),
+        ...this.getColumnSearchProps(propertiesTable[i]?.name),
+        render(record,data){         
+          return typeof(record)=='object'? record.map((doc)=><p>{doc?.url}</p>):record
+        }
       });
     }
 
@@ -306,7 +308,7 @@ class eventUsersList extends Component {
             size='small'
             rowSelection={rowSelection}
             columns={columnsTable}
-            dataSource={attendeesFormatedForTable}
+            dataSource={attendeesFormatedForTable && attendeesFormatedForTable}
           />
         </Fragment>
         {this.state.addUser && (
