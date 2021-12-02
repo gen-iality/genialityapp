@@ -80,7 +80,7 @@ class documentsDetail extends Component {
     }
 
     return (
-      <>
+      <div style={{paddingLeft:'25px', paddingRight:'25px'}}>
         <Tabs defaultActiveKey='1'>
           <TabPane tab={`Documentos de ${this.props.cEventUser?.value?.properties?.displayName}`} key='1'>
             {this.props.cEventUser?.value?.properties?.documents_user ? (
@@ -129,7 +129,7 @@ class documentsDetail extends Component {
             </Col>
           </TabPane>
         </Tabs>
-      </>
+      </div>
     );
   }
 }
