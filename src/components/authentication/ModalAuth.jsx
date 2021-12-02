@@ -55,10 +55,12 @@ const ModalAuth = (props) => {
     userAuth();
 
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
-    if(props.cEvent.value?._id==="61816f5a039c0f2db65384a2"){
+    if (
+      props.cEvent.value?._id === '61816f5a039c0f2db65384a2' ||
+      props.cEvent.value?._id === '6193acf6f3b1800733678a64'
+    ) {
       handleChangeTabModal('1');
     }
-
 
     return () => {
       form1.resetFields();
@@ -68,6 +70,7 @@ const ModalAuth = (props) => {
   useEffect(() => {
     form1.resetFields();
   }, [typeModal, tabLogin]);
+
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
@@ -89,7 +92,7 @@ const ModalAuth = (props) => {
     let loginNormal = false;
     let loginFirst = false;
     setErrorLogin(false);
-   
+
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
@@ -274,7 +277,7 @@ const ModalAuth = (props) => {
           </TabPane>
           {props.cEventUser?.value == null &&
             props.organization !== 'landing' &&
-            props.cEvent.value?._id != '61816f5a039c0f2db65384a2' && (
+            props.cEvent.value?._id != '6193acf6f3b1800733678a64' && (
               <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
                 <div
                   // className='asistente-list'
