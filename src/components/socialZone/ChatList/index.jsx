@@ -145,6 +145,7 @@ const ChatList = (props) => {
           {chatActual.chatname && (
             <>
               <iframe
+              style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px' }` }}
                 title='chatevius'
                 className='ChatEviusLan'
                 src={

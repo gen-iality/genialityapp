@@ -12,7 +12,7 @@ import * as StageActions from '../../../redux/stage/actions';
 import AccessPoint from '@2fd/ant-design-icons/lib/AccessPoint';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
-import {zoomExternoHandleOpen} from '../../../helpers/helperEvent';
+import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -176,22 +176,16 @@ function AgendaActivityItem(props) {
                         {item.hosts.length > 0 &&
                           (item.hosts.length < 4 ? (
                             <>
-                              {item.hosts.map((speaker, key) => (
-                                <Col key={key} span={8} style={{ fontSize: '75%' }}>
-                                  <table>
-                                    <tr>
-                                      <th>
-                                        <Avatar size={28} src={speaker.image} />
-                                      </th>
-                                      <th style={{ marginRight: '12px' }}>
-                                        <div style={{ marginLeft: '12px', fontSize: '9px', marginRight: '12px' }}>
-                                          {speaker.name}
-                                        </div>
-                                      </th>
-                                    </tr>
-                                  </table>
-                                </Col>
-                              ))}
+                              <Col style={{ fontSize: '75%' }}>
+                                <Space>
+                                  {item.hosts.map((speaker, key) => (
+                                    <Space key={key}>
+                                      <Avatar size={28} src={speaker.image} />
+                                      <div>{speaker.name}</div>
+                                    </Space>
+                                  ))}
+                                </Space>
+                              </Col>
                             </>
                           ) : (
                             <>
@@ -337,9 +331,13 @@ function AgendaActivityItem(props) {
                           <p style={{ fontSize: '16px' }}>
                             {meetingState == 'open_meeting_room'
                               ? intl.formatMessage({ id: 'live' })
-                              : meetingState == 'ended_meeting_room' && item.video && props.event._id!="618d3a983a90686a9016b5d3"
+                              : meetingState == 'ended_meeting_room' &&
+                                item.video &&
+                                props.event._id != '618d3a983a90686a9016b5d3'
                               ? intl.formatMessage({ id: 'live.ended.video' })
-                              : meetingState == 'ended_meeting_room' && item.video && props.event._id=="618d3a983a90686a9016b5d3"
+                              : meetingState == 'ended_meeting_room' &&
+                                item.video &&
+                                props.event._id == '618d3a983a90686a9016b5d3'
                               ? intl.formatMessage({ id: 'live.ended.video.modify' })
                               : meetingState == 'ended_meeting_room'
                               ? intl.formatMessage({ id: 'live.ended' })
@@ -446,7 +444,7 @@ function AgendaActivityItem(props) {
                       )}
                     </Space>
                   </Col>
-                  <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight:'220px' }}>
+                  <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
                     {meetingState == 'ended_meeting_room' && item.video ? (
                       <ReactPlayer light={true} width={'100%'} height={'100%'} url={item !== null && item.video} />
                     ) : (

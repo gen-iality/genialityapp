@@ -179,7 +179,6 @@ class ListEventUser extends Component {
   };
 
   async componentDidMount() {
-    
     let self = this;
     this.checkFirebasePersistence();
     try {
@@ -410,7 +409,7 @@ class ListEventUser extends Component {
       this.setState({ timeout: true, errorData });
     }
 
-    console.log("users=>>",this.state.users)
+    console.log('users=>>', this.state.users);
   }
 
   obtenerName = (fileUrl) => {
@@ -636,7 +635,27 @@ class ListEventUser extends Component {
 
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
-    // console.log("usersReq",usersReq)
+
+    // function nameHere(str) {
+    //   return str.match(/[A-Z]/);
+    // }
+
+    // function isUpperCase(str) {
+    //   return str === str.toUpperCase();
+    // }
+
+    // let sonono = [];
+
+    // usersReq.map((item) => {
+    //   let es = nameHere(item.email);
+    //   console.log("es",es, item.properties["email"])
+    //   // if (es) {
+    //   //   if (isUpperCase(es[0])) {
+    //   //     sonono.push(item.name);
+    //   //   }
+    //   // }
+    // });
+    // console.log('AJA', sonono);
 
     return (
       <React.Fragment>
