@@ -46,6 +46,7 @@ class CheckAgenda extends Component {
   async componentDidMount() {
     let self=this;
    this.cargarUsuarios(self)
+
   }
 
   //FUNCION QUE OBTIENE CHECKIN DE FIREBASE
@@ -462,6 +463,7 @@ class CheckAgenda extends Component {
       eventID,
       agendaID,
     } = this.state;
+
  
     const rowSelection = {
       selectedRowKeys,
@@ -469,7 +471,9 @@ class CheckAgenda extends Component {
       
     };
  
+
     if (!this.props.location.state) return this.goBack();
+
     return (
       <Fragment>
          {!this.props.loading && this.state.editUser && (

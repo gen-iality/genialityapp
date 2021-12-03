@@ -7,6 +7,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
+import moment from 'moment';
 
 var chatFirebase = app.initializeApp(
   {
@@ -113,16 +114,18 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let newtime = timeConverter(doc.data().timestamp);
+          let conversion  = moment(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
+          
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,
             text: doc.data().text,
-            hora: newtime,
+            hora: conversion,
           };
           datamessagesthisevent.push(msjnew);
         });
         setdatamsjevent(datamessagesthisevent);
+        // console.log("CHAT=>>",datamessagesthisevent)
       })
       .catch();
   }
