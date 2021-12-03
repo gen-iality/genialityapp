@@ -28,30 +28,36 @@ class Home extends Component {
       timeout: false,
       serverError: false,
       errorData: {},
-      pageSize: 30,
+      nelements:10,
+      pageSize: 10,
+      limit:100,
       hasMore: undefined,
     };
     this.fetchEvent = this.fetchEvent.bind(this);
   }
 
   async componentDidMount() {
-    await this.fetchEvent('next');
+    await this.fetchEvent(this.state.typeEvent);
   }
 
   async fetchEvent(type) {
     try {
       this.setState({ events: [] });
       let { pageSize } = this.state;
-      pageSize > 300 ? this.setState({ hasMore: false, pageSize: 30 }) : this.setState({ hasMore: true });
+      type=="prev" && pageSize>=this.state.limit?this.setState({ hasMore: false}):  type=="prev"?this.setState({ hasMore: true }): pageSize >= this.state.total? this.setState({ hasMore: false}) : this.setState({ hasMore: true });
       this.setState({ loading: true, typeEvent: type });
       const resp =
         type === 'next'
-          ? await EventsApi.getPublic(
-              '?pageSize=30&filtered=[{%22field%22:%22datetime_to%22,%22value%22:%222021-10-10%22,%22comparator%22:%22%3E%22}]'
+          ? await EventsApi.getNextEvents(
+            `?pageSize=${pageSize}`
             )
           : await EventsApi.getOldEvents(`?pageSize=${pageSize}`);
 
-      const events = resp.data.filter((item) => item.organizer);
+          console.log("resp.meta.current_page",resp.meta.current_page,pageSize,resp.meta.total)
+       //FILTERED
+       //&filtered=[{%22field%22:%22datetime_to%22,%22value%22:%222021-10-10%22,%22comparator%22:%22%3E%22}]
+      const events = resp.data.filter((item) => item?.organizer);
+      console.log("EVENTS==>",events)
 
       this.setState({ events, loading: false, current_page: resp.meta.current_page, total: resp.meta.total });
     } catch (error) {
@@ -66,14 +72,16 @@ class Home extends Component {
     }
   }
   // Funcion usada para incrementar el numero de eventos pasados consultados a la API
-  seeMore = async (page, type) => {
+  seeMore = async (page, type) => {    
     let { pageSize } = this.state;
-    pageSize = pageSize + page;
-    this.setState({ pageSize });
-    await this.fetchEvent(type);
+    pageSize = pageSize + page;    
+    this.setState({ pageSize },async()=>await this.fetchEvent(type));
+    
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  //ESTE MÉTODO GENERA BUG Y HACE CARGAR TODOS LOS EVENTOS
+ /* UNSAFE_componentWillReceiveProps(nextProps) {
+    console.log("EJECUTADO UNSAFE===>")
     const search = nextProps.location.search;
     const params = new URLSearchParams(search);
     const type = params.get('type');
@@ -110,7 +118,7 @@ class Home extends Component {
           this.setState({ serverError: true, loader: false, errorData });
         }
       });
-  }
+  }*/
 
   render() {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
@@ -121,12 +129,12 @@ class Home extends Component {
           <div className='tabs'>
             <ul>
               <li
-                onClick={!loading ? () => this.fetchEvent('next') : ''}
+                onClick={!loading ? () => this.setState({pageSize:this.state.nelements},async()=>this.fetchEvent('next')): null}
                 className={typeEvent === 'next' ? 'is-active' : ''}>
                 <a>Próximos</a>
               </li>
               <li
-                onClick={!loading ? () => this.fetchEvent('prev') : ''}
+                onClick={!loading ? () => this.setState({pageSize:this.state.nelements},async()=>this.fetchEvent('prev')): null}
                 className={typeEvent === 'prev' ? 'is-active' : ''}>
                 <a>Pasados</a>
               </li>
@@ -155,18 +163,18 @@ class Home extends Component {
                 )}
               </Row>
             )}
-
-            {hasMore === true && typeEvent === 'prev' ? (
+            {/*hasMore === true && typeEvent === 'prev'*/}
+            {hasMore === true ? (
               <Button
                 className='button is-primary is-medium is-fullwidth is-outlined'
                 size='large'
                 block
                 loading={loading}
-                onClick={() => this.seeMore(10, typeEvent)}>
+                onClick={() => this.seeMore(this.state.pageSize, typeEvent)}>
                 {!loading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
               </Button>
             ) : typeEvent === 'next' ? (
-              ''
+              loading && 'Buscando...'
             ) : (
               <Button disabled block>
                 {loading ? 'Buscando...' : 'No hay más eventos'}
