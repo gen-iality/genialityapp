@@ -102,14 +102,11 @@ export function parseData2Excel(data, fields,roles=null) {
         case 'complex':
           console.log("ITEM1==>",item.properties[name])
           if( item.properties[name]?.includes("url")){
-            //str='Archivo'
             let document= item.properties[name] && item.properties[name]?.includes("url") && JSON.parse(item.properties[name] )
-            console.log("ITEM===>",document)
           str =  (document[0] ? document[0]?.url :item.properties[name] ? item.properties[name].response : item?.user[name]).toString();
           }else{
             str=''
           }
-          console.log("")   
           break;
         case 'multiplelist':
           str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
