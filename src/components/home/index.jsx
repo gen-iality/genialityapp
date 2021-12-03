@@ -57,7 +57,6 @@ class Home extends Component {
        //FILTERED
        //&filtered=[{%22field%22:%22datetime_to%22,%22value%22:%222021-10-10%22,%22comparator%22:%22%3E%22}]
       const events = resp.data.filter((item) => item?.organizer);
-      console.log("EVENTS==>",events)
 
       this.setState({ events, loading: false, current_page: resp.meta.current_page, total: resp.meta.total });
     } catch (error) {
@@ -72,11 +71,10 @@ class Home extends Component {
     }
   }
   // Funcion usada para incrementar el numero de eventos pasados consultados a la API
-  seeMore = async (page, type) => {    
+  seeMore = async (page, type) => {
     let { pageSize } = this.state;
-    pageSize = pageSize + page;    
+    pageSize = pageSize + page;
     this.setState({ pageSize },async()=>await this.fetchEvent(type));
-    
   };
 
   //ESTE MÉTODO GENERA BUG Y HACE CARGAR TODOS LOS EVENTOS
