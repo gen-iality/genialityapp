@@ -73,7 +73,7 @@ function AgendaActivityItem(props) {
     <>
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
-          className='agendaHover efect-scale'
+          className='agendaHover '/* efect-scale */
           justify='start'
           align='middle'
           onClick={() => {
@@ -300,7 +300,7 @@ function AgendaActivityItem(props) {
                               </div>
                             </div>
                           </Timeline.Item>
-                          <Timeline.Item color={event.styles.toolbarDefaultBg} style={{ paddingBottom: '0px' }}>
+                          <Timeline.Item color={event.styles.toolbarDefaultBg} style={{ paddingBottom: '5px' }}>
                             {!props.hasDate &&
                               item.datetime_end &&
                               Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
