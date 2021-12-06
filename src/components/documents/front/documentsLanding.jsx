@@ -1,29 +1,16 @@
 import { notification, List, Avatar, Button } from 'antd';
 import React, { Component } from 'react';
 import { getFiles } from '../services';
-import { Col, Card, Result } from 'antd';
+import { Col, Card, Result, Row,Space } from 'antd';
+import {CloudDownloadOutlined} from '@ant-design/icons';
 import Loading from '../../loaders/loading';
 import DocumentsList from '../documentsList';
 import { DocumentsApi } from '../../../helpers/request';
 import { Tabs } from 'antd';
 import withContext from '../../../Context/withContext';
-
+import XLSX from 'xlsx';
 const { TabPane } = Tabs;
 
-const ExampleData = [
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-  {
-    title: 'Ant Design Title 3',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-];
 
 class documentsDetail extends Component {
   constructor(props) {
@@ -38,8 +25,16 @@ class documentsDetail extends Component {
     };
   }
 
+  exportFile = async (e) => {
+    e.preventDefault();
+    const data = this.props.cEventUser?.value?.properties?.documents_user;
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'CARTONES BINGO');
+    XLSX.writeFile(wb, `CARTONES BINGO_${this.props.cEventUser?.value?.properties?.displayName}.xls`);
+  };
+
   async componentDidMount() {
-    console.log('propsdocs', this.props.cEventUser);
     let { documents } = this.state;
     let data = [];
 
@@ -66,6 +61,8 @@ class documentsDetail extends Component {
         description: 'Ha ocurrido un error obteniendo los documentos',
       });
     }
+
+    // console.log('DOCUMENTES_USER=>', this.props.cEventUser?.value?.properties?.documents_user);
   }
 
   removeLoader = () => {
@@ -80,10 +77,10 @@ class documentsDetail extends Component {
     }
 
     return (
-      <div style={{paddingLeft:'25px', paddingRight:'25px'}}>
+      <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
         <Tabs defaultActiveKey='1'>
           <TabPane tab={`Documentos de ${this.props.cEventUser?.value?.properties?.displayName}`} key='1'>
-            {this.props.cEventUser?.value?.properties?.documents_user ? (
+            {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
               <List
                 style={{ padding: 10 }}
                 itemLayout='vertical'
@@ -96,7 +93,7 @@ class documentsDetail extends Component {
                       }
                       title={<a href={item.url}>{item.name}</a>}
                       description={
-                        <Button onClick={() => window.open(item.url)} shape='round' type='primary'>
+                        <Button  onClick={() => window.open(item.url)} shape='round' type='primary'>
                           Ver Documento
                         </Button>
                       }
@@ -104,14 +101,29 @@ class documentsDetail extends Component {
                   </List.Item>
                 )}
               />
+            ) : this.props.cEventUser?.value?.properties?.documents_user?.length >= 10 ? (
+              <Row>
+                <Space direction='vertical'>
+                  <Row>
+                    {`Hola ${this.props.cEventUser?.value?.properties?.displayName} tienes ${this.props.cEventUser?.value?.properties?.documents_user.length} documentos, por favor descarga el archivo para verlos`}
+                  </Row>
+                 <Row>
+                 <Button icon={<CloudDownloadOutlined />} onClick={(e) => this.exportFile(e)} shape='round' type='primary'>
+                    Descargar Documentos
+                  </Button>
+                 </Row>
+                </Space>
+              </Row>
             ) : (
-              <div className='site-card-border-less-wrapper'>
-                <Card title='' bordered={false}>
-                  <Result
-                    title={`Hola ${this.props.cEventUser?.value?.properties?.displayName}, No Tienes documentos por ver para este evento`}
-                  />
-                </Card>
-              </div>
+              this.props.cEventUser?.value?.properties?.documents_user == undefined && (
+                <div className='site-card-border-less-wrapper'>
+                  <Card title='' bordered={false}>
+                    <Result
+                      title={`Hola ${this.props.cEventUser?.value?.properties?.displayName}, No Tienes documentos por ver para este evento`}
+                    />
+                  </Card>
+                </div>
+              )
             )}
           </TabPane>
 
