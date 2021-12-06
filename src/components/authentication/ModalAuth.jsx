@@ -278,8 +278,8 @@ const ModalAuth = (props) => {
           </TabPane>
           {(props.cEventUser?.value == null &&
             props.organization !== 'landing' &&
-            props.cEvent.value?._id != '6193acf6f3b1800733678a64') ||
-            (props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' && (
+            props.cEvent.value?._id != '61aa596d8fe0525f9a623c74') 
+            && (
               <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
                 <div
                   // className='asistente-list'
@@ -294,7 +294,7 @@ const ModalAuth = (props) => {
                   <FormComponent />
                 </div>
               </TabPane>
-            ))}
+            )}
         </Tabs>
       </Modal>
     )
