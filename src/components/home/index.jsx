@@ -28,8 +28,8 @@ class Home extends Component {
       timeout: false,
       serverError: false,
       errorData: {},
-      nelements:10,
-      pageSize: 10,
+      nelements:20,
+      pageSize: 20,
       limit:100,
       hasMore: undefined,
     };
