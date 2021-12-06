@@ -87,7 +87,7 @@ class EventCard extends Component {
                         <i className='fas fa-calendar-alt' />
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
                         {'-'}
-                        <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+                        <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
                       </Space>
                     </span>
                     <h3 style={{ fontWeight: 'bold' }}>{event.name}</h3>

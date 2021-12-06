@@ -201,6 +201,9 @@ export const EventsApi = {
   getOldEvents: async (query) => {
     return await Actions.getAll(`/api/eventsbeforetoday${query}`, true);
   },
+  getNextEvents: async (query) => {
+    return await Actions.getAll(`/api/eventsaftertoday${query}`, true);
+  },
   landingEvent: async (id) => {
     return await Actions.getOne('/api/events/', id, true);
   },
