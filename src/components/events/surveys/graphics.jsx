@@ -298,7 +298,7 @@ class Graphics extends Component {
       return (
         <>
           <Card bodyStyle={{ padding: '0' }} className='survyCard'>
-            <strong style={{ fontSize: '18px' }}>{cSurveys.currentSurvey.name}</strong>
+            {/* <strong style={{ fontSize: '18px' }}>{cSurveys.currentSurvey.name}</strong>
             <div style={{ marginTop: 5 }}>
               {this.props.currentActivity === null && (
                 <Button
@@ -311,7 +311,7 @@ class Graphics extends Component {
                   <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
                 </Button>
               )}
-            </div>
+            </div> */}
             <strong style={{ fontSize: '16px' }}>{titleQuestion}</strong>
             {/* esta validacion es para que tomo los estilos la torta */}
             {/*

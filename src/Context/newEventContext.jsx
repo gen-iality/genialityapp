@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
+import { message } from 'antd';
 
 export const cNewEventContext = createContext();
 
@@ -58,11 +59,27 @@ export const NewEventProvider = ({ children }) => {
     setTypeTransmission(type);
   };
   const handleOk = () => {
-    setIsModalVisible(false);
-    setSelectedDateEvent({
-      from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
-      at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
-    });
+    let title = [];
+    if (selectedDay < new Date())
+    title.push('La fecha no puede ser menor a la fecha actual');
+    
+    if (selectedHours.from > selectedHours.at)
+    title.push('La hora de inicio no puede ser mayor a la hora fin');
+    
+    if ((selectedHours.from < new Date()) && (selectedDay <= new Date()))
+    title.push('La hora no puede ser menor a la hora actual');
+    
+    if (title.length > 0) {
+      title.map((item) => {
+        message.warning(item);
+      });
+    } else {
+      setIsModalVisible(false);
+      setSelectedDateEvent({
+        from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
+        at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
+      });
+    };
   };
 
   const handleCancel = () => {
