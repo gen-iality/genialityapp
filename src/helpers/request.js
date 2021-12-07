@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import * as Cookie from 'js-cookie';
 import { handleSelect } from './utils';
-import { firestore } from './firebase';
+import { app, firestore } from './firebase';
 import { parseUrl } from '../helpers/constants';
 import Moment from 'moment';
 import { async } from 'ramda-adjunct';
@@ -33,36 +33,54 @@ PRIMERO MIRAMOS  si viene en la URL
 luego miramos si viene en las cookies
 */
 
+
 let evius_token = null;
-let dataUrl = parseUrl(document.URL);
-if (dataUrl && dataUrl.token) {
-  Cookie.set('evius_token', dataUrl.token, {
-    expires: 180,
+
+
+async function getToken() {
+  app.auth().onAuthStateChanged((user) => {
+    if (user) {
+      user.getIdToken().then(async function (idToken) {
+        console.log('burrito sabanero', idToken);
+        evius_token = idToken;
+        privateInstance.defaults.params = {};
+        privateInstance.defaults.params[ 'evius_token' ] = idToken;
+      });
+    }
   });
-  evius_token = dataUrl.token;
 }
 
-if (!evius_token) {
-  evius_token = Cookie.get('evius_token');
-}
+getToken();
 
-if (evius_token) {
-  privateInstance.defaults.params = {};
-  privateInstance.defaults.params['evius_token'] = evius_token;
-}
+// let dataUrl = parseUrl(document.URL);
+// if (dataUrl && dataUrl.token) {
+//   Cookie.set('evius_token', dataUrl.token, {
+//     expires: 180,
+//   });
+//   evius_token = dataUrl.token;
+// }
 
-/** ACTUALIZAMOS EL BEARER TOKEN SI SE VENCIO Y NOS VIENE UN NUEVO TOKEN EN EL HEADER */
-privateInstance.interceptors.response.use((response) => {
-  const { headers } = response;
-  if (headers.new_token) {
-    Cookie.set('evius_token', headers.new_token, {
-      expires: 180,
-    });
-    privateInstance.defaults.params = {};
-    privateInstance.defaults.params['evius_token'] = headers.new_token;
-  }
-  return response;
-});
+// if (!evius_token) {
+//   evius_token = Cookie.get('evius_token');
+// }
+
+// if (evius_token) {
+//   privateInstance.defaults.params = {};
+//   privateInstance.defaults.params[ 'evius_token' ] = evius_token;
+// }
+
+// /** ACTUALIZAMOS EL BEARER TOKEN SI SE VENCIO Y NOS VIENE UN NUEVO TOKEN EN EL HEADER */
+// privateInstance.interceptors.response.use((response) => {
+//   const { headers } = response;
+//   if (headers.new_token) {
+//     Cookie.set('evius_token', headers.new_token, {
+//       expires: 180,
+//     });
+//     privateInstance.defaults.params = {};
+//     privateInstance.defaults.params[ 'evius_token' ] = headers.new_token;
+//   }
+//   return response;
+// });
 
 export const fireStoreApi = {
   createOrUpdate: (eventId, activityId, eventUser) => {
@@ -182,14 +200,14 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
     return eventUser;
   },
 
   getcurrentUserEventUser: async (event_id) => {
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
 
-    let eventUser = response.data && response.data[0] ? response.data[0] : null;
+    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
     return eventUser;
   },
 
@@ -641,7 +659,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers['content-type'],
+            type: response.headers[ 'content-type' ],
             blob: response.data,
           });
         });

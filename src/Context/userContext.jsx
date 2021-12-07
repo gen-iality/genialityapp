@@ -5,6 +5,7 @@ import privateInstance, { getCurrentUser } from '../helpers/request';
 
 export const CurrentUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };
+
 export function CurrentUserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(initialContextState);
 

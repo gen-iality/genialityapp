@@ -19,12 +19,12 @@ export function CurrentUserEventProvider({ children }) {
       if (user) {
         let user_id = user.uid;
         console.log('user', user);
-        EventsApi.getEventUser(user_id, event_id).then((res) => {
-          console.log('oe', res);
+        EventsApi.getcurrentUserEventUser(event_id).then((user2) => {
+          console.log('eventUserGlobal2', user2);
         });
-        user.getIdToken().then(async function(idToken) {
-          console.log('burrito sabanero', idToken);
-        });
+        // user.getIdToken().then(async function(idToken) {
+        //   console.log('burrito sabanero', idToken);
+        // });
       }
     });
 

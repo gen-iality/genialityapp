@@ -39,34 +39,12 @@ const ModalAuth = (props) => {
   }, [props.tab]);
 
   useEffect(() => {
-    async function userAuth() {
-      app.auth().onAuthStateChanged((user) => {
-        if (user) {
-          user.getIdToken().then(async function(idToken) {
-            console.log('llega aca=>>', idToken);
-            // if (idToken && !Cookie.get('evius_token')) {
-            //   Cookie.set('evius_token', idToken, { expires: 180 });
-            //   let url =
-            //     props.organization && props.organization == 'landing'
-            //       ? `/organization/${props.idOrganization}/events?token=${idToken}`
-            //       : props.organization && props.organization == 'register'
-            //       ? `/myprofile?token=${idToken}`
-            //       : `/landing/${props.cEvent.value?._id}?token=${idToken}`;
-            //   setTimeout(function() {
-            //     window.location.replace(url);
-            //   }, 1000);
-            // }
-          });
-        }
-      });
-    }
-    userAuth();
-
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
     if (props.cEvent.value?._id === '61816f5a039c0f2db65384a2') {
       handleChangeTabModal('1');
     }
 
+    console.log('props auth', props.cUser?.value);
     return () => {
       form1.resetFields();
     };
@@ -172,7 +150,7 @@ const ModalAuth = (props) => {
     console.error('Failed:', errorInfo);
   };
   return (
-    props.cUser?.status == 'LOADED' &&
+    props.cUser?.status == 'LOADING' &&
     props.cUser?.value == null &&
     typeModal == null && (
       <Modal
@@ -182,8 +160,8 @@ const ModalAuth = (props) => {
         centered
         footer={null}
         zIndex={1000}
-        closable={props.organization == 'register' ? true : false}
-        visible={props.organization == 'register' ? props.visible : true}>
+        visible={props.organization == 'register' ? props.visible : true}
+        closable={props.organization == 'register' ? true : false}>
         <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane
             tab={intl.formatMessage({

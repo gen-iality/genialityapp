@@ -26,7 +26,6 @@ import InformativeSection2 from '../informativeSections/informativeSection2';
 import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
-import PageNotPermissions from './PageNotPermissions';
 import Productos from '../producto/index';
 import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
@@ -44,7 +43,7 @@ import MySection from '../newSection';
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
-  let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal } = useContext(HelperContext);
+  let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal, handleChangeTabModal } = useContext(HelperContext);
 
   //redirigir a evento Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -57,36 +56,15 @@ const EventSectionRoutes = (props) => {
 
       if (props.cUser.value && !props.cEventUser.value) {
         handleChangeTypeModal('register');
+      } else if (!props.cUser.value) {
+        handleChangeTabModal('1');
       }
 
-      //   if (
-      //     routePermissions.length > 0 &&
-      //     routePermissions[0].permissions === 'assistants' &&
-      //     props.cUser.value !== null &&
-      //     props.cEventUser.value == null
-      //   ) {
-      //     handleChangeTypeModal('register');
-      //     return false;
-      //   } else if (
-      //     routePermissions.length > 0 &&
-      //     routePermissions[0].permissions === 'public' &&
-      //     props.cEventUser.value == null &&
-      //     eventPrivate.private
-      //   ) {
-      //     handleChangeTypeModal('register');
-      //     // props.setSectionPermissions({ view: true, section: nombresection });
-      //     return false;
-      //   } else if (
-      //     routePermissions.length > 0 &&
-      //     routePermissions[0].permissions === 'public' &&
-      //     props.cUser.value !== null &&
-      //     props.cEventUser.value == null &&
-      //     !eventPrivate.private
-      //   ) {
-      //     handleChangeTypeModal('register');
-      //     return false;
-      //   }
+      // if (!props.cUser.value) {
+      //   handleChangeTabModal('1');
       // }
+
+      // console.log('props.cUser.value && !props.cEventUser.value', props.cUser.value, props.cEventUser.value);
     }
   }
 
