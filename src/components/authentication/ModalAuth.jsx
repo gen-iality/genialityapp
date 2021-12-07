@@ -58,7 +58,12 @@ const ModalAuth = (props) => {
     if (
       props.cEvent.value?._id === '61816f5a039c0f2db65384a2' ||
       props.cEvent.value?._id === '6193acf6f3b1800733678a64' ||
-      props.cEvent.value?._id === '61aa596d8fe0525f9a623c74'
+      props.cEvent.value?._id === '61aa596d8fe0525f9a623c74' ||
+      props.cEvent.value?._id === '61aa59af8b4d7c454c051224' ||
+      props.cEvent.value?._id === '61aa5a007060fa339c7de8b5' ||
+      props.cEvent.value?._id === '61aa5a518fe0525f9a623c7d' ||
+      props.cEvent.value?._id === '61aa5adccf4598684c160363' ||
+      props.cEvent.value?._id === '61aa5b188b4d7c454c05122e'
     ) {
       handleChangeTabModal('1');
     }
@@ -198,16 +203,25 @@ const ModalAuth = (props) => {
                 />
               </Form.Item>
               {!loading && (
-                <Form.Item style={{ marginBottom: '15px' }}>
-                  <Typography.Text
-                    onClick={() => handleChangeTypeModal('recover')}
-                    underline
-                    id={'forgotpassword'}
-                    type='secondary'
-                    style={{ float: 'right', cursor: 'pointer' }}>
-                    {intl.formatMessage({ id: 'modal.option.restore', defaultMessage: 'Olvidé mi contraseña' })}
-                  </Typography.Text>
-                </Form.Item>
+                <>
+                  {props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
+                    props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
+                    props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
+                    props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
+                    props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
+                    props.cEvent.value?._id != '61aa5b188b4d7c454c05122e' && (
+                      <Form.Item style={{ marginBottom: '15px' }}>
+                        <Typography.Text
+                          onClick={() => handleChangeTypeModal('recover')}
+                          underline
+                          id={'forgotpassword'}
+                          type='secondary'
+                          style={{ float: 'right', cursor: 'pointer' }}>
+                          {intl.formatMessage({ id: 'modal.option.restore', defaultMessage: 'Olvidé mi contraseña' })}
+                        </Typography.Text>
+                      </Form.Item>
+                    )}
+                </>
               )}
               {errorLogin && (
                 <Alert
@@ -276,10 +290,14 @@ const ModalAuth = (props) => {
               </div>
             )}
           </TabPane>
-          {(props.cEventUser?.value == null &&
+          {props.cEventUser?.value == null &&
             props.organization !== 'landing' &&
-            props.cEvent.value?._id != '61aa596d8fe0525f9a623c74') 
-            && (
+            props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
+            props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
+            props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
+            props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
+            props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
+            props.cEvent.value?._id != '61aa5b188b4d7c454c05122e' && (
               <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
                 <div
                   // className='asistente-list'
