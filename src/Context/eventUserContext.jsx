@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { EventsApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
+import { GetTokenUserFirebase } from '../helpers/HelperAuth';
+import { app } from 'helpers/firebase';
 export const CurrentEventUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };
 
@@ -13,8 +15,22 @@ export function CurrentUserEventProvider({ children }) {
 
     if (!event_id) return;
 
+    app.auth().onAuthStateChanged((user) => {
+      if (user) {
+        let user_id = user.uid;
+        console.log('user', user);
+        EventsApi.getEventUser(user_id, event_id).then((res) => {
+          console.log('oe', res);
+        });
+        user.getIdToken().then(async function(idToken) {
+          console.log('burrito sabanero', idToken);
+        });
+      }
+    });
+
     async function fetchEvent() {
       const eventUserGlobal = await EventsApi.getcurrentUserEventUser(event_id);
+      console.log('eventUserGlobal', eventUserGlobal);
       setuserEvent({ status: 'LOADED', value: eventUserGlobal });
     }
 

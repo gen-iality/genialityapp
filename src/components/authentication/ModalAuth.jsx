@@ -43,18 +43,19 @@ const ModalAuth = (props) => {
       app.auth().onAuthStateChanged((user) => {
         if (user) {
           user.getIdToken().then(async function(idToken) {
-            if (idToken && !Cookie.get('evius_token')) {
-              Cookie.set('evius_token', idToken, { expires: 180 });
-              let url =
-                props.organization && props.organization == 'landing'
-                  ? `/organization/${props.idOrganization}/events?token=${idToken}`
-                  : props.organization && props.organization == 'register'
-                  ? `/myprofile?token=${idToken}`
-                  : `/landing/${props.cEvent.value?._id}?token=${idToken}`;
-              setTimeout(function() {
-                window.location.replace(url);
-              }, 1000);
-            }
+            console.log('llega aca=>>', idToken);
+            // if (idToken && !Cookie.get('evius_token')) {
+            //   Cookie.set('evius_token', idToken, { expires: 180 });
+            //   let url =
+            //     props.organization && props.organization == 'landing'
+            //       ? `/organization/${props.idOrganization}/events?token=${idToken}`
+            //       : props.organization && props.organization == 'register'
+            //       ? `/myprofile?token=${idToken}`
+            //       : `/landing/${props.cEvent.value?._id}?token=${idToken}`;
+            //   setTimeout(function() {
+            //     window.location.replace(url);
+            //   }, 1000);
+            // }
           });
         }
       });
@@ -94,16 +95,31 @@ const ModalAuth = (props) => {
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
-    loginEmailPassword(values);
+    loginFirebase(values);
     setTimeout(() => {
       setLoading(false);
     }, 3000);
   };
 
   //Realiza la validación del email y password con firebase
-  const loginFirebase = async (data) => {};
+  const loginFirebase = async (data) => {
+    app
+      .auth()
+      .signInWithEmailAndPassword(data.email, data.password)
+      .then((response) => {
+        if (response.user) {
+          console.log('response', response);
+        } else {
+          setErrorLogin(true);
+        }
+
+        // loginNormal = true;
+        // setErrorLogin(false);
+      });
+  };
 
   const loginEmailPassword = async (data) => {
+    console.log('data', data);
     let loginNormal = false;
     let loginFirst = false;
     setErrorLogin(false);

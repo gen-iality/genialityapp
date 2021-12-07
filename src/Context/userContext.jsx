@@ -1,17 +1,26 @@
+import { app } from 'helpers/firebase';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { getCurrentUser } from '../helpers/request';
+import privateInstance, { getCurrentUser } from '../helpers/request';
 
 export const CurrentUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };
 export function CurrentUserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(initialContextState);
 
+  //seteando con el auth al current user || falta eventUser
   useEffect(() => {
     async function asyncdata() {
       try {
-        let dataUser = await getCurrentUser();
-        setCurrentUser({ status: 'LOADED', value: dataUser });
+        app.auth().onAuthStateChanged((user) => {
+          if (user) {
+            user.getIdToken().then(async function(idToken) {
+              privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
+                setCurrentUser({ status: 'LOADED', value: response.data });
+              });
+            });
+          }
+        });
       } catch (e) {
         setCurrentUser({ status: 'ERROR', value: null });
       }
