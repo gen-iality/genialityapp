@@ -40,11 +40,17 @@ let ImageInput = (props) => {
         </button>
       </Col>
       <Col>
-        <button
-          onClick={async (e)=>{ e.stopPropagation(); setStillOldImage(true); await props.changeImg('', props.indexImage); setStillOldImage(false)}}
-          className={`button is-primary is-inverted is-outlined`}>
-          Eliminar Foto
-        </button>
+        {
+          props.btnRemove ? (
+            props.btnRemove
+          ) : (
+            <button
+              onClick={async (e)=>{ e.stopPropagation(); setStillOldImage(true); await props.changeImg('', props.indexImage); setStillOldImage(false)}}
+              className={`button is-primary is-inverted is-outlined`}>
+              Eliminar Imagen
+            </button>
+          ) 
+        }
       </Col>
     </Row>
   );
