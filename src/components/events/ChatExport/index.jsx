@@ -8,6 +8,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
 import moment from 'moment';
+let BADWORDS = ['spam,SPAN, SPAM'];
 
 var chatFirebase = app.initializeApp(
   {
@@ -92,10 +93,7 @@ const ChatExport = ({ eventId, event }) => {
   const exportFile = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
-    // const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
-
-    // const data = await parseData2Excel(datamsjevent);
+    datamsjevent = datamsjevent.filter((item) => item.text.toLowerCase().indexOf('spam') === -1);
     const ws = XLSX.utils.json_to_sheet(datamsjevent);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Chat');
@@ -114,8 +112,8 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let conversion  = moment(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
-          
+          let conversion = moment(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
+
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,
