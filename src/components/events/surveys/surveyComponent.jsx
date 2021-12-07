@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Result } from 'antd';
+import { Result, Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { SurveyPage } from './services/services';
 import UserGamification from './services/userGamificationService';
@@ -72,9 +72,14 @@ function SurveyComponent(props) {
          loadSurveyData.freezeGame = surveyRealTime.freezeGame;
       }
 
+      /* Survey.StylesManager.applyTheme("darkblue"); */
       let surveyModelData = new Survey.Model(loadSurveyData);
       surveyModelData.currentPageNo = surveyRealTime.currentPage;
       surveyModelData.locale = 'es';
+      //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
+      //uno en el header y otro encima del botón de inicio de encuesta
+      delete surveyModelData.localizableStrings.title.values.default;
+      /* console.log(surveyModelData, '-------------', loadSurveyData) */
 
       setSurveyData(loadSurveyData);
       setInitialSurveyModel(surveyModelData);
@@ -194,14 +199,14 @@ function SurveyComponent(props) {
          )}
 
          {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
-         surveyData &&
+            surveyData &&
             (surveyData.allow_anonymous_answers === 'true' ||
                surveyData.allow_anonymous_answers === true ||
                surveyData.publish === 'true' ||
-               surveyData.publish === true) && (
+               surveyData.publish === true) ? (
                <div style={{ display: showOrHideSurvey ? 'block' : 'none' }}>
                   {initialSurveyModel && (
-                     <div className='animate__animated animate__bounceInDown notranslate'>
+                     <div className='animate__animated animate__fadeInBottomLeft notranslate'>{/* animate__bounceInDown */}
                         {/* {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
                            <div
                               className='survy-comodin'
@@ -230,7 +235,11 @@ function SurveyComponent(props) {
                      </div>
                   )}
                </div>
-            )}
+            ) : (
+            <div style={{textAlign: 'center' }}>
+               <Spin tip={'Cargando...'}/>
+            </div>
+         )}
       </div>
    );
 }
