@@ -102,7 +102,7 @@ class eventUsersList extends Component {
         ellipsis: true,
         ...this.getColumnSearchProps(propertiesTable[i]?.name),
         render(record,data){         
-          return typeof(record)=='object'? record.map((doc)=><p>{doc?.url}</p>):record
+          return typeof(record)=='object'? record?.map((doc)=><p>{doc?.url}</p>):record
         }
       });
     }
