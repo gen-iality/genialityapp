@@ -162,10 +162,9 @@ class CertificadoLanding extends Component {
           <Row gutter={[8, 8]} wrap>
             <Col xs={22} sm={22} md={14} lg={14} xl={14} style={{ margin: '0 auto' }}>
               <Card>
-                {/* Alert informativo de certificados disponibles */}
-                {this.props.cUser.value.rol_id == '619d0c9161162b7bd16fcb82' ||
-                this.props.cUser.value.rol_id == '619d0c8a4c361c44e83f4312' ? (
+                {/* {checkedInUsers.length > 0 ? ( */}
                   <>
+                    {/* Alert informativo de certificados disponibles */}
                     <Alert message='Certificados disponibles' type='success' />
                     {checkedInUsers.map((user, key) => (
                       <div key={key}>
@@ -182,12 +181,12 @@ class CertificadoLanding extends Component {
                       </div>
                     ))}
                   </>
-                ) : (
+                {/* ) : (
                   <h1
                     style={{
                       fontSize: '27px',
-                    }}>{`Hola ${this.props.cUser.value.displayName} 👋, los certificados solo estan Disponibles para usuarios con paquete Universo y Super Heróe  `}</h1>
-                )}
+                    }}>{'En este momento no tiene certificados'}</h1>
+                )} */}
               </Card>
             </Col>
           </Row>

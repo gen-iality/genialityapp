@@ -193,7 +193,7 @@ class Headers extends Component {
         // Solucion temporal, se esta trabajando un reducer que permita identificar
         // el eventId sin importar su posición, actualmente se detecta un problema
         // cuando la url tiene el eventId en una posicion diferente al final
-        window.location.replace(window.location.origin + '/events');
+        window.location.replace(window.location.origin + '');
       })
       .catch(function(error) {
         // An error happened.
@@ -285,7 +285,8 @@ class Headers extends Component {
                 <Spin />
               )}
 
-              {(window.location.href.toString().includes('events') || window.location.href.toString().split('/').length == 4)&&
+              {(window.location.href.toString().includes('events') ||
+                window.location.href.toString().split('/').length == 4) &&
                 !window.location.href.toString().includes('organization') && (
                   <ModalAuth
                     tab={this.state.tabModal}

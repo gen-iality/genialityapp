@@ -22,27 +22,31 @@ function Apariencia(props) {
   };
   //Cambio en el input de imagen
   const changeImg = async (files, indexImage) => {
-    const file = files[0];
-    const url = '/api/files/upload',
-      path = [],
-      self = this;
-    if (file) {
-      const uploaders = files.map((file) => {
-        let data = new FormData();
-        data.append('file', file);
-        return Actions.post(url, data).then((image) => {
-          if (image) path.push(image);
+    if(files) {
+      const file = files[0];
+      const url = '/api/files/upload',
+        path = [],
+        self = this;
+      if (file) {
+        const uploaders = files.map((file) => {
+          let data = new FormData();
+          data.append('file', file);
+          return Actions.post(url, data).then((image) => {
+            if (image) path.push(image);
+          });
         });
-      });
-
-      // eslint-disable-next-line no-unused-vars
-      await Axios.all(uploaders).then((data) => {
-        saveImageEvent(path[0], indexImage);
-
-        message.success('Imagen cargada correctamente...');
-      });
+  
+        // eslint-disable-next-line no-unused-vars
+        await Axios.all(uploaders).then((data) => {
+          saveImageEvent(path[0], indexImage);
+  
+          message.success('Imagen cargada correctamente...');
+        });
+      } else {
+        message.error('Error al cargar imagen.');
+      }
     } else {
-      message.error('Error al cargar imagen.');
+      saveImageEvent(files, indexImage);
     }
   };
 

@@ -1,4 +1,4 @@
-import { Spin } from "antd";
+import { Spin, Row, Col } from "antd";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 
@@ -29,13 +29,24 @@ let ImageInput = (props) => {
     borderRadius: 10,
   };
   let contentDrop = props.contentDrop || (
-    <button
-      onClick={(e) => {
-        e.preventDefault();
-      }}
-      className={`button is-primary is-inverted is-outlined ${stillOldImage ? "is-loading" : ""}`}>
-      Cambiar foto
-    </button>
+    <Row gutter={[8, 8]} justify='center' wrap>
+      <Col>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+          className={`button is-primary is-inverted is-outlined ${stillOldImage ? "is-loading" : ""}`}>
+          Cambiar foto
+        </button>
+      </Col>
+      <Col>
+        <button
+          onClick={async (e)=>{ e.stopPropagation(); setStillOldImage(true); await props.changeImg('', props.indexImage); setStillOldImage(false)}}
+          className={`button is-primary is-inverted is-outlined`}>
+          Eliminar Foto
+        </button>
+      </Col>
+    </Row>
   );
   let divClass = props.divClass || "drop-img";
   let classDrop = props.classDrop || "dropzone";

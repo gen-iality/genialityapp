@@ -352,7 +352,7 @@ class Styles extends Component {
     const thereIsAnOrganization = this.props.org?._id
 
     this.state.data = { styles: this.state.styles };
-    console.log('save data', this.state.data)
+    /* console.log('save data', this.state.data) */
     try {
       if(thereIsAnOrganization){
          info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
@@ -452,14 +452,14 @@ class Styles extends Component {
   }
 
   handleChange(value, name) {
-    console.log(value, name);
+    /* console.log(value, name); */
     /* let name = e.target.name; */
     /* let value = e.target.value; */
     /* let value = e; */
 
     let styles = { ...this.state.styles };
     styles[name] = value;
-    console.log(styles[name], styles)
+    /* console.log(styles[name], styles) */
 
     this.setState({ styles: styles });
   }
