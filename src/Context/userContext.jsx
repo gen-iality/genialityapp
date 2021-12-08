@@ -1,7 +1,7 @@
 import { app } from 'helpers/firebase';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import privateInstance, { getCurrentUser } from '../helpers/request';
+import privateInstance from '../helpers/request';
 
 export const CurrentUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };
@@ -18,6 +18,7 @@ export function CurrentUserProvider({ children }) {
             user.getIdToken().then(async function(idToken) {
               privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
                 setCurrentUser({ status: 'LOADED', value: response.data });
+                console.log('usuario=>>', response.data);
               });
             });
           }

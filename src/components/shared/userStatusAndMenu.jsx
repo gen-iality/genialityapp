@@ -33,8 +33,10 @@ const UserStatusAndMenu = (props) => {
   }
   useEffect(() => {
     if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
+    console.log('aja', !props.cUser?.value?.isAnonymous);
   }, [props.eventId]);
-  let menu = !props.cUser?.value?.isAnonymous ? (
+
+  let menu = !props.anonimususer ? (
     <Menu>
       <Menu.Item style={ItemStyle}>
         <NavLink
@@ -96,7 +98,11 @@ const UserStatusAndMenu = (props) => {
     </Menu>
   ) : (
     <Menu>
-      <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
+      {!props.anonimususer ? (
+        <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
+      ) : (
+        <Menu.Item style={ItemStyle}>{`Por favor inicie sesión`}</Menu.Item>
+      )}
     </Menu>
   );
 
