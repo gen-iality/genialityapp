@@ -595,10 +595,17 @@ class Styles extends Component {
                         this.saveEventImage(files, item.imageFieldName);
                       }}
                       errImg={this.state.errImg}
+                      btnRemove={(this.state.styles[item.imageFieldName] && (
+                        <button
+                          onClick={async (e)=>{ e.stopPropagation(); this.deleteInfoBanner(item.imageFieldName)}}
+                          className={`button is-primary is-inverted is-outlined`}>
+                          Eliminar Imagen
+                        </button>
+                      ))}
                     />
-                    {this.state.styles[item.imageFieldName] && (
+                    {/* {this.state.styles[item.imageFieldName] && (
                       <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
-                    )}
+                    )} */}
                   </Form.Item>
 
                   {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
