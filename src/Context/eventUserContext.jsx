@@ -13,14 +13,16 @@ export function CurrentUserEventProvider({ children }) {
 
   useEffect(() => {
     let event_id = cEvent.value?._id;
+    // console.log('cambiar el envento', cEvent.value);
     async function asyncdata() {
       try {
         app.auth().onAuthStateChanged((user) => {
           if (user) {
             user.getIdToken().then(async function(idToken) {
               privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
+                console.log('user event', response.data);
                 EventsApi.getStatusRegister(event_id, response.data.email).then((responseStatus) => {
-                  // console.log('responseStatus=>>', responseStatus.data[0]);
+                  // console.log('responseStatus=>>', responseStatus);
                   setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });
                 });
               });
@@ -31,7 +33,9 @@ export function CurrentUserEventProvider({ children }) {
         setCurrentUser({ status: 'LOADING', value: null });
       }
     }
-    asyncdata();
+    if (event_id) {
+      asyncdata();
+    }
   }, [cEvent.value]);
 
   return <CurrentEventUserContext.Provider value={userEvent}>{children}</CurrentEventUserContext.Provider>;

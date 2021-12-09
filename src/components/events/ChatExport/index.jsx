@@ -7,14 +7,8 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
-import Header from '../../../antdComponents/Header';
-import Table from '../../../antdComponents/Table';
-import { handleRequestError } from '../../../helpers/utils';
-import { getColumnSearchProps } from '../../speakers/getColumnSearch';
 import moment from 'moment';
-
-
-const { confirm } = Modal;
+let BADWORDS = ['spam,SPAN, SPAM'];
 
 var chatFirebase = app.initializeApp(
   {
@@ -77,7 +71,8 @@ const ChatExport = ({ eventId, event }) => {
   const renderMensaje = (text, record) => (
     <Tooltip title={record.text} placement='topLeft'>
       <Tag color='#3895FA'>{record.text}</Tag>
-    </Tooltip>);
+    </Tooltip>
+  );
   const renderFecha = (val, item) => <p>{moment(val).format('DD/MM/YYYY HH:mm')}</p>;
   const columns = [
     {
@@ -112,10 +107,7 @@ const ChatExport = ({ eventId, event }) => {
   const exportFile = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
-    // const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
-
-    // const data = await parseData2Excel(datamsjevent);
+    datamsjevent = datamsjevent.filter((item) => item.text.toLowerCase().indexOf('spam') === -1);
     const ws = XLSX.utils.json_to_sheet(datamsjevent);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Chat');
@@ -134,16 +126,18 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let newtime = timeConverter(doc.data().timestamp?.seconds);
+          let conversion = moment(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
+
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,
             text: doc.data().text,
-            hora: newtime,
+            hora: conversion,
           };
           datamessagesthisevent.push(msjnew);
         });
         setdatamsjevent(datamessagesthisevent);
+        // console.log("CHAT=>>",datamessagesthisevent)
       })
       .catch();
   }
@@ -181,7 +175,6 @@ const ChatExport = ({ eventId, event }) => {
         onHandlerRemove();
       },
     });
-
   }
 
   function deleteSingleChat(eventId, chatId) {
@@ -201,28 +194,23 @@ const ChatExport = ({ eventId, event }) => {
 
   return (
     <>
-      <Header 
-        title={'Comunicaciones Enviadas'}
-      />
+      <Header title={'Comunicaciones Enviadas'} />
 
-      <Table 
+      <Table
         header={columns}
         list={datamsjevent}
         loading={loading}
         exportData
         fileName={'ReportChats'}
-        titleTable={(
+        titleTable={
           <Row gutter={[8, 8]} wrap>
             <Col>
-              <Button
-                onClick={deleteAllChat}
-                type='danger'
-                icon={<DeleteOutlined />}>
+              <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
                 Eliminar Chat
               </Button>
             </Col>
           </Row>
-        )}
+        }
         search
         setColumnsData={setColumnsData}
       />

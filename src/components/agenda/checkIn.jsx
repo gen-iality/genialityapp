@@ -10,7 +10,16 @@ import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';
 import { Table as TableA, Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd';
-import { SearchOutlined, UserAddOutlined, PlusCircleOutlined, DownloadOutlined, UploadOutlined, SendOutlined, QrcodeOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  UserAddOutlined,
+  PlusCircleOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+  SendOutlined,
+  QrcodeOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import UserModal from '../modal/modalUser';
 import Moment from 'moment';
@@ -172,7 +181,7 @@ class CheckAgenda extends Component {
       <p>{Moment(item.checkedin_at || item.properties?.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
-        <Checkbox 
+        <Checkbox
           id={'checkinUser' + item._id}
           disabled={item.checkedin_at}
           name={'checkinUser' + item._id}
@@ -258,14 +267,9 @@ class CheckAgenda extends Component {
   editcomponent = (text, item, index) => {
     return (
       <Tooltip placement='topLeft' title='Editar'>
-        <Button 
-          type={'primary'} 
-          icon={<EditOutlined />} 
-          size='small' 
-          onClick={() => this.openEditModalUser(item)}
-        />
+        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
       </Tooltip>
-      
+
       /* <span
         className='icon has-text-grey action_pointer'
         data-tooltip={'Editar'}
@@ -291,7 +295,12 @@ class CheckAgenda extends Component {
     const ws = await XLSX.utils.json_to_sheet(data);
     const wb = await XLSX.utils.book_new();
     await XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    await XLSX.writeFile(wb, `asistentes_actividad_${this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name}.xls`);
+    await XLSX.writeFile(
+      wb,
+      `asistentes_actividad_${
+        this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name
+      }.xls`
+    );
   };
 
   //FN Modal, abre y cierra
@@ -503,6 +512,7 @@ class CheckAgenda extends Component {
     };
 
     if (!this.props.location.state) return this.goBack();
+
     return (
       <Fragment>
         {!this.props.loading && this.state.editUser && (
@@ -527,8 +537,10 @@ class CheckAgenda extends Component {
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
-        <Header 
-          title={`CheckIn: ${this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name}`}
+        <Header
+          title={`CheckIn: ${
+            this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name
+          }`}
           back
         />
 
@@ -545,34 +557,25 @@ class CheckAgenda extends Component {
           </Col>
         </Row>
 
-        <Table 
+        <Table
           header={columnsTable}
           list={usersData}
           pagination
           scroll={{ x: 3200 }}
-          titleTable={(
+          titleTable={
             <Row gutter={[8, 8]} wrap justify='end'>
               <Col>
-                <Button
-                  onClick={this.checkModal}
-                  type='primary'
-                  icon={<QrcodeOutlined />}>
+                <Button onClick={this.checkModal} type='primary' icon={<QrcodeOutlined />}>
                   {'Leer Código QR'}
                 </Button>
               </Col>
               <Col>
-                <Button
-                  onClick={this.goToSendMessage}
-                  type='primary'
-                  icon={<SendOutlined />}>
+                <Button onClick={this.goToSendMessage} type='primary' icon={<SendOutlined />}>
                   {'Enviar Comunicación/Correo'}
                 </Button>
               </Col>
               <Col>
-                <Button
-                  onClick={this.exportFile}
-                  type='primary'
-                  icon={<DownloadOutlined />}>
+                <Button onClick={this.exportFile} type='primary' icon={<DownloadOutlined />}>
                   {'Exportar'}
                 </Button>
               </Col>
@@ -587,15 +590,12 @@ class CheckAgenda extends Component {
                 </Button>
               </Col>
               <Col>
-                <Button
-                  onClick={this.addUser}
-                  type='primary'
-                  icon={<PlusCircleOutlined />}>
+                <Button onClick={this.addUser} type='primary' icon={<PlusCircleOutlined />}>
                   {'Agregar Usuario'}
                 </Button>
               </Col>
             </Row>
-          )}
+          }
         />
         {qrModal && (
           <CheckSpace

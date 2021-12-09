@@ -43,9 +43,23 @@ const ModalAuth = (props) => {
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
     if (!props.cUser?.value) {
       setmodalVisible(true);
+      handleChangeTabModal('1');
     } else {
       setmodalVisible(false);
     }
+
+    // if (
+    //   props.cEvent.value?._id === '61816f5a039c0f2db65384a2' ||
+    //   props.cEvent.value?._id === '6193acf6f3b1800733678a64' ||
+    //   props.cEvent.value?._id === '61aa596d8fe0525f9a623c74' ||
+    //   props.cEvent.value?._id === '61aa59af8b4d7c454c051224' ||
+    //   props.cEvent.value?._id === '61aa5a007060fa339c7de8b5' ||
+    //   props.cEvent.value?._id === '61aa5a518fe0525f9a623c7d' ||
+    //   props.cEvent.value?._id === '61aa5adccf4598684c160363' ||
+    //   props.cEvent.value?._id === '61aa5b188b4d7c454c05122e'
+    // ) {
+    //   handleChangeTabModal('1');
+    // }
 
     return () => {
       form1.resetFields();
@@ -67,6 +81,7 @@ const ModalAuth = (props) => {
     setErrorRegisterUSer(false);
     setErrorLogin(false);
   }, [typeModal, tabLogin]);
+
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
@@ -328,14 +343,13 @@ const ModalAuth = (props) => {
           </TabPane>
           {props.cEventUser?.value == null &&
             props.organization !== 'landing' &&
-            props.cEvent.value?._id != '60797bfb2a9cc06ce973a1f4' &&
-            props.cEvent.value?._id != '61816f5a039c0f2db65384a2' && (
-              <TabPane
-                tab={intl.formatMessage({
-                  id: 'modal.title.register',
-                  defaultMessage: 'Registrarme',
-                })}
-                key='2'>
+            props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
+            props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
+            props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
+            props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
+            props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
+            props.cEvent.value?._id != '61aa5b188b4d7c454c05122e' && (
+              <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
                 <div
                   // className='asistente-list'
                   style={{

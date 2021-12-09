@@ -78,7 +78,6 @@ const ContentContainer = () => {
             <NewEvent />
           </NewEventProvider>
         </PrivateRoute>
-
         <PrivateRoute path='/eventadmin/:event' component={Event} />
         <PrivateRoute path='/orgadmin/:event' component={Event} />
         <PrivateRoute path='/create-event' component={NewEvent} />
@@ -99,6 +98,7 @@ const ContentContainer = () => {
         <Route path='/api/generatorQr/:id' component={QRedirect} />
         <Route exact path='/transition/:event' component={Transition} />
         <Route exact path='/eventfinished' component={EventFinished} />
+
         {/* <Route exact path='/' component={RedirectPortal} /> */}
 
         <Route

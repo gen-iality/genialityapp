@@ -66,8 +66,6 @@ const AgendaActividadDetalle = (props) => {
     props.setVirtualConference(false);
     HandleOpenCloseMenuRigth();
 
-    console.log('buscar rol=>>', props.cEventUser.value.user.rol_id);
-
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);

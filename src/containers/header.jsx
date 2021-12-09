@@ -126,8 +126,8 @@ const Headers = (props) => {
                 let data = responseStatus.data[0];
                 const name =
                   data != null
-                    ? data.properties?.name || data?.properties?.names
-                    : data.properties?.name || data?.properties?.names;
+                    ? data?.properties?.name || data?.properties?.names
+                    : data?.properties?.name || data?.properties?.names;
 
                 // console.log('aja=>>', responseStatus.data[0]);
                 // console.log('organizationsMine', organizationsMine);
@@ -137,11 +137,11 @@ const Headers = (props) => {
                   ...dataGeneral,
                   name,
                   userEvent: data,
-                  photo: data.properties.picture
-                    ? data.properties.picture
+                  photo: data?.properties.picture
+                    ? data?.properties.picture
                     : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-                  uid: data.user.uid,
-                  id: data.user._id,
+                  uid: data?.user.uid,
+                  id: data?.user._id,
                   user: true,
                   loader: false,
                   organizations: organizationsMine,

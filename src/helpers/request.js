@@ -224,6 +224,9 @@ export const EventsApi = {
   getOldEvents: async (query) => {
     return await Actions.getAll(`/api/eventsbeforetoday${query}`, true);
   },
+  getNextEvents: async (query) => {
+    return await Actions.getAll(`/api/eventsaftertoday${query}`, true);
+  },
   landingEvent: async (id) => {
     return await Actions.getOne('/api/events/', id, true);
   },
@@ -305,6 +308,7 @@ export const EventsApi = {
     return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
   },
   getStatusRegister: async (eventId, email) => {
+    console.log("Que hace",eventId,email)
     return await Actions.get(
       `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]`
     );

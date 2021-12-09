@@ -35,7 +35,14 @@ import {
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
-import { EditOutlined, FullscreenOutlined, PlusCircleOutlined, UploadOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  FullscreenOutlined,
+  PlusCircleOutlined,
+  UploadOutlined,
+  DownloadOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 
 import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
@@ -115,7 +122,7 @@ class ListEventUser extends Component {
       configfast: {},
       isModalVisible: false,
       fieldsForm: [],
-      typeScanner: 'options'
+      typeScanner: 'options',
     };
   }
 
@@ -759,7 +766,27 @@ class ListEventUser extends Component {
 
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
-    // console.log("usersReq",usersReq)
+
+    // function nameHere(str) {
+    //   return str.match(/[A-Z]/);
+    // }
+
+    // function isUpperCase(str) {
+    //   return str === str.toUpperCase();
+    // }
+
+    // let sonono = [];
+
+    // usersReq.map((item) => {
+    //   let es = nameHere(item.email);
+    //   console.log("es",es, item.properties["email"])
+    //   // if (es) {
+    //   //   if (isUpperCase(es[0])) {
+    //   //     sonono.push(item.name);
+    //   //   }
+    //   // }
+    // });
+    // console.log('AJA', sonono);
 
     return (
       <React.Fragment>
