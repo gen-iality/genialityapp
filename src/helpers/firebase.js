@@ -39,6 +39,7 @@ const fireRealtime = eviusaauth.database();
 const auth = eviusaauth.auth();
 
 const firestoreeviuschat = eviuschat.firestore();
+const realTimeviuschat = eviuschat.database();
 
 firestore.settings({
   cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
@@ -56,4 +57,4 @@ firestore
 
 window.firebase = app;
 
-export { app, auth, firestore, fireStorage, fireRealtime, firestoreeviuschat };
+export { app, auth, firestore, fireStorage, fireRealtime, firestoreeviuschat, realTimeviuschat };

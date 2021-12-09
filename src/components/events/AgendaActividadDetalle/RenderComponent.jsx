@@ -12,6 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WOWZAPlayer from 'components/livetransmision/WOWZAPlayer';
+import { realTimeviuschat } from '../../../helpers/firebase';
 
 const RenderComponent = (props) => {
   let {
@@ -33,6 +34,7 @@ const RenderComponent = (props) => {
   const [renderGame, setRenderGame] = useState('');
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
+  const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
 
   const Preloader = () => (
     <Space
@@ -77,13 +79,27 @@ const RenderComponent = (props) => {
   }
 
   useEffect(() => {
+    let realTimeRef = null;
+    let unsubscribe = null;
+
     async function GetStateMeetingRoom() {
       await listeningStateMeetingRoom(props.cEvent.value._id, currentActivity._id);
     }
 
     if (currentActivity) {
       GetStateMeetingRoom();
+      realTimeRef = realTimeviuschat.ref('meets/' + currentActivity._id + '/streamingStatus');
+      unsubscribe = realTimeRef.on('value', (snapshot) => {
+        const data = snapshot?.val();
+        setWebHookStreamStatus(data?.status);
+      });
     }
+
+    return () => {
+      if (realTimeRef && unsubscribe) {
+        realTimeRef.off('value', unsubscribe);
+      }
+    };
   }, [currentActivity]);
 
   useEffect(() => {
@@ -172,7 +188,18 @@ const RenderComponent = (props) => {
                   </>
                 );
             }
-            return <WOWZAPlayer meeting_id={meetingId} />;
+            return (
+              <>
+                {webHookStreamStatus && (
+                  <>
+                    <b>Evius Meets Status: </b>
+                    {webHookStreamStatus}
+                    <br />
+                  </>
+                )}
+                <WOWZAPlayer meeting_id={meetingId} />
+              </>
+            );
 
           case 'closed_meeting_room':
             return <ImageComponentwithContext />;

@@ -22,6 +22,7 @@ export default function RoomConfig(props) {
     setMeetingId,
     select_host_manual,
     activityDispatch,
+    activityEdit,
   } = useContext(AgendaContext);
   const { handleClick, createZoomRoom, host_list, hasVideoconference, deleteRoom, handleChange, saveConfig } = props;
 
@@ -53,7 +54,13 @@ export default function RoomConfig(props) {
         />
         {
           {
-            wowza: <WowzaStreamingPanel meeting_id={meeting_id} activityDispatch={activityDispatch} />,
+            wowza: (
+              <WowzaStreamingPanel
+                meeting_id={meeting_id}
+                activityDispatch={activityDispatch}
+                activityEdit={activityEdit}
+              />
+            ),
           }[platform]
         }
       </Card>
@@ -102,7 +109,13 @@ export default function RoomConfig(props) {
                 <p>Crear una nueva</p>
                 {
                   {
-                    wowza: <WowzaStreamingPanel meeting_id={meeting_id} activityDispatch={activityDispatch} />,
+                    wowza: (
+                      <WowzaStreamingPanel
+                        meeting_id={meeting_id}
+                        activityDispatch={activityDispatch}
+                        activityEdit={activityEdit}
+                      />
+                    ),
                     zoom: (
                       <PlatformZoomCreate
                         {...{

@@ -162,6 +162,10 @@ class DatosModal extends Component {
       <Fragment>
         {/* <section className='modal-card-body'> */}
         <Form initialValues={this.props.info} ref={this.formRef} onFinish={this.saveField} {...formLayout}>
+          {/* Campo oculto  con el id del mismo para poder editar un campo a recolectar para una organización */}
+          <Form.Item hidden initialValue={this.props.info?._id} name={'id'}>
+            <Input name='label' type='text' />
+          </Form.Item>
           <Form.Item
             initialValue={this.props.info?.label}
             //value={info?.label + 'h' || 'value'}

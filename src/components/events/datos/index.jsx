@@ -113,7 +113,7 @@ class Datos extends Component {
       const organizationId = this?.organization?._id;
       //console.log('STATE_ID==>', field, this.state.info);
       if (organizationId) {
-        if (this.state.edit) await this.props.editField(field._id, field, this.state.isEditTemplate, this.updateTable);
+        if (this.state.edit) await this.props.editField(field.id, field, this.state.isEditTemplate, this.updateTable);
         else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
       } else {
         if (this.state.edit) await EventFieldsApi.editOne(field, this.state?.info?._id, this.eventID);
@@ -364,7 +364,7 @@ class Datos extends Component {
         title: 'Tipo de dato',
         dataIndex: 'type',
         ellipsis: true,
-        sorter: (a, b) => a.type.localeCompare(b.type)
+        sorter: (a, b) => a.type.localeCompare(b.type),
       },
       {
         title: 'Obligatorio',

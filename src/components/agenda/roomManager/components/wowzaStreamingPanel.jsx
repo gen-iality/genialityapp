@@ -11,13 +11,15 @@ import {
   getLiveStreamStatus,
   getLiveStreamStats,
 } from 'adaptors/wowzaStreamingAPI';
+import { realTimeviuschat } from '../../../../helpers/firebase';
 
-const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activityDispatch }) => {
+const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activityDispatch, activityEdit }) => {
   console.log('props', meeting_id, created_action, stopped_action);
   //const [livestream, setLivestream] = useState(null);
   const [livestreamStatus, setLivestreamStatus] = useState(null);
   const [livestreamStats, setLivestreamStats] = useState(null);
   const [linkeviusmeets, setLinkeviusmeets] = useState(null);
+  const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
 
   const queryClient = useQueryClient();
   console.log('innerRender', meeting_id);
@@ -29,10 +31,23 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
     if (livestreamQuery && livestreamQuery.data) {
       let rtmplink = livestreamQuery.data.source_connection_information;
       let linkeviusmeetsi =
-        eviusmeets + `?meetingId=${'mocion4'}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}`;
+        eviusmeets + `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}`;
       setLinkeviusmeets(linkeviusmeetsi);
     }
   }, [livestreamQuery.data]);
+
+  useEffect(() => {
+    const realTimeRef = realTimeviuschat.ref('meets/' + activityEdit + '/streamingStatus');
+
+    const unsubscribe = realTimeRef.on('value', (snapshot) => {
+      const data = snapshot?.val();
+      setWebHookStreamStatus(data?.status);
+    });
+
+    return () => {
+      realTimeRef.off('value', unsubscribe);
+    };
+  }, []);
 
   console.log('linkeviusmeets', linkeviusmeets);
   useEffect(() => {
@@ -131,6 +146,13 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
       <br />
 
       <br />
+      {webHookStreamStatus && (
+        <>
+          <b>Evius Meets Status: </b>
+          {webHookStreamStatus}
+          <br />
+        </>
+      )}
       {livestreamStatus && (
         <>
           <b>Streaming Status: </b>
