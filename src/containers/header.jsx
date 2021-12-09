@@ -1,22 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { app } from '../helpers/firebase';
 import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
-import { OrganizationApi, getCurrentUser, EventsApi } from '../helpers/request';
+import privateInstance, { OrganizationApi, getCurrentUser, EventsApi, EventFieldsApi } from '../helpers/request';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
-
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
 import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
-import { parseUrl } from '../helpers/constants';
 import withContext from '../Context/withContext';
-import HelperContext from '../Context/HelperContext';
 import ModalAuth from '../components/authentication/ModalAuth';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 
@@ -28,318 +25,277 @@ const zIndex = {
   zIndex: '1',
 };
 
-class Headers extends Component {
-  constructor(props) {
-    super(props);
-    this.props.history.listen((location) => {
-      this.handleMenu(location);
-    });
+const Headers = (props) => {
+  const [dataGeneral, setdataGeneral] = useState({
+    selection: [],
+    organizations: [],
+    name: '',
+    user: false,
+    menuOpen: false,
+    timeout: false,
+    modal: false,
+    loader: false,
+    create: false,
+    valid: true,
+    serverError: false,
+    showAdmin: false,
+    showEventMenu: false,
+    tabEvtType: true,
+    tabEvtCat: true,
+    eventId: null,
+    userEvent: null,
+    modalVisible: false,
+    tabModal: '1',
+    loadingUser: true,
+    anonimususer: false,
+  });
 
-    this.state = {
-      selection: [],
-      organizations: [],
-      name: 'user',
-      user: false,
-      menuOpen: false,
-      timeout: false,
-      modal: false,
-      loader: true,
-      create: false,
-      valid: true,
-      serverError: false,
-      showAdmin: false,
-      showEventMenu: false,
-      tabEvtType: true,
-      tabEvtCat: true,
-      eventId: null,
-      userEvent: null,
-      modalVisible: false,
-      tabModal: '1',
-      loadingUser: true,
-    };
-    this.setEventId = this.setEventId.bind(this);
-    this.logout = this.logout.bind(this);
-    this.modalClose = this.modalClose.bind(this);
-  }
+  const [organizationsMine, setorganizationsMine] = useState([]);
+  const [loadedData, setloadedData] = useState(false);
 
-  showDrawer = () => {
-    this.setState({
-      showEventMenu: true,
-    });
+  const modalClose = () => {
+    setdataGeneral({ ...dataGeneral, modalVisible: false, tabModal: '' });
   };
 
-  onClose = () => {
-    this.setState({
-      showEventMenu: false,
-    });
+  const logout = () => {
+    app
+      .auth()
+      .signOut()
+      .then(() => {
+        window.location.replace(window.location.origin + '');
+      })
+      .catch(function(error) {
+        console.log('error', error);
+      });
   };
 
-  setEventId = () => {
+  const openMenu = () => {
+    setdataGeneral({ ...dataGeneral, menuOpen: !dataGeneral.menuOpen, filterOpen: false });
+  };
+
+  const goReport = (e) => {
+    e.preventDefault();
+    window.location.replace(`${ApiUrl}/events/reports`);
+  };
+
+  const handleMenuEvent = () => {
+    setdataGeneral({ ...dataGeneral, showEventMenu: !dataGeneral.showEventMenu });
+    props.showMenu();
+  };
+
+  const handleMenu = (location) => {
+    const splited = location.pathname.split('/');
+    if (splited[1] === '') {
+      setdataGeneral({ ...dataGeneral, showAdmin: false, menuOpen: false });
+    } else if (splited[1] === 'eventadmin' || splited[1] === 'orgadmin') {
+      setdataGeneral({ ...dataGeneral, showAdmin: false, menuOpen: false, showEventMenu: false });
+      window.scrollTo(0, 0);
+    } else {
+      setdataGeneral({ ...dataGeneral, showAdmin: false, menuOpen: false, showEventMenu: false });
+    }
+  };
+
+  const showDrawer = () => {
+    setdataGeneral({ ...dataGeneral, showEventMenu: true });
+  };
+
+  const onClose = () => {
+    setdataGeneral({ ...dataGeneral, showEventMenu: false });
+  };
+
+  const setEventId = () => {
     const path = window.location.pathname.split('/');
     let eventId = path[2] || path[1];
     return eventId;
   };
 
-  async componentDidMount() {
-    const eventId = this.setEventId();
-    this.setState({ eventId });
+  const LoadMineOrganizations = () => {
+    OrganizationApi.mine().then((organizationsMine) => {
+      setorganizationsMine(organizationsMine);
+    });
+  };
 
-    /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
-    let evius_token = null;
-    let dataUrl = parseUrl(document.URL);
-    if (dataUrl && dataUrl.token) {
-      Cookie.set('evius_token', dataUrl.token, { expires: 180 });
-      evius_token = dataUrl.token;
-    }
-    if (!evius_token) {
-      evius_token = await Cookie.get('evius_token');
-    }
+  async function LoadCurrentUser() {
+    const eventId = setEventId();
+    try {
+      app.auth().onAuthStateChanged((user) => {
+        if (user) {
+          user.getIdToken().then(async function(idToken) {
+            privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
+              EventsApi.getStatusRegister(eventId, response.data.email).then((responseStatus) => {
+                let data = responseStatus.data[0];
+                const name =
+                  data != null
+                    ? data?.properties?.name || data?.properties?.names
+                    : data?.properties?.name || data?.properties?.names;
 
-    // Si no tenemos token, significa que no tenemos usuario.
-    if (!evius_token) {
-      this.setState({ user: false, loader: false, loadingUser: false });
-      return;
-    }
+                // console.log('aja=>>', responseStatus.data[0]);
+                // console.log('organizationsMine', organizationsMine);
+                // console.log('data', data);
 
-    //Si existe el token consultamos la información del usuario
-    const data = await getCurrentUser();
-    //console.log('USERDATA==>', data);
-
-    if (data) {
-      //console.log('DATA==>', data);
-      const user = await EventsApi.getEventUser(data._id, eventId);
-      // console.log('USERDATA2==>', user);
-      const photo = user != null ? user.user?.picture : data.picture;
-      const name = user != null ? user?.properties?.name || user?.properties?.names : data.name || data.names;
-
-      const organizations = await OrganizationApi.mine();
-
-      this.setState(
-        {
-          name,
-          userEvent: { ...user?.properties, _id: user?.account_id || data._id },
-          photo,
-          uid: data.uid,
-          id: data._id,
-          user: true,
-          cookie: evius_token,
-          loader: false,
-          organizations,
-          loadingUser: false,
-        },
-        () => {
-          this.props.addLoginInformation(data);
+                setdataGeneral({
+                  ...dataGeneral,
+                  name,
+                  userEvent: data,
+                  photo: data?.properties.picture
+                    ? data?.properties.picture
+                    : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+                  uid: data?.user.uid,
+                  id: data?.user._id,
+                  user: true,
+                  loader: false,
+                  organizations: organizationsMine,
+                  loadingUser: false,
+                  anonimususer: false,
+                });
+                setloadedData(true);
+                // props.addLoginInformation(data);
+                // handleMenu(window.location);
+              });
+            });
+          });
         }
-      );
-      this.handleMenu(this.props.location);
-    } else {
-      //Problemas
-      console.log('entro');
-      this.setState({ timeout: true, loader: false, loadingUser: false });
-    }
-  }
-  modalClose() {
-    this.setState({ modalVisible: false, tabModal: '' });
-  }
-  handleMenu = (location) => {
-    const splited = location.pathname.split('/');
-    if (splited[1] === '') {
-      this.setState({ showAdmin: false, menuOpen: false });
-    } else if (splited[1] === 'eventadmin' || splited[1] === 'orgadmin') {
-      this.setState({ showAdmin: true, showEventMenu: false, menuOpen: false });
-      window.scrollTo(0, 0);
-    } else {
-      this.setState({ showAdmin: false, showEventMenu: false, menuOpen: false });
-    }
-  };
-
-  async componentDidUpdate(prevProps) {
-    if (
-      this.props.loginInfo.name !== prevProps.loginInfo.name ||
-      this.props.loginInfo.picture !== prevProps.loginInfo.picture
-    ) {
-      // console.log('LOGIN INFO==>', this.props.loginInfo);
-      const user = await EventsApi.getEventUser(this.props?.loginInfo?._id, this.state.eventId);
-      // console.log('USERDATA2==>', user);
-      const photo = user?.user ? user.user?.picture : this.props.loginInfo.picture;
-      const name = user?.user
-        ? user?.properties?.name || user?.properties?.names
-        : this.props.loginInfo.name || this.props.loginInfo.names;
-
-      this.setState({
-        name,
-        photo,
-        user: true,
-        userEvent: { ...user?.properties, _id: user?.account_id || this.props?.loginInfo?._id },
       });
-    }
-
-    if (prevProps && prevProps.location !== this.props.location) {
-      this.handleMenu(this.props.location);
+    } catch (e) {
+      console.log('error', e);
     }
   }
 
-  logout = () => {
-    app
-      .auth()
-      .signOut()
-      .then(() => {
-        Cookie.remove('token');
-        Cookie.remove('evius_token');
+  useEffect(() => {
+    // console.log('loadedData', loadedData);
+    LoadMineOrganizations();
+    LoadCurrentUser();
+  }, [props.cUser]);
 
-        //const urlRedirect = this.state.eventId ? `${BaseUrl}/landing/${this.state.eventId}` : `${BaseUrl}`
-        //window.location.replace(urlRedirect);
+  // useEffect(() => {
+  //   console.log('datageneral', dataGeneral);
+  // }, [dataGeneral]);
 
-        // Solucion temporal, se esta trabajando un reducer que permita identificar
-        // el eventId sin importar su posición, actualmente se detecta un problema
-        // cuando la url tiene el eventId en una posicion diferente al final
-        window.location.replace(window.location.origin + '');
-      })
-      .catch(function(error) {
-        // An error happened.
-        error;
-      });
-  };
-
-  openMenu = () => {
-    this.setState((menuState) => {
-      return { menuOpen: !menuState.menuOpen, filterOpen: false };
-    });
-  };
-
-  goReport = (e) => {
-    e.preventDefault();
-    window.location.replace(`${ApiUrl}/events/reports`);
-  };
-
-  handleMenuEvent = () => {
-    this.setState({ showEventMenu: true }, () => {
-      this.props.showMenu();
-    });
-  };
-
-  render() {
-    const { timeout, serverError, errorData, photo, name, showAdmin, showEventMenu } = this.state;
-    const { eventMenu, location } = this.props;
-    return (
-      <React.Fragment>
-        <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-          <Menu theme='light' mode='horizontal'>
-            <Row justify='space-between' align='middle'>
-              {/*evius LOGO */}
-
-              {/* <h1>Lanzamiento HBOMax Región Andina</h1> */}
-
-              <Row className='logo-header' justify='space-between' align='middle'>
-                {/* {this.props.event !== null && this.props.event.name} */}
-                <Link to={'/'}>{/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}</Link>
-                {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
-                {showAdmin && (
-                  <Col span={2} offset={3} data-target='navbarBasicExample'>
-                    <span className='icon icon-menu' onClick={this.handleMenuEvent}>
-                      <Button style={zIndex} onClick={this.showDrawer}>
-                        {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                          className: 'trigger',
-                          onClick: this.toggle,
-                        })}
-                      </Button>
-                    </span>
-                  </Col>
-                )}
-              </Row>
-
-              {!this.state.userEvent && !this.state.loadingUser ? (
-                !window.location.href.toString().includes('landing') &&
-                window.location.href.toString().split('/').length == 4 && (
-                  <Space>
-                    <Button
-                      size='large'
-                      style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                      onClick={() => this.setState({ modalVisible: true, tabModal: '2' })}>
-                      Registrarme
+  return (
+    <React.Fragment>
+      <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+        <Menu theme='light' mode='horizontal'>
+          <Row justify='space-between' align='middle'>
+            <Row className='logo-header' justify='space-between' align='middle'>
+              <Link to={'/'}>{/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}</Link>
+              {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
+              {dataGeneral?.showAdmin && (
+                <Col span={2} offset={3} data-target='navbarBasicExample'>
+                  <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
+                    <Button style={zIndex} onClick={() => showDrawer()}>
+                      {React.createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                        className: 'trigger',
+                        onClick: () => {
+                          console.log('CERRAR');
+                        },
+                      })}
                     </Button>
-                    <Button
-                      icon={<LockOutlined />}
-                      size='large'
-                      onClick={() => this.setState({ modalVisible: true, tabModal: '1' })}
-                      style={{ marginRight: 5 }}>
-                      Iniciar sesión
-                    </Button>
-                  </Space>
-                )
-              ) : !this.state.loadingUser ? (
-                <UserStatusAndMenu
-                  isLoading={this.state.loader}
-                  user={this.state.user}
-                  menuOpen={this.state.menuOpen}
-                  loader={this.state.loader}
-                  photo={photo}
-                  name={name}
-                  userEvent={this.state.userEvent}
-                  eventId={this.state.eventId}
-                  logout={this.logout}
-                  openMenu={this.openMenu}
-                  loginInfo={this.props.loginInfo}
-                />
-              ) : (
-                <Spin />
+                  </span>
+                </Col>
               )}
+            </Row>
 
-              {(window.location.href.toString().includes('events') ||
-                window.location.href.toString().split('/').length == 4) &&
-                !window.location.href.toString().includes('organization') && (
-                  <ModalAuth
-                    tab={this.state.tabModal}
-                    closeModal={this.modalClose}
-                    organization='register'
-                    visible={this.state.modalVisible}
-                  />
-                )}
-              {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
-              {/* Dropdown de navegacion para el usuario  */}
-              {/* {this.state.userEvent && (
+            {!dataGeneral.userEvent && !dataGeneral.loadingUser ? (
+              !window.location.href.toString().includes('landing') &&
+              window.location.href.toString().split('/').length == 4 && (
+                <Space>
+                  <Button
+                    size='large'
+                    style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '2' })}>
+                    Registrarme
+                  </Button>
+                  <Button
+                    icon={<LockOutlined />}
+                    size='large'
+                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '1' })}
+                    style={{ marginRight: 5 }}>
+                    Iniciar sesión
+                  </Button>
+                </Space>
+              )
+            ) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
+              <UserStatusAndMenu
+                isLoading={dataGeneral.loader}
+                user={dataGeneral.user}
+                menuOpen={dataGeneral.menuOpen}
+                loader={dataGeneral.loader}
+                photo={
+                  dataGeneral.userEvent.properties?.picture
+                    ? dataGeneral.userEvent.properties?.picture
+                    : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                }
+                name={
+                  dataGeneral.userEvent.properties?.name
+                    ? dataGeneral.userEvent.properties?.name
+                    : dataGeneral.userEvent.properties?.names
+                    ? dataGeneral.userEvent.properties?.names
+                    : ''
+                }
+                userEvent={dataGeneral.userEvent}
+                eventId={dataGeneral.eventId}
+                logout={() => logout()}
+                openMenu={() => openMenu()}
+                loginInfo={props.loginInfo}
+              />
+            ) : (
+              dataGeneral.userEvent != null &&
+              dataGeneral.anonimususer && (
                 <UserStatusAndMenu
-                  isLoading={this.state.loader}
-                  user={this.state.user}
-                  menuOpen={this.state.menuOpen}
-                  loader={this.state.loader}
-                  photo={photo}
-                  name={name}
-                  userEvent={this.state.userEvent}
-                  eventId={this.state.eventId}
-                  logout={this.logout}
-                  openMenu={this.openMenu}
-                  loginInfo={this.props.loginInfo}
+                  isLoading={dataGeneral.loader}
+                  user={dataGeneral.user}
+                  menuOpen={dataGeneral.menuOpen}
+                  loader={dataGeneral.loader}
+                  photo={'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
+                  name={'Usuario Anonimo'}
+                  userEvent={dataGeneral.userEvent}
+                  eventId={dataGeneral.eventId}
+                  logout={() => console.log('logout')}
+                  openMenu={() => console.log('openMenu')}
+                  loginInfo={props.loginInfo}
+                  anonimususer={true}
+                />
+              )
+            )}
+
+            {/* {(window.location.href.toString().includes('events') ||
+              window.location.href.toString().split('/').length == 4) &&
+              !window.location.href.toString().includes('organization') && (
+                <ModalAuth
+                  tab={dataGeneral.tabModal}
+                  closeModal={this.modalClose}
+                  organization='register'
+                  visible={dataGeneral.modalVisible}
                 />
               )} */}
-            </Row>
-          </Menu>
-        </Header>
+            {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
+          </Row>
+        </Menu>
+      </Header>
 
-        {/* Menu mobile */}
+      {/* Menu mobile */}
 
-        {showAdmin && showEventMenu && (
-          <div id='navbarBasicExample' className={`${eventMenu ? 'is-active' : ''}`}>
-            <Drawer
-              className='hiddenMenuMobile_Landing'
-              title='Administrar evento'
-              maskClosable={true}
-              bodyStyle={{ padding: '0px' }}
-              placement='left'
-              closable={true}
-              onClose={this.onClose}
-              visible={this.state.showEventMenu}>
-              <MenuOld match={location.pathname} />
-            </Drawer>
-          </div>
-        )}
+      {dataGeneral.showAdmin && dataGeneral.showEventMenu && (
+        <div id='navbarBasicExample' className={`${eventMenu ? 'is-active' : ''}`}>
+          <Drawer
+            className='hiddenMenuMobile_Landing'
+            title='Administrar evento'
+            maskClosable={true}
+            bodyStyle={{ padding: '0px' }}
+            placement='left'
+            closable={true}
+            onClose={() => onClose()}
+            visible={dataGeneral.showEventMenu}>
+            <MenuOld match={window.location.pathname} />
+          </Drawer>
+        </div>
+      )}
 
-        {timeout && <LogOut />}
-        {serverError && <ErrorServe errorData={errorData} />}
-      </React.Fragment>
-    );
-  }
-}
+      {dataGeneral.timeout && <LogOut />}
+      {dataGeneral.serverError && <ErrorServe errorData={errorData} />}
+    </React.Fragment>
+  );
+};
 
 const mapStateToProps = (state) => ({
   categories: state.categories.items,

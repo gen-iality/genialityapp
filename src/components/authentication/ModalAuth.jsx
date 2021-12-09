@@ -31,6 +31,7 @@ const ModalAuth = (props) => {
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
+  const [modalVisible, setmodalVisible] = useState(false);
   const intl = useIntl();
   useEffect(() => {
     if (props.tab) {
@@ -39,37 +40,31 @@ const ModalAuth = (props) => {
   }, [props.tab]);
 
   useEffect(() => {
-    async function userAuth() {
-      app.auth().onAuthStateChanged((user) => {
-        if (user) {
-          user.getIdToken().then(async function(idToken) {
-            if (idToken && !Cookie.get('evius_token')) {
-              Cookie.set('evius_token', idToken, { expires: 180 });
-              let url =
-                props.organization && props.organization == 'landing'
-                  ? `/organization/${props.idOrganization}/events?token=${idToken}`
-                  : props.organization && props.organization == 'register'
-                  ? `/myprofile?token=${idToken}`
-                  : `/landing/${props.cEvent.value?._id}?token=${idToken}`;
-              setTimeout(function() {
-                window.location.replace(url);
-              }, 1000);
-            }
-          });
-        }
-      });
-    }
-    userAuth();
-
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
-    if (props.cEvent.value?._id === '61816f5a039c0f2db65384a2') {
+    if (!props.cUser?.value) {
+      setmodalVisible(true);
       handleChangeTabModal('1');
+    } else {
+      setmodalVisible(false);
     }
+
+    // if (
+    //   props.cEvent.value?._id === '61816f5a039c0f2db65384a2' ||
+    //   props.cEvent.value?._id === '6193acf6f3b1800733678a64' ||
+    //   props.cEvent.value?._id === '61aa596d8fe0525f9a623c74' ||
+    //   props.cEvent.value?._id === '61aa59af8b4d7c454c051224' ||
+    //   props.cEvent.value?._id === '61aa5a007060fa339c7de8b5' ||
+    //   props.cEvent.value?._id === '61aa5a518fe0525f9a623c7d' ||
+    //   props.cEvent.value?._id === '61aa5adccf4598684c160363' ||
+    //   props.cEvent.value?._id === '61aa5b188b4d7c454c05122e'
+    // ) {
+    //   handleChangeTabModal('1');
+    // }
 
     return () => {
       form1.resetFields();
     };
-  }, []);
+  }, [props.cUser.value]);
 
   const registerUser = async (values) => {
     setLoading(true);
@@ -86,6 +81,7 @@ const ModalAuth = (props) => {
     setErrorRegisterUSer(false);
     setErrorLogin(false);
   }, [typeModal, tabLogin]);
+
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
@@ -94,71 +90,81 @@ const ModalAuth = (props) => {
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
-    loginEmailPassword(values);
+    loginFirebase(values);
     setTimeout(() => {
       setLoading(false);
     }, 3000);
   };
 
   //Realiza la validación del email y password con firebase
-  const loginFirebase = async (data) => {};
-
-  const loginEmailPassword = async (data) => {
-    let loginNormal = false;
-    let loginFirst = false;
-    setErrorLogin(false);
-
+  const loginFirebase = async (data) => {
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
-        loginNormal = true;
-        setErrorLogin(false);
-        //setLoading(false);
-      })
-      .catch(async (e) => {
-        if (props.organization !== 'register') {
-          let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
-          if (user.data.length > 0) {
-            if (
-              user.data[0].properties?.password == data.password ||
-              user.data[0].contrasena == data.password ||
-              user.data[0]?.user?.contrasena == data.password
-            ) {
-              let url =
-                props.organization == 'landing'
-                  ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
-                  : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
-              window.location.href = url;
-              loginFirst = true;
-              setErrorLogin(false);
-              //setLoading(false);
-              //loginFirebase(data)
-              //leafranciscobar@gmail.com
-              //Mariaguadalupe2014
-            } else {
-              setErrorLogin(true);
-              setLoading(false);
-            }
-          } else {
-            setErrorLogin(true);
-            setLoading(false);
-          }
+        if (response.user) {
+          console.log('response', response);
         } else {
-          let login = await EventsApi.signInWithEmailAndPassword(data);
-          let user = await UsersApi.findByEmail(data.email);
+          setErrorLogin(true);
         }
       });
   };
+
+  // const loginEmailPassword = async (data) => {
+  //   console.log('data', data);
+  //   let loginNormal = false;
+  //   let loginFirst = false;
+  //   setErrorLogin(false);
+
+  //   app
+  //     .auth()
+  //     .signInWithEmailAndPassword(data.email, data.password)
+  //     .then((response) => {
+  //       loginNormal = true;
+  //       setErrorLogin(false);
+  //       //setLoading(false);
+  //     })
+  //     .catch(async (e) => {
+  //       if (props.organization !== 'register') {
+  //         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
+  //         if (user.data.length > 0) {
+  //           if (
+  //             user.data[0].properties?.password == data.password ||
+  //             user.data[0].contrasena == data.password ||
+  //             user.data[0]?.user?.contrasena == data.password
+  //           ) {
+  //             let url =
+  //               props.organization == 'landing'
+  //                 ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
+  //                 : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
+  //             window.location.href = url;
+  //             loginFirst = true;
+  //             setErrorLogin(false);
+  //             //setLoading(false);
+  //             //loginFirebase(data)
+  //             //leafranciscobar@gmail.com
+  //             //Mariaguadalupe2014
+  //           } else {
+  //             setErrorLogin(true);
+  //             setLoading(false);
+  //           }
+  //         } else {
+  //           setErrorLogin(true);
+  //           setLoading(false);
+  //         }
+  //       } else {
+  //         let login = await EventsApi.signInWithEmailAndPassword(data);
+  //         let user = await UsersApi.findByEmail(data.email);
+  //       }
+  //     });
+  // };
 
   //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
   return (
-    props.cUser?.status == 'LOADED' &&
-    props.cUser?.value == null &&
-    typeModal == null && (
+    modalVisible && (
       <Modal
         maskStyle={props.organization == 'landing' && { backgroundColor: '#333333' }}
         onCancel={props.organization == 'register' ? () => props.closeModal() : null}
@@ -166,8 +172,8 @@ const ModalAuth = (props) => {
         centered
         footer={null}
         zIndex={1000}
-        closable={props.organization == 'register' ? true : false}
-        visible={props.organization == 'register' ? props.visible : true}>
+        visible={props.organization == 'register' ? props.visible : true}
+        closable={props.organization == 'register' ? true : false}>
         <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane
             tab={intl.formatMessage({
@@ -337,14 +343,13 @@ const ModalAuth = (props) => {
           </TabPane>
           {props.cEventUser?.value == null &&
             props.organization !== 'landing' &&
-            props.cEvent.value?._id != '60797bfb2a9cc06ce973a1f4' &&
-            props.cEvent.value?._id != '61816f5a039c0f2db65384a2' && (
-              <TabPane
-                tab={intl.formatMessage({
-                  id: 'modal.title.register',
-                  defaultMessage: 'Registrarme',
-                })}
-                key='2'>
+            props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
+            props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
+            props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
+            props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
+            props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
+            props.cEvent.value?._id != '61aa5b188b4d7c454c05122e' && (
+              <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
                 <div
                   // className='asistente-list'
                   style={{

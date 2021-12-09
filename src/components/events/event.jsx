@@ -32,9 +32,8 @@ import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../Context/withContext';
-
-//import Test from "../events/testButton"
 import { Layout, Space, Row, Col } from 'antd';
+import { AdminUsers } from 'components/AdminUsers/AdminUsers';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -248,6 +247,9 @@ class Event extends Component {
                 path={`${match.url}/agenda`}
                 render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent} />}
               />
+
+              <Route path={`${match.url}/adminUsers`} render={() => <AdminUsers />} />
+
               <Route path={`${match.url}/empresas`}>
                 <EmpresasRoutes event={this.state.event} matchUrl={match.url} />
               </Route>
@@ -311,7 +313,10 @@ class Event extends Component {
                 path={`${match.url}/invitados`}
                 render={() => <InvitedUsers eventId={this.state.event._id} event={this.state.event} />}
               />
-              <Route path={`${match.url}/messages`} render={() => <Messages eventID={this.state.event._id} event={this.state.event} matchUrl={match.url} />} />
+              <Route
+                path={`${match.url}/messages`}
+                render={() => <Messages eventID={this.state.event._id} event={this.state.event} matchUrl={match.url} />}
+              />
 
               {permissions.data.ids.includes(rolPermissions.admin_staff._id) && (
                 <Route path={`${match.url}/staff`} render={() => <AdminRol event={this.state.event} />} />
@@ -322,7 +327,9 @@ class Event extends Component {
               />
               <Route
                 path={`${match.url}/tipo-asistentes`}
-                render={() => <TipoAsistentes eventID={this.state.event._id} event={this.state.event} matchUrl={match.url} />}
+                render={() => (
+                  <TipoAsistentes eventID={this.state.event._id} event={this.state.event} matchUrl={match.url} />
+                )}
               />
               {true && (
                 <Route path={`${match.url}/ticket`} render={() => <TicketInfo eventId={this.state.event._id} />} />
@@ -395,7 +402,9 @@ class Event extends Component {
               />
               <Route
                 path={`${match.url}/ticketsEvent`}
-                render={() => <EventsTicket eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />}
+                render={() => (
+                  <EventsTicket eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />
+                )}
               />
               {/* <Route path={`${match.url}/trivia`} render={()=><Trivia eventId={this.state.event._id}/>}/> */}
               <Route component={NoMatch} />

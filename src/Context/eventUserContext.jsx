@@ -1,24 +1,41 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { EventsApi } from '../helpers/request';
+import privateInstance, { EventsApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
+import { app } from 'helpers/firebase';
 export const CurrentEventUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };
 
 export function CurrentUserEventProvider({ children }) {
   let cEvent = UseEventContext();
+
   const [userEvent, setuserEvent] = useState(initialContextState);
+
   useEffect(() => {
     let event_id = cEvent.value?._id;
-
-    if (!event_id) return;
-
-    async function fetchEvent() {
-      const eventUserGlobal = await EventsApi.getcurrentUserEventUser(event_id);
-      setuserEvent({ status: 'LOADED', value: eventUserGlobal });
+    // console.log('cambiar el envento', cEvent.value);
+    async function asyncdata() {
+      try {
+        app.auth().onAuthStateChanged((user) => {
+          if (user) {
+            user.getIdToken().then(async function(idToken) {
+              privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
+                console.log('user event', response.data);
+                EventsApi.getStatusRegister(event_id, response.data.email).then((responseStatus) => {
+                  // console.log('responseStatus=>>', responseStatus);
+                  setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });
+                });
+              });
+            });
+          }
+        });
+      } catch (e) {
+        setCurrentUser({ status: 'LOADING', value: null });
+      }
     }
-
-    fetchEvent();
+    if (event_id) {
+      asyncdata();
+    }
   }, [cEvent.value]);
 
   return <CurrentEventUserContext.Provider value={userEvent}>{children}</CurrentEventUserContext.Provider>;

@@ -16,9 +16,8 @@ import { SurveysContext } from '../../../Context/surveysContext';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
-
 class Graphics extends Component {
-  static contextType = SurveysContext
+  static contextType = SurveysContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -38,8 +37,8 @@ class Graphics extends Component {
     };
   }
   dismiss() {
-    this.chart.destroy()
-  } 
+    this.chart.destroy();
+  }
   // Funcion que permite dividir una cadena
   divideString = (string) => {
     let separatedByWhiteSpace = string.split(/\s/);
@@ -178,8 +177,6 @@ class Graphics extends Component {
       graphy.data.datasets[0].data = Object.values(totalPercentResponse || []);
       graphy.options.title.text = formatterTitle;
 
-     
-
       //Chart.pluginService.register(customPlugin);
 
       /* Fin del codigo de referencia para registrar la configuracion
@@ -265,7 +262,7 @@ class Graphics extends Component {
       // }
 
       chart.update();
-      this.setState({chart, currentPage: optionsIndex + 1});
+      this.setState({ chart, currentPage: optionsIndex + 1 });
     }
   };
 
@@ -293,7 +290,7 @@ class Graphics extends Component {
     const { Paragraph } = Typography;
     const { surveyLabel } = this.props;
 
-    let cSurveys = this.context
+    let cSurveys = this.context;
     if (dataSurvey.questions)
       return (
         <>
@@ -328,11 +325,7 @@ class Graphics extends Component {
             </Card>
 
             <br />
-            <Pagination
-              current={currentPage}
-              total={dataSurvey.questions.length * 10}
-              onChange={this.setCurrentPage}
-            />
+            <Pagination current={currentPage} total={dataSurvey.questions.length * 10} onChange={this.setCurrentPage} />
           </Card>
           <br />
           <Row>

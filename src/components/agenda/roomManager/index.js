@@ -266,6 +266,7 @@ class RoomManager extends Component {
           activity_id,
           meeting_id,
         };
+        console.log("data",data)
         const response = await service.getZoomRoom(data);
         if (
           Object.keys(response).length > 0 &&

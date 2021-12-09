@@ -2,7 +2,14 @@ import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
 import { Table, Input, Button, Space, Menu, Dropdown, Row, Col, Tag } from 'antd';
-import { SearchOutlined, DownOutlined, UserOutlined, DownloadOutlined,  UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  DownOutlined,
+  UserOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
 import XLSX from 'xlsx';
@@ -45,16 +52,15 @@ class eventUsersList extends Component {
 
     for (let i = 0; attendees.length > i; i++) {
       if (attendees[i].properties) {
-        attendeeFlattenedData = attendees[i].properties;
-        attendeeFlattenedData.key = attendees[i]._id;
-        attendeeFlattenedData.ticket = attendees[i].ticket ? attendees[i].ticket.title : '';
-        attendeeFlattenedData.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : '';
-        attendeeFlattenedData.created_at = attendees[i].created_at;
-        attendeeFlattenedData.updated_at = attendees[i].updated_at;
+        attendeeFlattenedData = attendees[i]?.properties;
+        attendeeFlattenedData.key = attendees[i]?._id;
+        attendeeFlattenedData.ticket = attendees[i]?.ticket ? attendees[i]?.ticket?.title : '';
+        attendeeFlattenedData.checkedin_at = attendees[i]?.checkedin_at ? attendees[i]?.checkedin_at : '';
+        attendeeFlattenedData.created_at = attendees[i]?.created_at;
+        attendeeFlattenedData.updated_at = attendees[i]?.updated_at;
         attendeesFormatedForTable.push(attendeeFlattenedData);
       }
     }
-
     //verificacion del tipo de dato de los campos, si se recibe un {...} entonces se pasa a array para evitar errores en la renderizacion de la tabla
     return attendeesFormatedForTable;
   }
@@ -123,7 +129,7 @@ class eventUsersList extends Component {
       {
         title: 'Actualizado',
         dataIndex: 'updated_at',
-       /*  width: 300, */
+        /*  width: 300, */
         ellipsis: true,
         sorter: (a, b) => a.updated_at - b.updated_at,
         ...this.getColumnSearchProps('updated_at'),
@@ -287,16 +293,14 @@ class eventUsersList extends Component {
     };
     return (
       <>
-        <Header 
-          title={'Enviar información o correo a asistentes'}
-        />
+        <Header title={'Enviar información o correo a asistentes'} />
         <div>
           <small>
-            <Tag>Seleccionados: {selectedRowKeys.length}</Tag> 
+            <Tag>Seleccionados: {selectedRowKeys.length}</Tag>
           </small>
         </div>
 
-        <Table          
+        <Table
           scroll={{ x: 3200 }}
           size='small'
           rowSelection={rowSelection}
@@ -315,9 +319,7 @@ class eventUsersList extends Component {
               </Col>
               <Col>
                 <Link to={`${this.props.matchUrl}/importar-excel`} icon={<UploadOutlined />}>
-                  <Button type='primary'>
-                    Importar Usuario
-                  </Button>
+                  <Button type='primary'>Importar Usuario</Button>
                 </Link>
               </Col>
               <Col>
