@@ -18,7 +18,7 @@ import { parseUrl } from '../helpers/constants';
 
 const { Header, Content, Footer } = Layout;
 const zIndex = {
-  zIndex: '1'
+  zIndex: '1',
 };
 
 class Headers extends Component {
@@ -43,19 +43,19 @@ class Headers extends Component {
       showAdmin: false,
       showEventMenu: false,
       tabEvtType: true,
-      tabEvtCat: true
+      tabEvtCat: true,
     };
   }
 
   showDrawer = () => {
     this.setState({
-      showEventMenu: true
+      showEventMenu: true,
     });
   };
 
   onClose = () => {
     this.setState({
-      showEventMenu: false
+      showEventMenu: false,
     });
   };
 
@@ -64,7 +64,7 @@ class Headers extends Component {
     let evius_token = Cookie.get('evius_token');
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
-      Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
+      Cookie.set('evius_token', dataUrl.token, { expires: 180 });
       evius_token = dataUrl.token;
     }
     if (!evius_token) {
@@ -177,7 +177,7 @@ class Headers extends Component {
                       <Button style={zIndex} onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                           className: 'trigger',
-                          onClick: this.toggle
+                          onClick: this.toggle,
                         })}
                       </Button>
                     </span>
@@ -242,7 +242,7 @@ const mapStateToProps = (state) => ({
   loginInfo: state.user.data,
   eventMenu: state.user.menu,
   permissions: state.permissions,
-  error: state.categories.error
+  error: state.categories.error,
 });
 
 export default connect(mapStateToProps)(withRouter(Headers));

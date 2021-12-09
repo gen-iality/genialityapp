@@ -53,18 +53,6 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
-
-      if (props.cUser.value && !props.cEventUser.value) {
-        handleChangeTypeModal('register');
-      } else if (!props.cUser.value) {
-        handleChangeTabModal('1');
-      }
-
-      // if (!props.cUser.value) {
-      //   handleChangeTabModal('1');
-      // }
-
-      // console.log('props.cUser.value && !props.cEventUser.value', props.cUser.value, props.cEventUser.value);
     }
   }
 

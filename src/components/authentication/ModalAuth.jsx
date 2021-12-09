@@ -31,6 +31,7 @@ const ModalAuth = (props) => {
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
+  const [modalVisible, setmodalVisible] = useState(false);
   const intl = useIntl();
   useEffect(() => {
     if (props.tab) {
@@ -40,15 +41,16 @@ const ModalAuth = (props) => {
 
   useEffect(() => {
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
-    if (props.cEvent.value?._id === '61816f5a039c0f2db65384a2') {
-      handleChangeTabModal('1');
+    if (!props.cUser?.value) {
+      setmodalVisible(true);
+    } else {
+      setmodalVisible(false);
     }
 
-    console.log('props auth', props.cUser?.value);
     return () => {
       form1.resetFields();
     };
-  }, []);
+  }, [props.cUser.value]);
 
   const registerUser = async (values) => {
     setLoading(true);
@@ -90,69 +92,64 @@ const ModalAuth = (props) => {
         } else {
           setErrorLogin(true);
         }
-
-        // loginNormal = true;
-        // setErrorLogin(false);
       });
   };
 
-  const loginEmailPassword = async (data) => {
-    console.log('data', data);
-    let loginNormal = false;
-    let loginFirst = false;
-    setErrorLogin(false);
+  // const loginEmailPassword = async (data) => {
+  //   console.log('data', data);
+  //   let loginNormal = false;
+  //   let loginFirst = false;
+  //   setErrorLogin(false);
 
-    app
-      .auth()
-      .signInWithEmailAndPassword(data.email, data.password)
-      .then((response) => {
-        loginNormal = true;
-        setErrorLogin(false);
-        //setLoading(false);
-      })
-      .catch(async (e) => {
-        if (props.organization !== 'register') {
-          let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
-          if (user.data.length > 0) {
-            if (
-              user.data[0].properties?.password == data.password ||
-              user.data[0].contrasena == data.password ||
-              user.data[0]?.user?.contrasena == data.password
-            ) {
-              let url =
-                props.organization == 'landing'
-                  ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
-                  : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
-              window.location.href = url;
-              loginFirst = true;
-              setErrorLogin(false);
-              //setLoading(false);
-              //loginFirebase(data)
-              //leafranciscobar@gmail.com
-              //Mariaguadalupe2014
-            } else {
-              setErrorLogin(true);
-              setLoading(false);
-            }
-          } else {
-            setErrorLogin(true);
-            setLoading(false);
-          }
-        } else {
-          let login = await EventsApi.signInWithEmailAndPassword(data);
-          let user = await UsersApi.findByEmail(data.email);
-        }
-      });
-  };
+  //   app
+  //     .auth()
+  //     .signInWithEmailAndPassword(data.email, data.password)
+  //     .then((response) => {
+  //       loginNormal = true;
+  //       setErrorLogin(false);
+  //       //setLoading(false);
+  //     })
+  //     .catch(async (e) => {
+  //       if (props.organization !== 'register') {
+  //         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
+  //         if (user.data.length > 0) {
+  //           if (
+  //             user.data[0].properties?.password == data.password ||
+  //             user.data[0].contrasena == data.password ||
+  //             user.data[0]?.user?.contrasena == data.password
+  //           ) {
+  //             let url =
+  //               props.organization == 'landing'
+  //                 ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
+  //                 : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
+  //             window.location.href = url;
+  //             loginFirst = true;
+  //             setErrorLogin(false);
+  //             //setLoading(false);
+  //             //loginFirebase(data)
+  //             //leafranciscobar@gmail.com
+  //             //Mariaguadalupe2014
+  //           } else {
+  //             setErrorLogin(true);
+  //             setLoading(false);
+  //           }
+  //         } else {
+  //           setErrorLogin(true);
+  //           setLoading(false);
+  //         }
+  //       } else {
+  //         let login = await EventsApi.signInWithEmailAndPassword(data);
+  //         let user = await UsersApi.findByEmail(data.email);
+  //       }
+  //     });
+  // };
 
   //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
   return (
-    props.cUser?.status == 'LOADING' &&
-    props.cUser?.value == null &&
-    typeModal == null && (
+    modalVisible && (
       <Modal
         maskStyle={props.organization == 'landing' && { backgroundColor: '#333333' }}
         onCancel={props.organization == 'register' ? () => props.closeModal() : null}

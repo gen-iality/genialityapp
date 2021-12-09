@@ -117,7 +117,7 @@ const Landing = (props) => {
 
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
-      console.log("cEventContext",cEventContext)
+      console.log('cEventContext', cEventContext);
       firestore
         .collection('events')
         .doc(cEventContext.value?._id)
@@ -146,7 +146,7 @@ const Landing = (props) => {
     }
   }, [cEventContext.status]);
 
-  if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin />;
+  if (cEventContext.status === 'LOADING') return <Spin />;
 
   return (
     <>
