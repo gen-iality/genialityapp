@@ -115,31 +115,33 @@ function AgendaActivityItem(props) {
                     </div>
                   )}
                   {/* aqui se encuenta el estado de agenda en la mobile */}
-                  <div className='contenedor-estado-agenda'>
-                    {meetingState == 'open_meeting_room' ? (
-                      <EnvivoIcon style={{ fontSize: '35px', marginTop: '10px' }} />
-                    ) : meetingState == 'closed_meeting_room' ? (
-                      <LoadingOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
-                    ) : meetingState == 'ended_meeting_room' && item.video ? (
-                      <CaretRightOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
-                    ) : meetingState == 'ended_meeting_room' ? (
-                      <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
-                    ) : (
-                      <></>
-                    )}
+                  {item.platform && (
+                    <div className='contenedor-estado-agenda'>
+                      {meetingState == 'open_meeting_room' ? (
+                        <EnvivoIcon style={{ fontSize: '35px', marginTop: '10px' }} />
+                      ) : meetingState == 'closed_meeting_room' ? (
+                        <LoadingOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                      ) : meetingState == 'ended_meeting_room' && item.video ? (
+                        <CaretRightOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                      ) : meetingState == 'ended_meeting_room' ? (
+                        <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                      ) : (
+                        <></>
+                      )}
 
-                    <span style={{ fontSize: '8px' }}>
-                      {meetingState == 'open_meeting_room'
-                        ? 'En vivo'
-                        : meetingState == 'ended_meeting_room' && item.video
-                        ? 'Grabado'
-                        : meetingState == 'ended_meeting_room'
-                        ? 'Finalizado'
-                        : meetingState == 'closed_meeting_room'
-                        ? 'Por iniciar'
-                        : '     '}
-                    </span>
-                  </div>
+                      <span style={{ fontSize: '8px' }}>
+                        {meetingState == 'open_meeting_room'
+                          ? 'En vivo'
+                          : meetingState == 'ended_meeting_room' && item.video
+                          ? 'Grabado'
+                          : meetingState == 'ended_meeting_room'
+                          ? 'Finalizado'
+                          : meetingState == 'closed_meeting_room'
+                          ? 'Por iniciar'
+                          : '     '}
+                      </span>
+                    </div>
+                  )}
                 </Col>
                 <Col span={20} style={{ textAlign: 'left' }}>
                   <Space direction='vertical'>
@@ -225,32 +227,34 @@ function AgendaActivityItem(props) {
                                 ') '}
                             </p>
                           )}
-                          <div className='contenedor-estado-agenda'>
-                            {meetingState == 'open_meeting_room' ? (
-                              <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
-                            ) : meetingState == 'closed_meeting_room' ? (
-                              <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                            ) : meetingState == 'ended_meeting_room' && item.video ? (
-                              <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                            ) : meetingState == 'ended_meeting_room' ? (
-                              <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                            ) : (
-                              <></>
-                            )}
+                          {item.platform && (
+                            <div className='contenedor-estado-agenda'>
+                              {meetingState == 'open_meeting_room' ? (
+                                <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
+                              ) : meetingState == 'closed_meeting_room' ? (
+                                <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                              ) : meetingState == 'ended_meeting_room' && item.video ? (
+                                <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                              ) : meetingState == 'ended_meeting_room' ? (
+                                <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                              ) : (
+                                <></>
+                              )}
 
-                            {(meetingState == '' || meetingState == null) && <></>}
-                            <p style={{ fontSize: '14px' }}>
-                              {meetingState == 'open_meeting_room'
-                                ? intl.formatMessage({ id: 'live' })
-                                : meetingState == 'ended_meeting_room' && item.video
-                                ? intl.formatMessage({ id: 'live.ended.video' })
-                                : meetingState == 'ended_meeting_room'
-                                ? intl.formatMessage({ id: 'live.ended' })
-                                : meetingState == 'closed_meeting_room'
-                                ? intl.formatMessage({ id: 'live.by_start' })
-                                : '     '}
-                            </p>
-                          </div>
+                              {(meetingState == '' || meetingState == null) && <></>}
+                              <p style={{ fontSize: '14px' }}>
+                                {meetingState == 'open_meeting_room'
+                                  ? intl.formatMessage({ id: 'live' })
+                                  : meetingState == 'ended_meeting_room' && item.video
+                                  ? intl.formatMessage({ id: 'live.ended.video' })
+                                  : meetingState == 'ended_meeting_room'
+                                  ? intl.formatMessage({ id: 'live.ended' })
+                                  : meetingState == 'closed_meeting_room'
+                                  ? intl.formatMessage({ id: 'live.by_start' })
+                                  : '     '}
+                              </p>
+                            </div>
+                          )}
                         </Timeline.Item>
                         <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
                           {!props.hasDate &&
@@ -359,7 +363,7 @@ function AgendaActivityItem(props) {
                   </Space>
                 </Col>
                 <Col md={8} lg={5} xl={5}>
-                  <img className='agenda-imagen' src={item.image ? item.image : event_image} />
+                  {item.image && <img className='agenda-imagen' src={item.image ? item.image : event_image} />}
                 </Col>
               </Row>
             </Card>
