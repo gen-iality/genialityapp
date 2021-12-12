@@ -93,13 +93,21 @@ function AgendaActivityItem(props) {
                   {!props.hasDate && (
                     <div className='agenda-hora'>
                       {item.datetime_start
-                        ? Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                        ? Moment.tz(
+                            item.datetime_start,
+                            'YYYY-MM-DD HH:mm',
+                            props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                          )
                             .tz(timeZone)
                             .format('hh:mm a')
                         : ''}
                       {item.datetime_start && (
                         <p className='ultrasmall-mobile'>
-                          {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                          {Moment.tz(
+                            item.datetime_start,
+                            'YYYY-MM-DD HH:mm',
+                            props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                          )
                             .tz(timeZone)
                             .format(' (Z)')}
                         </p>
@@ -195,13 +203,21 @@ function AgendaActivityItem(props) {
                       <Timeline>
                         <Timeline.Item color='#1cdcb7'>
                           {!props.hasDate && item.datetime_start
-                            ? Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            ? Moment.tz(
+                                item.datetime_start,
+                                'YYYY-MM-DD h:mm',
+                                props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                              )
                                 .tz(timeZone)
                                 .format('h:mm a')
                             : ''}
                           {!props.hasDate && item.datetime_start && (
                             <p className='ultrasmall'>
-                              {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                              {Moment.tz(
+                                item.datetime_start,
+                                'YYYY-MM-DD HH:mm',
+                                props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                              )
                                 .tz(timeZone)
                                 .format(' (Z') +
                                 ' ' +
@@ -239,12 +255,20 @@ function AgendaActivityItem(props) {
                         <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
                           {!props.hasDate &&
                             item.datetime_end &&
-                            Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                            Moment.tz(
+                              item.datetime_end,
+                              'YYYY-MM-DD HH:mm',
+                              props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                            )
                               .tz(timeZone)
                               .format('h:mm a')}
                           {!props.hasDate && item.datetime_end && (
                             <p className='ultrasmall'>
-                              {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                              {Moment.tz(
+                                item.datetime_end,
+                                'YYYY-MM-DD HH:mm',
+                                props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                              )
                                 .tz(timeZone)
                                 .format(' (Z') +
                                 ' ' +
