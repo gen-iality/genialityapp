@@ -50,7 +50,7 @@ function AgendaActivityItem(props) {
   }, [registerStatus, item]);
 
   useEffect(() => {
-    console.log("DATE HAS");
+    console.log('DATE HAS');
     console.log(props.hasDate);
     (async () => {
       await listeningStateMeetingRoom(item.event_id, item._id);
@@ -72,7 +72,6 @@ function AgendaActivityItem(props) {
 
   return (
     <>
-    HHH{props.event._id}
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
@@ -90,21 +89,23 @@ function AgendaActivityItem(props) {
             {/* card de agenda en mobile */}
             <Card hoverable className='card-agenda-mobile agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
               <Row gutter={[8, 8]}>
-               <Col span={4}>
-               {!props.hasDate &&   <div className='agenda-hora'>
-                    {item.datetime_start
-                      ? Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
-                          .tz(timeZone)
-                          .format('hh:mm a')
-                      : ''}
-                    {item.datetime_start && (
-                      <p className='ultrasmall-mobile'>
-                        {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
-                          .tz(timeZone)
-                          .format(' (Z)')}
-                      </p>
-                    )}
-                  </div>}
+                <Col span={4}>
+                  {!props.hasDate && (
+                    <div className='agenda-hora'>
+                      {item.datetime_start
+                        ? Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                            .tz(timeZone)
+                            .format('hh:mm a')
+                        : ''}
+                      {item.datetime_start && (
+                        <p className='ultrasmall-mobile'>
+                          {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                            .tz(timeZone)
+                            .format(' (Z)')}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   {/* aqui se encuenta el estado de agenda en la mobile */}
                   <div className='contenedor-estado-agenda'>
                     {meetingState == 'open_meeting_room' ? (
@@ -190,67 +191,70 @@ function AgendaActivityItem(props) {
               <Row gutter={[8, 8]}>
                 <Col md={4} lg={4} xl={4}>
                   <div className='agenda-hora'>
-                  {!props.hasDate && item.datetime_end && <Timeline>
-                      <Timeline.Item color='#1cdcb7'>
-                        { !props.hasDate && item.datetime_start
-                          ? Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                              .tz(timeZone)
-                              .format('h:mm a')
-                          : ''}
-                        { !props.hasDate &&item.datetime_start && (
-                          <p className='ultrasmall'>
-                            {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
-                              .tz(timeZone)
-                              .format(' (Z') +
-                              ' ' +
-                              timeZone +
-                              ') '}
-                          </p>
-                        )}
-                        <div className='contenedor-estado-agenda'>
-                          {meetingState == 'open_meeting_room' ? (
-                            <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
-                          ) : meetingState == 'closed_meeting_room' ? (
-                            <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                          ) : meetingState == 'ended_meeting_room' && item.video ? (
-                            <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                          ) : meetingState == 'ended_meeting_room' ? (
-                            <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                          ) : (
-                            <></>
+                    {!props.hasDate && item.datetime_end && (
+                      <Timeline>
+                        <Timeline.Item color='#1cdcb7'>
+                          {!props.hasDate && item.datetime_start
+                            ? Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                                .tz(timeZone)
+                                .format('h:mm a')
+                            : ''}
+                          {!props.hasDate && item.datetime_start && (
+                            <p className='ultrasmall'>
+                              {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                                .tz(timeZone)
+                                .format(' (Z') +
+                                ' ' +
+                                timeZone +
+                                ') '}
+                            </p>
                           )}
+                          <div className='contenedor-estado-agenda'>
+                            {meetingState == 'open_meeting_room' ? (
+                              <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
+                            ) : meetingState == 'closed_meeting_room' ? (
+                              <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                            ) : meetingState == 'ended_meeting_room' && item.video ? (
+                              <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                            ) : meetingState == 'ended_meeting_room' ? (
+                              <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                            ) : (
+                              <></>
+                            )}
 
-                          {(meetingState == '' || meetingState == null) && <></>}
-                          <p style={{ fontSize: '14px' }}>
-                            {meetingState == 'open_meeting_room'
-                              ? intl.formatMessage({ id: 'live' })
-                              : meetingState == 'ended_meeting_room' && item.video
-                              ? intl.formatMessage({ id: 'live.ended.video' })
-                              : meetingState == 'ended_meeting_room'
-                              ? intl.formatMessage({ id: 'live.ended' })
-                              : meetingState == 'closed_meeting_room'
-                              ? intl.formatMessage({ id: 'live.by_start' })
-                              : '     '}
-                          </p>
-                        </div>
-                      </Timeline.Item>
-                      <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
-                        {!props.hasDate && item.datetime_end &&
-                          Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
-                            .tz(timeZone)
-                            .format('h:mm a')}
-                        { !props.hasDate && item.datetime_end && (
-                          <p className='ultrasmall'>
-                            {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                            {(meetingState == '' || meetingState == null) && <></>}
+                            <p style={{ fontSize: '14px' }}>
+                              {meetingState == 'open_meeting_room'
+                                ? intl.formatMessage({ id: 'live' })
+                                : meetingState == 'ended_meeting_room' && item.video
+                                ? intl.formatMessage({ id: 'live.ended.video' })
+                                : meetingState == 'ended_meeting_room'
+                                ? intl.formatMessage({ id: 'live.ended' })
+                                : meetingState == 'closed_meeting_room'
+                                ? intl.formatMessage({ id: 'live.by_start' })
+                                : '     '}
+                            </p>
+                          </div>
+                        </Timeline.Item>
+                        <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
+                          {!props.hasDate &&
+                            item.datetime_end &&
+                            Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                               .tz(timeZone)
-                              .format(' (Z') +
-                              ' ' +
-                              timeZone +
-                              ') '}
-                          </p>
-                        )}
-                      </Timeline.Item>
-                    </Timeline>}
+                              .format('h:mm a')}
+                          {!props.hasDate && item.datetime_end && (
+                            <p className='ultrasmall'>
+                              {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                                .tz(timeZone)
+                                .format(' (Z') +
+                                ' ' +
+                                timeZone +
+                                ') '}
+                            </p>
+                          )}
+                        </Timeline.Item>
+                      </Timeline>
+                    )}
                   </div>
                 </Col>
                 <Col md={12} lg={15} xl={15} className='agenda-contenido'>
