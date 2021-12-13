@@ -30,15 +30,15 @@ export const FETCH_PERMISSIONS_SUCCESS = 'FETCH_PERMISSIONS_SUCCESS';
 export const FETCH_PERMISSIONS_FAILURE = 'FETCH_PERMISSIONS_FAILURE';
 
 export const fetchPermissionsBegin = () => ({
-  type: FETCH_PERMISSIONS_BEGIN
+  type: FETCH_PERMISSIONS_BEGIN,
 });
 
 export const fetchPermissionsSuccess = (permissions) => ({
   type: FETCH_PERMISSIONS_SUCCESS,
-  payload: permissions
+  payload: permissions,
 });
 
 export const fetchPermissionsFailure = (error) => ({
   type: FETCH_PERMISSIONS_FAILURE,
-  payload: { error }
+  payload: { error },
 });

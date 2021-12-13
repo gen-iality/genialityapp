@@ -8,6 +8,6 @@ export async function GetTokenUserFirebase() {
       });
     }
   });
-
+  console.log('response===>', response, app.auth().currentUser);
   return response;
 }

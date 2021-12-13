@@ -28,7 +28,7 @@ class UserLoginContainer extends Component {
       errorValidation: false,
       errorRecovery: false,
       successRecovery: false,
-      eventId: this.props.eventId
+      eventId: this.props.eventId,
     };
   }
 
@@ -36,7 +36,7 @@ class UserLoginContainer extends Component {
     this.setState({ successRecovery: false });
     const { eventId } = this.state;
 
-    await app.auth().onAuthStateChanged((user) => {
+    /* await app.auth().onAuthStateChanged((user) => {
       if (user) {
         user.getIdToken().then(async function(idToken) {
           if (idToken && !Cookie.get('evius_token')){
@@ -47,7 +47,7 @@ class UserLoginContainer extends Component {
           }
         });
       }
-    });
+    });*/
   }
 
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
@@ -83,7 +83,7 @@ class UserLoginContainer extends Component {
     setTimeout(() => {
       this.setState({
         enabledFormRecoveryPass: true,
-        loading: false
+        loading: false,
       });
     }, 500);
   };
@@ -93,7 +93,7 @@ class UserLoginContainer extends Component {
     setTimeout(() => {
       this.setState({
         enabledFormLoginWithEmailPass: true,
-        loading: false
+        loading: false,
       });
     }, 500);
   };
@@ -101,8 +101,7 @@ class UserLoginContainer extends Component {
   handleRecoveryPass = async ({ email }) => {
     this.setState({ loading: true, errorRecovery: false, successRecovery: false });
     const urlRequest =
-      `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword?destination=` +
-      window.location.origin ;
+      `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword?destination=` + window.location.origin;
     await Actions.put(urlRequest, { email })
       .then(() => {
         this.setState({ loading: false, successRecovery: true });
@@ -121,7 +120,7 @@ class UserLoginContainer extends Component {
       enabledFormLoginWithEmailPass,
       enabledFormRecoveryPass,
       errorRecovery,
-      successRecovery
+      successRecovery,
     } = this.state;
 
     return (

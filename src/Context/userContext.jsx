@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import privateInstance from '../helpers/request';
 
 export const CurrentUserContext = React.createContext();
-let initialContextState = { status: 'LOADING', value: null };
+let initialContextState = { status: 'LOADING', value: undefined };
 
 export function CurrentUserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(initialContextState);
@@ -18,9 +18,21 @@ export function CurrentUserProvider({ children }) {
             user.getIdToken().then(async function(idToken) {
               privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
                 setCurrentUser({ status: 'LOADED', value: response.data });
-                console.log('usuario=>>', response.data);
               });
             });
+          } else {
+            setCurrentUser({ status: 'LOADED', value: null });
+          }
+        });
+        app.auth().isSignInWithEmailLink((user) => {
+          if (user) {
+            user.getIdToken().then(async function(idToken) {
+              privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
+                setCurrentUser({ status: 'LOADED', value: response.data });
+              });
+            });
+          } else {
+            setCurrentUser({ status: 'LOADED', value: null });
           }
         });
       } catch (e) {

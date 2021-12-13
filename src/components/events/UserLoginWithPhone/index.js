@@ -6,7 +6,7 @@ import FormTags from './constants';
 import { injectIntl } from 'react-intl';
 
 const textLeft = {
-  textAlign: 'left'
+  textAlign: 'left',
 };
 
 class UserLogin extends Component {
@@ -30,7 +30,7 @@ class UserLogin extends Component {
       errorLogin: false,
       errorValidation: false,
       eventId: this.props.eventId,
-      formTexts: FormTags('login')
+      formTexts: FormTags('login'),
     };
   }
 
@@ -39,7 +39,7 @@ class UserLogin extends Component {
 
     //this.initializeCaptcha();
 
-    await app.auth().onAuthStateChanged((user) => {
+    /* await app.auth().onAuthStateChanged((user) => {
       if (user) {
         user.getIdToken().then(async function(idToken) {
           if (idToken) {
@@ -50,7 +50,7 @@ class UserLogin extends Component {
           }
         });
       }
-    });
+    });*/
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -71,7 +71,7 @@ class UserLogin extends Component {
       window.recaptchaVerifier = new app.auth.RecaptchaVerifier(this.reCaptchaRef.current.id, {
         size: 'invisible',
         callback: function(response) {},
-        'expired-callback': function() {}
+        'expired-callback': function() {},
       });
 
       window.recaptchaVerifier.render().then(function(widgetId) {
@@ -124,7 +124,7 @@ class UserLogin extends Component {
     const respuesta = app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      
+
       .catch(() => {
         console.error('Error: Email or password invalid');
         this.setState({ errorLogin: true });
@@ -171,7 +171,7 @@ class UserLogin extends Component {
     // })
     // .then((refreshToken)=>{
     //   this.setState({refreshToken: refreshToken})
-    //   
+    //
     // })
     // .catch(function (error) {
     //  console.error(error)
@@ -241,8 +241,8 @@ class UserLogin extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese E-Mail'
-                    }
+                      message: 'Ingrese E-Mail',
+                    },
                   ]}>
                   <Input style={{ width: '300px' }} />
                 </Form.Item>
@@ -256,8 +256,8 @@ class UserLogin extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese su contraseña'
-                    }
+                      message: 'Ingrese su contraseña',
+                    },
                   ]}>
                   <Input type='password' style={{ width: '300px' }} />
                 </Form.Item>
@@ -305,8 +305,8 @@ class UserLogin extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese el código de verificación'
-                    }
+                      message: 'Ingrese el código de verificación',
+                    },
                   ]}>
                   <Input />
                 </Form.Item>

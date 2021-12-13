@@ -9,6 +9,7 @@ import { app, firestore } from './firebase';
 import { parseUrl } from '../helpers/constants';
 import Moment from 'moment';
 import { async } from 'ramda-adjunct';
+import { GetTokenUserFirebase } from './HelperAuth';
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
@@ -33,18 +34,16 @@ PRIMERO MIRAMOS  si viene en la URL
 luego miramos si viene en las cookies
 */
 
-
 let evius_token = null;
-
 
 async function getToken() {
   app.auth().onAuthStateChanged((user) => {
     if (user) {
-      user.getIdToken().then(async function (idToken) {
+      user.getIdToken().then(async function(idToken) {
         console.log('burrito sabanero', idToken);
         evius_token = idToken;
         privateInstance.defaults.params = {};
-        privateInstance.defaults.params[ 'evius_token' ] = idToken;
+        privateInstance.defaults.params['evius_token'] = idToken;
       });
     }
   });
@@ -200,14 +199,14 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
     return eventUser;
   },
 
   getcurrentUserEventUser: async (event_id) => {
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
 
-    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
+    let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
 
@@ -308,7 +307,7 @@ export const EventsApi = {
     return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
   },
   getStatusRegister: async (eventId, email) => {
-    console.log("Que hace",eventId,email)
+    console.log('Que hace', eventId, email);
     return await Actions.get(
       `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]`
     );
@@ -420,6 +419,7 @@ export const eventTicketsApi = {
 
 export const TicketsApi = {
   getAll: async (token) => {
+    //token = await GetTokenUserFirebase();
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
   },
   getByEvent: async (event, token) => {
@@ -663,7 +663,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers[ 'content-type' ],
+            type: response.headers['content-type'],
             blob: response.data,
           });
         });

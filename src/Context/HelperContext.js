@@ -64,8 +64,7 @@ export const HelperContextProvider = ({ children }) => {
   const [gameRanking, setGameRanking] = useState([]);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [tabsGenerals, settabsGenerals] = useState();
-  
-
+  const [updateEventUser, setUpdateEventUser] = useState(false);
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
   }
@@ -179,7 +178,9 @@ export const HelperContextProvider = ({ children }) => {
         </Row>
       ),
       description: isAnImage ? (
-        <div style={{ color: 'grey' }}><FileImageOutlined /> Imagen</div>
+        <div style={{ color: 'grey' }}>
+          <FileImageOutlined /> Imagen
+        </div>
       ) : (
         <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>
       ),
@@ -372,7 +373,7 @@ export const HelperContextProvider = ({ children }) => {
 
   /* CARGAR CHAT PRIVADOS */
   useEffect(() => {
-    if (cEvent.value == null || cUser.value == null) return;
+    if (cEvent.value == null || cUser.value == null || cUser.value == undefined) return;
     firestore
       .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
@@ -388,12 +389,11 @@ export const HelperContextProvider = ({ children }) => {
 
           list.push(data);
         });
-        
         let totalNewMessages = 0;
         list.map((privateuser) => {
           let countsmsj =
-          privateuser?.participants &&
-          privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
+            privateuser?.participants &&
+            privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
           if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
             totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
           }
@@ -428,7 +428,7 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
-    if (cEvent.value == null || cUser.value == null) return;
+    if (cEvent.value == null || cUser.value == null || cUser.value == undefined) return;
     async function fethcNewMessages() {
       let ultimomsj = null;
       firestore
@@ -534,7 +534,7 @@ export const HelperContextProvider = ({ children }) => {
         });
     }
 
-    if (cUser.value != null && cEvent.value != null) {
+    if (cUser.value != null && cUser.value != undefined && cEvent.value != null) {
       fetchNetworkingChange();
     }
   }, [cUser.value, cEvent.value]);
@@ -621,7 +621,9 @@ export const HelperContextProvider = ({ children }) => {
         gameRanking,
         setGameRanking,
         tabsGenerals,
-        handleChangeTabs        
+        handleChangeTabs,
+        updateEventUser,
+        setUpdateEventUser,
       }}>
       {children}
     </HelperContext.Provider>
