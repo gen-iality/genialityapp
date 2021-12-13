@@ -130,7 +130,7 @@ const FormRegister = ({
   const cEvent = UseEventContext();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
-  const { tabLogin, typeModal, eventPrivate } = useContext(HelperContext);
+  const { tabLogin, typeModal, eventPrivate, handleChangeTypeModal } = useContext(HelperContext);
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -150,13 +150,13 @@ const FormRegister = ({
   let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
-  const [initialValues, setinitialValues] = useState(
-    organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
-  );
+  const [initialValues, setinitialValues] = useState({});
   if (Object.keys(initialValues).length > 0) {
     initialValues.contrasena = '';
     initialValues.password = '';
   }
+
+  console.log('1. INITIAL VALUES==>', initialValues, cEventUser?.value, cUser.value);
 
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || []
@@ -165,6 +165,18 @@ const FormRegister = ({
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {}
   );
+
+  useEffect(() => {
+    setinitialValues(
+      organization
+        ? initialOtherValue
+        : cEventUser?.value != null && cEventUser?.value != undefined
+        ? cEventUser?.value?.properties
+        : cUser.value
+        ? cUser.value
+        : {}
+    );
+  }, [cUser.value, cEventUser]);
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
@@ -246,7 +258,7 @@ const FormRegister = ({
       callback(values);
     } else {
       const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
-
+      console.log('DATA USER==>', data, cEventUser);
       if (data.length == 0 || cEventUser.value) {
         setSectionPermissions({ view: false, ticketview: false });
         values.password = password;
@@ -268,6 +280,7 @@ const FormRegister = ({
         let eventUserId;
 
         if (eventUserId) {
+          console.log('1. ENTRO ACA A MODIFICAR 1-----');
           try {
             await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, snap);
             // textMessage.content = "Transferencia Realizada";
@@ -321,7 +334,7 @@ const FormRegister = ({
               // console.log('INITIAL TOKEN AND VALID EMAIL', resp.data.user.initial_token, cEvent.value?.validateEmail);
               if (!cEvent?.value?.validateEmail && resp.data.user.initial_token) {
                 //setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
-                console.log('1. INGRESO ACA===>');
+                console.log('10. INGRESO ACA A LOGUEAR===>', resp.data.user);
                 const loginFirebase = async () => {
                   app
                     .auth()
@@ -329,9 +342,16 @@ const FormRegister = ({
                     .then((response) => {
                       if (response.user) {
                         console.log('1.response', response);
-                        cEventUser.setUpdateUser(true);
-                        //handleChangeTypeModal(null);
-                        setSubmittedForm(false);
+                        if (cEventUser.value) {
+                          //cEventUser.setUpdateUser(true);
+                          //handleChangeTypeModal(null);
+                          //setSubmittedForm(false);
+                          window.location.reload();
+                        } else {
+                          cEventUser.setUpdateUser(true);
+                          //handleChangeTypeModal(null);
+                          setSubmittedForm(false);
+                        }
                       } else {
                         setErrorLogin(true);
                       }
@@ -350,6 +370,7 @@ const FormRegister = ({
                   );
                 }, 100);*/
               } else {
+                console.log('1. ENTRO ACA A MODIFICAR-----');
                 window.location.replace(
                   `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
                 );
@@ -967,7 +988,7 @@ const FormRegister = ({
                   {!loadingregister && (
                     <Form.Item>
                       <Button type='primary' htmlType='submit'>
-                        {initialValues?.properties != null && Object.keys(initialValues).length > 0
+                        {initialValues != null && cEventUser.value !== null && Object.keys(initialValues).length > 0
                           ? intl.formatMessage({ id: 'registration.button.update' })
                           : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                           ? 'Votar y Enviar'
