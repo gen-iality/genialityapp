@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Card, Col, Layout, Row, Space, Statistic, Tabs, Typography, Grid, Divider, Skeleton } from 'antd';
-import { AppstoreFilled, SettingOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
+import { AppstoreFilled, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
@@ -8,7 +8,6 @@ import withContext from '../../Context/withContext';
 import { EventsApi, TicketsApi, OrganizationApi } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
-import * as Cookie from 'js-cookie';
 import moment from 'moment';
 import Loading from './loading';
 
