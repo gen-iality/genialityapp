@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import React, { useContext, useState, useEffect } from 'react';
 import { Tabs, Row, Badge, Col, Button, Alert, Space } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';

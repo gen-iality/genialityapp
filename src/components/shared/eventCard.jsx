@@ -49,17 +49,13 @@ class EventCard extends Component {
               </div>
             </span>
           }>
-          <Link
-            id='go_to_activity'
-            // onClick={() => Cookies.set('idevent', event._id)}
-            //to={{ pathname: `/event/${encodeURI(event.name)}`, state: { event: event } }}>
-            to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
-            <Card
-              bordered={bordered}
-              loading={loading}
-              style={{ width: '100%' }}
-              cover={
-                event.picture ? (
+          <Card
+            bordered={bordered}
+            loading={loading}
+            style={{ width: '100%' }}
+            cover={
+              event.picture ? (
+                <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
                   <img
                     className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
@@ -67,7 +63,9 @@ class EventCard extends Component {
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
                     alt='Evius.co'
                   />
-                ) : (
+                </Link>
+              ) : (
+                <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
                   <img
                     className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
@@ -81,37 +79,37 @@ class EventCard extends Component {
                     }
                     alt='Evius.co'
                   />
-                )
+                </Link>
+              )
+            }
+            actions={right}
+            bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
+            <Meta
+              style={{}}
+              description={
+                <Space size={1} direction='vertical'>
+                  <span style={{ fontSize: '12px' }}>
+                    <Space>
+                      <i className='fas fa-calendar-alt' />
+                      <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+                      {'-'}
+                      <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
+                    </Space>
+                  </span>
+                  <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
+                    {event.name}
+                  </Typography.Text>
+                  <span>
+                    {event.organizer?.name
+                      ? event.organizer?.name
+                      : event.author?.displayName
+                      ? event.author?.displayName
+                      : event.author?.names}
+                  </span>
+                </Space>
               }
-              actions={right}
-              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
-              <Meta
-                style={{}}
-                description={
-                  <Space size={1} direction='vertical'>
-                    <span style={{ fontSize: '12px' }}>
-                      <Space>
-                        <i className='fas fa-calendar-alt' />
-                        <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
-                        {'-'}
-                        <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
-                      </Space>
-                    </span>
-                    <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
-                      {event.name}
-                    </Typography.Text>
-                    <span>
-                      {event.organizer?.name
-                        ? event.organizer?.name
-                        : event.author?.displayName
-                        ? event.author?.displayName
-                        : event.author?.names}
-                    </span>
-                  </Space>
-                }
-              />
-            </Card>
-          </Link>
+            />
+          </Card>
         </Badge.Ribbon>
       </div>
     );

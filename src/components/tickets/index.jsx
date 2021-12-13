@@ -21,13 +21,12 @@ class TicketInfo extends Component {
       visible: false,
       items: {},
       visibleModal: false,
-      currentEventId: null
+      currentEventId: null,
     };
     this.changeVisible = this.changeVisible.bind(this);
   }
   async componentDidMount() {
-    const token = Cookie.get('evius_token');
-    const tickets = await TicketsApi.getAll(token);
+    const tickets = await TicketsApi.getAll();
     const usersInscription = [];
     tickets.forEach(async (element) => {
       const eventByTicket = await EventsApi.getOne(element.event_id);
@@ -44,7 +43,7 @@ class TicketInfo extends Component {
           state: element.state ? element.state.name : 'Sin Confirmar',
           properties: element.properties,
           status: element.checked_in,
-          author: eventByTicket.author?.displayName
+          author: eventByTicket.author?.displayName,
         });
       }
 
@@ -133,7 +132,7 @@ class TicketInfo extends Component {
                       this.changeVisible(items);
                     }}>
                     Detalles
-                  </Button>
+                  </Button>,
                 ]}
                 cover={
                   <div>

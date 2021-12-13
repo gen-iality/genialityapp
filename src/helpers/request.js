@@ -132,8 +132,8 @@ export const Actions = {
 };
 
 //BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
-export const getCurrentUser = () => {
-  let token = Cookie.get('evius_token');
+export const getCurrentUser = async () => {
+  const token = await GetTokenUserFirebase();
 
   // eslint-disable-next-line no-unused-vars
   // eslint-disable-next-line no-async-promise-executor
@@ -166,8 +166,6 @@ export const getCurrentUser = () => {
               draggable: true,
               progress: undefined,
             });
-            Cookie.remove('token');
-            Cookie.remove('evius_token');
             setTimeout(() => {
               window.location.reload();
             }, 2000);
@@ -418,12 +416,12 @@ export const eventTicketsApi = {
 };
 
 export const TicketsApi = {
-  getAll: async (token) => {
-    //token = await GetTokenUserFirebase();
-    return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
+  getAll: async (id) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.getAll(`/api/me/eventUsers/?evius_token=${token}&limit=20`, true);
   },
-  getByEvent: async (event, token) => {
-    return await Actions.getOne(`/api/me/eventusers/event/${event}/?token=`, token);
+  getByEvent: async (event) => {
+    return await Actions.getOne(`/api/me/eventusers/event/${event}`);
   },
   transferToUser: async (event, event_user, data) => {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
