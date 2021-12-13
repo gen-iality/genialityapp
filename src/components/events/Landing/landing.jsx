@@ -37,6 +37,8 @@ import { toast } from 'react-toastify';
 import ModalAuth from '../../authentication/ModalAuth';
 import ModalLoginHelpers from '../../authentication/ModalLoginHelpers';
 import ModalPermission from '../../authentication/ModalPermission';
+import ModalFeedback from '../../authentication/ModalFeedback';
+import ModalNoRegister from '../../authentication/ModalNoRegister';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -150,6 +152,8 @@ const Landing = (props) => {
 
   return (
     <>
+      <ModalFeedback />
+      <ModalNoRegister />
       <ModalAuth organization='event' />
       <ModalLoginHelpers />
       <ModalPermission />
