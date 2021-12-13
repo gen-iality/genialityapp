@@ -43,7 +43,7 @@ import MySection from '../newSection';
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
-  let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal, handleChangeTabModal } = useContext(HelperContext);
+  let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal, typeModal } = useContext(HelperContext);
 
   //redirigir a evento Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -58,7 +58,7 @@ const EventSectionRoutes = (props) => {
     if (props.cEventUser?.value == null && props.cEventUser?.status == 'LOADED') {
       console.log('1. ingreso aca a type modal');
       handleChangeTypeModal('register');
-    } else {
+    } else if (props.cEventUser?.value !== null && props.cEventUser?.status == 'LOADED' && typeModal !== 'update') {
       handleChangeTypeModal(null);
     }
   }

@@ -22,7 +22,7 @@ const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
-  let { propertiesProfile,requestSend, handleChangeTypeModal } = useContext(HelperContext);
+  let { propertiesProfile, requestSend, handleChangeTypeModal } = useContext(HelperContext);
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);
@@ -33,16 +33,16 @@ const DrawerProfile = (props) => {
     if (props.profileuser !== null) {
       let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
       //console.log("ISCONTACT==>",isContact)
-    
+      console.log('PROFILE USER===>', cUser.value._id, props.profileuser);
       setIsMe(cUser.value._id == props.profileuser._id);
       setIsMyContact(isContact);
-      setUserSelected(props.profileuser); 
+      setUserSelected(props.profileuser);
     }
   }, [props.profileuser]);
-  const haveRequestUser=(user)=>{
+  const haveRequestUser = (user) => {
     //console.log("HEPERVALUE==>",requestSend,user)
-   return haveRequest(user,requestSend,1);
-  }
+    return haveRequest(user, requestSend, 1);
+  };
   return (
     <>
       <Drawer
@@ -77,7 +77,7 @@ const DrawerProfile = (props) => {
             {isMe && (
               <Button
                 onClick={() => {
-                  props.setViewPerfil({ view: !props.viewPerfil, perfil: null });
+                  props.setViewPerfil({ view: !props.viewPerfil, perfil: userSelected });
                   handleChangeTypeModal('update');
                 }}
                 type='text'
@@ -90,49 +90,54 @@ const DrawerProfile = (props) => {
           <Col span={24}>
             <Row justify='center' style={{ marginTop: '20px' }}>
               <Space size='middle'>
-                <Tooltip title={haveRequestUser(userSelected)?'Solicitud pendiente':'Solicitar contacto'}>
+                <Tooltip title={haveRequestUser(userSelected) ? 'Solicitud pendiente' : 'Solicitar contacto'}>
                   {userSelected && userSelected._id !== cUser.value._id && (
                     <Button
                       size='large'
                       shape='circle'
                       icon={<UsergroupAddOutlined />}
                       disabled={haveRequestUser(userSelected) || isMycontact || send}
-                      onClick={haveRequestUser(userSelected)?null:async () => {
-                        setSend(true);
-                        let sendResp = await SendFriendship(
-                          {
-                            eventUserIdReceiver: userSelected.eventUserId,
-                            userName:
-                              userSelected.properties.name ||
-                              userSelected.properties.names ||
-                              userSelected.properties?.email,
-                          },
-                          cEventUser.value,
-                          cEvent.value
-                        );
+                      onClick={
+                        haveRequestUser(userSelected)
+                          ? null
+                          : async () => {
+                              setSend(true);
+                              let sendResp = await SendFriendship(
+                                {
+                                  eventUserIdReceiver: userSelected.eventUserId,
+                                  userName:
+                                    userSelected.properties.name ||
+                                    userSelected.properties.names ||
+                                    userSelected.properties?.email,
+                                },
+                                cEventUser.value,
+                                cEvent.value
+                              );
 
-                        if (sendResp._id) {
-                          let notificationR = {
-                            idReceive: userSelected._id,
-                            idEmited: sendResp._id,
-                            emailEmited: cEventUser.value?.email || cEventUser.value.user?.email,
-                            message:
-                              (cEventUser.value.names || cEventUser.value.user.names || cEventUser.value.user.name) +
-                              'te ha enviado solicitud de amistad',
-                            name: 'notification.name',
-                            type: 'amistad',
-                            state: '0',
-                          };
-                          addNotification(notificationR, cEvent.value, cEventUser.value);
-                          props.setViewPerfil({ view: !props.viewPerfil, perfil: null });
-                          notification['success']({
-                            message: 'Correcto!',
-                            description: 'Se ha enviado la solicitud de amistad correctamente',
-                          });
-                        } else {
-                          console.log('Error al guardar');
-                        }
-                      }}
+                              if (sendResp._id) {
+                                let notificationR = {
+                                  idReceive: userSelected._id,
+                                  idEmited: sendResp._id,
+                                  emailEmited: cEventUser.value?.email || cEventUser.value.user?.email,
+                                  message:
+                                    (cEventUser.value.names ||
+                                      cEventUser.value.user.names ||
+                                      cEventUser.value.user.name) + 'te ha enviado solicitud de amistad',
+                                  name: 'notification.name',
+                                  type: 'amistad',
+                                  state: '0',
+                                };
+                                addNotification(notificationR, cEvent.value, cEventUser.value);
+                                props.setViewPerfil({ view: !props.viewPerfil, perfil: null });
+                                notification['success']({
+                                  message: 'Correcto!',
+                                  description: 'Se ha enviado la solicitud de amistad correctamente',
+                                });
+                              } else {
+                                console.log('Error al guardar');
+                              }
+                            }
+                      }
                     />
                   )}
                 </Tooltip>
