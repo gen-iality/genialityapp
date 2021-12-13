@@ -17,14 +17,14 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber } from 'antd';
+import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber, Badge, Space } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
 
 Moment.locale('es');
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
 
@@ -75,6 +75,7 @@ class General extends Component {
         checked: true,
         permissions: 'public',
       },
+      typeEvent: 0,
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -157,6 +158,18 @@ class General extends Component {
         this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } });
       }
     }
+
+    //Esto es para la configuración de autenticación. Nuevo flujo de Login
+    if(this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register){
+      //Evento Público con Registro
+      this.setState({typeEvent: 0})
+    } else if(this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register){
+      //Evento Público sin Registro
+      this.setState({typeEvent: 1})
+    } else {
+      //Evento Privado con Invitación
+      this.setState({typeEvent: 2})
+    }
   }
 
   //*********** FUNCIONES DEL FORMULARIO
@@ -177,7 +190,7 @@ class General extends Component {
 
   //Cambio en los input
   handleChange = (e, name) => {
-    console.log(e, e.target, '1')
+    /* console.log(e, e.target, '1') */
     let value = e;
     if(e.target) {
       value = e.target;
@@ -185,10 +198,10 @@ class General extends Component {
         value = e.target.value;
       }
     }
-    console.log(name, value, '2');
+    /* console.log(name, value, '2'); */
 
     if (name === 'visibility') {
-      value = e.target.checked ? 'PUBLIC' : 'ORGANIZATION';
+      value = e.target.checked ? 'PUBLIC' : 'PRIVATE';
     } else if (name === 'allow_register' || name === 'has_payment') {
       value = e.target.checked;
     }
@@ -417,6 +430,8 @@ class General extends Component {
       return item.value;
     });
 
+    /* console.log(event.visibility, event.allow_register, 'hola') */
+
     const data = {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
@@ -433,7 +448,7 @@ class General extends Component {
         event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
       enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
       homeSelectedScreen: event.homeSelectedScreen,
-      visibility: event.visibility ? event.visibility : 'ORGANIZATION',
+      visibility: event.visibility ? event.visibility : 'PRIVATE',
       description: event.description,
       category_ids: categories,
       organizer_id:
@@ -480,22 +495,22 @@ class General extends Component {
     } catch (error) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
-        console.error(error.response);
+        /* console.error(error.response); */
         const { status, data } = error.response;
-        console.error('STATUS', status, status === 401);
+        /* console.error('STATUS', status, status === 401); */
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.error('Error', error.message);
+        /* console.error('Error', error.message); */
         if (error.request) {
-          console.error(error.request);
+          /* console.error(error.request); */
           errorData = error.request;
         }
         errorData.status = 708;
         this.setState({ serverError: true, loader: false, errorData });
       }
-      console.error(error.config);
+     /*  console.error(error.config); */
     }
   }
   //Delete event
@@ -568,6 +583,21 @@ class General extends Component {
   handleChangeReactQuill = (e) => {
     this.setState({ description: e });
   };
+
+  //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
+  changetypeEvent = (value) => {
+    this.setState({typeEvent: value});
+    if(value === 0) {
+      //Evento Público con Registro
+      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } }, this.valid);
+    } else if(value === 1) {
+      //Evento Público sin Registro
+      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } }, this.valid);
+    } else {
+      //Evento Privado con Invitación
+      this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } }, this.valid);
+    }
+  }
 
   render() {
     if (this.state.loading) return <Loading />;
@@ -783,13 +813,13 @@ class General extends Component {
                     <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   )}
 
-                  <Form.Item label={'Idioma del evento'}>
+                  {/* <Form.Item label={'Idioma del evento'}>
                     <Select value={event.language} name={'language'} onChange={(e) => this.handleChange(e, 'language')}>
                       <option value='es'>Español</option>
                       <option value='en'>English</option>
                       <option value='pt'>Portuguese</option>
                     </Select>
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Form.Item label={'Descripción'}>
                     <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
@@ -974,7 +1004,100 @@ class General extends Component {
             <Tabs.TabPane tab='Avanzado' key='2'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
-                  <Form.Item label={'Habilitar formulario de registro'}>
+                  <Form.Item label={'Configurar autenticación'}>
+                    <Row gutter={[16, 16]} wrap>
+                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8} >
+                        <Badge count={this.state.typeEvent === 0 ? <CheckCircleOutlined style={{fontSize: '20px', color: '#002766'}} /> : ''}>
+                          <div /* className='cards-type-information'  */
+                            onClick={() => this.changetypeEvent(0)} 
+                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer'}}
+                          >
+                            <Space direction='vertical'>
+                              <Text strong>Evento Público con Registro</Text>
+                              <Text type='secondary'>
+                                Se mostrara el inicio de sesión y registro. Configuración por defecto
+                                {/* <b>Contiene:</b><br />
+                                <ul>
+                                  <li>Registro al evento</li>
+                                  <li>Inicio de sesión</li>
+                                </ul>
+                                <b>Formas de Registro:</b><br />
+                                <ul>
+                                  <li>Email y Password</li>
+                                  <li>Número de celular</li>
+                                </ul>
+                                <b>Formas de Inicio de sesión:</b><br />
+                                <ul>
+                                  <li>Email y Password</li>
+                                  <li>Solo email</li>
+                                  <li>Número de celular</li>
+                                </ul> */}
+                              </Text>
+                            </Space>
+                          </div>
+                        </Badge>
+                      </Col>
+                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                        <Badge count={this.state.typeEvent === 1 ? <CheckCircleOutlined style={{fontSize: '20px', color: '#002766'}} /> : ''}>
+                          <div 
+                            /* className='cards-type-information'  */
+                            onClick={() => this.changetypeEvent(1)}
+                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer'}}
+                          >
+                            <Space direction='vertical'>
+                              <Text strong>Evento Público sin Registro</Text>
+                              <Text type='secondary'>
+                                Solo se mostrará el inicio de sesión. Quedará como anónimo
+                                {/* <b>Contiene:</b><br />
+                                <ul>
+                                  <li>Sin modal del login</li>
+                                </ul>
+                                <b>Formas de Registro:</b><br />
+                                <ul>
+                                  <li>Sin Registro</li>
+                                </ul>
+                                <b>Formas de Inicio de sesión:</b><br />
+                                <ul>
+                                  <li>Anónimo</li>
+                                </ul> */}
+                              </Text>
+                            </Space>
+                          </div>
+                        </Badge>
+                      </Col>
+                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                        <Badge count={this.state.typeEvent === 2 ? <CheckCircleOutlined style={{fontSize: '20px', color: '#002766'}} /> : ''}>
+                          <div 
+                            /* className='cards-type-information'  */
+                            onClick={() => this.changetypeEvent(2)}
+                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer'}}
+                          >
+                            <Space direction='vertical'>
+                              <Text strong>Evento Privado por invitación</Text>
+                              <Text type='secondary'>
+                                Solo se podra acceder por invitación. No tendra inicio de sesión ni registro
+                                {/* <b>Contiene:</b><br />
+                                <ul>
+                                  <li>Inicio de sesión</li>
+                                </ul>
+                                <b>Formas de Registro:</b><br />
+                                <ul>
+                                  <li>Por Organización</li>
+                                </ul>
+                                <b>Formas de Inicio de sesión:</b><br />
+                                <ul>
+                                  <li>Email y Password</li>
+                                  <li>Solo email</li>
+                                  <li>Número de celular</li>
+                                </ul> */}
+                              </Text>
+                            </Space>
+                          </div>
+                        </Badge>
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                  {/* <Form.Item label={'Habilitar formulario de registro'}>
                     <Checkbox
                       defaultChecked={event.allow_register || event.allow_register === 'true'}
                       onChange={(e) => this.handleChange(e, 'allow_register')}
@@ -986,8 +1109,7 @@ class General extends Component {
                       <Card
                         title={<Title level={4}>{registerForm.name}</Title>}
                         bordered={true}
-                        /* style={{ width: 300, marginTop: '2%' }} */>
-                        {/* <div style={{ marginBottom: '3%' }}></div> */}
+                      >
 
                         <Form.Item label={'Cambiar nombre de la sección'}>
                           <Input
@@ -1000,7 +1122,6 @@ class General extends Component {
                         
                         <Form.Item label={'Posición en el menú'}>
                           <InputNumber
-                            /* type='number' */
                             defaultValue={registerForm.position}
                             value={registerForm.position}
                             onChange={(e) => {
@@ -1017,7 +1138,7 @@ class General extends Component {
                       defaultChecked={event.visibility === 'PUBLIC'}
                       onChange={(e) => this.handleChange(e, 'visibility')}
                       name={'visibility'} />
-                  </Form.Item>
+                  </Form.Item> */}
                   
                   <Form.Item label={'El evento requiere pago'}>
                     <Checkbox
@@ -1025,6 +1146,7 @@ class General extends Component {
                       onChange={(e) => this.handleChange(e, 'has_payment')}
                       name={'has_payment'} />
                   </Form.Item>
+                  
                 </Col>
               </Row>
             </Tabs.TabPane>
