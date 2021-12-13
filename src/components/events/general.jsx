@@ -20,7 +20,7 @@ import DateEvent from './dateEvent';
 import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber, Badge, Space } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
-import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
 
 Moment.locale('es');
@@ -1007,7 +1007,7 @@ class General extends Component {
                   <Form.Item label={'Configurar autenticación'}>
                     <Row gutter={[16, 16]} wrap>
                       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8} >
-                        <Badge count={this.state.typeEvent === 0 ? <CheckCircleOutlined style={{fontSize: '20px', color: '#002766'}} /> : ''}>
+                        <Badge count={this.state.typeEvent === 0 ? <CheckCircleFilled style={{fontSize: '20px', color: '#52c41a'}} /> : ''}>
                           <div /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(0)} 
                             style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer'}}
@@ -1038,7 +1038,7 @@ class General extends Component {
                         </Badge>
                       </Col>
                       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge count={this.state.typeEvent === 1 ? <CheckCircleOutlined style={{fontSize: '20px', color: '#002766'}} /> : ''}>
+                        <Badge count={this.state.typeEvent === 1 ? <CheckCircleFilled style={{fontSize: '20px', color: '#52c41a'}} /> : ''}>
                           <div 
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(1)}
@@ -1066,7 +1066,7 @@ class General extends Component {
                         </Badge>
                       </Col>
                       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge count={this.state.typeEvent === 2 ? <CheckCircleOutlined style={{fontSize: '20px', color: '#002766'}} /> : ''}>
+                        <Badge count={this.state.typeEvent === 2 ? <CheckCircleFilled style={{fontSize: '20px', color: '#52c41a'}} /> : ''}>
                           <div 
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(2)}
