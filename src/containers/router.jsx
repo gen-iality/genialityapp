@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCategories } from '../redux/categories/actions';
@@ -10,36 +10,33 @@ import { CurrentUserProvider } from '../Context/userContext';
 import { HelperContextProvider } from '../Context/HelperContext';
 import { CurrentEventProvider } from '../Context/eventContext';
 import { CurrentUserEventProvider } from '../Context/eventUserContext';
+import { UseCurrentUser } from 'Context/userContext';
 
-class MainRouter extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const MainRouter = (props) => {
+  let cUser = UseCurrentUser();
+  useEffect(() => {
+    props.dispatch(fetchCategories());
+    props.dispatch(fetchTypes());
 
-  componentDidMount() {
-    this.props.dispatch(fetchCategories());
-    this.props.dispatch(fetchTypes());
-  }
+    console.log('1. CUSER MAIN ROUTER==>', cUser.value);
+  }, [cUser.value]);
 
-  render() {
-    return (
-      <Router basename='/'>
-        <Layout>
-          <CurrentEventProvider>
+  return (
+    <Router basename='/'>
+      <Layout>
+        <CurrentEventProvider>
+          <CurrentUserProvider>
             <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <Header />
-                </HelperContextProvider>
-              </CurrentUserProvider>
+              <HelperContextProvider>
+                <Header />
+              </HelperContextProvider>
             </CurrentUserEventProvider>
-          </CurrentEventProvider>
-          <ContentContainer />
-        </Layout>
-      </Router>
-    );
-  }
-}
+          </CurrentUserProvider>
+        </CurrentEventProvider>
+        <ContentContainer />
+      </Layout>
+    </Router>
+  );
+};
 
 export default connect()(MainRouter);

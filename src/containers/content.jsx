@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from 'antd';
+import { Grid, Spin } from 'antd';
 import { Route, Redirect, withRouter, Switch } from 'react-router-dom';
 import Event from '../components/events/event';
 import * as Cookie from 'js-cookie';
@@ -18,6 +18,7 @@ import Organization from '../components/organization';
 import { NewEventProvider } from '../Context/newEventContext';
 import MainProfile from '../components/profile/main';
 import { AgendaContextProvider } from '../Context/AgendaContext';
+import { UseCurrentUser } from 'Context/userContext';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -149,26 +150,35 @@ const RouteContext = ({ component: Component, ...rest }) => (
   />
 );
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) => (
-      <CurrentEventProvider>
-        <CurrentUserEventProvider>
-          <CurrentUserProvider>
-            <HelperContextProvider>
-              <SurveysProvider>
-                <AgendaContextProvider>
-                  {Cookie.get('evius_token') ? <Component {...props} /> : <ForbiddenPage />}
-                </AgendaContextProvider>
-              </SurveysProvider>
-            </HelperContextProvider>
-          </CurrentUserProvider>
-        </CurrentUserEventProvider>
-      </CurrentEventProvider>
-    )}
-  />
-);
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const cUser = UseCurrentUser();
+  return (
+    <Route
+      {...rest}
+      render={(props) => (
+        <CurrentEventProvider>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <AgendaContextProvider>
+                    {cUser.value ? (
+                      <Component {...props} />
+                    ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                      <ForbiddenPage />
+                    ) : (
+                      <Spin />
+                    )}
+                  </AgendaContextProvider>
+                </SurveysProvider>
+              </HelperContextProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+      )}
+    />
+  );
+};
 
 const RouteContextChildren = ({ children: children, ...rest }) => (
   <Route {...rest}>

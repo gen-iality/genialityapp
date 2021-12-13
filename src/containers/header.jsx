@@ -117,8 +117,7 @@ const Headers = (props) => {
 
   async function LoadCurrentUser() {
     const eventId = setEventId();
-    try {
-      app.auth().onAuthStateChanged((user) => {
+    /*app.auth().onAuthStateChanged((user) => {
         if (user) {
           user.getIdToken().then(async function(idToken) {
             privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
@@ -155,17 +154,79 @@ const Headers = (props) => {
             });
           });
         }
+      });*/
+    //PARA VALIDAR SI ESTÁ DENTRO DE UN EVENTO
+    if (eventId) {
+      try {
+        EventsApi.getStatusRegister(eventId, props.cUser?.value?.email).then((responseStatus) => {
+          //EXISTE EVENT USER
+          if (responseStatus.data.length > 0) {
+            let data = responseStatus.data[0];
+            setdataGeneral({
+              name: data.properties?.names || data.properties?.name,
+              userEvent: { ...data?.properties, properties: data.properties },
+              photo: data?.properties.picture
+                ? data?.properties.picture
+                : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+              uid: data?.user.uid,
+              id: data?.user._id,
+              user: true,
+              loader: false,
+              organizations: organizationsMine,
+              loadingUser: false,
+              anonimususer: false,
+            });
+          } else {
+            // EL USUARIO TIENE SESION PERO NO ESTA REGISTRADO EN EL EVENTO
+            let data = props.cUser?.value;
+            setdataGeneral({
+              name: data?.names || data?.name,
+              userEvent: { ...data, properties: { names: data.names || data.name } },
+              photo: data?.picture
+                ? data?.picture
+                : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+              uid: data?.user?.uid,
+              id: data?.user?._id,
+              user: true,
+              loader: false,
+              organizations: organizationsMine,
+              loadingUser: false,
+              anonimususer: false,
+            });
+          }
+        });
+      } catch (e) {
+        console.log('error', e);
+      }
+    } else {
+      //SOLO EXISTE USER
+      let data = props.cUser?.value;
+      setdataGeneral({
+        name: data?.names || data?.name,
+        userEvent: { ...data, properties: { names: data.names || data.name } },
+        photo: data?.picture
+          ? data?.picture
+          : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+        uid: data?.user?.uid,
+        id: data?.user?._id,
+        user: true,
+        loader: false,
+        organizations: organizationsMine,
+        loadingUser: false,
+        anonimususer: false,
       });
-    } catch (e) {
-      console.log('error', e);
     }
   }
 
   useEffect(() => {
     // console.log('loadedData', loadedData);
-    LoadMineOrganizations();
-    LoadCurrentUser();
-  }, [props.cUser]);
+    if (props.cUser.value !== undefined && props.cUser.value !== null) {
+      LoadMineOrganizations();
+      LoadCurrentUser();
+
+      // logout();
+    }
+  }, [props.cUser.value, props.cEvent.value]);
 
   // useEffect(() => {
   //   console.log('datageneral', dataGeneral);

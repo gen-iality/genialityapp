@@ -54,6 +54,13 @@ const EventSectionRoutes = (props) => {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
     }
+
+    if (props.cEventUser?.value == null && props.cEventUser?.status == 'LOADED') {
+      console.log('1. ingreso aca a type modal');
+      handleChangeTypeModal('register');
+    } else {
+      handleChangeTypeModal(null);
+    }
   }
 
   const obtenerFirstSection = () => {
@@ -84,8 +91,8 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     GetPermissionsEvent();
 
-    if(window.location.pathname.includes('/event/Gorilla-Logic/evento')){
-      window.location.replace("https://app.evius.co/landing/618c502f8ceb9e109464f1c4")
+    if (window.location.pathname.includes('/event/Gorilla-Logic/evento')) {
+      window.location.replace('https://app.evius.co/landing/618c502f8ceb9e109464f1c4');
     }
   }, []);
 

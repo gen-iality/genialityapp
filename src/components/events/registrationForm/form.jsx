@@ -33,6 +33,7 @@ import HelperContext from '../../../Context/HelperContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
+import { app } from 'helpers/firebase';
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
@@ -149,7 +150,6 @@ const FormRegister = ({
   let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
-  let { handleChangeTypeModal, handleChangeTabModal } = useContext(HelperContext);
   const [initialValues, setinitialValues] = useState(
     organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
   );
@@ -191,9 +191,9 @@ const FormRegister = ({
         setareacodeselected(codeValue);
       }
     }
-    let pais= extraFields.filter((field) => field.type == 'country');
-    if(pais[0]){
-      let paisSelected= initialValues && pais[0] ? initialValues[pais[0].name] :'';
+    let pais = extraFields.filter((field) => field.type == 'country');
+    if (pais[0]) {
+      let paisSelected = initialValues && pais[0] ? initialValues[pais[0].name] : '';
       setCountry(paisSelected);
     }
   }, []);
@@ -320,8 +320,25 @@ const FormRegister = ({
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
               // console.log('INITIAL TOKEN AND VALID EMAIL', resp.data.user.initial_token, cEvent.value?.validateEmail);
               if (!cEvent?.value?.validateEmail && resp.data.user.initial_token) {
-                setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
-                setTimeout(function() {
+                //setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
+                console.log('1. INGRESO ACA===>');
+                const loginFirebase = async () => {
+                  app
+                    .auth()
+                    .signInWithEmailAndPassword(resp.data.user.email, values.password)
+                    .then((response) => {
+                      if (response.user) {
+                        console.log('1.response', response);
+                        cEventUser.setUpdateUser(true);
+                        //handleChangeTypeModal(null);
+                        setSubmittedForm(false);
+                      } else {
+                        setErrorLogin(true);
+                      }
+                    });
+                };
+                loginFirebase();
+                /*setTimeout(function() {
                   window.location.replace(
                     cEvent.value?._id == '60cb7c70a9e4de51ac7945a2'
                       ? `/landing/${cEvent.value?._id}/success/${
@@ -331,7 +348,7 @@ const FormRegister = ({
                           !eventUser?._id ? 2 : 4
                         }&token=${resp.data.user.initial_token}`
                   );
-                }, 100);
+                }, 100);*/
               } else {
                 window.location.replace(
                   `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
@@ -958,19 +975,15 @@ const FormRegister = ({
                       </Button>
                       {options &&
                         initialValues != null &&
-                        options.map(
-                          (option) => (
-                            (
-                              <Button
-                                icon={option.icon}
-                                onClick={() => option.action(eventUser)}
-                                type={option.type}
-                                style={{ marginLeft: 10 }}>
-                                {option.text}
-                              </Button>
-                            )
-                          )
-                        )}
+                        options.map((option) => (
+                          <Button
+                            icon={option.icon}
+                            onClick={() => option.action(eventUser)}
+                            type={option.type}
+                            style={{ marginLeft: 10 }}>
+                            {option.text}
+                          </Button>
+                        ))}
                     </Form.Item>
                   )}
                   {loadingregister && <Spin />}

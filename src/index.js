@@ -6,6 +6,7 @@ import App from './App/App';
 import { unregister as unregisterServiceWorker } from './registerServiceWorker';
 import { IntlProvider } from 'react-intl';
 import localeData from './helpers/locale.json';
+import { CurrentUserProvider } from 'Context/userContext';
 
 const language = (navigator.languages && navigator.languages[0]) || navigator.language;
 const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
@@ -14,7 +15,9 @@ const messages = localeData[languageWithoutRegionCode] || localeData[language] |
 ReactDOM.render(
   <>
     <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale='es'>
-      <App />
+      <CurrentUserProvider>
+        <App />
+      </CurrentUserProvider>
     </IntlProvider>
   </>,
   document.getElementById('root')

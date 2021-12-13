@@ -41,12 +41,14 @@ const ModalAuth = (props) => {
 
   useEffect(() => {
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
-    if (!props.cUser?.value) {
-      setmodalVisible(true);
-      handleChangeTabModal('1');
-    } else {
-      setmodalVisible(false);
-    }
+    app.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        setmodalVisible(true);
+        handleChangeTabModal('1');
+      } else {
+        setmodalVisible(false);
+      }
+    });
 
     // if (
     //   props.cEvent.value?._id === '61816f5a039c0f2db65384a2' ||
@@ -91,9 +93,9 @@ const ModalAuth = (props) => {
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
     loginFirebase(values);
-    setTimeout(() => {
+    /*setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 3000);*/
   };
 
   //Realiza la validación del email y password con firebase
