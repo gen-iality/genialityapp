@@ -4,7 +4,7 @@ div.icon-header {
   width: 115px;
   margin-right: 0px;
   top: 6px;
-  @media screen and (max-width: "1030px") {
+  @media screen and (max-width: '1030px') {
     position: absolute;
     top: 6px;
     left: 35%;
@@ -18,7 +18,7 @@ div.icon-header {
 
 .name_menu-user {
   color: initial;
-  @media screen and (max-width: "1030px") {
+  @media screen and (max-width: '1030px') {
     display: none;
   }
 }
@@ -38,7 +38,7 @@ div.icon-header {
 }
 
 .main {
-  margin-top: 65px;
+  // margin-top: 65px;
 
   .columns {
     margin: 0;

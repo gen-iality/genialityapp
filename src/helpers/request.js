@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { ApiUrl, ApiEviusZoomSurvey } from './constants';
+/** Api Prod */
+// import { ApiUrl, ApiEviusZoomSurvey } from './constants';
+/** Api  Dev*/
+import { ApiDEVUrl, ApiEviusZoomSurvey } from './constants';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,14 +14,14 @@ import Moment from 'moment';
 import { async } from 'ramda-adjunct';
 import { GetTokenUserFirebase } from './HelperAuth';
 const publicInstance = axios.create({
-  url: ApiUrl,
-  baseURL: ApiUrl,
+  url: ApiDEVUrl,
+  baseURL: ApiDEVUrl,
   pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 
 const privateInstance = axios.create({
-  url: ApiUrl,
-  baseURL: ApiUrl,
+  url: ApiDEVUrl,
+  baseURL: ApiDEVUrl,
   withCredentials: true,
 });
 
@@ -305,9 +308,8 @@ export const EventsApi = {
     return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
   },
   getStatusRegister: async (eventId, email) => {
-    console.log('Que hace', eventId, email);
     return await Actions.get(
-      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]`
+      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`
     );
   },
   recoveryPassword: async (eventId, url, email) => {
@@ -372,7 +374,10 @@ export const UsersApi = {
     return await Actions.delete(`/api/users`, user);
   },
   createUser: async (user) => {
-    return await Actions.post(`/api/users`, user);
+    return await Actions.post(`/api/users`, user, true);
+  },
+  editEventUser: async (data, id) => {
+    return await Actions.post(`/api/events/${id}/eventusers`, data);
   },
 };
 
