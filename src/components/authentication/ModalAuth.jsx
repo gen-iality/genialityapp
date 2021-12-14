@@ -174,7 +174,7 @@ const ModalAuth = (props) => {
         centered
         footer={null}
         zIndex={1000}
-        visible={props.organization == 'register' ? props.visible : true}
+        visible={props.organization == 'register' ? props.visible : typeModal == null ? true : false}
         closable={props.organization == 'register' ? true : false}>
         <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane

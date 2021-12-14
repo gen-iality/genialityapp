@@ -325,7 +325,7 @@ class AgendaEdit extends Component {
     if (!name) {
       name = value.target.name;
       value = value.target.value;
-    } 
+    }
     if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
@@ -723,13 +723,12 @@ class AgendaEdit extends Component {
 
     if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
       title.push('Seleccione una hora de finalización valida');
-    
-    if (this.state.hour_start > this.state.hour_end)
-      title.push('La hora de inicio no puede ser mayor a la hora fin');
-  
-    if ((this.state.hour_start < new Date()) && (this.state.date <= Moment(new Date()).format('YYYY-MM-DD')))
-      title.push('La hora no puede ser menor a la hora actual');
-      
+
+    if (this.state.hour_start > this.state.hour_end) title.push('La hora de inicio no puede ser mayor a la hora fin');
+
+    /* if ((this.state.hour_start < new Date()) && (this.state.date <= Moment(new Date()).format('YYYY-MM-DD')))
+      title.push('La hora no puede ser menor a la hora actual');*/
+
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
       title.map((item) => {

@@ -313,6 +313,15 @@ export const EventsApi = {
   recoveryPassword: async (eventId, url, email) => {
     return await Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}`, email);
   },
+  //RESTABLECER CONTRASEÑA
+  changePassword: async (eventId, email) => {
+    //URL DE PRUEBAS
+    return await axios.put(`https://apidev.evius.co/api/changeuserpassword`, { email: email, event_id: eventId });
+  },
+  //ACCEDER POR LINK AL CORREO
+  requestLinkEmail: async (eventId, email) => {
+    return await axios.post(`https://apidev.evius.co/api/getloginlink`, { email: email, event_id: eventId });
+  },
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
       `/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,

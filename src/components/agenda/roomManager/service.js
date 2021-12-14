@@ -65,12 +65,12 @@ class Service {
               habilitar_ingreso,
               platform,
               meeting_id,
-              isPublished,
+              isPublished: isPublished || null,
               host_id,
               host_name,
               tabs: tabsSchema,
-              avalibleGames,
-              roomState,
+              avalibleGames: avalibleGames || null,
+              roomState: roomState || null,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
         }

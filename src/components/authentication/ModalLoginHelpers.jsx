@@ -39,7 +39,10 @@ const ModalLoginHelpers = (props) => {
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
-      const resp = await EventsApi.recoveryPassword(props.cEvent.value?._id, window.location.origin, { email });
+      const resp = await EventsApi.changePassword(props.cEvent.value?._id, email);
+      if (resp) {
+        console.log('1. RESPUESTA API DEV===>', resp);
+      }
       setSendRecovery(
         `${intl.formatMessage({
           id: 'modal.restore.alert.success',
@@ -98,18 +101,16 @@ const ModalLoginHelpers = (props) => {
       //ENVIAR ACCESO AL CORREO
       try {
         //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
-        const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
-        if (data?.length > 0) {
-          let resp = await UsersApi.createOne(data[0]?.properties, props.cEvent.value?._id);
-          setresul(resp && resp.message);
-          if (resp && resp.message == 'OK') {
-            setSendRecovery(
-              `${intl.formatMessage({
-                id: 'modal.send.alert.success',
-                defaultMessage: 'Se ha enviado un link de acceso a su correo electrónico',
-              })} ${values.email}`
-            );
-          }
+        console.log('1. EMAIL A ENVIAR LINK', values.email);
+        const resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);
+        if (resp) {
+          console.log('1. RESPUESTA ENVíO DE LINK');
+          setSendRecovery(
+            `${intl.formatMessage({
+              id: 'modal.send.alert.success',
+              defaultMessage: 'Se ha enviado un link de acceso a su correo electrónico',
+            })} ${values.email}`
+          );
         } else {
           setSendRecovery(
             `${values.email} ${intl.formatMessage({
