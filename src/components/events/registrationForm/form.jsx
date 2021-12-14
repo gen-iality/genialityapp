@@ -316,16 +316,6 @@ const FormRegister = ({
                 break;
             }
 
-            // if (typeModal === 'registerForTheEvent') {
-            //   const { data } = await UsersApi.createOne(eventUserBody, cEvent.value?._id);
-            //   resp = data;
-            // } else if (typeModal === 'update') {
-            //   const { data } = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id);
-            //   resp = data;
-            // } else {
-            //   resp = await UsersApi.createUser(registerBody, cEvent.value?._id);
-            // }
-
             // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
             // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
             //
