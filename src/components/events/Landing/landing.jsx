@@ -152,8 +152,8 @@ const Landing = (props) => {
 
   return (
     <>
-      {/* <ModalFeedback />
-      <ModalNoRegister /> */}
+      {/* <ModalFeedback /> */}
+      {/* <ModalNoRegister /> */}
       <ModalAuth organization='event' />
       <ModalLoginHelpers />
       <ModalPermission />
