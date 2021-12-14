@@ -13,7 +13,7 @@ import {
 } from '../../helpers/request';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
-import AgendaActivityItem from './AgendaActivityItem';
+import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 import { setTabs } from '../../redux/stage/actions';
@@ -76,7 +76,6 @@ class Agenda extends Component {
   }
 
   async componentDidMount() {
-
     this.props.setVirtualConference(false);
     this.setState({ loading: true });
     await this.fetchAgenda();
@@ -102,7 +101,6 @@ class Agenda extends Component {
 
     let surveysData = await SurveysApi.getAll(this.props.cEvent.value._id);
     let documentsData = await DocumentsApi.getAll(this.props.cEvent.value._id);
-  
 
     if (surveysData.data.length >= 1) {
       this.setState({ survey: surveysData.data });
@@ -113,15 +111,13 @@ class Agenda extends Component {
     }
 
     this.getAgendaUser();
-    
   }
 
-
-  componentWillUnmount(){
-    this.props.setVirtualConference(true)
+  componentWillUnmount() {
+    this.props.setVirtualConference(true);
   }
   /** extraemos los días en los que pasan actividades */
-  setDaysWithAllActivities = (data) => {   
+  setDaysWithAllActivities = (data) => {
     const dayswithactivities = [];
     data.map((activity) => {
       const datestring = Moment.tz(activity.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
@@ -131,9 +127,9 @@ class Agenda extends Component {
       //Revisamos que no hayamos extraido el día de otra actividad previa
       const result = dayswithactivities.filter((item) => item === datestring);
       if (result.length === 0) {
-        if(data.isPublished || data.isPublished==undefined){
+        if (data.isPublished || data.isPublished == undefined) {
           dayswithactivities.push(datestring);
-        }      
+        }
       }
     });
     this.setState({ days: dayswithactivities });
@@ -175,27 +171,28 @@ class Agenda extends Component {
   }
 
   async filterStateMeetingRoom(list) {
- 
-  let lista=await Promise.all( list.map(async(activity, index) => {
-      let infoActivity= await firestore
-        .collection('events')
-        .doc(this.props.cEvent.value._id)
-        .collection('activities')
-        .doc(activity._id)
-        .get();
+    let lista = await Promise.all(
+      list.map(async (activity, index) => {
+        let infoActivity = await firestore
+          .collection('events')
+          .doc(this.props.cEvent.value._id)
+          .collection('activities')
+          .doc(activity._id)
+          .get();
         //if (!infoActivity.exists) return;
-        const data = infoActivity.data();        
-        let  habilitar_ingreso=data?.habilitar_ingreso
-        let isPublished=data?.isPublished
-        let meeting_id=data?.meeting_id 
-        let platform =data?.platform
-        
+        const data = infoActivity.data();
+        let habilitar_ingreso = data?.habilitar_ingreso;
+        let isPublished = data?.isPublished;
+        let meeting_id = data?.meeting_id;
+        let platform = data?.platform;
+
         let updatedActivityInfo = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
         //this.props.setTabs(tabs);
-        return  updatedActivityInfo;
-    }))
-  
-    return lista.filter((lf)=>lf.isPublished || lf.isPublished==undefined);
+        return updatedActivityInfo;
+      })
+    );
+
+    return lista.filter((lf) => lf.isPublished || lf.isPublished == undefined);
   }
 
   exchangeCode = async () => {
@@ -236,18 +233,18 @@ class Agenda extends Component {
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
-   
+
     const { data } = await AgendaApi.byEvent(
       this.props.cEvent.value._id,
       this.props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
         ? `?orderBy=[{"field":"datetime_start","order":"desc"}]`
         : null
-    );  
+    );
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.cEvent.value._id);
-   //FILTRO
+    //FILTRO
 
-    let listFiltered=await this.filterStateMeetingRoom(data)
+    let listFiltered = await this.filterStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     //const filtered = this.filterByDay(this.state.days[0], data);
     await this.listeningStateMeetingRoom(data);
@@ -587,20 +584,24 @@ class Agenda extends Component {
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
-   const list =
+    const list =
       date != null
         ? data
             .filter(
-              (a) => date && date.format && a.datetime_start && a.datetime_start.includes(date.format('YYYY-MM-DD')) && (a.isPublished || a.isPublished==undefined)
+              (a) =>
+                date &&
+                date.format &&
+                a.datetime_start &&
+                a.datetime_start.includes(date.format('YYYY-MM-DD')) &&
+                (a.isPublished || a.isPublished == undefined)
             )
             .sort(
               (a, b) =>
                 Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
                 Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
             )
-        : data;        
-        return list;
-
+        : data;
+    return list;
   };
 
   //End modal methods
@@ -612,8 +613,6 @@ class Agenda extends Component {
     {
       Moment.locale(window.navigator.language);
     }
-
-    
 
     return (
       <div>
@@ -688,7 +687,6 @@ class Agenda extends Component {
               Canjear código
             </Button>,
           ]}>
-  
           <div>
             {this.state.exchangeCodeMessage && (
               <Alert
@@ -702,7 +700,6 @@ class Agenda extends Component {
             <Input value={this.state.discountCode} onChange={(e) => this.setState({ discountCode: e.target.value })} />
           </div>
         </Modal>
-
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (
@@ -759,31 +756,35 @@ class Agenda extends Component {
                       //tabBarExtraContent={{right:<DoubleRightOutlined />, left:<DoubleLeftOutlined/>}}
                       defaultActiveKey='0'
                       size='large'
-                      style={{paddingTop:'5px'}}
+                      style={{ paddingTop: '5px' }}
                       tabBarStyle={{
                         backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
                         borderRadius: '10px',
                         paddingLeft: '25px',
                       }}>
-                      {days.map((day, index) => (
-                      this.getActivitiesByDayVisibility(day) && this.getActivitiesByDayVisibility(day).length > 0 && <TabPane
-                          style={{ paddingLeft: '20px', paddingRight: '20px' }}
-                          tab={
-                            <span
-                              style={{
-                                fontWeight: 'bolder',
-                                color: this.props.cEvent.value.styles.textMenu,
-                                backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                              }}>
-                              {Moment(day)
-                                .format('LL')
-                                .toUpperCase()}
-                            </span>
-                          }
-                          key={index}>
-                          {this.getActivitiesByDay(day)}                         
-                        </TabPane>
-                      ))}
+                      {days.map(
+                        (day, index) =>
+                          this.getActivitiesByDayVisibility(day) &&
+                          this.getActivitiesByDayVisibility(day).length > 0 && (
+                            <TabPane
+                              style={{ paddingLeft: '20px', paddingRight: '20px' }}
+                              tab={
+                                <span
+                                  style={{
+                                    fontWeight: 'bolder',
+                                    color: this.props.cEvent.value.styles.textMenu,
+                                    backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                                  }}>
+                                  {Moment(day)
+                                    .format('LL')
+                                    .toUpperCase()}
+                                </span>
+                              }
+                              key={index}>
+                              {this.getActivitiesByDay(day)}
+                            </TabPane>
+                          )
+                      )}
                     </Tabs>
                   )}
               </div>
