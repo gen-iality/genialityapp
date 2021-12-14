@@ -53,8 +53,11 @@ class Faqs extends Component {
             }} */
             defaultActiveKey={['3']}>
             {faqsData.map((faqs, key) => (
-              <Panel key={key} header={<span style={{ color: this.props.cEvent.value.styles.textMenu }}>{faqs.title}</span>}>
-                <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
+              <Panel key={key} 
+                header={<span /* style={{ color: this.props.cEvent.value.styles.textMenu }} */>
+                  <b>{'Pregunta: '}</b><br />{faqs.title}
+                </span>}>
+                <b>Respuesta:</b> <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
               </Panel>
             ))}
           </Collapse>
