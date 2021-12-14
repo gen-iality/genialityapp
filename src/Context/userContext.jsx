@@ -24,6 +24,7 @@ export function CurrentUserProvider({ children }) {
             setCurrentUser({ status: 'LOADED', value: null });
           }
         });
+
         app.auth().isSignInWithEmailLink((user) => {
           if (user) {
             user.getIdToken().then(async function(idToken) {
