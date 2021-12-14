@@ -164,7 +164,7 @@ const Headers = (props) => {
             let data = responseStatus.data[0];
             setdataGeneral({
               name: data.properties?.names || data.properties?.name,
-              userEvent: { ...data?.properties, properties: data.properties },
+              userEvent: { ...data?.properties, properties: data.properties, _id: data.account_id },
               photo: data?.properties.picture
                 ? data?.properties.picture
                 : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',

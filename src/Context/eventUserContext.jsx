@@ -13,31 +13,30 @@ export function CurrentUserEventProvider({ children }) {
   console.log('1. CUSER EVENT USER==>', cUser);
 
   const [userEvent, setuserEvent] = useState(initialContextState);
-  let [updateUser, setUpdateUser] = useState(false);
+  let [updateUser, setUpdateUser] = useState(true);
 
   useEffect(() => {
     let event_id = cEvent.value?._id;
-    console.log('1. EJECUTADO USEEFFECT1===>', cUser);
-    if (cUser.value == null || cUser.value == undefined) return;
-    // console.log('cambiar el envento', cEvent.value);
-    console.log('1. EJECUTADO USEEFFECT2===>', cUser);
+    if (cUser.value == null || cUser.value == undefined || updateUser == false) return;
     async function asyncdata() {
       try {
-        console.log('1. CUSER===>', cUser);
+        console.log('10. CUSER===>', cUser);
         EventsApi.getStatusRegister(event_id, cUser.value.email).then((responseStatus) => {
-          console.log('responseStatus=>>', responseStatus);
+          console.log('10. responseStatus=>>', responseStatus);
           if (responseStatus.data.length > 0) {
+            console.log('1. ENTRA ACA A SETEAR USER');
             setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });
           } else {
             setuserEvent({ status: 'LOADED', value: null });
           }
+          setUpdateUser(false);
         });
       } catch (e) {
         setuserEvent({ status: 'LOADED', value: null });
+        setUpdateUser(false);
       }
     }
     if (event_id) {
-      updateUser = false;
       asyncdata();
     }
   }, [cEvent.value, cUser.value, updateUser]);
