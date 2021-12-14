@@ -168,8 +168,8 @@ const Headers = (props) => {
               photo: data?.properties.picture
                 ? data?.properties.picture
                 : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-              uid: data?.user.uid,
-              id: data?.user._id,
+              uid: data?.user?.uid,
+              id: data?.user?._id,
               user: true,
               loader: false,
               organizations: organizationsMine,
