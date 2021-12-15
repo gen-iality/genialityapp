@@ -49,6 +49,7 @@ const Table = (props) => {
     title: 'Opciones',
     dataIndex: 'options',
     fixed: 'right',
+    width: 110,
     render(val, item) {
       return (
         <Row wrap gutter={[8, 8]}>
