@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons';
 import FormQuestionEdit from './formEdit';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import Loading from '../profile/loading';
 
 const formLayout = {
@@ -170,62 +171,66 @@ class triviaEdit extends Component {
 
   //Funcion para guardar los datos a actualizar
   async submit() {
-    //Se recogen los datos a actualizar
-    const data = {
-      survey: this.state.survey,
-      show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
-      graphyType: this.state.graphyType,
-      allow_vote_value_per_user: 'false',
-      event_id: this.props.event._id,
-      activity_id: this.state.activity_id,
-      points: this.state.points ? parseInt(this.state.points) : 1,
-      initialMessage: this.state.initialMessage,
-      time_limit: parseInt(this.state.time_limit),
-      win_Message: this.state.win_Message,
-      neutral_Message: this.state.neutral_Message,
-      lose_Message: this.state.lose_Message,
-
-      // Survey Config
-      allow_anonymous_answers: 'false',
-      allow_gradable_survey: 'false',
-      hasMinimumScore: false,
-      isGlobal: false,
-      showNoVotos: false,
-
-      //Survey state
-      freezeGame: this.state.freezeGame === 'true' ? true : false,
-      open: 'false',
-      publish: 'false',
-
-      minimumScore: 0,
-    };
-    // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-    const save = await SurveysApi.createOne(this.props.event._id, data);
-    const idSurvey = save._id;
-
-    // Esto permite almacenar los estados en firebase
-    await createOrUpdateSurvey(
-      idSurvey,
-      {
-        // Survey Config
-        allow_anonymous_answers: data.allow_anonymous_answers,
-        allow_gradable_survey: data.allow_gradable_survey,
-        hasMinimumScore: data.hasMinimumScore,
-        isGlobal: data.isGlobal,
-        showNoVotos: data.showNoVotos,
+    if(this.state.survey) {
+      //Se recogen los datos a actualizar
+      const data = {
+        survey: this.state.survey,
+        show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
+        graphyType: this.state.graphyType,
+        allow_vote_value_per_user: 'false',
+        event_id: this.props.event._id,
+        activity_id: this.state.activity_id,
+        points: this.state.points ? parseInt(this.state.points) : 1,
+        initialMessage: this.state.initialMessage,
         time_limit: parseInt(this.state.time_limit),
+        win_Message: this.state.win_Message,
+        neutral_Message: this.state.neutral_Message,
+        lose_Message: this.state.lose_Message,
 
-        //survey state
-        freezeGame: data.freezeGame,
-        isOpened: data.open,
-        isPublished: data.publish,
+        // Survey Config
+        allow_anonymous_answers: 'false',
+        allow_gradable_survey: 'false',
+        hasMinimumScore: false,
+        isGlobal: false,
+        showNoVotos: false,
 
-        minimumScore: data.minimumScore,
-      },
-      { eventId: this.props.event._id, name: save.survey, category: 'none' }
-    );
+        //Survey state
+        freezeGame: this.state.freezeGame === 'true' ? true : false,
+        open: 'false',
+        publish: 'false',
 
-    await this.setState({ idSurvey });
+        minimumScore: 0,
+      };
+      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+      const save = await SurveysApi.createOne(this.props.event._id, data);
+      const idSurvey = save._id;
+
+      // Esto permite almacenar los estados en firebase
+      await createOrUpdateSurvey(
+        idSurvey,
+        {
+          // Survey Config
+          allow_anonymous_answers: data.allow_anonymous_answers,
+          allow_gradable_survey: data.allow_gradable_survey,
+          hasMinimumScore: data.hasMinimumScore,
+          isGlobal: data.isGlobal,
+          showNoVotos: data.showNoVotos,
+          time_limit: parseInt(this.state.time_limit),
+
+          //survey state
+          freezeGame: data.freezeGame,
+          isOpened: data.open,
+          isPublished: data.publish,
+
+          minimumScore: data.minimumScore,
+        },
+        { eventId: this.props.event._id, name: save.survey, category: 'none' }
+      );
+
+      await this.setState({ idSurvey });
+    } else {
+      message.error('El nombre es requerido');
+    }
   }
 
   async submitWithQuestions(e) {
@@ -641,7 +646,14 @@ class triviaEdit extends Component {
             {isLoading ? (
               <Loading />
             ) : (
-              <Form.Item label={'Nombre'}>
+              <Form.Item 
+                label={
+                  <label style={{ marginTop: '2%' }} className='label'>
+                    Nombre <label style={{ color: 'red' }}>*</label>
+                  </label>
+                }
+                rules={[{ required: true, message: 'El nombre es requerido' }]}
+              >
                 <Input
                   value={survey}
                   placeholder={'Nombre de la encuesta'}
@@ -772,7 +784,7 @@ class triviaEdit extends Component {
                     onChange={(relation) => {
                       this.setState({ activity_id: relation });
                     }}>
-                    <Option value='No relacionar'>{'No relacionar'}</Option>
+                    <Option value=''>{'No relacionar'}</Option>
                     {dataAgenda.map((activity, key) => (
                       <Option key={key} value={activity._id}>
                         {activity.name}
@@ -856,6 +868,7 @@ class triviaEdit extends Component {
             )}
           </Col>
         </Row>
+        <BackTop />
       </Form>
     );
   }

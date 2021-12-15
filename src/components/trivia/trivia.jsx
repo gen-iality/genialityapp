@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import {Tag} from 'antd'
+import { SendOutlined } from '@ant-design/icons'
 
 const trivia = (props) => {
   let [columnsData, setColumnsData] = useState({});
@@ -44,6 +44,12 @@ const trivia = (props) => {
       actions
       search
       setColumnsData={setColumnsData}
+      /* extraPath={`${props.matchUrl}/report`}
+      extraPathIcon={<SendOutlined />}
+      extraPathTitle='Detalle'
+      extraPathId
+      extraPathStateName={'report'}
+      widthAction={130} */
     />
   );
 }

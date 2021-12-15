@@ -39,7 +39,10 @@ const Table = (props) => {
     extraPathTitle,
     extraPathIcon,
     extraPathType,
+    extraPathId,
+    extraPathStateName,
     scroll,
+    widthAction,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -49,7 +52,7 @@ const Table = (props) => {
     title: 'Opciones',
     dataIndex: 'options',
     fixed: 'right',
-    width: 110,
+    width: widthAction ? widthAction : 110,
     render(val, item) {
       return (
         <Row wrap gutter={[8, 8]}>
@@ -73,7 +76,7 @@ const Table = (props) => {
                 <Link
                   key={`extraPathAction${item.index}`}
                   id={`extraPathAction${item.index}`}
-                  to={{ pathname: `${extraPath}/${item._id}`, state: { item: item }}}>
+                  to={{ pathname: `${extraPath}/${item._id}`, state: { [extraPathStateName ? extraPathStateName : item] : [extraPathId ? item._id : item] }}}>
                   <Button 
                     icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
                     type={extraPathType ? extraPathType : 'primary'} 
