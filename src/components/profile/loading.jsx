@@ -11,7 +11,7 @@ const Loading = () => {
         display: 'flex',
         justifyContent: 'center',
         alignContent: 'center',
-        height: '100vh',
+        height: '100%',
       }}>
       <LoadingOutlined style={{ fontSize: '100px', color: '#cccccc' }} />
     </Space>

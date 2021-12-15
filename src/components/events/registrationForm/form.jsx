@@ -156,8 +156,6 @@ const FormRegister = ({
     initialValues.password = '';
   }
 
-  console.log('1. INITIAL VALUES==>', initialValues, cEventUser?.value, cUser.value);
-
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || []
   );
@@ -234,11 +232,6 @@ const FormRegister = ({
     if (areacodeselected) {
       values['code'] = areacodeselected;
     }
-    if (values.checked_in) {
-      values.checkedin_at = new Date();
-    } else {
-      values.checkedin_at = '';
-    }
 
     //OBTENER RUTA ARCHIVOS FILE
     Object.values(extraFields).map((value) => {
@@ -252,13 +245,18 @@ const FormRegister = ({
     });
 
     if (imageAvatar) {
-      values.picture = imageAvatar.fileList[0].response;
+      if (imageAvatar.fileList[0]) {
+        values.picture = imageAvatar.fileList[0].response;
+      } else {
+        values.picture = '';
+      }
+    } else {
+      delete values.picture;
     }
     if (callback) {
       callback(values);
     } else {
       const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
-      console.log('DATA USER==>', data, cEventUser);
       if (data.length == 0 || cEventUser.value) {
         setSectionPermissions({ view: false, ticketview: false });
         values.password = password;
@@ -273,16 +271,16 @@ const FormRegister = ({
         // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
         message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
 
-        const snap = { properties: { ...values, typeRegister: typeRegister } };
+        const registerBody = { ...values };
+        const eventUserBody = { properties: { ...values, typeRegister: typeRegister } };
 
         let textMessage = {};
         textMessage.key = key;
         let eventUserId;
 
         if (eventUserId) {
-          console.log('1. ENTRO ACA A MODIFICAR 1-----');
           try {
-            await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, snap);
+            await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, registerBody);
             // textMessage.content = "Transferencia Realizada";
             textMessage.content = formMessage.successMessage;
             setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
@@ -293,14 +291,30 @@ const FormRegister = ({
               closeModal({ status: 'sent_transfer', message: 'Transferencia Hecha' });
             }, 4000);
           } catch (err) {
-            console.error('Se presento un problema', err);
             // textMessage.content = "Error... Intentalo mas tarde";
             textMessage.content = formMessage.errorMessage;
             message.error(textMessage);
           }
         } else {
           try {
-            let resp = await UsersApi.createOne(snap, cEvent.value?._id);
+            let resp = undefined;
+
+            switch (typeModal) {
+              case 'registerForTheEvent':
+                const registerForTheEventData = await UsersApi.createOne(eventUserBody, cEvent.value?._id);
+                resp = registerForTheEventData.data;
+                break;
+
+              case 'update':
+                const updateData = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id);
+                resp = updateData.data;
+                break;
+
+              default:
+                resp = await UsersApi.createUser(registerBody, cEvent.value?._id);
+
+                break;
+            }
 
             // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
             // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
@@ -312,7 +326,7 @@ const FormRegister = ({
 
             //if (resp.status !== 'UPDATED') {
 
-            if (resp.data && resp.data.user && resp.data.user.initial_token) {
+            if (resp && resp._id) {
               setSuccessMessageInRegisterForm(resp.status);
               // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
               // textMessage.content = "Usuario " + statusMessage;
@@ -332,26 +346,24 @@ const FormRegister = ({
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
               // console.log('INITIAL TOKEN AND VALID EMAIL', resp.data.user.initial_token, cEvent.value?.validateEmail);
-              if (!cEvent?.value?.validateEmail && resp.data.user.initial_token) {
+              if (!cEvent?.value?.validateEmail && resp._id) {
                 //setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
-                console.log('10. INGRESO ACA A LOGUEAR===>', resp.data.user);
                 const loginFirebase = async () => {
                   app
                     .auth()
-                    .signInWithEmailAndPassword(resp.data.user.email, values.password)
+                    .signInWithEmailAndPassword(resp.email || resp.properties.email, values.password)
                     .then((response) => {
                       if (response.user) {
-                        console.log('1.response', response);
-                        if (cEventUser.value) {
-                          //cEventUser.setUpdateUser(true);
-                          //handleChangeTypeModal(null);
-                          //setSubmittedForm(false);
-                          window.location.reload();
-                        } else {
-                          cEventUser.setUpdateUser(true);
-                          //handleChangeTypeModal(null);
-                          setSubmittedForm(false);
-                        }
+                        // if (cEventUser.value) {
+                        //   //cEventUser.setUpdateUser(true);
+                        //   //handleChangeTypeModal(null);
+                        //   //setSubmittedForm(false);
+                        //   window.location.reload();
+                        // } else {
+                        cEventUser.setUpdateUser(true);
+                        handleChangeTypeModal(null);
+                        setSubmittedForm(false);
+                        // }
                       } else {
                         setErrorLogin(true);
                       }
@@ -370,7 +382,6 @@ const FormRegister = ({
                   );
                 }, 100);*/
               } else {
-                console.log('1. ENTRO ACA A MODIFICAR-----');
                 window.location.replace(
                   `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
                 );
@@ -484,7 +495,7 @@ const FormRegister = ({
       let description = m.description;
       let labelPosition = m.labelPosition;
       let target = name;
-      let value = !callback
+      let value = callback
         ? eventUser && eventUser['properties']
           ? eventUser['properties'][target]
           : ''

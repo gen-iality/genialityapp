@@ -57,7 +57,7 @@ const EventSectionRoutes = (props) => {
 
     if (props.cEventUser?.value == null && props.cEventUser?.status == 'LOADED') {
       console.log('1. ingreso aca a type modal');
-      handleChangeTypeModal('register');
+      handleChangeTypeModal('registerForTheEvent');
     } else if (props.cEventUser?.value !== null && props.cEventUser?.status == 'LOADED' && typeModal !== 'update') {
       handleChangeTypeModal(null);
     }

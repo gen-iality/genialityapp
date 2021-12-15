@@ -22,9 +22,7 @@ export function CurrentUserEventProvider({ children }) {
       try {
         console.log('10. CUSER===>', cUser);
         EventsApi.getStatusRegister(event_id, cUser.value.email).then((responseStatus) => {
-          console.log('10. responseStatus=>>', responseStatus);
           if (responseStatus.data.length > 0) {
-            console.log('1. ENTRA ACA A SETEAR USER');
             setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });
           } else {
             setuserEvent({ status: 'LOADED', value: null });

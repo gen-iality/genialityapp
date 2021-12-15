@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiUrl, ApiEviusZoomSurvey } from './constants';
+import { ApiDEVUrl, ApiUrl, ApiEviusZoomSurvey } from './constants';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { handleSelect } from './utils';
@@ -18,12 +18,10 @@ const privateInstance = axios.create({
   withCredentials: true,
 });
 
-
 /* SI EL USUARIO ESTA LOGUEADO POR DEFECTO AGREGAMOS EL TOKEN A LAS PETICIONES 
 PRIMERO MIRAMOS  si viene en la URL
 luego miramos si viene en las cookies
 */
-
 
 export const fireStoreApi = {
   createOrUpdate: (eventId, activityId, eventUser) => {
@@ -74,7 +72,6 @@ export const Actions = {
     return privateInstance.get(`${url}`).then(({ data }) => data);
   },
 };
-
 
 //BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
 export const getCurrentUser = async () => {
@@ -135,7 +132,7 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
     return eventUser;
   },
 
@@ -144,7 +141,7 @@ export const EventsApi = {
 
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
 
-    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
+    let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
 
@@ -247,9 +244,8 @@ export const EventsApi = {
     return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
   },
   getStatusRegister: async (eventId, email) => {
-    console.log('Que hace', eventId, email);
     return await Actions.get(
-      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]`
+      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`
     );
   },
   recoveryPassword: async (eventId, url, email) => {
@@ -314,7 +310,10 @@ export const UsersApi = {
     return await Actions.delete(`/api/users`, user);
   },
   createUser: async (user) => {
-    return await Actions.post(`/api/users`, user);
+    return await Actions.post(`/api/users`, user, true);
+  },
+  editEventUser: async (data, id) => {
+    return await Actions.post(`/api/events/${id}/eventusers`, data);
   },
 };
 
@@ -579,10 +578,7 @@ export const discountCodesApi = {
   },
 };
 
-
 export const CertsApi = {
-
-
   byEvent: async (event) => {
     let token = await GetTokenUserFirebase();
     return await Actions.getAll(`api/events/${event}/certificates?token=${token}`).then(({ data }) => data);
@@ -611,7 +607,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers[ 'content-type' ],
+            type: response.headers['content-type'],
             blob: response.data,
           });
         });

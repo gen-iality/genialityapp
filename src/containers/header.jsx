@@ -24,6 +24,7 @@ const zIndex = {
 };
 
 const Headers = (props) => {
+  const { cUser, showMenu, cEventUser, loginInfo } = props;
   const [dataGeneral, setdataGeneral] = useState({
     selection: [],
     organizations: [],
@@ -78,7 +79,7 @@ const Headers = (props) => {
 
   const handleMenuEvent = () => {
     setdataGeneral({ ...dataGeneral, showEventMenu: !dataGeneral.showEventMenu });
-    props.showMenu();
+    showMenu();
   };
 
   const handleMenu = (location) => {
@@ -115,90 +116,47 @@ const Headers = (props) => {
 
   async function LoadCurrentUser() {
     const eventId = setEventId();
-    /*app.auth().onAuthStateChanged((user) => {
-        if (user) {
-          user.getIdToken().then(async function(idToken) {
-            privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
-              EventsApi.getStatusRegister(eventId, response.data.email).then((responseStatus) => {
-                let data = responseStatus.data[0];
-                const name =
-                  data != null
-                    ? data?.properties?.name || data?.properties?.names
-                    : data?.properties?.name || data?.properties?.names;
-
-                // console.log('aja=>>', responseStatus.data[0]);
-                // console.log('organizationsMine', organizationsMine);
-                // console.log('data', data);
-
-                setdataGeneral({
-                  ...dataGeneral,
-                  name,
-                  userEvent: data,
-                  photo: data?.properties.picture
-                    ? data?.properties.picture
-                    : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-                  uid: data?.user.uid,
-                  id: data?.user._id,
-                  user: true,
-                  loader: false,
-                  organizations: organizationsMine,
-                  loadingUser: false,
-                  anonimususer: false,
-                });
-                setloadedData(true);
-                // props.addLoginInformation(data);
-                // handleMenu(window.location);
-              });
-            });
-          });
-        }
-      });*/
     //PARA VALIDAR SI ESTÁ DENTRO DE UN EVENTO
     if (eventId) {
-      try {
-        EventsApi.getStatusRegister(eventId, props.cUser?.value?.email).then((responseStatus) => {
-          //EXISTE EVENT USER
-          if (responseStatus.data.length > 0) {
-            let data = responseStatus.data[0];
-            setdataGeneral({
-              name: data.properties?.names || data.properties?.name,
-              userEvent: { ...data?.properties, properties: data.properties, _id: data.account_id },
-              photo: data?.properties.picture
-                ? data?.properties.picture
-                : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-              uid: data?.user.uid,
-              id: data?.user._id,
-              user: true,
-              loader: false,
-              organizations: organizationsMine,
-              loadingUser: false,
-              anonimususer: false,
-            });
-          } else {
-            // EL USUARIO TIENE SESION PERO NO ESTA REGISTRADO EN EL EVENTO
-            let data = props.cUser?.value;
-            setdataGeneral({
-              name: data?.names || data?.name,
-              userEvent: { ...data, properties: { names: data.names || data.name } },
-              photo: data?.picture
-                ? data?.picture
-                : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-              uid: data?.user?.uid,
-              id: data?.user?._id,
-              user: true,
-              loader: false,
-              organizations: organizationsMine,
-              loadingUser: false,
-              anonimususer: false,
-            });
-          }
+      if (cEventUser?.value) {
+        let data = cEventUser?.value?.properties;
+        let eventUserId = cEventUser?.value.account_id;
+        let { _id, uid } = cEventUser?.value.user;
+        setdataGeneral({
+          name: data.names || data.name,
+          userEvent: { ...data, properties: data, _id: eventUserId },
+          photo: data?.picture
+            ? data?.picture
+            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+          uid: uid,
+          id: _id,
+          user: true,
+          loader: false,
+          organizations: organizationsMine,
+          loadingUser: false,
+          anonimususer: false,
         });
-      } catch (e) {
-        console.log('error', e);
+      } else {
+        // EL USUARIO TIENE SESION PERO NO ESTA REGISTRADO EN EL EVENTO
+        let data = cUser?.value;
+        setdataGeneral({
+          name: data?.names || data?.name,
+          userEvent: { ...data, properties: { names: data.names || data.name } },
+          photo: data?.picture
+            ? data?.picture
+            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+          uid: data?.user?.uid,
+          id: data?.user?._id,
+          user: true,
+          loader: false,
+          organizations: organizationsMine,
+          loadingUser: false,
+          anonimususer: false,
+        });
       }
     } else {
       //SOLO EXISTE USER
-      let data = props.cUser?.value;
+      let data = cUser?.value;
       setdataGeneral({
         name: data?.names || data?.name,
         userEvent: { ...data, properties: { names: data.names || data.name } },
@@ -218,13 +176,13 @@ const Headers = (props) => {
 
   useEffect(() => {
     // console.log('loadedData', loadedData);
-    if (props.cUser.value !== undefined && props.cUser.value !== null) {
+    if (cUser.value !== undefined && cUser.value !== null) {
       LoadMineOrganizations();
       LoadCurrentUser();
 
       // logout();
     }
-  }, [props.cUser.value, props.cEvent.value]);
+  }, [cUser?.value, cEventUser?.value]);
 
   // useEffect(() => {
   //   console.log('datageneral', dataGeneral);
@@ -232,7 +190,7 @@ const Headers = (props) => {
 
   return (
     <React.Fragment>
-      <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+      <Header style={{ position: 'fixed', zIndex: 1, width: '100%', left: 0, top: 0 }}>
         <Menu theme='light' mode='horizontal'>
           <Row justify='space-between' align='middle'>
             <Row className='logo-header' justify='space-between' align='middle'>
@@ -280,22 +238,16 @@ const Headers = (props) => {
                 menuOpen={dataGeneral.menuOpen}
                 loader={dataGeneral.loader}
                 photo={
-                  dataGeneral.userEvent.properties?.picture
-                    ? dataGeneral.userEvent.properties?.picture
+                  dataGeneral.photo
+                    ? dataGeneral.photo
                     : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
                 }
-                name={
-                  dataGeneral.userEvent.properties?.name
-                    ? dataGeneral.userEvent.properties?.name
-                    : dataGeneral.userEvent.properties?.names
-                    ? dataGeneral.userEvent.properties?.names
-                    : ''
-                }
+                name={dataGeneral.name ? dataGeneral.name : ''}
                 userEvent={dataGeneral.userEvent}
                 eventId={dataGeneral.eventId}
                 logout={() => logout()}
                 openMenu={() => openMenu()}
-                loginInfo={props.loginInfo}
+                loginInfo={loginInfo}
               />
             ) : (
               dataGeneral.userEvent != null &&
@@ -311,7 +263,7 @@ const Headers = (props) => {
                   eventId={dataGeneral.eventId}
                   logout={() => console.log('logout')}
                   openMenu={() => console.log('openMenu')}
-                  loginInfo={props.loginInfo}
+                  loginInfo={loginInfo}
                   anonimususer={true}
                 />
               )
