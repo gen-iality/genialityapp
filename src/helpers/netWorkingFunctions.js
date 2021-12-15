@@ -1,13 +1,13 @@
 import { getUserByEmail } from '../components/networking/services';
-import * as Cookie from 'js-cookie';
-import { EventsApi, Networking } from './request';
+import { EventsApi } from './request';
 import { firestore } from './firebase';
+import { GetTokenUserFirebase } from './HelperAuth';
 
 export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActual, event) => {
   let eventUserId = userActual._id;
 
   let currentUserName = userActual.names || userActual.email;
-  let currentUser = Cookie.get('evius_token');
+  let currentUser = await GetTokenUserFirebase();
 
   if (currentUser) {
     // Se valida si el usuario esta suscrito al evento
@@ -76,36 +76,36 @@ export const addNotification = (notification, event, user) => {
   }
 };
 
-export const isMyContacts=(contact,listContacts)=>{
- let resp=false;  
- if(Array.isArray(listContacts)){
- listContacts.map((contacts)=>{
-    if(contacts._id==contact.eventUserId){        
-      resp=true; 
-      return;
-    }
-  })
-}
+export const isMyContacts = (contact, listContacts) => {
+  let resp = false;
+  if (Array.isArray(listContacts)) {
+    listContacts.map((contacts) => {
+      if (contacts._id == contact.eventUserId) {
+        resp = true;
+        return;
+      }
+    })
+  }
   return resp;
 }
 
-  export const haveRequest=(user,listRequest,socialZone=0)=>{    
-    if(listRequest.length>0){
-      /*console.log("user==>",user,socialZone)
-      for(let i=0;i<listRequest.length;i++){
-        if(listRequest[i].id_user_requesting==user?.eventUserId){
-        // console.log("ACAESTOY==>",i)
-        }
-      }*/
-     // console.log("USERREQUEST==>",user)
-      let request=listRequest?.filter((userRequest)=>socialZone==0?userRequest.id_user_requesting==user?._id :userRequest?.id_user_requesting== user?.eventUserId);
-      //console.log("LISTA==>",request,user?.eventUserId)
-      if(request.length>0){
-        return true;
+export const haveRequest = (user, listRequest, socialZone = 0) => {
+  if (listRequest.length > 0) {
+    /*console.log("user==>",user,socialZone)
+    for(let i=0;i<listRequest.length;i++){
+      if(listRequest[i].id_user_requesting==user?.eventUserId){
+      // console.log("ACAESTOY==>",i)
       }
-      else{
-        return false;
-      }
+    }*/
+    // console.log("USERREQUEST==>",user)
+    let request = listRequest?.filter((userRequest) => socialZone == 0 ? userRequest.id_user_requesting == user?._id : userRequest?.id_user_requesting == user?.eventUserId);
+    //console.log("LISTA==>",request,user?.eventUserId)
+    if (request.length > 0) {
+      return true;
     }
-    return false;
+    else {
+      return false;
+    }
   }
+  return false;
+}

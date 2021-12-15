@@ -22,7 +22,7 @@ const ModalPermission = (props) => {
   const screens = useBreakpoint();
   const intl = useIntl();
   const textoTitle =
-    typeModal == 'register'
+    typeModal == 'registerForTheEvent'
       ? intl.formatMessage({ id: 'modal.title.registerevent', defaultMessage: 'Registrarme al evento' })
       : typeModal == 'update'
       ? intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })
@@ -34,7 +34,7 @@ const ModalPermission = (props) => {
       footer={null}
       zIndex={1000}
       closable={false}
-      visible={typeModal == 'register' || typeModal == 'update'}>
+      visible={typeModal == 'register' || typeModal == 'update' || typeModal === 'registerForTheEvent'}>
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={

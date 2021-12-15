@@ -10,8 +10,8 @@ import { Actions, CategoriesApi, OrganizationApi, TypesApi } from '../../../help
 import Loading from '../../loaders/loading';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import API from '../../../helpers/request';
-import * as Cookie from 'js-cookie';
 import { Button, Input, Modal, Form } from 'antd';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 class InfoGeneral extends Component {
   constructor(props) {
@@ -31,12 +31,12 @@ class InfoGeneral extends Component {
     this.onFinish = this.onFinish.bind(this);
   }
   async getCurrentUser() {
-    let evius_token = Cookie.get('evius_token');
+    let evius_token = await GetTokenUserFirebase();
     if (!evius_token) {
       this.setState({ currentUser: 'guest', loading: false });
     } else {
       try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
+        const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
         if (resp?.data) {
           this.setState({ currentUser: resp.data });
         }
@@ -456,16 +456,16 @@ class InfoGeneral extends Component {
                   </select>
                 </div>
               </div>
-            </div>          
-                    <SelectInput 
-                      name={ "Organizado por:" }                   
-                      isMulti={false}
-                      selectedOptions={selectedOrganizer}
-                      selectOption={this.selectOrganizer}
-                      options={organizers}
-                      required={true}
-                    />              
-                <Button id={'addOrganization'}  onClick={()=>this.setState({newOrganization:true})}>
+            </div>
+            <SelectInput
+              name={'Organizado por:'}
+              isMulti={false}
+              selectedOptions={selectedOrganizer}
+              selectOption={this.selectOrganizer}
+              options={organizers}
+              required={true}
+            />
+            <Button id={'addOrganization'} onClick={() => this.setState({ newOrganization: true })}>
               Agregar organización
             </Button>
             <SelectInput
@@ -504,17 +504,12 @@ class InfoGeneral extends Component {
             initialValues={{ remember: false }}
             onFinish={this.onFinish}
             onFinishFailed={this.onFinishFailed}
-            autoComplete="off"
-          >
-            <Form.Item
-              label="Nombre"
-              name="name"
-              rules={[{ required: true, message: 'Ingrese un nombre válido' }]}
-            >
+            autoComplete='off'>
+            <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Ingrese un nombre válido' }]}>
               <Input id='nameOrganizer'></Input>
-              </Form.Item>
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button  id={'addOrganizers'} type="primary" htmlType="submit">
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button id={'addOrganizers'} type='primary' htmlType='submit'>
                 Agregar
               </Button>
             </Form.Item>

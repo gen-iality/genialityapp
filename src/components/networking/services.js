@@ -13,7 +13,7 @@ export const getCurrentUser = (token) => {
         resolve('guestUser');
       } else {
         try {
-          const resp = await API.get(`/auth/currentUser?evius_token=${token}`);
+          const resp = await API.get(`/auth/currentUser`);
           if (resp.status === 200) {
             resolve(resp.data);
           }
@@ -127,7 +127,7 @@ export const createAgendaToEventUser = ({
               name_requesting: eventUser ? eventUser.properties.names : '',
               email_requesting: eventUser ? eventUser.properties.email : '',
               nuevapropiedad: 'asdfa',
-              attendees: [currentEventUserId, targetEventUserId],
+              attendees: [ currentEventUserId, targetEventUserId ],
               owner_id: currentEventUserId,
               request_status: 'pending',
               type: 'meeting',
@@ -341,8 +341,8 @@ export const getUserByEmail = async (user, eventid) => {
   try {
     const userByEmail = await UsersApi.findByEmail(user.email);
     let datauser;
-    if (userByEmail[0]) {
-      datauser = await getUserEvent(userByEmail[0]._id, eventid);
+    if (userByEmail[ 0 ]) {
+      datauser = await getUserEvent(userByEmail[ 0 ]._id, eventid);
     } else {
       datauser = await getUserEvent(user._id, eventid);
     }
@@ -356,7 +356,7 @@ export const getUserByEmail = async (user, eventid) => {
 // OBTENER USUARIO A PARTIR DEL ACCOUNT ID
 export const getUserEvent = async (id, eventid) => {
   const dataUser = await UsersApi.getAll(eventid, `?filtered=[{"field":"account_id","value":"${id}"}]`);
-  let user = dataUser.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[0];
+  let user = dataUser.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[ 0 ];
   return user;
 };
 
@@ -370,7 +370,7 @@ export const getUserEventbyEmail = async (email, eventid) => {
 // OBTENER USUARIO A PARTIR DEL EVENTUSER_ID
 export const getUsersId = async (id, eventid) => {
   const dataUser = await UsersApi.getAll(eventid, `?filtered=[{"field":"_id","value":"${id}"}]`);
-  return dataUser.data[0];
+  return dataUser.data[ 0 ];
 };
 
 /*export const getUserByEventUser = async (eventuser, eventid) => {

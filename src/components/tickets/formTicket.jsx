@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import 'moment/locale/es';
 import { Actions } from '../../helpers/request';
-import * as Cookie from 'js-cookie';
 import { toast } from 'react-toastify';
 import UserRegistration from '../events/userRegistration';
 import withContext from '../../Context/withContext';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 class TicketsForm extends Component {
   constructor(props) {
@@ -36,7 +36,12 @@ class TicketsForm extends Component {
     this.props.setVirtualConference(false);
 
     const haspayments = !!this.props.cEvent.value.tickets.find((item) => item.price !== '0');
-    const evius_token = Cookie.get('evius_token');
+    async function GetUserToken() {
+      let token = await GetTokenUserFirebase();
+      return token;
+    }
+
+    let evius_token = GetUserToken();
 
     //Arreglo de tiquetes
     const tickets = this.props.cEvent.value.tickets.map((ticket) => {

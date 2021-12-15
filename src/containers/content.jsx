@@ -1,8 +1,7 @@
 import React from 'react';
-import { Grid, Spin } from 'antd';
+import { Grid, Spin, Layout, Space } from 'antd';
 import { Route, Redirect, withRouter, Switch } from 'react-router-dom';
 import Event from '../components/events/event';
-import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
 import asyncComponent from './AsyncComponent';
 import WithFooter from '../components/withFooter';
@@ -19,6 +18,7 @@ import { NewEventProvider } from '../Context/newEventContext';
 import MainProfile from '../components/profile/main';
 import { AgendaContextProvider } from '../Context/AgendaContext';
 import { UseCurrentUser } from 'Context/userContext';
+import Header from './header';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -140,7 +140,12 @@ const RouteContext = ({ component: Component, ...rest }) => (
           <CurrentUserProvider>
             <HelperContextProvider>
               <SurveysProvider>
-                <Component {...props} />
+                <Layout>
+                  <Space direction='vertical' size={65}>
+                    <Header />
+                    <Component {...props} />
+                  </Space>
+                </Layout>
               </SurveysProvider>
             </HelperContextProvider>
           </CurrentUserProvider>
@@ -162,13 +167,18 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
               <HelperContextProvider>
                 <SurveysProvider>
                   <AgendaContextProvider>
-                    {cUser.value ? (
-                      <Component {...props} />
-                    ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                      <ForbiddenPage />
-                    ) : (
-                      <Spin />
-                    )}
+                    <Layout>
+                      <Space direction='vertical' size={65}>
+                        <Header />
+                        {cUser.value ? (
+                          <Component {...props} />
+                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                          <ForbiddenPage />
+                        ) : (
+                          <Spin />
+                        )}
+                      </Space>
+                    </Layout>
                   </AgendaContextProvider>
                 </SurveysProvider>
               </HelperContextProvider>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import API, { EventsApi, TicketsApi } from '../../helpers/request';
 import { fieldNameEmailFirst } from '../../helpers/utils';
-import * as Cookie from 'js-cookie';
 import FormComponent from './registrationForm/form';
 import { Spin, Skeleton } from 'antd';
 import withContext from '../../Context/withContext';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 class UserRegistration extends Component {
   constructor(props) {
@@ -39,13 +39,13 @@ class UserRegistration extends Component {
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
-    let evius_token = Cookie.get('evius_token');
+    let evius_token = await GetTokenUserFirebase();
     let eventUser = null;
     if (!evius_token) {
       this.setState({ currentUser: 'guest', loading: false });
     } else {
       try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
+        const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
         if (resp.status === 200) {
           const data = resp.data;
           eventUser = await EventsApi.getcurrentUserEventUser(this.props.cEvent.value._id);
@@ -82,7 +82,6 @@ class UserRegistration extends Component {
 
   render() {
     let { registeredUser, loading, initialValues, extraFields, eventUser, conditionals } = this.state;
-  
 
     if (!loading)
       return !registeredUser ? (
@@ -121,6 +120,5 @@ class UserRegistration extends Component {
   }
 }
 
-
 let UserRegistrationwithContext = withContext(UserRegistration);
-export default UserRegistrationwithContext ;
+export default UserRegistrationwithContext;

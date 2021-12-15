@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Input, Col, Row, Button, Spin, Card } from 'antd';
 import { app } from '../../../helpers/firebase';
-import * as Cookie from 'js-cookie';
 import FormTags from './constants';
 import { injectIntl } from 'react-intl';
 
@@ -34,24 +33,6 @@ class UserLogin extends Component {
     };
   }
 
-  async componentDidMount() {
-    const { eventId } = this.props;
-
-    //this.initializeCaptcha();
-
-    /* await app.auth().onAuthStateChanged((user) => {
-      if (user) {
-        user.getIdToken().then(async function(idToken) {
-          if (idToken) {
-            Cookie.set('evius_token', idToken,{ expires: 180 });
-            setTimeout(function() {
-              window.location.replace(`/landing/${eventId}?token=${idToken}`);
-            }, 1000);
-          }
-        });
-      }
-    });*/
-  }
 
   componentDidUpdate(prevProps, prevState) {
     let { loading } = this.state;
@@ -70,11 +51,11 @@ class UserLogin extends Component {
       //
       window.recaptchaVerifier = new app.auth.RecaptchaVerifier(this.reCaptchaRef.current.id, {
         size: 'invisible',
-        callback: function(response) {},
-        'expired-callback': function() {},
+        callback: function (response) { },
+        'expired-callback': function () { },
       });
 
-      window.recaptchaVerifier.render().then(function(widgetId) {
+      window.recaptchaVerifier.render().then(function (widgetId) {
         window.recaptchaWidgetId = widgetId;
       });
     }
@@ -84,7 +65,7 @@ class UserLogin extends Component {
     app
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
-      .catch(function(error) {
+      .catch(function (error) {
         // Handle Errors here.
         console.error(error.code);
         console.error(error.message);
@@ -121,7 +102,7 @@ class UserLogin extends Component {
   loginEmailPassword = (data) => {
     //
     this.setState({ errorLogin: false });
-    const respuesta = app
+    app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
 
@@ -134,14 +115,8 @@ class UserLogin extends Component {
   };
 
   handleLoginEmailPassword = async (values) => {
-    //
-    //
-    // Cookie.remove("token");
-    // Cookie.remove("evius_token");
-    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
-    // window.indexedDB.deleteDatabase('firestore/[DEFAULT]/eviusauth/main')
     this.setState({ loading: true });
-    await this.loginEmailPassword(values);
+    this.loginEmailPassword(values);
     setTimeout(() => {
       this.setState({ loading: false });
     }, 3000);
@@ -233,7 +208,7 @@ class UserLogin extends Component {
         {/* Inicio  de formulario para autenticación con Email y contraseña */}
         {this.state.enabledLoginForm && (
           <Form onFinish={this.handleLoginEmailPassword} onFinishFailed={this.onFinishFailed}>
-            <Row gutter={[24, 24]}>
+            <Row gutter={[ 24, 24 ]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
                   label='E-Mail'
@@ -248,7 +223,7 @@ class UserLogin extends Component {
                 </Form.Item>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
+            <Row gutter={[ 24, 24 ]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
                   label='Contraseña'
@@ -264,13 +239,13 @@ class UserLogin extends Component {
               </Col>
             </Row>
             {this.state.errorLogin && (
-              <Row gutter={[24, 24]}>
+              <Row gutter={[ 24, 24 ]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <span style={{ color: 'red' }}>{formTexts.errorLoginEmailPassword}</span>
                 </Col>
               </Row>
             )}
-            <Row gutter={[24, 24]}>
+            <Row gutter={[ 24, 24 ]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item>
                   {this.state.loading ? (
@@ -283,7 +258,7 @@ class UserLogin extends Component {
                 </Form.Item>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
+            <Row gutter={[ 24, 24 ]}>
               <span>Olvidé mi contraseña</span>
             </Row>
             {/* <Row gutter={[24, 24]}>
@@ -297,7 +272,7 @@ class UserLogin extends Component {
         {/* Inicio del formulario de verificación del código envia al celular */}
         {this.state.enabledVerificationForm && (
           <Form onFinish={this.handleVerificationWithPhoneNumber}>
-            <Row gutter={[24, 24]}>
+            <Row gutter={[ 24, 24 ]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
                   label='Código de verificación'
@@ -318,13 +293,13 @@ class UserLogin extends Component {
         </Col>
       </Row> */}
             {this.state.errorValidation && (
-              <Row gutter={[24, 24]}>
+              <Row gutter={[ 24, 24 ]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <span style={{ color: 'red' }}>Código de verificación invalido</span>
                 </Col>
               </Row>
             )}
-            <Row gutter={[24, 24]}>
+            <Row gutter={[ 24, 24 ]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item>
                   <Button type='primary' htmlType='submit'>

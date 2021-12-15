@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import 'react-toastify/dist/ReactToastify.css';
-
-import * as Cookie from 'js-cookie';
 import { Networking, UsersApi } from '../../helpers/request';
-import { getCurrentUser, getCurrentEventUser } from './services';
+import { getCurrentUser } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
+import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -117,8 +115,9 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
     setLoading(true);
-    if (Cookie.get('evius_token')) {
-      getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
+    let evius_token = await GetTokenUserFirebase();
+    if (evius_token) {
+      getCurrentUser(evius_token).then(async (user) => {
         // Servicio que obtiene el eventUserId del usuario actual
         let eventUser = currentUser;
 
