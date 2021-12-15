@@ -106,15 +106,7 @@ const ContentContainer = () => {
           path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
           component={AppointmentAccept}
         />
-        <Route
-          exact
-          path='/'
-          render={() => (
-            <WithFooter>
-              <Home />
-            </WithFooter>
-          )}
-        />
+        <RouteContext exact path='/' component={PageWithFooter} />
         <Route component={NotFoundPage} />
       </Switch>
     </main>
@@ -203,5 +195,13 @@ const RouteContextChildren = ({ children: children, ...rest }) => (
     </CurrentEventProvider>
   </Route>
 );
+
+const PageWithFooter = () => {
+  return (
+    <WithFooter>
+      <Home />
+    </WithFooter>
+  );
+};
 
 export default React.memo(ContentContainer);
