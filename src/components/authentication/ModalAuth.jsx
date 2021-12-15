@@ -1,5 +1,27 @@
-import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image, Skeleton } from 'antd';
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  LoadingOutlined,
+  LockOutlined,
+  MailOutlined,
+  PictureOutlined,
+} from '@ant-design/icons';
+import {
+  Modal,
+  Tabs,
+  Form,
+  Input,
+  Button,
+  Divider,
+  Typography,
+  Space,
+  Grid,
+  Alert,
+  Spin,
+  Image,
+  Skeleton,
+  Upload,
+} from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -7,13 +29,14 @@ import { app } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
 import { UsersApi } from '../../helpers/request';
+import RegisterUser from './RegisterUser';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 
 const stylePaddingDesktop = {
-  paddingLeft: '25px',
-  paddingRight: '25px',
+  paddingLeft: '30px',
+  paddingRight: '30px',
   textAlign: 'center',
 };
 const stylePaddingMobile = {
@@ -331,7 +354,12 @@ const ModalAuth = (props) => {
                     paddingTop: '0px',
                     paddingBottom: '0px',
                   }}>
-                  {props.organization != 'register' && <FormComponent />}
+                  <RegisterUser
+                    screens={screens}
+                    stylePaddingMobile={stylePaddingMobile}
+                    stylePaddingDesktop={stylePaddingDesktop}
+                  />
+                  {/* {props.organization != 'register' && <FormComponent />}
                   {props.organization == 'register' && (
                     <FormComponent
                       conditionalsOther={[]}
@@ -344,7 +372,7 @@ const ModalAuth = (props) => {
                       loadingregister={loading}
                       errorRegisterUser={errorRegisterUSer}
                     />
-                  )}
+                  )} */}
                 </div>
               </TabPane>
             )}
