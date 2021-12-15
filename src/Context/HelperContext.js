@@ -65,6 +65,8 @@ export const HelperContextProvider = ({ children }) => {
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [tabsGenerals, settabsGenerals] = useState();
   const [updateEventUser, setUpdateEventUser] = useState(false);
+  const [register, setRegister] = useState(null);
+
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
   }
@@ -624,6 +626,8 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeTabs,
         updateEventUser,
         setUpdateEventUser,
+        register,
+        setRegister,
       }}>
       {children}
     </HelperContext.Provider>

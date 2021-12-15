@@ -72,8 +72,9 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, typeModal, currentActivity } = useContext(HelperContext);
-  const [register, setRegister] = useState(null);
+  let { isNotification, ChangeActiveNotification, typeModal, currentActivity, register, setRegister } = useContext(
+    HelperContext
+  );
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (

@@ -210,17 +210,16 @@ const Headers = (props) => {
               window.location.href.toString().split('/').length == 4 && (
                 <Space>
                   <Button
-                    size='large'
+                    icon={<LockOutlined />}
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '2' })}>
-                    Registrarme
+                    size='large'
+                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '1' })}>
+                    Iniciar sesión
                   </Button>
                   <Button
-                    icon={<LockOutlined />}
                     size='large'
-                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '1' })}
-                    style={{ marginRight: 5 }}>
-                    Iniciar sesión
+                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '2' })}>
+                    Registrarme
                   </Button>
                 </Space>
               )

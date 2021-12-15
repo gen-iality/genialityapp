@@ -130,7 +130,7 @@ const FormRegister = ({
   const cEvent = UseEventContext();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
-  const { tabLogin, typeModal, eventPrivate, handleChangeTypeModal } = useContext(HelperContext);
+  const { tabLogin, typeModal, eventPrivate, handleChangeTypeModal, setRegister } = useContext(HelperContext);
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -363,6 +363,15 @@ const FormRegister = ({
                         cEventUser.setUpdateUser(true);
                         handleChangeTypeModal(null);
                         setSubmittedForm(false);
+                        switch (typeModal) {
+                          case 'registerForTheEvent':
+                            setRegister(2);
+                            break;
+
+                          case 'update':
+                            setRegister(4);
+                            break;
+                        }
                         // }
                       } else {
                         setErrorLogin(true);
