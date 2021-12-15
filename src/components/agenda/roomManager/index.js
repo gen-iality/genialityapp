@@ -62,7 +62,8 @@ class RoomManager extends Component {
   static contextType = AgendaContext;
 
   componentDidMount = async () => {
-    const { event_id, activity_id } = this.props;
+    const { event_id} = this.props; 
+    const  activity_id = this.context.activityEdit;
     const { host_list } = this.state;
 
     const host_ids = host_list.map((host) => host.host_id);
@@ -83,9 +84,9 @@ class RoomManager extends Component {
     this.setState({ loading: false });
   };
 
-  componentDidUpdate = async (prevProps) => {
+  /*componentDidUpdate = async (prevProps) => {
     // Se escucha el cambio de activity_id esto sucede cuando se crea una actividad nueva
-    if (prevProps.activity_id !== this.props.activity_id) {
+    if (prevProps.activity_id !== this.context.activityEdit) {
       // Si valida si existe informacion en Firebase del espacio virtual
       const validation = await this.validationRoom();
 
@@ -94,11 +95,12 @@ class RoomManager extends Component {
         await this.saveConfig();
       }
     }
-  };
+  };*/
 
   // validacion de existencia de sala e inicializacion de estado
   validationRoom = async () => {
-    const { event_id, activity_id } = this.props;
+    const { event_id} = this.props;
+    const  activity_id = this.context.activityEdit;
     const { service } = this.state;
     const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
@@ -229,7 +231,8 @@ class RoomManager extends Component {
 
   // Método para guarda la información de la configuración
   saveConfig = async () => {
-    const { event_id, activity_id } = this.props;
+    const { event_id} = this.props;
+    const  activity_id = this.context.activityEdit;
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();

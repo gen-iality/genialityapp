@@ -69,8 +69,6 @@ class AgendaEdit extends Component {
       loading: true,
       // Estado para la redireccion de navegacion interna al eliminar actividad o volver al listado de actividades.
       redirect: false,
-      // El id de la actividad se inicializa al crear la actividad
-      activity_id: false,
       isLoading: { types: true, categories: true },
       name: '',
       subtitle: '',
@@ -144,10 +142,10 @@ class AgendaEdit extends Component {
   // VALIDAR SI TIENE ENCUESTAS EXTERNAS
   validateRoom = async () => {
     const { service } = this.state;
-    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
+    const activity_id=this.context.activityEdit;
+    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, activity_id);
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
-      /* console.log('configuration', configuration); */
+      const configuration = await service.getConfiguration(this.props.event._id, activity_id);
       this.setState({
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
@@ -330,11 +328,12 @@ class AgendaEdit extends Component {
     if (!name) {
       name = value.target.name;
       value = value.target.value;
-    } 
+    }
     if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
-      this.setState({ [name]: value }, async () => await this.saveConfig());
+      this.context.setIsPublished(value)
+      await this.saveConfig();
     } else {
       this.setState({ [name]: value });
     }
@@ -805,8 +804,9 @@ class AgendaEdit extends Component {
   saveConfig = async () => {
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
+    const activity_id=this.context.activityEdit;   
     try {
-      const result = await service.createOrUpdateActivity(this.props.event._id, this.state.activity_id, roomInfo, tabs);
+      const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
       if (result) message.success(result.message);
       return result;
     } catch (err) {
@@ -906,7 +906,7 @@ class AgendaEdit extends Component {
                   checkedChildren='Sí'
                   unCheckedChildren='No'
                   name={'isPublished'}
-                  checked={this.state.isPublished}
+                  checked={this.context.isPublished}
                   onChange={(e) => this.handleChange(e, 'isPublished')}
                 />
               </Form.Item>

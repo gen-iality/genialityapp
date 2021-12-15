@@ -1,28 +1,33 @@
 class Service {
   constructor(instance) {
     this.firestore = instance;
+    //this.validateHasVideoconference=this.validateHasVideoconference.bind(this);
   }
+ 
 
-  validateHasVideoconference = (event_id, activity_id) => {
-    if (!event_id || !activity_id) return false;
-
-    // eslint-disable-next-line no-unused-vars
+  validateHasVideoconference = (event_id, activity_id) => {    // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
+      if (!event_id || !activity_id) resolve(false);
       this.firestore
         .collection('events')
         .doc(event_id)
         .collection('activities')
         .doc(activity_id)
-        .onSnapshot((activity) => {
-          if (!activity.exists) {
+        .get().then((activity) => {
+          console.log("ACTIVITY==>",activity)
+          if (!activity.exists) {            
+            console.log("ACTIVITY UPDATE==>",activity)
             resolve(false);
-          }
+          }        
+          console.log("ACTIVITY UPDATE==>",activity)
           resolve(true);
+          
         });
     });
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
+  
     console.log(event_id, activity_id, roomInfo, tabs, 'service');
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
     const {
@@ -37,7 +42,8 @@ class Service {
     } = roomInfo;
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
-      this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
+   
+      this.validateHasVideoconference (event_id, activity_id).then((existActivity) => {
         if (existActivity) {
           this.firestore
             .collection('events')
@@ -65,12 +71,12 @@ class Service {
               habilitar_ingreso,
               platform,
               meeting_id,
-              isPublished,
+              isPublished: isPublished || null,
               host_id,
               host_name,
               tabs: tabsSchema,
-              avalibleGames,
-              roomState,
+              avalibleGames: avalibleGames || null,
+              roomState: roomState || null,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
         }
