@@ -28,10 +28,10 @@ export default function RoomController(props) {
       });
     });
 
-    if (avalibleGames.length === 0) {
+    if (avalibleGames?.length === 0) {
       setListOfGames(gamesData);
       handleGamesSelected('newOrUpdate', '', gamesData);
-    } else if (avalibleGames.length !== gamesData.length) {
+    } else if (avalibleGames?.length !== gamesData?.length) {
       setListOfGames(gamesData);
       handleGamesSelected('newOrUpdate', '', gamesData);
       setUpdatedMensaje(true);

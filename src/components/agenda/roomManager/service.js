@@ -37,8 +37,7 @@ class Service {
       meeting_id,
       isPublished,
       host_id,
-      host_name,
-      avalibleGames,
+      host_name      
     } = roomInfo;
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
@@ -58,7 +57,7 @@ class Service {
               isPublished,
               host_id,
               host_name,
-              avalibleGames,
+              avalibleGames:roomInfo?.avalibleGames||[],
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -75,7 +74,7 @@ class Service {
               host_id,
               host_name,
               tabs: tabsSchema,
-              avalibleGames: avalibleGames || null,
+              avalibleGames: roomInfo?.avalibleGames || [],
               roomState: roomState || null,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
