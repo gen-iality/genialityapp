@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { app } from '../../../helpers/firebase';
-import * as Cookie from 'js-cookie';
 import UserLogin from '../UserLogin';
 import FormTags from './constants';
 import { Actions } from '../../../helpers/request';
@@ -34,20 +33,6 @@ class UserLoginContainer extends Component {
 
   async componentDidMount() {
     this.setState({ successRecovery: false });
-    const { eventId } = this.state;
-
-    /* await app.auth().onAuthStateChanged((user) => {
-      if (user) {
-        user.getIdToken().then(async function(idToken) {
-          if (idToken && !Cookie.get('evius_token')){
-            Cookie.set('evius_token', idToken,{ expires: 180 });
-            setTimeout(function() {
-              window.location.replace(`/landing/${eventId}?token=${idToken}`);
-            }, 1000);
-          }
-        });
-      }
-    });*/
   }
 
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../../helpers/constants';
 import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Space, Spin, Typography } from 'antd';
 import {
@@ -31,6 +30,7 @@ import XLSX from 'xlsx';
 import ReactToPrint from 'react-to-print';
 import Moment from 'moment';
 import API from '../../helpers/request';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 // const [google, setGoogle] = useState(null)
 
@@ -193,7 +193,13 @@ class DashboardEvent extends Component {
 
   componentDidMount() {
     // fin de la peticion a analytics
-    const evius_token = Cookie.get('evius_token');
+    async function GetUserToken() {
+      let token = await GetTokenUserFirebase();
+      return token;
+    }
+
+    let evius_token = GetUserToken();
+
     const { eventId } = this.props;
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;

@@ -8,7 +8,9 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
 import moment from 'moment';
-let BADWORDS = ['spam,SPAN, SPAM'];
+import { getColumnSearchProps } from 'components/speakers/getColumnSearch';
+import Header from 'antdComponents/Header';
+import { Table } from 'antd';
 
 var chatFirebase = app.initializeApp(
   {
@@ -194,7 +196,7 @@ const ChatExport = ({ eventId, event }) => {
 
   return (
     <>
-      <Header title={'Comunicaciones Enviadas'} />
+      <Header title={'Gestión de chats del evento'} />
 
       <Table
         header={columns}

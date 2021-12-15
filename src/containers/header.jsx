@@ -1,9 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { app } from '../helpers/firebase';
-import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
-import privateInstance, { OrganizationApi, getCurrentUser, EventsApi, EventFieldsApi } from '../helpers/request';
+import { OrganizationApi, EventsApi } from '../helpers/request';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -11,10 +10,9 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
-import ModalAuth from '../components/authentication/ModalAuth';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 
 const { setEventData } = eventActions;

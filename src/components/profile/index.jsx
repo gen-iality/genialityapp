@@ -32,8 +32,8 @@ class Index extends Component {
       valid: true,
       message: {
         class: '',
-        content: ''
-      }
+        content: '',
+      },
     };
     this.saveForm = this.saveForm.bind(this);
   }
@@ -60,7 +60,7 @@ class Index extends Component {
       this.setState({
         timeout: true,
         loading: false,
-        errorData: { status: e.response.status, message: JSON.stringify(e.response.data) }
+        errorData: { status: e.response.status, message: JSON.stringify(e.response.data) },
       });
     }
   }
@@ -81,7 +81,7 @@ class Index extends Component {
     if (file) {
       this.setState({
         imageFile: file,
-        user: { ...this.state.user, picture: null }
+        user: { ...this.state.user, picture: null },
       });
       let data = new FormData();
       const url = '/api/files/upload',
@@ -92,9 +92,9 @@ class Index extends Component {
           self.setState({
             user: {
               ...self.state.user,
-              picture: image
+              picture: image,
             },
-            fileMsg: 'Image uploaded successfully'
+            fileMsg: 'Image uploaded successfully',
           });
           toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
         })
@@ -114,7 +114,7 @@ class Index extends Component {
 
   valid = () => {
     const {
-      user: { email, name, phoneNumber, dni_number }
+      user: { email, name, phoneNumber, dni_number },
     } = this.state;
     const error = {};
     let nameValid,
@@ -157,7 +157,7 @@ class Index extends Component {
     user.birth_date = Moment(user.birth_date).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-      const resp = await UsersApi.editProfile(user, user._id)
+      const resp = await UsersApi.editProfile(user, user._id);
 
       resp.birth_date = resp.birth_date ? Moment(resp.birth_date).toDate() : new Date();
       this.props.addLoginInformation(user);
@@ -192,8 +192,7 @@ class Index extends Component {
 
   render() {
     const { loading, timeout, user, valid, error, errorData } = this.state;
-    // let userId = this.props.match.params.id;
-    // const evius_token = Cookie.get('evius_token');
+
     return (
       <section className='section profile'>
         {loading ? (
@@ -377,7 +376,7 @@ class Index extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
+  addLoginInformation: bindActionCreators(addLoginInformation, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(withRouter(Index));

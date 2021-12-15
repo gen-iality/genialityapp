@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { withRouter } from 'react-router-dom';
-import * as Cookie from 'js-cookie';
 import API, { AgendaApi, SpacesApi, Activity } from '../../helpers/request';
+import { GetTokenUserFirebase } from '../../helpers/auth';
 class AgendaListadoActividades extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +19,7 @@ class AgendaListadoActividades extends Component {
       value: '',
       redirect: false,
       disabled: false,
-      generalTab: true
+      generalTab: true,
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -46,13 +46,13 @@ class AgendaListadoActividades extends Component {
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
-    let evius_token = Cookie.get('evius_token');
+    let evius_token = await GetTokenUserFirebase();
 
     if (!evius_token) {
       this.setState({ user: false });
     } else {
       try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
+        const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
         if (resp.status === 200) {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
@@ -276,7 +276,7 @@ class AgendaListadoActividades extends Component {
                             key={key}
                             style={{
                               background: cat.color,
-                              color: cat.color ? 'white' : ''
+                              color: cat.color ? 'white' : '',
                             }}
                             className='tag category_calendar-tag'>
                             {cat.name}

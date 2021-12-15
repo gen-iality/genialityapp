@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid, Spin } from 'antd';
 import { Route, Redirect, withRouter, Switch } from 'react-router-dom';
 import Event from '../components/events/event';
-import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
 import asyncComponent from './AsyncComponent';
 import WithFooter from '../components/withFooter';
