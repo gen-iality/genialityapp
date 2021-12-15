@@ -6,11 +6,11 @@ import ScrollTo from 'react-scroll-into-view';
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
 import * as iconComponents from '@ant-design/icons';
 import { Component } from 'react';
-import * as Cookie from 'js-cookie';
 import { connect } from 'react-redux';
 
 import { gotoActivity } from '../../redux/stage/actions';
 import {} from '../../redux/notifyNetworking/actions';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 const stylesMenuItems = {
   height: '100%',
@@ -153,12 +153,12 @@ class MenuEvent extends Component {
         icon: 'PlaySquareOutlined',
         checked: false,
         permissions: 'public',
-      }    
+      },
     };
   }
 
   async componentDidMount() {
-    const isExistCookie = Cookie.get('evius_token');
+    const isExistCookieawait = await GetTokenUserFirebase();
 
     if (this.props.notifications !== undefined && this.props.notifications !== null) {
       this.setState({

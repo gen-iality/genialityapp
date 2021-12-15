@@ -1,88 +1,27 @@
 import axios from 'axios';
-/** Api Prod */
-// import { ApiUrl, ApiEviusZoomSurvey } from './constants';
-/** Api  Dev*/
-import { ApiDEVUrl, ApiEviusZoomSurvey } from './constants';
-import { ToastContainer, toast } from 'react-toastify';
+import { ApiDEVUrl, ApiUrl, ApiEviusZoomSurvey } from './constants';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import * as Cookie from 'js-cookie';
 import { handleSelect } from './utils';
-import { app, firestore } from './firebase';
-import { parseUrl } from '../helpers/constants';
+import { firestore } from './firebase';
 import Moment from 'moment';
-import { async } from 'ramda-adjunct';
 import { GetTokenUserFirebase } from './HelperAuth';
 const publicInstance = axios.create({
-  url: ApiDEVUrl,
-  baseURL: ApiDEVUrl,
+  url: ApiUrl,
+  baseURL: ApiUrl,
   pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 
 const privateInstance = axios.create({
-  url: ApiDEVUrl,
-  baseURL: ApiDEVUrl,
+  url: ApiUrl,
+  baseURL: ApiUrl,
   withCredentials: true,
 });
-
-var currentUser = null;
-
-// const privateInstancePush = axios.create({
-//   // pushURL: 'https://104.248.125.133:6477/pushNotification',
-//   withCredentials: false,
-// });
 
 /* SI EL USUARIO ESTA LOGUEADO POR DEFECTO AGREGAMOS EL TOKEN A LAS PETICIONES 
 PRIMERO MIRAMOS  si viene en la URL
 luego miramos si viene en las cookies
 */
-
-let evius_token = null;
-
-async function getToken() {
-  app.auth().onAuthStateChanged((user) => {
-    if (user) {
-      user.getIdToken().then(async function(idToken) {
-        console.log('burrito sabanero', idToken);
-        evius_token = idToken;
-        privateInstance.defaults.params = {};
-        privateInstance.defaults.params['evius_token'] = idToken;
-      });
-    }
-  });
-}
-
-getToken();
-
-// let dataUrl = parseUrl(document.URL);
-// if (dataUrl && dataUrl.token) {
-//   Cookie.set('evius_token', dataUrl.token, {
-//     expires: 180,
-//   });
-//   evius_token = dataUrl.token;
-// }
-
-// if (!evius_token) {
-//   evius_token = Cookie.get('evius_token');
-// }
-
-// if (evius_token) {
-//   privateInstance.defaults.params = {};
-//   privateInstance.defaults.params[ 'evius_token' ] = evius_token;
-// }
-
-// /** ACTUALIZAMOS EL BEARER TOKEN SI SE VENCIO Y NOS VIENE UN NUEVO TOKEN EN EL HEADER */
-// privateInstance.interceptors.response.use((response) => {
-//   const { headers } = response;
-//   if (headers.new_token) {
-//     Cookie.set('evius_token', headers.new_token, {
-//       expires: 180,
-//     });
-//     privateInstance.defaults.params = {};
-//     privateInstance.defaults.params[ 'evius_token' ] = headers.new_token;
-//   }
-//   return response;
-// });
 
 export const fireStoreApi = {
   createOrUpdate: (eventId, activityId, eventUser) => {
@@ -136,16 +75,9 @@ export const Actions = {
 
 //BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
 export const getCurrentUser = async () => {
-  const token = await GetTokenUserFirebase();
+  let token = await GetTokenUserFirebase();
 
-  // eslint-disable-next-line no-unused-vars
-  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve) => {
-    // if (currentUser) {
-    //   resolve(currentUser);
-    //   return;
-    // }
-
     if (!token || token == 'undefined') {
       resolve(null);
     } else {
@@ -205,7 +137,9 @@ export const EventsApi = {
   },
 
   getcurrentUserEventUser: async (event_id) => {
-    let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
+    let token = await GetTokenUserFirebase();
+
+    let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
 
     let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
@@ -213,7 +147,8 @@ export const EventsApi = {
 
   /* Según un nuevo modelo de los eventUsers un solo usuario puede tener varios eventUsers para un evento */
   getcurrentUserEventUsers: async (event_id) => {
-    let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
+    let token = await GetTokenUserFirebase();
+    let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
     let eventUsers = response.data ? response.data : null;
     return eventUsers;
   },
@@ -247,7 +182,8 @@ export const EventsApi = {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
   mine: async () => {
-    const events = await Actions.getAll('/api/me/contributors/events');
+    let token = await GetTokenUserFirebase();
+    const events = await Actions.getAll(`/api/me/contributors/events?${token}`);
     return events;
   },
   getOne: async (id) => {
@@ -422,8 +358,7 @@ export const eventTicketsApi = {
 
 export const TicketsApi = {
   getAll: async (id) => {
-    const token = await GetTokenUserFirebase();
-    return await Actions.getAll(`/api/me/eventUsers/?evius_token=${token}&limit=20`, true);
+    return await Actions.getAll(`/api/me/eventUsers/?evius_token=${evius_token}&limit=20`, true);
   },
   getByEvent: async (event) => {
     return await Actions.getOne(`/api/me/eventusers/event/${event}`);
@@ -536,7 +471,9 @@ export const TypesApi = {
 };
 export const OrganizationApi = {
   mine: async () => {
-    const resp = await Actions.getAll('api/me/organizations');
+    let evius_token = await GetTokenUserFirebase();
+
+    const resp = await Actions.getAll(`api/me/organizations?token=$${evius_token}`);
     let data = resp.data.map((item) => {
       return {
         id: item._id,
@@ -560,7 +497,8 @@ export const OrganizationApi = {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events');
   },
   getUsers: async (id) => {
-    return await Actions.get(`/api/organizations/${id}/organizationusers`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
   },
   getUser: async (org, member) => {
     return await Actions.getOne(`/api/organizations/${org}/users/`, member);
@@ -593,7 +531,8 @@ export const OrganizationApi = {
     return await Actions.delete(`/api/organizations/${org}/userproperties`, fieldId);
   },
   getTemplateOrganization: async (org) => {
-    return await Actions.get(`/api/organizations/${org}/templateproperties`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/organizations/${org}/templateproperties?token=${token}`);
   },
   updateTemplateOrganization: async (orgId, idTemplate, data) => {
     return await Actions.put(`/api/organizations/${orgId}/templateproperties/${idTemplate}`, data);
@@ -618,7 +557,8 @@ export const HelperApi = {
     return await Actions.getOne(`api/contributors/events/`, id);
   },
   rolesOne: async (event) => {
-    return await Actions.get(`api/contributors/events/${event}/me`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/contributors/events/${event}/me?token=${token}`);
   },
   saveHelper: async (event, data) => {
     return await Actions.post(`api/events/${event}/contributors`, data);
@@ -640,7 +580,8 @@ export const discountCodesApi = {
 
 export const CertsApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/certificates`).then(({ data }) => data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event}/certificates?token=${token}`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.getOne(`api/certificate/`, id);
@@ -676,7 +617,8 @@ export const CertsApi = {
 
 export const NewsFeed = {
   byEvent: async (eventId) => {
-    return await Actions.getAll(`api/events/${eventId}/newsfeed`).then(({ data }) => data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${eventId}/newsfeed?token=${token}`).then(({ data }) => data);
   },
   getOne: async (eventId, idnew) => {
     return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
@@ -733,7 +675,8 @@ export const RolAttApi = {
     return await Actions.getAll(`api/events/${event}/rolesattendees`);
   },
   byEventRolsGeneral: async () => {
-    return await Actions.getAll(`api/rols`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/rols?token=${token}`);
   },
   getOne: async (event, id) => {
     return await Actions.get(`api/events/${event}/rolesattendees/`, id);
@@ -869,7 +812,8 @@ export const OrganizationPlantillaApi = {
   },
 
   byEvent: async (organization) => {
-    return await Actions.get(`api/organizations/${organization}/templateproperties`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/organizations/${organization}/templateproperties?token=${token}`);
   },
   putOne: async (event, templatepropertie) => {
     return await Actions.put(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);

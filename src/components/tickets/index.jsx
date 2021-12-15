@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import * as Cookie from 'js-cookie';
 import { fieldNameEmailFirst } from '../../helpers/utils';
 import TimeStamp from 'react-timestamp';
 import { TicketsApi, EventsApi } from '../../helpers/request';

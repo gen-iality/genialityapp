@@ -9,8 +9,8 @@ import { CategoriesApi, EventsApi, UsersApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import 'react-toastify/dist/ReactToastify.css';
 import { ApiUrl } from '../../helpers/constants';
-import * as Cookie from 'js-cookie';
 import ErrorServe from '../modal/serverError';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 class Compras extends Component {
   constructor(props) {
@@ -24,8 +24,8 @@ class Compras extends Component {
       valid: true,
       message: {
         class: '',
-        content: ''
-      }
+        content: '',
+      },
     };
   }
 
@@ -41,7 +41,7 @@ class Compras extends Component {
       this.setState({
         timeout: true,
         loading: false,
-        errorData: { status: e.response.status, message: JSON.stringify(e.response.data) }
+        errorData: { status: e.response.status, message: JSON.stringify(e.response.data) },
       });
     }
   }
@@ -60,7 +60,12 @@ class Compras extends Component {
   render() {
     const { loading, timeout, errorData } = this.state;
     let userId = this.props.match.params.id;
-    const evius_token = Cookie.get('evius_token');
+    async function GetUserToken() {
+      let token = await GetTokenUserFirebase();
+      return token;
+    }
+
+    let evius_token = GetUserToken();
     return (
       <section className='section profile'>
         {loading ? (
@@ -88,7 +93,7 @@ class Compras extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
+  addLoginInformation: bindActionCreators(addLoginInformation, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(withRouter(Compras));

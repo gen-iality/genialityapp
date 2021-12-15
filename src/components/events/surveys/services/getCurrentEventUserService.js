@@ -1,9 +1,9 @@
 import { TicketsApi } from '../../../../helpers/request';
-import * as Cookie from 'js-cookie';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 // funcion para obtener el EventUser y los votos
 async function getCurrentEvenUser(eventId, setEventUsers, setVoteWeight) {
-   let evius_token = Cookie.get('evius_token');
+   let evius_token = await GetTokenUserFirebase();
    let eventUser = [];
    let voteWeight = 1;
    if (evius_token) {

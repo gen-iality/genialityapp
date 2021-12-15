@@ -96,6 +96,11 @@
     "tabs.private.socialzone": "Private",
     "tabs.private.socialzone.message": "See all",
 
+    "auth.error.wrongPassword": "The password is incorrect",
+    "auth.error.userNotFound": "The email is not registered",
+    "auth.error.invalidEmail": "The email is invalid",
+    "auth.error.tooManyRequests": "Access to this account has been temporarily disabl…setting your password or you can try again later",
+
     "modal.title.login": "Login",
     "modal.title.register": "Register",
     "modal.label.email": "Email ",
@@ -174,6 +179,11 @@
     "toast.email_sent": "Tiquete enviado correctamente",
     "live.private_access": "Acceso privado",
     "live.hosts": "Anfitriones",
+
+    "auth.error.wrongPassword": "La contraseña es incorrecta",
+    "auth.error.userNotFound": "este email no esta registrado",
+    "auth.error.invalidEmail": "el email es invalido",
+    "auth.error.tooManyRequests": "El acceso a esta cuenta se ha desactivado temporalmente por varios intentos fallidos de ingreso, intentelo de nuevo más tarde",
 
     "live.join": "Ingresar",
     "live.join.disabled": "El evento iniciará pronto",

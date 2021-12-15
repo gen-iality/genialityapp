@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
-import * as Cookie from 'js-cookie';
 import { AuthUrl } from '../../helpers/constants';
 
 class LogOut extends Component {
@@ -10,15 +9,12 @@ class LogOut extends Component {
     element.classList.remove('is-active');
     const history = this.props.history;
     history.length = 0;
-    Cookie.remove('token');
-    Cookie.remove('evius_token');
     window.location.replace(`${AuthUrl}/logout`);
   };
+
   closeModal = () => {
     const element = document.getElementById('modal');
     element.classList.remove('is-active');
-    Cookie.remove('token');
-    Cookie.remove('evius_token');
     window.location.reload();
   };
 

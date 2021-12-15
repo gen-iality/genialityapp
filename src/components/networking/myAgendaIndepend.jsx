@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import MyAgenda from './myAgenda';
 import { userRequest } from './services';
-import * as Cookie from 'js-cookie';
 import { Spin } from 'antd';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 import withContext from '../../Context/withContext';
 
 class AgendaIndepent extends Component {
@@ -17,10 +17,11 @@ class AgendaIndepent extends Component {
   }
 
   async componentDidMount() {
+    let evius_token = await GetTokenUserFirebase();
     if (this.props.cUser) {
       let eventUserList = await userRequest.getEventUserList(
         this.props.cEvent.value._id,
-        Cookie.get('evius_token'),
+        evius_token,
         this.props.cUser
       );
 

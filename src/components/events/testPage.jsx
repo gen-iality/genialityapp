@@ -1,23 +1,23 @@
 import React, { Component, Fragment } from 'react';
-import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import ComponentTest from './componentTest';
-import * as Cookie from 'js-cookie';
 import API from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 class Test extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentUser: false,
-      usuarioRegistrado: false
+      usuarioRegistrado: false,
     };
   }
 
   async componentDidMount() {
-    const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
+    const evius_tokenawait = await GetTokenUserFirebase();
+    const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
 
     if (resp.status !== 200 && resp.status !== 202) {
       return;
@@ -46,7 +46,7 @@ class Test extends Component {
             .update({
               updated_at: new Date(),
               checked_in: true,
-              checked_at: new Date()
+              checked_at: new Date(),
             })
             .then(() => {
               // Disminuye el contador si la actualizacion en la base de datos se realiza
