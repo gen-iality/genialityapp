@@ -84,7 +84,6 @@ export const getCurrentUser = async () => {
       try {
         const resp = await privateInstance.get(`/auth/currentUser?evius_token=${token}`);
         if (resp.status === 200) {
-          currentUser = resp.data;
           resolve(resp.data);
         }
       } catch (error) {
