@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { Redirect, Link, withRouter } from 'react-router-dom';
-import { EventsApi, UsersApi } from '../../helpers/request';
+import { UsersApi } from '../../helpers/request';
 import SearchComponent from '../shared/searchTable';
 import { FormattedMessage } from 'react-intl';
-import Dialog from '../modal/twoAction';
-import API, { TicketsApi } from '../../helpers/request';
+import API from '../../helpers/request';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddUser from '../modal/addUser';
@@ -12,11 +11,9 @@ import Loading from '../loaders/loading';
 import EventContent from '../events/shared/content';
 import EvenTable from '../events/shared/table';
 import Pagination from '../shared/pagination';
-import { sweetAlert } from '../../helpers/utils';
 import ModalAdvise from './modal';
 import { fieldNameEmailFirst, parseData2Excel } from '../../helpers/utils';
 import XLSX from 'xlsx';
-import * as Cookie from 'js-cookie';
 
 class UsersRsvp extends Component {
   constructor(props) {
@@ -44,7 +41,7 @@ class UsersRsvp extends Component {
       dropSend: false,
       visible: false,
       exportUsers: [],
-      tickets: []
+      tickets: [],
     };
     this.checkEvent = this.checkEvent.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
@@ -85,7 +82,7 @@ class UsersRsvp extends Component {
         usersReq: users,
         resp,
         columns,
-        pageOfItems: users.slice(0, 10)
+        pageOfItems: users.slice(0, 10),
       });
     } catch (error) {
       if (error.response) {
@@ -171,7 +168,7 @@ class UsersRsvp extends Component {
       this.setState({
         loading: false,
         items: selection.slice(0, 10),
-        scrollNow: 10
+        scrollNow: 10,
       });
     } else {
       currentRecords.map((user) => {
@@ -293,7 +290,7 @@ class UsersRsvp extends Component {
         this.setState({
           redirect: true,
           url_redirect: '/event/' + event._id + '/messages',
-          disabled: false
+          disabled: false,
         });
       })
       .catch((e) => {
@@ -367,7 +364,7 @@ class UsersRsvp extends Component {
       if (resp.data[i].user.ticket_id === ticket || resp.data[i].user.ticketid === ticket) {
         filter.push({
           id: resp.data[i]._id,
-          properties: resp.data[i].user
+          properties: resp.data[i].user,
         });
       } else {
       }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as Cookie from 'js-cookie';
 import { Actions, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
 import SurveyList from './surveyList';
@@ -8,6 +7,7 @@ import SurveyDetailPage from './SurveyDetailPage';
 import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
 import withContext from '../../../Context/withContext';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -42,9 +42,8 @@ class SurveyForm extends Component {
   async componentDidMount() {
     // Método para escuchar todas las encuestas relacionadas con el evento
     await this.listenSurveysData();
-    
+
     let eventUser = await this.getCurrentEvenUser(this.props.cEvent.value._id);
-  
 
     this.setState({ eventUser: eventUser });
     // this.userVote();
@@ -52,7 +51,7 @@ class SurveyForm extends Component {
   }
 
   listenSurveysData = async () => {
-    const {activity } = this.props;
+    const { activity } = this.props;
 
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let $query = firestore.collection('surveys');
@@ -91,7 +90,6 @@ class SurveyForm extends Component {
     });
   };
 
-  
   surveyVisible = () => {
     // if (this.state.publishedSurveys.length === 1 && !this.state.surveyVisible) {
     //   this.toggleSurvey(this.state.publishedSurveys[0]);
@@ -104,7 +102,7 @@ class SurveyForm extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     //this.listenSurveysData(prevProps);
-   
+
     //Método que permite al componente conectar con un componente superior y subir el estado  de la encuesta actual seleccionada
     if (prevState.selectedSurvey !== this.state.selectedSurvey) {
       this.props.mountCurrentSurvey(this.state.selectedSurvey);
@@ -118,8 +116,6 @@ class SurveyForm extends Component {
   }
 
   queryMyResponses = async (survey) => {
-
-
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let counterDocuments = 0;
     return new Promise((resolve) => {
@@ -180,7 +176,7 @@ class SurveyForm extends Component {
   };
 
   getCurrentEvenUser = async (eventId) => {
-    let evius_token = Cookie.get('evius_token');
+    let evius_token = await GetTokenUserFirebase();
     if (!evius_token) return null;
     let response = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
     return response && response.data.length ? response.data[0] : null;
@@ -290,6 +286,5 @@ const mapDispatchToProps = {
   setSurveyVisible,
 };
 
-
-let SurveyFormWithContext = withContext(SurveyForm)
+let SurveyFormWithContext = withContext(SurveyForm);
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyFormWithContext);

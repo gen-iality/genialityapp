@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { Actions } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../shared/logOut';
-import * as Cookie from 'js-cookie';
 import privateInstance from '../../helpers/request';
 import { parseUrl } from '../../helpers/constants';
 import { BaseUrl } from '../../helpers/constants';
@@ -34,7 +33,7 @@ class Configuration extends Component {
       checkRegister: false,
       checkRankingScreen: false,
       information: {},
-      url: ''
+      url: '',
     };
     this.submit = this.submit.bind(this);
     this.checkInput = React.createRef();
@@ -46,157 +45,157 @@ class Configuration extends Component {
     this.setState({ info });
     this.setState({
       dates: {
-        database: this.state.information
-      }
+        database: this.state.information,
+      },
     });
 
     this.setState({
       configuration: {
-        ...this.state.info.app_configuration
-      }
+        ...this.state.info.app_configuration,
+      },
     });
 
     if (this.state.dates.database) {
       if (this.state.dates.database.HomeScreen) {
         this.setState({
-          checkHome: true
+          checkHome: true,
         });
         document.getElementById('checkbox0').checked = true;
       } else {
         this.setState({
-          checkHome: false
+          checkHome: false,
         });
         document.getElementById('checkbox0').checked = false;
       }
 
       if (this.state.dates.database.ProfileScreen) {
         this.setState({
-          checkProfile: true
+          checkProfile: true,
         });
         document.getElementById('checkbox1').checked = true;
       } else {
         this.setState({
-          checkProfile: false
+          checkProfile: false,
         });
         document.getElementById('checkbox1').checked = false;
       }
 
       if (this.state.dates.database.CalendarScreen) {
         this.setState({
-          checkCalendar: true
+          checkCalendar: true,
         });
         document.getElementById('checkbox2').checked = true;
       } else {
         this.setState({
-          checkCalendar: false
+          checkCalendar: false,
         });
         document.getElementById('checkbox2').checked = false;
       }
 
       if (this.state.dates.database.NewsScreen) {
         this.setState({
-          checkNews: true
+          checkNews: true,
         });
         document.getElementById('checkbox3').checked = true;
       } else {
         this.setState({
-          checkNews: false
+          checkNews: false,
         });
         document.getElementById('checkbox3').checked = false;
       }
 
       if (this.state.dates.database.EventPlaceScreen !== undefined) {
         this.setState({
-          checkEventPlace: true
+          checkEventPlace: true,
         });
         document.getElementById('checkbox4').checked = true;
       } else {
         this.setState({
-          checkEventPlace: false
+          checkEventPlace: false,
         });
         document.getElementById('checkbox4').checked = false;
       }
 
       if (this.state.dates.database.SpeakerScreen) {
         this.setState({
-          checkSpeaker: true
+          checkSpeaker: true,
         });
         document.getElementById('checkbox5').checked = true;
       } else {
         this.setState({
-          checkSpeaker: false
+          checkSpeaker: false,
         });
         document.getElementById('checkbox5').checked = false;
       }
 
       if (this.state.dates.database.SurveyScreen) {
         this.setState({
-          checkSurveys: true
+          checkSurveys: true,
         });
         document.getElementById('checkbox6').checked = true;
       } else {
         this.setState({
-          checkSurveys: false
+          checkSurveys: false,
         });
         document.getElementById('checkbox6').checked = false;
       }
 
       if (this.state.dates.database.DocumentsScreen) {
         this.setState({
-          checkDocuments: true
+          checkDocuments: true,
         });
         document.getElementById('checkbox7').checked = true;
       } else {
         this.setState({
-          checkDocuments: false
+          checkDocuments: false,
         });
         document.getElementById('checkbox7').checked = false;
       }
 
       if (this.state.dates.database.WallScreen) {
         this.setState({
-          checkWall: true
+          checkWall: true,
         });
         document.getElementById('checkbox8').checked = true;
       } else {
         this.setState({
-          checkWall: false
+          checkWall: false,
         });
         document.getElementById('checkbox8').checked = false;
       }
 
       if (this.state.dates.database.WebScreen) {
         this.setState({
-          checkWebScreen: true
+          checkWebScreen: true,
         });
         document.getElementById('checkbox9').checked = true;
       } else {
         this.setState({
-          checkWebScreen: false
+          checkWebScreen: false,
         });
         document.getElementById('checkbox9').checked = false;
       }
 
       if (this.state.dates.database.RankingScreen) {
         this.setState({
-          checkRankingScreen: true
+          checkRankingScreen: true,
         });
         document.getElementById('checkbox10').checked = true;
       } else {
         this.setState({
-          checkRankingScreen: false
+          checkRankingScreen: false,
         });
         document.getElementById('checkbox10').checked = false;
       }
 
       if (this.state.dates.database.FaqsScreen) {
         this.setState({
-          checkFaq: true
+          checkFaq: true,
         });
         document.getElementById('checkbox11').checked = true;
       } else {
         this.setState({
-          checkFaq: false
+          checkFaq: false,
         });
         document.getElementById('checkbox11').checked = false;
       }
@@ -218,13 +217,12 @@ class Configuration extends Component {
         checkGallery: false,
         checkWebScreen: false,
         checkRegister: false,
-        checkRankingScreen: false
+        checkRankingScreen: false,
       });
     }
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
       if (dataUrl.token) {
-        Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
         privateInstance.defaults.params = {};
         privateInstance.defaults.params['evius_token'] = dataUrl.token;
       }
@@ -265,12 +263,9 @@ class Configuration extends Component {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
         const { status, data } = error.response;
-
-        if (status === 401) {this.setState({ timeout: true, loader: false });
-        Cookie.remove('token');
-        Cookie.remove('evius_token');
-      }
-        else this.setState({ serverError: true, loader: false, errorData: data });
+        if (status === 401) {
+          this.setState({ timeout: true, loader: false });
+        } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
 
@@ -290,25 +285,25 @@ class Configuration extends Component {
       this.setState({
         app_configuration: {
           app_configuration: {
-            ...this.state.configuration
-          }
-        }
+            ...this.state.configuration,
+          },
+        },
       });
     } else {
       await this.setState({
         configuration: {
           ...this.state.configuration,
-          [name]: val
-        }
+          [name]: val,
+        },
       });
 
       await this.setState({
         app_configuration: {
           app_configuration: {
             ...this.state.configuration,
-            [name]: val
-          }
-        }
+            [name]: val,
+          },
+        },
       });
     }
   };
@@ -327,17 +322,17 @@ class Configuration extends Component {
       await this.setState({
         configuration: {
           ...this.state.configuration,
-          [name]: val
-        }
+          [name]: val,
+        },
       });
 
       await this.setState({
         app_configuration: {
           app_configuration: {
             ...this.state.configuration,
-            [name]: val
-          }
-        }
+            [name]: val,
+          },
+        },
       });
     }
   };
@@ -367,7 +362,7 @@ class Configuration extends Component {
         icon: 'home',
         key: 0,
         title_view: 'Modulo Home Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -381,7 +376,7 @@ class Configuration extends Component {
         icon: 'user',
         key: 1,
         title_view: 'Modulo Perfil Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -395,7 +390,7 @@ class Configuration extends Component {
         icon: 'book-open',
         key: 2,
         title_view: 'Modulo Agenda Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -409,7 +404,7 @@ class Configuration extends Component {
         icon: 'file-text',
         key: 3,
         title_view: 'Modulo de Noticias Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -423,7 +418,7 @@ class Configuration extends Component {
         icon: 'map-pin',
         key: 4,
         title_view: 'Modulo lugar del evento visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -437,7 +432,7 @@ class Configuration extends Component {
         icon: 'mic',
         key: 5,
         title_view: 'Modulo Conferencistas Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -451,7 +446,7 @@ class Configuration extends Component {
         icon: 'edit-2',
         key: 6,
         title_view: 'Modulo de encuestas Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -465,7 +460,7 @@ class Configuration extends Component {
         icon: 'folder',
         key: 7,
         title_view: 'Modulo de documentos Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -479,7 +474,7 @@ class Configuration extends Component {
         icon: 'message-square',
         key: 8,
         title_view: 'Modulo de Muro Visible',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -494,7 +489,7 @@ class Configuration extends Component {
         icon: 'monitor',
         key: 9,
         title_view: 'Modulo de Web Screen',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -508,7 +503,7 @@ class Configuration extends Component {
         icon: 'award',
         key: 10,
         title_view: 'Modulo Ranking',
-        desc: 'Nombre en el aplicativo'
+        desc: 'Nombre en el aplicativo',
       },
       {
         reference: this.checkInput,
@@ -522,8 +517,8 @@ class Configuration extends Component {
         icon: 'help-circle',
         key: 11,
         title_view: 'Modulo de F.A.Q Visible',
-        desc: 'Nombre en el aplicativo'
-      }
+        desc: 'Nombre en el aplicativo',
+      },
     ];
     return (
       <React.Fragment>
@@ -547,7 +542,7 @@ class Configuration extends Component {
                       title: item.title,
                       name: item.name,
                       icon: item.icon,
-                      key: item.key
+                      key: item.key,
                     });
                   }}
                 />
@@ -581,7 +576,7 @@ class Configuration extends Component {
                           config: item.config,
                           name: item.name,
                           icon: item.icon,
-                          key: item.key
+                          key: item.key,
                         });
                       }}
                     />

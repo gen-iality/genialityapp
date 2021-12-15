@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
-import { NavLink, withRouter, Switch, Route, Redirect } from 'react-router-dom';
-import InfoGeneral from './newEvent/InfoGeneral';
-import InfoAsistentes from './newEvent/infoAsistentes';
-import Moment from 'moment';
-import * as Cookie from 'js-cookie';
-
+import { withRouter } from 'react-router-dom';
 import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
-import { FormattedMessage } from 'react-intl';
-import { BaseUrl, host_list } from '../../helpers/constants';
+import { host_list } from '../../helpers/constants';
 import { Steps, Button, message, Card, Row, Spin } from 'antd';
-import { PictureOutlined, ScheduleOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */
 import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import Tranmitir from './newEvent/transmitir';
 /*vista de resultado de la creacion de un evento */
-import Resultado from './newEvent/resultado';
 import { cNewEventContext } from '../../Context/newEventContext';
 import Service from '../../components/agenda/roomManager/service';
 import { firestore } from '../../helpers/firebase';
+import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 const { Step } = Steps;
 
@@ -246,7 +239,7 @@ class NewEvent extends Component {
 
   createZoomRoom = async (activity, event_id) => {
     const service = new Service(firestore);
-    const evius_token = Cookie.get('evius_token');
+    const evius_token = await GetTokenUserFirebase();
     // Se valida si es el host se selecciona de manera manual o automáticamente
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
     // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts

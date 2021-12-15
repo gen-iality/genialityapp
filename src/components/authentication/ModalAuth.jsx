@@ -4,11 +4,9 @@ import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 import { app } from '../../helpers/firebase';
-import * as Cookie from 'js-cookie';
 import { useIntl } from 'react-intl';
-
 import React, { useContext, useEffect, useState } from 'react';
-import { EventsApi, UsersApi } from '../../helpers/request';
+import { UsersApi } from '../../helpers/request';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -32,7 +30,9 @@ const ModalAuth = (props) => {
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const [modalVisible, setmodalVisible] = useState(false);
+  const [msjError, setmsjError] = useState('');
   const intl = useIntl();
+
   useEffect(() => {
     if (props.tab) {
       handleChangeTabModal(props.tab);
@@ -84,6 +84,25 @@ const ModalAuth = (props) => {
     setErrorLogin(false);
   }, [typeModal, tabLogin]);
 
+  const DetecError = (code) => {
+    switch (code) {
+      case 'auth/wrong-password':
+        setmsjError(intl.formatMessage({ id: 'auth.error.wrongPassword' }));
+        break;
+      case 'auth/user-not-found':
+        setmsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }));
+
+        break;
+      case 'auth/invalid-email':
+        setmsjError(intl.formatMessage({ id: 'auth.error.invalidEmail' }));
+        break;
+
+      case 'auth/too-many-requests':
+        setmsjError(intl.formatMessage({ id: 'auth.error.tooManyRequests' }));
+        break;
+    }
+  };
+
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
@@ -93,9 +112,6 @@ const ModalAuth = (props) => {
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
     loginFirebase(values);
-    /*setTimeout(() => {
-      setLoading(false);
-    }, 3000);*/
   };
 
   //Realiza la validación del email y password con firebase
@@ -106,65 +122,21 @@ const ModalAuth = (props) => {
       .then((response) => {
         if (response.user) {
           console.log('response', response);
-        } else {
-          setErrorLogin(true);
         }
+      })
+      .catch((error) => {
+        console.log('error', error);
+        DetecError(error.code);
+        setErrorLogin(true);
+        setLoading(false);
       });
   };
-
-  // const loginEmailPassword = async (data) => {
-  //   console.log('data', data);
-  //   let loginNormal = false;
-  //   let loginFirst = false;
-  //   setErrorLogin(false);
-
-  //   app
-  //     .auth()
-  //     .signInWithEmailAndPassword(data.email, data.password)
-  //     .then((response) => {
-  //       loginNormal = true;
-  //       setErrorLogin(false);
-  //       //setLoading(false);
-  //     })
-  //     .catch(async (e) => {
-  //       if (props.organization !== 'register') {
-  //         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
-  //         if (user.data.length > 0) {
-  //           if (
-  //             user.data[0].properties?.password == data.password ||
-  //             user.data[0].contrasena == data.password ||
-  //             user.data[0]?.user?.contrasena == data.password
-  //           ) {
-  //             let url =
-  //               props.organization == 'landing'
-  //                 ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
-  //                 : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
-  //             window.location.href = url;
-  //             loginFirst = true;
-  //             setErrorLogin(false);
-  //             //setLoading(false);
-  //             //loginFirebase(data)
-  //             //leafranciscobar@gmail.com
-  //             //Mariaguadalupe2014
-  //           } else {
-  //             setErrorLogin(true);
-  //             setLoading(false);
-  //           }
-  //         } else {
-  //           setErrorLogin(true);
-  //           setLoading(false);
-  //         }
-  //       } else {
-  //         let login = await EventsApi.signInWithEmailAndPassword(data);
-  //         let user = await UsersApi.findByEmail(data.email);
-  //       }
-  //     });
-  // };
 
   //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
+
   return (
     modalVisible && (
       <Modal
@@ -286,10 +258,7 @@ const ModalAuth = (props) => {
                     marginBottom: '15px',
                   }}
                   type='error'
-                  message={intl.formatMessage({
-                    id: 'modal.login.message',
-                    defaultMessage: 'Correo o contraseña equivocada',
-                  })}
+                  message={msjError}
                 />
               )}
               {!loading && (

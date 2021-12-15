@@ -1,25 +1,27 @@
-import {Actions} from "../../helpers/request";
+import { Actions } from "../../helpers/request";
+import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
 
 export function fetchRol() {
     return async dispatch => {
+        let token = await GetTokenUserFirebase();
         dispatch(fetchRolBegin());
-        Actions.getAll('/api/contributors/metadata/roles')
-            .then((rolData)=> {
+        Actions.getAll('/api/contributors/metadata/roles?token=' + token)
+            .then((rolData) => {
                 let roles = rolData.map(state => ({
                     value: state._id,
                     label: state.name
                 }));
                 dispatch(fetchRolSuccess(roles));
             })
-            .catch((e)=>{
+            .catch((e) => {
                 dispatch(fetchRolFailure(e))
             })
     };
 }
 
-export const FETCH_ROL_BEGIN     = "FETCH_ROL_BEGIN";
-export const FETCH_ROL_SUCCESS   = "FETCH_ROL_SUCCESS";
-export const FETCH_ROL_FAILURE   = "FETCH_ROL_FAILURE";
+export const FETCH_ROL_BEGIN = "FETCH_ROL_BEGIN";
+export const FETCH_ROL_SUCCESS = "FETCH_ROL_SUCCESS";
+export const FETCH_ROL_FAILURE = "FETCH_ROL_FAILURE";
 
 export const fetchRolBegin = () => ({
     type: FETCH_ROL_BEGIN

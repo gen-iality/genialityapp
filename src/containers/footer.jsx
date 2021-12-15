@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { AuthUrl } from '../helpers/constants';
-import * as Cookie from 'js-cookie';
 
 class Footer extends Component {
   constructor(props) {
@@ -10,8 +8,6 @@ class Footer extends Component {
   }
 
   logout = () => {
-    Cookie.remove('token');
-    Cookie.remove('evius_token');
     window.location.reload();
   };
 
