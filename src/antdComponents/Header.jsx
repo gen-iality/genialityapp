@@ -1,6 +1,6 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
-import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -28,7 +28,7 @@ const Header = ( props ) => {
         {
           back && (
             <Tooltip placement='bottomLeft' title={'Atrás'}>
-              <LeftOutlined id='goBack' onClick={() => history.goBack()}/>
+              <ArrowLeftOutlined id='goBack' onClick={() => history.goBack()} style={{marginRight: '10px'}}/>
             </Tooltip>
           )
         }
@@ -42,7 +42,7 @@ const Header = ( props ) => {
         )
       }
 
-      <Row wrap justify='end' gutter={[8, 8]} style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''}>
+      <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>
           {
             extra && (
@@ -101,11 +101,6 @@ const Header = ( props ) => {
           }
         </Col>
       </Row>
-      {form && (
-        <>
-          <br /><br />
-        </>
-      )}
     </>
   )
 }

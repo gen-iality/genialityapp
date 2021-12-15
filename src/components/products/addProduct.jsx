@@ -95,7 +95,7 @@ function AddProduct(props) {
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       Axios.all(uploaders).then(() => {
-        console.log('PATH===>', path[0]);
+        /* console.log('PATH===>', path[0]); */
         option === 'Imagen' ? setPicture(path[0]) : setOptionalPicture(path[0]);
         option === 'Imagen' ? setImgFile(null) : setImgFileOptional(null);
 
