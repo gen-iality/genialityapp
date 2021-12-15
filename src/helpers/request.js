@@ -598,13 +598,16 @@ export const CertsApi = {
     return await Actions.get(`api/pdfcertificate?content=` + content + '&image=' + image + '&download=1');
   },
   editOne: async (data, id) => {
-    return await Actions.edit('/api/certificates', data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/certificates/${id}?token=${token}`, data);
   },
   deleteOne: async (id) => {
-    return await Actions.delete('/api/certificates', id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/certificates/${id}?token=${token}`);
   },
   create: async (data) => {
-    return await Actions.create(`api/certificates`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`/api/certificates?token=${token}`, data);
   },
   generateCert: async (body) => {
     // eslint-disable-next-line no-unused-vars
