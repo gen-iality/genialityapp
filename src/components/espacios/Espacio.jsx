@@ -32,31 +32,35 @@ const Espacio = (props) => {
   }
 
   const onSubmit = async () => {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
-    });
-
-    try {
-      if(locationState.edit) {
-        await SpacesApi.editOne(espacio, locationState.edit, eventID);
-      } else {
-        await SpacesApi.create(espacio, eventID);
-      }     
-    
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Información guardada correctamente!</>,
+    if(espacio.name) {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras se guarda la información..</>,
       });
-      history.push(`${props.matchUrl}/espacios`);
-    } catch (e) {
-      message.destroy(loading.key);
-      message.open({
-        type: 'error',
-        content: handleRequestError(e).message,
-      });
+  
+      try {
+        if(locationState.edit) {
+          await SpacesApi.editOne(espacio, locationState.edit, eventID);
+        } else {
+          await SpacesApi.create(espacio, eventID);
+        }     
+      
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Información guardada correctamente!</>,
+        });
+        history.push(`${props.matchUrl}/espacios`);
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
+      }
+    } else {
+      message.error('El nombre es requerido');
     }
   }
 
@@ -118,7 +122,14 @@ const Espacio = (props) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col span={12}>
-          <Form.Item label={'Nombre'} >
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Nombre <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input 
               value={espacio.name}
               name={'name'}
