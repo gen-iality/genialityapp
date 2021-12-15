@@ -121,7 +121,7 @@ class AgendaEdit extends Component {
 
       //Estado para determinar si una actividad requiere registro para ser accedida
       requires_registration: false,
-      isPublished: true,
+      isPublished: false,
       avalibleGames: [],
       roomStatus: null,
       /* platform,
@@ -333,7 +333,7 @@ class AgendaEdit extends Component {
       value = value.target.checked;
     } else if (name === 'isPublished') {
       this.context.setIsPublished(value)
-      await this.saveConfig();
+      this.setState({isPublished:value},async()=>await this.saveConfig()) ;
     } else {
       this.setState({ [name]: value });
     }
@@ -784,7 +784,6 @@ class AgendaEdit extends Component {
       host_name,
       avalibleGames,
     } = this.context;
-
     const { isPublished } = this.state;
 
     const roomInfo = {
