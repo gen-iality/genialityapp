@@ -14,6 +14,7 @@ import { Menu, Drawer, Button, Col, Row, Layout, Space } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
+import ModalAuth from '../components/authentication/ModalAuth';
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
@@ -24,7 +25,7 @@ const zIndex = {
 };
 
 const Headers = (props) => {
-  const { cUser, showMenu, cEventUser, loginInfo } = props;
+  const { cUser, showMenu, loginInfo, cHelper } = props;
   const [dataGeneral, setdataGeneral] = useState({
     selection: [],
     organizations: [],
@@ -48,9 +49,7 @@ const Headers = (props) => {
     loadingUser: true,
     anonimususer: false,
   });
-
   const [organizationsMine, setorganizationsMine] = useState([]);
-  const [loadedData, setloadedData] = useState(false);
 
   const modalClose = () => {
     setdataGeneral({ ...dataGeneral, modalVisible: false, tabModal: '' });
@@ -115,78 +114,72 @@ const Headers = (props) => {
   };
 
   async function LoadCurrentUser() {
-    const eventId = setEventId();
-    //PARA VALIDAR SI ESTÁ DENTRO DE UN EVENTO
-    if (eventId) {
-      if (cEventUser?.value) {
-        let data = cEventUser?.value?.properties;
-        let eventUserId = cEventUser?.value.account_id;
-        let { _id, uid } = cEventUser?.value.user;
-        setdataGeneral({
-          name: data.names || data.name,
-          userEvent: { ...data, properties: data, _id: eventUserId },
-          photo: data?.picture
-            ? data?.picture
-            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-          uid: uid,
-          id: _id,
-          user: true,
-          loader: false,
-          organizations: organizationsMine,
-          loadingUser: false,
-          anonimususer: false,
-        });
-      } else {
-        // EL USUARIO TIENE SESION PERO NO ESTA REGISTRADO EN EL EVENTO
-        let data = cUser?.value;
-        setdataGeneral({
-          name: data?.names || data?.name,
-          userEvent: { ...data, properties: { names: data.names || data.name } },
-          photo: data?.picture
-            ? data?.picture
-            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-          uid: data?.user?.uid,
-          id: data?.user?._id,
-          user: true,
-          loader: false,
-          organizations: organizationsMine,
-          loadingUser: false,
-          anonimususer: false,
-        });
-      }
-    } else {
-      //SOLO EXISTE USER
-      let data = cUser?.value;
-      setdataGeneral({
-        name: data?.names || data?.name,
-        userEvent: { ...data, properties: { names: data.names || data.name } },
-        photo: data?.picture
-          ? data?.picture
-          : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-        uid: data?.user?.uid,
-        id: data?.user?._id,
-        user: true,
-        loader: false,
-        organizations: organizationsMine,
-        loadingUser: false,
-        anonimususer: false,
-      });
-    }
+    // const eventId = setEventId();
+    // //PARA VALIDAR SI ESTÁ DENTRO DE UN EVENTO
+    // if (eventId) {
+    //   if (cEventUser?.value) {
+    //     let data = cEventUser?.value?.properties;
+    //     let eventUserId = cEventUser?.value.account_id;
+    //     let { _id, uid } = cEventUser?.value.user;
+    //     setdataGeneral({
+    //       name: data.names || data.name,
+    //       userEvent: { ...data, properties: data, _id: eventUserId },
+    //       photo: data?.picture
+    //         ? data?.picture
+    //         : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+    //       uid: uid,
+    //       id: _id,
+    //       user: true,
+    //       loader: false,
+    //       organizations: organizationsMine,
+    //       loadingUser: false,
+    //       anonimususer: false,
+    //     });
+    //   } else {
+    //     // EL USUARIO TIENE SESION PERO NO ESTA REGISTRADO EN EL EVENTO
+    //     let data = cUser?.value;
+    //     setdataGeneral({
+    //       name: data?.names || data?.name,
+    //       userEvent: { ...data, properties: { names: data.names || data.name } },
+    //       photo: data?.picture
+    //         ? data?.picture
+    //         : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+    //       uid: data?.user?.uid,
+    //       id: data?.user?._id,
+    //       user: true,
+    //       loader: false,
+    //       organizations: organizationsMine,
+    //       loadingUser: false,
+    //       anonimususer: false,
+    //     });
+    //   }
+    // } else {
+    //SOLO EXISTE USER
+    let data = cUser?.value;
+    if (!data) return;
+    setdataGeneral({
+      name: data?.names || data?.name,
+      userEvent: { ...data, properties: { names: data.names || data.name } },
+      photo: data?.picture
+        ? data?.picture
+        : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+      uid: data?.user?.uid,
+      id: data?.user?._id,
+      user: true,
+      loader: false,
+      organizations: organizationsMine,
+      loadingUser: false,
+      anonimususer: false,
+    });
+    // }
   }
 
   useEffect(() => {
-    // console.log('loadedData', loadedData);
-    if (cUser.value !== undefined && cUser.value !== null) {
-      LoadMineOrganizations();
-      LoadCurrentUser();
-
-      // logout();
-    }
-  }, [cUser?.value, cEventUser?.value]);
-
-  // useEffect(() => {
-  //   console.log('datageneral', dataGeneral);
-  // }, [dataGeneral]);
+    if (cUser.value === undefined || cUser.value === null) return;
+    console.log('debu render useEffect ==>', cUser);
+    LoadMineOrganizations();
+    LoadCurrentUser();
+  }, [cUser?.value]);
 
   return (
     <React.Fragment>
@@ -212,7 +205,7 @@ const Headers = (props) => {
               )}
             </Row>
 
-            {!dataGeneral.userEvent && !dataGeneral.loadingUser ? (
+            {!dataGeneral.userEvent && dataGeneral.loadingUser ? (
               !window.location.href.toString().includes('landing') &&
               window.location.href.toString().split('/').length == 4 && (
                 <Space>
@@ -269,16 +262,16 @@ const Headers = (props) => {
               )
             )}
 
-            {/* {(window.location.href.toString().includes('events') ||
+            {(window.location.href.toString().includes('events') ||
               window.location.href.toString().split('/').length == 4) &&
               !window.location.href.toString().includes('organization') && (
                 <ModalAuth
                   tab={dataGeneral.tabModal}
-                  closeModal={this.modalClose}
+                  closeModal={modalClose}
                   organization='register'
                   visible={dataGeneral.modalVisible}
                 />
-              )} */}
+              )}
             {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
           </Row>
         </Menu>
