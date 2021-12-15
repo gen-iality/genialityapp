@@ -88,6 +88,7 @@ export const columns = (columnsData) => [
       title: 'Opciones',
       dataIndex: 'options',
       fixed: 'rigth',
+      width: 110,
       render(val, item) {
          return (
             /*
