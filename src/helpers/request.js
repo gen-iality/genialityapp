@@ -82,7 +82,7 @@ export const getCurrentUser = async () => {
       resolve(null);
     } else {
       try {
-        const resp = await privateInstance.get(`/auth/currentUser?evius_token=${token}`);
+        const resp = await privateInstance.get(`/auth/currentUser?token=${token}`);
         if (resp.status === 200) {
           currentUser = resp.data;
           resolve(resp.data);
@@ -183,7 +183,7 @@ export const EventsApi = {
   },
   mine: async () => {
     let token = await GetTokenUserFirebase();
-    const events = await Actions.getAll(`/api/me/contributors/events?${token}`);
+    const events = await Actions.getAll(`/api/me/contributors/events/?token=${token}`, true);
     return events;
   },
   getOne: async (id) => {
@@ -358,7 +358,8 @@ export const eventTicketsApi = {
 
 export const TicketsApi = {
   getAll: async (id) => {
-    return await Actions.getAll(`/api/me/eventUsers/?evius_token=${evius_token}&limit=20`, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`/api/me/eventUsers/?token=${token}&limit=20`, true);
   },
   getByEvent: async (event) => {
     return await Actions.getOne(`/api/me/eventusers/event/${event}`);
@@ -471,9 +472,9 @@ export const TypesApi = {
 };
 export const OrganizationApi = {
   mine: async () => {
-    let evius_token = await GetTokenUserFirebase();
+    let token = await GetTokenUserFirebase();
 
-    const resp = await Actions.getAll(`api/me/organizations?token=$${evius_token}`);
+    const resp = await Actions.getAll(`api/me/organizations?token=$${token}`);
     let data = resp.data.map((item) => {
       return {
         id: item._id,
