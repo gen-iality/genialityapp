@@ -10,12 +10,14 @@ import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input,
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
+import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 class Styles extends Component {
@@ -55,8 +57,9 @@ class Styles extends Component {
     this.imageDrawer = [
       {
         title: 'Elige una imagen para el banner superior en desktop: (Tamaño recomendado 1920x540)',
-        description:
-        `Por defecto en el baner superior se muestra la imagen prinicpal ${this.props.org?._id ? 'de la organización' : 'del evento'} aqui la puedes cambiar`,
+        description: `Por defecto en el baner superior se muestra la imagen prinicpal ${
+          this.props.org?._id ? 'de la organización' : 'del evento'
+        } aqui la puedes cambiar`,
         imageFieldName: 'banner_image',
         button: 'Eliminar banner superior',
         width: 1920,
@@ -93,7 +96,9 @@ class Styles extends Component {
         height: 180,
       },
       {
-        title: `Elige una imagen para el footer ${this.props.org?._id ? 'de la organización' : 'del evento'}: (Tamaño recomendado 1920x280)`,
+        title: `Elige una imagen para el footer ${
+          this.props.org?._id ? 'de la organización' : 'del evento'
+        }: (Tamaño recomendado 1920x280)`,
         imageFieldName: 'banner_footer',
         button: 'Eliminar pie de pagina',
         width: 1920,
@@ -101,7 +106,9 @@ class Styles extends Component {
       },
       {
         title: 'Elige una imagen para el footer del email: (Tamaño recomendado 600x220)',
-        description: `Por defecto se reduce la imagen automaticamente del footer ${this.props.org?._id ? 'de la organización' : 'del evento'}`,
+        description: `Por defecto se reduce la imagen automaticamente del footer ${
+          this.props.org?._id ? 'de la organización' : 'del evento'
+        }`,
         imageFieldName: 'banner_footer_email',
         button: 'Eliminar pie de pagina de email',
         width: 600,
@@ -122,7 +129,6 @@ class Styles extends Component {
             label: 'No',
             value: false,
           },
-          
         ],
       },
       {
@@ -138,7 +144,6 @@ class Styles extends Component {
             label: 'No',
             value: false,
           },
-          
         ],
       },
       {
@@ -220,18 +225,18 @@ class Styles extends Component {
   }
   //Se consulta la api para traer los datos ya guardados y enviarlos al state
   async componentDidMount() {
-    const thereIsAnOrganization = this.props.org?._id
-    let dataStyles
-    let info
+    const thereIsAnOrganization = this.props.org?._id;
+    let dataStyles;
+    let info;
 
-    if(thereIsAnOrganization){
-      dataStyles = this.props.org?.styles ? this.props.org.styles : {}
-    }else{
+    if (thereIsAnOrganization) {
+      dataStyles = this.props.org?.styles ? this.props.org.styles : {};
+    } else {
       info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-     dataStyles = info.styles ? info.styles : {};
+      dataStyles = info.styles ? info.styles : {};
     }
-    
-      if (dataStyles) {
+
+    if (dataStyles) {
       this.setState({
         styles: {
           brandPrimary: dataStyles.brandPrimary || '#FFFFFF',
@@ -261,8 +266,8 @@ class Styles extends Component {
           mobile_banner: dataStyles.mobile_banner || null,
           banner_footer_email: dataStyles.banner_footer_email || null,
           show_banner: dataStyles.show_banner || false,
-          show_title: dataStyles?.show_title  || false,
-          show_video_widget: dataStyles?.show_video_widget  || false,
+          show_title: dataStyles?.show_title || false,
+          show_video_widget: dataStyles?.show_video_widget || false,
           show_card_banner: dataStyles.show_card_banner || true,
           show_inscription: info?.show_inscription || false,
           hideDatesAgenda: dataStyles.hideDatesAgenda || false,
@@ -347,17 +352,18 @@ class Styles extends Component {
       type: 'loading',
       content: <> Por favor espere..</>,
     });
-    let info
+    let info;
     const { eventId } = this.state;
-    const thereIsAnOrganization = this.props.org?._id
+    const thereIsAnOrganization = this.props.org?._id;
 
     this.state.data = { styles: this.state.styles };
     /* console.log('save data', this.state.data) */
     try {
-      if(thereIsAnOrganization){
-         info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
-      }else{
-         info = await Actions.put(`/api/events/${eventId}`, this.state.data);
+      if (thereIsAnOrganization) {
+        info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
+      } else {
+        let token = await GetTokenUserFirebase();
+        info = await Actions.put(`/api/events/${eventId}?token=${token}`, this.state.data);
       }
 
       this.setState({ loading: false });
@@ -475,20 +481,12 @@ class Styles extends Component {
 
     return (
       <React.Fragment>
-        <Form
-          onFinish={this.submit}
-          {...formLayout}
-        >
-          <Header 
-            title={'Configuración de Estilos'}
-            save
-            form
-          />
+        <Form onFinish={this.submit} {...formLayout}>
+          <Header title={'Configuración de Estilos'} save form />
 
           <Row justify='center' wrap gutter={[8, 8]}>
             <Col span={12}>
               {this.state.colorDrawer.map((item, key) => (
-                
                 <div key={key}>
                   {item.editIsVisible && (
                     <Modal
@@ -533,7 +531,7 @@ class Styles extends Component {
 
                   <Form.Item label={item.title} onClick={() => this.handleClickSelectColor(key)}>
                     {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-                    <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]} >
+                    <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                       {this.state.styles[item.fieldColorName]}
                     </Tag>
                   </Form.Item>
@@ -544,12 +542,11 @@ class Styles extends Component {
                 <div key={key}>
                   <Form.Item label={item.label}>
                     <Select
-                      defaultValue={this.state.styles[item.name]/* item.defaultValue */}
+                      defaultValue={this.state.styles[item.name] /* item.defaultValue */}
                       value={this.state.styles[item.name]}
                       name={item.name}
                       onChange={(e) => this.handleChange(e, item.name)}
-                      style={{ width: 120 }}
-                    >
+                      style={{ width: 120 }}>
                       {item.options.map((item2, key2) => (
                         <Option key={key2} value={item2.value}>
                           {item2.label}
@@ -557,7 +554,7 @@ class Styles extends Component {
                       ))}
                     </Select>
                   </Form.Item>
-                  
+
                   {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
                     <Form.Item label={'Link de video'}>
                       <Input
@@ -595,13 +592,18 @@ class Styles extends Component {
                         this.saveEventImage(files, item.imageFieldName);
                       }}
                       errImg={this.state.errImg}
-                      btnRemove={(this.state.styles[item.imageFieldName] && (
-                        <button
-                          onClick={async (e)=>{ e.stopPropagation(); this.deleteInfoBanner(item.imageFieldName)}}
-                          className={`button is-primary is-inverted is-outlined`}>
-                          Eliminar Imagen
-                        </button>
-                      ))}
+                      btnRemove={
+                        this.state.styles[item.imageFieldName] && (
+                          <button
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              this.deleteInfoBanner(item.imageFieldName);
+                            }}
+                            className={`button is-primary is-inverted is-outlined`}>
+                            Eliminar Imagen
+                          </button>
+                        )
+                      }
                     />
                     {/* {this.state.styles[item.imageFieldName] && (
                       <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
@@ -613,6 +615,7 @@ class Styles extends Component {
               ))}
             </Col>
           </Row>
+          <BackTop />
         </Form>
         {timeout && <LogOut />}
       </React.Fragment>

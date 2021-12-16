@@ -3,13 +3,15 @@ import { Typography, Select, Card, Input, Button, Col, Row, message, Spin, Form,
 import { Actions, OrganizationApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
+import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 
 const { Title } = Typography;
 const { Option } = Select;
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-  size: 'small'
+  size: 'small',
 };
 
 class menuLanding extends Component {
@@ -203,21 +205,21 @@ class menuLanding extends Component {
     const menuBase = this.state.menu;
     let menuLanding = {};
     if (this.props.organization != 1) {
-      menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`);
+      let token = await GetTokenUserFirebase();
+      menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}?token=${token}`);
     } else {
       //OBTENER DE ORGANIZACIÓN
-     // alert("ORGANIZATION")
-     
+      // alert("ORGANIZATION")
+
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
       console.log('ITEMS==>', menuLanding.itemsMenu);
-      this.state.itemsMenu=menuLanding.itemsMenu
-      let items=menuLanding.itemsMenu
-    
+      this.state.itemsMenu = menuLanding.itemsMenu;
+      let items = menuLanding.itemsMenu;
     }
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
         if (prop1 === prop) {
-          console.log("INGRESO ACA")
+          console.log('INGRESO ACA');
           this.mapActiveItemsToAvailable(prop);
           this.changeNameMenu(prop, menuLanding.itemsMenu[prop1]?.name);
           this.changePositionMenu(prop, menuLanding.itemsMenu[prop1].position);
@@ -267,14 +269,15 @@ class menuLanding extends Component {
       newMenu.allow_register = false;
     }
     if (this.props.organization !== 1) {
-      await Actions.put(`api/events/${this.props.event._id}`, newMenu);
+      let token = await GetTokenUserFirebase();
+      await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
     } else {
       //ACTUALIZAR ORGANIZACION
-     // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
-     //console.log(this.props.organizationObj)
+      // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
+      //console.log(this.props.organizationObj)
       let updateOrganization = {
         ...this.props.organizationObj,
-        itemsMenu: {...menu },
+        itemsMenu: { ...menu },
       };
       let resp = await OrganizationApi.editMenu(updateOrganization, updateOrganization._id);
       if (resp) {
@@ -291,11 +294,11 @@ class menuLanding extends Component {
 
   async mapActiveItemsToAvailable(key) {
     let menuBase = { ...this.state.menu };
-    let itemsMenuDB ={ ...this.state.itemsMenu };
-    console.log("ITEMSMENUTOAVAILABLE==>",this.state.itemsMenu )
+    let itemsMenuDB = { ...this.state.itemsMenu };
+    console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
     console.log('items menù', itemsMenuDB);
     console.log('primero=>', menuBase[key]);
-    menuBase[key].checked = !menuBase[key].checked;  
+    menuBase[key].checked = !menuBase[key].checked;
     console.log('segundo=>', menuBase[key]);
 
     if (menuBase[key].checked) {
@@ -310,11 +313,11 @@ class menuLanding extends Component {
   changeNameMenu(key, name) {
     let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
-    console.log("CHANGEMENU==>",key, name)
+    console.log('CHANGEMENU==>', key, name);
     if (name !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].name = name;
-        menuBase[key].name=itemsMenuDB[key].name||name;
+        menuBase[key].name = itemsMenuDB[key].name || name;
       }
     }
     this.setState({ itemsMenu: itemsMenuDB });
@@ -326,7 +329,7 @@ class menuLanding extends Component {
     if (position !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].position = position;
-        menuBase[key].position= position || itemsMenuDB[key].position
+        menuBase[key].position = position || itemsMenuDB[key].position;
       }
     }
     this.setState({ itemsMenu: itemsMenuDB });
@@ -337,7 +340,7 @@ class menuLanding extends Component {
     let itemsMenuDB = { ...this.state.itemsMenu };
     if (markup !== '') {
       itemsMenuDB[key].markup = markup;
-      menuBase[key].markup= itemsMenuDB[key].markup || markup;
+      menuBase[key].markup = itemsMenuDB[key].markup || markup;
     }
     this.setState({ itemsMenu: itemsMenuDB });
   }
@@ -345,10 +348,10 @@ class menuLanding extends Component {
   changePermissions(key, access) {
     let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
-    console.log("itemsMenuDB",itemsMenuDB)
+    console.log('itemsMenuDB', itemsMenuDB);
     if (itemsMenuDB[key]) {
       itemsMenuDB[key].permissions = access;
-      menuBase[key].permissions=itemsMenuDB[key].permissions || access;
+      menuBase[key].permissions = itemsMenuDB[key].permissions || access;
     }
 
     this.setState({ itemsMenu: itemsMenuDB, keySelect: Date.now() });
@@ -358,74 +361,73 @@ class menuLanding extends Component {
     let itemsMenu = { ...this.state.menu };
     let itemsMenuToOrder = { ...this.state.itemsMenu };
     itemsMenuToOrder[key].position = order !== '' ? parseInt(order) : 0;
-    itemsMenu [key].position= itemsMenuToOrder[key].position || order !== '' ? parseInt(order) : 0
+    itemsMenu[key].position = itemsMenuToOrder[key].position || order !== '' ? parseInt(order) : 0;
     this.setState({ itemsMenu: itemsMenuToOrder });
   }
   render() {
     return (
       <Fragment>
-        <Form
-          {...formLayout}
-          onFinish={this.submit}
-        >
-          <Header 
-            title={this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'}
+        <Form {...formLayout} onFinish={this.submit}>
+          <Header
+            title={
+              this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'
+            }
             description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
             save
             form
           />
 
           <Row gutter={[8, 8]} wrap>
-            {
-              Object.keys(this.state.menu).map((key, index) => (
-                <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                  <Card 
-                    title={this.state.menu[key].name}
-                    bordered={true}
-                  >
-                    <Form.Item name={this.state.menu[key].name}>
-                      <Button
-                        onClick={() => {this.mapActiveItemsToAvailable(key);}}
-                      >
-                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                      </Button>
-                    </Form.Item>
-                    <Form.Item label={'Cambiar nombre de la sección'}>
-                      <Input
-                        name={`name${index}`}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        //value={this.state.menu[key].name}
-                        onChange={(e) => {this.changeNameMenu(key, e.target.value);}}
-                        placeholder={this.state.menu[key].name}
-                      />
-                    </Form.Item>
-                    <Form.Item label={'Permisos para la sección'}>
-                      <Select
-                        name={`permissions${index}`}
-                        key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].permissions}
-                        onChange={(e) => {this.changePermissions(key, e);}}>
-                        <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al evento</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item label={'Posición en el menú'}>
-                      <InputNumber
-                        name={`position${index}`}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].position}
-                        onChange={(e) => this.orderPosition(key, e)} 
-                      />
-                    </Form.Item>
-                  </Card>
-                </Col>
-              ))
-            }
+            {Object.keys(this.state.menu).map((key, index) => (
+              <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
+                <Card title={this.state.menu[key].name} bordered={true}>
+                  <Form.Item name={this.state.menu[key].name}>
+                    <Button
+                      onClick={() => {
+                        this.mapActiveItemsToAvailable(key);
+                      }}>
+                      {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                    </Button>
+                  </Form.Item>
+                  <Form.Item label={'Cambiar nombre de la sección'}>
+                    <Input
+                      name={`name${index}`}
+                      disabled={this.state.menu[key].checked === true ? false : true}
+                      //value={this.state.menu[key].name}
+                      onChange={(e) => {
+                        this.changeNameMenu(key, e.target.value);
+                      }}
+                      placeholder={this.state.menu[key].name}
+                    />
+                  </Form.Item>
+                  <Form.Item label={'Permisos para la sección'}>
+                    <Select
+                      name={`permissions${index}`}
+                      key={this.state.keySelect}
+                      disabled={this.state.menu[key].checked === true ? false : true}
+                      value={this.state.menu[key].permissions}
+                      onChange={(e) => {
+                        this.changePermissions(key, e);
+                      }}>
+                      <Option value='public'>Abierto para todos</Option>
+                      <Option value='assistants'>Usuarios inscritos al evento</Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item label={'Posición en el menú'}>
+                    <InputNumber
+                      name={`position${index}`}
+                      disabled={this.state.menu[key].checked === true ? false : true}
+                      value={this.state.menu[key].position}
+                      onChange={(e) => this.orderPosition(key, e)}
+                    />
+                  </Form.Item>
+                </Card>
+              </Col>
+            ))}
           </Row>
+          <BackTop />
         </Form>
-        
-        
+
         {/* <Title level={3}>
           {this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'}
         </Title>

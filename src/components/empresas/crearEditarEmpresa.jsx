@@ -19,6 +19,7 @@ import useGetEventCompaniesSocialNetworksOptions from './customHooks/useGetEvent
 import { createEventCompany, updateEventCompany } from './services';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -632,6 +633,7 @@ function CrearEditarEmpresa( props ) {
                 </Form.Item> */}
               </Col>
             </Row>
+            <BackTop />
           </Form>
         );
       }}

@@ -31,6 +31,7 @@ import {
   EditOutlined,
 } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import { areaCode } from '../../helpers/constants';
 
 const { Title } = Typography;
@@ -149,40 +150,45 @@ function Speaker(props) {
   }
 
   async function submit(values) {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras guarda la información..</>,
-    });
-    const { name, profession, description, image, order, published } = values;
+    if(values.name) {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras guarda la información..</>,
+      });
+      const { name, profession, description, image, order, published } = values;
 
-    const body = {
-      name,
-      image,
-      description_activity: showDescription_activity,
-      description,
-      profession,
-      published,
-      category_id: selectedCategories?.value,
-      order: parseInt(order),
-      index: parseInt(order),
-    };
-    try {
-      if (state.edit) await SpeakersApi.editOne(body, state.edit, eventID);
-      else await SpeakersApi.create(eventID, body);
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Conferencista guardado correctamente!</>,
-      });
-      history.push(`/${match}/${eventID}/speakers`);
-    } catch (e) {
-      message.destroy(loading.key);
-      message.open({
-        type: 'error',
-        content: handleRequestError(e).message,
-      });
+      const body = {
+        name,
+        image,
+        description_activity: showDescription_activity,
+        description,
+        profession,
+        published,
+        category_id: selectedCategories?.value,
+        order: parseInt(order),
+        index: parseInt(order),
+      };
+      try {
+        if (state.edit) await SpeakersApi.editOne(body, state.edit, eventID);
+        else await SpeakersApi.create(eventID, body);
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Conferencista guardado correctamente!</>,
+        });
+        history.push(`/${match}/${eventID}/speakers`);
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
+      }
+    } else {
+      message.error('El nombre es requerido')
     }
+    
   }
 
   function remove() {
@@ -284,7 +290,14 @@ function Speaker(props) {
 
       <Row justify='center' wrap gutter={12}>
         <Col span={12}>
-          <Form.Item label={'Nombre'}>
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Nombre <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input
               value={data.name}
               placeholder='Nombre del conferencista'
@@ -411,6 +424,7 @@ function Speaker(props) {
           </Form.Item>
         </Col>
       </Row>
+      <BackTop />
     </Form>
   );
 }

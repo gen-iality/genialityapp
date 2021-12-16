@@ -22,6 +22,7 @@ import CMS from '../../newComponent/CMS';
 import { firestore } from '../../../helpers/firebase';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 import Header from '../../../antdComponents/Header';
+import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -153,7 +154,8 @@ class Datos extends Component {
     if (organizationId && !this.eventID) {
       await this.props.orderFields(this.state.properties);
     } else if (this.eventID && !organizationId && this.props.byEvent) {
-      await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
+      let token = await GetTokenUserFirebase();
+      await Actions.put(`api/events/${this.props.eventID}?token=${token}`, this.state.properties);
     } else {
       await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
     }

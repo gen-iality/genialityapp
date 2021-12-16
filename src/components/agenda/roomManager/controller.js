@@ -13,11 +13,11 @@ export default function RoomController(props) {
   const { games, avalibleGames } = useContext(AgendaContext);
   const { handleTabsController, handleGamesSelected } = props;
 
-  const [listOfGames, setListOfGames] = useState([]);
-  const [updateMensaje, setUpdatedMensaje] = useState(false);
-  let [columnsData, setColumnsData] = useState({});
-  const [showavailableGames, setShowavailableGames] = useState(games);
-  const [isLoading, setIsLoading] = useState(true);
+  const [ listOfGames, setListOfGames ] = useState([]);
+  const [ updateMensaje, setUpdatedMensaje ] = useState(false);
+  let [ columnsData, setColumnsData ] = useState({});
+  const [ showavailableGames, setShowavailableGames ] = useState(games);
+  const [ isLoading, setIsLoading ] = useState(true);
 
   async function getGamesData() {
     let gamesData = [];
@@ -28,10 +28,10 @@ export default function RoomController(props) {
       });
     });
 
-    if (avalibleGames.length === 0) {
+    if (avalibleGames && avalibleGames.length === 0) {
       setListOfGames(gamesData);
       handleGamesSelected('newOrUpdate', '', gamesData);
-    } else if (avalibleGames.length !== gamesData.length) {
+    } else if (avalibleGames && avalibleGames.length !== gamesData.length) {
       setListOfGames(gamesData);
       handleGamesSelected('newOrUpdate', '', gamesData);
       setUpdatedMensaje(true);
@@ -43,7 +43,7 @@ export default function RoomController(props) {
 
   useEffect(() => {
     getGamesData();
-  }, [avalibleGames]);
+  }, [ avalibleGames ]);
 
   const columns = [
     {

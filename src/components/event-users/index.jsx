@@ -291,6 +291,7 @@ class ListEventUser extends Component {
         title: 'Editar',
         key: 'edit',
         fixed: 'right',
+        width: 60,
         render: self.editcomponent,
       };
       /* columns.push(editColumn); */
@@ -857,7 +858,7 @@ class ListEventUser extends Component {
           </Col>
         </Row>
 
-        {event_stages && event_stages.length > 0 && (
+        {/* {event_stages && event_stages.length > 0 && (
           <div className='filter'>
             <button className='button icon-filter'>
               <span className='icon'>
@@ -909,7 +910,7 @@ class ListEventUser extends Component {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         <TableA
           list={users}

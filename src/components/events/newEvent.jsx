@@ -176,11 +176,13 @@ class NewEvent extends Component {
       //console.log('EVENT TO CREATE==>', data);
       //CREAR EVENTO
       try {
-        const result = await Actions.create('/api/events', data);
+        let token = await GetTokenUserFirebase();
+
+        const result = await Actions.create(`/api/events?token=${token}`, data);
         if (result._id) {
           //HABILTAR SECCIONES POR DEFECTO
           const sections = await Actions.put(
-            `api/events/${result._id}`,
+            `api/events/${result._id}?token=${token}`,
             eventNewContext.selectOrganization.itemsMenu || newMenu
           );
 

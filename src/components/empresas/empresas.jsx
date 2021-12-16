@@ -146,6 +146,8 @@ function Empresas({ event, match }) {
     {
       title: 'Opciones',
       dataIndex: 'id',
+      fixed: 'right',
+      width: 110,
       render(value,record) {
         return (
           <Row gutter={[8, 8]}>

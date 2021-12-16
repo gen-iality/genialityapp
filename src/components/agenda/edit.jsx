@@ -27,6 +27,7 @@ import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
 import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import RoomController from '../agenda/roomManager/controller';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
@@ -68,8 +69,6 @@ class AgendaEdit extends Component {
       loading: true,
       // Estado para la redireccion de navegacion interna al eliminar actividad o volver al listado de actividades.
       redirect: false,
-      // El id de la actividad se inicializa al crear la actividad
-      activity_id: false,
       isLoading: { types: true, categories: true },
       name: '',
       subtitle: '',
@@ -122,7 +121,7 @@ class AgendaEdit extends Component {
 
       //Estado para determinar si una actividad requiere registro para ser accedida
       requires_registration: false,
-      isPublished: true,
+      isPublished: false,
       avalibleGames: [],
       roomStatus: null,
       /* platform,
@@ -143,10 +142,10 @@ class AgendaEdit extends Component {
   // VALIDAR SI TIENE ENCUESTAS EXTERNAS
   validateRoom = async () => {
     const { service } = this.state;
-    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
+    const activity_id=this.context.activityEdit;
+    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, activity_id);
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
-      console.log('configuration', configuration);
+      const configuration = await service.getConfiguration(this.props.event._id, activity_id);
       this.setState({
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
@@ -202,10 +201,12 @@ class AgendaEdit extends Component {
 
         for (var i = 0; i < date.length; i++) {
           let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
-          if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
+          /* if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
             days.push({ value: formatDate, label: formatDate });
-          }
+          } */
+          days.push({ value: formatDate, label: formatDate });
         }
+        this.setState({days: days})
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
         const init = Moment(event.date_start);
@@ -216,10 +217,12 @@ class AgendaEdit extends Component {
           let formatDate = Moment(init)
             .add(i, 'd')
             .format('YYYY-MM-DD');
-          if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
+          /* if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
             days.push({ value: formatDate, label: formatDate });
-          }
+          } */
+          days.push({ value: formatDate, label: formatDate });
         }
+        this.setState({days: days})
       }
     } catch (e) {
       console.error(e);
@@ -269,10 +272,10 @@ class AgendaEdit extends Component {
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
-      console.log(
+      /* console.log(
         Object.keys(this.state).map((key) => info[key]),
         'ObjectKey'
-      );
+      ); */
       const { date, hour_start, hour_end } = handleDate(info);
 
       let currentUser = await getCurrentUser();
@@ -325,11 +328,12 @@ class AgendaEdit extends Component {
     if (!name) {
       name = value.target.name;
       value = value.target.value;
-    } 
+    }
     if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
-      this.setState({ [name]: value }, async () => await this.saveConfig());
+      this.context.setIsPublished(value)
+      this.setState({isPublished:value},async()=>await this.saveConfig()) ;
     } else {
       this.setState({ [name]: value });
     }
@@ -724,12 +728,12 @@ class AgendaEdit extends Component {
     if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
       title.push('Seleccione una hora de finalización valida');
     
-    if (this.state.hour_start > this.state.hour_end)
+    /* if (this.state.hour_start > this.state.hour_end)
       title.push('La hora de inicio no puede ser mayor a la hora fin');
   
     if ((this.state.hour_start < new Date()) && (this.state.date <= Moment(new Date()).format('YYYY-MM-DD')))
       title.push('La hora no puede ser menor a la hora actual');
-      
+       */
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
       title.map((item) => {
@@ -780,7 +784,6 @@ class AgendaEdit extends Component {
       host_name,
       avalibleGames,
     } = this.context;
-
     const { isPublished } = this.state;
 
     const roomInfo = {
@@ -800,8 +803,9 @@ class AgendaEdit extends Component {
   saveConfig = async () => {
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
+    const activity_id=this.context.activityEdit;   
     try {
-      const result = await service.createOrUpdateActivity(this.props.event._id, this.state.activity_id, roomInfo, tabs);
+      const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
       if (result) message.success(result.message);
       return result;
     } catch (err) {
@@ -901,7 +905,7 @@ class AgendaEdit extends Component {
                   checkedChildren='Sí'
                   unCheckedChildren='No'
                   name={'isPublished'}
-                  checked={this.state.isPublished}
+                  checked={this.context.isPublished}
                   onChange={(e) => this.handleChange(e, 'isPublished')}
                 />
               </Form.Item>
@@ -911,7 +915,12 @@ class AgendaEdit extends Component {
             <TabPane tab='Agenda' key='1'>
               <Row justify='center' wrap gutter={12}>
                 <Col span={20}>
-                  <Form.Item label={'Nombre'}>
+                  <Form.Item 
+                    label={<label style={{ marginTop: '2%' }} className='label'>
+                      Nombre <label style={{ color: 'red' }}>*</label>
+                    </label>}
+                    rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}
+                  >
                     <Input
                       ref={this.name}
                       autoFocus
@@ -922,7 +931,12 @@ class AgendaEdit extends Component {
                       placeholder={'Nombre de la actividad'}
                     />
                   </Form.Item>
-                  <Form.Item label={'Día'}>
+                  <Form.Item 
+                    label={<label style={{ marginTop: '2%' }} className='label'>
+                      Día <label style={{ color: 'red' }}>*</label>
+                    </label>}
+                    rules={[{ required: true, message: 'La fecha es requerida' }]}
+                  >
                     <SelectAntd
                       name='date'
                       options={this.state.days}
@@ -933,7 +947,12 @@ class AgendaEdit extends Component {
                   </Form.Item>
                   <Row wrap justify='space-between' gutter={[8, 8]}>
                     <Col>
-                      <Form.Item label={'Hora Inicio'}>
+                      <Form.Item 
+                        label={<label style={{ marginTop: '2%' }} className='label'>
+                          Hora Inicio <label style={{ color: 'red' }}>*</label>
+                        </label>}
+                        rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
+                      >
                         <DateTimePicker
                           value={hour_start}
                           dropUp
@@ -944,7 +963,12 @@ class AgendaEdit extends Component {
                       </Form.Item>
                     </Col>
                     <Col>
-                      <Form.Item label={'Hora Fin'}>
+                      <Form.Item 
+                        label={<label style={{ marginTop: '2%' }} className='label'>
+                          Hora Fin <label style={{ color: 'red' }}>*</label>
+                        </label>}
+                        rules={[{ required: true, message: 'La hora final es requerida' }]}
+                      >
                         <DateTimePicker
                           value={hour_end}
                           dropUp
@@ -1157,6 +1181,7 @@ class AgendaEdit extends Component {
                       <br />
                       <br />
                       <br />
+                      <BackTop />
                     </Row>
                   </Form.Item>
                 </Col>
@@ -1176,6 +1201,7 @@ class AgendaEdit extends Component {
                     pendingChangesSave={this.state.pendingChangesSave}
                     updateRoomManager={this.updateRoomManager}
                   />
+                  <BackTop />
                 </Col>
               </Row>
             </TabPane>
@@ -1186,6 +1212,7 @@ class AgendaEdit extends Component {
                     handleGamesSelected={this.handleGamesSelected}
                     handleTabsController={this.handleTabsController}
                   />
+                  <BackTop />
                 </Col>
               </Row>
             </TabPane>
@@ -1202,6 +1229,7 @@ class AgendaEdit extends Component {
                       roomStatus={this.state.roomStatus}
                     />
                   )}
+                  <BackTop />
                 </Col>
               </Row>
             </TabPane>
@@ -1219,6 +1247,7 @@ class AgendaEdit extends Component {
                       value={selected_document}
                     />
                   </Form.Item>
+                  <BackTop />
                 </Col>
               </Row>
             </TabPane>
@@ -1231,7 +1260,7 @@ class AgendaEdit extends Component {
 
 //FN manejo/parseo de fechas
 function handleDate(info) {
-  console.log(info, 'entro en handleDate');
+  /* console.log(info, 'entro en handleDate'); */
   let date, hour_start, hour_end;
   hour_start = Moment(info.datetime_start, 'YYYY-MM-DD HH:mm').toDate();
   hour_end = Moment(info.datetime_end, 'YYYY-MM-DD HH:mm').toDate();

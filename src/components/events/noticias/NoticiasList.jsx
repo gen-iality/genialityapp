@@ -32,8 +32,12 @@ const NoticiasList = ({ setVirtualConference, match, size, newId }) => {
         if (size) {
           noticeList = noticeList.slice(0, size);
         }
-        if(newId) {
-          setNoticias(noticeList.filter((value) => {return value._id != newId}))
+        if (newId) {
+          setNoticias(
+            noticeList.filter((value) => {
+              return value._id != newId;
+            })
+          );
         } else {
           setNoticias(noticeList);
         }
@@ -72,7 +76,7 @@ const NoticiasList = ({ setVirtualConference, match, size, newId }) => {
           noticias.map((news) => (
             <>
               {/* {console.log('NOTICIA==>', news)} */}
-              <Col /* style={{ paddingBottom: '30px' }}  */xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Col /* style={{ paddingBottom: '30px' }}  */ xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                 {moment().format('YYYY-MM-DD') === moment(news.created_at).format('YYYY-MM-DD') ? (
                   <Badge.Ribbon text='Nuevo' color='cyan'>
                     <Card
@@ -154,7 +158,7 @@ const NoticiasList = ({ setVirtualConference, match, size, newId }) => {
         {noticias && noticias.length == 0 && (
           <Card style={{ width: '100%', textAlign: 'center' }}>No existen noticias</Card>
         )}
-        {size && (noticias && noticias.length > size) && (
+        {size && noticias && noticias.length > size && (
           <Button type='primary' block onClick={viewAll} style={{ fontSize: '18px', height: 'auto' }}>
             {!viewMenos ? 'Ver más' : 'Ver menos'}
           </Button>

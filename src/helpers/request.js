@@ -38,36 +38,36 @@ export const fireStoreApi = {
   },
 };
 export const Actions = {
-  create: (url, data, unsafe) => {
+  create: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);
     return privateInstance.post(url, data).then(({ data }) => data);
   },
-  delete: (url, id, unsafe) => {
+  delete: async (url, id, unsafe) => {
     if (unsafe) return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
     return privateInstance.delete(`${url}/${id}`).then(({ data }) => data);
   },
-  edit: (url, data, id, unsafe) => {
+  edit: async (url, data, id, unsafe) => {
     if (unsafe) return publicInstance.put(`${url}${id}`, data).then(({ data }) => data);
     return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
   },
-  post: (url, data, unsafe) => {
+  post: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);
     return privateInstance.post(url, data).then(({ data }) => data);
   },
-  get: (url, unsafe) => {
+  get: async (url, unsafe) => {
     if (unsafe) return publicInstance.get(url).then(({ data }) => data);
     return privateInstance.get(url).then(({ data }) => data);
   },
 
-  put: (url, data, unsafe) => {
+  put: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.put(url, data).then(({ data }) => data);
     return privateInstance.put(url, data).then(({ data }) => data);
   },
-  getOne: (url, id, unsafe) => {
+  getOne: async (url, id, unsafe) => {
     if (unsafe) return publicInstance.get(`${url}${id}`).then(({ data }) => data);
     return privateInstance.get(`${url}${id}`).then(({ data }) => data);
   },
-  getAll: (url, unsafe) => {
+  getAll: async (url, unsafe) => {
     if (unsafe) return publicInstance.get(`${url}`).then(({ data }) => data);
     return privateInstance.get(`${url}`).then(({ data }) => data);
   },
@@ -84,7 +84,6 @@ export const getCurrentUser = async () => {
       try {
         const resp = await privateInstance.get(`/auth/currentUser?token=${token}`);
         if (resp.status === 200) {
-          currentUser = resp.data;
           resolve(resp.data);
         }
       } catch (error) {
@@ -138,9 +137,7 @@ export const EventsApi = {
 
   getcurrentUserEventUser: async (event_id) => {
     let token = await GetTokenUserFirebase();
-
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
-
     let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
@@ -193,7 +190,8 @@ export const EventsApi = {
     return await Actions.get(`/api/events/?filtered=[{"field":"name","value":[%22${eventName}%22]}]`);
   },
   editOne: async (data, id) => {
-    return await Actions.edit('/api/events', data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit('/api/events', data, `${id}?token=${token}`);
   },
   deleteOne: async (id) => {
     return await Actions.delete('/api/events', id);
@@ -224,13 +222,16 @@ export const EventsApi = {
     return await Actions.get(`/api/events/${eventId}/products/${idproduct}`);
   },
   editProduct: async (data, eventId, idproduct) => {
-    return await Actions.put(`/api/events/${eventId}/products/${idproduct}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${eventId}/products/${idproduct}?token=${token}`, data);
   },
   createProducts: async (data, eventId) => {
-    return await Actions.post(`/api/events/${eventId}/products`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${eventId}/products?token=${token}`, data);
   },
   deleteProduct: async (galleryId, eventId) => {
-    return await Actions.delete(`/api/events/${eventId}/products`, galleryId);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${eventId}/products`, `${galleryId}?token=${token}`);
   },
   validPrice: async (eventId, productId) => {
     return await Actions.get(`/api/events/${eventId}/products/${productId}/minimumauctionvalue`);
@@ -251,6 +252,15 @@ export const EventsApi = {
   recoveryPassword: async (eventId, url, email) => {
     return await Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}`, email);
   },
+  //RESTABLECER CONTRASEÑA
+  changePassword: async (eventId, email) => {
+    //URL DE PRUEBAS
+    return await axios.put(`https://apidev.evius.co/api/changeuserpassword`, { email: email, event_id: eventId });
+  },
+  //ACCEDER POR LINK AL CORREO
+  requestLinkEmail: async (eventId, email) => {
+    return await axios.post(`https://apidev.evius.co/api/getloginlink`, { email: email, event_id: eventId });
+  },
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
       `/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,
@@ -261,7 +271,11 @@ export const EventsApi = {
     return await Actions.post(`/api/users/signInWithEmailAndPassword`, data);
   },
   createTemplateEvent: async (eventId, idTemplate) => {
-    return await Actions.put(`/api/events/${eventId}/templateproperties/${idTemplate}/addtemplateporperties`, {});
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(
+      `/api/events/${eventId}/templateproperties/${idTemplate}/addtemplateporperties?token=${token}`,
+      {}
+    );
   },
 };
 export const InvitationsApi = {
@@ -492,7 +506,8 @@ export const OrganizationApi = {
     return await Actions.post('/api/organizations', data);
   },
   editOne: async (data, id) => {
-    return await Actions.edit('/api/organizations', data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit('/api/organizations', data, `${id}?token=${token}`);
   },
   events: async (id) => {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events');
@@ -536,9 +551,11 @@ export const OrganizationApi = {
     return await Actions.get(`/api/organizations/${org}/templateproperties?token=${token}`);
   },
   updateTemplateOrganization: async (orgId, idTemplate, data) => {
-    return await Actions.put(`/api/organizations/${orgId}/templateproperties/${idTemplate}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/organizations/${orgId}/templateproperties/${idTemplate}?token=${token}`, data);
   },
   editMenu: async (data, id) => {
+    let token = await GetTokenUserFirebase();
     return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true`, data);
   },
 };
@@ -591,13 +608,16 @@ export const CertsApi = {
     return await Actions.get(`api/pdfcertificate?content=` + content + '&image=' + image + '&download=1');
   },
   editOne: async (data, id) => {
-    return await Actions.edit('/api/certificates', data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/certificates/${id}?token=${token}`, data);
   },
   deleteOne: async (id) => {
-    return await Actions.delete('/api/certificates', id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/certificates/${id}?token=${token}`);
   },
   create: async (data) => {
-    return await Actions.create(`api/certificates`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`/api/certificates?token=${token}`, data);
   },
   generateCert: async (body) => {
     // eslint-disable-next-line no-unused-vars
@@ -622,16 +642,20 @@ export const NewsFeed = {
     return await Actions.getAll(`api/events/${eventId}/newsfeed?token=${token}`).then(({ data }) => data);
   },
   getOne: async (eventId, idnew) => {
-    return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}?token=${token}`);
   },
   editOne: async (data, id, eventId) => {
-    return await Actions.edit(`api/events/${eventId}/newsfeed`, data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`api/events/${eventId}/newsfeed`, data, `${id}?token=${token}`);
   },
   deleteOne: async (id, eventId) => {
-    return await Actions.delete(`api/events/${eventId}/newsfeed`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${eventId}/newsfeed`, `${id}?token=${token}`);
   },
   create: async (data, eventId) => {
-    return await Actions.create(`api/events/${eventId}/newsfeed`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`api/events/${eventId}/newsfeed?token=${token}`, data);
   },
 };
 
@@ -809,7 +833,8 @@ export const SpeakersApi = {
 
 export const OrganizationPlantillaApi = {
   createTemplate: async (organization, data) => {
-    return await Actions.post(`api/organizations/${organization}/templateproperties`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/organizations/${organization}/templateproperties?token=${token}`, data);
   },
 
   byEvent: async (organization) => {
@@ -817,9 +842,13 @@ export const OrganizationPlantillaApi = {
     return await Actions.get(`api/organizations/${organization}/templateproperties?token=${token}`);
   },
   putOne: async (event, templatepropertie) => {
-    return await Actions.put(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(
+      `api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties?token=${token}`
+    );
   },
   deleteOne: async (template, organization) => {
+    let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/organizations/${organization}/templateproperties`, template);
   },
 };

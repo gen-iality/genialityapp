@@ -73,6 +73,7 @@ function ImageField(rawProps) {
               }}
               errImg={errorMsg}
               {...props}
+              btnRemove={(<></>)}
             />
           </div>
         /* <FormItem

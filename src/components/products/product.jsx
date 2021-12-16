@@ -224,10 +224,11 @@ class Product extends Component {
                      )}
                   />
                   <Column
-                     title='Herramientas'
+                     title='Opciones'
                      key='_id'
                      align='center'
                      fixed='right'
+                     width={150}
                      render={(data, index) => (
                         <Space key={index} size='small'>
                            <Tooltip key={index} placement='topLeft' title='Editar'>

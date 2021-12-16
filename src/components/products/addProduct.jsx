@@ -6,6 +6,7 @@ import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { Actions, EventsApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import EviusReactQuill from '../shared/eviusReactQuill';
 
 export const toolbarEditor = {
@@ -95,7 +96,7 @@ function AddProduct(props) {
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       Axios.all(uploaders).then(() => {
-        console.log('PATH===>', path[0]);
+        /* console.log('PATH===>', path[0]); */
         option === 'Imagen' ? setPicture(path[0]) : setOptionalPicture(path[0]);
         option === 'Imagen' ? setImgFile(null) : setImgFileOptional(null);
 
@@ -364,6 +365,7 @@ function AddProduct(props) {
           />
         </Col>
       </Row>
+      <BackTop />
     </Form>
   );
 }
