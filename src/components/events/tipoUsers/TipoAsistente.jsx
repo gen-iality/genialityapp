@@ -39,37 +39,41 @@ const TipoAsistente = (props) => {
   };
 
   const onSubmit = async () => {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
-    });
-    try {
-      if (locationState.edit) {
-        /* const data = {
-          name: tipoAsistente.name
-        } */
-        await RolAttApi.editOne(tipoAsistente, locationState.edit, eventID);
-      } else {
-        const data = {
-          name: tipoAsistente.name,
-          event_id: eventID,
+    if(tipoAsistente.name) {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras se guarda la información..</>,
+      });
+      try {
+        if (locationState.edit) {
+          /* const data = {
+            name: tipoAsistente.name
+          } */
+          await RolAttApi.editOne(tipoAsistente, locationState.edit, eventID);
+        } else {
+          const data = {
+            name: tipoAsistente.name,
+            event_id: eventID,
+          }
+          await RolAttApi.create(data, eventID);
         }
-        await RolAttApi.create(data, eventID);
-      }
-
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Información guardada correctamente!</>,
-      });
-      history.push(`${props.matchUrl}/tipo-asistentes`);
-    } catch (e) {
-      message.destroy(loading.key);
-      message.open({
-        type: 'error',
-        content: handleRequestError(e).message,
-      });
+  
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Información guardada correctamente!</>,
+        });
+        history.push(`${props.matchUrl}/tipo-asistentes`);
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
+      } 
+    } else {
+      message.error('El nombre es requerido');
     }
   };
 
@@ -117,7 +121,14 @@ const TipoAsistente = (props) => {
 
       <Row justify='center' wrap gutter={18}>
         <Col>
-          <Form.Item label={'Nombre del rol'} >
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Nombre del rol <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input 
               name={'name'} 
               placeholder={'Nombre del rol'} 
