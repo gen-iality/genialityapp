@@ -539,7 +539,7 @@ class CheckAgenda extends Component {
         )}
         <Header
           title={`CheckIn: ${
-            this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name
+            this.props.location.state ? this.props.location.state.name : this.props.location.state.item.name
           }`}
           back
         />

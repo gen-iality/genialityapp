@@ -3,9 +3,9 @@ class Service {
     this.firestore = instance;
     //this.validateHasVideoconference=this.validateHasVideoconference.bind(this);
   }
- 
 
-  validateHasVideoconference = (event_id, activity_id) => {    // eslint-disable-next-line no-unused-vars
+  validateHasVideoconference = (event_id, activity_id) => {
+    // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       if (!event_id || !activity_id) resolve(false);
       this.firestore
@@ -13,37 +13,28 @@ class Service {
         .doc(event_id)
         .collection('activities')
         .doc(activity_id)
-        .get().then((activity) => {
-          console.log("ACTIVITY==>",activity)
-          if (!activity.exists) {            
-            console.log("ACTIVITY UPDATE==>",activity)
+        .get()
+        .then((activity) => {
+          console.log('ACTIVITY==>', activity);
+          if (!activity.exists) {
+            console.log('ACTIVITY UPDATE==>', activity);
             resolve(false);
-          }        
-          console.log("ACTIVITY UPDATE==>",activity)
+          }
+          console.log('ACTIVITY UPDATE==>', activity);
           resolve(true);
-          
         });
     });
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
-  
     console.log(event_id, activity_id, roomInfo, tabs, 'service');
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
-    const {
-      roomState,
-      habilitar_ingreso,
-      platform,
-      meeting_id,
-      isPublished,
-      host_id,
-      host_name      
-    } = roomInfo;
+    const { roomState, habilitar_ingreso, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
-   
-      this.validateHasVideoconference (event_id, activity_id).then((existActivity) => {
+      this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
         if (existActivity) {
+          // console.log('avalibleGames', avalibleGames);
           this.firestore
             .collection('events')
             .doc(event_id)
@@ -54,10 +45,10 @@ class Service {
               platform,
               meeting_id,
               tabs,
-              isPublished,
+              isPublished: isPublished ? isPublished : false,
               host_id,
               host_name,
-              avalibleGames:roomInfo?.avalibleGames||[],
+              avalibleGames: roomInfo?.avalibleGames || [],
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
