@@ -3,7 +3,7 @@ class Service {
     this.firestore = instance;
     //this.validateHasVideoconference=this.validateHasVideoconference.bind(this);
   }
- 
+
 
   validateHasVideoconference = (event_id, activity_id) => {    // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
@@ -14,20 +14,20 @@ class Service {
         .collection('activities')
         .doc(activity_id)
         .get().then((activity) => {
-          console.log("ACTIVITY==>",activity)
-          if (!activity.exists) {            
-            console.log("ACTIVITY UPDATE==>",activity)
+          console.log("ACTIVITY==>", activity)
+          if (!activity.exists) {
+            console.log("ACTIVITY UPDATE==>", activity)
             resolve(false);
-          }        
-          console.log("ACTIVITY UPDATE==>",activity)
+          }
+          console.log("ACTIVITY UPDATE==>", activity)
           resolve(true);
-          
+
         });
     });
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
-  
+
     console.log(event_id, activity_id, roomInfo, tabs, 'service');
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
     const {
@@ -42,9 +42,10 @@ class Service {
     } = roomInfo;
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
-   
-      this.validateHasVideoconference (event_id, activity_id).then((existActivity) => {
+
+      this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
         if (existActivity) {
+          console.log("avalibleGames", avalibleGames)
           this.firestore
             .collection('events')
             .doc(event_id)
@@ -55,10 +56,10 @@ class Service {
               platform,
               meeting_id,
               tabs,
-              isPublished,
+              isPublished: isPublished ? isPublished : false,
               host_id,
               host_name,
-              avalibleGames,
+              avalibleGames: avalibleGames ? avalibleGames : false
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {

@@ -24,7 +24,7 @@ const formLayout = {
 const NewCE = (props) => {
   const history = useHistory();
   const locationState = props.location.state;
-  const [notice, setNotice] = useState({time: moment(new Date())});
+  const [notice, setNotice] = useState(null);
 
   useEffect(() => {
     if (locationState.edit) {
@@ -115,14 +115,14 @@ const NewCE = (props) => {
         type: 'loading',
         content: <> Por favor espere miestras se guarda la información..</>,
       });
-  
+
       try {
         if (locationState.edit) {
           await NewsFeed.editOne(notice, locationState.edit, props.eventId);
         } else {
           await NewsFeed.create(notice, props.eventId);
         }
-  
+
         message.destroy(loading.key);
         message.open({
           type: 'success',
@@ -180,17 +180,16 @@ const NewCE = (props) => {
   return (
     <Form onFinish={onSubmit} {...formLayout} initialValues={notice}>
       <Header title={'Noticia'} back save form edit={locationState.edit} remove={remove} />
-      
+
       <Row justify='center' wrap gutter={12}>
         <Col span={16}>
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El título es requerido' }]}
-          >
+            rules={[{ required: true, message: 'El título es requerido' }]}>
             <Input
               name={'title'}
               value={notice && notice.title}
@@ -199,31 +198,28 @@ const NewCE = (props) => {
             />
           </Form.Item>
 
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Subtítulo <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El subtítulo es requerido' }]}
-          >
+            rules={[{ required: true, message: 'El subtítulo es requerido' }]}>
             <EviusReactQuill
               id='description_short'
               name={'description_short'}
-              data={(notice && notice.description_short) || ''}
-              //modules={toolbarEditor}
+              data={notice && notice.description_short ? notice.description_short : ''}
               handleChange={(e) => changeDescription(e, 'description_short')}
             />
           </Form.Item>
 
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Noticia <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'La noticia es requerida' }]}
-          >
+            rules={[{ required: true, message: 'La noticia es requerida' }]}>
             <EviusReactQuill
               id='description_complete'
               name={'description_complete'}
@@ -233,14 +229,13 @@ const NewCE = (props) => {
             />
           </Form.Item>
 
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Imagen <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'La imagen es requerida' }]}
-          >
+            rules={[{ required: true, message: 'La imagen es requerida' }]}>
             <Card style={{ textAlign: 'center' }}>
               <Form.Item noStyle>
                 <ImageInput
