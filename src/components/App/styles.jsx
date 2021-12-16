@@ -10,6 +10,7 @@ import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input,
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -613,6 +614,7 @@ class Styles extends Component {
               ))}
             </Col>
           </Row>
+          <BackTop />
         </Form>
         {timeout && <LogOut />}
       </React.Fragment>
