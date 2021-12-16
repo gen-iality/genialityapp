@@ -55,9 +55,14 @@ const EventSectionRoutes = (props) => {
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
     }
 
-    if (props.cEventUser?.value == null && props.cEventUser?.status == 'LOADED') {
+    if (
+      props.cEventUser?.value == null &&
+      props.cEventUser?.status == 'LOADED' &&
+      typeModal !== 'registerForTheEvent'
+    ) {
       console.log('1. ingreso aca a type modal');
-      handleChangeTypeModal('registerForTheEvent');
+      //handleChangeTypeModal('registerForTheEvent');
+      handleChangeTypeModal('preregisterMessage');
     } else if (props.cEventUser?.value !== null && props.cEventUser?.status == 'LOADED' && typeModal !== 'update') {
       handleChangeTypeModal(null);
     }

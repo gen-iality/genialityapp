@@ -156,8 +156,9 @@ const Landing = (props) => {
       {/* <ModalFeedback /> */}
       {/* <ModalNoRegister /> */}
       <ModalAuth organization='event' />
-      <ModalLoginHelpers /> 
+      <ModalLoginHelpers />
       <ModalPermission />
+      <ModalFeedback />
       {/*update: modal de actualizar || register: modal de registro */}
       {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
