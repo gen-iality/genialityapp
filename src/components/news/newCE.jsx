@@ -24,7 +24,7 @@ const formLayout = {
 const NewCE = (props) => {
   const history = useHistory();
   const locationState = props.location.state;
-  const [notice, setNotice] = useState(null);
+  const [notice, setNotice] = useState({});
 
   useEffect(() => {
     if (locationState.edit) {
@@ -101,15 +101,43 @@ const NewCE = (props) => {
   };
 
   const onSubmit = async () => {
-    if (notice.description === '') {
-      message.error('La noticia es requerida');
-    } else if (notice.descriptionShort === '') {
-      message.error('El subtítulo es requerido');
-    } else if (notice.picture === null) {
-      message.error('La imagen es requerida');
-    } else if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
-      message.error('La fecha es requerida');
+    let values = {};
+    if (notice.title === '' || !notice.title) {
+      message.error('El título es requerido');
+      values.title = false;
     } else {
+      values.title = true;
+    }
+    if (notice.description_complete === '' || notice.description_complete === '<p><br></p>' || !notice.description_complete) {
+      message.error('La noticia es requerida');
+      values.description_complete = false;
+    } else {
+      values.description_complete = true;
+    }
+    if (notice.description_short === '' || notice.description_short === '<p><br></p>' || !notice.description_short) {
+      message.error('El subtítulo es requerido');
+      values.description_short = false;
+    } else {
+      values.description_short = true;
+    }
+    if (notice.picture === null || !notice.picture) {
+      message.error('La imagen es requerida');
+      values.picture = false;
+    } else {
+      values.picture = true;
+    }
+    if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
+      message.error('La fecha es requerida');
+      values.fecha = false;
+    } else {
+      values.fecha = true;
+    }
+
+    if(values && values.title &&
+      values.description_complete &&
+      values.description_short &&
+      values.picture &&
+      values.fecha) {
       const loading = message.open({
         key: 'loading',
         type: 'loading',
