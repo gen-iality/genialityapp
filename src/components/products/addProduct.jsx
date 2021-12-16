@@ -6,6 +6,7 @@ import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { Actions, EventsApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import EviusReactQuill from '../shared/eviusReactQuill';
 
 export const toolbarEditor = {
@@ -364,6 +365,7 @@ function AddProduct(props) {
           />
         </Col>
       </Row>
+      <BackTop />
     </Form>
   );
 }

@@ -42,34 +42,40 @@ const Document = ( props ) => {
 
   const onSubmit = async () => {
     if(folder) {
-      console.log('here', folder);
       setDocument({...document, type: 'folder', folder});
     }
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
-    });
 
-    try {
-      if(locationState.edit) {
-        await DocumentsApi.editOne(!folder ? document : {title: document.title, type: 'folder', folder}, locationState.edit, props.event._id);
-      } else {
-        await DocumentsApi.create(!folder ? document : {title: document.title, type: 'folder', folder}, props.event._id);
-      }     
-    
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Información guardada correctamente!</>,
+    if(!document.title) {
+      message.error('El título es requerido');
+    } else if(!files && document.type !== 'folder') {
+      message.error('El archivo es requerido');
+    } else {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras se guarda la información..</>,
       });
-      history.push(`${props.matchUrl}`);
-    } catch (e) {
-      message.destroy(loading.key);
-      message.open({
-        type: 'error',
-        content: handleRequestError(e).message,
-      });
+  
+      try {
+        if(locationState.edit) {
+          await DocumentsApi.editOne(!folder ? document : {title: document.title, type: 'folder', folder}, locationState.edit, props.event._id);
+        } else {
+          await DocumentsApi.create(!folder ? document : {title: document.title, type: 'folder', folder}, props.event._id);
+        }     
+      
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Información guardada correctamente!</>,
+        });
+        history.push(`${props.matchUrl}`);
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
+      }
     }
   }
 
@@ -139,7 +145,7 @@ const Document = ( props ) => {
   };
 
   const onHandlerFile = async (e) => {
-    console.log(e.file.originFileObj);
+    /* console.log(e.file.originFileObj); */
     setDocumentList(e.fileList);
     
     const ref = firebase.storage().ref();
@@ -153,10 +159,10 @@ const Document = ( props ) => {
     setExtention(name.split('.').pop());
 
     /* this.setState({ fileName: name }); */
-    console.log(fileName, name);
+    /* console.log(fileName, name); */
     let uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files)
     /* setUploadTask(uploadTaskRef); */
-    console.log(uploadTaskRef);
+    /* console.log(uploadTaskRef); */
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
     uploadTaskRef.on(firebase.storage.TaskEvent.STATE_CHANGED, stateUploadFile, wrongUpdateFiles, succesUploadFile(uploadTaskRef));
 
@@ -232,7 +238,14 @@ const Document = ( props ) => {
               onChange={(e) => setFolder(e.target.checked)}
             />
           </Form.Item>
-          <Form.Item label={'Título'} >
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Título <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El título es requerido' }]}
+          >
             <Input 
               name={'title'}
               placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
@@ -242,7 +255,14 @@ const Document = ( props ) => {
           </Form.Item>
           {
             !folder && (
-              <Form.Item label={'Archivo'} >
+              <Form.Item  
+                label={
+                  <label style={{ marginTop: '2%' }} className='label'>
+                    Archivo <label style={{ color: 'red' }}>*</label>
+                  </label>
+                }
+              rules={[{ required: true, message: 'El archivo es requerido' }]}
+              >
                 <Upload
                   name={'file'}
                   type='file'

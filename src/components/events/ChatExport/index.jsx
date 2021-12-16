@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Table as TableA, Tooltip } from 'antd';
-import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip } from 'antd';
+import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
@@ -10,7 +10,7 @@ import 'firebase/database';
 import moment from 'moment';
 import { getColumnSearchProps } from 'components/speakers/getColumnSearch';
 import Header from 'antdComponents/Header';
-import { Table } from 'antd';
+import Table from 'antdComponents/Table';
 
 var chatFirebase = app.initializeApp(
   {
@@ -202,10 +202,15 @@ const ChatExport = ({ eventId, event }) => {
         header={columns}
         list={datamsjevent}
         loading={loading}
-        exportData
-        fileName={'ReportChats'}
+        /* exportData
+        fileName={'ReportChats'} */
         titleTable={
           <Row gutter={[8, 8]} wrap>
+            <Col>
+              <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
+                Exportar
+              </Button>
+            </Col>
             <Col>
               <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
                 Eliminar Chat

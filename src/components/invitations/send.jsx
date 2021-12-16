@@ -13,6 +13,7 @@ import Quill from 'react-quill';
 import { Button, Checkbox, Row, Space, Col, Form, Input, Modal } from 'antd';
 Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
 
 const formLayout = {
@@ -394,6 +395,7 @@ class SendRsvp extends Component {
             </p>
           </Modal>
           {timeout && <LogOut />}
+          <BackTop />
         </Form>
       </>
     );

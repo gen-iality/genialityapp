@@ -20,6 +20,7 @@ import DateEvent from './dateEvent';
 import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber, Badge, Space } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
 
@@ -627,7 +628,14 @@ class General extends Component {
             <Tabs.TabPane tab='General' key='1'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
-                  <Form.Item label={'Nombre'} >
+                  <Form.Item 
+                    label={
+                      <label style={{ marginTop: '2%' }} className='label'>
+                        Nombre <label style={{ color: 'red' }}>*</label>
+                      </label>
+                    }
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}
+                  >
                     <Input
                       name={'name'}
                       placeholder={'Nombre del evento'}
@@ -1000,6 +1008,7 @@ class General extends Component {
                   </Card>
                 </Col>
               </Row>
+              <BackTop />
             </Tabs.TabPane>
             <Tabs.TabPane tab='Avanzado' key='2'>
               <Row justify='center' wrap gutter={[8, 8]}>

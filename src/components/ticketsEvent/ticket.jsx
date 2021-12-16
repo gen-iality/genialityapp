@@ -38,35 +38,39 @@ const Ticket = (props) => {
   };
 
   const onSubmit = async () => {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
-    });
-    try {
-      if (locationState.edit) {
-        await eventTicketsApi.update(eventID, ticket, locationState.edit);
-      } else {
-        const data = {
-          title: ticket.title,
-          allowed_to_vote: ticket.allowed_to_vote,
-          event_id: eventID,
+    if(ticket.title) {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras se guarda la información..</>,
+      });
+      try {
+        if (locationState.edit) {
+          await eventTicketsApi.update(eventID, ticket, locationState.edit);
+        } else {
+          const data = {
+            title: ticket.title,
+            allowed_to_vote: ticket.allowed_to_vote,
+            event_id: eventID,
+          }
+          await eventTicketsApi.create(eventID, data);
         }
-        await eventTicketsApi.create(eventID, data);
+  
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Información guardada correctamente!</>,
+        });
+        history.push(`${props.matchUrl}/ticketsEvent`);
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
       }
-
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Información guardada correctamente!</>,
-      });
-      history.push(`${props.matchUrl}/ticketsEvent`);
-    } catch (e) {
-      message.destroy(loading.key);
-      message.open({
-        type: 'error',
-        content: handleRequestError(e).message,
-      });
+    } else {
+      message.error('El título es requerido');
     }
   };
 
@@ -115,7 +119,14 @@ const Ticket = (props) => {
 
       <Row justify='center' wrap gutter={18}>
         <Col>
-          <Form.Item label={'Título'} >
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Título <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El título es requerido' }]}
+          >
             <Input 
               name={'title'} 
               placeholder={'Título del ticket'} 

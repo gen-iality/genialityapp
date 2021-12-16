@@ -9,6 +9,7 @@ import Axios from 'axios';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -23,7 +24,7 @@ const formLayout = {
 const NewCE = (props) => {
   const history = useHistory();
   const locationState = props.location.state;
-  const [notice, setNotice] = useState();
+  const [notice, setNotice] = useState({time: moment(new Date())});
 
   useEffect(() => {
     if (locationState.edit) {
@@ -100,31 +101,41 @@ const NewCE = (props) => {
   };
 
   const onSubmit = async () => {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
-    });
-
-    try {
-      if (locationState.edit) {
-        await NewsFeed.editOne(notice, locationState.edit, props.eventId);
-      } else {
-        await NewsFeed.create(notice, props.eventId);
+    if (notice.description === '') {
+      message.error('La noticia es requerida');
+    } else if (notice.descriptionShort === '') {
+      message.error('El subtítulo es requerido');
+    } else if (notice.picture === null) {
+      message.error('La imagen es requerida');
+    } else if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
+      message.error('La fecha es requerida');
+    } else {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras se guarda la información..</>,
+      });
+  
+      try {
+        if (locationState.edit) {
+          await NewsFeed.editOne(notice, locationState.edit, props.eventId);
+        } else {
+          await NewsFeed.create(notice, props.eventId);
+        }
+  
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Información guardada correctamente!</>,
+        });
+        history.push(`${props.match.url}`);
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
       }
-
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Información guardada correctamente!</>,
-      });
-      history.push(`${props.match.url}`);
-    } catch (e) {
-      message.destroy(loading.key);
-      message.open({
-        type: 'error',
-        content: handleRequestError(e).message,
-      });
     }
   };
 
@@ -172,7 +183,14 @@ const NewCE = (props) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col span={16}>
-          <Form.Item label={'Título'}>
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Título <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El título es requerido' }]}
+          >
             <Input
               name={'title'}
               value={notice && notice.title}
@@ -181,7 +199,14 @@ const NewCE = (props) => {
             />
           </Form.Item>
 
-          <Form.Item label={'Subtítulo'}>
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Subtítulo <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El subtítulo es requerido' }]}
+          >
             <EviusReactQuill
               id='description_short'
               name={'description_short'}
@@ -191,7 +216,14 @@ const NewCE = (props) => {
             />
           </Form.Item>
 
-          <Form.Item label={'Noticia'}>
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Noticia <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'La noticia es requerida' }]}
+          >
             <EviusReactQuill
               id='description_complete'
               name={'description_complete'}
@@ -201,7 +233,14 @@ const NewCE = (props) => {
             />
           </Form.Item>
 
-          <Form.Item label={'Imagen'}>
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Imagen <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'La imagen es requerida' }]}
+          >
             <Card style={{ textAlign: 'center' }}>
               <Form.Item noStyle>
                 <ImageInput
@@ -268,6 +307,7 @@ const NewCE = (props) => {
           </Form.Item>
         </Col>
       </Row>
+      <BackTop />
     </Form>
   );
 };

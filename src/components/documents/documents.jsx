@@ -33,6 +33,7 @@ const Documents = ( props ) => {
       downloadFile
       search
       setColumnsData={setColumnsData}
+      widthAction={150}
     />
   )
 }
