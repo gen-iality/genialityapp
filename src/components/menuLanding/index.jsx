@@ -3,6 +3,7 @@ import { Typography, Select, Card, Input, Button, Col, Row, message, Spin, Form,
 import { Actions, OrganizationApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Header from '../../antdComponents/Header';
+import BackTop from '../../antdComponents/BackTop';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -423,6 +424,7 @@ class menuLanding extends Component {
               ))
             }
           </Row>
+          <BackTop />
         </Form>
         
         
