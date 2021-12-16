@@ -54,7 +54,6 @@ const Headers = (props) => {
   const modalClose = () => {
     setdataGeneral({ ...dataGeneral, modalVisible: false, tabModal: '' });
   };
-
   const logout = () => {
     app
       .auth()
@@ -176,7 +175,6 @@ const Headers = (props) => {
 
   useEffect(() => {
     if (cUser.value === undefined || cUser.value === null) return;
-    console.log('debu render useEffect ==>', cUser);
     LoadMineOrganizations();
     LoadCurrentUser();
   }, [cUser?.value]);
@@ -260,17 +258,16 @@ const Headers = (props) => {
                 />
               )
             )}
-
-            {(window.location.href.toString().includes('events') ||
+            {/* {(window.location.href.toString().includes('events') ||
               window.location.href.toString().split('/').length == 4) &&
-              !window.location.href.toString().includes('organization') && (
-                <ModalAuth
-                  tab={dataGeneral.tabModal}
-                  closeModal={modalClose}
-                  organization='register'
-                  visible={dataGeneral.modalVisible}
-                />
-              )}
+              !window.location.href.toString().includes('organization') && ( */}
+            <ModalAuth
+              tab={dataGeneral.tabModal}
+              closeModal={modalClose}
+              organization='register'
+              visible={dataGeneral.modalVisible}
+            />
+            {/* )} */}
             {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
           </Row>
         </Menu>

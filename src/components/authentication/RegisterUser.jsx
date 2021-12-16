@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload } from 'antd';
+import { Form, Input, Button, Space, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
+import createNewUser from './ModalsFunctions/createNewUser';
+import ModalFeedback from './ModalFeedback';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const ruleEmail = [
@@ -23,20 +25,76 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   ];
   const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
 
+  const [form] = Form.useForm();
+  let [imageAvatar, setImageAvatar] = useState(null);
+  let [modalInfo, setModalInfo] = useState(null);
+  let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
+
+  /** request para no mostrar el error que genera el component upload de antd */
+  const dummyRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess('ok');
+    }, 0);
+  };
+
+  function resetFields() {
+    form.resetFields();
+    setImageAvatar(null);
+  }
+
+  const onFinishCreateNewUser = (values) => {
+    const newValues = {
+      ...values,
+      picture: imageAvatar,
+      resetFields,
+      setModalInfo,
+      setOpenOrCloseTheModalFeedback,
+    };
+    createNewUser(newValues);
+  };
   return (
-    <Form autoComplete='off' layout='vertical' style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+    <Form
+      onFinish={onFinishCreateNewUser}
+      form={form}
+      autoComplete='off'
+      layout='vertical'
+      style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+      {openOrCloseTheModalFeedback && (
+        <ModalFeedback
+          status={modalInfo.status}
+          title={modalInfo.title}
+          description={modalInfo.description}
+          openOrCloseTheModalFeedback={openOrCloseTheModalFeedback}
+          setOpenOrCloseTheModalFeedback={setOpenOrCloseTheModalFeedback}
+        />
+      )}
       {/* <Typography.Title level={4} type='secondary'>
                       Nueva organizacion
                     </Typography.Title> */}
       <Form.Item>
         <ImgCrop rotate shape='round'>
-          <Upload accept='image/png,image/jpeg' multiple={false} listType='picture' maxCount={1}>
-            <Button type='primary' shape='circle' style={{ height: '125px', width: '125px' }}>
-              <Space direction='vertical'>
-                <PictureOutlined style={{ fontSize: '40px' }} />
-                <span style={{ fontSize: '14px' }}>Subir imagen</span>
-              </Space>
-            </Button>
+          <Upload
+            accept='image/png,image/jpeg'
+            onChange={(file) => {
+              if (file.fileList.length > 0) {
+                setImageAvatar(file.fileList);
+              } else {
+                setImageAvatar(null);
+              }
+            }}
+            customRequest={dummyRequest}
+            multiple={false}
+            listType='picture'
+            maxCount={1}
+            fileList={imageAvatar}>
+            {!imageAvatar && (
+              <Button type='primary' shape='circle' style={{ height: '150px', width: '150px' }}>
+                <Space direction='vertical'>
+                  <PictureOutlined style={{ fontSize: '40px' }} />
+                  Subir logo
+                </Space>
+              </Button>
+            )}
           </Upload>
         </ImgCrop>
       </Form.Item>
@@ -68,7 +126,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       </Form.Item>
       <Form.Item
         label={'Nombre'}
-        name='name'
+        name='names'
         hasFeedback
         style={{ marginBottom: '10px', textAlign: 'left' }}
         rules={ruleName}>

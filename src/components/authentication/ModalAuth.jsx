@@ -359,7 +359,7 @@ const ModalAuth = (props) => {
                     stylePaddingMobile={stylePaddingMobile}
                     stylePaddingDesktop={stylePaddingDesktop}
                   />
-                  {props.organization != 'register' && <FormComponent />}
+                  {/* {props.organization != 'register' && <FormComponent />}
                   {props.organization == 'register' && (
                     <FormComponent
                       conditionalsOther={[]}
@@ -372,7 +372,7 @@ const ModalAuth = (props) => {
                       loadingregister={loading}
                       errorRegisterUser={errorRegisterUSer}
                     />
-                  )}
+                  )} */}
                 </div>
               </TabPane>
             )}

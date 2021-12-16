@@ -14,7 +14,7 @@ import React from 'react';
  * Cuenta creada -> status: success
  */
 
-const ModalFeedback = ({ status, title, description }) => {
+const ModalFeedback = ({ status, title, description, setOpenOrCloseTheModalFeedback, openOrCloseTheModalFeedback }) => {
   // status -> warning, info, success, error
   status = status ? status : 'info';
 
@@ -31,7 +31,8 @@ const ModalFeedback = ({ status, title, description }) => {
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={true}>
+      visible={openOrCloseTheModalFeedback}
+      onCancel={() => setOpenOrCloseTheModalFeedback(!openOrCloseTheModalFeedback)}>
       <Result
         status={status}
         title={title}
