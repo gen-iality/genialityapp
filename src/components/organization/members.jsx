@@ -37,6 +37,8 @@ function OrgMembers(props) {
         _id: membersData._id,
         created_at: membersData.created_at,
         updated_at: membersData.updated_at,
+        names: membersData.user.name || membersData.user.names,
+        email: membersData.user.email,
         ...membersData.properties,
       };
 

@@ -7,6 +7,7 @@ import { SurveysApi } from '../../helpers/request';
 import { getTotalVotes } from './services';
 
 import { List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from 'antd';
+import Header from '../../antdComponents/Header';
 
 class TriviaReport extends Component {
   constructor(props) {
@@ -68,7 +69,43 @@ class TriviaReport extends Component {
     if (!loading)
       return (
         <Fragment>
-          <EventContent title='Encuestas' closeAction={this.goBack}>
+          <Header 
+            title={'Detalle de la Encuesta'}
+            back
+          />
+
+          {surveyQuestions.length > 0 ? (
+            <List
+              grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 2,
+                lg: 3,
+                xl: 3,
+                xxl: 3
+              }}
+              dataSource={surveyQuestions}
+              renderItem={(item) => (
+                <List.Item>
+                  <Link
+                    to={{
+                      pathname: `${this.props.matchUrl}/report/${item.id}`,
+                      state: { titleQuestion: item.title, surveyId: location.state.report }
+                    }}>
+                    <Card title={item.title ? item.title : 'Pregunta sin Titulo'} hoverable>
+                      {item.quantityResponses === 0
+                        ? 'No se ha respondido aun la pregunta'
+                        : `${item.quantityResponses} usuarios han respondido la pregunta`}
+                    </Card>
+                  </Link>
+                </List.Item>
+              )}
+            />
+          ) : (
+            <Empty />
+          )}
+          {/* <EventContent title='Encuestas' closeAction={this.goBack}>
             {surveyQuestions.length > 0 ? (
               <Fragment>
                 <Row justify='end' style={{ marginBottom: 10 }}>
@@ -115,11 +152,11 @@ class TriviaReport extends Component {
             ) : (
               <Empty />
             )}
-          </EventContent>
+          </EventContent> */}
         </Fragment>
       );
 
-    return <Spin></Spin>;
+    return <Spin></Spin>
   }
 }
 

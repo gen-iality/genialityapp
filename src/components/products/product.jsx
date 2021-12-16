@@ -110,7 +110,7 @@ class Product extends Component {
          content: 'Está seguro de borrar este producto?',
          onOk() {
             return new Promise((resolve, reject) => {
-               EventsApi.deleteProduct(data.event_id, data._id).then((res) => {
+               EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
                   self.fetchItem();
                   if (res === 1) {
                      message.success('Producto eliminado correctamente');

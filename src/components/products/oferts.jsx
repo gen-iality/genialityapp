@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { withRouter } from 'react-router';
 import API from '../../helpers/request';
+import Header from '../../antdComponents/Header';
 
 const OfertProduts=(props)=>{
     const goBack = () => props.history.goBack();
@@ -60,14 +61,21 @@ const OfertProduts=(props)=>{
       ];
     return(
         <>
-        <Row>
+          <Header 
+            title={'Ofertas de la obra'}
+            back
+          />
+          <Table 
+            columns={columns}
+            dataSource={oferts.length>0 && oferts}
+          />
+          {/* <Row>
             <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
             <span style={{ marginLeft: 30 }}>Ofertas de la obra</span>
-         </Row>
-         {console.log("OFERTAS==>",oferts)}
-         <Row style={{marginTop:30}}>
-         <Table style={{width:'100%'}} columns={columns} dataSource={oferts.length>0 && oferts} />
-         </Row>
+          </Row>
+          <Row style={{marginTop:30}}>
+            <Table style={{width:'100%'}} columns={columns} dataSource={oferts.length>0 && oferts} />
+          </Row> */}
 
         </>        
     );

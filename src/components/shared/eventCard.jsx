@@ -59,7 +59,7 @@ class EventCard extends Component {
                   <img
                     className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
-                    style={{ objectFit: 'cover', height: '180px' }}
+                    style={{ objectFit: 'cover', height: '180px', width: '100%' }}
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
                     alt='Evius.co'
                   />
@@ -69,7 +69,7 @@ class EventCard extends Component {
                   <img
                     className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
-                    style={{ objectFit: 'cover', height: '180px' }}
+                    style={{ objectFit: 'cover', height: '180px', width: '100%' }}
                     src={
                       event.styles
                         ? event.styles.banner_image && event.styles.banner_image !== undefined
