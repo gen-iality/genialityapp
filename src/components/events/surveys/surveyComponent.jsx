@@ -206,7 +206,7 @@ function SurveyComponent(props) {
                surveyData.publish === true) ? (
                <div style={{ display: showOrHideSurvey ? 'block' : 'none' }}>
                   {initialSurveyModel && (
-                     <div className='animate__animated animate__fadeInBottomLeft notranslate'>{/* animate__bounceInDown */}
+                     <div className='animate__animated animate__backInUp notranslate'>{/* animate__bounceInDown */}
                         {/* {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
                            <div
                               className='survy-comodin'
