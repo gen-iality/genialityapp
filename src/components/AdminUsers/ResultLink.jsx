@@ -1,10 +1,11 @@
 import React from 'react';
 import { Spin, Result, Button, Typography, Grid } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import logo from '../../logo.svg';
 
 const { useBreakpoint } = Grid;
 
-const ResultLink = ({ status, data }) => {
+const ResultLink = ({ status, data, event }) => {
   const screens = useBreakpoint();
   // statust -> loading || error
   status = status ? status : 'loading';
@@ -30,6 +31,20 @@ const ResultLink = ({ status, data }) => {
           height: `${screens.xs ? '80%' : '70%'}`,
           borderRadius: '25px',
         }}>
+        <img
+          onClick={() => {
+            window.location.href = `${window.location.origin}`;
+          }}
+          style={{
+            cursor: 'pointer',
+            height: `${screens.xs ? '20px' : '30px'}`,
+            position: 'absolute',
+            bottom: `${screens.xs ? '4%' : '6%'}`,
+            // right: `${screens.xs ? '10%' : '22%'}`,
+          }}
+          src={logo}
+          alt='logo'
+        />
         <Result
           icon={status === 'loading' && <LoadingOutlined />}
           status={status === 'loading' ? null : 'error'}
@@ -55,10 +70,22 @@ const ResultLink = ({ status, data }) => {
             status === 'loading'
               ? null
               : [
-                  <Button size='large' type='primary' key='goToEvent'>
+                  <Button
+                    onClick={() => {
+                      window.location.href = `${window.location.origin}/landing/${event}`;
+                    }}
+                    size='large'
+                    type='primary'
+                    key='goToEvent'>
                     Ir al evento
                   </Button>,
-                  <Button size='large' type='text' key='goToEvius'>
+                  <Button
+                    onClick={() => {
+                      window.location.href = `${window.location.origin}`;
+                    }}
+                    size='large'
+                    type='text'
+                    key='goToEvius'>
                     Ir a Evius
                   </Button>,
                 ]

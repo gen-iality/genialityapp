@@ -6,6 +6,7 @@ import ResultLink from './ResultLink';
 
 const WithCode = () => {
   const [email, setEmail] = useState();
+  const [event, setEvent] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -15,6 +16,7 @@ const WithCode = () => {
     const event = params.get('event_id');
     if (email) {
       setEmail(email);
+      setEvent(event);
       loginWithCode();
     }
     async function loginWithCode() {
@@ -40,7 +42,13 @@ const WithCode = () => {
   }, []);
   return (
     <>
-      {loading ? <ResultLink status='loading' data={email} /> : error ? <ResultLink status='error' data={email} /> : ''}
+      {loading ? (
+        <ResultLink status='loading' data={email} />
+      ) : error ? (
+        <ResultLink status='error' data={email} event={event} />
+      ) : (
+        ''
+      )}
     </>
   );
 };
