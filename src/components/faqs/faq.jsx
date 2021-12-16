@@ -19,7 +19,7 @@ const Faq = (props) => {
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
-  const [faq, setFaq] = useState();
+  const [faq, setFaq] = useState({});
 
   useEffect(() => {
     if (locationState.edit) {
@@ -39,31 +39,35 @@ const Faq = (props) => {
   };
 
   const onSubmit = async () => {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
-    });
+    if(faq.content && faq.title) {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras se guarda la información..</>,
+      });
 
-    try {
-      if (locationState.edit) {
-        await FaqsApi.editOne(faq, locationState.edit, eventID);
-      } else {
-        await FaqsApi.create(faq, eventID);
+      try {
+        if (locationState.edit) {
+          await FaqsApi.editOne(faq, locationState.edit, eventID);
+        } else {
+          await FaqsApi.create(faq, eventID);
+        }
+
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Información guardada correctamente!</>,
+        });
+        history.push(`${props.matchUrl}/faqs`);
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
       }
-
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Información guardada correctamente!</>,
-      });
-      history.push(`${props.matchUrl}/faqs`);
-    } catch (e) {
-      message.destroy(loading.key);
-      message.open({
-        type: 'error',
-        content: handleRequestError(e).message,
-      });
+    } else {
+      message.error('El título y contenido son requeridos');
     }
   };
 
@@ -125,7 +129,14 @@ const Faq = (props) => {
 
       <Row justify='center' wrap gutter={12}>
         <Col>
-          <Form.Item label={'Título'}>
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Título <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El título es requerido' }]}
+          >
             <Input
               value={faq && faq.title}
               name={'title'}
@@ -133,7 +144,14 @@ const Faq = (props) => {
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
-          <Form.Item label={'Contenido'}>
+          <Form.Item 
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Contenido <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'El contenido es requerido' }]}
+          >
             <ReactQuill
               id='faqContent'
               value={(faq && faq.content) || ''}
