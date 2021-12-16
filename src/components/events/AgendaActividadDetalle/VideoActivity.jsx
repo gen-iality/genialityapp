@@ -8,7 +8,7 @@ export const VideoActivity = () => {
   let { currentActivity } = useContext(HelperContext);
   return (
     <>
-      {currentActivity.video ? (
+      {currentActivity?.video ? (
         <ReactPlayer
           width={'100%'}
           style={{
