@@ -39,6 +39,12 @@ const MainProfile = (props) => {
 
   const eventsThatIHaveParticipated = async () => {
     const ticketsall = await TicketsApi.getAll();
+
+    if (ticketsall.length === 0) {
+      settickets(ticketsall);
+      setEventsThatIHaveParticipatedIsLoading(false);
+      return;
+    }
     const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     const usersInscription = [];
     ticketsDataSorted.forEach(async (element) => {
@@ -54,7 +60,8 @@ const MainProfile = (props) => {
 
   const myOrganizations = async () => {
     const organizations = await OrganizationApi.mine();
-    const organizationDataSorted = organizations.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+    const organizationsFilter = organizations.filter((orgData) => orgData.id);
+    const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     setorganizations(organizationDataSorted);
     setorganizationsLimited(organizationDataSorted.slice(0, 5));
     setOrganizationsIsLoading(false);
@@ -323,17 +330,23 @@ const MainProfile = (props) => {
                 <Loading />
               ) : (
                 <Row gutter={[16, 16]}>
-                  {tickets.map((event, index) => {
-                    return (
-                      <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <EventCard
-                          bordered={false}
-                          event={event}
-                          action={{ name: 'Ver', url: `landing/${event._id}` }}
-                        />
-                      </Col>
-                    );
-                  })}
+                  {tickets.length > 0 ? (
+                    tickets.map((event, index) => {
+                      return (
+                        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                          <EventCard
+                            bordered={false}
+                            event={event}
+                            action={{ name: 'Ver', url: `landing/${event._id}` }}
+                          />
+                        </Col>
+                      );
+                    })
+                  ) : (
+                    <Col span={24}>
+                      <ExploreEvents />
+                    </Col>
+                  )}
                 </Row>
               )}
             </TabPane>

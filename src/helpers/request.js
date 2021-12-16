@@ -488,13 +488,14 @@ export const OrganizationApi = {
   mine: async () => {
     let token = await GetTokenUserFirebase();
 
-    const resp = await Actions.getAll(`api/me/organizations?token=$${token}`);
+    const resp = await Actions.getAll(`api/me/organizations?token=${token}`);
     let data = resp.data.map((item) => {
       return {
-        id: item._id,
-        name: item.name,
-        styles: item.styles,
-        created_at: item.created_at,
+        _id: item._id,
+        id: item.organization?._id,
+        name: item.organization?.name,
+        styles: item.organization?.styles,
+        created_at: item.organization?.created_at,
       };
     });
     return data;
@@ -503,7 +504,8 @@ export const OrganizationApi = {
     return await Actions.getOne('/api/organizations/', id);
   },
   createOrganization: async (data) => {
-    return await Actions.post('/api/organizations', data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/organizations?token=${token}`, data, true);
   },
   editOne: async (data, id) => {
     let token = await GetTokenUserFirebase();
