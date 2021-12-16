@@ -7,7 +7,7 @@ const BackTop = ( props ) => {
     <>
       <BackTopAnt style={{marginRight: '-80px'}}>
         <Tooltip title='Subir para guardar cambios'>
-          <Button type='primary' shape={'circle'} icon={<UpOutlined />} className='animate__animated animate__pulse' />{/* animate__infinite animate__slow */}
+          <Button type='primary' shape={'circle'} icon={<UpOutlined />} className='animate__animated animate__pulse' size='large' />{/* animate__infinite animate__slow */}
         </Tooltip>
       </BackTopAnt>
     </>
