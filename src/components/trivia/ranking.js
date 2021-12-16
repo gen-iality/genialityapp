@@ -7,7 +7,9 @@ import { getTriviaRanking } from './services';
 
 import EventContent from '../events/shared/content';
 
-import { Table, Divider, Button } from 'antd';
+import { Table as TableA, Divider, Button } from 'antd';
+import Header from '../../antdComponents/Header';
+import Table from '../../antdComponents/Table';
 
 const columns = [
   {
@@ -82,11 +84,24 @@ class Ranking extends Component {
     let { nameQuestion, listOfUserResponse } = this.state;
     return (
       <Fragment>
-        <EventContent title={nameQuestion} closeAction={this.goBack}>
+        <Header 
+          title={'Ranking'}
+          back
+        />
+
+        <Table 
+          header={columns}
+          list={listOfUserResponse}
+          pagination={false}
+          exportData
+          fileName={`Ranking`}
+        />
+
+        {/* <EventContent title={nameQuestion} closeAction={this.goBack}>
           <Divider orientation='right'>Reporte</Divider>
           <Button onClick={this.exportReport}>Exportar resultados </Button>
-          <Table dataSource={listOfUserResponse} columns={columns} />;
-        </EventContent>
+          <TableA dataSource={listOfUserResponse} columns={columns} />;
+        </EventContent> */}
       </Fragment>
     );
   }

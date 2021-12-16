@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import arrayMove from 'array-move';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
-import { EditOutlined, DeleteOutlined, DragOutlined, DownloadOutlined, SettingOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, DragOutlined, DownloadOutlined, SettingOutlined, CrownOutlined } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
 import ExportExcel from '../components/newComponent/ExportExcel';
 import moment from 'moment';
@@ -76,9 +76,28 @@ const Table = (props) => {
                 <Link
                   key={`extraPathAction${item.index}`}
                   id={`extraPathAction${item.index}`}
-                  to={{ pathname: `${extraPath}/${item._id}`, state: { [extraPathStateName ? extraPathStateName : item] : [extraPathId ? item._id : item] }}}>
+                  to={ !extraPathStateName ? { pathname: `${extraPath}/${item._id}`, state: { item : item }} : { pathname: `${extraPath}`, state: { report: item._id }}}
+                >
                   <Button 
                     icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
+                    type={extraPathType ? extraPathType : 'primary'} 
+                    size='small' 
+                  />
+                </Link>
+              </Tooltip>
+            )}
+          </Col>
+          {/*Esto de momento es por la encuesta el ranking, esto queda pendiente para modificar*/}
+          <Col>
+            {extraPathStateName && (
+              <Tooltip placement='topLeft' title={extraPathTitle ? 'Ranking' : ''}>
+                <Link
+                  key={`extraPathAction${item.index}`}
+                  id={`extraPathAction${item.index}`}
+                  to={{ pathname: `${extraPathStateName}/${item._id}`, state: { report : item._id }}}
+                >
+                  <Button 
+                    icon={<CrownOutlined />}
                     type={extraPathType ? extraPathType : 'primary'} 
                     size='small' 
                   />
