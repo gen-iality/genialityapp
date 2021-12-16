@@ -25,8 +25,6 @@ const ModalFeedback = ({ cHelper }) => {
       ? 'Correcto!'
       : cHelper.typeModal == 'loginError'
       ? 'Error'
-      : cHelper.typeModal == 'preregisterMessage'
-      ? 'Información'
       : '¡Ups! algo salió mal';
 
   // title -> mensaje principal
@@ -35,8 +33,6 @@ const ModalFeedback = ({ cHelper }) => {
       ? 'Bienvenido a evius'
       : cHelper.typeModal == 'loginError'
       ? 'Ya se encuentra registrado. Por favor inicie sesión'
-      : cHelper.typeModal == 'preregisterMessage'
-      ? 'Usted no está registrado en el evento.'
       : '';
 
   return (
@@ -46,11 +42,7 @@ const ModalFeedback = ({ cHelper }) => {
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={
-        cHelper.typeModal == 'loginSuccess' ||
-        cHelper.typeModal == 'loginError' ||
-        cHelper.typeModal == 'preregisterMessage'
-      }
+      visible={cHelper.typeModal == 'loginSuccess' || cHelper.typeModal == 'loginError'}
       onCancel={() => cHelper.handleChangeTypeModal(null)}>
       <Result
         status={status}

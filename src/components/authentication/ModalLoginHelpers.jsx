@@ -143,7 +143,12 @@ const ModalLoginHelpers = (props) => {
       footer={null}
       zIndex={1000}
       closable={false}
-      visible={typeModal !== null && typeModal != 'preregisterMessage'}>
+      visible={
+        typeModal !== null &&
+        typeModal != 'preregisterMessage' &&
+        typeModal != 'loginError' &&
+        typeModal !== 'loginSuccessNotRegister'
+      }>
       <PageHeader
         className={
           (sendRecovery != null || registerUser) &&
