@@ -10,6 +10,7 @@ import API from '../../helpers/request';
 import LogOut from '../shared/logOut';
 import ErrorServe from '../modal/serverError';
 import { Button, Row, Col } from 'antd';
+import ModalFeedback from 'components/authentication/ModalFeedback';
 
 Moment.locale('es');
 momentLocalizer();
@@ -131,8 +132,10 @@ class Home extends Component {
 
   render() {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
+
     return (
       <React.Fragment>
+        <ModalFeedback />
         <h2 className='is-size-2 bold-text'>Eventos</h2>
         <section className='home'>
           <div className='tabs'>

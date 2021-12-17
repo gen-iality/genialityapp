@@ -3,13 +3,22 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
-import { ArrowLeftOutlined, CaretRightOutlined, CheckCircleOutlined, ClockCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import {
+  ArrowLeftOutlined,
+  CaretRightOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import WithEviusContext from '../../../Context/withContext';
 import EnVivo from '../../../EnVivo.svg';
 import Moment from 'moment-timezone';
+import { UseEventContext } from 'Context/eventContext';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useContext(HelperContext);
+  let cEvent = UseEventContext();
+  console.log('cEvent details==>', cEvent);
   const intl = useIntl();
   return (
     <Row align='middle'>
@@ -20,7 +29,12 @@ const HeaderColumns = (props) => {
         lg={{ order: 1, span: 4 }}
         xl={{ order: 1, span: 4 }}
         style={{ padding: '4px' }}>
-        <Link to={`/landing/${props.cEvent.value._id}/agenda`}>
+        <Link
+          to={
+            cEvent && !cEvent?.isByname
+              ? `/landing/${props.cEvent.value._id}/agenda`
+              : `/event/${cEvent?.nameEvent}/agenda`
+          }>
           <Row style={{ paddingLeft: '10px' }}>
             <Button type='primary' shape='round' icon={<ArrowLeftOutlined />} size='small'>
               {intl.formatMessage({ id: 'button.back.agenda' })}
@@ -45,7 +59,7 @@ const HeaderColumns = (props) => {
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (
               <CheckCircleOutlined style={{ fontSize: '30px' }} />
             ) : props.activityState === '' || props.activityState == null ? (
-              <ClockCircleOutlined  style={{ fontSize: '30px' }}/>
+              <ClockCircleOutlined style={{ fontSize: '30px' }} />
             ) : props.activityState === 'closed_meeting_room' ? (
               <LoadingOutlined style={{ fontSize: '30px' }} />
             ) : (

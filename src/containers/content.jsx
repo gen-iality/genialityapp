@@ -49,9 +49,7 @@ const ContentContainer = () => {
   return (
     <main className='main'>
       <Switch>
-        <RouteContext path='/landing/:event_id' component={Landing} />
-
-        <RouteContext path='/event/:event_name' component={Landing} />
+        <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
 
         {/*Ruta para ver resumen */}
         <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
@@ -102,7 +100,7 @@ const ContentContainer = () => {
         <Route exact path='/eventfinished' component={EventFinished} />
 
         {/* <Route exact path='/' component={RedirectPortal} /> */}
-        <Route path="/loginWithCode" component={LoginWithCode} />
+        <Route path='/loginWithCode' component={LoginWithCode} />
 
         <Route
           path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'

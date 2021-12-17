@@ -28,18 +28,24 @@ export function CurrentEventProvider({ children }) {
       switch (type) {
         case 'id':
           eventGlobal = await EventsApi.getOne(event_id || event);
-          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event };
+          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event, isByname: false };
           break;
 
         case 'name':
           eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
-          dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
+          dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name, isByname: true };
           /* console.log('evne', eventGlobal.data[0]); */
           break;
 
         case 'eventadmin':
           eventGlobal = await EventsApi.getOne(event);
-          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event , idEvent: event};
+          dataevent = {
+            status: 'LOADED',
+            value: eventGlobal,
+            nameEvent: event_id || event,
+            idEvent: event,
+            isByname: false,
+          };
           break;
       }
       setEventContext(dataevent);

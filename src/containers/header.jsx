@@ -268,7 +268,7 @@ const Headers = (props) => {
               visible={dataGeneral.modalVisible}
             />
             {/* )} */}
-            {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
+            {<ModalLoginHelpers organization={1} />}
           </Row>
         </Menu>
       </Header>

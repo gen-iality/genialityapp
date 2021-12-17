@@ -1,5 +1,6 @@
 import { Modal, Result, Button } from 'antd';
 import React from 'react';
+import withContext from '../../Context/withContext';
 
 /** Feedback login
  * Email no valido -> status: error
@@ -14,15 +15,25 @@ import React from 'react';
  * Cuenta creada -> status: success
  */
 
-const ModalFeedback = ({ status, title, description, setOpenOrCloseTheModalFeedback, openOrCloseTheModalFeedback }) => {
+const ModalFeedback = ({ cHelper }) => {
   // status -> warning, info, success, error
-  status = status ? status : 'info';
+  let status = cHelper.typeModal == 'loginSuccess' ? 'success' : cHelper.typeModal == 'loginError' ? 'error' : 'info';
 
   // title -> mensaje principal
-  title = title ? title : '¡Ups! algo salió mal';
+  let title =
+    cHelper.typeModal == 'loginSuccess'
+      ? 'Correcto!'
+      : cHelper.typeModal == 'loginError'
+      ? 'Error'
+      : '¡Ups! algo salió mal';
 
   // title -> mensaje principal
-  description = description ? description : '';
+  let description =
+    cHelper.typeModal == 'loginSuccess'
+      ? 'Bienvenido a evius'
+      : cHelper.typeModal == 'loginError'
+      ? 'Ya se encuentra registrado. Por favor inicie sesión'
+      : '';
 
   return (
     <Modal
@@ -31,21 +42,29 @@ const ModalFeedback = ({ status, title, description, setOpenOrCloseTheModalFeedb
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={openOrCloseTheModalFeedback}
-      onCancel={() => setOpenOrCloseTheModalFeedback(!openOrCloseTheModalFeedback)}>
+      visible={cHelper.typeModal == 'loginSuccess' || cHelper.typeModal == 'loginError'}
+      onCancel={() => cHelper.handleChangeTypeModal(null)}>
       <Result
         status={status}
         title={title}
         subTitle={description}
         extra={[
-          <Button type='primary' key='aceptar'>
+          <Button onClick={() => cHelper.handleChangeTypeModal(null)} type='primary' key='aceptar'>
             Aceptar
           </Button>,
-          <Button key='registrarme'>Registrarme</Button>,
+          cHelper.typeModal !== 'loginError' && cHelper.typeModal !== 'loginSuccess' && (
+            <Button
+              onClick={() => {
+                cHelper.handleChangeTypeModal('registerForTheEvent');
+              }}
+              key='registrarme'>
+              Registrarme
+            </Button>
+          ),
         ]}
       />
     </Modal>
   );
 };
 
-export default ModalFeedback;
+export default withContext(ModalFeedback);

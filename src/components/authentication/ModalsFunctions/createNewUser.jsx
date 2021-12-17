@@ -1,17 +1,10 @@
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { UsersApi } from '../../../helpers/request';
 import { message } from 'antd';
-const createNewUser = (props) => {
+const createNewUser = async (props) => {
   const { picture, email, names, password, resetFields, setModalInfo, setOpenOrCloseTheModalFeedback } = props;
 
   const pictureDefault = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
-
-  message.loading({
-    duration: 90,
-    key: 'loading',
-    content: 'Se está registrando el usuario.',
-  });
-
   function sendDataFinished() {
     message.destroy('loading');
     resetFields();
@@ -39,29 +32,25 @@ const createNewUser = (props) => {
     try {
       const response = await UsersApi.createUser(body);
       if (response?._id)
-        setModalInfo({
+        /* setModalInfo({
           status: 'success',
           title: `Bienvenido ${response.names}`,
           description: 'Tu registro ha sido exitoso',
         });
       setOpenOrCloseTheModalFeedback(true);
-      sendDataFinished();
+      sendDataFinished();*/
+        return true;
     } catch (e) {
       // console.log(e.response);
       const registeredEmail = e.response.data.errors.email[0];
       if (registeredEmail === 'email ya ha sido registrado.') {
-        setModalInfo({
-          status: 'error',
-          title: `Lo sentimos ${names}`,
-          description: `El email ${email}, ya se encuentra registrado en nuestra plataforma`,
-        });
+        return false;
       }
-      setOpenOrCloseTheModalFeedback(true);
-      sendDataFinished();
     }
   };
 
-  sendData();
+  let resp = await sendData();
+  return resp;
 };
 
 export default createNewUser;

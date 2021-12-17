@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { HelperContext } from '../../../Context/HelperContext';
 import ImageComponentwithContext from './ImageComponent';
 import RenderComponent from './RenderComponent';
-import { SecondVideoActivity } from './SecondVideoActivity';
 
 const HCOActividad = () => {
   let { currentActivity } = useContext(HelperContext);
