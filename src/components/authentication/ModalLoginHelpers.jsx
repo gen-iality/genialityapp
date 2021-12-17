@@ -6,6 +6,7 @@ import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 import { useIntl } from 'react-intl';
 import { auth } from '../../helpers/firebase';
+import { UseEventContext } from 'Context/eventContext';
 
 const { useBreakpoint } = Grid;
 
@@ -20,6 +21,7 @@ const stylePaddingMobile = {
 
 const ModalLoginHelpers = (props) => {
   let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
+  let cEvent = UseEventContext();
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
@@ -39,7 +41,13 @@ const ModalLoginHelpers = (props) => {
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
-      const resp = await EventsApi.changePassword(props.cEvent.value?._id, email);
+      let resp;
+      if (props.cEvent.value !== null && props.cEvent.value !== undefined) {
+        resp = await EventsApi.changePassword(props.cEvent.value?._id, email);
+      } else {
+        resp = await EventsApi.changePasswordUser(email);
+      }
+
       if (resp) {
         console.log('1. RESPUESTA API DEV===>', resp);
       }
@@ -78,7 +86,7 @@ const ModalLoginHelpers = (props) => {
         //alert('ACA');
         const userExists = await UsersApi.findByEmail(values.email);
         if (userExists.length > 0) {
-          auth.sendPasswordResetEmail(values.email);
+          handleRecoveryPass(values);
           setSendRecovery(
             `${intl.formatMessage({
               id: 'modal.restore.alert.success',
@@ -101,8 +109,15 @@ const ModalLoginHelpers = (props) => {
       //ENVIAR ACCESO AL CORREO
       try {
         //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
-        console.log('1. EMAIL A ENVIAR LINK', values.email);
-        const resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);
+        let resp;
+        //SE VALIDA DE ESTA MANERA PARA
+        if (cEvent.value !== null && cEvent.value !== undefined) {
+          resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);
+        } else {
+          console.log('INGRESA ACA');
+          resp = await EventsApi.requestLinkEmailUSer(values.email);
+        }
+
         if (resp) {
           console.log('1. RESPUESTA ENVíO DE LINK');
           setSendRecovery(
@@ -111,6 +126,7 @@ const ModalLoginHelpers = (props) => {
               defaultMessage: 'Se ha enviado un link de acceso a su correo electrónico',
             })} ${values.email}`
           );
+          setresul('OK');
         } else {
           setSendRecovery(
             `${values.email} ${intl.formatMessage({

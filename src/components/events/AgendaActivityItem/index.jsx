@@ -13,13 +13,16 @@ import AccessPoint from '@2fd/ant-design-icons/lib/AccessPoint';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
+import { UseEventContext } from 'Context/eventContext';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
 
 function AgendaActivityItem(props) {
   let history = useHistory();
-  let urlactivity = `/landing/${props.event._id}/activity/`;
+  let cEvent = UseEventContext();
+  let urlactivity =
+    cEvent && !cEvent?.isByname ? `/landing/${props.event._id}/activity/` : `/event/${cEvent?.nameEvent}/activity/`;
   const screens = useBreakpoint();
   function HandleGoActivity(activity_id) {
     history.push(`${urlactivity}${activity_id}`);

@@ -16,8 +16,14 @@ const ModalNoRegister = (props) => {
       centered
       footer={[
         <Space wrap key={'options'}>
-          <Button key='sign_off' type='text' size='large'>
-            Cerrar sesión
+          <Button
+            onClick={() => {
+              window.location.href = `${window.location.origin}`;
+            }}
+            key='sign_off'
+            type='text'
+            size='large'>
+            Ir a evius
           </Button>
           <Button
             onClick={() => props.cHelper.handleChangeTypeModal('registerForTheEvent')}

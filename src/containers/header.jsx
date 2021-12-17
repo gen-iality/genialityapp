@@ -267,9 +267,8 @@ const Headers = (props) => {
               organization='register'
               visible={dataGeneral.modalVisible}
             />
-            <ModalLoginHelpers />
             {/* )} */}
-            {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
+            {<ModalLoginHelpers organization={1} />}
           </Row>
         </Menu>
       </Header>
