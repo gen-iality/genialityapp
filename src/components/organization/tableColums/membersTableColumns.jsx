@@ -81,9 +81,9 @@ export const columns = (columnsData, editModalUser) => [
   {
     title: 'Opción',
     dataIndex: 'index',
-    /* width: 60,
-    align: 'center', */
+    /* align: 'center', */
     fixed: 'right',
+    width: 80,
     render(val, item, index) {
       return (
         <Tooltip title='Editar'>

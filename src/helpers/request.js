@@ -131,14 +131,14 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
     return eventUser;
   },
 
   getcurrentUserEventUser: async (event_id) => {
     let token = await GetTokenUserFirebase();
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
-    let eventUser = response.data && response.data[0] ? response.data[0] : null;
+    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
     return eventUser;
   },
 
@@ -399,6 +399,7 @@ export const EventFieldsApi = {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
   },
   getOne: async (event, id) => {
+
     return await Actions.getOne(`/api/events/${event}/userproperties/${id}`);
   },
   createOne: async (data, event) => {
@@ -411,7 +412,8 @@ export const EventFieldsApi = {
     return await Actions.put(`/api/events/${event}/userproperties/${id}/RegisterListFieldOptionTaken`, data);
   },
   deleteOne: async (id, event) => {
-    return await Actions.delete(`/api/events/${event}/userproperties`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/userproperties`, `${id}?token=${token}`);
   },
 };
 
@@ -488,13 +490,14 @@ export const OrganizationApi = {
   mine: async () => {
     let token = await GetTokenUserFirebase();
 
-    const resp = await Actions.getAll(`api/me/organizations?token=$${token}`);
+    const resp = await Actions.getAll(`api/me/organizations?token=${token}`);
     let data = resp.data.map((item) => {
       return {
-        id: item._id,
-        name: item.name,
-        styles: item.styles,
-        created_at: item.created_at,
+        _id: item._id,
+        id: item.organization?._id,
+        name: item.organization?.name,
+        styles: item.organization?.styles,
+        created_at: item.organization?.created_at,
       };
     });
     return data;
@@ -503,7 +506,8 @@ export const OrganizationApi = {
     return await Actions.getOne('/api/organizations/', id);
   },
   createOrganization: async (data) => {
-    return await Actions.post('/api/organizations', data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/organizations?token=${token}`, data, true);
   },
   editOne: async (data, id) => {
     let token = await GetTokenUserFirebase();
@@ -526,7 +530,8 @@ export const OrganizationApi = {
     return await Actions.edit(`/api/organizations/${org}/organizationusers`, data, member);
   },
   deleteUser: async (org, member) => {
-    return await Actions.delete(`/api/organizations/${org}/organizationusers`, member);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/organizations/${org}/organizationusers`, `/${member}?token=${token}`, true);
   },
   getEventsStatistics: async (org) => {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
@@ -544,7 +549,8 @@ export const OrganizationApi = {
     return await Actions.get(`/api/organizations/${org}/userproperties`);
   },
   deleteUserProperties: async (org, fieldId) => {
-    return await Actions.delete(`/api/organizations/${org}/userproperties`, fieldId);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/organizations/${org}/userproperties?token=${token}`, fieldId);
   },
   getTemplateOrganization: async (org) => {
     let token = await GetTokenUserFirebase();
@@ -556,7 +562,7 @@ export const OrganizationApi = {
   },
   editMenu: async (data, id) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true`, data);
+    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true`, `${data}&token=${token}`);
   },
 };
 export const BadgeApi = {
@@ -628,7 +634,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers['content-type'],
+            type: response.headers[ 'content-type' ],
             blob: response.data,
           });
         });
@@ -849,7 +855,7 @@ export const OrganizationPlantillaApi = {
   },
   deleteOne: async (template, organization) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/organizations/${organization}/templateproperties`, template);
+    return await Actions.delete(`api/organizations/${organization}/templateproperties`, `${template}?token=${token}`);
   },
 };
 
