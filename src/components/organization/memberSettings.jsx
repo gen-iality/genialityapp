@@ -34,6 +34,7 @@ function MemberSettings(props) {
 
   /** callback para ordenar los campos */
   async function orderFields(userProperties) {
+    console.log('ordenar campos', userProperties);
     await OrganizationApi.editAllUserProperties(organizationId, userProperties);
   }
 

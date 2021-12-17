@@ -537,7 +537,8 @@ export const OrganizationApi = {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
   },
   editAllUserProperties: async (org, data) => {
-    return await Actions.put(`api/organizations/${org}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/organizations/${org}?token=${token}`, data);
   },
   editOneUserProperties: async (org, fieldId, data) => {
     return await Actions.edit(`api/organizations/${org}/userproperties`, data, fieldId);
