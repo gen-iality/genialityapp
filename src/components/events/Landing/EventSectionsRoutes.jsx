@@ -39,6 +39,7 @@ import ResponsePayu from '../registrationForm/responsePayu';
 import { useParams } from 'react-router-dom';
 import AgendaActividadDetalle from '../../events/AgendaActividadDetalle/index';
 import MySection from '../newSection';
+import ThisRouteCanBeDisplayed from './helpers/thisRouteCanBeDisplayed';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -143,7 +144,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <DocumentsForm />
+              <ThisRouteCanBeDisplayed>
+                <DocumentsForm />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -155,7 +158,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <MyAgendaIndepend />
+              <ThisRouteCanBeDisplayed>
+                <MyAgendaIndepend />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -167,7 +172,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <NetworkingForm />
+              <ThisRouteCanBeDisplayed>
+                <NetworkingForm />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -179,7 +186,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <InformativeSection2 />
+              <ThisRouteCanBeDisplayed>
+                <InformativeSection2 />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -196,7 +205,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <InformativeSection />
+              <ThisRouteCanBeDisplayed>
+                <InformativeSection />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -208,7 +219,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
               </>
             ) : (
-              <MySection />
+              <ThisRouteCanBeDisplayed>
+                <MySection />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -220,9 +233,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <>
+              <ThisRouteCanBeDisplayed>
                 <AgendaActividadDetalle />
-              </>
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -234,7 +247,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <SpeakersForm />
+              <ThisRouteCanBeDisplayed>
+                <SpeakersForm />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -245,7 +260,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <SurveyForm />
+              <ThisRouteCanBeDisplayed>
+                <SurveyForm />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -256,7 +273,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <Partners />
+              <ThisRouteCanBeDisplayed>
+                <Partners />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -267,7 +286,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <FaqsForm />
+              <ThisRouteCanBeDisplayed>
+                <FaqsForm />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -279,7 +300,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <EventHome />
+              <ThisRouteCanBeDisplayed>
+                <EventHome />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -291,7 +314,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <WallForm />
+              <ThisRouteCanBeDisplayed>
+                <WallForm />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -302,7 +327,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <Videos />
+              <ThisRouteCanBeDisplayed>
+                <Videos />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -314,7 +341,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <Ferias />
+              <ThisRouteCanBeDisplayed>
+                <Ferias />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -325,7 +354,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <Noticias />
+              <ThisRouteCanBeDisplayed>
+                <Noticias />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -352,7 +383,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
-              <CertificadoLanding />
+              <ThisRouteCanBeDisplayed>
+                <CertificadoLanding />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
@@ -368,11 +401,13 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={`/landing/${props.cEvent.value._id}/agenda`} />
               </>
             ) : (
-              <Agenda
-                activity={props.currentActivity}
-                generalTabs={props.generalTabs}
-                setVirtualConference={props.setVirtualConference}
-              />
+              <ThisRouteCanBeDisplayed>
+                <Agenda
+                  activity={props.currentActivity}
+                  generalTabs={props.generalTabs}
+                  setVirtualConference={props.setVirtualConference}
+                />
+              </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
