@@ -2,12 +2,24 @@ import React, { useEffect, useState, useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import WithLoading from './withLoading';
 import { Menu, Dropdown, Avatar, Button, Col, Row, Space } from 'antd';
-import { DownOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+  ContactsOutlined,
+  DownOutlined,
+  LogoutOutlined,
+  ScheduleOutlined,
+  SolutionOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
 import withContext from '../../Context/withContext';
-
+import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
+import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
+import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
+import CalendarCheckOutlineIcon from '@2fd/ant-design-icons/lib/CalendarCheckOutline';
+import HexagonMultipleOutlineIcon from '@2fd/ant-design-icons/lib/HexagonMultipleOutline';
+import LogoutIcon from '@2fd/ant-design-icons/lib/Logout';
 const MenuStyle = {
   flex: 1,
   textAlign: 'right',
@@ -38,41 +50,47 @@ const UserStatusAndMenu = (props) => {
 
   let menu = !props.anonimususer ? (
     <Menu>
-      <Menu.Item style={ItemStyle}>
-        <NavLink
-          onClick={(e) => {
-            e.preventDefault();
-            props.location.pathname.includes('landing')
-              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } })
-              : null;
-          }}
-          to={''}>
-          <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
-        </NavLink>
+      <Menu.Item
+        icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
+        onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
+        <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
       </Menu.Item>
+      {props.location.pathname.includes('landing') && (
+        <Menu.Item
+          onClick={() => {
+            props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } });
+          }}
+          icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}>
+          <FormattedMessage id='header.my_data_event' defaultMessage='Mis datos en el evento' />
+        </Menu.Item>
+      )}
+      <Menu.Divider />
       {visible && (
-        <Menu.Item style={ItemStyle} onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
+        <Menu.Item
+          icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
+          onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Menu.Item>
       )}
       {visible && (
-        <Menu.Item style={ItemStyle} onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
+        <Menu.Item
+          icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
+          onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </Menu.Item>
       )}
       {visible && (
         <Menu.Item
-          style={ItemStyle}
+          icon={<HexagonMultipleOutlineIcon style={{ fontSize: '18px' }} />}
           onClick={() => {
             linkToTheMenuRouteS(`/myprofile/organization`);
           }}>
           <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Eventos' />
         </Menu.Item>
       )}
-
+      <Menu.Divider />
       {visible && (
         <Menu.Item
-          style={ItemStyle}
           onClick={() =>
             linkToTheMenuRouteS(
               window.location.toString().includes('admin/organization')
@@ -83,17 +101,14 @@ const UserStatusAndMenu = (props) => {
                 : `/create-event/${props.userEvent._id}`
             )
           }>
-          <Button type='primary' size='medium'>
+          <Button block type='primary' size='medium'>
             <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
           </Button>
         </Menu.Item>
       )}
       <Menu.Divider />
-      <Menu.Item style={ItemStyle}>
-        <a onClick={logout}>
-          <LogoutOutlined />
-          <FormattedMessage id='header.logout' defaultMessage='Log Out' />
-        </a>
+      <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={logout}>
+        <FormattedMessage id='header.logout' defaultMessage='Salir' />
       </Menu.Item>
     </Menu>
   ) : (
