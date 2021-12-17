@@ -10,7 +10,7 @@ const ModalNoRegister = (props) => {
     'Este evento es privado, solo se puede acceder por invitación, Si esta no es su cuenta puede intentar con otra o contactar con el administrador del evento.';
   return (
     <Modal
-      onCancel={() => console.log('cerrar')}
+      onCancel={() => props.cHelper.handleChangeTypeModal('visitors')}
       width={400}
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
