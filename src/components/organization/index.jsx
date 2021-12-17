@@ -178,6 +178,7 @@ function Organization(props) {
                           }}
                           deleteField={async (nameField, template, updateTable) => {
                             console.log(nameField, template);
+                            console.log('ELIMINAR ESTO');
                             let newtemplate = template.datafields?.filter((field) => field.name != nameField);
                             console.log('TEMPLATES==>', newtemplate);
                             let resp = await updateTemplate(template, newtemplate);
