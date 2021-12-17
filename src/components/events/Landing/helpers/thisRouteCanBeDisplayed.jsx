@@ -1,5 +1,5 @@
 import React from 'react';
-import { Result } from 'antd';
+import { Button, Result, Typography } from 'antd';
 import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { UseEventContext } from '../../../../Context/eventContext';
 import Loading from '../../../profile/loading';
@@ -29,7 +29,26 @@ function ThisRouteCanBeDisplayed({ children }) {
         (iAmRegisteredInThisEvent() === 'loading' ? (
           <Loading />
         ) : iAmRegisteredInThisEvent() === 'notRegistered' ? (
-          <Result status='error' title='Lo sentimos' subTitle='Para acceder a este evento debes estar registrado' />
+          <Result
+            className='animate__animated animate__pulse'
+            status='warning'
+            title={<Typography.Title level={2}>Usuario no registrado al evento</Typography.Title>}
+            subTitle={
+              <Typography.Paragraph
+                type='secondary'
+                style={{
+                  fontSize: '18px',
+                  overflowWrap: 'anywhere',
+                }}>
+                Este evento requiere que los asistentes se registren para poder participar.{console.log(children)}
+              </Typography.Paragraph>
+            }
+            extra={[
+              <Button size='large' type='primary' key='goToEvent'>
+                Registrarme
+              </Button>,
+            ]}
+          />
         ) : (
           iAmRegisteredInThisEvent() === 'registered' && children
         ))}

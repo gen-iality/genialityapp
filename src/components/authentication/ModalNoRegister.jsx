@@ -4,8 +4,7 @@ import withContext from '../../Context/withContext';
 
 const ModalNoRegister = (props) => {
   // Mensajes para evento privado y prublico
-  const msgEventPublic =
-    'Este evento requiere que sus asistentes estén registrados para poder participar. Si esta no es su cuenta, puede intentar con otra presionando el botón de cerrar sesión.';
+  const msgEventPublic = 'Este evento requiere que los asistentes se registren para poder participar.';
   const msgEventPrivate =
     'Este evento es privado, solo se puede acceder por invitación, Si esta no es su cuenta puede intentar con otra o contactar con el administrador del evento.';
   return (
@@ -43,7 +42,7 @@ const ModalNoRegister = (props) => {
         title={
           props.cHelper.typeModal !== 'loginSuccessNotRegister' ? (
             <Typography.Title level={4} style={{ textAlign: 'left' }}>
-              Cuenta no registrada al evento
+              Usuario no registrado al evento
             </Typography.Title>
           ) : (
             <Typography.Title level={4} style={{ textAlign: 'left' }}>
@@ -52,9 +51,7 @@ const ModalNoRegister = (props) => {
           )
         }
         subTitle={
-          <Typography.Paragraph level={5} style={{ textAlign: 'left' }}>
-            {msgEventPublic}
-          </Typography.Paragraph>
+          <Typography.Paragraph style={{ textAlign: 'left', fontSize: '16px' }}>{msgEventPublic}</Typography.Paragraph>
         }
       />
     </Modal>
