@@ -5,6 +5,7 @@ import { UseSurveysContext } from '../../../../Context/surveysContext';
 import { UseCurrentUser } from '../../../../Context/userContext';
 import SurveyDetailPage from '../SurveyDetailPage';
 import RankingTrivia from '../rankingTrivia';
+import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed';
 
 function SurveyDrawer(props) {
   let cSurveys = UseSurveysContext();
@@ -110,7 +111,9 @@ function SurveyDrawer(props) {
 
           <Row gutter={[8, 8]} justify='center'>
             <Col xl={rankingVisible === true ? 24 : 16} xxl={rankingVisible === true ? 24 : 16}>
-              <SurveyDetailPage />
+              <ThisRouteCanBeDisplayed>
+                <SurveyDetailPage />
+              </ThisRouteCanBeDisplayed>
             </Col>
             <Col hidden={rankingVisible} xl={8} xxl={8}>
               <div style={{ width: '100%' }}>

@@ -9,10 +9,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
 import UsersCard from '../../shared/usersCard';
+import ThisRouteCanBeDisplayed from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
-
 
 const styleList = {
   padding: 5,
@@ -84,9 +84,9 @@ const ChatList = (props) => {
     );
 
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
-      console.log('Props',props)
+  console.log('Props', props);
   return (
-    <Tabs style={{marginTop:'-15px'}} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
+    <Tabs style={{ marginTop: '-15px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
         <TabPane
           tab={
@@ -96,7 +96,7 @@ const ChatList = (props) => {
           }
           key='public'>
           <iframe
-            style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px' }` }}
+            style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px'}` }}
             title='chatevius'
             className='ChatEviusLan'
             src={
@@ -134,18 +134,21 @@ const ChatList = (props) => {
           }
           key='private'>
           {!chatActual.chatname && (
-            <List
-              className='asistente-list'
-              style={styleList}
-              dataSource={privateChatsList}
-              renderItem={(item) => <UsersCard type='privateChat' item={item} />}
-            />
+            <ThisRouteCanBeDisplayed>
+              <List
+                key='PrivateChat'
+                className='asistente-list'
+                style={styleList}
+                dataSource={privateChatsList}
+                renderItem={(item) => <UsersCard type='privateChat' item={item} />}
+              />
+            </ThisRouteCanBeDisplayed>
           )}
 
           {chatActual.chatname && (
             <>
               <iframe
-              style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px' }` }}
+                style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px'}` }}
                 title='chatevius'
                 className='ChatEviusLan'
                 src={

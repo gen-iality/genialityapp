@@ -25,7 +25,6 @@ function ThisRouteCanBeDisplayed({ children }) {
   }
 
   function showComponentForPublicEventWithRegistration(component) {
-    console.log('debu =====>> ', children.key);
     switch (component.key) {
       case 'evento':
         return component;
@@ -65,6 +64,26 @@ function ThisRouteCanBeDisplayed({ children }) {
     switch (component.key) {
       case 'evento':
         return component;
+      case 'agenda':
+        return component;
+      case 'activity':
+        return component;
+      case 'speakers':
+        return component;
+      case 'videos':
+        return component;
+      case 'documents':
+        return component;
+      case 'noticias':
+        return component;
+      case 'faqs':
+        return component;
+      case 'ferias':
+        return component;
+      case 'partners':
+        return component;
+      case 'ChatList':
+        return component;
 
       default:
         return (
@@ -98,7 +117,6 @@ function ThisRouteCanBeDisplayed({ children }) {
 
   function showComponentForprivateEvent(component) {}
 
-  // console.log('debu ', recordTypeForThisEvent());
   return (
     <>
       {recordTypeForThisEvent() === 'publicEventWithRegistration' &&
@@ -109,7 +127,9 @@ function ThisRouteCanBeDisplayed({ children }) {
         ) : (
           iAmRegisteredInThisEvent() === 'registered' && children
         ))}
+
       {recordTypeForThisEvent() === 'unregisteredPublicEvent' && showComponentunregisteredPublicEvent(children)}
+
       {recordTypeForThisEvent() === 'privateEvent' && (
         <Result status='warning' title='Lo sentimos' subTitle='Este evento es privado necesitas estar invitado' />
       )}
