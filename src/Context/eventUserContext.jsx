@@ -17,7 +17,7 @@ export function CurrentUserEventProvider({ children }) {
 
   useEffect(() => {
     let event_id = cEvent.value?._id;
-    if (cUser.value == null || cUser.value == undefined || updateUser == false) return;
+    if (cUser.value == null || cUser.value == undefined || updateUser == false || cUser?.value.isAnonymous) return;
     async function asyncdata() {
       try {
         console.log('10. CUSER===>', cUser);

@@ -100,9 +100,11 @@ export const getCurrentUser = async () => {
               draggable: true,
               progress: undefined,
             });
+            // YA NO DE REDIRIGIR EL TOKEN CADUCADO
+            /* alert('RELOAD ACA');
             setTimeout(() => {
               window.location.reload();
-            }, 2000);
+            }, 2000);*/
             //this.setState({ timeout: true, loader: false })
           } else {
             //this.setState({ serverError: true, loader: false, errorData: data })
