@@ -1,6 +1,7 @@
-import { Modal, Result, Button } from 'antd';
+import { Modal, Result, Button, Typography } from 'antd';
 import React from 'react';
 import withContext from '../../Context/withContext';
+import { useIntl } from 'react-intl';
 
 /** Feedback login
  * Email no valido -> status: error
@@ -16,23 +17,35 @@ import withContext from '../../Context/withContext';
  */
 
 const ModalFeedback = ({ cHelper }) => {
+  const intl = useIntl();
+
   // status -> warning, info, success, error
   let status = cHelper.typeModal == 'loginSuccess' ? 'success' : cHelper.typeModal == 'loginError' ? 'error' : 'info';
 
   // title -> mensaje principal
   let title =
     cHelper.typeModal == 'loginSuccess'
-      ? 'Correcto!'
+      ? intl.formatMessage({
+          id: 'modal.feedback.title.success',
+          defaultMessage: 'Muy bien, ahora eres parte de la mejor plataforma de eventos virtuales.',
+        })
       : cHelper.typeModal == 'loginError'
-      ? 'Error'
+      ? intl.formatMessage({ id: 'modal.feedback.title.error', defaultMessage: 'Correo electrónico ya en uso' })
       : '¡Ups! algo salió mal';
 
-  // title -> mensaje principal
   let description =
     cHelper.typeModal == 'loginSuccess'
-      ? 'Bienvenido a evius'
+      ? intl.formatMessage({
+          id: 'modal.feedback.description.success',
+          defaultMessage:
+            'El evento desea recolectar datos para brindarte una mejor experiencia, nosotros llenaremos la información que ya suministraste anteriormente para agilizar este proceso. ',
+        })
       : cHelper.typeModal == 'loginError'
-      ? 'Ya se encuentra registrado. Por favor inicie sesión'
+      ? intl.formatMessage({
+          id: 'modal.feedback.description.error',
+          defaultMessage:
+            'El evento desea recolectar datos para brindarte una mejor experiencia, nosotros llenaremos la información que ya suministraste anteriormente para agilizar este proceso. ',
+        })
       : '';
 
   return (
@@ -46,14 +59,15 @@ const ModalFeedback = ({ cHelper }) => {
       onCancel={() => cHelper.handleChangeTypeModal(null)}>
       <Result
         status={status}
-        title={title}
-        subTitle={description}
+        title={<Typography.Title level={4}>{title}</Typography.Title>}
+        subTitle={<Typography.Paragraph style={{ fontSize: '16px' }}>{description}</Typography.Paragraph>}
         extra={[
-          <Button onClick={() => cHelper.handleChangeTypeModal(null)} type='primary' key='aceptar'>
-            Aceptar
+          <Button size='large' onClick={() => cHelper.handleChangeTypeModal(null)} type='primary' key='aceptar'>
+            {intl.formatMessage({ id: 'modal.feedback.accept', defaultMessage: 'Aceptar' })}
           </Button>,
           cHelper.typeModal !== 'loginError' && cHelper.typeModal !== 'loginSuccess' && (
             <Button
+              size='large'
               onClick={() => {
                 cHelper.handleChangeTypeModal('registerForTheEvent');
               }}
