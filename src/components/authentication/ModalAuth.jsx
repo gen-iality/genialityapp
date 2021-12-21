@@ -69,7 +69,8 @@ const ModalAuth = (props) => {
     app.auth().onAuthStateChanged((user) => {
       if (
         (!user && cEvent?.value?.allow_register && cEvent?.value?.visibility !== 'PUBLIC') ||
-        (!user && cEvent.value == null)
+        (!user && !window.location.toString().includes('landing')) ||
+        !window.location.toString().includes('event')
       ) {
         console.log('EVENTO==>', cEvent.value);
         setmodalVisible(true);

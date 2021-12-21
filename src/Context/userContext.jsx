@@ -14,7 +14,6 @@ export function CurrentUserProvider({ children }) {
     async function asyncdata() {
       try {
         app.auth().onAuthStateChanged((user) => {
-          console.log('USER LOGUEADO==>', user);
           if (!user?.isAnonymous && user) {
             user.getIdToken().then(async function(idToken) {
               privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
