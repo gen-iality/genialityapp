@@ -57,16 +57,11 @@ const ModalNoRegister = (props) => {
         icon={null}
         title={
           props.cHelper.typeModal !== 'loginSuccessNotRegister' ? (
-<<<<<<< HEAD
-            <Typography.Title level={4} style={{ textAlign: 'left' }}>
-              Usuario no registrado al evento
-=======
             <Typography.Title level={4}>
               {intl.formatMessage({
                 id: 'modal.no_register.title',
                 defaultMessage: 'Usuario no registrado al evento',
               })}
->>>>>>> be9662d9e0253c991687aa2931545ef85c407755
             </Typography.Title>
           ) : (
             <Typography.Title level={4} style={{ textAlign: 'left' }}>
