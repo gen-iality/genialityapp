@@ -1,8 +1,10 @@
 import React from 'react';
 import { Modal, Result, Button, Divider, Typography, Space } from 'antd';
 import withContext from '../../Context/withContext';
+import { useIntl } from 'react-intl';
 
 const ModalNoRegister = (props) => {
+  const intl = useIntl();
   // Mensajes para evento privado y prublico
   const msgEventPublic = 'Este evento requiere que los asistentes se registren para poder participar.';
   const msgEventPrivate =
