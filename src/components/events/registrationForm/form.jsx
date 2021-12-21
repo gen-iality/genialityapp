@@ -486,7 +486,7 @@ const FormRegister = ({
     return isLt5M ? true : false;
   };
 
-  function validateUrl() {
+  function validateUrl(){
     let url = window.location.pathname;
     return url.includes('/eventadmin/') ? true : false;
   }
@@ -501,392 +501,389 @@ const FormRegister = ({
         return;
       }
       //Este if es nuevo para poder validar las contraseñas y avatars viejos (nuevo flujo para no mostrar esos campos)
-      if (m.name !== 'contrasena' && m.name !== 'password' && m.name !== 'avatar') {
-        let type = m.type || 'text';
-        let props = m.props || {};
-        let name = m.name;
-        let label = m.label;
-        let mandatory = m.mandatory;
-        let description = m.description;
-        let labelPosition = m.labelPosition;
-        let target = name;
-        let value = callback
-          ? eventUser && eventUser['properties']
-            ? eventUser['properties'][target]
-            : ''
-          : initialValues
-          ? initialValues[target]
-          : '';
+      if(m.name !== 'contrasena' && m.name !== 'password' && m.name !== 'avatar'){
+        
+
+      let type = m.type || 'text';
+      let props = m.props || {};
+      let name = m.name;
+      let label = m.label;
+      let mandatory = m.mandatory;
+      let description = m.description;
+      let labelPosition = m.labelPosition;
+      let target = name;
+      let value = callback
+        ? eventUser && eventUser['properties']
+          ? eventUser['properties'][target]
+          : ''
+        : initialValues
+        ? initialValues[target]
+        : '';
         /* console.log(initialValues, 'initialValues', m) */
 
-        //no entiendo b esto para que funciona
-        if (conditionals.state === 'enabled') {
-          if (label === conditionals.field) {
-            if (true == true || value === [conditionals.value]) {
-              label = conditionals.field;
-            } else {
-              return;
-            }
+      //no entiendo b esto para que funciona
+      if (conditionals.state === 'enabled') {
+        if (label === conditionals.field) {
+          if (true == true || value === [conditionals.value]) {
+            label = conditionals.field;
+          } else {
+            return;
           }
         }
+      }
+      let input = (
+        <Input
+          disabled={
+            /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
+            validateUrl() === true ?
+            (m.name == 'email' && initialValues?.email ? true : 
+            cEvent.value.visibility === 'PUBLIC' &&
+            m.name == 'names' && 
+            initialValues?.names ? true : false) : false
+          }
+          {...props}
+          addonBefore={
+            labelPosition === 'izquierda' && (
+              <span>
+                {mandatory && <span style={{ color: 'red' }}>* </span>}
+                <strong>{label}</strong>
+              </span>
+            )
+          }
+          type={type}
+          key={key}
+          name={name}
+          defaultValue={value}
+        />
+      );
 
-        let input = (
+      if (type === 'codearea') {
+        const prefixSelector = (
+          <Select
+            showSearch
+            optionFilterProp='children'
+            style={{ fontSize: '12px', width: 150 }}
+            value={areacodeselected}
+            onChange={(val) => {
+              setareacodeselected(val);
+              //console.log(val);
+            }}
+            placeholder='Codigo de area del pais'>
+            {areaCode.map((code, key) => {
+              return (
+                <Option key={key} value={code.value}>
+                  {`${code.label} (+${code.value})`}
+                </Option>
+              );
+            })}
+          </Select>
+        );
+        input = (
           <Input
-            disabled={
-              /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
-              //como validar cuando es usuario y admin?
-              cUser.value.autorizaciontratamientodedatospersonales === true
-                ? true
-                : m.name == 'email' && initialValues?.email
-                ? true
-                : cEvent.value.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
-                ? true
-                : false
-            }
-            {...props}
-            addonBefore={
-              labelPosition === 'izquierda' && (
-                <span>
-                  {mandatory && <span style={{ color: 'red' }}>* </span>}
-                  <strong>{label}</strong>
-                </span>
-              )
-            }
-            type={type}
-            key={key}
+            addonBefore={prefixSelector}
+            //onChange={(e) => setnumberareacode(e.target.value)}
+            defaultvalue={value?.toString().split()[2]}
             name={name}
-            defaultValue={value}
+            //required={mandatory}
+            type='number'
+            key={key}
+            style={{ width: '100%' }}
+            placeholder='Numero de telefono'
           />
         );
+      }
 
-        if (type === 'codearea') {
-          const prefixSelector = (
-            <Select
-              showSearch
-              optionFilterProp='children'
-              style={{ fontSize: '12px', width: 150 }}
-              value={areacodeselected}
-              onChange={(val) => {
-                setareacodeselected(val);
-                //console.log(val);
-              }}
-              placeholder='Codigo de area del pais'>
-              {areaCode.map((code, key) => {
-                return (
-                  <Option key={key} value={code.value}>
-                    {`${code.label} (+${code.value})`}
-                  </Option>
-                );
-              })}
-            </Select>
-          );
-          input = (
-            <Input
-              addonBefore={prefixSelector}
-              //onChange={(e) => setnumberareacode(e.target.value)}
-              defaultvalue={value?.toString().split()[2]}
-              name={name}
-              //required={mandatory}
-              type='number'
-              key={key}
-              style={{ width: '100%' }}
-              placeholder='Numero de telefono'
-            />
-          );
+      if (type === 'tituloseccion') {
+        input = (
+          <React.Fragment>
+            <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: label,
+                }}></div>
+            </div>
+            <Divider />
+          </React.Fragment>
+        );
+      }
+
+      if (type === 'multiplelisttable') {
+        input = <ReactSelect options={m.options} isMulti name={name} />;
+      }
+
+      if (type === 'boolean') {
+        if (mandatory) {
+          let textoError = intl.formatMessage({ id: 'form.field.required' });
+
+          rule = { validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)) };
+        } else {
+          rule = {
+            validator: (_, value) =>
+              value == true || value == false || value == '' || value == undefined
+                ? Promise.resolve()
+                : Promise.reject(textoError),
+          };
         }
-
-        if (type === 'tituloseccion') {
-          input = (
-            <React.Fragment>
-              <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: label,
-                  }}></div>
-              </div>
-              <Divider />
-            </React.Fragment>
-          );
-        }
-
-        if (type === 'multiplelisttable') {
-          input = <ReactSelect options={m.options} isMulti name={name} />;
-        }
-
-        if (type === 'boolean') {
-          if (mandatory) {
-            let textoError = intl.formatMessage({ id: 'form.field.required' });
-
-            rule = { validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)) };
-          } else {
-            rule = {
-              validator: (_, value) =>
-                value == true || value == false || value == '' || value == undefined
-                  ? Promise.resolve()
-                  : Promise.reject(textoError),
-            };
-          }
-          return (
-            <div key={'g' + key} name='field'>
-              {
-                <>
-                  <Form.Item
-                    // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
-                    // style={eventUserId && hideFields}
-                    valuePropName={'checked'}
-                    /* label={
+        return (
+          <div key={'g' + key} name='field'>
+            {
+              <>
+                <Form.Item
+                  // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
+                  // style={eventUserId && hideFields}
+                  valuePropName={'checked'}
+                  /* label={
                     (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
                       ? label
                       : '' && (labelPosition !== 'arriba' || !labelPosition)
                   }*/
-                    name={name}
-                    rules={[rule]}
-                    key={'l' + key}
-                    htmlFor={key}
-                    initialValue={value}>
-                    <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
-                      {mandatory ? (
-                        <span>
-                          <span style={{ color: 'red' }}>* </span>
-                          <strong>{label}</strong>
-                        </span>
-                      ) : (
-                        label
-                      )}
-                    </Checkbox>
-                  </Form.Item>
-                  {cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                    <Row style={{ marginTop: 20 }}>
-                      {' '}
-                      <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
-                        <PlayCircleOutlined /> Ver términos y condiciones
-                      </a>
-                    </Row>
-                  )}
-                  {description && description.length < 500 && <p>{description}</p>}
-                  {description && description.length > 500 && (
-                    <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
-                      <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
-                        <pre
-                          dangerouslySetInnerHTML={{
-                            __html: description,
-                          }}
-                          style={{ whiteSpace: 'normal' }}></pre>
-                      </Panel>
-                    </Collapse>
-                  )}
-                </>
-              }
-            </div>
-          );
-        }
-
-        if (type === 'longtext') {
-          input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />;
-        }
-
-        if (type === 'multiplelist') {
-          input = (
-            <Checkbox.Group
-              options={m.options}
-              defaultValue={value}
-              onChange={(checkedValues) => {
-                value = JSON.stringify(checkedValues);
-              }}
-            />
-          );
-        }
-
-        if (type === 'file') {
-          input = (
-            <Upload
-              accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
-              action='https://api.evius.co/api/files/upload/'
-              multiple={false}
-              listType='text'
-              beforeUpload={beforeUpload}
-              defaultFileList={
-                value
-                  ? [
-                      {
-                        name: typeof value == 'string' ? obtenerName(value) : null,
-                        url: typeof value == 'string' ? value : null,
-                      },
-                    ]
-                  : []
-              }>
-              <Button icon={<UploadOutlined />}>Upload</Button>
-            </Upload>
-          );
-        }
-
-        if (type === 'list') {
-          //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
-
-          let fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;
-
-          if (event && m.justonebyattendee && m.options) {
-            let takenoptions = event['takenoptions_' + fieldId];
-            if (takenoptions) {
-              m.options = m.options.filter((x) => {
-                return takenoptions.filter((c) => x.value == c.value).length <= 0;
-              });
+                  name={name}
+                  rules={[rule]}
+                  key={'l' + key}
+                  htmlFor={key}
+                  initialValue={value}>
+                  <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
+                    {mandatory ? (
+                      <span>
+                        <span style={{ color: 'red' }}>* </span>
+                        <strong>{label}</strong>
+                      </span>
+                    ) : (
+                      label
+                    )}
+                  </Checkbox>
+                </Form.Item>
+                {cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
+                  <Row style={{ marginTop: 20 }}>
+                    {' '}
+                    <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
+                      <PlayCircleOutlined /> Ver términos y condiciones
+                    </a>
+                  </Row>
+                )}
+                {description && description.length < 500 && <p>{description}</p>}
+                {description && description.length > 500 && (
+                  <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
+                    <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
+                      <pre
+                        dangerouslySetInnerHTML={{
+                          __html: description,
+                        }}
+                        style={{ whiteSpace: 'normal' }}></pre>
+                    </Panel>
+                  </Collapse>
+                )}
+              </>
             }
+          </div>
+        );
+      }
+
+      if (type === 'longtext') {
+        input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />;
+      }
+
+      if (type === 'multiplelist') {
+        input = (
+          <Checkbox.Group
+            options={m.options}
+            defaultValue={value}
+            onChange={(checkedValues) => {
+              value = JSON.stringify(checkedValues);
+            }}
+          />
+        );
+      }
+
+      if (type === 'file') {
+        input = (
+          <Upload
+            accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
+            action='https://api.evius.co/api/files/upload/'
+            multiple={false}
+            listType='text'
+            beforeUpload={beforeUpload}
+            defaultFileList={
+              value
+                ? [
+                    {
+                      name: typeof value == 'string' ? obtenerName(value) : null,
+                      url: typeof value == 'string' ? value : null,
+                    },
+                  ]
+                : []
+            }>
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+        );
+      }
+
+      if (type === 'list') {
+        //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
+
+        let fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;
+
+        if (event && m.justonebyattendee && m.options) {
+          let takenoptions = event['takenoptions_' + fieldId];
+          if (takenoptions) {
+            m.options = m.options.filter((x) => {
+              return takenoptions.filter((c) => x.value == c.value).length <= 0;
+            });
           }
-          input = m.options.map((o, key) => {
-            return (
-              <Option key={key} value={o.value}>
-                {o.label}
-              </Option>
-            );
-          });
-          input = (
-            <Select style={{ width: '100%' }} name={name} defaultValue={value}>
-              <Option value={''}>Seleccione...</Option>
-              {input}
-            </Select>
-          );
         }
-
-        if (type === 'country') {
-          input = (
-            <CountryDropdown
-              className='countryCity-styles'
-              value={country}
-              onChange={(val) => setCountry(val)}
-              name={name}
-            />
+        input = m.options.map((o, key) => {
+          return (
+            <Option key={key} value={o.value}>
+              {o.label}
+            </Option>
           );
-        }
+        });
+        input = (
+          <Select style={{ width: '100%' }} name={name} defaultValue={value}>
+            <Option value={''}>Seleccione...</Option>
+            {input}
+          </Select>
+        );
+      }
 
-        if (type === 'city') {
-          input = (
-            <RegionDropdown
-              className='countryCity-styles'
-              country={country}
-              value={region}
-              name={name}
-              onChange={(val) => setRegion(val)}
-            />
-          );
-        }
+      if (type === 'country') {
+        input = (
+          <CountryDropdown
+            className='countryCity-styles'
+            value={country}
+            onChange={(val) => setCountry(val)}
+            name={name}
+          />
+        );
+      }
 
-        if (type === 'password') {
-          input = (
-            <Password
-              name='password'
-              placeholder='Ingrese su password'
-              onChange={(e) => setPassword(e.target.value)}
-              key={key}
-              defaultValue={value}
-              value={password}
-              //pattern='^(?=\w*\d)(?=\w*[a-z])\S{8,16}$'
-              title={intl.formatMessage({ id: 'form.validate.message.password' })}
-              //required={true}
-              message={intl.formatMessage({ id: 'form.field.required' })}
-            />
-          );
-        }
+      if (type === 'city') {
+        input = (
+          <RegionDropdown
+            className='countryCity-styles'
+            country={country}
+            value={region}
+            name={name}
+            onChange={(val) => setRegion(val)}
+          />
+        );
+      }
 
-        if (type === 'avatar') {
-          ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
+      if (type === 'password') {
+        input = (
+          <Password
+            name='password'
+            placeholder='Ingrese su password'
+            onChange={(e) => setPassword(e.target.value)}
+            key={key}
+            defaultValue={value}
+            value={password}
+            //pattern='^(?=\w*\d)(?=\w*[a-z])\S{8,16}$'
+            title={intl.formatMessage({ id: 'form.validate.message.password' })}
+            //required={true}
+            message={intl.formatMessage({ id: 'form.field.required' })}
+          />
+        );
+      }
 
-          input = (
-            <div style={{ textAlign: 'center' }}>
-              <ImgCrop rotate shape='round'>
-                <Upload
-                  action={'https://api.evius.co/api/files/upload/'}
-                  accept='image/png,image/jpeg'
-                  onChange={(file) => {
-                    //alert("ONCHANGE")
-                    //console.log("FILE==>",file.fileList)
-                    //console.log("FILEFORMATTER==>",file)
-                    setImageAvatar(file);
-                    /*  setImgUrl(fls);
+      if (type === 'avatar') {
+        ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
+
+        input = (
+          <div style={{ textAlign: 'center' }}>
+            <ImgCrop rotate shape='round'>
+              <Upload
+                action={'https://api.evius.co/api/files/upload/'}
+                accept='image/png,image/jpeg'
+                onChange={(file) => {
+                  //alert("ONCHANGE")
+                  //console.log("FILE==>",file.fileList)
+                  //console.log("FILEFORMATTER==>",file)
+                  setImageAvatar(file);
+                  /*  setImgUrl(fls);
                  const fls = (file ? file.fileList : [])                  
                   .map(fl => ({
                     ...fl,
                     status: 'success',
                   }))*/
-                  }}
-                  multiple={false}
-                  listType='picture'
-                  maxCount={1}
-                  defaultFileList={
-                    value
-                      ? [
-                          {
-                            name: typeof value == 'string' ? obtenerName(value) : null,
-                            url: typeof value == 'string' ? value : null,
-                          },
-                        ]
-                      : []
-                  }
-                  beforeUpload={beforeUpload}>
-                  <Button type='primary' icon={<UploadOutlined />}>
-                    {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
-                  </Button>
-                </Upload>
-              </ImgCrop>
-            </div>
-          );
-        }
-
-        let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
-
-        //esogemos el tipo de validación para email
-        rule = type === 'email' ? { ...rule, type: 'email' } : rule;
-
-        rule =
-          type == 'password'
-            ? {
-                required: true,
-                pattern: new RegExp(/^[A-Za-z0-9_-]{8,}$/),
-                message: 'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales',
-              }
-            : rule;
-        // let hideFields =
-        //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
-
-        return (
-          type !== 'boolean' && (
-            <div key={'g' + key} name='field'>
-              {type === 'tituloseccion' && input}
-              {type !== 'tituloseccion' && (
-                <>
-                  <Form.Item
-                    // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
-                    // style={eventUserId && hideFields}
-                    valuePropName={type === 'boolean' ? 'checked' : 'value'}
-                    label={
-                      (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
-                        ? label
-                        : '' && (labelPosition !== 'arriba' || !labelPosition)
-                    }
-                    name={name}
-                    rules={[rule]}
-                    key={'l' + key}
-                    htmlFor={key}
-                    initialValue={value}>
-                    {input}
-                  </Form.Item>
-
-                  {description && description.length < 500 && <p>{description}</p>}
-                  {description && description.length > 500 && (
-                    <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
-                      <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
-                        <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
-                      </Panel>
-                    </Collapse>
-                  )}
-                </>
-              )}
-            </div>
-          )
+                }}
+                multiple={false}
+                listType='picture'
+                maxCount={1}
+                defaultFileList={
+                  value
+                    ? [
+                        {
+                          name: typeof value == 'string' ? obtenerName(value) : null,
+                          url: typeof value == 'string' ? value : null,
+                        },
+                      ]
+                    : []
+                }
+                beforeUpload={beforeUpload}>
+                <Button type='primary' icon={<UploadOutlined />}>
+                  {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
+                </Button>
+              </Upload>
+            </ImgCrop>
+          </div>
         );
       }
-    });
 
+      let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
+
+      //esogemos el tipo de validación para email
+      rule = type === 'email' ? { ...rule, type: 'email' } : rule;
+
+      rule =
+        type == 'password'
+          ? {
+              required: true,
+              pattern: new RegExp(/^[A-Za-z0-9_-]{8,}$/),
+              message: 'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales',
+            }
+          : rule;
+      // let hideFields =
+      //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
+
+      return (
+        type !== 'boolean' && (
+          <div key={'g' + key} name='field'>
+            {type === 'tituloseccion' && input}
+            {type !== 'tituloseccion' && (
+              <>
+                <Form.Item
+                  // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
+                  // style={eventUserId && hideFields}
+                  valuePropName={type === 'boolean' ? 'checked' : 'value'}
+                  label={
+                    (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
+                      ? label
+                      : '' && (labelPosition !== 'arriba' || !labelPosition)
+                  }
+                  name={name}
+                  rules={[rule]}
+                  key={'l' + key}
+                  htmlFor={key}
+                  initialValue={value}>
+                  {input}
+                </Form.Item>
+
+                {description && description.length < 500 && <p>{description}</p>}
+                {description && description.length > 500 && (
+                  <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
+                    <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
+                      <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
+                    </Panel>
+                  </Collapse>
+                )}
+              </>
+            )}
+          </div>
+        )
+      );}
+    });
+  
     return formUI;
   });
 
