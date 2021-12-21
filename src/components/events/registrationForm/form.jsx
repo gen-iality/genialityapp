@@ -492,9 +492,13 @@ const FormRegister = ({
   const renderForm = useCallback(() => {
     if (!extraFields) return '';
     let formUI = extraFields.map((m, key) => {
+      /* console.log(m, key) */
       if (m.visibleByAdmin == true) {
         return;
       }
+      //Este if es nuevo para poder validar las contraseñas y avatars viejos (nuevo flujo para no mostrar esos campos)
+      if(m.name !== 'contrasena' && m.name !== 'password' && m.name !== 'avatar'){
+        
 
       let type = m.type || 'text';
       let props = m.props || {};
@@ -527,8 +531,10 @@ const FormRegister = ({
         <Input
           disabled={
             /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
+            //como validar cuando es usuario y admin?
+            cUser.value.autorizaciontratamientodedatospersonales === true ? true :
             m.name == 'email' && initialValues?.email ? true : 
-            cEvent.value.visibility === 'PRIVATE' &&
+            cEvent.value.visibility === 'PUBLIC' &&
             m.name == 'names' && 
             initialValues?.names ? true : false
           }
@@ -872,8 +878,9 @@ const FormRegister = ({
             )}
           </div>
         )
-      );
+      );}
     });
+  
     return formUI;
   });
 

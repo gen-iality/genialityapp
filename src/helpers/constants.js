@@ -89,6 +89,7 @@ export const rolPermissions = {
   },
 };
 export const typeInputs = [
+  { value: '', label: 'Seleccione una opción'},
   { value: 'text', label: 'Texto' },
   { value: 'country', label: 'Pais ' },
   { value: 'city', label: 'Ciudad ' },
@@ -102,10 +103,10 @@ export const typeInputs = [
   { value: 'file', label: 'Archivo' },
   { value: 'complex', label: 'JSON' },
   { value: 'tituloseccion', label: 'Titulo para indicar campos relacionados' },
-  { value: 'password', label: 'Password' },
+  /* { value: 'password', label: 'Password' }, */
   { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
   { value: 'codearea', label: 'Código de área para números' },
-  { value: 'avatar', label: 'Imagen de perfil' },
+  /* { value: 'avatar', label: 'Imagen de perfil' }, */
 ];
 export const toolbarEditor = {
   toolbar: [
