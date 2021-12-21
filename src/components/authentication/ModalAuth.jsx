@@ -356,24 +356,24 @@ const ModalAuth = (props) => {
               </div>
             )}
           </TabPane>
-          { isVisibleRegister() && (
-              <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
-                <div
-                  // className='asistente-list'
-                  style={{
-                    height: 'auto',
-                    overflowY: 'hidden',
-                    paddingLeft: '5px',
-                    paddingRight: '5px',
-                    paddingTop: '0px',
-                    paddingBottom: '0px',
-                  }}>
-                  <RegisterUser
-                    screens={screens}
-                    stylePaddingMobile={stylePaddingMobile}
-                    stylePaddingDesktop={stylePaddingDesktop}
-                  />
-                  {/* {props.organization != 'register' && <FormComponent />}
+          {isVisibleRegister() && (
+            <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
+              <div
+                // className='asistente-list'
+                style={{
+                  height: 'auto',
+                  overflowY: 'hidden',
+                  paddingLeft: '5px',
+                  paddingRight: '5px',
+                  paddingTop: '0px',
+                  paddingBottom: '0px',
+                }}>
+                <RegisterUser
+                  screens={screens}
+                  stylePaddingMobile={stylePaddingMobile}
+                  stylePaddingDesktop={stylePaddingDesktop}
+                />
+                {/* {props.organization != 'register' && <FormComponent />}
                   {props.organization == 'register' && (
                     <FormComponent
                       conditionalsOther={[]}
@@ -387,9 +387,9 @@ const ModalAuth = (props) => {
                       errorRegisterUser={errorRegisterUSer}
                     />
                   )} */}
-                </div>
-              </TabPane>
-            )}
+              </div>
+            </TabPane>
+          )}
         </Tabs>
       </Modal>
     )

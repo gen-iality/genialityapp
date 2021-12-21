@@ -81,7 +81,7 @@ let SocialZone = function(props) {
 
   return (
     <Tabs
-      style={{ marginTop: '-20px' }}
+      style={{ marginTop: '-15px' }}
       defaultActiveKey='1'
       onChange={callback}
       activeKey={chatAttendeChats}
@@ -97,7 +97,7 @@ let SocialZone = function(props) {
               size='small'
               // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
               count={totalPrivateMessages}>
-              <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
+              <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
             </Badge>
           </>
         }
@@ -108,7 +108,6 @@ let SocialZone = function(props) {
       </TabPane>
 
       <>
-        {' '}
         <TabPane
           style={styleTabAttendes}
           tab={

@@ -86,7 +86,7 @@ const ChatList = (props) => {
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
   console.log('Props', props);
   return (
-    <Tabs style={{ marginTop: '-15px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
+    <Tabs style={{ marginTop: '-18px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
         <TabPane
           tab={
