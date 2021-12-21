@@ -179,13 +179,13 @@ class NewEvent extends Component {
         let token = await GetTokenUserFirebase();
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
+        result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
           //HABILTAR SECCIONES POR DEFECTO
-          const sections = await Actions.put(
-            `api/events/${result._id}?token=${token}`,
-            eventNewContext.selectOrganization.itemsMenu || newMenu
-          );
-
+          const sections = await Actions.put(`api/events/${result._id}?token=${token}`, {
+            itemsMenu: eventNewContext.selectOrganization.itemsMenu || newMenu,
+          });
+          sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
             //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
             const activity = {
