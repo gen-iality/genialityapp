@@ -59,7 +59,7 @@ const Headers = (props) => {
       .auth()
       .signOut()
       .then(() => {
-        window.location.replace(window.location.origin + '');
+        window.location.reload();
       })
       .catch(function(error) {
         console.log('error', error);

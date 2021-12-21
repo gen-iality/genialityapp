@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
 import UsersCard from '../../shared/usersCard';
 import { app } from 'helpers/firebase';
+import ThisRouteCanBeDisplayed from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
@@ -162,12 +163,15 @@ const ChatList = (props) => {
           }
           key='private'>
           {!chatActual.chatname && (
-            <List
-              className='asistente-list'
-              style={styleList}
-              dataSource={privateChatsList}
-              renderItem={(item) => <UsersCard type='privateChat' item={item} />}
-            />
+            <ThisRouteCanBeDisplayed>
+              <List
+                key='PrivateChat'
+                className='asistente-list'
+                style={styleList}
+                dataSource={privateChatsList}
+                renderItem={(item) => <UsersCard type='privateChat' item={item} />}
+              />
+            </ThisRouteCanBeDisplayed>
           )}
 
           {chatActual.chatname && (

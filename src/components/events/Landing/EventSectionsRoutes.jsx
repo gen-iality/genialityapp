@@ -145,7 +145,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <DocumentsForm />
+                <DocumentsForm key='documents' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -159,7 +159,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <MyAgendaIndepend />
+                <MyAgendaIndepend key='interviews' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -173,7 +173,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <NetworkingForm />
+                <NetworkingForm key='networking' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -187,7 +187,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <InformativeSection2 />
+                <InformativeSection2 key='informativeSection1' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -206,7 +206,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <InformativeSection />
+                <InformativeSection key='informativeSection' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -220,7 +220,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <MySection />
+                <MySection key='my_section' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -234,7 +234,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <AgendaActividadDetalle />
+                <AgendaActividadDetalle key='activity' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -248,12 +248,12 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <SpeakersForm />
+                <SpeakersForm key='speakers' />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
-        <Route path={`${path}/surveys`}>
+        <Route path={`${path}/survey`}>
           {() =>
             ValidateViewPermissions('surveys', 'Encuestas') ? (
               <>
@@ -261,7 +261,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <SurveyForm />
+                <SurveyForm key='survey' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -274,7 +274,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Partners />
+                <Partners key='partners' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -287,7 +287,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <FaqsForm />
+                <FaqsForm key='faqs' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -301,7 +301,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <EventHome />
+                <EventHome key='evento' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -315,7 +315,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <WallForm />
+                <WallForm key='wall' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -328,7 +328,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Videos />
+                <Videos key='videos' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -342,7 +342,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Ferias />
+                <Ferias key='ferias' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -355,7 +355,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Noticias />
+                <Noticias key='noticias' />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -384,14 +384,20 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <CertificadoLanding />
+                <CertificadoLanding key='certs' />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/producto`}>
           {() =>
-            ValidateViewPermissions('producto', 'Galería') ? <Redirect to={redirectToPermissions} /> : <Productos />
+            ValidateViewPermissions('producto', 'Galería') ? (
+              <Redirect to={redirectToPermissions} />
+            ) : (
+              <ThisRouteCanBeDisplayed>
+                <Productos key='producto' />
+              </ThisRouteCanBeDisplayed>
+            )
           }
         </Route>
         <Route path={`${path}/agenda`}>
@@ -403,6 +409,7 @@ const EventSectionRoutes = (props) => {
             ) : (
               <ThisRouteCanBeDisplayed>
                 <Agenda
+                  key='agenda'
                   activity={props.currentActivity}
                   generalTabs={props.generalTabs}
                   setVirtualConference={props.setVirtualConference}
