@@ -139,8 +139,8 @@ const RenderComponent = (props) => {
 
           case 'ended_meeting_room':
             return <VideoActivity />;
-          default:
-            return <VideoActivity />;
+          case '':
+            return currentActivity?.video && <VideoActivity />;
         }
 
       case 'zoom':
@@ -162,8 +162,8 @@ const RenderComponent = (props) => {
 
           case 'ended_meeting_room':
             return <VideoActivity />;
-          default:
-            return <VideoActivity />;
+          case '':
+            return currentActivity?.video && <VideoActivity />;
         }
 
       case 'dolby':
@@ -185,8 +185,8 @@ const RenderComponent = (props) => {
 
           case 'ended_meeting_room':
             return <VideoActivity />;
-          default:
-            return <VideoActivity />;
+          case '':
+            return currentActivity?.video && <VideoActivity />;
         }
 
       case 'wowza':
@@ -219,8 +219,8 @@ const RenderComponent = (props) => {
 
           case 'ended_meeting_room':
             return <VideoActivity />;
-          default:
-            return <VideoActivity />;
+          case '':
+            return currentActivity?.video && <VideoActivity />;
         }
       case null:
         return <VideoActivity />;

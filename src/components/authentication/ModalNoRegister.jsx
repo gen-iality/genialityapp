@@ -20,6 +20,7 @@ const ModalNoRegister = (props) => {
   return (
     <Modal
       onCancel={() => props.cHelper.handleChangeTypeModal('visitors')}
+      width={400}
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
       footer={[
@@ -56,17 +57,26 @@ const ModalNoRegister = (props) => {
         icon={null}
         title={
           props.cHelper.typeModal !== 'loginSuccessNotRegister' ? (
+<<<<<<< HEAD
+            <Typography.Title level={4} style={{ textAlign: 'left' }}>
+              Usuario no registrado al evento
+=======
             <Typography.Title level={4}>
               {intl.formatMessage({
                 id: 'modal.no_register.title',
                 defaultMessage: 'Usuario no registrado al evento',
               })}
+>>>>>>> be9662d9e0253c991687aa2931545ef85c407755
             </Typography.Title>
           ) : (
-            <Typography.Title level={4}>Cuenta creada correctamente</Typography.Title>
+            <Typography.Title level={4} style={{ textAlign: 'left' }}>
+              Cuenta creada correctamente
+            </Typography.Title>
           )
         }
-        subTitle={<Typography.Paragraph style={{ fontSize: '16px' }}>{msgEventPublic}</Typography.Paragraph>}
+        subTitle={
+          <Typography.Paragraph style={{ textAlign: 'left', fontSize: '16px' }}>{msgEventPublic}</Typography.Paragraph>
+        }
       />
     </Modal>
   );
