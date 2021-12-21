@@ -486,6 +486,10 @@ const FormRegister = ({
     return isLt5M ? true : false;
   };
 
+  function validateUrl() {
+    let url = window.location.pathname;
+    return url.includes('/eventadmin/') ? true : false;
+  }
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
