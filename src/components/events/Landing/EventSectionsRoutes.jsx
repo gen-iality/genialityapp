@@ -60,7 +60,7 @@ const EventSectionRoutes = (props) => {
       props.cEventUser?.value == null &&
       props.cEventUser?.status == 'LOADED' &&
       typeModal !== 'registerForTheEvent' &&
-      typeModal !== 'loginSuccessNotRegister' &&
+      typeModal !== 'loginSuccess' &&
       typeModal !== 'visitors'
     ) {
       console.log('1. ingreso aca a type modal');

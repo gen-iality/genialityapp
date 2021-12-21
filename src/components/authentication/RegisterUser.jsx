@@ -69,7 +69,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           if (login) {
             //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
             if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
-              handleChangeTypeModal('loginSuccessNotRegister');
+              handleChangeTypeModal('loginSuccess');
             } else {
               handleChangeTypeModal('loginSuccess');
             }
