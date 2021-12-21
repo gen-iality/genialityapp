@@ -16,6 +16,7 @@ import { UseCurrentUser } from '../../Context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../Context/HelperContext';
+import ThisRouteCanBeDisplayed from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
@@ -80,7 +81,7 @@ let SocialZone = function(props) {
 
   return (
     <Tabs
-      style={{marginTop:'-20px'}}
+      style={{ marginTop: '-20px' }}
       defaultActiveKey='1'
       onChange={callback}
       activeKey={chatAttendeChats}
@@ -96,12 +97,14 @@ let SocialZone = function(props) {
               size='small'
               // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
               count={totalPrivateMessages}>
-              <div style={{ color: cEvent.value.styles.textMenu  }}> Chats</div>
+              <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
             </Badge>
           </>
         }
         key='1'>
-        <ChatList props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
+        <ThisRouteCanBeDisplayed>
+          <ChatList key='ChatList' props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
+        </ThisRouteCanBeDisplayed>
       </TabPane>
 
       <>
@@ -114,56 +117,60 @@ let SocialZone = function(props) {
             </div>
           }
           key='2'>
-          <Row>
-            <Space size={10} style={{ width: '100%' }}>
-              {!Object.keys(attendeeList).length ? (
-                ''
-              ) : (
-                <div
-                  className='control'
-                  style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
-                  <input
-                    style={{ color: cEvent.value.styles.textMenu }}
-                    ref={busquedaRef}
-                    autoFocus
-                    //className='input'
-                    type='text'
-                    name={'name'}
-                    onChange={handleChange}
-                    placeholder='Buscar participante...'
-                  />
-                </div>
-              )}
-              {!Object.keys(attendeeList).length
-                ? null
-                : busqueda !== null && (
-                    <Button
-                      icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
-                      shape='round'
-                      onClick={searhAttende}>
-                      {!isFiltered && 'Buscar'}
-                      {isFiltered && 'Borrar'}
-                    </Button>
+          <ThisRouteCanBeDisplayed>
+            <div key='AttendeList'>
+              <Row>
+                <Space size={10} style={{ width: '100%' }}>
+                  {!Object.keys(attendeeList).length ? (
+                    ''
+                  ) : (
+                    <div
+                      className='control'
+                      style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
+                      <input
+                        style={{ color: cEvent.value.styles.textMenu }}
+                        ref={busquedaRef}
+                        autoFocus
+                        //className='input'
+                        type='text'
+                        name={'name'}
+                        onChange={handleChange}
+                        placeholder='Buscar participante...'
+                      />
+                    </div>
                   )}
-            </Space>
-          </Row>
-          <div className='asistente-list'>
-            {!Object.keys(attendeeList).length ? (
-              <Row justify='center'>
-                <p>No hay asistentes aún</p>
+                  {!Object.keys(attendeeList).length
+                    ? null
+                    : busqueda !== null && (
+                        <Button
+                          icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
+                          shape='round'
+                          onClick={searhAttende}>
+                          {!isFiltered && 'Buscar'}
+                          {isFiltered && 'Borrar'}
+                        </Button>
+                      )}
+                </Space>
               </Row>
-            ) : (
-              <AttendeList
-                agendarCita={props.agendarCita}
-                notificacion={props.notificacion}
-                sendFriendship={props.sendFriendship}
-                perfil={props.perfil}
-                section={props.section}
-                containNetWorking={props.containNetWorking}
-                busqueda={strAttende}
-              />
-            )}
-          </div>
+              <div className='asistente-list'>
+                {!Object.keys(attendeeList).length ? (
+                  <Row justify='center'>
+                    <p>No hay asistentes aún</p>
+                  </Row>
+                ) : (
+                  <AttendeList
+                    agendarCita={props.agendarCita}
+                    notificacion={props.notificacion}
+                    sendFriendship={props.sendFriendship}
+                    perfil={props.perfil}
+                    section={props.section}
+                    containNetWorking={props.containNetWorking}
+                    busqueda={strAttende}
+                  />
+                )}
+              </div>
+            </div>
+          </ThisRouteCanBeDisplayed>
         </TabPane>
       </>
 
@@ -180,32 +187,36 @@ let SocialZone = function(props) {
             </div>
           }
           key='3'>
-          <Row
-            justify='space-between'
-            style={{ display: 'pointer' }}
-            onClick={() => {
-              props.setMainStage(null);
-              HandleChatOrAttende('1');
-            }}></Row>
-          {cUser.value !== null ? (
-            <SurveyList
-              eventSurveys={props.eventSurveys}
-              publishedSurveys={props.publishedSurveys}
-              listOfEventSurveys={props.listOfEventSurveys}
-              loadingSurveys={props.loadingSurveys}
-            />
-          ) : (
-            <div style={{ paddingTop: 30 }}>
-              <Alert
-                showIcon
-                message='Para poder responder una encuesta debes ser usuario del sistema'
-                type='warning'
-              />
-              <Row style={{ marginTop: 30 }} justify='center'>
-                <Button onClick={redirectRegister}>Registrarme</Button>
-              </Row>
+          <ThisRouteCanBeDisplayed>
+            <div key='SurveyList'>
+              <Row
+                justify='space-between'
+                style={{ display: 'pointer' }}
+                onClick={() => {
+                  props.setMainStage(null);
+                  HandleChatOrAttende('1');
+                }}></Row>
+              {cUser.value !== null ? (
+                <SurveyList
+                  eventSurveys={props.eventSurveys}
+                  publishedSurveys={props.publishedSurveys}
+                  listOfEventSurveys={props.listOfEventSurveys}
+                  loadingSurveys={props.loadingSurveys}
+                />
+              ) : (
+                <div style={{ paddingTop: 30 }}>
+                  <Alert
+                    showIcon
+                    message='Para poder responder una encuesta debes ser usuario del sistema'
+                    type='warning'
+                  />
+                  <Row style={{ marginTop: 30 }} justify='center'>
+                    <Button onClick={redirectRegister}>Registrarme</Button>
+                  </Row>
+                </div>
+              )}
             </div>
-          )}
+          </ThisRouteCanBeDisplayed>
         </TabPane>
       )}
 
@@ -222,7 +233,9 @@ let SocialZone = function(props) {
               </>
             }
             key='4'>
-            <GameList />
+            <ThisRouteCanBeDisplayed>
+              <GameList key='GameList' />
+            </ThisRouteCanBeDisplayed>
           </TabPane>
         )}
     </Tabs>
