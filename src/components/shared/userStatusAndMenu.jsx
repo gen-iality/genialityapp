@@ -34,6 +34,12 @@ const ItemStyle = {
 };
 
 const UserStatusAndMenu = (props) => {
+  let { cEventUser } = props;
+  console.log(
+    `%c📌debugger start, element Selected : props📌`,
+    'font-family:calibri; background-color:#0be881; color: #1e272e; font-size:16px; border-radius:5px; margin:5px; padding:2px;border: 5px #fff; border-style: solid dashed',
+    props
+  );
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
@@ -55,7 +61,7 @@ const UserStatusAndMenu = (props) => {
         onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
         <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
       </Menu.Item>
-      {props.location.pathname.includes('landing') && (
+      {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
         <Menu.Item
           onClick={() => {
             props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } });
