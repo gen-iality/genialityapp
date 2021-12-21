@@ -486,6 +486,10 @@ const FormRegister = ({
     return isLt5M ? true : false;
   };
 
+  function validateUrl(){
+    let url = window.location.pathname;
+    return url.includes('/eventadmin/') ? true : false;
+  }
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
@@ -532,11 +536,11 @@ const FormRegister = ({
           disabled={
             /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
             //como validar cuando es usuario y admin?
-            cUser.value.autorizaciontratamientodedatospersonales === true ? true :
-            m.name == 'email' && initialValues?.email ? true : 
+            validateUrl() === true ?
+            (m.name == 'email' && initialValues?.email ? true : 
             cEvent.value.visibility === 'PUBLIC' &&
             m.name == 'names' && 
-            initialValues?.names ? true : false
+            initialValues?.names ? true : false) : false
           }
           {...props}
           addonBefore={

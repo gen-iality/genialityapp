@@ -373,7 +373,7 @@ class Datos extends Component {
         dataIndex: 'label',
         ellipsis: true,
         sorter: (a, b) => a.label.localeCompare(b.label),
-        render (val, item) {
+        /* render (val, item) {
           return (
             <>
               {
@@ -383,7 +383,7 @@ class Datos extends Component {
               }
             </>
           )
-        }
+        } */
       },
       {
         title: 'Tipo de dato',
