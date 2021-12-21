@@ -34,6 +34,7 @@ const ItemStyle = {
 };
 
 const UserStatusAndMenu = (props) => {
+  let { cEventUser } = props;
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
@@ -55,7 +56,7 @@ const UserStatusAndMenu = (props) => {
         onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
         <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
       </Menu.Item>
-      {props.location.pathname.includes('landing') && (
+      {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
         <Menu.Item
           onClick={() => {
             props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } });
