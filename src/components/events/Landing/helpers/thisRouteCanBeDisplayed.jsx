@@ -52,13 +52,7 @@ function ThisRouteCanBeDisplayed({ children }) {
         ) : (
           iAmRegisteredInThisEvent() === 'registered' && children
         ))}
-      {recordTypeForThisEvent() === 'unregisteredPublicEvent' && (
-        <Result
-          status='success'
-          title='Genial 📎'
-          subTitle='Participa de este evento sin limites, no todos nuestros eventos son publicos'
-        />
-      )}
+      {recordTypeForThisEvent() === 'unregisteredPublicEvent' && children}
       {recordTypeForThisEvent() === 'privateEvent' && (
         <Result status='warning' title='Lo sentimos' subTitle='Este evento es privado necesitas estar invitado' />
       )}
