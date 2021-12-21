@@ -573,7 +573,7 @@ export const OrganizationApi = {
   },
   editMenu: async (data, id) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true`, `${data}&token=${token}`);
+    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=false&token=${token}`, data);
   },
 };
 export const BadgeApi = {

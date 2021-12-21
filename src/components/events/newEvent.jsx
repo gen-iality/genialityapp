@@ -13,6 +13,7 @@ import { cNewEventContext } from '../../Context/newEventContext';
 import Service from '../../components/agenda/roomManager/service';
 import { firestore } from '../../helpers/firebase';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import Axios from 'axios';
 
 const { Step } = Steps;
 
@@ -179,13 +180,19 @@ class NewEvent extends Component {
         let token = await GetTokenUserFirebase();
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
+        //DEV API QUEMADA POR AHORA // PRUEBAS
+        //const result = await Axios.post(`https://apidev.evius.co/api/events?token=${token}`, data);
+        result._id = result._id ? result._id : result.data._id;
         if (result._id) {
           //HABILTAR SECCIONES POR DEFECTO
-          const sections = await Actions.put(
-            `api/events/${result._id}?token=${token}`,
-            eventNewContext.selectOrganization.itemsMenu || newMenu
-          );
-
+          const sections = await Actions.put(`api/events/${result._id}?token=${token}`, {
+            itemsMenu: eventNewContext.selectOrganization.itemsMenu || newMenu,
+          });
+          //API DEV
+          /*const sections = await Axios.put(`https://apidev.evius.co/api/events/${result._id}?token=${token}`, {
+            itemsMenu: eventNewContext.selectOrganization.itemsMenu || newMenu,
+          });*/
+          sections._id = sections._id ? sections?._id : sections?.data._id;
           if (sections?._id) {
             //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
             const activity = {
@@ -205,6 +212,7 @@ class NewEvent extends Component {
                 let sala = await this.createZoomRoom(agenda, result._id);
                 if (sala) {
                   message.success('Evento creado correctamente..');
+                  alert('ACA');
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
                   message.error('Error al crear sala');
@@ -225,9 +233,11 @@ class NewEvent extends Component {
               }
             }
           } else {
+            console.log('RESP API==>', result);
             message.error('Error al crear el evento');
           }
         } else {
+          console.log('RESP API==>', result);
           message.error('Error al crear el evento');
         }
       } catch (error) {

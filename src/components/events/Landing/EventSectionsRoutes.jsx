@@ -55,7 +55,7 @@ const EventSectionRoutes = (props) => {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
     }
-
+    console.log('props.cEventUser?.value', props.cEventUser?.value, props.cEventUser?.status, typeModal);
     if (
       props.cEventUser?.value == null &&
       props.cEventUser?.status == 'LOADED' &&

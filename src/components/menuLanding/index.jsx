@@ -270,7 +270,7 @@ class menuLanding extends Component {
     }
     if (this.props.organization !== 1) {
       let token = await GetTokenUserFirebase();
-      await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
+      const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, menu);
     } else {
       //ACTUALIZAR ORGANIZACION
       // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
@@ -279,7 +279,8 @@ class menuLanding extends Component {
         ...this.props.organizationObj,
         itemsMenu: { ...menu },
       };
-      let resp = await OrganizationApi.editMenu(updateOrganization, updateOrganization._id);
+
+      let resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
       if (resp) {
         console.log('MENU GUARDADDO==>', newMenu);
       }
