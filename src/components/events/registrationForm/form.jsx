@@ -511,6 +511,7 @@ const FormRegister = ({
         : initialValues
         ? initialValues[target]
         : '';
+        /* console.log(initialValues, 'initialValues', m) */
 
       //no entiendo b esto para que funciona
       if (conditionals.state === 'enabled') {
@@ -524,7 +525,12 @@ const FormRegister = ({
       }
       let input = (
         <Input
-          disabled={m.name == 'email' && initialValues?.email ? true : false}
+          disabled={
+            /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
+            cEvent.value.visibility === 'PRIVATE' &&
+            (m.name == 'email' || m.name == 'names') && 
+            (initialValues?.email || initialValues?.names) ? true : false
+          }
           {...props}
           addonBefore={
             labelPosition === 'izquierda' && (

@@ -43,6 +43,7 @@ const DrawerProfile = (props) => {
     //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
   };
+
   return (
     <>
       <Drawer
@@ -83,7 +84,12 @@ const DrawerProfile = (props) => {
                 type='text'
                 size='middle'
                 style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}>
-                {intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}
+                {
+                  /* (props.cEvent.value.allow_register === true || props.cEvent.value.allow_register === 'true') && Este en caso de que tampoco sea para anonimo */
+                  props.cEvent.value.visibility === 'PUBLIC' && (
+                    <>{intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}</>
+                  )
+                }
               </Button>
             )}
           </Space>
