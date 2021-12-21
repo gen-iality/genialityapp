@@ -7,8 +7,10 @@ import ModalFeedback from './ModalFeedback';
 import { app } from 'helpers/firebase';
 import { useContext } from 'react';
 import HelperContext from 'Context/HelperContext';
+import { useIntl } from 'react-intl';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+  const intl = useIntl();
   const { handleChangeTypeModal } = useContext(HelperContext);
   const ruleEmail = [
     {
@@ -118,7 +120,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                   style={{ height: !imageAvatar ? '150px' : '95px', width: !imageAvatar ? '150px' : '95px' }}>
                   <Space direction='vertical'>
                     <PictureOutlined style={{ fontSize: '40px' }} />
-                    Subir logo
+                    {intl.formatMessage({
+                      id: 'modal.label.photo',
+                      defaultMessage: 'Subir foto',
+                    })}
                   </Space>
                 </Button>
               }
@@ -126,7 +131,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           </ImgCrop>
         </Form.Item>
         <Form.Item
-          label={'Email'}
+          label={intl.formatMessage({
+            id: 'modal.label.email',
+            defaultMessage: 'Correo electrónico',
+          })}
           name='email'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
@@ -139,7 +147,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           />
         </Form.Item>
         <Form.Item
-          label={'Contraseña'}
+          label={intl.formatMessage({
+            id: 'modal.label.password',
+            defaultMessage: 'Contraseña',
+          })}
           name='password'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
@@ -152,7 +163,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           />
         </Form.Item>
         <Form.Item
-          label={'Nombre'}
+          label={intl.formatMessage({
+            id: 'modal.label.name',
+            defaultMessage: 'Nombre',
+          })}
           name='names'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
@@ -171,7 +185,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
             size='large'>
-            Crear Cuenta
+            {intl.formatMessage({
+              id: 'modal.label.create_user',
+              defaultMessage: 'Crear cuenta de usuario',
+            })}
           </Button>
         </Form.Item>
       </Form>
