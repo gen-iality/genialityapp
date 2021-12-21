@@ -527,9 +527,10 @@ const FormRegister = ({
         <Input
           disabled={
             /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
+            m.name == 'email' && initialValues?.email ? true : 
             cEvent.value.visibility === 'PRIVATE' &&
-            (m.name == 'email' || m.name == 'names') && 
-            (initialValues?.email || initialValues?.names) ? true : false
+            m.name == 'names' && 
+            initialValues?.names ? true : false
           }
           {...props}
           addonBefore={
