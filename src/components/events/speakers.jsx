@@ -282,7 +282,7 @@ class Speakers extends Component {
         {/* <div style={{ padding: '40px' }}> */}
         <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
           {/* Mapeo de datos para mostrar los Speakers */}
-          {speakersWithoutCategory.length &&
+          {speakersWithoutCategory.length > 0 &&
             speakersWithoutCategory.map((speaker, key) => (
               <>
                 {speaker.published && (

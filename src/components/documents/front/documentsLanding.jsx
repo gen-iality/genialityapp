@@ -1,8 +1,8 @@
 import { notification, List, Avatar, Button } from 'antd';
 import React, { Component } from 'react';
 import { getFiles } from '../services';
-import { Col, Card, Result, Row,Space } from 'antd';
-import {CloudDownloadOutlined} from '@ant-design/icons';
+import { Col, Card, Result, Row, Space } from 'antd';
+import { CloudDownloadOutlined } from '@ant-design/icons';
 import Loading from '../../loaders/loading';
 import DocumentsList from '../documentsList';
 import { DocumentsApi } from '../../../helpers/request';
@@ -10,7 +10,6 @@ import { Tabs } from 'antd';
 import withContext from '../../../Context/withContext';
 import XLSX from 'xlsx';
 const { TabPane } = Tabs;
-
 
 class documentsDetail extends Component {
   constructor(props) {
@@ -79,54 +78,59 @@ class documentsDetail extends Component {
     return (
       <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
         <Tabs defaultActiveKey='1'>
-          <TabPane tab={`Documentos de ${this.props.cEventUser?.value?.properties?.displayName}`} key='1'>
-            {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
-              <List
-                style={{ padding: 10 }}
-                itemLayout='vertical'
-                dataSource={this.props.cEventUser?.value?.properties?.documents_user}
-                renderItem={(item) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={
-                        <Avatar src='https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/64/000000/external-file-interface-kiranshastry-lineal-color-kiranshastry-2.png' />
-                      }
-                      title={<a href={item.url}>{item.name}</a>}
-                      description={
-                        <Button  onClick={() => window.open(item.url)} shape='round' type='primary'>
-                          Ver Documento
-                        </Button>
-                      }
-                    />
-                  </List.Item>
-                )}
-              />
-            ) : this.props.cEventUser?.value?.properties?.documents_user?.length >= 10 ? (
-              <Row>
-                <Space direction='vertical'>
-                  <Row>
-                    {`Hola ${this.props.cEventUser?.value?.properties?.displayName} tienes ${this.props.cEventUser?.value?.properties?.documents_user.length} cartones, por favor descarga el archivo para verlos`}
-                  </Row>
-                 <Row>
-                 <Button icon={<CloudDownloadOutlined />} onClick={(e) => this.exportFile(e)} shape='round' type='primary'>
-                    Descargar Lista de cartones
-                  </Button>
-                 </Row>
-                </Space>
-              </Row>
-            ) : (
-              this.props.cEventUser?.value?.properties?.documents_user == undefined && (
-                <div className='site-card-border-less-wrapper'>
-                  <Card title='' bordered={false}>
-                    <Result
-                      title={`Hola ${this.props.cEventUser?.value?.properties?.displayName}, No Tienes documentos por ver para este evento`}
-                    />
-                  </Card>
-                </div>
-              )
-            )}
-          </TabPane>
-
+          {this.props.cEventUser?.value && (
+            <TabPane tab={`Documentos de ${this.props.cEventUser?.value?.properties?.displayName}`} key='1'>
+              {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
+                <List
+                  style={{ padding: 10 }}
+                  itemLayout='vertical'
+                  dataSource={this.props.cEventUser?.value?.properties?.documents_user}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar src='https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/64/000000/external-file-interface-kiranshastry-lineal-color-kiranshastry-2.png' />
+                        }
+                        title={<a href={item.url}>{item.name}</a>}
+                        description={
+                          <Button onClick={() => window.open(item.url)} shape='round' type='primary'>
+                            Ver Documento
+                          </Button>
+                        }
+                      />
+                    </List.Item>
+                  )}
+                />
+              ) : this.props.cEventUser?.value?.properties?.documents_user?.length >= 10 ? (
+                <Row>
+                  <Space direction='vertical'>
+                    <Row>
+                      {`Hola ${this.props.cEventUser?.value?.properties?.displayName} tienes ${this.props.cEventUser?.value?.properties?.documents_user.length} cartones, por favor descarga el archivo para verlos`}
+                    </Row>
+                    <Row>
+                      <Button
+                        icon={<CloudDownloadOutlined />}
+                        onClick={(e) => this.exportFile(e)}
+                        shape='round'
+                        type='primary'>
+                        Descargar Lista de cartones
+                      </Button>
+                    </Row>
+                  </Space>
+                </Row>
+              ) : (
+                this.props.cEventUser?.value?.properties?.documents_user == undefined && (
+                  <div className='site-card-border-less-wrapper'>
+                    <Card title='' bordered={false}>
+                      <Result
+                        title={`Hola ${this.props.cEventUser?.value?.properties?.displayName}, No Tienes documentos por ver para este evento`}
+                      />
+                    </Card>
+                  </div>
+                )
+              )}
+            </TabPane>
+          )}
           <TabPane tab='Documentos del evento' key='2'>
             <Col xs={24} sm={20} md={20} lg={20} xl={20} style={{ margin: '0 auto' }}>
               {folders && folders.length > 0 && <DocumentsList data={folders} files={data} />}
