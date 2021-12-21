@@ -201,6 +201,7 @@ class DatosModal extends Component {
             name='type'
             rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}>
             <Select
+              defaultValue={typeInputs}
               options={typeInputs}
               disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
               onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>

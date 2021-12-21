@@ -78,15 +78,27 @@ class Datos extends Component {
     try {
       const organizationId = this?.organization?._id;
       let fields = [];
+      let fieldsReplace = [];
       if (organizationId && !this.props.eventID && !this.props.edittemplate) {
         fields = await this.props.getFields();
-        fields = this.orderFieldsByWeight(fields);
-        fields = this.updateIndex(fields);
+        //Realizado con la finalidad de no mostrar la contraseña ni el avatar
+        fields.map((field) => {
+          if(field.name !== 'password' && field.name !== 'contrasena' && field.name !== 'avatar'){
+            fieldsReplace.push(field);
+          }
+        })
+        fields = this.orderFieldsByWeight(fieldsReplace);
+        fields = this.updateIndex(fieldsReplace);
       } else if (!this.props.edittemplate) {
         fields = await EventFieldsApi.getAll(this.eventID);
-
-        fields = this.orderFieldsByWeight(fields);
-        fields = this.updateIndex(fields);
+        //Realizado con la finalidad de no mostrar la contraseña ni el avatar
+        fields.map((field) => {
+          if(field.name !== 'password' && field.name !== 'contrasena' && field.name !== 'avatar'){
+            fieldsReplace.push(field);
+          }
+        })
+        fields = this.orderFieldsByWeight(fieldsReplace);
+        fields = this.updateIndex(fieldsReplace);
       }
       //console.log('FIELDS==>', fields);
       this.setState({ fields, loading: false });
@@ -361,6 +373,17 @@ class Datos extends Component {
         dataIndex: 'label',
         ellipsis: true,
         sorter: (a, b) => a.label.localeCompare(b.label),
+        render (val, item) {
+          return (
+            <>
+              {
+                item.name !== 'contraseña' || item.name !== 'password' || item.name !== 'avatar' && (
+                  <>{item.name}</>
+                )
+              }
+            </>
+          )
+        }
       },
       {
         title: 'Tipo de dato',

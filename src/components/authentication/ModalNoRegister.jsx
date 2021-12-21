@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Result, Button, Divider, Typography, Space } from 'antd';
 import withContext from '../../Context/withContext';
+import { useIntl } from 'react-intl';
 
 const ModalNoRegister = (props) => {
+  const intl = useIntl();
   // Mensajes para evento privado y prublico
-  const msgEventPublic = 'Este evento requiere que los asistentes se registren para poder participar.';
-  const msgEventPrivate =
-    'Este evento es privado, solo se puede acceder por invitación, Si esta no es su cuenta puede intentar con otra o contactar con el administrador del evento.';
+
+  const msgEventPublic = intl.formatMessage({
+    id: 'modal.no_register.msg_public',
+    defaultMessage: 'Este evento requiere que el asistente se registre para poder participar. ',
+  });
+  const msgEventPrivate = intl.formatMessage({
+    id: 'modal.no_register.msg_private',
+    defaultMessage:
+      'Este evento es privado, solo se puede acceder por invitación,  contacte al administrador del evento.',
+  });
+
   return (
     <Modal
       onCancel={() => props.cHelper.handleChangeTypeModal('visitors')}
@@ -22,14 +32,20 @@ const ModalNoRegister = (props) => {
             key='sign_off'
             type='text'
             size='large'>
-            Ir a evius
+            {intl.formatMessage({
+              id: 'modal.no_register.gotoevius',
+              defaultMessage: 'Ir a evius',
+            })}
           </Button>
           <Button
             onClick={() => props.cHelper.handleChangeTypeModal('registerForTheEvent')}
             key='sign_up'
             type='primary'
             size='large'>
-            Registrarme
+            {intl.formatMessage({
+              id: 'registration.button.create',
+              defaultMessage: 'Registrarme',
+            })}
           </Button>
         </Space>,
       ]}
@@ -41,8 +57,16 @@ const ModalNoRegister = (props) => {
         icon={null}
         title={
           props.cHelper.typeModal !== 'loginSuccessNotRegister' ? (
+<<<<<<< HEAD
             <Typography.Title level={4} style={{ textAlign: 'left' }}>
               Usuario no registrado al evento
+=======
+            <Typography.Title level={4}>
+              {intl.formatMessage({
+                id: 'modal.no_register.title',
+                defaultMessage: 'Usuario no registrado al evento',
+              })}
+>>>>>>> be9662d9e0253c991687aa2931545ef85c407755
             </Typography.Title>
           ) : (
             <Typography.Title level={4} style={{ textAlign: 'left' }}>
