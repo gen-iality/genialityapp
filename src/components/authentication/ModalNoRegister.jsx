@@ -20,7 +20,6 @@ const ModalNoRegister = (props) => {
   return (
     <Modal
       onCancel={() => props.cHelper.handleChangeTypeModal('visitors')}
-      width={400}
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
       footer={[
