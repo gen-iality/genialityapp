@@ -131,14 +131,14 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
     return eventUser;
   },
 
   getcurrentUserEventUser: async (event_id) => {
     let token = await GetTokenUserFirebase();
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
-    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
+    let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
 
@@ -643,7 +643,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers[ 'content-type' ],
+            type: response.headers['content-type'],
             blob: response.data,
           });
         });
