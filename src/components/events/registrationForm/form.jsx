@@ -328,6 +328,7 @@ const FormRegister = ({
 
             if (resp && resp._id) {
               setSuccessMessageInRegisterForm(resp.status);
+              cEventUser.setUpdateUser(true);
               handleChangeTypeModal(null);
               // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
               // textMessage.content = "Usuario " + statusMessage;
