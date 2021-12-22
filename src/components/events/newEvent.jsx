@@ -113,7 +113,7 @@ class NewEvent extends Component {
         visibility: 'PUBLIC',
         description: eventNewContext.valueInputs?.description || '',
         category_ids: [],
-        organizer_id: eventNewContext.selectOrganization.id,
+        organizer_id: eventNewContext.selectOrganization.id || eventNewContext.selectOrganization._id,
         event_type_id: '5bf47203754e2317e4300b68',
         user_properties: [],
         allow_register: true,
@@ -180,19 +180,15 @@ class NewEvent extends Component {
         let token = await GetTokenUserFirebase();
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
-        //DEV API QUEMADA POR AHORA // PRUEBAS
-        //const result = await Axios.post(`https://apidev.evius.co/api/events?token=${token}`, data);
-        result._id = result._id ? result._id : result.data._id;
+        result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
+          console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
+          let sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
+            ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
+            : newMenu;
           //HABILTAR SECCIONES POR DEFECTO
-          const sections = await Actions.put(`api/events/${result._id}?token=${token}`, {
-            itemsMenu: eventNewContext.selectOrganization.itemsMenu || newMenu,
-          });
-          //API DEV
-          /*const sections = await Axios.put(`https://apidev.evius.co/api/events/${result._id}?token=${token}`, {
-            itemsMenu: eventNewContext.selectOrganization.itemsMenu || newMenu,
-          });*/
-          sections._id = sections._id ? sections?._id : sections?.data._id;
+          const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
+          sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
             //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
             const activity = {

@@ -16,7 +16,7 @@ import { useIntl } from 'react-intl';
  * Cuenta creada -> status: success
  */
 
-const ModalFeedback = ({ cHelper }) => {
+const ModalFeedback = ({ cHelper, cEvent }) => {
   const intl = useIntl();
 
   // status -> warning, info, success, error
@@ -34,7 +34,7 @@ const ModalFeedback = ({ cHelper }) => {
       : '¡Ups! algo salió mal';
 
   let description =
-    cHelper.typeModal == 'loginSuccess'
+    cHelper.typeModal == 'loginSuccess' && cEvent.value != null
       ? intl.formatMessage({
           id: 'modal.feedback.description.success',
           defaultMessage:

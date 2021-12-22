@@ -109,26 +109,6 @@ const ModalAuth = (props) => {
     setLoading(false);
   };
 
-  const isVisibleRegister = () => {
-    if (
-      (props.cEventUser?.value == null &&
-        (props.cEvent.value?.allow_register === true || props.cEvent.value?.allow_register === 'true') &&
-        props.cEvent.value?.visibility === 'PUBLIC' &&
-        props.organization !== 'landing' &&
-        props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
-        props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
-        props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
-        props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
-        props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
-        props.cEvent.value?._id != '61aa5b188b4d7c454c05122e') ||
-      props.cEvent?.value == null
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   useEffect(() => {
     form1.resetFields();
     setErrorRegisterUSer(false);
@@ -188,6 +168,26 @@ const ModalAuth = (props) => {
     console.error('Failed:', errorInfo);
   };
   /* console.log('props para eventos', props.cEvent.value?.allow_register, props.cEvent.value?.visibility) */
+
+  const isVisibleRegister = () => {
+    if (
+      (props.cEventUser?.value == null &&
+        (props.cEvent.value?.allow_register === true || props.cEvent.value?.allow_register === 'true') &&
+        props.cEvent.value?.visibility === 'PUBLIC' &&
+        props.organization !== 'landing' &&
+        props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
+        props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
+        props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
+        props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
+        props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
+        props.cEvent.value?._id != '61aa5b188b4d7c454c05122e') ||
+      props.cEvent?.value == null
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     modalVisible && (

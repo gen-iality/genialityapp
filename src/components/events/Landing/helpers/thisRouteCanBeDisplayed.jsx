@@ -152,8 +152,8 @@ function ThisRouteCanBeDisplayed({ children }) {
         );
     }
   }
-  console.log('debu iAmRegisteredInThisEvent ', iAmRegisteredInThisEvent());
-  console.log('debu recordTypeForThisEvent ', recordTypeForThisEvent());
+  // console.log('debu iAmRegisteredInThisEvent ', iAmRegisteredInThisEvent());
+  // console.log('debu recordTypeForThisEvent ', recordTypeForThisEvent());
   return (
     <>
       {recordTypeForThisEvent() === 'publicEventWithRegistration' &&

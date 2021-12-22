@@ -67,15 +67,19 @@ const Informacion = (props) => {
   }, [props.orgId, props.currentUser]);
   async function obtainOrganizations() {
     isLoadingOrganization(true);
-    let organizations = await OrganizationApi.mine();
-    if (organizations.length == 0) {
-      await createOrganization();
-      organizations = await OrganizationApi.mine();
-    }
+    const organizations = await OrganizationApi.mine();
 
-    setOrganizations(organizations);
-    selectedOrganization(organizations && organizations[0]);
-    isLoadingOrganization(false);
+    if (organizations.length === 0) {
+      const createOrganizations = await createOrganization();
+
+      selectedOrganization(createOrganizations);
+      setOrganizations([createOrganizations]);
+      isLoadingOrganization(false);
+    } else {
+      setOrganizations(organizations);
+      selectedOrganization(organizations && organizations[0]);
+      isLoadingOrganization(false);
+    }
   }
   const createNewOrganization = async (value) => {
     //alert(value);
@@ -94,6 +98,7 @@ const Informacion = (props) => {
     };
     //CREAR ORGANIZACION------------------------------
     let create = await OrganizationApi.createOrganization(newOrganization);
+
     /* console.log('CREATE==>', create); */
     if (create) {
       return create;
@@ -237,7 +242,7 @@ const Informacion = (props) => {
                     style={{ height: 400, overflowY: 'auto' }}
                     size='small'
                     bordered
-                    dataSource={organizations}
+                    dataSource={organizations?.length > 0 && organizations}
                     renderItem={(item) => (
                       <List.Item
                         style={{

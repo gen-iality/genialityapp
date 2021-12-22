@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import WithLoading from './withLoading';
-import { Menu, Dropdown, Avatar, Button, Col, Row, Space } from 'antd';
+import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge } from 'antd';
 import {
   ContactsOutlined,
   DownOutlined,
@@ -34,6 +34,7 @@ const ItemStyle = {
 };
 
 const UserStatusAndMenu = (props) => {
+  let { cEventUser } = props;
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
@@ -50,66 +51,81 @@ const UserStatusAndMenu = (props) => {
 
   let menu = !props.anonimususer ? (
     <Menu>
-      <Menu.Item
-        icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
-        onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
-        <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
-      </Menu.Item>
-      {props.location.pathname.includes('landing') && (
-        <Menu.Item
-          onClick={() => {
-            props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } });
-          }}
-          icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}>
-          <FormattedMessage id='header.my_data_event' defaultMessage='Mis datos en el evento' />
-        </Menu.Item>
+      {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
+        <Menu.ItemGroup title='Evento'>
+          {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
+            <Badge count={'Nuevo'}>
+              <Menu.Item
+                onClick={() => {
+                  props.setViewPerfil({
+                    view: true,
+                    perfil: { _id: props.userEvent?._id, properties: props.userEvent },
+                  });
+                }}
+                icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}>
+                <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el evento' />
+              </Menu.Item>
+            </Badge>
+          )}
+        </Menu.ItemGroup>
       )}
-      <Menu.Divider />
-      {visible && (
-        <Menu.Item
-          icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
-          onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
-          <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
+      <Menu.ItemGroup title='Administracion'>
+        {visible && (
+          <Menu.Item
+            icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
+            onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
+            <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
+          </Menu.Item>
+        )}
+        {visible && (
+          <Menu.Item
+            icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
+            onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
+            <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
+          </Menu.Item>
+        )}
+        {visible && (
+          <Menu.Item
+            icon={<HexagonMultipleOutlineIcon style={{ fontSize: '18px' }} />}
+            onClick={() => {
+              linkToTheMenuRouteS(`/myprofile/organization`);
+            }}>
+            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Eventos' />
+          </Menu.Item>
+        )}
+        <Menu.Divider />
+        {visible && (
+          <Menu.Item
+            onClick={() =>
+              linkToTheMenuRouteS(
+                window.location.toString().includes('admin/organization')
+                  ? `/create-event/${props.userEvent._id}/?orgId=${window.location.pathname.split('/')[3]}`
+                  : window.location.toString().includes('organization') &&
+                    !window.location.toString().includes('myprofile')
+                  ? `/create-event/${props.userEvent._id}/?orgId=${props.eventId}`
+                  : `/create-event/${props.userEvent._id}`
+              )
+            }>
+            <Button block type='primary' size='medium'>
+              <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
+            </Button>
+          </Menu.Item>
+        )}
+      </Menu.ItemGroup>
+
+      <Menu.ItemGroup title='Usuario'>
+        <Badge count={'Nuevo'}>
+          <Menu.Item
+            icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
+            onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
+            <FormattedMessage id='header.profile' defaultMessage='Cuenta de usuario' />
+          </Menu.Item>
+        </Badge>
+
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={logout}>
+          <FormattedMessage id='header.logout' defaultMessage='Salir' />
         </Menu.Item>
-      )}
-      {visible && (
-        <Menu.Item
-          icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
-          onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
-          <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
-        </Menu.Item>
-      )}
-      {visible && (
-        <Menu.Item
-          icon={<HexagonMultipleOutlineIcon style={{ fontSize: '18px' }} />}
-          onClick={() => {
-            linkToTheMenuRouteS(`/myprofile/organization`);
-          }}>
-          <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Eventos' />
-        </Menu.Item>
-      )}
-      <Menu.Divider />
-      {visible && (
-        <Menu.Item
-          onClick={() =>
-            linkToTheMenuRouteS(
-              window.location.toString().includes('admin/organization')
-                ? `/create-event/${props.userEvent._id}/?orgId=${window.location.pathname.split('/')[3]}`
-                : window.location.toString().includes('organization') &&
-                  !window.location.toString().includes('myprofile')
-                ? `/create-event/${props.userEvent._id}/?orgId=${props.eventId}`
-                : `/create-event/${props.userEvent._id}`
-            )
-          }>
-          <Button block type='primary' size='medium'>
-            <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
-          </Button>
-        </Menu.Item>
-      )}
-      <Menu.Divider />
-      <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={logout}>
-        <FormattedMessage id='header.logout' defaultMessage='Salir' />
-      </Menu.Item>
+      </Menu.ItemGroup>
     </Menu>
   ) : (
     <Menu>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AuthUrl } from '../helpers/constants';
 import { Link } from 'react-router-dom';
 
 class Footer extends Component {
@@ -8,7 +9,7 @@ class Footer extends Component {
   }
 
   logout = () => {
-    window.location.reload();
+    window.location.replace(`${AuthUrl}/logout`);
   };
 
   render() {

@@ -17,7 +17,7 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber, Badge, Space } from 'antd';
+import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber, Badge, Space, Grid } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -28,6 +28,7 @@ Moment.locale('es');
 const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
+const { useBreakpoint } = Grid;
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -73,7 +74,7 @@ class General extends Component {
         position: 0,
         section: 'tickets',
         icon: 'CreditCardOutlined',
-        checked: true,
+        checked: false,
         permissions: 'public',
       },
       typeEvent: 0,
@@ -472,7 +473,7 @@ class General extends Component {
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
       itemsMenu:
-        event.allow_register === 'true' || event.allow_register === true
+        event.allow_register === 'false' || event.allow_register === false
           ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
           : { ...this.state.itemsMenu },
     };
@@ -1019,12 +1020,17 @@ class General extends Component {
                         <Badge count={this.state.typeEvent === 0 ? <CheckCircleFilled style={{fontSize: '20px', color: '#135200'}} /> : ''}>
                           <div /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(0)} 
-                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer'}}
+                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer', minHeight: '170px' }}
                           >
                             <Space direction='vertical'>
                               <Text strong>Evento Público con Registro</Text>
                               <Text type='secondary'>
-                                Se mostrara el inicio de sesión y registro. Configuración por defecto
+                               {/*  Se mostrara el inicio de sesión y registro. Configuración por defecto */}
+                                <ul>
+                                  <li>Registro.</li>
+                                  <br />
+                                  <li>Inicio de sesión.</li>
+                                </ul>
                                 {/* <b>Contiene:</b><br />
                                 <ul>
                                   <li>Registro al evento</li>
@@ -1051,12 +1057,17 @@ class General extends Component {
                           <div 
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(1)}
-                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer'}}
+                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer', minHeight: '170px' }}
                           >
                             <Space direction='vertical'>
                               <Text strong>Evento Público sin Registro</Text>
                               <Text type='secondary'>
-                                Solo se mostrará el inicio de sesión. Quedará como anónimo
+                                {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
+                                <ul>
+                                  <li>Quedará como anónimo.</li>
+                                  <br />
+                                  <li>No tendrá inicio de sesión ni registro.</li>
+                                </ul>
                                 {/* <b>Contiene:</b><br />
                                 <ul>
                                   <li>Sin modal del login</li>
@@ -1079,12 +1090,17 @@ class General extends Component {
                           <div 
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(2)}
-                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer'}}
+                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer', minHeight: '170px' }}
                           >
                             <Space direction='vertical'>
                               <Text strong>Evento Privado por invitación</Text>
                               <Text type='secondary'>
-                                Solo se podra acceder por invitación. No tendra inicio de sesión ni registro
+                                {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}
+                                <ul>
+                                  <li>Sólo se podrá acceder por invitación.</li>
+                                  <br />
+                                  <li>Sólo se mostrará el inicio de sesión.</li>
+                                </ul>
                                 {/* <b>Contiene:</b><br />
                                 <ul>
                                   <li>Inicio de sesión</li>

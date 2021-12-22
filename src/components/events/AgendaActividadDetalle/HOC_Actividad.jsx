@@ -12,9 +12,9 @@ const HCOActividad = () => {
 
         {/* {currentActivity && currentActivity.secondvideo && <SecondVideoActivity />} */}
 
-        {((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null) &&
+        {(((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null) &&
           (currentActivity?.video == null || !currentActivity?.video)) ||
-          (!currentActivity?.habilitar_ingreso && !currentActivity?.video && <ImageComponentwithContext />)}
+          (!currentActivity?.habilitar_ingreso && !currentActivity?.video)) && <ImageComponentwithContext />}
       </div>
     </header>
   );

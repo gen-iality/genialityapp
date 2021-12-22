@@ -43,14 +43,14 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
-        tickets: {
+        /* tickets: {
           name: 'Registro',
           position: '',
           section: 'tickets',
           icon: 'CreditCardOutlined',
           checked: false,
           permissions: 'public',
-        },
+        }, */
         certs: {
           name: 'Certificados',
           position: '',
@@ -150,14 +150,14 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
-        login: {
+        /* login: {
           name: 'Inicio de sesion',
           position: '',
           section: 'login',
           icon: 'LoginOutlined',
           checked: false,
           permissions: 'public',
-        },
+        }, */
         partners: {
           name: 'Patrocinadores',
           section: 'partners',
@@ -279,7 +279,6 @@ class menuLanding extends Component {
         ...this.props.organizationObj,
         itemsMenu: { ...menu },
       };
-
       let resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
       if (resp) {
         console.log('MENU GUARDADDO==>', newMenu);

@@ -164,7 +164,8 @@ const ModalLoginHelpers = (props) => {
         typeModal != 'preregisterMessage' &&
         typeModal != 'loginError' &&
         typeModal !== 'loginSuccessNotRegister' &&
-        typeModal !== 'visitors'
+        typeModal !== 'visitors' &&
+        typeModal !== 'loginSuccess'
       }>
       <PageHeader
         className={
