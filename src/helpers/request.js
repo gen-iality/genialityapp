@@ -335,8 +335,8 @@ export const UsersApi = {
   createUser: async (user) => {
     return await Actions.post(`/api/users`, user, true);
   },
-  editEventUser: async (data, id) => {
-    return await Actions.post(`/api/events/${id}/eventusers`, data);
+  editEventUser: async (data, eventId, eventUserId) => {
+    return await Actions.put(`/api/events/${eventId}/eventusers/${eventUserId}`, data);
   },
 };
 
