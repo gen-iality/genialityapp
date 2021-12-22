@@ -536,7 +536,7 @@ const FormRegister = ({
               validateUrl() === true
                 ? m.name == 'email' && initialValues?.email
                   ? true
-                  : cEvent.value.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
+                  : cEvent.value?.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
                   ? true
                   : false
                 : false
