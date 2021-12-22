@@ -488,7 +488,7 @@ const FormRegister = ({
 
   function validateUrl(){
     let url = window.location.pathname;
-    return url.includes('/eventadmin/') ? true : false;
+    return url.includes('/landing/') ? true : false;
   }
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
