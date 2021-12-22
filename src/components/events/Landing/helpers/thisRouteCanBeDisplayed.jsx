@@ -5,24 +5,24 @@ import { UseEventContext } from '../../../../Context/eventContext';
 import HelperContext from '../../../../Context/HelperContext';
 import Loading from '../../../profile/loading';
 
+export function iAmRegisteredInThisEvent(cEventUser) {
+  if (!cEventUser.value && cEventUser.status === 'LOADING') return 'LOADING';
+  if (!cEventUser.value && cEventUser.status === 'LOADED') return 'NOT_REGISTERED';
+  if (cEventUser.value._id && cEventUser.status === 'LOADED') return 'REGISTERED';
+}
+
+export function recordTypeForThisEvent(cEvent) {
+  let event = cEvent.value;
+  if (!event) return 'LOADING';
+  if (event.visibility === 'PUBLIC' && event.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
+  if (event.visibility === 'PUBLIC' && event.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
+  if (event.visibility === 'PRIVATE' && event.allow_register === false) return 'PRIVATE_EVENT';
+}
+
 function ThisRouteCanBeDisplayed({ children }) {
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
   let { handleChangeTypeModal } = useContext(HelperContext);
-
-  function iAmRegisteredInThisEvent() {
-    if (!cEventUser.value && cEventUser.status === 'LOADING') return 'loading';
-    if (!cEventUser.value && cEventUser.status === 'LOADED') return 'notRegistered';
-    if (cEventUser.value._id && cEventUser.status === 'LOADED') return 'registered';
-  }
-
-  function recordTypeForThisEvent() {
-    let event = cEvent.value;
-    if (!event) return 'loading';
-    if (event.visibility === 'PUBLIC' && event.allow_register === true) return 'publicEventWithRegistration';
-    if (event.visibility === 'PUBLIC' && event.allow_register === false) return 'unregisteredPublicEvent';
-    if (event.visibility === 'PRIVATE' && event.allow_register === false) return 'privateEvent';
-  }
 
   function showComponentForPublicEventWithRegistration(component) {
     switch (component.key) {
@@ -156,23 +156,24 @@ function ThisRouteCanBeDisplayed({ children }) {
   // console.log('debu recordTypeForThisEvent ', recordTypeForThisEvent());
   return (
     <>
-      {recordTypeForThisEvent() === 'publicEventWithRegistration' &&
-        (iAmRegisteredInThisEvent() === 'loading' ? (
+      {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
+        (iAmRegisteredInThisEvent(cEventUser) === 'LOADING' ? (
           <Loading />
-        ) : iAmRegisteredInThisEvent() === 'notRegistered' ? (
+        ) : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' ? (
           showComponentForPublicEventWithRegistration(children)
         ) : (
-          iAmRegisteredInThisEvent() === 'registered' && children
+          iAmRegisteredInThisEvent() === 'REGISTERED' && children
         ))}
 
-      {recordTypeForThisEvent() === 'unregisteredPublicEvent' && showComponentunregisteredPublicEvent(children)}
+      {recordTypeForThisEvent(cEvent) === 'UN_REGISTERED_PUBLIC_EVENT' &&
+        showComponentunregisteredPublicEvent(children)}
 
-      {recordTypeForThisEvent() === 'privateEvent' &&
-        (iAmRegisteredInThisEvent() === 'loading'
+      {recordTypeForThisEvent(cEvent) === 'PRIVATE_EVENT' &&
+        (iAmRegisteredInThisEvent(cEventUser) === 'LOADING'
           ? showComponentForprivateEvent(children)
-          : iAmRegisteredInThisEvent() === 'notRegistered'
+          : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED'
           ? showComponentForprivateEvent(children)
-          : iAmRegisteredInThisEvent() === 'registered' && children)}
+          : iAmRegisteredInThisEvent(cEventUser) === 'REGISTERED' && children)}
     </>
   );
 }
