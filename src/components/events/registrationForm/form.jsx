@@ -500,8 +500,8 @@ const FormRegister = ({
       if (m.visibleByAdmin == true) {
         return;
       }
-      //Este if es nuevo para poder validar las contraseñas y avatars viejos (nuevo flujo para no mostrar esos campos)
-      if(m.name !== 'contrasena' && m.name !== 'password' && m.name !== 'avatar'){
+      //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
+      if(m.name !== 'contrasena' && m.name !== 'password'){
         
 
       let type = m.type || 'text';
