@@ -112,7 +112,7 @@ class NewEvent extends Component {
         visibility: 'PUBLIC',
         description: eventNewContext.valueInputs?.description || '',
         category_ids: [],
-        organizer_id: eventNewContext.selectOrganization.id,
+        organizer_id: eventNewContext.selectOrganization.id || eventNewContext.selectOrganization._id,
         event_type_id: '5bf47203754e2317e4300b68',
         user_properties: [],
         allow_register: true,

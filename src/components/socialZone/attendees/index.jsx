@@ -50,9 +50,9 @@ const AttendeList = function(props) {
               ? attendeeList[key].properties?.names
               : attendeeList[key].properties?.name,
             status: attendeeListPresence[key]
-              ? attendeeListPresence[key].state
-              : attendeeListPresence[key].last_changed
-              ? attendeeListPresence[key].last_changed
+              ? attendeeListPresence[key]?.state
+              : attendeeListPresence[key]?.last_changed
+              ? attendeeListPresence[key]?.last_changed
               : 'offline',
             email: attendeeList[key].properties.email,
             properties: attendeeList[key].properties,
@@ -76,8 +76,8 @@ const AttendeList = function(props) {
 
       // imageProfile
     });
-    const userId = cUser.value._id
-    const removeCurrentUserFromList = ordenadousers.filter((users)=> users.iduser !== userId)
+    const userId = cUser.value._id;
+    const removeCurrentUserFromList = ordenadousers.filter((users) => users.iduser !== userId);
     setmyattendelist(removeCurrentUserFromList);
     setfilteredlist(removeCurrentUserFromList.slice(0, pag));
     setPage(1);

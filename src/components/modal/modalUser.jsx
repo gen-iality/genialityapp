@@ -181,12 +181,12 @@ class UserModal extends Component {
       }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };
-      if(this.props.organizationId){
-        resp = await OrganizationApi.saveUser(this.props.organizationId, snap)
+      if (this.props.organizationId) {
+        resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */
-      }else{
+      } else {
         /* console.log("se va por aca",this.props.cEvent) */
-        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id ||  this.props.cEvent?.value?.idEvent);
+        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
         /* console.log("10. USERADD==>",resp) */
       }
       if (this.props.byActivity && resp?.data?._id && !this.props.edit) {
@@ -207,31 +207,31 @@ class UserModal extends Component {
         }
       }
 
-      if (values.checked_in && this.props.activityId) {
-        let userRef = await firestore
-          .collection(`${this.props.cEvent?.value?._id}_event_attendees`)
-          .doc('activity')
-          .collection(`${this.props.activityId}`);
-        userRef.doc(resp?.data?._id || this.props.value.idActivity).set({
-          ...resp.data,
-          updated_at: new Date(),
-          checked_in: true,
-          checkedin_at: new Date(),
-          checked_at: new Date(),
-        });
-      } else {
-        let userRef = await firestore
-          .collection(`${this.props.cEvent?.value?._id}_event_attendees`)
-          .doc('activity')
-          .collection(`${this.props.activityId}`);
-        userRef.doc(resp?.data?._id || this.props.value.idActivity).set({
-          ...(resp?.data || respActivity),
-          updated_at: new Date(),
-          checked_in: false,
-          checkedin_at: '',
-          checked_at: '',
-        });
-      }
+      // if (values.checked_in && this.props.activityId) {
+      //   let userRef = await firestore
+      //     .collection(`${this.props.cEvent?.value?._id}_event_attendees`)
+      //     .doc('activity')
+      //     .collection(`${this.props.activityId}`);
+      //   userRef.doc(resp?._id || this.props.value.idActivity).set({
+      //     ...resp.data,
+      //     updated_at: new Date(),
+      //     checked_in: true,
+      //     checkedin_at: new Date(),
+      //     checked_at: new Date(),
+      //   });
+      // } else {
+      //   let userRef = await firestore
+      //     .collection(`${this.props.cEvent?.value?._id}_event_attendees`)
+      //     .doc('activity')
+      //     .collection(`${this.props.activityId}`);
+      //   userRef.doc(resp?._id || this.props.value?.idActivity).set({
+      //     ...(resp?.data || respActivity),
+      //     updated_at: new Date(),
+      //     checked_in: false,
+      //     checkedin_at: '',
+      //     checked_at: '',
+      //   });
+      // }
       if (this.props.updateView) {
         await this.props.updateView();
       }
