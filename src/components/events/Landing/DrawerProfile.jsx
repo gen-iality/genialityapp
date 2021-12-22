@@ -84,12 +84,10 @@ const DrawerProfile = (props) => {
                 type='text'
                 size='middle'
                 style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}>
-                {
-                  /* (props.cEvent.value.allow_register === true || props.cEvent.value.allow_register === 'true') && Este en caso de que tampoco sea para anonimo */
-                  props.cEvent.value.visibility === 'PUBLIC' && (
-                    <>{intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}</>
-                  )
-                }
+                {/* (props.cEvent.value.allow_register === true || props.cEvent.value.allow_register === 'true') && Este en caso de que tampoco sea para anonimo */
+                props.cEvent.value.visibility === 'PUBLIC' && (
+                  <>{intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}</>
+                )}
               </Button>
             )}
           </Space>
@@ -216,8 +214,8 @@ const DrawerProfile = (props) => {
                         title={item.label}
                         description={formatDataToString(
                           item.type !== 'codearea'
-                            ? userSelected.properties[item.name]
-                            : '(+' + userSelected.properties['code'] + ')' + userSelected.properties[item.name],
+                            ? cEventUser.value.properties[item.name]
+                            : '(+' + cEventUser.value.properties['code'] + ')' + cEventUser.value.properties[item.name],
                           item
                         )}
                       />
@@ -225,6 +223,7 @@ const DrawerProfile = (props) => {
                   )
                 }
               />
+
               /*) : (
             <ProfileAttende />
           )}*/
