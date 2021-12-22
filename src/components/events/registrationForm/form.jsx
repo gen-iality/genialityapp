@@ -301,12 +301,13 @@ const FormRegister = ({
             switch (typeModal) {
               case 'registerForTheEvent':
                 const registerForTheEventData = await UsersApi.createOne(eventUserBody, cEvent.value?._id);
-                resp = registerForTheEventData.data;
+                resp = registerForTheEventData;
+
                 break;
 
               case 'update':
                 const updateData = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id, cEventUser.value._id);
-                resp = updateData.data;
+                resp = updateData;
                 break;
 
               default:
@@ -327,6 +328,7 @@ const FormRegister = ({
 
             if (resp && resp._id) {
               setSuccessMessageInRegisterForm(resp.status);
+              handleChangeTypeModal(null);
               // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
               // textMessage.content = "Usuario " + statusMessage;
               textMessage.content = 'Usuario ' + formMessage.successMessage;
