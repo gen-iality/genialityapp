@@ -113,7 +113,7 @@ const ChatList = (props) => {
     );
 
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
-  console.log('Props', props);
+  let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
   return (
     <Tabs style={{ marginTop: '-18px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -139,7 +139,9 @@ const ChatList = (props) => {
               cEvent.value?._id +
               '&userid=' +
               cUser.value?.uid +
-              '&version=0.0.2'
+              '&version=0.0.2' +
+              '&anonimo=' +
+              anonymous
             }></iframe>
         </TabPane>
       )}
