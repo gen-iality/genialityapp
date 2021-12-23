@@ -37,6 +37,8 @@ import moment from 'moment';
 import Loading from './loading';
 import { useIntl } from 'react-intl';
 import ChangePasswordForm from './components/changePasswordForm';
+import EditInformation from './EditInformation';
+
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -216,7 +218,7 @@ const MainProfile = (props) => {
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
           {content === 'CHANGE_PASSWORD' && <ChangePasswordForm email={props?.cUser?.value?.email} />}
-          {content === 'EDIT_INFORMATION' && <div>editar informacion</div>}
+          {content === 'EDIT_INFORMATION' && <EditInformation />}
           {content === 'ACCOUNT_ACTIVITY' && (
             <Tabs
               defaultActiveKey={activeTab}
