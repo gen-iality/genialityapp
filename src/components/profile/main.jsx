@@ -36,7 +36,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Loading from './loading';
 import { useIntl } from 'react-intl';
-
+import ChangePasswordForm from './components/changePasswordForm';
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -58,15 +58,15 @@ const MainProfile = (props) => {
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
 
-  const rulePassword = [
-    { required: true, message: 'Ingrese una contraseña para su cuenta en Evius' },
-    {
-      type: 'string',
-      min: 6,
-      max: 18,
-      message: 'La contraseña debe tener entre 6 a 18 caracteres',
-    },
-  ];
+  // const rulePassword = [
+  //   { required: true, message: 'Ingrese una contraseña para su cuenta en Evius' },
+  //   {
+  //     type: 'string',
+  //     min: 6,
+  //     max: 18,
+  //     message: 'La contraseña debe tener entre 6 a 18 caracteres',
+  //   },
+  // ];
 
   const showSider = () => {
     if (!collapsed) {
@@ -215,33 +215,7 @@ const MainProfile = (props) => {
       </Sider>
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
-          {content === 'CHANGE_PASSWORD' && (
-            <div>
-              <Form autoComplete='off' layout='vertical' style={{ padding: '100px' }}>
-                <Form.Item
-                  label={'Contraseña actual'}
-                  name='oldPassword'
-                  hasFeedback
-                  rules={rulePassword}
-                  style={{ marginBottom: '10px', textAlign: 'left' }}>
-                  <Input.Password type='password' size='large' />
-                </Form.Item>
-                <Form.Item
-                  label={'Contraseña nueva'}
-                  name='newPassword'
-                  hasFeedback
-                  style={{ marginBottom: '10px', textAlign: 'left' }}
-                  rules={rulePassword}>
-                  <Input.Password type='password' size='large' />
-                </Form.Item>
-                <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-                  <Button style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
-                    Cambiar contraseña
-                  </Button>
-                </Form.Item>
-              </Form>
-            </div>
-          )}
+          {content === 'CHANGE_PASSWORD' && <ChangePasswordForm email={props?.cUser?.value?.email} />}
           {content === 'EDIT_INFORMATION' && <div>editar informacion</div>}
           {content === 'ACCOUNT_ACTIVITY' && (
             <Tabs
