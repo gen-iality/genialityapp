@@ -315,7 +315,7 @@ class ListEventUser extends Component {
                   {this.obtenerName(key[item?.name])}
                 </a>
               ) : item.type == 'avatar' ? (
-                <Image width={40} height={40} src={key[item?.name]} />
+                <Image width={40} height={40} src={key?.user?.picture} />
               ) : (
                 key[item.name]
               );
@@ -972,7 +972,7 @@ class ListEventUser extends Component {
             badgeEvent={this.state.badgeEvent}
             extraFields={this.state.fieldsForm}
             spacesEvent={spacesEvent}
-            edit={this.state.edit}
+            edit={editUser}
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}

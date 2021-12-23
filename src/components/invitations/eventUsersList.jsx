@@ -105,7 +105,7 @@ class eventUsersList extends Component {
 
     // Se iteran las propiedades del usuario (campos a recolectar) para mostrar la información
     // que el usuario diligenció para registrarse al event
-    for (let i = 0; propertiesTable.length > i; i++) {
+    for (let i = 0; propertiesTable?.length > i; i++) {
       columnsTable.push({
         title: propertiesTable[i].label ? propertiesTable[i].label : propertiesTable[i].name,
         dataIndex: propertiesTable[i].name,
