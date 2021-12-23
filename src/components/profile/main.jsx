@@ -36,6 +36,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Loading from './loading';
 import { useIntl } from 'react-intl';
+import EditInformation from './EditInformation';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -242,7 +243,11 @@ const MainProfile = (props) => {
               </Form>
             </div>
           )}
-          {content === 'EDIT_INFORMATION' && <div>editar informacion</div>}
+          {content === 'EDIT_INFORMATION' && (
+            <div>
+              <EditInformation />
+            </div>
+          )}
           {content === 'ACCOUNT_ACTIVITY' && (
             <Tabs
               defaultActiveKey={activeTab}
