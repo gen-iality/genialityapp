@@ -14,12 +14,34 @@ export function CurrentUserProvider({ children }) {
     async function asyncdata() {
       try {
         app.auth().onAuthStateChanged((user) => {
-          if (user) {
+          if (!user?.isAnonymous && user) {
             user.getIdToken().then(async function(idToken) {
               privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
                 setCurrentUser({ status: 'LOADED', value: response.data });
               });
             });
+          } else if (user?.isAnonymous && user) {
+            //OBTENERT USER
+
+            console.log('USUARIO ANONIMO==>', user.displayName, user.name, user);
+            const obtainDisplayName = () => {
+              if (app.auth().currentUser.displayName != null) {
+                setCurrentUser({
+                  status: 'LOADED',
+                  value: {
+                    names: user.displayName,
+                    email: 'email@email.com',
+                    isAnonymous: true,
+                    _id: user.uid,
+                  },
+                });
+              } else {
+                setTimeout(() => {
+                  obtainDisplayName();
+                }, 500);
+              }
+            };
+            obtainDisplayName();
           } else {
             setCurrentUser({ status: 'LOADED', value: null });
           }

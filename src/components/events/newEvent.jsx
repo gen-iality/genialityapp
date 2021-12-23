@@ -13,6 +13,7 @@ import { cNewEventContext } from '../../Context/newEventContext';
 import Service from '../../components/agenda/roomManager/service';
 import { firestore } from '../../helpers/firebase';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import Axios from 'axios';
 
 const { Step } = Steps;
 
@@ -207,6 +208,7 @@ class NewEvent extends Component {
                 let sala = await this.createZoomRoom(agenda, result._id);
                 if (sala) {
                   message.success('Evento creado correctamente..');
+                  alert('ACA');
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
                   message.error('Error al crear sala');
@@ -227,9 +229,11 @@ class NewEvent extends Component {
               }
             }
           } else {
+            console.log('RESP API==>', result);
             message.error('Error al crear el evento');
           }
         } else {
+          console.log('RESP API==>', result);
           message.error('Error al crear el evento');
         }
       } catch (error) {

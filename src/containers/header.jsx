@@ -168,14 +168,14 @@ const Headers = (props) => {
       loader: false,
       organizations: organizationsMine,
       loadingUser: false,
-      anonimususer: false,
+      anonimususer: cUser.value?.isAnonymous || false,
     });
     // }
   }
 
   useEffect(() => {
     if (cUser.value === undefined || cUser.value === null) return;
-    LoadMineOrganizations();
+    !cUser.value?.isAnonymous && LoadMineOrganizations();
     LoadCurrentUser();
   }, [cUser?.value]);
 
@@ -248,10 +248,10 @@ const Headers = (props) => {
                   menuOpen={dataGeneral.menuOpen}
                   loader={dataGeneral.loader}
                   photo={'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
-                  name={'Usuario Anonimo'}
+                  name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}
                   eventId={dataGeneral.eventId}
-                  logout={() => console.log('logout')}
+                  logout={() => logout()}
                   openMenu={() => console.log('openMenu')}
                   loginInfo={loginInfo}
                   anonimususer={true}

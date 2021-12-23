@@ -132,7 +132,9 @@ const UserStatusAndMenu = (props) => {
       {!props.anonimususer ? (
         <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
       ) : (
-        <Menu.Item style={ItemStyle}>{`Por favor inicie sesión`}</Menu.Item>
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={logout}>
+          <FormattedMessage id='header.logout' defaultMessage='Salir' />
+        </Menu.Item>
       )}
     </Menu>
   );

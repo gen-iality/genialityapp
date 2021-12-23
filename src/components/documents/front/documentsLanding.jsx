@@ -79,7 +79,7 @@ class documentsDetail extends Component {
       <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
         <Tabs defaultActiveKey='1'>
           {this.props.cEventUser?.value && (
-            <TabPane tab={`Documentos de ${this.props.cEventUser?.value?.properties?.displayName}`} key='1'>
+            <TabPane tab={`Mis documentos`} key='1'>
               {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
                 <List
                   style={{ padding: 10 }}
@@ -122,9 +122,7 @@ class documentsDetail extends Component {
                 this.props.cEventUser?.value?.properties?.documents_user == undefined && (
                   <div className='site-card-border-less-wrapper'>
                     <Card title='' bordered={false}>
-                      <Result
-                        title={`Hola ${this.props.cEventUser?.value?.properties?.displayName}, No Tienes documentos por ver para este evento`}
-                      />
+                      <Result title={`Hola, No Tienes documentos asignados`} />
                     </Card>
                   </div>
                 )

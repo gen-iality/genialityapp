@@ -50,7 +50,12 @@ const ModalNoRegister = (props) => {
       ]}
       zIndex={1000}
       closable={true}
-      visible={props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister'}>
+      visible={
+        ((props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister') &&
+          props.cEvent?.value?.allow_register &&
+          props.cEvent?.value?.visibility == 'PUBLIC') ||
+        (!props.cEvent?.value?.allow_register && props.cEvent?.value?.visibility == 'PRIVATE')
+      }>
       <Result
         status='warning'
         icon={null}

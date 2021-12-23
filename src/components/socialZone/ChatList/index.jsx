@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { List, Typography, Badge, Tabs, Form, Button, Row, Space, Col } from 'antd';
+import { List, Typography, Badge, Tabs, Form, Button, Row, Space, Col, Input } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
@@ -9,6 +9,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
 import UsersCard from '../../shared/usersCard';
+import { app } from 'helpers/firebase';
 import ThisRouteCanBeDisplayed from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
@@ -21,8 +22,8 @@ const styleList = {
 };
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
 };
 
 const ChatList = (props) => {
@@ -36,7 +37,30 @@ const ChatList = (props) => {
   );
 
   const onFinish = (values) => {
-    cUser.value = values;
+    app
+      .auth()
+      .signInAnonymously()
+      .then((user) => {
+        app
+          .auth()
+          .currentUser.updateProfile({
+            displayName: values.name,
+            photoURL: 'https://example.com/jane-q-user/profile.jpg',
+          })
+          .then(async (respother) => {
+            await app.auth().currentUser.reload();
+            console.log('RESP OTHER==>', respother);
+            /* app
+              .auth()
+              .currentUser.updateEmail(values.email)
+              .then((resp) => {
+                console.log('EMAIL VALUES==>', values.email);
+                console.log('LOGIN ANONIMO', resp);
+                setUserAnosimous({ ...values });
+              })
+              .catch((err) => console.log('ERROR==>', err));*/
+          });
+      });
   };
 
   // constante para insertar texto dinamico con idioma
@@ -57,10 +81,10 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
-  if (!cUser.value)
+  if (!cUser.value && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC')
     return (
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
-        <Row justify='start'>
+        <Row justify='start' style={{ marginBottom: 15 }}>
           <Col>
             <Text type='secondary'>
               <FormattedMessage
@@ -71,15 +95,20 @@ const ChatList = (props) => {
           </Col>
         </Row>
 
-        <Row justify='center'>
-          <Space size='small' wrap>
-            <Form.Item>
-              <Button onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
-                <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
-              </Button>
-            </Form.Item>
-          </Space>
-        </Row>
+        <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Ingrese su nombre' }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Ingrese su email' }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+          <Button htmlType='submit' onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
+            {/*<FormattedMessage id='form.button.register' defaultMessage='Registrarme' />*/}
+            Ingresar
+          </Button>
+        </Form.Item>
       </Form>
     );
 

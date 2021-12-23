@@ -270,7 +270,7 @@ class menuLanding extends Component {
     }
     if (this.props.organization !== 1) {
       let token = await GetTokenUserFirebase();
-      await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
+      const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, menu);
     } else {
       //ACTUALIZAR ORGANIZACION
       // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)

@@ -100,9 +100,11 @@ export const getCurrentUser = async () => {
               draggable: true,
               progress: undefined,
             });
+            // YA NO DE REDIRIGIR EL TOKEN CADUCADO
+            /* alert('RELOAD ACA');
             setTimeout(() => {
               window.location.reload();
-            }, 2000);
+            }, 2000);*/
             //this.setState({ timeout: true, loader: false })
           } else {
             //this.setState({ serverError: true, loader: false, errorData: data })
@@ -335,8 +337,8 @@ export const UsersApi = {
   createUser: async (user) => {
     return await Actions.post(`/api/users`, user, true);
   },
-  editEventUser: async (data, id) => {
-    return await Actions.post(`/api/events/${id}/eventusers`, data);
+  editEventUser: async (data, eventId, eventUserId) => {
+    return await Actions.put(`/api/events/${eventId}/eventusers/${eventUserId}`, data);
   },
 };
 
@@ -571,7 +573,7 @@ export const OrganizationApi = {
   },
   editMenu: async (data, id) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true&token=${token}`, data);
+    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=false&token=${token}`, data);
   },
 };
 export const BadgeApi = {

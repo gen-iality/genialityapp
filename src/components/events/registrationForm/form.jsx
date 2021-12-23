@@ -139,7 +139,7 @@ const FormRegister = ({
   const [formMessage, setFormMessage] = useState({});
   const [country, setCountry] = useState();
   const [region, setRegion] = useState();
-  const [password, setPassword] = useState('');
+  // const [password, setPassword] = useState('');
   const [event, setEvent] = useState(null);
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
@@ -259,7 +259,7 @@ const FormRegister = ({
       const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
       if (data.length == 0 || cEventUser.value) {
         setSectionPermissions({ view: false, ticketview: false });
-        values.password = password;
+        // values.password = password;
 
         // values.files = fileSave
 
@@ -298,16 +298,16 @@ const FormRegister = ({
         } else {
           try {
             let resp = undefined;
-
             switch (typeModal) {
               case 'registerForTheEvent':
                 const registerForTheEventData = await UsersApi.createOne(eventUserBody, cEvent.value?._id);
-                resp = registerForTheEventData.data;
+                resp = registerForTheEventData;
+
                 break;
 
               case 'update':
-                const updateData = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id);
-                resp = updateData.data;
+                const updateData = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id, cEventUser.value._id);
+                resp = updateData;
                 break;
 
               default:
@@ -328,6 +328,8 @@ const FormRegister = ({
 
             if (resp && resp._id) {
               setSuccessMessageInRegisterForm(resp.status);
+              cEventUser.setUpdateUser(true);
+              handleChangeTypeModal(null);
               // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
               // textMessage.content = "Usuario " + statusMessage;
               textMessage.content = 'Usuario ' + formMessage.successMessage;
@@ -536,7 +538,7 @@ const FormRegister = ({
               validateUrl() === true
                 ? m.name == 'email' && initialValues?.email
                   ? true
-                  : cEvent.value.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
+                  : cEvent.value?.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
                   ? true
                   : false
                 : false
@@ -791,66 +793,66 @@ const FormRegister = ({
           );
         }
 
-        if (type === 'password') {
-          input = (
-            <Password
-              name='password'
-              placeholder='Ingrese su password'
-              onChange={(e) => setPassword(e.target.value)}
-              key={key}
-              defaultValue={value}
-              value={password}
-              //pattern='^(?=\w*\d)(?=\w*[a-z])\S{8,16}$'
-              title={intl.formatMessage({ id: 'form.validate.message.password' })}
-              //required={true}
-              message={intl.formatMessage({ id: 'form.field.required' })}
-            />
-          );
-        }
+        // if (type === 'password') {
+        //   input = (
+        //     <Password
+        //       name='password'
+        //       placeholder='Ingrese su password'
+        //       onChange={(e) => setPassword(e.target.value)}
+        //       key={key}
+        //       defaultValue={value}
+        //       value={password}
+        //       //pattern='^(?=\w*\d)(?=\w*[a-z])\S{8,16}$'
+        //       title={intl.formatMessage({ id: 'form.validate.message.password' })}
+        //       //required={true}
+        //       message={intl.formatMessage({ id: 'form.field.required' })}
+        //     />
+        //   );
+        // }
 
-        if (type === 'avatar') {
-          ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
+        // if (type === 'avatar') {
+        //   ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 
-          input = (
-            <div style={{ textAlign: 'center' }}>
-              <ImgCrop rotate shape='round'>
-                <Upload
-                  action={'https://api.evius.co/api/files/upload/'}
-                  accept='image/png,image/jpeg'
-                  onChange={(file) => {
-                    //alert("ONCHANGE")
-                    //console.log("FILE==>",file.fileList)
-                    //console.log("FILEFORMATTER==>",file)
-                    setImageAvatar(file);
-                    /*  setImgUrl(fls);
-                 const fls = (file ? file.fileList : [])                  
-                  .map(fl => ({
-                    ...fl,
-                    status: 'success',
-                  }))*/
-                  }}
-                  multiple={false}
-                  listType='picture'
-                  maxCount={1}
-                  defaultFileList={
-                    value
-                      ? [
-                          {
-                            name: typeof value == 'string' ? obtenerName(value) : null,
-                            url: typeof value == 'string' ? value : null,
-                          },
-                        ]
-                      : []
-                  }
-                  beforeUpload={beforeUpload}>
-                  <Button type='primary' icon={<UploadOutlined />}>
-                    {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
-                  </Button>
-                </Upload>
-              </ImgCrop>
-            </div>
-          );
-        }
+        //   input = (
+        //     <div style={{ textAlign: 'center' }}>
+        //       <ImgCrop rotate shape='round'>
+        //         <Upload
+        //           action={'https://api.evius.co/api/files/upload/'}
+        //           accept='image/png,image/jpeg'
+        //           onChange={(file) => {
+        //             //alert("ONCHANGE")
+        //             //console.log("FILE==>",file.fileList)
+        //             //console.log("FILEFORMATTER==>",file)
+        //             setImageAvatar(file);
+        //             /*  setImgUrl(fls);
+        //          const fls = (file ? file.fileList : [])
+        //           .map(fl => ({
+        //             ...fl,
+        //             status: 'success',
+        //           }))*/
+        //           }}
+        //           multiple={false}
+        //           listType='picture'
+        //           maxCount={1}
+        //           defaultFileList={
+        //             value
+        //               ? [
+        //                   {
+        //                     name: typeof value == 'string' ? obtenerName(value) : null,
+        //                     url: typeof value == 'string' ? value : null,
+        //                   },
+        //                 ]
+        //               : []
+        //           }
+        //           beforeUpload={beforeUpload}>
+        //           <Button type='primary' icon={<UploadOutlined />}>
+        //             {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
+        //           </Button>
+        //         </Upload>
+        //       </ImgCrop>
+        //     </div>
+        //   );
+        // }
 
         let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
 

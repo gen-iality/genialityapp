@@ -30,6 +30,7 @@ import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
 import { UsersApi } from '../../helpers/request';
 import RegisterUser from './RegisterUser';
+import { UseEventContext } from 'Context/eventContext';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -52,6 +53,7 @@ const ModalAuth = (props) => {
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
+  const cEvent = UseEventContext();
   const [modalVisible, setmodalVisible] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
@@ -64,8 +66,14 @@ const ModalAuth = (props) => {
 
   useEffect(() => {
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
+    console.log('EVENTO PRIVATE==>', cEvent.value);
     app.auth().onAuthStateChanged((user) => {
-      if (!user) {
+      if (
+        (!user && cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC') ||
+        (!user && !window.location.toString().includes('landing') && !window.location.toString().includes('event')) ||
+        (!user && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PRIVATE')
+      ) {
+        console.log('EVENTO==>', cEvent.value);
         setmodalVisible(true);
         handleChangeTabModal('1');
       } else {
