@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { app } from '../helpers/firebase';
 import { ApiUrl } from '../helpers/constants';
-import { OrganizationApi, EventsApi } from '../helpers/request';
+// import { OrganizationApi, EventsApi } from '../helpers/request';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
@@ -23,33 +23,31 @@ const { Header } = Layout;
 const zIndex = {
   zIndex: '1',
 };
+const initialDataGeneral = {
+  selection: [],
+  name: '',
+  user: false,
+  menuOpen: false,
+  timeout: false,
+  modal: false,
+  create: false,
+  valid: true,
+  serverError: false,
+  showAdmin: false,
+  showEventMenu: false,
+  tabEvtType: true,
+  tabEvtCat: true,
+  eventId: null,
+  userEvent: null,
+  modalVisible: false,
+  tabModal: '1',
+  anonimususer: false,
+};
 
 const Headers = (props) => {
   const { cUser, showMenu, loginInfo, cHelper } = props;
-  const [dataGeneral, setdataGeneral] = useState({
-    selection: [],
-    organizations: [],
-    name: '',
-    user: false,
-    menuOpen: false,
-    timeout: false,
-    modal: false,
-    loader: false,
-    create: false,
-    valid: true,
-    serverError: false,
-    showAdmin: false,
-    showEventMenu: false,
-    tabEvtType: true,
-    tabEvtCat: true,
-    eventId: null,
-    userEvent: null,
-    modalVisible: false,
-    tabModal: '1',
-    loadingUser: true,
-    anonimususer: false,
-  });
-  const [organizationsMine, setorganizationsMine] = useState([]);
+  const [headerIsLoading, setHeaderIsLoading] = useState(true);
+  const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
 
   const modalClose = () => {
     setdataGeneral({ ...dataGeneral, modalVisible: false, tabModal: '' });
@@ -106,76 +104,28 @@ const Headers = (props) => {
     return eventId;
   };
 
-  const LoadMineOrganizations = () => {
-    OrganizationApi.mine().then((organizationsMine) => {
-      setorganizationsMine(organizationsMine);
-    });
-  };
-
   async function LoadCurrentUser() {
-    // const eventId = setEventId();
-    // //PARA VALIDAR SI ESTÁ DENTRO DE UN EVENTO
-    // if (eventId) {
-    //   if (cEventUser?.value) {
-    //     let data = cEventUser?.value?.properties;
-    //     let eventUserId = cEventUser?.value.account_id;
-    //     let { _id, uid } = cEventUser?.value.user;
-    //     setdataGeneral({
-    //       name: data.names || data.name,
-    //       userEvent: { ...data, properties: data, _id: eventUserId },
-    //       photo: data?.picture
-    //         ? data?.picture
-    //         : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-    //       uid: uid,
-    //       id: _id,
-    //       user: true,
-    //       loader: false,
-    //       organizations: organizationsMine,
-    //       loadingUser: false,
-    //       anonimususer: false,
-    //     });
-    //   } else {
-    //     // EL USUARIO TIENE SESION PERO NO ESTA REGISTRADO EN EL EVENTO
-    //     let data = cUser?.value;
-    //     setdataGeneral({
-    //       name: data?.names || data?.name,
-    //       userEvent: { ...data, properties: { names: data.names || data.name } },
-    //       photo: data?.picture
-    //         ? data?.picture
-    //         : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-    //       uid: data?.user?.uid,
-    //       id: data?.user?._id,
-    //       user: true,
-    //       loader: false,
-    //       organizations: organizationsMine,
-    //       loadingUser: false,
-    //       anonimususer: false,
-    //     });
-    //   }
-    // } else {
-    //SOLO EXISTE USER
-    let data = cUser?.value;
-    if (!data) return;
+    let { value, status } = cUser;
+
+    if (!value && status === 'LOADED') return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral);
+    if (!value) return;
+
     setdataGeneral({
-      name: data?.names || data?.name,
-      userEvent: { ...data, properties: { names: data.names || data.name } },
-      photo: data?.picture
-        ? data?.picture
+      name: value?.names || value?.name,
+      userEvent: { ...value, properties: { names: value.names || value.name } },
+      photo: value?.picture
+        ? value?.picture
         : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
-      uid: data?.user?.uid,
-      id: data?.user?._id,
+      uid: value?.user?.uid,
+      id: value?.user?._id,
       user: true,
-      loader: false,
-      organizations: organizationsMine,
-      loadingUser: false,
-      anonimususer: cUser.value?.isAnonymous || false,
+      anonimususer: value?.isAnonymous || false,
     });
+    setHeaderIsLoading(false);
     // }
   }
 
   useEffect(() => {
-    if (cUser.value === undefined || cUser.value === null) return;
-    !cUser.value?.isAnonymous && LoadMineOrganizations();
     LoadCurrentUser();
   }, [cUser?.value]);
 
@@ -203,30 +153,27 @@ const Headers = (props) => {
               )}
             </Row>
 
-            {!dataGeneral.userEvent && dataGeneral.loadingUser ? (
-              !window.location.href.toString().includes('landing') &&
-              window.location.href.toString().split('/').length == 4 && (
-                <Space>
-                  <Button
-                    icon={<LockOutlined />}
-                    style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size='large'
-                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '1' })}>
-                    Iniciar sesión
-                  </Button>
-                  <Button
-                    size='large'
-                    onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '2' })}>
-                    Registrarme
-                  </Button>
-                </Space>
-              )
+            {headerIsLoading ? (
+              <Spin />
+            ) : !dataGeneral.userEvent && !window.location.href.toString().includes('landing') ? (
+              <Space>
+                <Button
+                  icon={<LockOutlined />}
+                  style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                  size='large'
+                  onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '1' })}>
+                  Iniciar sesión
+                </Button>
+                <Button
+                  size='large'
+                  onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '2' })}>
+                  Registrarme
+                </Button>
+              </Space>
             ) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
               <UserStatusAndMenu
-                isLoading={dataGeneral.loader}
                 user={dataGeneral.user}
                 menuOpen={dataGeneral.menuOpen}
-                loader={dataGeneral.loader}
                 photo={
                   dataGeneral.photo
                     ? dataGeneral.photo
@@ -243,10 +190,8 @@ const Headers = (props) => {
               dataGeneral.userEvent != null &&
               dataGeneral.anonimususer && (
                 <UserStatusAndMenu
-                  isLoading={dataGeneral.loader}
                   user={dataGeneral.user}
                   menuOpen={dataGeneral.menuOpen}
-                  loader={dataGeneral.loader}
                   photo={'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
                   name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}

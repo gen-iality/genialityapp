@@ -231,7 +231,7 @@ const ModalAuth = (props) => {
                   defaultMessage: 'Correo electrónico',
                 })}
                 name='email'
-                style={{ marginBottom: '15px' }}
+                style={{ marginBottom: '15px', textAlign: 'left' }}
                 rules={[
                   {
                     required: true,
@@ -258,7 +258,7 @@ const ModalAuth = (props) => {
                   defaultMessage: 'Contraseña',
                 })}
                 name='password'
-                style={{ marginBottom: '15px' }}
+                style={{ marginBottom: '15px', textAlign: 'left' }}
                 rules={[
                   {
                     required: true,
@@ -297,6 +297,7 @@ const ModalAuth = (props) => {
               {errorLogin && (
                 <Alert
                   showIcon
+                  onClose={() => setErrorLogin(false)}
                   closable
                   className='animate__animated animate__bounceIn'
                   style={{

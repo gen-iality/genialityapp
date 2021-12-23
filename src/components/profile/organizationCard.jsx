@@ -45,9 +45,7 @@ const OrganizationCard = (props) => {
         ) : (
           <Skeleton.Avatar active={true} size={100} shape='circle' />
         )}
-        <Typography.Paragraph
-          ellipsis={{ rows: 2 }}
-          style={{ fontSize: '14px', width: '130px', lineHeight: '1.15rem' }}>
+        <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
           {props.data?.name}
         </Typography.Paragraph>
       </Space>
