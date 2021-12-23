@@ -309,6 +309,7 @@ const ModalAuth = (props) => {
                     borderRadius: '5px',
                     marginBottom: '15px',
                   }}
+                  onClose={() => setErrorLogin(false)}
                   type='error'
                   message={msjError}
                 />
