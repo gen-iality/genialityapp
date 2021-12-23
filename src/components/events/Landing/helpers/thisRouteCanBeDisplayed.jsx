@@ -6,12 +6,17 @@ import HelperContext from '../../../../Context/HelperContext';
 import Loading from '../../../profile/loading';
 
 export function iAmRegisteredInThisEvent(cEventUser) {
-  if (!cEventUser?.value && cEventUser?.status === 'LOADING') return 'LOADING';
-  if (!cEventUser?.value && cEventUser?.status === 'LOADED') return 'NOT_REGISTERED';
-  if (cEventUser?.value?._id && cEventUser?.status === 'LOADED') return 'REGISTERED';
+  if (!cEventUser) return;
+
+  let { value, status } = cEventUser;
+  if (!value && status === 'LOADING') return 'LOADING';
+  if (!value && status === 'LOADED') return 'NOT_REGISTERED';
+  if (value?._id && status === 'LOADED') return 'REGISTERED';
 }
 
 export function recordTypeForThisEvent(cEvent) {
+  if (!cEvent) return;
+
   let event = cEvent?.value;
   if (!event) return 'LOADING';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
@@ -152,8 +157,8 @@ function ThisRouteCanBeDisplayed({ children }) {
         );
     }
   }
-  // console.log('debu iAmRegisteredInThisEvent ', iAmRegisteredInThisEvent());
-  // console.log('debu recordTypeForThisEvent ', recordTypeForThisEvent());
+  // console.log('debu iAmRegisteredInThisEvent ', iAmRegisteredInThisEvent(cEventUser));
+  // console.log('debu recordTypeForThisEvent ', recordTypeForThisEvent(cEvent));
   return (
     <>
       {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
@@ -162,7 +167,7 @@ function ThisRouteCanBeDisplayed({ children }) {
         ) : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' ? (
           showComponentForPublicEventWithRegistration(children)
         ) : (
-          iAmRegisteredInThisEvent() === 'REGISTERED' && children
+          iAmRegisteredInThisEvent(cEventUser) === 'REGISTERED' && children
         ))}
 
       {recordTypeForThisEvent(cEvent) === 'UN_REGISTERED_PUBLIC_EVENT' &&
