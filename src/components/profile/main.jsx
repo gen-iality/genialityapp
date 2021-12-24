@@ -38,6 +38,7 @@ import Loading from './loading';
 import { useIntl } from 'react-intl';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
+import logo from '../../logo.svg';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -212,6 +213,22 @@ const MainProfile = (props) => {
                 Cambiar contraseña
               </Menu.Item>
             </Menu>
+          </Col>
+          <Col>
+            <img
+              onClick={() => {
+                window.location.href = `${window.location.origin}`;
+              }}
+              style={{
+                cursor: 'pointer',
+                height: `${screens.xs ? '30px' : '35px'}`,
+                // position: 'absolute',
+                // bottom: `${screens.xs ? '4%' : '6%'}`,
+                // right: `${screens.xs ? '10%' : '22%'}`,
+              }}
+              src={logo}
+              alt='logo'
+            />
           </Col>
         </Row>
       </Sider>

@@ -70,15 +70,17 @@ const ResultLink = ({ status, data, event }) => {
             status === 'loading'
               ? null
               : [
-                  <Button
-                    onClick={() => {
-                      window.location.href = `${window.location.origin}/landing/${event}`;
-                    }}
-                    size='large'
-                    type='primary'
-                    key='goToEvent'>
-                    Ir al evento
-                  </Button>,
+                  event && (
+                    <Button
+                      onClick={() => {
+                        window.location.href = `${window.location.origin}/landing/${event}`;
+                      }}
+                      size='large'
+                      type='primary'
+                      key='goToEvent'>
+                      Ir al evento
+                    </Button>
+                  ),
                   <Button
                     onClick={() => {
                       window.location.href = `${window.location.origin}`;
