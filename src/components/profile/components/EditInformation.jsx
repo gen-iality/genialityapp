@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Card, Form, Input, Space, Upload, Alert } from 'antd';
+import { Button, Card, Form, Input, Space, Upload, Alert, PageHeader } from 'antd';
 import { PictureOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { UsersApi } from '../../../helpers/request';
+import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
 
 const EditInformation = ({ cUser }) => {
   const { value, setCurrentUser } = cUser;
@@ -95,94 +96,106 @@ const EditInformation = ({ cUser }) => {
 
   return (
     <Card style={{ borderRadius: '15px' }}>
-      <Form onFinish={editUserData} autoComplete='off' layout='vertical' style={{ padding: '10px' }}>
-        <Form.Item>
-          <ImgCrop rotate shape='round'>
-            <Upload
-              accept='image/png,image/jpeg'
-              onChange={(file) => {
-                if (file.fileList.length > 0) {
-                  setImageAvatar(file.fileList);
-                } else {
-                  setImageAvatar(null);
-                }
-              }}
-              customRequest={dummyRequest}
-              multiple={false}
-              listType='picture'
-              maxCount={1}
-              fileList={imageAvatar}>
-              {
-                <Button
-                  type='primary'
-                  shape='circle'
-                  style={{ height: !imageAvatar ? '150px' : '95px', width: !imageAvatar ? '150px' : '95px' }}>
-                  <Space direction='vertical'>
-                    <PictureOutlined style={{ fontSize: '40px' }} />
-                    {intl.formatMessage({
-                      id: 'modal.label.photo',
-                      defaultMessage: 'Subir foto',
-                    })}
-                  </Space>
-                </Button>
-              }
-            </Upload>
-          </ImgCrop>
-        </Form.Item>
-        <Form.Item
-          label={intl.formatMessage({
-            id: 'modal.label.name',
-            defaultMessage: 'Nombre',
-          })}
-          name='names'
-          initialValue={names}
-          hasFeedback
-          style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}>
-          <Input
-            type='text'
-            size='large'
-            placeholder={'¿Como te llamas?'}
-            prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-          />
-        </Form.Item>
-        {sendRecovery !== null && (
-          <Alert
-            type={
-              userDataSentSuccessfullyOrWrongly === 'initial'
-                ? 'info'
-                : userDataSentSuccessfullyOrWrongly
-                ? 'success'
-                : 'error'
-            }
-            message={sendRecovery}
-            showIcon
-            closable
-            className='animate__animated animate__pulse'
-            style={{
-              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-              backgroundColor: '#FFFFFF',
-              color: '#000000',
-              borderLeft: `5px solid ${
+      <ShieldAccountIcon
+        style={{ position: 'absolute', right: '10px', bottom: '10px', fontSize: '50px', color: '#D0EFC1' }}
+      />
+      <PageHeader
+        // avatar={{
+        //   icon: <LockOutlined />,
+        //   style: { backgroundColor: '#52C41A' },
+        // }}
+        title='Editar mi información'
+      />
+      <div style={{ padding: '24px' }}>
+        <Form onFinish={editUserData} autoComplete='off' layout='vertical'>
+          <Form.Item>
+            <ImgCrop rotate shape='round'>
+              <Upload
+                accept='image/png,image/jpeg'
+                onChange={(file) => {
+                  if (file.fileList.length > 0) {
+                    setImageAvatar(file.fileList);
+                  } else {
+                    setImageAvatar(null);
+                  }
+                }}
+                customRequest={dummyRequest}
+                multiple={false}
+                listType='picture'
+                maxCount={1}
+                fileList={imageAvatar}>
+                {!imageAvatar && (
+                  <Button
+                    type='primary'
+                    shape='circle'
+                    style={{ height: !imageAvatar ? '150px' : '95px', width: !imageAvatar ? '150px' : '95px' }}>
+                    <Space direction='vertical'>
+                      <PictureOutlined style={{ fontSize: '40px' }} />
+                      {intl.formatMessage({
+                        id: 'modal.label.photo',
+                        defaultMessage: 'Subir foto',
+                      })}
+                    </Space>
+                  </Button>
+                )}
+              </Upload>
+            </ImgCrop>
+          </Form.Item>
+          <Form.Item
+            label={intl.formatMessage({
+              id: 'modal.label.name',
+              defaultMessage: 'Nombre',
+            })}
+            name='names'
+            initialValue={names}
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+            rules={ruleName}>
+            <Input
+              type='text'
+              size='large'
+              placeholder={'¿Como te llamas?'}
+              prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            />
+          </Form.Item>
+          {sendRecovery !== null && (
+            <Alert
+              type={
                 userDataSentSuccessfullyOrWrongly === 'initial'
-                  ? '#333F44'
+                  ? 'info'
                   : userDataSentSuccessfullyOrWrongly
-                  ? '#52C41A'
-                  : '#FF4E50'
-              }`,
-              fontSize: '14px',
-              textAlign: 'start',
-              borderRadius: '5px',
-            }}
-            icon={isLoading && <LoadingOutlined />}
-          />
-        )}
-        <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-          <Button htmlType='submit' style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
-            Guardar cambios
-          </Button>
-        </Form.Item>
-      </Form>
+                  ? 'success'
+                  : 'error'
+              }
+              message={sendRecovery}
+              showIcon
+              closable
+              className='animate__animated animate__pulse'
+              style={{
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                backgroundColor: '#FFFFFF',
+                color: '#000000',
+                borderLeft: `5px solid ${
+                  userDataSentSuccessfullyOrWrongly === 'initial'
+                    ? '#333F44'
+                    : userDataSentSuccessfullyOrWrongly
+                    ? '#52C41A'
+                    : '#FF4E50'
+                }`,
+                fontSize: '14px',
+                textAlign: 'start',
+                borderRadius: '5px',
+              }}
+              icon={isLoading && <LoadingOutlined />}
+            />
+          )}
+          <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
+            <Button htmlType='submit' style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+              Guardar cambios
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </Card>
   );
 };
