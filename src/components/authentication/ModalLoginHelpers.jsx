@@ -139,7 +139,7 @@ const ModalLoginHelpers = (props) => {
       } catch (error) {
         setSendRecovery(
           `${intl.formatMessage({
-            id: 'modal.restore.alert.error',
+            id: 'modal.send.alert.error',
             defaultMessage: 'Error al solicitar acceso al evento',
           })}`
         );

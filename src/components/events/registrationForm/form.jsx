@@ -809,50 +809,50 @@ const FormRegister = ({
         //     />
         //   );
         // }
+        //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
+        if (type === 'avatar') {
+          ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 
-        // if (type === 'avatar') {
-        //   ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
-
-        //   input = (
-        //     <div style={{ textAlign: 'center' }}>
-        //       <ImgCrop rotate shape='round'>
-        //         <Upload
-        //           action={'https://api.evius.co/api/files/upload/'}
-        //           accept='image/png,image/jpeg'
-        //           onChange={(file) => {
-        //             //alert("ONCHANGE")
-        //             //console.log("FILE==>",file.fileList)
-        //             //console.log("FILEFORMATTER==>",file)
-        //             setImageAvatar(file);
-        //             /*  setImgUrl(fls);
-        //          const fls = (file ? file.fileList : [])
-        //           .map(fl => ({
-        //             ...fl,
-        //             status: 'success',
-        //           }))*/
-        //           }}
-        //           multiple={false}
-        //           listType='picture'
-        //           maxCount={1}
-        //           defaultFileList={
-        //             value
-        //               ? [
-        //                   {
-        //                     name: typeof value == 'string' ? obtenerName(value) : null,
-        //                     url: typeof value == 'string' ? value : null,
-        //                   },
-        //                 ]
-        //               : []
-        //           }
-        //           beforeUpload={beforeUpload}>
-        //           <Button type='primary' icon={<UploadOutlined />}>
-        //             {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
-        //           </Button>
-        //         </Upload>
-        //       </ImgCrop>
-        //     </div>
-        //   );
-        // }
+          input = (
+            <div style={{ textAlign: 'center' }}>
+              <ImgCrop rotate shape='round'>
+                <Upload
+                  action={'https://api.evius.co/api/files/upload/'}
+                  accept='image/png,image/jpeg'
+                  onChange={(file) => {
+                    //alert("ONCHANGE")
+                    //console.log("FILE==>",file.fileList)
+                    //console.log("FILEFORMATTER==>",file)
+                    setImageAvatar(file);
+                    /*  setImgUrl(fls);
+                 const fls = (file ? file.fileList : [])
+                  .map(fl => ({
+                    ...fl,
+                    status: 'success',
+                  }))*/
+                  }}
+                  multiple={false}
+                  listType='picture'
+                  maxCount={1}
+                  defaultFileList={
+                    value
+                      ? [
+                          {
+                            name: typeof value == 'string' ? obtenerName(value) : null,
+                            url: typeof value == 'string' ? value : null,
+                          },
+                        ]
+                      : []
+                  }
+                  beforeUpload={beforeUpload}>
+                  <Button type='primary' icon={<UploadOutlined />}>
+                    {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
+                  </Button>
+                </Upload>
+              </ImgCrop>
+            </div>
+          );
+        }
 
         let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
 

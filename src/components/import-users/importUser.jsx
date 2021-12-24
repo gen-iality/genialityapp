@@ -15,7 +15,7 @@ class ImportUsers extends Component {
     this.state = {
       step: 0,
       list: [],
-      toImport: []
+      toImport: [],
     };
   }
 
@@ -37,6 +37,8 @@ class ImportUsers extends Component {
       }
       return column;
     });
+
+    console.log('USERS COLUMNS==>', users);
 
     //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos
     //al componente result que realiza la importación uno a uno usando el api
@@ -68,7 +70,7 @@ class ImportUsers extends Component {
             }
           }
           cb(items);
-        }
+        },
       ],
       function(result) {
         self.setState((prevState) => {
@@ -116,24 +118,20 @@ class ImportUsers extends Component {
         eventId={this.props.eventId}
         extraFields={this.props.extraFields}
         organization={this.props.organization}
-      />
+      />,
     ];
     return (
       <>
-        <Header 
-          title={(
-            <Link to={this.props.matchUrl}>
-              {'Invitados'}
-            </Link>
-          )}
+        <Header
+          title={<Link to={this.props.matchUrl}>{'Invitados'}</Link>}
           back
           description={'Importación de usuarios - Excel'}
         />
         <br />
         <Steps current={this.state.step} /* onChange={this.onChange} */>
-          <Step title="Importar" />
-          <Step title="Relacionar" />
-          <Step title="Resultado" />
+          <Step title='Importar' />
+          <Step title='Relacionar' />
+          <Step title='Resultado' />
         </Steps>
         <br />
 

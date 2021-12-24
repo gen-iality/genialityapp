@@ -257,20 +257,20 @@ export const EventsApi = {
   //RESTABLECER CONTRASEÑA
   changePassword: async (eventId, email) => {
     //URL DE PRUEBAS
-    return await axios.put(`https://apidev.evius.co/api/changeuserpassword`, { email: email, event_id: eventId });
+    return await Actions.put(`/api/changeuserpassword`, { email: email, event_id: eventId });
   },
 
   changePasswordUser: async (email) => {
     //URL DE PRUEBAS
-    return await axios.put(`https://apidev.evius.co/api/changeuserpassword`, { email: email });
+    return await Actions.put(`/api/changeuserpassword`, { email: email });
   },
   //ACCEDER POR LINK AL CORREO
   requestLinkEmail: async (eventId, email) => {
-    return await axios.post(`https://apidev.evius.co/api/getloginlink`, { email: email, event_id: eventId });
+    return await Actions.post(`/api/getloginlink`, { email: email, event_id: eventId });
   },
   //ACCEDER POR LINK AL CORREO SIN EVENTO
   requestLinkEmailUSer: async (email) => {
-    return await axios.post(`https://apidev.evius.co/api/getloginlink`, { email: email });
+    return await Actions.post(`/api/getloginlink`, { email: email });
   },
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
