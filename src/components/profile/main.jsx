@@ -38,6 +38,7 @@ import Loading from './loading';
 import { useIntl } from 'react-intl';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
+import logo from '../../logo.svg';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -185,6 +186,7 @@ const MainProfile = (props) => {
           <Col span={24}>
             <Menu style={{ border: 'none' }}>
               <Menu.Item
+                title={null}
                 onClick={() => {
                   showContent('ACCOUNT_ACTIVITY');
                   screens.xs && showSider();
@@ -194,6 +196,7 @@ const MainProfile = (props) => {
                 Actividad en Evius
               </Menu.Item>
               <Menu.Item
+                title={null}
                 onClick={() => {
                   showContent('EDIT_INFORMATION');
                   screens.xs && showSider();
@@ -203,6 +206,7 @@ const MainProfile = (props) => {
                 Editar mi informacion
               </Menu.Item>
               <Menu.Item
+                title={null}
                 onClick={() => {
                   showContent('CHANGE_PASSWORD');
                   screens.xs && showSider();
@@ -212,6 +216,22 @@ const MainProfile = (props) => {
                 Cambiar contraseña
               </Menu.Item>
             </Menu>
+          </Col>
+          <Col>
+            <img
+              onClick={() => {
+                window.location.href = `${window.location.origin}`;
+              }}
+              style={{
+                cursor: 'pointer',
+                height: `${screens.xs ? '30px' : '35px'}`,
+                // position: 'absolute',
+                // bottom: `${screens.xs ? '4%' : '6%'}`,
+                // right: `${screens.xs ? '10%' : '22%'}`,
+              }}
+              src={logo}
+              alt='logo'
+            />
           </Col>
         </Row>
       </Sider>
