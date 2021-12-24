@@ -4,7 +4,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 import { EventsApi } from '../../../helpers/request';
 
-export const ChangePasswordForm = ({ email }) => {
+export const ChangePassword = ({ email }) => {
   const [sendRecovery, setSendRecovery] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordSentSuccessfullyOrWrongly, setpPsswordSentSuccessfullyOrWrongly] = useState('initial');
@@ -95,4 +95,4 @@ export const ChangePasswordForm = ({ email }) => {
     </div>
   );
 };
-export default ChangePasswordForm;
+export default ChangePassword;

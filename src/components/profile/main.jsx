@@ -36,8 +36,8 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Loading from './loading';
 import { useIntl } from 'react-intl';
-import ChangePasswordForm from './components/changePasswordForm';
-import EditInformation from './EditInformation';
+import ChangePassword from './components/changePassword';
+import EditInformation from './components/EditInformation';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -217,7 +217,7 @@ const MainProfile = (props) => {
       </Sider>
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
-          {content === 'CHANGE_PASSWORD' && <ChangePasswordForm email={props?.cUser?.value?.email} />}
+          {content === 'CHANGE_PASSWORD' && <ChangePassword email={props?.cUser?.value?.email} />}
           {content === 'EDIT_INFORMATION' && <EditInformation />}
           {content === 'ACCOUNT_ACTIVITY' && (
             <Tabs
