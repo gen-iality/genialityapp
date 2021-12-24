@@ -8,13 +8,13 @@ import ShieldLockIcon from '@2fd/ant-design-icons/lib/ShieldLock';
 export const ChangePassword = ({ email }) => {
   const [sendRecovery, setSendRecovery] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordSentSuccessfullyOrWrongly, setpPsswordSentSuccessfullyOrWrongly] = useState('initial');
+  const [passwordSentSuccessfullyOrWrongly, setPsswordSentSuccessfullyOrWrongly] = useState('initial');
 
   const intl = useIntl();
 
   const handleRecoveryPass = async (values) => {
     setSendRecovery(null);
-    setpPsswordSentSuccessfullyOrWrongly('initial');
+    setPsswordSentSuccessfullyOrWrongly('initial');
     setIsLoading(true);
     setSendRecovery(
       `${intl.formatMessage({
@@ -32,10 +32,10 @@ export const ChangePassword = ({ email }) => {
             defaultMessage: 'Se ha enviado una link de cambio de contraseña al correo:',
           })} ${email} `
         );
-        setpPsswordSentSuccessfullyOrWrongly(true);
+        setPsswordSentSuccessfullyOrWrongly(true);
       } catch (error) {
         setIsLoading(false);
-        setpPsswordSentSuccessfullyOrWrongly(false);
+        setPsswordSentSuccessfullyOrWrongly(false);
         setSendRecovery(
           `${intl.formatMessage({
             id: 'modal.restore.alert.passwordError',
