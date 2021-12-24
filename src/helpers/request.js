@@ -46,8 +46,8 @@ export const Actions = {
     if (unsafe) return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
     return privateInstance.delete(`${url}/${id}`).then(({ data }) => data);
   },
-  edit: async (url, data, id, unsafe) => {
-    if (unsafe) return publicInstance.put(`${url}${id}`, data).then(({ data }) => data);
+  edit: async (url, data, unsafe) => {
+    if (unsafe) return publicInstance.put(`${url}`, data).then(({ data }) => data);
     return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
   },
   post: async (url, data, unsafe) => {
@@ -313,7 +313,8 @@ export const UsersApi = {
     return await Actions.getOne('/api/users/', id);
   },
   editProfile: async (data, id) => {
-    return await Actions.edit('/api/users', data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`/api/users/${id}/?token=${token}`, data, true);
   },
   findByEmail: async (email) => {
     return await Actions.getOne(`api/users/findByEmail/`, email);

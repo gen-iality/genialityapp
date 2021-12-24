@@ -218,7 +218,7 @@ const MainProfile = (props) => {
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
           {content === 'CHANGE_PASSWORD' && <ChangePassword email={props?.cUser?.value?.email} />}
-          {content === 'EDIT_INFORMATION' && <EditInformation />}
+          {content === 'EDIT_INFORMATION' && <EditInformation cUser={props.cUser} />}
           {content === 'ACCOUNT_ACTIVITY' && (
             <Tabs
               defaultActiveKey={activeTab}
