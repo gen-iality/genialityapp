@@ -186,6 +186,7 @@ const MainProfile = (props) => {
           <Col span={24}>
             <Menu style={{ border: 'none' }}>
               <Menu.Item
+                title={null}
                 onClick={() => {
                   showContent('ACCOUNT_ACTIVITY');
                   screens.xs && showSider();
@@ -195,6 +196,7 @@ const MainProfile = (props) => {
                 Actividad en Evius
               </Menu.Item>
               <Menu.Item
+                title={null}
                 onClick={() => {
                   showContent('EDIT_INFORMATION');
                   screens.xs && showSider();
@@ -204,6 +206,7 @@ const MainProfile = (props) => {
                 Editar mi informacion
               </Menu.Item>
               <Menu.Item
+                title={null}
                 onClick={() => {
                   showContent('CHANGE_PASSWORD');
                   screens.xs && showSider();
