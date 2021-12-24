@@ -31,13 +31,18 @@ const EditInformation = ({ cUser }) => {
   };
 
   const uploadNewUserPicture = async () => {
-    const selectedLogo = imageAvatar ? imageAvatar[0].thumbUrl : imageAvatar;
+    const selectedLogo = imageAvatar ? imageAvatar[0] : imageAvatar;
+    console.log(
+      `%c📌debugger start, element Selected : imageAvatar📌`,
+      'font-family:calibri; background-color:#0be881; color: #1e272e; font-size:16px; border-radius:5px; margin:5px; padding:2px;border: 5px #fff; border-style: solid dashed',
+      imageAvatar
+    );
 
     if (selectedLogo) {
-      const urlOfTheUploadedImage = await saveImageStorage(selectedLogo);
-
-      return urlOfTheUploadedImage;
+      if (selectedLogo.thumbUrl) return await saveImageStorage(selectedLogo.thumbUrl);
+      return selectedLogo.url;
     }
+
     return 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   };
 
