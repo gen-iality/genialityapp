@@ -203,7 +203,7 @@ const MainProfile = (props) => {
                 }}
                 key={'editarInfo'}
                 icon={<EditOutlined style={{ fontSize: '18px' }} />}>
-                Editar mi informacion
+                Editar mi información
               </Menu.Item>
               <Menu.Item
                 title={null}
