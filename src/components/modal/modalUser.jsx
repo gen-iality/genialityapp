@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
-import { Activity, AttendeeApi, eventTicketsApi, TicketsApi, UsersApi } from '../../helpers/request';
+import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Dialog from './twoAction';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
@@ -49,7 +49,7 @@ class UserModal extends Component {
     let user = {};
     if (this.props.edit) {
       const { value } = this.props;
-      if (value.properties) {
+      if (value?.properties) {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
@@ -65,7 +65,7 @@ class UserModal extends Component {
           prevState: value.state_id,
           valid: false,
         });
-      } else {
+      } else if (value) {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
@@ -138,13 +138,12 @@ class UserModal extends Component {
 
             self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
             self.props.byActivity && (await self.props.updateView());
-            
+
             message.destroy(loading.key);
             message.open({
               type: 'success',
               content: <> Se eliminó la información correctamente!</>,
             });
-            
           } catch (e) {
             message.destroy(loading.key);
             message.open({
@@ -153,16 +152,16 @@ class UserModal extends Component {
             });
           } finally {
             userRef
-            .doc(self.state.userId)
-            .delete()
-            .then(function() {
-              messages.class = 'msg_warning';
-              messages.content = 'USER DELETED';
-              toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+              .doc(self.state.userId)
+              .delete()
+              .then(function() {
+                messages.class = 'msg_warning';
+                messages.content = 'USER DELETED';
+                toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
-              //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
-              //substractSyncQuantity();
-            });
+                //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
+                //substractSyncQuantity();
+              });
 
             setTimeout(() => {
               messages.class = messages.content = '';
@@ -173,7 +172,7 @@ class UserModal extends Component {
         onHandlerRemove();
       },
     });
-    
+
     /* try {
       !this.props.byActivity &&
         (await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, user._id));
@@ -232,6 +231,7 @@ class UserModal extends Component {
   saveUser = async (values) => {
     this.setState({ loadingregister: true });
     //console.log('callback=>', values);
+    console.log('BY ACTIVITY==>', this.props.byActivity, this.props.organizationId, this.props.edit);
     let resp;
     let respActivity = true;
     if (values) {
@@ -242,18 +242,29 @@ class UserModal extends Component {
       }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };
-      if (this.props.organizationId) {
+      if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */
       } else {
         /* console.log("se va por aca",this.props.cEvent) */
-        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
+        if (!this.props.edit) {
+          console.log('EVENT==>', this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
+          resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
+          console.log('RESPUESTA==>', resp);
+        } else {
+          resp = await UsersApi.editEventUser(
+            snap,
+            this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent,
+            this.props.value._id
+          );
+        }
         /* console.log("10. USERADD==>",resp) */
       }
-      if (this.props.byActivity && resp?.data?._id && !this.props.edit) {
+
+      if (this.props.byActivity && (resp?.data?._id || resp?._id) && !this.props.edit) {
         respActivity = await Activity.Register(
           this.props.cEvent?.value?._id,
-          resp.data.user._id,
+          resp?.data?.user?._id || resp?.user?._id,
           this.props.activityId
         );
       }

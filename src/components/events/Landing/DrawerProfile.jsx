@@ -16,7 +16,8 @@ import { setUserAgenda } from '../../../redux/networking/actions';
 import withContext from '../../../Context/withContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
+import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 
 const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
@@ -47,35 +48,40 @@ const DrawerProfile = (props) => {
   return (
     <>
       <Drawer
+        title={
+          <Space>
+            <BadgeAccountOutlineIcon
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px',
+                height: '40px',
+                width: '40px',
+                borderRadius: '8px',
+                color: cEvent.value.styles.textMenu,
+                backgroundColor: cEvent.value.styles.toolbarDefaultBg,
+              }}
+            />
+            <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el evento' />
+          </Space>
+        }
         zIndex={5000}
         visible={props.viewPerfil}
         closable={true}
         onClose={() => props.setViewPerfil({ view: !props.viewPerfil, perfil: null })}
         width={'52vh'}
         bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
-        <Row justify='center' style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-          <Space size={0} direction='vertical' style={{ textAlign: 'center' }}>
-            <Avatar
-              size={110}
-              src={
-                userSelected && userSelected['picture']
-                  ? userSelected['picture']
-                  : 'https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'
-              }
-            />
-            <Typography.Paragraph style={{ fontSize: '20px', width: '250px' }}>
-              {userSelected != null
-                ? userSelected && userSelected.names
-                  ? userSelected.names
-                  : userSelected && userSelected.name
-                  ? userSelected.name
-                  : ''
-                : ''}
+        <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '10px' }}>
+          <Col span={24}>
+            <Typography.Paragraph>
+              Esta es tu información suministrada para el evento{' '}
+              <Typography.Text strong> {cEvent.value.name} </Typography.Text>
             </Typography.Paragraph>
-            <Typography.Paragraph type='secondary' style={{ fontSize: '16px', width: '250px' }}>
-              {userSelected && userSelected?.email}
-            </Typography.Paragraph>
-            {isMe && (
+          </Col>
+
+          {isMe && (
+            <Col span={24}>
               <Button
                 onClick={() => {
                   props.setViewPerfil({ view: !props.viewPerfil, perfil: userSelected });
@@ -89,8 +95,9 @@ const DrawerProfile = (props) => {
                   <>{intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}</>
                 )}
               </Button>
-            )}
-          </Space>
+            </Col>
+          )}
+
           {/* <Col span={24}>
             <Row justify='center' style={{ marginTop: '20px' }}>
               <Space size='middle'>

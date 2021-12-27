@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Modal, Result, Button, Divider, Typography, Space } from 'antd';
 import withContext from '../../Context/withContext';
 import { useIntl } from 'react-intl';
+import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { UseEventContext } from '../../Context/eventContext';
 
 const ModalNoRegister = (props) => {
+  let cEvent = UseEventContext();
   const intl = useIntl();
-  // Mensajes para evento privado y prublico
+  // Mensajes para evento privado y publico
 
   const msgEventPublic = intl.formatMessage({
     id: 'modal.no_register.msg_public',
@@ -36,16 +39,18 @@ const ModalNoRegister = (props) => {
               defaultMessage: 'Ir a evius',
             })}
           </Button>
-          <Button
-            onClick={() => props.cHelper.handleChangeTypeModal('registerForTheEvent')}
-            key='sign_up'
-            type='primary'
-            size='large'>
-            {intl.formatMessage({
-              id: 'registration.button.create',
-              defaultMessage: 'Registrarme',
-            })}
-          </Button>
+          {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && (
+            <Button
+              onClick={() => props.cHelper.handleChangeTypeModal('registerForTheEvent')}
+              key='sign_up'
+              type='primary'
+              size='large'>
+              {intl.formatMessage({
+                id: 'registration.button.create',
+                defaultMessage: 'Registrarme',
+              })}
+            </Button>
+          )}
         </Space>,
       ]}
       zIndex={1000}
@@ -74,7 +79,10 @@ const ModalNoRegister = (props) => {
           )
         }
         subTitle={
-          <Typography.Paragraph style={{ textAlign: 'left', fontSize: '16px' }}>{msgEventPublic}</Typography.Paragraph>
+          <Typography.Paragraph style={{ fontSize: '16px' }}>
+            {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && msgEventPublic}
+            {recordTypeForThisEvent(cEvent) === 'PRIVATE_EVENT' && msgEventPrivate}
+          </Typography.Paragraph>
         }
       />
     </Modal>
