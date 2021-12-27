@@ -1050,7 +1050,8 @@ const FormRegister = ({
                   {!loadingregister && (
                     <Form.Item>
                       <Button type='primary' htmlType='submit'>
-                        {initialValues != null && cEventUser.value !== null && Object.keys(initialValues).length > 0
+                        {(initialValues != null && cEventUser.value !== null) ||
+                        (initialValues != null && Object.keys(initialValues).length > 0)
                           ? intl.formatMessage({ id: 'registration.button.update' })
                           : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                           ? 'Votar y Enviar'
