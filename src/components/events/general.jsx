@@ -17,7 +17,24 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber, Badge, Space, Grid } from 'antd';
+import {
+  Switch,
+  Card,
+  Row,
+  Col,
+  message,
+  Tabs,
+  Checkbox,
+  Typography,
+  Input,
+  Select,
+  Modal,
+  Form,
+  InputNumber,
+  Badge,
+  Space,
+  Grid,
+} from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -69,14 +86,14 @@ class General extends Component {
       },
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
-      /* registerForm: {
+      registerForm: {
         name: 'Registro',
         position: 0,
         section: 'tickets',
         icon: 'CreditCardOutlined',
         checked: false,
         permissions: 'public',
-      }, */
+      },
       typeEvent: 0,
     };
     this.specificDates = this.specificDates.bind(this);
@@ -87,7 +104,7 @@ class General extends Component {
 
   async componentDidMount() {
     //inicializacion del estado de menu
-    /* if (this.state.event.itemsMenu) {
+    if (this.state.event.itemsMenu) {
       const { itemsMenu } = this.state.event;
       const { registerForm } = this.state;
 
@@ -103,7 +120,7 @@ class General extends Component {
       }
       delete itemsMenu.tickets;
       this.setState({ itemsMenu, registerForm: registerSection });
-    } */
+    }
 
     const validate = await this.validateTabs();
     if (validate) {
@@ -162,15 +179,15 @@ class General extends Component {
     }
 
     //Esto es para la configuración de autenticación. Nuevo flujo de Login
-    if(this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register){
+    if (this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register) {
       //Evento Público con Registro
-      this.setState({typeEvent: 0})
-    } else if(this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register){
+      this.setState({ typeEvent: 0 });
+    } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Evento Público sin Registro
-      this.setState({typeEvent: 1})
+      this.setState({ typeEvent: 1 });
     } else {
       //Evento Privado con Invitación
-      this.setState({typeEvent: 2})
+      this.setState({ typeEvent: 2 });
     }
   }
 
@@ -194,9 +211,9 @@ class General extends Component {
   handleChange = (e, name) => {
     /* console.log(e, e.target, '1') */
     let value = e;
-    if(e.target) {
+    if (e.target) {
       value = e.target;
-      if(e.target.value) {
+      if (e.target.value) {
         value = e.target.value;
       }
     }
@@ -472,10 +489,10 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
-      /* itemsMenu:
-        event.allow_register === 'false' || event.allow_register === false
+      itemsMenu:
+        /* event.allow_register === 'false' || event.allow_register === false
           ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
-          : { ...this.state.itemsMenu }, */
+          : */ { ...this.state.itemsMenu },
     };
 
     try {
@@ -497,6 +514,7 @@ class General extends Component {
     } catch (error) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
+        console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
         /* console.error('STATUS', status, status === 401); */
@@ -504,6 +522,7 @@ class General extends Component {
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
+        console.log('ERROR DATA===>', errorData);
         /* console.error('Error', error.message); */
         if (error.request) {
           /* console.error(error.request); */
@@ -512,7 +531,7 @@ class General extends Component {
         errorData.status = 708;
         this.setState({ serverError: true, loader: false, errorData });
       }
-     /*  console.error(error.config); */
+      /*  console.error(error.config); */
     }
   }
   //Delete event
@@ -588,18 +607,18 @@ class General extends Component {
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changetypeEvent = (value) => {
-    this.setState({typeEvent: value});
-    if(value === 0) {
+    this.setState({ typeEvent: value });
+    if (value === 0) {
       //Evento Público con Registro
       this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } }, this.valid);
-    } else if(value === 1) {
+    } else if (value === 1) {
       //Evento Público sin Registro
       this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } }, this.valid);
     } else {
       //Evento Privado con Invitación
       this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } }, this.valid);
     }
-  }
+  };
 
   render() {
     if (this.state.loading) return <Loading />;
@@ -620,23 +639,19 @@ class General extends Component {
     } = this.state;
     return (
       <React.Fragment>
-        <Form
-          onFinish={this.submit}
-          {...formLayout}
-        >
+        <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1'>
             <Tabs.TabPane tab='General' key='1'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
-                  <Form.Item 
+                  <Form.Item
                     label={
                       <label style={{ marginTop: '2%' }} className='label'>
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}
-                  >
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
                     <Input
                       name={'name'}
                       placeholder={'Nombre del evento'}
@@ -647,7 +662,10 @@ class General extends Component {
 
                   {event.app_configuration && (
                     <Form.Item label={'Que modulo desea observar en el inicio'}>
-                      <Select name={'homeSelectedScreen'} value={event.homeSelectedScreen} onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}>
+                      <Select
+                        name={'homeSelectedScreen'}
+                        value={event.homeSelectedScreen}
+                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}>
                         <Option value={null}>Banner de inicio</Option>
                         <Option
                           value={
@@ -725,24 +743,30 @@ class General extends Component {
                   )}
 
                   <Form.Item label={'Tipo de evento'}>
-                    <Select value={event.type_event} name={'type_event'} onChange={(e) => this.handleChange(e, 'type_event')}>
+                    <Select
+                      value={event.type_event}
+                      name={'type_event'}
+                      onChange={(e) => this.handleChange(e, 'type_event')}>
                       <Option value=''>Seleccionar...</Option>
                       <Option value='physicalEvent'>Evento Fisico</Option>
                       <Option value='onlineEvent'>Evento Virtual</Option>
                     </Select>
                   </Form.Item>
 
-                  {event.type_event === 'onlineEvent' && (
+                  {/* {event.type_event === 'onlineEvent' && (
                     <Form.Item label={'Plataforma Streaming del evento'}>
-                      <Select defaultValue={event.event_platform} name={'event_platform'} onChange={(e) => this.handleChange(e, 'event_platform')}>
-                        {/* <Option value="">Seleccionar...</Option> */}
+                      <Select
+                        defaultValue={event.event_platform}
+                        name={'event_platform'}
+                        onChange={(e) => this.handleChange(e, 'event_platform')}>
+                        <Option value="">Seleccionar...</Option>
                         <Option value='zoom'>Zoom</Option>
                         <Option value='zoomExterno'>ZoomExterno</Option>
                         <Option value='vimeo'>Vimeo</Option>
                         <Option value='bigmarker'>BigMaker</Option>
                       </Select>
                     </Form.Item>
-                  )}
+                  )} */}
 
                   {event.type_event === 'physicalEvent' && (
                     <>
@@ -754,7 +778,7 @@ class General extends Component {
                           onChange={(e) => this.handleChange(e, 'address')}
                         />
                       </Form.Item>
-                      
+
                       <Form.Item label={'Lugar'}>
                         <Input
                           name={'venue'}
@@ -944,7 +968,7 @@ class General extends Component {
                       onChange={this.googleanlyticsid}
                     />
                   </Form.Item>
-                  
+
                   <Form.Item label={'Id Google Tag Manager'}>
                     <Input
                       name={'googletagmanagerid'}
@@ -953,7 +977,7 @@ class General extends Component {
                       onChange={this.googletagmanagerid}
                     />
                   </Form.Item>
-                  
+
                   <Form.Item label={'Id Facebook Pixel'}>
                     <Input
                       name={'facebookpixelid'}
@@ -1016,16 +1040,28 @@ class General extends Component {
                 <Col span={16}>
                   <Form.Item label={'Configurar autenticación'}>
                     <Row gutter={[16, 16]} wrap>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8} >
-                        <Badge count={this.state.typeEvent === 0 ? <CheckCircleFilled style={{fontSize: '20px', color: '#135200'}} /> : ''}>
+                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                        <Badge
+                          count={
+                            this.state.typeEvent === 0 ? (
+                              <CheckCircleFilled style={{ fontSize: '20px', color: '#135200' }} />
+                            ) : (
+                              ''
+                            )
+                          }>
                           <div /* className='cards-type-information'  */
-                            onClick={() => this.changetypeEvent(0)} 
-                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer', minHeight: '170px' }}
-                          >
+                            onClick={() => this.changetypeEvent(0)}
+                            style={{
+                              border: '1px solid #D3D3D3',
+                              borderRadius: '5px',
+                              padding: '10px',
+                              cursor: 'pointer',
+                              minHeight: '170px',
+                            }}>
                             <Space direction='vertical'>
                               <Text strong>Evento Público con Registro</Text>
                               <Text type='secondary'>
-                               {/*  Se mostrara el inicio de sesión y registro. Configuración por defecto */}
+                                {/*  Se mostrara el inicio de sesión y registro. Configuración por defecto */}
                                 <ul>
                                   <li>Tiene registro para todos.</li>
                                   <br />
@@ -1053,12 +1089,24 @@ class General extends Component {
                         </Badge>
                       </Col>
                       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge count={this.state.typeEvent === 1 ? <CheckCircleFilled style={{fontSize: '20px', color: '#135200'}} /> : ''}>
-                          <div 
+                        <Badge
+                          count={
+                            this.state.typeEvent === 1 ? (
+                              <CheckCircleFilled style={{ fontSize: '20px', color: '#135200' }} />
+                            ) : (
+                              ''
+                            )
+                          }>
+                          <div
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(1)}
-                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer', minHeight: '170px' }}
-                          >
+                            style={{
+                              border: '1px solid #D3D3D3',
+                              borderRadius: '5px',
+                              padding: '10px',
+                              cursor: 'pointer',
+                              minHeight: '170px',
+                            }}>
                             <Space direction='vertical'>
                               <Text strong>Evento Público sin Registro</Text>
                               <Text type='secondary'>
@@ -1086,12 +1134,24 @@ class General extends Component {
                         </Badge>
                       </Col>
                       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge count={this.state.typeEvent === 2 ? <CheckCircleFilled style={{fontSize: '20px', color: '#135200'}} /> : ''}>
-                          <div 
+                        <Badge
+                          count={
+                            this.state.typeEvent === 2 ? (
+                              <CheckCircleFilled style={{ fontSize: '20px', color: '#135200' }} />
+                            ) : (
+                              ''
+                            )
+                          }>
+                          <div
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(2)}
-                            style={{border: '1px solid #D3D3D3', borderRadius: '5px', padding: '10px', cursor: 'pointer', minHeight: '170px' }}
-                          >
+                            style={{
+                              border: '1px solid #D3D3D3',
+                              borderRadius: '5px',
+                              padding: '10px',
+                              cursor: 'pointer',
+                              minHeight: '170px',
+                            }}>
                             <Space direction='vertical'>
                               <Text strong>Evento Privado por invitación</Text>
                               <Text type='secondary'>
@@ -1164,14 +1224,14 @@ class General extends Component {
                       onChange={(e) => this.handleChange(e, 'visibility')}
                       name={'visibility'} />
                   </Form.Item> */}
-                  
+
                   <Form.Item label={'El evento requiere pago'}>
                     <Checkbox
                       defaultChecked={event.has_payment || event.has_payment === 'true'}
                       onChange={(e) => this.handleChange(e, 'has_payment')}
-                      name={'has_payment'} />
+                      name={'has_payment'}
+                    />
                   </Form.Item>
-                  
                 </Col>
               </Row>
             </Tabs.TabPane>
@@ -1180,9 +1240,6 @@ class General extends Component {
           {serverError && <ErrorServe errorData={errorData} />}
           {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
         </Form>
-        
-        
-        
       </React.Fragment>
     );
   }
