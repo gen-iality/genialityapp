@@ -193,7 +193,7 @@ export const EventsApi = {
   },
   editOne: async (data, id) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit('/api/events', data, `${id}?token=${token}`);
+    return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id) => {
     return await Actions.delete('/api/events', id);
@@ -417,7 +417,7 @@ export const EventFieldsApi = {
     return await Actions.post(`/api/events/${event}/userproperties`, data);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`/api/events/${event}/userproperties`, data, id);
+    return await Actions.edit(`/api/events/${event}/userproperties/${id}`, data, true);
   },
   registerListFieldOptionTaken: async (data, id, event) => {
     return await Actions.put(`/api/events/${event}/userproperties/${id}/RegisterListFieldOptionTaken`, data);
