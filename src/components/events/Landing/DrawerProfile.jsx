@@ -27,18 +27,18 @@ const DrawerProfile = (props) => {
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);
   const [send, setSend] = useState(false);
+  const [userPropertiesProfile, setUserPropertiesProfile] = useState();
   const intl = useIntl();
 
   useEffect(() => {
-    if (props.profileuser !== null) {
-      let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
-      //console.log("ISCONTACT==>",isContact)
-      console.log('PROFILE USER===>', cUser.value._id, props.profileuser);
-      setIsMe(cUser.value._id == props.profileuser._id);
+    if (cEventUser.value !== null && cEventUser.status === 'LOADED') {
+      let isContact = isMyContacts(cEventUser.value.properties, props.cHelper.contacts);
+      setIsMe(cUser.value._id == cEventUser.value.user._id);
       setIsMyContact(isContact);
-      setUserSelected(props.profileuser);
+      setUserSelected(cEventUser.value.properties);
+      setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
     }
-  }, [props.profileuser]);
+  }, [cEventUser.value]);
   const haveRequestUser = (user) => {
     //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
@@ -58,22 +58,22 @@ const DrawerProfile = (props) => {
             <Avatar
               size={110}
               src={
-                userSelected && userSelected.properties && userSelected.properties['picture']
-                  ? userSelected.properties['picture']
+                userSelected && userSelected['picture']
+                  ? userSelected['picture']
                   : 'https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'
               }
             />
             <Typography.Paragraph style={{ fontSize: '20px', width: '250px' }}>
               {userSelected != null
-                ? userSelected && userSelected.properties && userSelected.properties.names
-                  ? userSelected.properties.names
-                  : userSelected.properties && userSelected.properties.name
-                  ? userSelected.properties.name
+                ? userSelected && userSelected.names
+                  ? userSelected.names
+                  : userSelected && userSelected.name
+                  ? userSelected.name
                   : ''
                 : ''}
             </Typography.Paragraph>
             <Typography.Paragraph type='secondary' style={{ fontSize: '16px', width: '250px' }}>
-              {userSelected && userSelected.properties && userSelected.properties?.email}
+              {userSelected && userSelected?.email}
             </Typography.Paragraph>
             {isMe && (
               <Button
@@ -91,7 +91,7 @@ const DrawerProfile = (props) => {
               </Button>
             )}
           </Space>
-          <Col span={24}>
+          {/* <Col span={24}>
             <Row justify='center' style={{ marginTop: '20px' }}>
               <Space size='middle'>
                 <Tooltip title={haveRequestUser(userSelected) ? 'Solicitud pendiente' : 'Solicitar contacto'}>
@@ -108,11 +108,8 @@ const DrawerProfile = (props) => {
                               setSend(true);
                               let sendResp = await SendFriendship(
                                 {
-                                  eventUserIdReceiver: userSelected.eventUserId,
-                                  userName:
-                                    userSelected.properties.name ||
-                                    userSelected.properties.names ||
-                                    userSelected.properties?.email,
+                                  eventUserIdReceiver: cEventUser.value._id,
+                                  userName: userSelected.name || userSelected.names || userSelected?.email,
                                 },
                                 cEventUser.value,
                                 cEvent.value
@@ -183,14 +180,14 @@ const DrawerProfile = (props) => {
                 </Tooltip>
               </Space>
             </Row>
-          </Col>
+          </Col> */}
         </Row>
         <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '5px' }}>
           <Col
             className='asistente-list' //agrega el estilo a la barra de scroll
             span={24}
             style={{ marginTop: '20px', height: '50vh', maxHeight: '50vh', overflowY: 'auto' }}>
-            {(!userSelected || !propertiesProfile) && (
+            {(!userSelected || !userPropertiesProfile) && (
               <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
             )}
 
@@ -199,23 +196,26 @@ const DrawerProfile = (props) => {
 
               <List
                 bordered
-                dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil}
+                dataSource={userPropertiesProfile && userPropertiesProfile}
                 renderItem={(item) =>
-                  ((item.visibleByContacts && isMycontact && !item.sensibility) ||
+                  ((item?.visibleByContacts && isMycontact && !item?.sensibility) ||
                     !item.sensibility ||
                     userSelected?._id == cUser.value._id) &&
-                  userSelected?.properties[item.name] &&
-                  item.name !== 'picture' &&
-                  item.name !== 'imagendeperfil' &&
-                  item.type !== 'password' &&
-                  item.type !== 'avatar' && (
+                  userSelected[item?.name] &&
+                  item?.name !== 'picture' &&
+                  item?.name !== 'imagendeperfil' &&
+                  item?.type !== 'password' &&
+                  item?.type !== 'avatar' && (
                     <List.Item>
                       <List.Item.Meta
-                        title={item.label}
+                        title={item?.label}
                         description={formatDataToString(
-                          item.type !== 'codearea'
-                            ? cEventUser.value.properties[item.name]
-                            : '(+' + cEventUser.value.properties['code'] + ')' + cEventUser.value.properties[item.name],
+                          item?.type !== 'codearea'
+                            ? cEventUser.value.properties[item?.name]
+                            : '(+' +
+                                cEventUser.value.properties['code'] +
+                                ')' +
+                                cEventUser.value.properties[item?.name],
                           item
                         )}
                       />
