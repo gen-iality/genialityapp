@@ -7,8 +7,8 @@ export const columns = (columnsData, editModalUser) => [
   {
     title: 'Avatar',
     dataIndex: 'picture',
-    /* width: 70,
-    align: 'center', */
+    width: 70,
+    /* align: 'center', */
     render(val, item, index) {
       return (
         <Row gutter={8}>
@@ -34,6 +34,7 @@ export const columns = (columnsData, editModalUser) => [
   {
     title: 'Nombres',
     dataIndex: 'names',
+    width: 300,
     /* align: 'center', */
     ellipsis: true,
     sorter: (a, b) => a.names.localeCompare(b.names),
@@ -42,6 +43,7 @@ export const columns = (columnsData, editModalUser) => [
   {
     title: 'Correo',
     dataIndex: 'email',
+    width: 350,
     ellipsis: true,
     sorter: (a, b) => a.email.localeCompare(b.email),
     /* align: 'center', */
