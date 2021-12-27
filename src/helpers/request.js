@@ -538,7 +538,8 @@ export const OrganizationApi = {
     return await Actions.post(`/api/organizations/${org}/addorganizationuser`, data);
   },
   editUser: async (org, member, data) => {
-    return await Actions.edit(`/api/organizations/${org}/organizationusers`, data, member);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`/api/organizations/${org}/organizationusers/${member}?token=${token}`, data, true);
   },
   deleteUser: async (org, member) => {
     let token = await GetTokenUserFirebase();
