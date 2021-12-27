@@ -65,7 +65,11 @@ export function CurrentUserProvider({ children }) {
     asyncdata();
   }, []);
 
-  return <CurrentUserContext.Provider value={currentUser}>{children}</CurrentUserContext.Provider>;
+  return (
+    <CurrentUserContext.Provider value={{ ...currentUser, setCurrentUser: setCurrentUser }}>
+      {children}
+    </CurrentUserContext.Provider>
+  );
 }
 
 export function UseCurrentUser() {
