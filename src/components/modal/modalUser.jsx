@@ -14,7 +14,10 @@ import { message, Modal } from 'antd';
 import withContext from '../../Context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { FaBullseye } from 'react-icons/fa';
+
+const { confirm } = Modal;
 
 class UserModal extends Component {
   constructor(props) {
@@ -106,14 +109,72 @@ class UserModal extends Component {
     // let resultado = null;
     const self = this;
 
-    const userRef = !this.props.byActivity
-      ? firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`)
+    const userRef = !self.props.byActivity
+      ? firestore.collection(`${self.props.cEvent.value?._id}_event_attendees`)
       : firestore
-          .collection(`${this.props.cEvent.value?._id}_event_attendees`)
+          .collection(`${self.props.cEvent.value?._id}_event_attendees`)
           .doc('activity')
-          .collection(`${this.props.activityId}`);
+          .collection(`${self.props.activityId}`);
 
-    try {
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const loading = message.open({
+          key: 'loading',
+          type: 'loading',
+          content: <> Por favor espere miestras borra la información..</>,
+        });
+        const onHandlerRemove = async () => {
+          try {
+            !self.props.byActivity &&
+              (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, user._id));
+            // messages = { class: 'msg_warning', content: 'USER DELETED' };
+            toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+
+            self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
+            self.props.byActivity && (await self.props.updateView());
+            
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+            
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'warning',
+              content: <>El usuario se eliminó</>,
+            });
+          } finally {
+            userRef
+            .doc(self.state.userId)
+            .delete()
+            .then(function() {
+              messages.class = 'msg_warning';
+              messages.content = 'USER DELETED';
+              toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+
+              //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
+              //substractSyncQuantity();
+            });
+
+            setTimeout(() => {
+              messages.class = messages.content = '';
+              self.closeModal();
+            }, 500);
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+    
+    /* try {
       !this.props.byActivity &&
         (await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, user._id));
       // message = { class: 'msg_warning', content: 'USER DELETED' };
@@ -143,9 +204,9 @@ class UserModal extends Component {
         messages.class = message.content = '';
         //self.closeModal();
       }, 500);
-    }
+    } */
 
-    //Borrado de usuario en Firebase
+    /* //Borrado de usuario en Firebase
     userRef
       .doc(this.state.userId)
       .delete()
@@ -160,7 +221,7 @@ class UserModal extends Component {
     setTimeout(() => {
       message.class = message.content = '';
       self.closeModal();
-    }, 500);
+    }, 500); */
   };
 
   closeModal = () => {
@@ -175,26 +236,18 @@ class UserModal extends Component {
     let respActivity = true;
     if (values) {
       if (values?.checked_in) {
-        values.checkedin_at = Moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        values.checkedin_at = new Date();
       } else {
         values.checkedin_at = '';
       }
       /* console.log("ACA VALUES==>",values) */
-      const snap = { properties: values, checked_in: values.checked_in, checkedin_at: values.checkedin_at };
+      const snap = { properties: values };
       if (this.props.organizationId) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */
       } else {
         /* console.log("se va por aca",this.props.cEvent) */
-        if (!this.props.edit) {
-          resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
-        } else {
-          resp = await UsersApi.editEventUser(
-            snap,
-            this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent,
-            this.props.value?._id
-          );
-        }
+        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
         /* console.log("10. USERADD==>",resp) */
       }
       if (this.props.byActivity && resp?.data?._id && !this.props.edit) {
