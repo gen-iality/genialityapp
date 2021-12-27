@@ -52,6 +52,7 @@ class Datos extends Component {
     this.updateTable = this.updateTable.bind(this);
     this.handlevisibleModal = this.handlevisibleModal.bind(this);
     this.organization = this.props?.sendprops ? this.props?.sendprops?.org : this.props?.org;
+    console.log('PROPS==>', props);
   }
 
   async componentDidMount() {
@@ -78,7 +79,10 @@ class Datos extends Component {
       const organizationId = this?.organization?._id;
       let fields = [];
       let fieldsReplace = [];
-      if (organizationId && !this.props.eventID && this.props.edittemplate) {
+      if (
+        (organizationId && !this.props.eventID && this.props.edittemplate) ||
+        (organizationId && !this.props.eventID && !this.props.edittemplate)
+      ) {
         fields = await this.props.getFields();
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
         fields.map((field) => {
@@ -89,7 +93,7 @@ class Datos extends Component {
         fields = this.orderFieldsByWeight(fieldsReplace);
         fields = this.updateIndex(fieldsReplace);
       } else if (!this.props.edittemplate) {
-        fields = await EventFieldsApi.getAll(this.eventID);
+        fields = await EventFieldsApi.getAll(this.props.eventID);
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
         fields.map((field) => {
           if (field.name !== 'password' && field.name !== 'contrasena' && field.name !== 'avatar') {
@@ -120,14 +124,16 @@ class Datos extends Component {
   };
   //Guardar campo en el evento
   saveField = async (field) => {
+    console.log('FIELD==>', field);
     try {
       let totaluser = {};
       const organizationId = this?.organization?._id;
       if (organizationId) {
-        if (this.state.edit) await this.props.editField(field._id, field, this.state.isEditTemplate, this.updateTable);
+        if (this.state.edit)
+          await this.props.editField(field._id || field.id, field, this.state.isEditTemplate, this.updateTable);
         else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
       } else {
-        if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
+        if (this.state.edit) await EventFieldsApi.editOne(field, field._id || field.id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
         totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
       }

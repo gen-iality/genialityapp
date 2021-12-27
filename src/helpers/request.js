@@ -553,7 +553,7 @@ export const OrganizationApi = {
     return await Actions.put(`api/organizations/${org}?token=${token}`, data);
   },
   editOneUserProperties: async (org, fieldId, data) => {
-    return await Actions.edit(`api/organizations/${org}/userproperties`, data, fieldId);
+    return await Actions.edit(`api/organizations/${org}/userproperties/${fieldId}`, data, true);
   },
   createOneUserProperties: async (org, data) => {
     return await Actions.post(`/api/organizations/${org}/userproperties`, data);
@@ -563,7 +563,7 @@ export const OrganizationApi = {
   },
   deleteUserProperties: async (org, fieldId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/organizations/${org}/userproperties?token=${token}`, fieldId);
+    return await Actions.delete(`/api/organizations/${org}/userproperties/${fieldId}?token=${token}`);
   },
   getTemplateOrganization: async (org) => {
     let token = await GetTokenUserFirebase();
