@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { OrganizationApi } from '../../helpers/request';
 import FormComponent from '../events/registrationForm/form';
 import { message, Modal } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+
+const { confirm } = Modal;
 
 function ModalMembers(props) {
   const organizationId = props.organizationId;
@@ -19,14 +21,48 @@ function ModalMembers(props) {
   ];
 
   async function deleteUser(user) {
-    try {
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const loading = message.open({
+          key: 'loading',
+          type: 'loading',
+          content: <> Por favor espere miestras borra la información..</>,
+        });
+        const onHandlerRemove = async () => {
+          try {
+            await OrganizationApi.deleteUser(organizationId, user._id);
+            props.closeOrOpenModalMembers();
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+            props.startingComponent();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: <>Hubo un error al eliminar</>,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+    /* try {
       await OrganizationApi.deleteUser(organizationId, user._id);
       props.closeOrOpenModalMembers();
       message.success('Eliminado correctamente');
       props.startingComponent();
     } catch (e) {
       message.error('Hubo un error al eliminar');
-    }
+    } */
   }
 
   async function saveUser(values) {

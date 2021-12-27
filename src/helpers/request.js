@@ -46,8 +46,8 @@ export const Actions = {
     if (unsafe) return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
     return privateInstance.delete(`${url}/${id}`).then(({ data }) => data);
   },
-  edit: async (url, data, id, unsafe) => {
-    if (unsafe) return publicInstance.put(`${url}${id}`, data).then(({ data }) => data);
+  edit: async (url, data, unsafe) => {
+    if (unsafe) return publicInstance.put(`${url}`, data).then(({ data }) => data);
     return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
   },
   post: async (url, data, unsafe) => {
@@ -193,7 +193,7 @@ export const EventsApi = {
   },
   editOne: async (data, id) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit('/api/events', data, `${id}?token=${token}`);
+    return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id) => {
     return await Actions.delete('/api/events', id);
@@ -313,7 +313,8 @@ export const UsersApi = {
     return await Actions.getOne('/api/users/', id);
   },
   editProfile: async (data, id) => {
-    return await Actions.edit('/api/users', data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`/api/users/${id}/?token=${token}`, data, true);
   },
   findByEmail: async (email) => {
     return await Actions.getOne(`api/users/findByEmail/`, email);
@@ -416,7 +417,7 @@ export const EventFieldsApi = {
     return await Actions.post(`/api/events/${event}/userproperties`, data);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`/api/events/${event}/userproperties`, data, id);
+    return await Actions.edit(`/api/events/${event}/userproperties/${id}`, data, true);
   },
   registerListFieldOptionTaken: async (data, id, event) => {
     return await Actions.put(`/api/events/${event}/userproperties/${id}/RegisterListFieldOptionTaken`, data);

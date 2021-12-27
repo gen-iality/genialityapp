@@ -75,6 +75,7 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value == null) return;
     let firstroute = Object.keys(props.cEvent.value.itemsMenu);
     let firstrouteValues = Object.values(props.cEvent.value.itemsMenu);
+    console.log(firstroute.includes('tickets'), firstrouteValues.name === 'Register', 'aa')
     let index = -1;
     if (firstroute && firstrouteValues) {
       if (firstroute.length > 0 && firstrouteValues.length > 0) {
