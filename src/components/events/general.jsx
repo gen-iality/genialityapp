@@ -86,14 +86,14 @@ class General extends Component {
       },
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
-      /* registerForm: {
+      registerForm: {
         name: 'Registro',
         position: 0,
         section: 'tickets',
         icon: 'CreditCardOutlined',
         checked: false,
         permissions: 'public',
-      }, */
+      },
       typeEvent: 0,
     };
     this.specificDates = this.specificDates.bind(this);
@@ -104,7 +104,7 @@ class General extends Component {
 
   async componentDidMount() {
     //inicializacion del estado de menu
-    /* if (this.state.event.itemsMenu) {
+    if (this.state.event.itemsMenu) {
       const { itemsMenu } = this.state.event;
       const { registerForm } = this.state;
 
@@ -120,7 +120,7 @@ class General extends Component {
       }
       delete itemsMenu.tickets;
       this.setState({ itemsMenu, registerForm: registerSection });
-    } */
+    }
 
     const validate = await this.validateTabs();
     if (validate) {
@@ -489,10 +489,10 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
-      /* itemsMenu:
-        event.allow_register === 'false' || event.allow_register === false
+      itemsMenu:
+        /* event.allow_register === 'false' || event.allow_register === false
           ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
-          : { ...this.state.itemsMenu }, */
+          : */ { ...this.state.itemsMenu },
     };
 
     try {
@@ -753,20 +753,20 @@ class General extends Component {
                     </Select>
                   </Form.Item>
 
-                  {event.type_event === 'onlineEvent' && (
+                  {/* {event.type_event === 'onlineEvent' && (
                     <Form.Item label={'Plataforma Streaming del evento'}>
                       <Select
                         defaultValue={event.event_platform}
                         name={'event_platform'}
                         onChange={(e) => this.handleChange(e, 'event_platform')}>
-                        {/* <Option value="">Seleccionar...</Option> */}
+                        <Option value="">Seleccionar...</Option>
                         <Option value='zoom'>Zoom</Option>
                         <Option value='zoomExterno'>ZoomExterno</Option>
                         <Option value='vimeo'>Vimeo</Option>
                         <Option value='bigmarker'>BigMaker</Option>
                       </Select>
                     </Form.Item>
-                  )}
+                  )} */}
 
                   {event.type_event === 'physicalEvent' && (
                     <>
