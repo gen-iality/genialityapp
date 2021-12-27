@@ -167,7 +167,7 @@ function Organization(props) {
                               updateTable(fields);
                             }
                           }}
-                          editField={async (fieldId, field, fieldupdate, template, updateTable) => {
+                          editField={async (fieldId, fieldupdate, template, updateTable) => {
                             template.datafields = template.datafields.map((field) => {
                               return field?.order_weight == fieldupdate?.order_weight ? fieldupdate : field;
                             });
