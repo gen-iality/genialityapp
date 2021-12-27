@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
-import { Activity, AttendeeApi, eventTicketsApi, TicketsApi, UsersApi } from '../../helpers/request';
+import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Dialog from './twoAction';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
@@ -49,7 +49,7 @@ class UserModal extends Component {
     let user = {};
     if (this.props.edit) {
       const { value } = this.props;
-      if (value.properties) {
+      if (value?.properties) {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
@@ -65,7 +65,7 @@ class UserModal extends Component {
           prevState: value.state_id,
           valid: false,
         });
-      } else {
+      } else if (value) {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
@@ -242,19 +242,26 @@ class UserModal extends Component {
       }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };
-      if (this.props.organizationId) {
+      if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */
       } else {
         /* console.log("se va por aca",this.props.cEvent) */
         if (!this.props.edit) {
+          console.log('EVENT==>', this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
           resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
-          console.log('10. USERADD==>', resp);
+          console.log('RESPUESTA==>', resp);
+        } else {
+          resp = await UsersApi.editEventUser(
+            snap,
+            this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent,
+            this.props.value._id
+          );
         }
+        /* console.log("10. USERADD==>",resp) */
       }
 
       if (this.props.byActivity && (resp?.data?._id || resp?._id) && !this.props.edit) {
-        alert('SOY UNA ACTIVIDAD');
         respActivity = await Activity.Register(
           this.props.cEvent?.value?._id,
           resp?.data?.user?._id || resp?.user?._id,
@@ -263,7 +270,6 @@ class UserModal extends Component {
       }
 
       if (this.props.byActivity && this.props.edit) {
-        alert('ACACCCAAA');
         //console.log('VALUES ACTIVITY==>', this.props.value);
         //respActivity = await Activity.Update(this.props.cEvent?.value?._id, this.props.value.idActivity, datos);
         //console.log('RESPUESTA ACTIVITY UPDATE==>', respActivity, this.props.value.idActivity);

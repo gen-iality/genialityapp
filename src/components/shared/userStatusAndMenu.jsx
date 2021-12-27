@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import WithLoading from './withLoading';
-import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge } from 'antd';
+import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal } from 'antd';
 import {
   ContactsOutlined,
   DownOutlined,
+  ExclamationCircleOutlined,
   LogoutOutlined,
   ScheduleOutlined,
   SolutionOutlined,
@@ -32,6 +33,7 @@ const ItemStyle = {
   padding: 5,
   margin: 5,
 };
+const { confirm } = Modal;
 
 const UserStatusAndMenu = (props) => {
   let { cEventUser } = props;
@@ -40,6 +42,7 @@ const UserStatusAndMenu = (props) => {
   let name = props.name;
   let logout = props.logout;
   const [visible, setVisible] = useState(true);
+  const intl = useIntl();
 
   function linkToTheMenuRouteS(menuRoute) {
     window.location.href = `${window.location.origin}${menuRoute}`;
@@ -52,9 +55,17 @@ const UserStatusAndMenu = (props) => {
   let menu = !props.anonimususer ? (
     <Menu>
       {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
-        <Menu.ItemGroup title='Evento'>
+        <Menu.ItemGroup
+          title={intl.formatMessage({
+            id: 'header.title.Event',
+            defaultMessage: 'Evento',
+          })}>
           {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
-            <Badge count={'Nuevo'}>
+            <Badge
+              count={intl.formatMessage({
+                id: 'header.new',
+                defaultMessage: 'Nuevo',
+              })}>
               <Menu.Item
                 onClick={() => {
                   props.setViewPerfil({
@@ -69,19 +80,23 @@ const UserStatusAndMenu = (props) => {
           )}
         </Menu.ItemGroup>
       )}
-      <Menu.ItemGroup title='Administracion'>
+      <Menu.ItemGroup
+        title={intl.formatMessage({
+          id: 'header.title.Management',
+          defaultMessage: 'Administración',
+        })}>
         {visible && (
           <Menu.Item
             icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
-            <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
+            <FormattedMessage id='header.my_tickets' defaultMessage='Mis Tiquetes' />
           </Menu.Item>
         )}
         {visible && (
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
-            <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
+            <FormattedMessage id='header.my_events' defaultMessage='Mis eventos' />
           </Menu.Item>
         )}
         {visible && (
@@ -113,8 +128,16 @@ const UserStatusAndMenu = (props) => {
         )}
       </Menu.ItemGroup>
 
-      <Menu.ItemGroup title='Usuario'>
-        <Badge count={'Nuevo'}>
+      <Menu.ItemGroup
+        title={intl.formatMessage({
+          id: 'header.title.User',
+          defaultMessage: 'Usuario',
+        })}>
+        <Badge
+          count={intl.formatMessage({
+            id: 'header.new',
+            defaultMessage: 'Nuevo',
+          })}>
           <Menu.Item
             icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
@@ -122,7 +145,7 @@ const UserStatusAndMenu = (props) => {
           </Menu.Item>
         </Badge>
 
-        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={logout}>
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={showPropsConfirm}>
           <FormattedMessage id='header.logout' defaultMessage='Salir' />
         </Menu.Item>
       </Menu.ItemGroup>
@@ -132,7 +155,7 @@ const UserStatusAndMenu = (props) => {
       {!props.anonimususer ? (
         <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
       ) : (
-        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={logout}>
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={showPropsConfirm}>
           <FormattedMessage id='header.logout' defaultMessage='Salir' />
         </Menu.Item>
       )}
@@ -171,6 +194,36 @@ const UserStatusAndMenu = (props) => {
       </Col>
     </Row>
   );
+
+  function showPropsConfirm() {
+    confirm({
+      centered: true,
+      title: intl.formatMessage({
+        id: 'header.confirm.title',
+        defaultMessage: '¿Estás seguro de que quieres cerrar la sesión?',
+      }),
+      icon: <ExclamationCircleOutlined />,
+      content: intl.formatMessage({
+        id: 'header.confirm.content',
+        defaultMessage: 'Si cierra la sesión, algunas de las funciones del sitio web quedarán desactivadas.',
+      }),
+      okText: intl.formatMessage({
+        id: 'header.confirm.okText',
+        defaultMessage: 'Si, cerrar la sesión',
+      }),
+      okType: 'danger',
+      cancelText: intl.formatMessage({
+        id: 'header.confirm.cancelText',
+        defaultMessage: 'Cancelar',
+      }),
+      onOk() {
+        logout();
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
 
   return <>{user ? loggedInuser : loggedOutUser}</>;
 };
