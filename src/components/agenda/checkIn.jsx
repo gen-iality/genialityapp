@@ -215,6 +215,7 @@ class CheckAgenda extends Component {
       ellipsis: true,
       key: 'edit',
       fixed: 'right',
+      width: 110,
       render: self.editcomponent,
     };
     /* columnsTable.push(editColumn); */
