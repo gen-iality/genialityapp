@@ -138,13 +138,12 @@ class UserModal extends Component {
 
             self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
             self.props.byActivity && (await self.props.updateView());
-            
+
             message.destroy(loading.key);
             message.open({
               type: 'success',
               content: <> Se eliminó la información correctamente!</>,
             });
-            
           } catch (e) {
             message.destroy(loading.key);
             message.open({
@@ -153,16 +152,16 @@ class UserModal extends Component {
             });
           } finally {
             userRef
-            .doc(self.state.userId)
-            .delete()
-            .then(function() {
-              messages.class = 'msg_warning';
-              messages.content = 'USER DELETED';
-              toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+              .doc(self.state.userId)
+              .delete()
+              .then(function() {
+                messages.class = 'msg_warning';
+                messages.content = 'USER DELETED';
+                toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
-              //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
-              //substractSyncQuantity();
-            });
+                //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
+                //substractSyncQuantity();
+              });
 
             setTimeout(() => {
               messages.class = messages.content = '';
@@ -173,7 +172,7 @@ class UserModal extends Component {
         onHandlerRemove();
       },
     });
-    
+
     /* try {
       !this.props.byActivity &&
         (await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, user._id));
@@ -232,6 +231,7 @@ class UserModal extends Component {
   saveUser = async (values) => {
     this.setState({ loadingregister: true });
     //console.log('callback=>', values);
+    console.log('BY ACTIVITY==>', this.props.byActivity, this.props.organizationId, this.props.edit);
     let resp;
     let respActivity = true;
     if (values) {
@@ -247,18 +247,23 @@ class UserModal extends Component {
         /* console.log("10. resp ", resp) */
       } else {
         /* console.log("se va por aca",this.props.cEvent) */
-        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
-        /* console.log("10. USERADD==>",resp) */
+        if (!this.props.edit) {
+          resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
+          console.log('10. USERADD==>', resp);
+        }
       }
-      if (this.props.byActivity && resp?.data?._id && !this.props.edit) {
+
+      if (this.props.byActivity && (resp?.data?._id || resp?._id) && !this.props.edit) {
+        alert('SOY UNA ACTIVIDAD');
         respActivity = await Activity.Register(
           this.props.cEvent?.value?._id,
-          resp.data.user._id,
+          resp?.data?.user?._id || resp?.user?._id,
           this.props.activityId
         );
       }
 
       if (this.props.byActivity && this.props.edit) {
+        alert('ACACCCAAA');
         //console.log('VALUES ACTIVITY==>', this.props.value);
         //respActivity = await Activity.Update(this.props.cEvent?.value?._id, this.props.value.idActivity, datos);
         //console.log('RESPUESTA ACTIVITY UPDATE==>', respActivity, this.props.value.idActivity);
