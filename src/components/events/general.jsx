@@ -69,14 +69,14 @@ class General extends Component {
       },
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
-      registerForm: {
+      /* registerForm: {
         name: 'Registro',
         position: 0,
         section: 'tickets',
         icon: 'CreditCardOutlined',
         checked: false,
         permissions: 'public',
-      },
+      }, */
       typeEvent: 0,
     };
     this.specificDates = this.specificDates.bind(this);
@@ -87,7 +87,7 @@ class General extends Component {
 
   async componentDidMount() {
     //inicializacion del estado de menu
-    if (this.state.event.itemsMenu) {
+    /* if (this.state.event.itemsMenu) {
       const { itemsMenu } = this.state.event;
       const { registerForm } = this.state;
 
@@ -103,7 +103,7 @@ class General extends Component {
       }
       delete itemsMenu.tickets;
       this.setState({ itemsMenu, registerForm: registerSection });
-    }
+    } */
 
     const validate = await this.validateTabs();
     if (validate) {
@@ -472,10 +472,10 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
-      itemsMenu:
+      /* itemsMenu:
         event.allow_register === 'false' || event.allow_register === false
           ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
-          : { ...this.state.itemsMenu },
+          : { ...this.state.itemsMenu }, */
     };
 
     try {
@@ -1027,9 +1027,9 @@ class General extends Component {
                               <Text type='secondary'>
                                {/*  Se mostrara el inicio de sesión y registro. Configuración por defecto */}
                                 <ul>
-                                  <li>Registro.</li>
+                                  <li>Tiene registro para todos.</li>
                                   <br />
-                                  <li>Inicio de sesión.</li>
+                                  <li>Tiene inicio de sesión para todos.</li>
                                 </ul>
                                 {/* <b>Contiene:</b><br />
                                 <ul>
