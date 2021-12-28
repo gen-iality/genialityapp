@@ -246,7 +246,6 @@ class UserModal extends Component {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */
       } else {
-        /* console.log("se va por aca",this.props.cEvent) */
         if (!this.props.edit) {
           console.log('EVENT==>', this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
           resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);

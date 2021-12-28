@@ -500,8 +500,10 @@ class ListEventUser extends Component {
 
   addUser = () => {
     html.classList.add('is-clipped');
-    this.setState((prevState) => {
-      return { editUser: !prevState.editUser, edit: false, selectedUser: null };
+    this.setState({ edit: false }, () => {
+      this.setState((prevState) => {
+        return { editUser: !prevState.editUser, selectedUser: null };
+      });
     });
   };
 
@@ -972,7 +974,7 @@ class ListEventUser extends Component {
             badgeEvent={this.state.badgeEvent}
             extraFields={this.state.fieldsForm}
             spacesEvent={spacesEvent}
-            edit={editUser}
+            edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
