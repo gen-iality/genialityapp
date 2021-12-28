@@ -66,12 +66,13 @@ const ModalAuth = (props) => {
 
   useEffect(() => {
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
-    console.log('EVENTO PRIVATE==>', cEvent.value);
+    console.log('EVENTO PRIVATE==>', cEvent.value, typeModal);
     app.auth().onAuthStateChanged((user) => {
       if (
         (!user && cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC') ||
         (!user && !window.location.toString().includes('landing') && !window.location.toString().includes('event')) ||
-        (!user && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PRIVATE')
+        (!user && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PRIVATE') ||
+        (!cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC' && props.visible)
       ) {
         console.log('EVENTO==>', cEvent.value);
         setmodalVisible(true);
@@ -97,7 +98,7 @@ const ModalAuth = (props) => {
     return () => {
       form1.resetFields();
     };
-  }, [props.cUser.value]);
+  }, [props.cUser.value, props.visible]);
 
   const registerUser = async (values) => {
     setLoading(true);
@@ -171,6 +172,9 @@ const ModalAuth = (props) => {
 
   const isVisibleRegister = () => {
     if (
+      (props.cEventUser?.value == null &&
+        !props.cEvent.value?.allow_register &&
+        props.cEvent.value?.visibility === 'PUBLIC') ||
       (props.cEventUser?.value == null &&
         (props.cEvent.value?.allow_register === true || props.cEvent.value?.allow_register === 'true') &&
         props.cEvent.value?.visibility === 'PUBLIC' &&

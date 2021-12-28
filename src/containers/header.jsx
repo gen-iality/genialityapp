@@ -155,7 +155,7 @@ const Headers = (props) => {
 
             {headerIsLoading ? (
               <Spin />
-            ) : !dataGeneral.userEvent && !window.location.href.toString().includes('landing') ? (
+            ) : !dataGeneral.userEvent ? (
               <Space>
                 <Button
                   icon={<LockOutlined />}
