@@ -2,28 +2,14 @@ import React, { useEffect, useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
 import { Layout, Spin, notification, Button } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
-/** Components */
-import TopBanner from './TopBanner';
-import EventSectionRoutes from './EventSectionsRoutes';
-import EventSectionsInnerMenu from './EventSectionsInnerMenu';
-import EventSectionMenuRigth from './EventSectionMenuRigth';
-import MenuTablets from './Menus/MenuTablets';
-import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
-
-/** Firebase */
-import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 
 import { setUserAgenda } from '../../../redux/networking/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
-
-import EviusFooter from './EviusFooter';
-import AppointmentModal from '../../networking/appointmentModal';
 
 /** Google tag manager */
 import { EnableGTMByEVENT } from './helpers/tagManagerHelper';
@@ -31,14 +17,25 @@ import { EnableGTMByEVENT } from './helpers/tagManagerHelper';
 import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 /** Facebook Pixel */
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
-import { Ripple } from 'react-preloaders';
-import ModalRegister from './modalRegister';
-import { toast } from 'react-toastify';
-import ModalAuth from '../../authentication/ModalAuth';
-import ModalLoginHelpers from '../../authentication/ModalLoginHelpers';
-import ModalPermission from '../../authentication/ModalPermission';
-import ModalFeedback from '../../authentication/ModalFeedback';
-import ModalNoRegister from '../../authentication/ModalNoRegister';
+
+import loadable from '@loadable/component';
+
+const EviusFooter = loadable(() => import('./EviusFooter'));
+const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
+const ModalRegister = loadable(() => import('./modalRegister'));
+const ModalAuth = loadable(() => import('../../authentication/ModalAuth'));
+const ModalLoginHelpers = loadable(() => import('../../authentication/ModalLoginHelpers'));
+const ModalPermission = loadable(() => import('../../authentication/ModalPermission'));
+const ModalFeedback = loadable(() => import('../../authentication/ModalFeedback'));
+const ModalNoRegister = loadable(() => import('../../authentication/ModalNoRegister'));
+
+/** Components */
+const TopBanner = loadable(() => import('./TopBanner'));
+const EventSectionRoutes = loadable(() => import('./EventSectionsRoutes'));
+const EventSectionsInnerMenu = loadable(() => import('./EventSectionsInnerMenu'));
+const EventSectionMenuRigth = loadable(() => import('./EventSectionMenuRigth'));
+const MenuTablets = loadable(() => import('./Menus/MenuTablets'));
+const MenuTabletsSocialZone = loadable(() => import('./Menus/MenuTabletsSocialZone'));
 
 const iniitalstatetabs = {
   attendees: false,
@@ -71,10 +68,7 @@ const IconRender = (type) => {
 const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
-  let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, typeModal, currentActivity, register, setRegister } = useContext(
-    HelperContext
-  );
+  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useContext(HelperContext);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -120,32 +114,36 @@ const Landing = (props) => {
 
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
-      console.log('cEventContext', cEventContext);
-      firestore
-        .collection('events')
-        .doc(cEventContext.value?._id)
-        .onSnapshot(function(eventSnapshot) {
-          if (eventSnapshot.exists) {
-            if (eventSnapshot.data().tabs !== undefined) {
-              setgeneraltabs(eventSnapshot.data().tabs);
-            }
-          }
-        });
-
-      firestore
-        .collection('eventchats/' + cEventContext.value._id + '/userchats/' + cUser.uid + '/' + 'chats/')
-        .onSnapshot(function(querySnapshot) {
-          let data;
-          querySnapshot.forEach((doc) => {
-            data = doc.data();
-
-            if (data.newMessages) {
-              settotalnewmessages(
-                (totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0)
-              );
+      import('../../../helpers/firebase').then((fb) => {
+        console.log('cEventContext', cEventContext);
+        fb.firestore
+          .collection('events')
+          .doc(cEventContext.value?._id)
+          .onSnapshot(function(eventSnapshot) {
+            if (eventSnapshot.exists) {
+              if (eventSnapshot.data().tabs !== undefined) {
+                setgeneraltabs(eventSnapshot.data().tabs);
+              }
             }
           });
-        });
+
+        fb.firestore
+          .collection('eventchats/' + cEventContext.value._id + '/userchats/' + cUser.uid + '/' + 'chats/')
+          .onSnapshot(function(querySnapshot) {
+            let data;
+            querySnapshot.forEach((doc) => {
+              data = doc.data();
+
+              if (data.newMessages) {
+                settotalnewmessages(
+                  (totalNewMessages += !isNaN(parseInt(data.newMessages.length))
+                    ? parseInt(data.newMessages.length)
+                    : 0)
+                );
+              }
+            });
+          });
+      });
     }
   }, [cEventContext.status]);
 

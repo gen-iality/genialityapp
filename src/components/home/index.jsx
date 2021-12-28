@@ -3,17 +3,18 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import LoadingEvent from '../loaders/loadevent';
-import EventCard from '../shared/eventCard';
 import { EventsApi } from '../../helpers/request';
-import API from '../../helpers/request';
-import LogOut from '../shared/logOut';
-import ErrorServe from '../modal/serverError';
 import { Button, Row, Col } from 'antd';
-import ModalFeedback from 'components/authentication/ModalFeedback';
+import loadable from '@loadable/component';
 
 Moment.locale('es');
 momentLocalizer();
+
+const LogOut = loadable(() => import('../shared/logOut'));
+const ErrorServe = loadable(() => import('../modal/serverError'));
+const ModalFeedback = loadable(() => import('components/authentication/ModalFeedback'));
+const LoadingEvent = loadable(() => import('../loaders/loadevent'));
+const EventCard = loadable(() => import('../shared/eventCard'));
 
 class Home extends Component {
   constructor(props) {

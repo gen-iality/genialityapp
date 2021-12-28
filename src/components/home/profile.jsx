@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import EventCard from '../shared/eventCard';
-import LoadingEvent from '../loaders/loadevent';
 import { Actions, OrganizationApi, UsersApi } from '../../helpers/request';
 import { networks } from '../../helpers/constants';
+import loadable from '@loadable/component';
+
+/** Components */
+const LoadingEvent = loadable(() => import('../loaders/loadevent'));
+const EventCard = loadable(() => import('../shared/eventCard'));
 
 class HomeProfile extends Component {
   constructor(props) {

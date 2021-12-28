@@ -10,7 +10,6 @@ import LogOut from '../shared/logOut';
 import { fetchRol } from '../../redux/rols/actions';
 import { fetchPermissions } from '../../redux/permissions/actions';
 import connect from 'react-redux/es/connect/connect';
-import asyncComponent from '../../containers/AsyncComponent';
 import ChatExport from './ChatExport/';
 import Espacios from '../espacios';
 import Menu from './shared/menu';
@@ -34,36 +33,37 @@ import { withRouter } from 'react-router-dom';
 import withContext from '../../Context/withContext';
 import { Layout, Space, Row, Col } from 'antd';
 import { AdminUsers } from 'components/AdminUsers/AdminUsers';
+import loadable from '@loadable/component';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
 
 //Code Splitting
-const General = asyncComponent(() => import('./general'));
-const Badge = asyncComponent(() => import('../badge'));
-const Informativesection = asyncComponent(() => import('../events/informativeSections/adminInformativeSection'));
+const General = loadable(() => import('./general'));
+const Badge = loadable(() => import('../badge'));
+const Informativesection = loadable(() => import('../events/informativeSections/adminInformativeSection'));
 
 //invitations
-const InvitedUsers = asyncComponent(() => import('../invitations'));
+const InvitedUsers = loadable(() => import('../invitations'));
 
 //Messages
-const Messages = asyncComponent(() => import('../messages'));
+const Messages = loadable(() => import('../messages'));
 
-const AdminRol = asyncComponent(() => import('./staff'));
-const TicketInfo = asyncComponent(() => import('../tickets'));
-const Styles = asyncComponent(() => import('../App/styles'));
-const DashboardEvent = asyncComponent(() => import('../dashboard'));
-const OrdersEvent = asyncComponent(() => import('../orders'));
-const Pages = asyncComponent(() => import('../pages'));
-const ListCertificados = asyncComponent(() => import('../certificados'));
-const ReporteCertificados = asyncComponent(() => import('../certificados/reporte'));
-const ConfigurationApp = asyncComponent(() => import('../App/configuration'));
-const NotificationsApp = asyncComponent(() => import('../pushNotifications/index'));
-const Wall = asyncComponent(() => import('../wall/index'));
-const NewsApp = asyncComponent(() => import('../news/news'));
+const AdminRol = loadable(() => import('./staff'));
+const TicketInfo = loadable(() => import('../tickets'));
+const Styles = loadable(() => import('../App/styles'));
+const DashboardEvent = loadable(() => import('../dashboard'));
+const OrdersEvent = loadable(() => import('../orders'));
+const Pages = loadable(() => import('../pages'));
+const ListCertificados = loadable(() => import('../certificados'));
+const ReporteCertificados = loadable(() => import('../certificados/reporte'));
+const ConfigurationApp = loadable(() => import('../App/configuration'));
+const NotificationsApp = loadable(() => import('../pushNotifications/index'));
+const Wall = loadable(() => import('../wall/index'));
+const NewsApp = loadable(() => import('../news/news'));
 
-const FAQS = asyncComponent(() => import('../faqs'));
-const EventsTicket = asyncComponent(() => import('../ticketsEvent'));
+const FAQS = loadable(() => import('../faqs'));
+const EventsTicket = loadable(() => import('../ticketsEvent'));
 
 Moment.locale('es');
 momentLocalizer();
