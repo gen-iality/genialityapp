@@ -143,7 +143,7 @@ class AgendaEdit extends Component {
   // VALIDAR SI TIENE ENCUESTAS EXTERNAS
   validateRoom = async () => {
     const { service } = this.state;
-    const activity_id=this.context.activityEdit;
+    const activity_id = this.context.activityEdit;
     const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, activity_id);
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(this.props.event._id, activity_id);
@@ -207,7 +207,7 @@ class AgendaEdit extends Component {
           } */
           days.push({ value: formatDate, label: formatDate });
         }
-        this.setState({days: days})
+        this.setState({ days: days });
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
         const init = Moment(event.date_start);
@@ -223,7 +223,7 @@ class AgendaEdit extends Component {
           } */
           days.push({ value: formatDate, label: formatDate });
         }
-        this.setState({days: days})
+        this.setState({ days: days });
       }
     } catch (e) {
       console.error(e);
@@ -333,8 +333,8 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
-      this.context.setIsPublished(value)
-      this.setState({isPublished:value},async()=>await this.saveConfig()) ;
+      this.context.setIsPublished(value);
+      this.setState({ isPublished: value }, async () => await this.saveConfig());
     } else {
       this.setState({ [name]: value });
     }
@@ -728,7 +728,7 @@ class AgendaEdit extends Component {
 
     if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
       title.push('Seleccione una hora de finalización valida');
-    
+
     /* if (this.state.hour_start > this.state.hour_end)
       title.push('La hora de inicio no puede ser mayor a la hora fin');
   
@@ -804,7 +804,7 @@ class AgendaEdit extends Component {
   saveConfig = async () => {
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
-    const activity_id=this.context.activityEdit;   
+    const activity_id = this.context.activityEdit;
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
       if (result) message.success(result.message);
@@ -916,12 +916,13 @@ class AgendaEdit extends Component {
             <TabPane tab='Agenda' key='1'>
               <Row justify='center' wrap gutter={12}>
                 <Col span={20}>
-                  <Form.Item 
-                    label={<label style={{ marginTop: '2%' }} className='label'>
-                      Nombre <label style={{ color: 'red' }}>*</label>
-                    </label>}
-                    rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}
-                  >
+                  <Form.Item
+                    label={
+                      <label style={{ marginTop: '2%' }} className='label'>
+                        Nombre <label style={{ color: 'red' }}>*</label>
+                      </label>
+                    }
+                    rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}>
                     <Input
                       ref={this.name}
                       autoFocus
@@ -932,12 +933,13 @@ class AgendaEdit extends Component {
                       placeholder={'Nombre de la actividad'}
                     />
                   </Form.Item>
-                  <Form.Item 
-                    label={<label style={{ marginTop: '2%' }} className='label'>
-                      Día <label style={{ color: 'red' }}>*</label>
-                    </label>}
-                    rules={[{ required: true, message: 'La fecha es requerida' }]}
-                  >
+                  <Form.Item
+                    label={
+                      <label style={{ marginTop: '2%' }} className='label'>
+                        Día <label style={{ color: 'red' }}>*</label>
+                      </label>
+                    }
+                    rules={[{ required: true, message: 'La fecha es requerida' }]}>
                     <SelectAntd
                       name='date'
                       options={this.state.days}
@@ -948,12 +950,13 @@ class AgendaEdit extends Component {
                   </Form.Item>
                   <Row wrap justify='space-between' gutter={[8, 8]}>
                     <Col>
-                      <Form.Item 
-                        label={<label style={{ marginTop: '2%' }} className='label'>
-                          Hora Inicio <label style={{ color: 'red' }}>*</label>
-                        </label>}
-                        rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
-                      >
+                      <Form.Item
+                        label={
+                          <label style={{ marginTop: '2%' }} className='label'>
+                            Hora Inicio <label style={{ color: 'red' }}>*</label>
+                          </label>
+                        }
+                        rules={[{ required: true, message: 'La hora de inicio es requerida' }]}>
                         <DateTimePicker
                           value={hour_start}
                           dropUp
@@ -964,12 +967,13 @@ class AgendaEdit extends Component {
                       </Form.Item>
                     </Col>
                     <Col>
-                      <Form.Item 
-                        label={<label style={{ marginTop: '2%' }} className='label'>
-                          Hora Fin <label style={{ color: 'red' }}>*</label>
-                        </label>}
-                        rules={[{ required: true, message: 'La hora final es requerida' }]}
-                      >
+                      <Form.Item
+                        label={
+                          <label style={{ marginTop: '2%' }} className='label'>
+                            Hora Fin <label style={{ color: 'red' }}>*</label>
+                          </label>
+                        }
+                        rules={[{ required: true, message: 'La hora final es requerida' }]}>
                         <DateTimePicker
                           value={hour_end}
                           dropUp
@@ -1070,9 +1074,7 @@ class AgendaEdit extends Component {
                   </Form.Item> */}
                   <Form.Item label={'Link del vídeo'}>
                     <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-                    <Text type='secondary'>
-                      Este video solo se vera cuando la transmisión no está en vivo.
-                    </Text>
+                    <Text type='secondary'>Este video solo se vera cuando la transmisión no está en vivo.</Text>
                     <Input name='video' type='text' value={video} onChange={this.handleChange} />
                   </Form.Item>
                   <Form.Item label={'Descripción'}>

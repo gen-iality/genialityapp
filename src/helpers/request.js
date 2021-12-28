@@ -817,7 +817,7 @@ export const AgendaApi = {
     return await Actions.getOne(`api/events/${event}/activities/`, id);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`api/events/${event}/activities`, data, id);
+    return await Actions.edit(`api/events/${event}/activities/${id}`, data, true);
   },
   deleteOne: async (id, event) => {
     return await Actions.delete(`api/events/${event}/activities`, id);
