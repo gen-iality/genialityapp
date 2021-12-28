@@ -4,6 +4,7 @@ import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { UseEventContext } from '../../../../Context/eventContext';
 import HelperContext from '../../../../Context/HelperContext';
 import Loading from '../../../profile/loading';
+import { useIntl } from 'react-intl';
 
 export function iAmRegisteredInThisEvent(cEventUser) {
   if (!cEventUser) return;
@@ -25,6 +26,7 @@ export function recordTypeForThisEvent(cEvent) {
 }
 
 function ThisRouteCanBeDisplayed({ children }) {
+  const intl = useIntl();
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
   let { handleChangeTypeModal } = useContext(HelperContext);
@@ -41,7 +43,11 @@ function ThisRouteCanBeDisplayed({ children }) {
           <Result
             className='animate__animated animate__pulse'
             status='warning'
-            title={<Typography.Title level={2}>Usuario no registrado al evento</Typography.Title>}
+            title={
+              <Typography.Title level={2}>
+                {intl.formatMessage({ id: 'modal.no_register.msg_public.title' })}
+              </Typography.Title>
+            }
             subTitle={
               <Typography.Paragraph
                 type='secondary'
@@ -49,7 +55,7 @@ function ThisRouteCanBeDisplayed({ children }) {
                   fontSize: '18px',
                   overflowWrap: 'anywhere',
                 }}>
-                Este evento requiere que los asistentes se registren para poder participar.
+                {intl.formatMessage({ id: 'modal.no_register.msg_public' })}
               </Typography.Paragraph>
             }
             extra={[
@@ -58,7 +64,7 @@ function ThisRouteCanBeDisplayed({ children }) {
                 size='large'
                 type='primary'
                 key='goToEvent'>
-                Registrarme
+                {intl.formatMessage({ id: 'form.button.register' })}
               </Button>,
             ]}
           />
@@ -98,26 +104,21 @@ function ThisRouteCanBeDisplayed({ children }) {
           <Result
             className='animate__animated animate__pulse'
             status='warning'
-            title={<Typography.Title level={2}>Usuario no registrado al evento</Typography.Title>}
-            subTitle={
-              <Typography.Paragraph
-                type='secondary'
-                style={{
-                  fontSize: '18px',
-                  overflowWrap: 'anywhere',
-                }}>
-                Este evento es publico pero para poder acceder a esta función requiere que los asistentes se registren.
-              </Typography.Paragraph>
+            title={
+              <Typography.Title level={2}>
+                {intl.formatMessage({ id: 'modal.no_register.msg_anonymous.title' })}
+              </Typography.Title>
             }
-            extra={[
-              <Button
-                onClick={() => handleChangeTypeModal('registerForTheEvent')}
-                size='large'
-                type='primary'
-                key='goToEvent'>
-                Registrarme
-              </Button>,
-            ]}
+            // subTitle={
+            //   <Typography.Paragraph
+            //     type='secondary'
+            //     style={{
+            //       fontSize: '18px',
+            //       overflowWrap: 'anywhere',
+            //     }}>
+            //     {intl.formatMessage({ id: 'modal.no_register.msg_anonymous' })}
+            //   </Typography.Paragraph>
+            // }
           />
         );
     }
@@ -133,7 +134,11 @@ function ThisRouteCanBeDisplayed({ children }) {
           <Result
             className='animate__animated animate__pulse'
             status='warning'
-            title={<Typography.Title level={2}>Lo sentimos</Typography.Title>}
+            title={
+              <Typography.Title level={2}>
+                {intl.formatMessage({ id: 'modal.no_register.msg_private.title' })}
+              </Typography.Title>
+            }
             subTitle={
               <Typography.Paragraph
                 type='secondary'
@@ -141,18 +146,9 @@ function ThisRouteCanBeDisplayed({ children }) {
                   fontSize: '18px',
                   overflowWrap: 'anywhere',
                 }}>
-                Este evento es privado para poder participar debes estar invitado.
+                {intl.formatMessage({ id: 'modal.no_register.msg_private' })}
               </Typography.Paragraph>
             }
-            extra={[
-              <Button
-                onClick={() => alert('Por favor llamar al numero 📱+57-321-253-24-51')}
-                size='large'
-                type='primary'
-                key='goToEvent'>
-                Contactarme con el administrador
-              </Button>,
-            ]}
           />
         );
     }

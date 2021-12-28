@@ -50,11 +50,9 @@
     "toast.email_sent": "Email sent successfully",
     "live.hosts": "Hosts",
     "live.private_access": "Private access",
-
     "live.join": "Join live",
     "live.join.disabled": "The event is starting soon",
     "live.starts_in": "activity starts in",
-
     "live.ended": "Event ended",
     "live.ended.video": "Event Ended. Look at the video",
     "live.ended.video.modify": "Look at the video",
@@ -71,7 +69,6 @@
     "registration.message.created": "Registered user",
     "registration.message.updated": "Updated user",
     "registration.already.registered": "Your email is already registered in the event.",
-
     "button.return": "Back",
     "button.go.event": "Go to event",
     "button.login": "Login",
@@ -81,10 +78,8 @@
     "button.cancel": "Cancel",
     "button.back.agenda": "Return",
     "button.more.information": "More information",
-
     "title.description": "Description",
     "title.panelists": "Panelists",
-
     "form.field.required": "This field is required",
     "form.validate.message.password": "The password must contain at least 8 characters, an uppercase, a lowercase and a number",
     "form.validate.message.email": "Invalid email",
@@ -97,19 +92,16 @@
     "form.button.register": "Register to the event",
     "form.message.socialzone": "This form is only valid to participate in the chat, if you want to enjoy the event in its entirety you must register.",
     "form.button.avatar": "Upload profile picture",
-
     "tabs.attendees.socialzone": "Attendees",
     "tabs.surveys.socialzone": "Surveys",
     "tabs.games.socialzone": "Games",
     "tabs.public.socialzone": "Public",
     "tabs.private.socialzone": "Private",
     "tabs.private.socialzone.message": "See all",
-
     "auth.error.wrongPassword": "The password is incorrect",
     "auth.error.userNotFound": "The email is not registered",
     "auth.error.invalidEmail": "The email is invalid",
     "auth.error.tooManyRequests": "Access to this account has been temporarily disabl…setting your password or you can try again later",
-
     "modal.title.login": "Login",
     "modal.title.register": "Register",
     "modal.label.email": "Email ",
@@ -149,11 +141,14 @@
     "modal.no_register.gotoevius": "Go to Evius",
     "modal.no_register.msg_public": "This event requires the attendee to register in order to participate.",
     "modal.no_register.msg_private": "This event is private, it can only be accessed by invitation, contact the event administrator.",
+    "modal.no_register.msg_anonymous": "",
+    "modal.no_register.msg_public.title": "User not registered in the event",
+    "modal.no_register.msg_private.title": "User not registered in the event",
+    "modal.no_register.msg_anonymous.title": "section not available for this event",
     "login.title": "Login",
     "restore.login.title": "Restore password",
     "restore.login.success": "A new password has been sent to your email",
     "restore.email.not.registered": "The email entered is not registered",
-
     "auth.restricted.event.title": "Restricted event: requires prior registration",
     "auth.restricted.event.message": "You must be registered prior to the event to access the live space, if you are registered and do not have access, contact the organizer"
   },
@@ -208,12 +203,10 @@
     "toast.email_sent": "Tiquete enviado correctamente",
     "live.private_access": "Acceso privado",
     "live.hosts": "Anfitriones",
-
     "auth.error.wrongPassword": "La contraseña es incorrecta",
     "auth.error.userNotFound": "este email no esta registrado",
     "auth.error.invalidEmail": "el email es invalido",
     "auth.error.tooManyRequests": "El acceso a esta cuenta se ha desactivado temporalmente por varios intentos fallidos de ingreso, intentelo de nuevo más tarde",
-
     "live.join": "Ingresar",
     "live.join.disabled": "El evento iniciará pronto",
     "live.starts_in": "La sesión inicia en",
@@ -222,7 +215,6 @@
     "live.ended.video.modify": "Mira el vídeo",
     "live.closed": "Iniciará pronto",
     "live": "En vivo",
-
     "registration.title.create": "Fomulario de registro",
     "registration.title.update": "Actualizar mis datos",
     "registration.button.create": "Registrarme",
@@ -234,7 +226,6 @@
     "registration.message.created": "Usuario registrado",
     "registration.message.updated": "Usuario actualizado",
     "registration.already.registered": "Su correo ya se encuentra registrado en el evento.",
-
     "button.return": "Regresar a iniciar sesión",
     "button.go.event": "Ir al evento",
     "button.login": "Ingresar",
@@ -244,10 +235,8 @@
     "button.cancel": "Cancelar",
     "button.back.agenda": "Volver",
     "button.more.information": "Ver detalle",
-
     "title.description": "Descripción",
     "title.panelists": "Panelistas",
-
     "form.field.required": "Este campo es obligatorio",
     "form.validate.message.password": "El password debe tener mínimo 8 caracteres, sólo letras, números y sin espacios",
     "form.validate.message.email": "E-mail inválido",
@@ -260,14 +249,12 @@
     "form.button.register": "Registrarme al evento",
     "form.message.socialzone": "Registrate para participar en el chat de este evento",
     "form.button.avatar": "Subir imagen de perfil",
-
     "tabs.attendees.socialzone": "Asistentes",
     "tabs.surveys.socialzone": "Encuestas",
     "tabs.games.socialzone": "Juegos",
     "tabs.public.socialzone": "Público",
     "tabs.private.socialzone": "Privados",
     "tabs.private.socialzone.message": "Ver todos",
-
     "modal.title.login": "Iniciar sesión",
     "modal.title.register": "Registrarme",
     "modal.label.email": "Correo electrónico",
@@ -307,15 +294,17 @@
     "modal.no_register.gotoevius": "Ir a Evius",
     "modal.no_register.msg_public": "Este evento requiere que el asistente se registre para poder participar.",
     "modal.no_register.msg_private": "Este evento es privado, solo se puede acceder por invitación,  contacte al administrador del evento.",
+    "modal.no_register.msg_anonymous": "",
+    "modal.no_register.msg_public.title": "Usuario no registrado en el evento",
+    "modal.no_register.msg_private.title": "Usuario no registrado en el evento",
+    "modal.no_register.msg_anonymous.title": "sección no disponible para este evento",
     "login.title": "Iniciar sesión",
     "restore.login.title": "Restablecer contraseña",
     "restore.login.success": "Se ha enviado una nueva contraseña a su correo",
     "restore.email.not.registered": "El correo ingresado no se encuentra registrado",
-
     "auth.restricted.event.title": "Evento restringido: requiere registro previo",
     "auth.restricted.event.message": "Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado y no tienes acceso comunicate con el organizador"
   },
-
   "pt": {
     "live.join": "Entrar",
     "live.join.disabled": "O evento irá iniciar em breve",
@@ -351,7 +340,6 @@
     "header.create_event": "Criar evento",
     "header.my_organizations": "Minhas organizações",
     "header.logout": "Sair",
-
     "button.return": "Para retornar",
     "button.go.event": "Ir ao evento",
     "button.login": "Iniciar sessão",
@@ -360,10 +348,8 @@
     "button.cancel": "Cancelar",
     "button.back.agenda": "Retorna",
     "button.more.information": "Mais Informações",
-
     "title.description": "Descrição",
     "title.panelists": "Painelistas",
-
     "form.field.required": "Este campo é obrigatório",
     "form.validate.message.password": "A senha deve ter pelo menos 8 caracteres, uma maiúscula, uma minúscula e um número",
     "form.validate.message.email": "E-mail inválido",
@@ -376,14 +362,12 @@
     "form.button.register": "Inscreva-se no evento",
     "form.message.socialzone": "Este formulário só é válido para participar do chat, se quiser curtir o evento na íntegra é necessário se cadastrar.s",
     "form.button.avatar": "Carregar foto de perfil",
-
     "tabs.attendees.socialzone": "Participantes",
     "tabs.surveys.socialzone": "Pesquisas",
     "tabs.games.socialzone": "Jogos",
     "tabs.public.socialzone": "Público",
     "tabs.private.socialzone": "Privados",
     "tabs.private.socialzone.message": "Ver tudo",
-
     "modal.title.login": "Iniciar sessão",
     "modal.title.register": "Check-in",
     "modal.label.email": "Correio eletrônico",
@@ -423,11 +407,14 @@
     "modal.no_register.gotoevius": "Vá para Evius",
     "modal.no_register.msg_public": "Este evento exige que o participante se inscreva para participar.",
     "modal.no_register.msg_private": "Este evento é privado, só pode ser acedido por convite, contacte o administrador do evento.",
+    "modal.no_register.msg_anonymous": "",
+    "modal.no_register.msg_public.title": "Usuário não cadastrado no evento",
+    "modal.no_register.msg_private.title": "Usuário não cadastrado no evento",
+    "modal.no_register.msg_anonymous.title": "seção não disponível para este evento",
     "login.title": "Iniciar sessão",
     "restore.login.title": "Restaurar senha",
     "restore.login.success": "Uma nova senha foi enviada para o seu e-mail",
     "restore.email.not.registered": "O email inserido não está registrado",
-
     "auth.restricted.event.title": "Evento restringido: requiere registro previo",
     "auth.restricted.event.message": "Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado y no tienes acceso comunicate con el organizador"
   }
