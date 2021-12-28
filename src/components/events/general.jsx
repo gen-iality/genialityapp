@@ -1035,10 +1035,10 @@ class General extends Component {
               </Row>
               <BackTop />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='Avanzado' key='2'>
+            <Tabs.TabPane tab='Seguridad' key='2'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
-                  <Form.Item label={'Configurar autenticación'}>
+                  <Form.Item label={'Formas de acceso'}>
                     <Row gutter={[16, 16]} wrap>
                       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                         <Badge
@@ -1225,13 +1225,13 @@ class General extends Component {
                       name={'visibility'} />
                   </Form.Item> */}
 
-                  <Form.Item label={'El evento requiere pago'}>
+                  {/* <Form.Item label={'El evento requiere pago'}>
                     <Checkbox
                       defaultChecked={event.has_payment || event.has_payment === 'true'}
                       onChange={(e) => this.handleChange(e, 'has_payment')}
                       name={'has_payment'}
                     />
-                  </Form.Item>
+                  </Form.Item> */}
                 </Col>
               </Row>
             </Tabs.TabPane>

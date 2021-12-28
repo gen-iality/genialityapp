@@ -54,6 +54,7 @@ import Service from './roomManager/service';
 import AgendaContext from '../../Context/AgendaContext';
 const { TabPane } = Tabs;
 const { confirm } = Modal;
+const { Text } = Typography;
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -1068,14 +1069,18 @@ class AgendaEdit extends Component {
                     />
                   </Form.Item> */}
                   <Form.Item label={'Link del vídeo'}>
+                    <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+                    <Text type='secondary'>
+                      Este video solo se vera cuando la transmisión no está en vivo.
+                    </Text>
                     <Input name='video' type='text' value={video} onChange={this.handleChange} />
                   </Form.Item>
                   <Form.Item label={'Descripción'}>
                     <Space>
                       <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-                      <Typography.Text type='secondary'>
+                      <Text type='secondary'>
                         Esta información no es visible en la Agenda/Actividad en versión Mobile.
-                      </Typography.Text>
+                      </Text>
                     </Space>
                     <EviusReactQuill
                       name='description'

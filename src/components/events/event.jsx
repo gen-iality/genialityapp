@@ -205,11 +205,11 @@ class Event extends Component {
             <Col>
               <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
                 <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                  Ir al evento: (version antigua)
+                  Ir al evento{/* : (version antigua) */}
                 </h2>
               </a>
             </Col>
-            <Col>
+            {/* <Col>
               <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
                 <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
                   Ir al evento: (con nombre)
@@ -222,7 +222,7 @@ class Event extends Component {
                   Ir al evento: (Cancilleria)
                 </h2>
               </a>
-            </Col>
+            </Col> */}
           </Row>
           <section className='section event-wrapper'>
             <Switch>
