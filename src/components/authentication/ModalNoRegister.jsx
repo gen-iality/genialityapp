@@ -19,10 +19,11 @@ const ModalNoRegister = (props) => {
     defaultMessage:
       'Este evento es privado, solo se puede acceder por invitación,  contacte al administrador del evento.',
   });
-
   return (
     <Modal
-      onCancel={() => props.cHelper.handleChangeTypeModal('visitors')}
+      onCancel={() => {
+        props.cHelper.handleChangeTypeModal('visitors');
+      }}
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
       footer={[
@@ -54,12 +55,14 @@ const ModalNoRegister = (props) => {
         </Space>,
       ]}
       zIndex={1000}
-      closable={(!props.cEvent?.value?.allow_register && props.cEvent?.value?.visibility == 'PRIVATE') ? false : true}
+      closable={true}
       visible={
         ((props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister') &&
           props.cEvent?.value?.allow_register &&
           props.cEvent?.value?.visibility == 'PUBLIC') ||
-        (!props.cEvent?.value?.allow_register && props.cEvent?.value?.visibility == 'PRIVATE')
+        (!props.cEvent?.value?.allow_register &&
+          props.cEvent?.value?.visibility == 'PRIVATE' &&
+          props.cHelper.typeModal != 'visitors')
       }>
       <Result
         status='warning'

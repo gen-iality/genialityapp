@@ -66,15 +66,20 @@ const EventSectionRoutes = (props) => {
       console.log('1. ingreso aca a type modal');
       //handleChangeTypeModal('registerForTheEvent');
       handleChangeTypeModal('preregisterMessage');
-    } else if (props.cEventUser?.value !== null && props.cEventUser?.status == 'LOADED' && typeModal !== 'update') {
+    } else if (
+      props.cEventUser?.value !== null &&
+      props.cEventUser?.status == 'LOADED' &&
+      typeModal !== 'update' &&
+      typeModal !== 'visitors'
+    ) {
       handleChangeTypeModal(null);
     }
   }
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return;
-    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(item => item !== 'tickets');
-    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(item => item.section !== 'tickets');
+    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter((item) => item !== 'tickets');
+    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section !== 'tickets');
     /* firstroute.filter(item => item !== 'tickets')
     firstrouteValues.filter(item => item.section !== 'tickets') */
     /* console.log(firstroute, firstrouteValues, '------------') */
