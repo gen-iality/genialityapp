@@ -54,7 +54,7 @@ const ModalNoRegister = (props) => {
         </Space>,
       ]}
       zIndex={1000}
-      closable={true}
+      closable={(!props.cEvent?.value?.allow_register && props.cEvent?.value?.visibility == 'PRIVATE') ? false : true}
       visible={
         ((props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister') &&
           props.cEvent?.value?.allow_register &&
