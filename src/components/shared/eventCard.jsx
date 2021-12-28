@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Card, Space, Typography } from 'antd';
-import loadable from '@loadable/component';
-
-const EventImage = loadable(() => import('../../eventimage.png'));
+import EventImage from '../../eventimage.png';
 
 const isUpper = (str) => {
   return !/[a-z]/.test(str) && /[A-Z]/.test(str);
