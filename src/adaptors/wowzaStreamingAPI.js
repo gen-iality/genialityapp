@@ -4,8 +4,8 @@ const wowzaCLient = axios.create({
   baseURL: 'https://api.cloud.wowza.com/api/v1.7/',
   timeout: 1000,
   headers: {
-    'wsc-api-key': 'r7x0RKTg0Ttlkbtsv7iK0RGhU6rUIeHOlkI7bJ0rBGnWAKchS7aCudBEwiMw3416',
-    'wsc-access-key': 'Vqi4r2JpRUfK1B6RUjfeNQ2sKS9QZ9Hwaadx32lXD9kcLxWlruYdEXWXDOQ23310',
+    'wsc-api-key': 'KoVXsd3aLiW6kTmtrlE4iDfDdQq6CKhawpdNN42b0ll11EFMrDwDDlsQmehk3441',
+    'wsc-access-key': '192VD7CHqoZQMa33iodC3MUAQjxBSUYrU4NumrBZ2ve5cbdOQXUC5rNMnvDJ3202',
 
     //'wsc-api-key': 'R4NcGEt9gkryz8bcNTOvxnfSjZYnL5PFQkutFbM0wN2J9exSMsdP9YHDZAuY3507',
     //'wsc-access-key': 'Hcp2AOg6mY8pnooePeDlrwzUb9EFQdwiICdjU6SkuOAXG2tsR4qMFbLfTivA352f',

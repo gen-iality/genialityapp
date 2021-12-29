@@ -1042,7 +1042,7 @@ class General extends Component {
               </Row>
               <BackTop />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='Seguridad' key='2'>
+            <Tabs.TabPane tab='Formas de acceso' key='2'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
                   <Form.Item label={'Formas de acceso'}>
