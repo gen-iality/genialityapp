@@ -102,7 +102,7 @@ class menuLanding extends Component {
         companies: {
           name: 'Empresas',
           position: '',
-          section: 'companies',
+          section: 'partners',
           icon: 'ApartmentOutlined',
           checked: false,
           permissions: 'public',

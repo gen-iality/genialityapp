@@ -1,12 +1,19 @@
-import { Button, Empty, message, Row, Table, Tag, Col, Tooltip, Modal } from 'antd'
-import { DragOutlined, ExclamationCircleOutlined, SaveOutlined, SettingOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import React, { useMemo } from 'react'
+import { Button, Empty, message, Row, Table, Tag, Col, Tooltip, Modal } from 'antd';
+import {
+  DragOutlined,
+  ExclamationCircleOutlined,
+  SaveOutlined,
+  SettingOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 
-import Loading from '../loaders/loading'
-import useGetEventCompanies from './customHooks/useGetEventCompanies'
+import Loading from '../loaders/loading';
+import useGetEventCompanies from './customHooks/useGetEventCompanies';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { firestore } from '../../helpers/firebase';
@@ -15,50 +22,52 @@ import Header from '../../antdComponents/Header';
 const { confirm } = Modal;
 
 const tableLocale = {
-  emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No hay datos" />
-}
+  emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No hay datos' />,
+};
 
 function Empresas({ event, match }) {
-  const [companies, loadingCompanies] = useGetEventCompanies(event._id)
-  const [companyList, setCompanyList]=useState([])
+  const [companies, loadingCompanies] = useGetEventCompanies(event._id);
+  const [companyList, setCompanyList] = useState([]);
 
-  useEffect(()=>{
-    
-    if(companies.length>0){
-      let newCompanies=companies.map((company,ind)=>{       
-        return {...company,index: company.index? company.index: ind+1} 
-        })
-      
-        newCompanies= newCompanies.sort(function(a, b) {
-         return a.index-b.index;
-        });
-        setCompanyList(newCompanies)
-    }  
-  },[companies])
+  useEffect(() => {
+    if (companies.length > 0) {
+      let newCompanies = companies.map((company, ind) => {
+        return { ...company, index: company.index ? company.index : ind + 1 };
+      });
 
- 
-  const SortableItem = sortableElement(props => <tr {...props} />);
-  const SortableContainer = sortableContainer(props => <tbody {...props} />);
+      newCompanies = newCompanies.sort(function(a, b) {
+        return a.index - b.index;
+      });
+      setCompanyList(newCompanies);
+    }
+  }, [companies]);
+
+  const SortableItem = sortableElement((props) => <tr {...props} />);
+  const SortableContainer = sortableContainer((props) => <tbody {...props} />);
   const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
-  const orderCompany=async(updateList)=>{
-    message.loading("Por favor espere..")
-    let companies=updateList?updateList:companyList
-    for(let i=0;i<companies.length;i++){
-      companies[i].index=i+1;     
-      var {id , ...company} =  companies[i];
+  const orderCompany = async (updateList) => {
+    message.loading('Por favor espere..');
+    let companies = updateList ? updateList : companyList;
+    for (let i = 0; i < companies.length; i++) {
+      companies[i].index = i + 1;
+      var { id, ...company } = companies[i];
       await firestore
-          .collection('event_companies')
-          .doc(event._id)
-          .collection('companies').doc(companies[i].id).set({
-            ...company
-          },{merge: true})
-    }    
+        .collection('event_companies')
+        .doc(event._id)
+        .collection('companies')
+        .doc(companies[i].id)
+        .set(
+          {
+            ...company,
+          },
+          { merge: true }
+        );
+    }
     message.success('Orden guardado correctamente..');
-    
-  }
+  };
 
-  function deleteCompany(id){
+  function deleteCompany(id) {
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -77,13 +86,14 @@ function Empresas({ event, match }) {
             firestore
               .collection('event_companies')
               .doc(event._id)
-              .collection('companies').doc(id).delete().then((resp)=>{
-                    
-              let updateList= companyList.filter(company=>company.id!==id);     
-              setCompanyList(updateList);
-                orderCompany(updateList).then((r)=>{
-                })
-            });
+              .collection('companies')
+              .doc(id)
+              .delete()
+              .then((resp) => {
+                let updateList = companyList.filter((company) => company.id !== id);
+                setCompanyList(updateList);
+                orderCompany(updateList).then((r) => {});
+              });
             message.destroy(loading.key);
             message.open({
               type: 'success',
@@ -96,20 +106,21 @@ function Empresas({ event, match }) {
               content: handleRequestError(e).message,
             });
           }
-        }
+        };
         onHandlerRemove();
-      }
+      },
     });
- }
+  }
 
-
- let companyColumns = [
+  let companyColumns = [
     {
       title: '',
       dataIndex: 'sort',
       width: 30,
       className: 'drag-visible',
-      render(companyName, record)   { return <DragHandle />}
+      render(companyName, record) {
+        return <DragHandle />;
+      },
     },
     {
       title: 'Nombre',
@@ -118,14 +129,11 @@ function Empresas({ event, match }) {
       sorter: (a, b) => a.name.localeCompare(b.name),
       render(companyName, record) {
         return (
-          <Link
-            to={`${match.url}/editar/${record.id}`}
-            title="Editar"
-          >
+          <Link to={`${match.url}/editar/${record.id}`} title='Editar'>
             {companyName}
           </Link>
-        )
-      }
+        );
+      },
     },
     {
       title: 'Tipo de stand',
@@ -138,17 +146,15 @@ function Empresas({ event, match }) {
       dataIndex: 'visible',
       ellipsis: true,
       render(visible) {
-        return visible
-          ? <Tag color="green">{'Visible'}</Tag>
-          : <Tag color="red">{'Oculto'}</Tag>
-      }
+        return visible ? <Tag color='green'>{'Visible'}</Tag> : <Tag color='red'>{'Oculto'}</Tag>;
+      },
     },
     {
       title: 'Opciones',
       dataIndex: 'id',
       fixed: 'right',
       width: 110,
-      render(value,record) {
+      render(value, record) {
         return (
           <Row gutter={[8, 8]}>
             <Col>
@@ -177,69 +183,60 @@ function Empresas({ event, match }) {
               </Tooltip>
             </Col>
           </Row>
-        )
-          
-      }
+        );
+      },
     },
-  ]
-  
+  ];
 
   if (loadingCompanies) {
-    return <Loading />
+    return <Loading />;
   }
 
- const onSortEnd = ({ oldIndex, newIndex }) => {
+  const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
-      const newData = arrayMove([].concat(companyList), oldIndex, newIndex).filter(el => !!el);
-      for(let i=0;i<newData .length;i++){
-        newData [i].index=i;  
+      const newData = arrayMove([].concat(companyList), oldIndex, newIndex).filter((el) => !!el);
+      for (let i = 0; i < newData.length; i++) {
+        newData[i].index = i;
       }
-      setCompanyList(newData)
-       
+      setCompanyList(newData);
     }
   };
 
-  const DraggableContainer = props => (
-    <SortableContainer
-      useDragHandle
-      disableAutoscroll
-      helperClass="row-dragging"
-      onSortEnd={onSortEnd}
-      {...props}
-    />
+  const DraggableContainer = (props) => (
+    <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
   );
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = companyList.findIndex(x => x.index === restProps['data-row-key']);
+    const index = companyList.findIndex((x) => x.index === restProps['data-row-key']);
     return <SortableItem index={index} {...restProps} />;
   };
 
   return (
     <div>
-      <Header 
+      <Header
         title={'Empresas'}
         titleTooltip={'Agregue o edite las Empresas que se muestran en la aplicación'}
         addUrl={{
-           pathname: `${match.url}/crear`,
-           state: { new: true },
+          pathname: `${match.url}/crear`,
+          state: { new: true },
         }}
-        extra={(
+        extra={
           <Row wrap gutter={[8, 8]}>
             <Col>
-              <Button onClick={()=>orderCompany()} type="primary" icon={<SaveOutlined />}>
+              <Button onClick={() => orderCompany()} type='primary' icon={<SaveOutlined />}>
                 {'Guardar orden'}
               </Button>
             </Col>
             <Col>
               <Link to={`${match.url}/configuration`}>
-                <Button type="primary" icon={<SettingOutlined />} id={'configuration'}>
+                <Button type='primary' icon={<SettingOutlined />} id={'configuration'}>
                   {'Configuración'}
                 </Button>
               </Link>
             </Col>
           </Row>
-        )}
+        }
       />
 
       <Table
@@ -247,7 +244,7 @@ function Empresas({ event, match }) {
         dataSource={companyList}
         columns={companyColumns}
         pagination={false}
-        rowKey="index"
+        rowKey='index'
         size='small'
         components={{
           body: {
@@ -257,7 +254,7 @@ function Empresas({ event, match }) {
         }}
       />
     </div>
-  )
+  );
 }
 
-export default Empresas
+export default Empresas;
