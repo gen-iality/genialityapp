@@ -1027,6 +1027,50 @@ class AgendaEdit extends Component {
                       </Col>
                     </Row>
                   </Form.Item>
+                  <Form.Item label={'Categorías'}>
+                    <Row wrap gutter={[8, 8]}>
+                      <Col span={23}>
+                        <Creatable
+                          isClearable
+                          styles={catStyles}
+                          onChange={this.selectCategory}
+                          onCreateOption={(value) => this.handleCreate(value, 'categories')}
+                          isDisabled={isLoading.categories}
+                          isLoading={isLoading.categories}
+                          isMulti
+                          options={categories}
+                          placeholder={'Sin categoría....'}
+                          value={selectedCategories}
+                        />
+                      </Col>
+                      <Col span={1}>
+                        <Button onClick={() => this.goSection(`${matchUrl}/categorias`)} icon={<SettingOutlined />} />
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                  <Form.Item label={'Tipo de actividad'}>
+                    <Row wrap gutter={[8, 8]}>
+                      <Col span={23}>
+                        <Creatable
+                          isClearable
+                          styles={creatableStyles}
+                          className='basic-multi-select'
+                          classNamePrefix='select'
+                          isDisabled={isLoading.types}
+                          isLoading={isLoading.types}
+                          onChange={this.selectType}
+                          onCreateOption={(value) => this.handleCreate(value, 'types')}
+                          options={types}
+                          value={selectedType}
+                        />
+                      </Col>
+                      <Col span={1}>
+                        <Link to={`${matchUrl}/tipos`}>
+                          <Button icon={<SettingOutlined />} />
+                        </Link>
+                      </Col>
+                    </Row>
+                  </Form.Item>
                   <Form.Item label={'¿Tiene espacio físico?'}>
                     <Switch
                       checked={this.state.isPhysical}
@@ -1139,58 +1183,7 @@ class AgendaEdit extends Component {
                       </Form.Item>
                     </Card>
                   </Form.Item>
-                  <Form.Item label={'Categorías'}>
-                    <Row wrap gutter={[8, 8]}>
-                      <Col span={23}>
-                        <Creatable
-                          isClearable
-                          styles={catStyles}
-                          onChange={this.selectCategory}
-                          onCreateOption={(value) => this.handleCreate(value, 'categories')}
-                          isDisabled={isLoading.categories}
-                          isLoading={isLoading.categories}
-                          isMulti
-                          options={categories}
-                          placeholder={'Sin categoría....'}
-                          value={selectedCategories}
-                        />
-                      </Col>
-                      <Col span={1}>
-                        <Button onClick={() => this.goSection(`${matchUrl}/categorias`)} icon={<SettingOutlined />} />
-                      </Col>
-                    </Row>
-                  </Form.Item>
-                  <Form.Item label={'Tipo de actividad'}>
-                    <Row wrap gutter={[8, 8]}>
-                      <Col span={23}>
-                        <Creatable
-                          isClearable
-                          styles={creatableStyles}
-                          className='basic-multi-select'
-                          classNamePrefix='select'
-                          isDisabled={isLoading.types}
-                          isLoading={isLoading.types}
-                          onChange={this.selectType}
-                          onCreateOption={(value) => this.handleCreate(value, 'types')}
-                          options={types}
-                          value={selectedType}
-                        />
-                      </Col>
-                      <Col span={1}>
-                        <Link to={`${matchUrl}/tipos`}>
-                          <Button icon={<SettingOutlined />} />
-                        </Link>
-                      </Col>
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      <BackTop />
-                    </Row>
-                  </Form.Item>
+                  <BackTop />
                 </Col>
               </Row>
             </TabPane>
