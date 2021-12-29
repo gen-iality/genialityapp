@@ -14,12 +14,23 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/Favicon-Evius.png" />
     <title>Eventos - EVIUS</title>
     <meta name="description" content="Eventos" />
+    <!-- preconnect & prefetch -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.gstatic.com" />
+    <link rel="preconnect" href="https://cdn.firebase.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.firebase.com" />
+    <link rel="preconnect" href="https://use.fontawesome.com" crossorigin />
+    <link rel="dns-prefetch" href="https://use.fontawesome.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://player.wowza.com" crossorigin />
+    <link rel="dns-prefetch" href="https://player.wowza.com" />
 
     <script>
       // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
       document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
     </script>
-    <script src="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth__es.js"></script>
+    <script async src="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth__es.js"></script>
 
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
     <link
@@ -39,9 +50,9 @@
     </script>
 
     <!-- WOWZA -->
-    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+    <script async type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
 
-    <script src="//cdn.jsdelivr.net/npm/less"></script>
+    <script async src="//cdn.jsdelivr.net/npm/less"></script>
     <style>
       .container-calendar2 .ant-card-body {
         padding: 0 !important;
@@ -149,7 +160,6 @@
     </script>
     <script
       async
-      defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"
     ></script>
 
@@ -182,6 +192,6 @@
         src="https://www.facebook.com/tr?id=1224063924627255&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
-    <script src="https://my.afrus.app/template/index.js"></script>
+    <script async src="https://my.afrus.app/template/index.js"></script>
   </body>
 </html>

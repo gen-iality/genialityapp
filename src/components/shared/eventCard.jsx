@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import EventImage from '../../eventimage.png';
 import { Badge, Card, Space, Typography } from 'antd';
+import EventImage from '../../eventimage.png';
 
 const isUpper = (str) => {
   return !/[a-z]/.test(str) && /[A-Z]/.test(str);
