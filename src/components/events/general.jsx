@@ -209,23 +209,29 @@ class General extends Component {
 
   //Cambio en los input
   handleChange = (e, name) => {
-    /* console.log(e, e.target, '1') */
-    let value = e;
-    if (e.target) {
-      value = e.target;
-      if (e.target.value) {
+    // console.log(e.target);
+    if (e.target != null || e.target != undefined || e.target != '') {
+      let value = e;
+      if (e.target.value != null || e.target.value != undefined || e.target.value != '') {
         value = e.target.value;
       }
+
+      if (name === 'visibility') {
+        value = e.target.checked ? 'PUBLIC' : 'PRIVATE';
+      } else if (name === 'allow_register' || name === 'has_payment') {
+        value = e.target.checked;
+      }
+
+      this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
     }
+    // if (e.target != null) {
+    //   // value = e.target;
+    //   if (e.target.value) {
+    //     value = e.target.value;
+    //   }
+    // }
+
     /* console.log(name, value, '2'); */
-
-    if (name === 'visibility') {
-      value = e.target.checked ? 'PUBLIC' : 'PRIVATE';
-    } else if (name === 'allow_register' || name === 'has_payment') {
-      value = e.target.checked;
-    }
-
-    this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
   };
   //Validación
   valid = () => {
@@ -489,10 +495,11 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
-      itemsMenu:
-        /* event.allow_register === 'false' || event.allow_register === false
+      itemsMenu: /* event.allow_register === 'false' || event.allow_register === false
           ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
-          : */ { ...this.state.itemsMenu },
+          : */ {
+        ...this.state.itemsMenu,
+      },
     };
 
     try {
