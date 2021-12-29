@@ -39,6 +39,7 @@ export default function AdmininformativeSection1(props) {
 
       try {
         const result = await EventsApi.editOne(data, eventContext.value._id);
+        console.log('result', result);
         message.success('Guardado');
       } catch (e) {
         message.error('Error', e.message);
@@ -48,14 +49,18 @@ export default function AdmininformativeSection1(props) {
   };
 
   useEffect(() => {
-    if (eventContext.value?.itemsMenu.informativeSection1)
-      setContent(eventContext.value.itemsMenu.informativeSection1?.markup);
-  }, [eventContext.value]);
-
-  /* console.log('EVENTCONTEXT==>', eventContext.value); */
+    async function getContent() {
+      const result = await EventsApi.getOne(eventContext.value._id);
+      console.log('data', result);
+      let markup = result.itemsMenu.informativeSection1.markup || '';
+      setContent(markup);
+    }
+    getContent();
+  }, []);
 
   const handleChangeReactQuill = (e) => {
     setContent(e);
+    console.log('content', e);
   };
 
   if (eventContext.status === 'LOADING') return 'Loading...';
@@ -63,10 +68,7 @@ export default function AdmininformativeSection1(props) {
 
   return (
     <section>
-      <Form
-        //initialValues={{ remember: true }}
-        onFinish={onFinish}
-        autoComplete='off'>
+      <Form onFinish={() => onFinish()} autoComplete='off'>
         <Header title={'Contenido Informativo'} save form />
 
         <Row justify='center' gutter={8} wrap>
@@ -77,17 +79,6 @@ export default function AdmininformativeSection1(props) {
           </Col>
         </Row>
       </Form>
-      {/* <EviusReactQuill name='content' data={content} handleChange={(e) => handleChangeReactQuill(e)} />
-      <Form
-        //initialValues={{ remember: true }}
-        onFinish={onFinish}
-        autoComplete='off'>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type='primary' htmlType='submit'>
-            Submit
-          </Button>
-        </Form.Item>
-      </Form> */}
     </section>
   );
 }

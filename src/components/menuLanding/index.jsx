@@ -99,14 +99,6 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
-        companies: {
-          name: 'Empresas',
-          position: '',
-          section: 'partners',
-          icon: 'ApartmentOutlined',
-          checked: false,
-          permissions: 'public',
-        },
         interviews: {
           name: 'Citas',
           position: '',
