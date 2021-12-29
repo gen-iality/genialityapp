@@ -20,18 +20,23 @@ const ModalNoRegister = (props) => {
       'Este evento es privado, solo se puede acceder por invitación,  contacte al administrador del evento.',
   });
 
+  // console.log(
+  //   'vvalidation',
+  //   ((props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister') &&
+  //     props.cEvent?.value?.allow_register &&
+  //     props.cEvent?.value?.visibility == 'PUBLIC') ||
+  //     (!props.cEvent?.value?.allow_register &&
+  //       props.cEvent?.value?.visibility == 'PRIVATE' &&
+  //       props.cHelper.typeModal != 'visitors' &&
+  //       !props.cEventUser?.value)
+  // );
+
   console.log(
-    'vvalidation',
-    ((props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister') &&
-      props.cEvent?.value?.allow_register &&
-      props.cEvent?.value?.visibility == 'PUBLIC') ||
-      (!props.cEvent?.value?.allow_register &&
-        props.cEvent?.value?.visibility == 'PRIVATE' &&
-        props.cHelper.typeModal != 'visitors' &&
-        !props.cEventUser?.value)
+    'visible evento',
+
+    props.cHelper.typeModal
   );
 
-  console.log('props.cHelper.typeModal', props);
   return (
     <Modal
       onCancel={() => {
@@ -75,7 +80,8 @@ const ModalNoRegister = (props) => {
           props.cEvent?.value?.visibility == 'PUBLIC') ||
         (!props.cEvent?.value?.allow_register &&
           props.cEvent?.value?.visibility == 'PRIVATE' &&
-          props.cHelper.typeModal != 'visitors' &&
+          props.cHelper.typeModal !== 'visitors' &&
+          props.cEventUser?.status == 'LOADED' &&
           !props.cEventUser?.value)
       }>
       <Result
