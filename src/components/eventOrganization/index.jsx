@@ -98,7 +98,7 @@ class EventOrganization extends Component {
                 ) : (
                   ''
                 )}
-                <Space
+                {/* <Space
                   direction='horizontal'
                   size={10}
                   style={{
@@ -119,7 +119,7 @@ class EventOrganization extends Component {
                   ) : (
                     <RightOutlined onClick={this.handleView} style={{ fontSize: '25px', color: '#007ACC' }} />
                   )}
-                </Space>
+                </Space> */}
               </div>
             )}
 
