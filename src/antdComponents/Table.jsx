@@ -3,10 +3,18 @@ import { Link } from 'react-router-dom';
 import arrayMove from 'array-move';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
-import { EditOutlined, DeleteOutlined, DragOutlined, DownloadOutlined, SettingOutlined, CrownOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  DeleteOutlined,
+  DragOutlined,
+  DownloadOutlined,
+  SettingOutlined,
+  CrownOutlined,
+} from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
 import ExportExcel from '../components/newComponent/ExportExcel';
 import moment from 'moment';
+import { Suspense } from 'react';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
@@ -76,12 +84,15 @@ const Table = (props) => {
                 <Link
                   key={`extraPathAction${item.index}`}
                   id={`extraPathAction${item.index}`}
-                  to={ !extraPathStateName ? { pathname: `${extraPath}/${item._id}`, state: { item : item }} : { pathname: `${extraPath}`, state: { report: item._id }}}
-                >
-                  <Button 
+                  to={
+                    !extraPathStateName
+                      ? { pathname: `${extraPath}/${item._id}`, state: { item: item } }
+                      : { pathname: `${extraPath}`, state: { report: item._id } }
+                  }>
+                  <Button
                     icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
-                    type={extraPathType ? extraPathType : 'primary'} 
-                    size='small' 
+                    type={extraPathType ? extraPathType : 'primary'}
+                    size='small'
                   />
                 </Link>
               </Tooltip>
@@ -94,13 +105,8 @@ const Table = (props) => {
                 <Link
                   key={`extraPathAction${item.index}`}
                   id={`extraPathAction${item.index}`}
-                  to={{ pathname: `${extraPathStateName}/${item._id}`, state: { report : item._id }}}
-                >
-                  <Button 
-                    icon={<CrownOutlined />}
-                    type={extraPathType ? extraPathType : 'primary'} 
-                    size='small' 
-                  />
+                  to={{ pathname: `${extraPathStateName}/${item._id}`, state: { report: item._id } }}>
+                  <Button icon={<CrownOutlined />} type={extraPathType ? extraPathType : 'primary'} size='small' />
                 </Link>
               </Tooltip>
             )}
@@ -268,7 +274,7 @@ const Table = (props) => {
   };
 
   return (
-    <div>
+    <Suspense fallback={<h1>cargando ...</h1>}>
       <TableAnt
         columns={header}
         dataSource={list}
@@ -279,21 +285,21 @@ const Table = (props) => {
         components={components}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
-            {
-              exportData && (
-                <Col><ExportExcel columns={header} list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} /></Col>
-              )
-            }
-            {
-              titleTable && (
-                <Col>{titleTable}</Col>
-              )
-            }
+            {exportData && (
+              <Col>
+                <ExportExcel
+                  columns={header}
+                  list={list}
+                  fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`}
+                />
+              </Col>
+            )}
+            {titleTable && <Col>{titleTable}</Col>}
           </Row>
         )}
         scroll={scroll}
       />
-    </div>
+    </Suspense>
   );
 };
 

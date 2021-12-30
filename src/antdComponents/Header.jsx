@@ -4,9 +4,9 @@ import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } f
 
 const { Title } = Typography;
 
-const Header = ( props ) => {
+const Header = (props) => {
   const history = useHistory();
-  const { 
+  const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
     addUrl, //link para ir a la vista de agregar
@@ -24,85 +24,55 @@ const Header = ( props ) => {
 
   return (
     <>
-      <Title level={4} >
-        {
-          back && (
-            <Tooltip placement='bottomLeft' title={'Atrás'}>
-              <ArrowLeftOutlined id='goBack' onClick={() => history.goBack()} style={{marginRight: '10px'}}/>
-            </Tooltip>
-          )
-        }
-        <Tooltip placement='bottomLeft' title={titleTooltip} >
+      <Title level={4}>
+        {back && (
+          <Tooltip placement='bottomLeft' title={'Atrás'}>
+            <ArrowLeftOutlined id='goBack' onClick={() => history.goBack()} style={{ marginRight: '10px' }} />
+          </Tooltip>
+        )}
+        <Tooltip placement='bottomLeft' title={titleTooltip}>
           {title}
         </Tooltip>
       </Title>
-      {
-        description && (
-          <small>{description}</small>
-        )
-      }
-
+      {description && <small>{description}</small>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
+        <Col>{extra && <div>{extra}</div>}</Col>
         <Col>
-          {
-            extra && (
-              <div>
-                {extra}
-              </div>
-            )
-          }
-        </Col>
-        <Col>
-          {
-            addUrl && (
-              <Link to={addUrl} >
-                <Button type="primary" icon={<PlusCircleOutlined />} size="middle" >
-                  {'Agregar'}
-                </Button>
-              </Link>
-            )
-          }
-          {
-            addFn && (
-              <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={addFn}>
+          {addUrl && (
+            <Link to={addUrl}>
+              <Button type='primary' icon={<PlusCircleOutlined />} size='middle'>
                 {'Agregar'}
               </Button>
-            )
-          }
+            </Link>
+          )}
+          {addFn && (
+            <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={addFn}>
+              {'Agregar'}
+            </Button>
+          )}
         </Col>
         <Col>
-          {
-            save && (
-              <Button 
-                onClick={saveMethod} 
-                type={'primary'} 
-                icon={<SaveOutlined /> }
-                size="middle"
-                htmlType={form ? 'submit' : 'button'}
-              >
-                {saveName ? saveName : 'Guardar'}
-              </Button>
-            )
-          }
+          {save && (
+            <Button
+              onClick={saveMethod}
+              type={'primary'}
+              icon={<SaveOutlined />}
+              size='middle'
+              htmlType={form ? 'submit' : 'button'}>
+              {saveName ? saveName : 'Guardar'}
+            </Button>
+          )}
         </Col>
         <Col>
-          {
-            edit && (
-              <Button 
-                id='removeHeader'
-                onClick={remove} 
-                type="link" 
-                danger 
-                icon={<DeleteOutlined />}
-              >
-                {'Eliminar'}
-              </Button>
-            ) 
-          }
+          {edit && (
+            <Button id='removeHeader' onClick={remove} type='link' danger icon={<DeleteOutlined />}>
+              {'Eliminar'}
+            </Button>
+          )}
         </Col>
       </Row>
     </>
-  )
-}
+  );
+};
 
 export default Header;

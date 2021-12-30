@@ -4,8 +4,7 @@ import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutli
 import { getColumnSearchProps } from '../../speakers/getColumnSearch';
 import { firestore } from '../../../helpers/firebase';
 import AgendaContext from '../../../Context/AgendaContext';
-
-const { Option } = Select;
+import { Suspense } from 'react';
 
 const Header = lazy(() => import('../../../antdComponents/Header'));
 const Table = lazy(() => import('../../../antdComponents/Table'));
@@ -14,11 +13,15 @@ export default function RoomController(props) {
   const { games, avalibleGames } = useContext(AgendaContext);
   const { handleTabsController, handleGamesSelected } = props;
 
-  const [listOfGames, setListOfGames] = useState([]);
-  const [updateMensaje, setUpdatedMensaje] = useState(false);
-  let [columnsData, setColumnsData] = useState({});
-  const [showavailableGames, setShowavailableGames] = useState(games);
-  const [isLoading, setIsLoading] = useState(true);
+  const [ listOfGames, setListOfGames ] = useState([]);
+  const [ updateMensaje, setUpdatedMensaje ] = useState(false);
+  let [ columnsData, setColumnsData ] = useState({});
+  const [ showavailableGames, setShowavailableGames ] = useState(false);
+  const [ isLoading, setIsLoading ] = useState(true);
+
+  useEffect(() => {
+    setShowavailableGames(games)
+  }, [ games ]);
 
   async function getGamesData() {
     let gamesData = [];
@@ -29,6 +32,7 @@ export default function RoomController(props) {
       });
     });
 
+    console.log("avalibleGames", avalibleGames)
     if (avalibleGames?.length === 0) {
       setListOfGames(gamesData);
       handleGamesSelected('newOrUpdate', '', gamesData);
@@ -44,7 +48,7 @@ export default function RoomController(props) {
 
   useEffect(() => {
     getGamesData();
-  }, [avalibleGames]);
+  }, [ avalibleGames ]);
 
   const columns = [
     {
@@ -103,23 +107,6 @@ export default function RoomController(props) {
       <Card>
         <Row style={{ padding: '8px 0px' }}>
           <Col span={24}>
-            {/* <Form.Item label={'Estado de videoconferencia'}>
-              <Select defaultValue={roomStatus} onChange={handleRoomState}>
-                <Option value=''>Sin Estado</Option>
-                <Option value='open_meeting_room'>Conferencia Abierta</Option>
-                <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
-                <Option value='ended_meeting_room'>Conferencia Terminada</Option>
-              </Select>
-            </Form.Item> */}
-            {/* <label className='label'>Estado de videoconferencia</label>
-            <div className='select is-primary'>
-              <select defaultValue={roomStatus} onChange={handleRoomState}>
-                <option value=''>Sin Estado</option>
-                <option value='open_meeting_room'>Conferencia Abierta</option>
-                <option value='closed_meeting_room'>Conferencia no Iniciada</option>
-                <option value='ended_meeting_room'>Conferencia Terminada</option>
-              </select>
-            </div> */}
 
             <Form.Item label={'Habilitar Juegos'}>
               <Switch
@@ -129,44 +116,10 @@ export default function RoomController(props) {
                 }}
               />
             </Form.Item>
-            {/* <Form.Item label={'Habilitar Chat'}>
-              <Switch checked={chat} onChange={(checked) => handleTabsController(checked, 'chat')} />
-            </Form.Item> */}
-            {/* <Form.Item label={'Habilitar Encuestas'}>
-              <Switch checked={surveys} onChange={(checked) => handleTabsController(checked, 'surveys')} />
-            </Form.Item> */}
+
           </Col>
         </Row>
 
-        {/* <Row style={{ padding: '8px 0px' }}>
-          <Col xs={12} lg={8}>
-            Habilitar Chat
-          </Col>
-          <Col xs={4} lg={2}>
-            <Switch checked={chat} onChange={(checked) => handleTabsController(checked, 'chat')} />
-          </Col>
-        </Row> */}
-        {/* <Row style={{ padding: '8px 0px' }}>
-          <Col xs={12} lg={8}>
-            Habilitar Encuestas
-          </Col>
-          <Col xs={4} lg={2}>
-            <Switch checked={surveys} onChange={(checked) => handleTabsController(checked, 'surveys')} />
-          </Col>
-        </Row> */}
-        {/* <Row style={{ padding: '8px 0px' }}>
-          <Col xs={12} lg={8}>
-            Habilitar Juegos
-          </Col>
-          <Col xs={4} lg={2}>
-            <Switch
-              checked={games}
-              onChange={(checked) => {
-                handleTabsController(checked, 'games'), setShowavailableGames(!showavailableGames);
-              }}
-            />
-          </Col>
-        </Row> */}
         {showavailableGames && (
           <>
             {updateMensaje && (
@@ -188,19 +141,23 @@ export default function RoomController(props) {
                 }}
               />
             )}
-            <Header
-              title={'Juegos disponibles'}
-              titleTooltip={'Seleccione los juegos que desea mostrar en la zona social'}
-              description='Seleccione los juegos que desea mostrar en la zona social'
-            />
-            <Table
-              key='index'
-              list={listOfGames}
-              header={columns}
-              setColumnsData={setColumnsData}
-              loading={isLoading}
-              search
-            />
+
+
+            <Suspense fallback={<div>Cargando...</div>}>
+              <Header
+                title={'Juegos disponibles'}
+                titleTooltip={'Seleccione los juegos que desea mostrar en la zona social'}
+                description='Seleccione los juegos que desea mostrar en la zona social'
+              />
+              <Table
+                key='index'
+                list={listOfGames}
+                header={columns}
+                setColumnsData={setColumnsData}
+                loading={isLoading}
+                search
+              />
+            </Suspense>
           </>
         )}
       </Card>
