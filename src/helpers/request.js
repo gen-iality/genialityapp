@@ -841,7 +841,8 @@ export const SpeakersApi = {
     return await Actions.getOne(`api/events/${event}/host/`, id);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`api/events/${event}/host`, data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`api/events/${event}/host/${id}`, data, `?token=${token}`);
   },
   deleteOne: async (id, event) => {
     return await Actions.delete(`api/events/${event}/host`, id);
