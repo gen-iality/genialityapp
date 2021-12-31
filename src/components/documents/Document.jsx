@@ -232,12 +232,12 @@ const Document = ( props ) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col span={14}>
-          <Form.Item label={'¿Desea crear carpeta?'} >
+          {/* <Form.Item label={'¿Desea crear carpeta?'} >
             <Checkbox 
               checked={folder}
               onChange={(e) => setFolder(e.target.checked)}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item 
             label={
               <label style={{ marginTop: '2%' }} className='label'>
