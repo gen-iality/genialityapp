@@ -11,7 +11,7 @@ import moment from 'moment';
 import withContext from '../../Context/withContext';
 import XLSX from 'xlsx';
 import Header from '../../antdComponents/Header';
-import ExportExcel from '../newComponent/ExportExcel'
+import ExportExcel from '../newComponent/ExportExcel';
 
 const { Title } = Typography;
 
@@ -37,14 +37,14 @@ function OrgMembers(props) {
         _id: membersData._id,
         created_at: membersData.created_at,
         updated_at: membersData.updated_at,
-        names: membersData.user.name || membersData.user.names,
-        email: membersData.user.email,
+        // names: membersData?.user?.name || membersData?.user?.names,
+        // email: membersData?.user?.email,
         ...membersData.properties,
       };
 
       fieldsMembersData.push(properties);
     });
-
+    console.log('debu fieldsMembersData ', fieldsMembersData);
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
@@ -104,9 +104,11 @@ function OrgMembers(props) {
 
   return (
     <>
-      <Header 
+      <Header
         title={'Miembros'}
-        description={'Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.'}
+        description={
+          'Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.'
+        }
       />
 
       <p>
@@ -115,20 +117,9 @@ function OrgMembers(props) {
         </small>
       </p>
 
-      <p><Tag>Inscritos: {membersData.length || 0}</Tag></p>
-
-      {/* <Title
-        level={5}
-        type='secondary'
-        style={{
-          backgroundColor: '#F5F5F5',
-          textAlign: 'center',
-          borderRadius: 4,
-          paddingLeft: 10,
-          paddingRight: 10,
-        }}>
-        Inscritos: {isLoading ? <LoadingOutlined style={{ fontSize: '15px' }} /> : membersData.length}
-      </Title> */}
+      <p>
+        <Tag>Inscritos: {membersData.length || 0}</Tag>
+      </p>
 
       <Table
         columns={columns(columnsData, editModalUser)}
@@ -137,11 +128,11 @@ function OrgMembers(props) {
         rowKey='index'
         pagination={false}
         loading={isLoading}
-        scroll={{x: 1200}}
-        title={() => (  
+        scroll={{ x: 1200 }}
+        title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
-              { membersData.length > 0 && (
+              {membersData.length > 0 && (
                 <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
@@ -153,16 +144,12 @@ function OrgMembers(props) {
               /> */}
             </Col>
             <Col>
-              <Button 
-                type="primary" 
-                icon={<PlusCircleOutlined />} 
-                onClick={addUser}
-              >
+              <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>
                 {'Agregar'}
               </Button>
             </Col>
           </Row>
-       )}
+        )}
       />
       {addOrEditUser && (
         <ModalMembers
@@ -177,75 +164,6 @@ function OrgMembers(props) {
           startingComponent={startingComponent}
         />
       )}
-      {/* <>
-        <p>
-          <small>
-            {' '}
-            Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.
-          </small>{' '}
-        </p>
-        <Row justify='start'>
-          <Title
-            level={5}
-            type='secondary'
-            style={{
-              backgroundColor: '#F5F5F5',
-              textAlign: 'center',
-              borderRadius: 4,
-              paddingLeft: 10,
-              paddingRight: 10,
-            }}>
-            Inscritos: {isLoading ? <LoadingOutlined style={{ fontSize: '15px' }} /> : membersData.length}
-          </Title>
-        </Row>
-
-        <div>
-          <small>
-            Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
-          </small>
-        </div>
-
-        <Row justify='end' style={{ marginBottom: '10px', marginRight: '10px' }}>
-          {extraFields && extraFields.length > 0 ? (
-            <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
-              Agregar Usuario
-            </Button>
-          ) : (
-            <small>
-              Para agregar un usuario, por favor cree los campos con los datos a recolectar en el menú: configuración
-              miembros
-            </small>
-          )}
-
-          {membersData.length > 0 && (
-            <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />} onClick={exportFile}>
-              Exportar
-            </Button>
-          )}
-        </Row>
-        <Table
-          columns={columns(columnsData, editModalUser)}
-          dataSource={membersData}
-          size='small'
-          rowKey='index'
-          pagination={false}
-          scroll={{ x: 1300 }}
-          loading={isLoading}
-        />
-        {addOrEditUser && (
-          <ModalMembers
-            handleModal={closeOrOpenModalMembers}
-            modal={addOrEditUser}
-            rolesList={roleList}
-            extraFields={extraFields}
-            value={selectedUser}
-            editMember={editMember}
-            closeOrOpenModalMembers={closeOrOpenModalMembers}
-            organizationId={organizationId}
-            startingComponent={startingComponent}
-          />
-        )}
-      </> */}
     </>
   );
 }
