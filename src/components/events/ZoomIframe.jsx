@@ -39,7 +39,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
     let url = null;
     switch (platform) {
       case 'zoom':
-        url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+        let url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
         url =
           url_conference +
           meeting_id +
