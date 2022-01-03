@@ -1,19 +1,21 @@
 import React, { useContext } from 'react';
-import { List, Typography, Badge, Tabs, Form, Button, Row, Space, Col, Input } from 'antd';
+import { List, Badge, Tabs } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
 import UsersCard from '../../shared/usersCard';
-import { app } from 'helpers/firebase';
-import ThisRouteCanBeDisplayed from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
+
+import ThisRouteCanBeDisplayed, {
+  iAmRegisteredInThisEvent,
+  recordTypeForThisEvent,
+} from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
+import AnonymousEvenUserForm from '../hooks/anonymousEvenUserForm';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
-const { Text } = Typography;
 
 const styleList = {
   padding: 5,
@@ -21,13 +23,7 @@ const styleList = {
   backgroundColor: '#ffffff63',
 };
 
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
-};
-
 const ChatList = (props) => {
-  const history = useHistory();
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
@@ -35,33 +31,6 @@ const ChatList = (props) => {
   let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
     HelperContext
   );
-
-  const onFinish = (values) => {
-    app
-      .auth()
-      .signInAnonymously()
-      .then((user) => {
-        app
-          .auth()
-          .currentUser.updateProfile({
-            displayName: values.name,
-            photoURL: 'https://example.com/jane-q-user/profile.jpg',
-          })
-          .then(async (respother) => {
-            await app.auth().currentUser.reload();
-            console.log('RESP OTHER==>', respother);
-            /* app
-              .auth()
-              .currentUser.updateEmail(values.email)
-              .then((resp) => {
-                console.log('EMAIL VALUES==>', values.email);
-                console.log('LOGIN ANONIMO', resp);
-                setUserAnosimous({ ...values });
-              })
-              .catch((err) => console.log('ERROR==>', err));*/
-          });
-      });
-  };
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
@@ -81,36 +50,14 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
+  // if (
+  //   iAmRegisteredInThisEvent(cEventUser) === 'LOADING' &&
+  //   recordTypeForThisEvent(cEvent) == 'UN_REGISTERED_PUBLIC_EVENT'
+  // )
+  //   return <AnonymousEvenUserForm />;
+
   if (!cUser.value && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC')
-    return (
-      <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
-        <Row justify='start' style={{ marginBottom: 15 }}>
-          <Col>
-            <Text type='secondary'>
-              <FormattedMessage
-                id='form.message.socialzone'
-                defaultMessage='Registrate para participar en el chat de este evento'
-              />
-            </Text>
-          </Col>
-        </Row>
-
-        <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Ingrese su nombre' }]}>
-          <Input />
-        </Form.Item>
-
-        <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Ingrese su email' }]}>
-          <Input />
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-          <Button htmlType='submit' onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
-            {/*<FormattedMessage id='form.button.register' defaultMessage='Registrarme' />*/}
-            Ingresar
-          </Button>
-        </Form.Item>
-      </Form>
-    );
+    return <AnonymousEvenUserForm />;
 
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
