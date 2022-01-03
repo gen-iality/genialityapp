@@ -189,7 +189,15 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
       )}
       <br />
       <br />
-      <WOWZAPlayer meeting_id={meeting_id} />
+      {livestreamStatus?.state === 'started' && (
+        <>
+          {livestreamStats?.connected.value === 'Yes' ? (
+            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+          ) : (
+            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+          )}
+        </>
+      )}
 
       <p>Coloca estos datos en tu plataforma de captura de video para transmitirlo:</p>
       <ul>

@@ -11,7 +11,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
-import WOWZAPlayer from 'components/livetransmision/WOWZAPlayer';
+import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import { realTimeviuschat } from '../../../helpers/firebase';
 
 const RenderComponent = (props) => {
@@ -35,7 +35,7 @@ const RenderComponent = (props) => {
   const [renderGame, setRenderGame] = useState('');
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
-  const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
+  // const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
 
   const Preloader = () => (
     <Space
@@ -82,8 +82,8 @@ const RenderComponent = (props) => {
   }
   console.log('1. ACTIVITY HELPER==>', currentActivity);
   useEffect(() => {
-    let realTimeRef = null;
-    let unsubscribe = null;
+    // let realTimeRef = null;
+    // let unsubscribe = null;
 
     async function GetStateMeetingRoom() {
       await listeningStateMeetingRoom(props.cEvent.value._id, currentActivity._id);
@@ -92,18 +92,18 @@ const RenderComponent = (props) => {
     if (currentActivity) {
       console.log('1. CURRENT==>', currentActivity);
       GetStateMeetingRoom();
-      realTimeRef = realTimeviuschat.ref('meets/' + currentActivity._id + '/streamingStatus');
-      unsubscribe = realTimeRef.on('value', (snapshot) => {
-        const data = snapshot?.val();
-        setWebHookStreamStatus(data?.status);
-      });
+      // realTimeRef = realTimeviuschat.ref('meets/' + currentActivity._id + '/streamingStatus');
+      // unsubscribe = realTimeRef.on('value', (snapshot) => {
+      //   const data = snapshot?.val();
+      //   setWebHookStreamStatus(data?.status);
+      // });
     }
 
-    return () => {
-      if (realTimeRef && unsubscribe) {
-        realTimeRef.off('value', unsubscribe);
-      }
-    };
+    // return () => {
+    //   if (realTimeRef && unsubscribe) {
+    //     realTimeRef.off('value', unsubscribe);
+    //   }
+    // };
   }, [currentActivity]);
 
   useEffect(() => {
@@ -196,21 +196,21 @@ const RenderComponent = (props) => {
               case 'game':
                 return (
                   <>
-                    <WOWZAPlayer meeting_id={meetingId} />
+                    <WowzaStreamingPlayer meeting_id={meetingId} />
                     <GameDrawer />
                   </>
                 );
             }
             return (
               <>
-                {webHookStreamStatus && (
+                {/* {webHookStreamStatus && (
                   <>
                     <b>Evius Meets Status: </b>
                     {webHookStreamStatus}
                     <br />
                   </>
-                )}
-                <WOWZAPlayer meeting_id={meetingId} />
+                )} */}
+                <WowzaStreamingPlayer meeting_id={meetingId} />
               </>
             );
 
