@@ -7,14 +7,14 @@ import { firestore } from './firebase';
 import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
 const publicInstance = axios.create({
-  url: ApiDEVUrl,
-  baseURL: ApiDEVUrl,
+  url: ApiUrl,
+  baseURL: ApiUrl,
   pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 
 const privateInstance = axios.create({
-  url: ApiDEVUrl,
-  baseURL: ApiDEVUrl,
+  url: ApiUrl,
+  baseURL: ApiUrl,
   withCredentials: true,
 });
 

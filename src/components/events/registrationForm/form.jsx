@@ -1052,9 +1052,7 @@ const FormRegister = ({
                       <Button type='primary' htmlType='submit'>
                         {(initialValues != null && cEventUser.value !== null) ||
                         (initialValues != null && Object.keys(initialValues).length > 0)
-                          ? intl.formatMessage({ id: 'registration.button.update' })
-                          : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
-                          ? 'Votar y Enviar'
+                          ? intl.formatMessage({ id: 'modal.feedback.accept' })
                           : intl.formatMessage({ id: 'registration.button.create' })}
                       </Button>
                       {options &&

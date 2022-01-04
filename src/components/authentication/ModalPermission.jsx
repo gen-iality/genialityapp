@@ -23,7 +23,10 @@ const ModalPermission = (props) => {
   const intl = useIntl();
   const textoTitle =
     typeModal == 'registerForTheEvent'
-      ? intl.formatMessage({ id: 'modal.title.registerevent', defaultMessage: 'Registrarme al evento' })
+      ? intl.formatMessage({
+          id: 'modal.title.registerevent',
+          defaultMessage: 'Información adicional para el evento',
+        })
       : typeModal == 'update'
       ? intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })
       : '';

@@ -27,7 +27,7 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
     cHelper.typeModal == 'loginSuccess'
       ? intl.formatMessage({
           id: 'modal.feedback.title.success',
-          defaultMessage: 'Muy bien, ahora eres parte de la mejor plataforma de eventos virtuales.',
+          defaultMessage: 'Muy bien, ahora eres parte de la mejor plataforma de eventos.',
         })
       : cHelper.typeModal == 'loginError'
       ? intl.formatMessage({ id: 'modal.feedback.title.error', defaultMessage: 'Correo electrónico ya en uso' })

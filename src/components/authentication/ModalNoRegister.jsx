@@ -10,10 +10,7 @@ const ModalNoRegister = (props) => {
   const intl = useIntl();
   // Mensajes para evento privado y publico
 
-  const msgEventPublic = intl.formatMessage({
-    id: 'modal.no_register.msg_public',
-    defaultMessage: 'Este evento requiere que el asistente se registre para poder participar. ',
-  });
+  const msgEventPublic = '';
   const msgEventPrivate = intl.formatMessage({
     id: 'modal.no_register.msg_private',
     defaultMessage:
@@ -55,7 +52,7 @@ const ModalNoRegister = (props) => {
             size='large'>
             {intl.formatMessage({
               id: 'modal.no_register.gotoevius',
-              defaultMessage: 'Ir a evius',
+              defaultMessage: 'Ver más eventos',
             })}
           </Button>
           {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && (
@@ -65,8 +62,8 @@ const ModalNoRegister = (props) => {
               type='primary'
               size='large'>
               {intl.formatMessage({
-                id: 'registration.button.create',
-                defaultMessage: 'Registrarme',
+                id: 'modal.feedback.accept',
+                defaultMessage: 'Aceptar',
               })}
             </Button>
           )}
@@ -92,7 +89,8 @@ const ModalNoRegister = (props) => {
             <Typography.Title level={4}>
               {intl.formatMessage({
                 id: 'modal.no_register.title',
-                defaultMessage: 'Usuario no registrado al evento',
+                defaultMessage:
+                  'Hola, tienes una cuenta activa con nosotros, pero esta actividad requiere otros detalles sobre ti.',
               })}
             </Typography.Title>
           ) : (

@@ -41,30 +41,29 @@ function ThisRouteCanBeDisplayed({ children }) {
       default:
         return (
           <Result
+            style={{ backgroundColor: 'white', borderRadius: '15px' }}
             className='animate__animated animate__pulse'
             status='warning'
             title={
-              <Typography.Title level={2}>
-                {intl.formatMessage({ id: 'modal.no_register.msg_public.title' })}
-              </Typography.Title>
+              <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title' })}</Typography.Title>
             }
-            subTitle={
-              <Typography.Paragraph
-                type='secondary'
-                style={{
-                  fontSize: '18px',
-                  overflowWrap: 'anywhere',
-                }}>
-                {intl.formatMessage({ id: 'modal.no_register.msg_public' })}
-              </Typography.Paragraph>
-            }
+            // subTitle={
+            //   <Typography.Paragraph
+            //     type='secondary'
+            //     style={{
+            //       fontSize: '18px',
+            //       overflowWrap: 'anywhere',
+            //     }}>
+            //     {intl.formatMessage({ id: 'modal.no_register.msg_public' })}
+            //   </Typography.Paragraph>
+            // }
             extra={[
               <Button
                 onClick={() => handleChangeTypeModal('registerForTheEvent')}
                 size='large'
                 type='primary'
                 key='goToEvent'>
-                {intl.formatMessage({ id: 'form.button.register' })}
+                {intl.formatMessage({ id: 'modal.feedback.accept' })}
               </Button>,
             ]}
           />
