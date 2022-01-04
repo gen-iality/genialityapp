@@ -118,7 +118,7 @@ const RenderComponent = (props) => {
   }, [chatAttendeChats]);
 
   function RenderizarComponente(plataforma, actividad_estado, reder_Game) {
-    console.log('10. si los recibe', plataforma);
+    console.log('10. si los recibe', reder_Game);
     switch (plataforma) {
       case 'vimeo':
         switch (actividad_estado) {
@@ -140,6 +140,7 @@ const RenderComponent = (props) => {
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
+            console.log('debu currentActivity?.video ', currentActivity?.video);
             return currentActivity?.video && <VideoActivity />;
         }
 
@@ -223,7 +224,7 @@ const RenderComponent = (props) => {
             return currentActivity?.video && <VideoActivity />;
         }
       case null:
-        return <VideoActivity />;
+        return currentActivity?.video ? <VideoActivity /> : '';
     }
   }
 
