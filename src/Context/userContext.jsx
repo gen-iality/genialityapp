@@ -22,15 +22,14 @@ export function CurrentUserProvider({ children }) {
             });
           } else if (user?.isAnonymous && user) {
             //OBTENERT USER
-
-            console.log('USUARIO ANONIMO==>', user.displayName, user.name, user);
             const obtainDisplayName = () => {
               if (app.auth().currentUser.displayName != null) {
+                /**para poder obtener el email y crear despues un eventUser se utiliza el parametro photoURL de firebas para almacenar el email */
                 setCurrentUser({
                   status: 'LOADED',
                   value: {
                     names: user.displayName,
-                    email: 'email@email.com',
+                    email: user.photoURL,
                     isAnonymous: true,
                     _id: user.uid,
                   },

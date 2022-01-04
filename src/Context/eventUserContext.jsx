@@ -10,17 +10,15 @@ let initialContextState = { status: 'LOADING', value: null };
 export function CurrentUserEventProvider({ children }) {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  console.log('1. CUSER EVENT USER==>', cUser);
 
   const [userEvent, setuserEvent] = useState(initialContextState);
   let [updateUser, setUpdateUser] = useState(true);
 
   useEffect(() => {
     let event_id = cEvent.value?._id;
-    if (cUser.value == null || cUser.value == undefined || updateUser == false || cUser?.value.isAnonymous) return;
+    if (cUser.value == null || cUser.value == undefined || updateUser == false) return;
     async function asyncdata() {
       try {
-        console.log('10. CUSER===>', cUser);
         EventsApi.getStatusRegister(event_id, cUser.value.email).then((responseStatus) => {
           if (responseStatus.data.length > 0) {
             setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });

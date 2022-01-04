@@ -20,27 +20,27 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
   const intl = useIntl();
 
   // status -> warning, info, success, error
-  let status = cHelper.typeModal == 'loginSuccess' ? 'success' : cHelper.typeModal == 'loginError' ? 'error' : 'info';
+  let status = cHelper?.typeModal == 'loginSuccess' ? 'success' : cHelper?.typeModal == 'loginError' ? 'error' : 'info';
 
   // title -> mensaje principal
   let title =
-    cHelper.typeModal == 'loginSuccess'
+    cHelper?.typeModal == 'loginSuccess'
       ? intl.formatMessage({
           id: 'modal.feedback.title.success',
           defaultMessage: 'Muy bien, ahora eres parte de la mejor plataforma de eventos.',
         })
-      : cHelper.typeModal == 'loginError'
+      : cHelper?.typeModal == 'loginError'
       ? intl.formatMessage({ id: 'modal.feedback.title.error', defaultMessage: 'Correo electrónico ya en uso' })
       : '¡Ups! algo salió mal';
 
   let description =
-    cHelper.typeModal == 'loginSuccess' && cEvent.value != null
+    cHelper?.typeModal == 'loginSuccess' && cEvent.value != null
       ? intl.formatMessage({
           id: 'modal.feedback.description.success',
           defaultMessage:
             'El evento desea recolectar datos para brindarte una mejor experiencia, nosotros llenaremos la información que ya suministraste anteriormente para agilizar este proceso. ',
         })
-      : cHelper.typeModal == 'loginError'
+      : cHelper?.typeModal == 'loginError'
       ? intl.formatMessage({
           id: 'modal.feedback.description.error',
           defaultMessage:
@@ -55,7 +55,7 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={cHelper.typeModal == 'loginSuccess' || cHelper.typeModal == 'loginError'}
+      visible={cHelper?.typeModal == 'loginSuccess' || cHelper?.typeModal == 'loginError'}
       onCancel={() => cHelper.handleChangeTypeModal(null)}>
       <Result
         status={status}
@@ -65,7 +65,7 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
           <Button size='large' onClick={() => cHelper.handleChangeTypeModal(null)} type='primary' key='aceptar'>
             {intl.formatMessage({ id: 'modal.feedback.accept', defaultMessage: 'Aceptar' })}
           </Button>,
-          cHelper.typeModal !== 'loginError' && cHelper.typeModal !== 'loginSuccess' && (
+          cHelper?.typeModal !== 'loginError' && cHelper?.typeModal !== 'loginSuccess' && (
             <Button
               size='large'
               onClick={() => {

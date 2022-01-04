@@ -50,13 +50,10 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
-  // if (
-  //   iAmRegisteredInThisEvent(cEventUser) === 'LOADING' &&
-  //   recordTypeForThisEvent(cEvent) == 'UN_REGISTERED_PUBLIC_EVENT'
-  // )
-  //   return <AnonymousEvenUserForm />;
-
-  if (!cUser.value && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC')
+  if (
+    (iAmRegisteredInThisEvent(cEventUser) === 'LOADING' || iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED') &&
+    recordTypeForThisEvent(cEvent) == 'UN_REGISTERED_PUBLIC_EVENT'
+  )
     return <AnonymousEvenUserForm />;
 
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
