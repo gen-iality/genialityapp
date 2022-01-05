@@ -44,7 +44,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           <Step key={item.title} title={item.title} icon={item.icon} />
         ))}
       </Steps>
-      <div>{steps[current].content}</div>
+      <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
       <div style={{ marginTop: '30px' }}>
         {current > 0 && (
           <Button size='large' style={{ margin: '0 8px' }} onClick={() => prev()}>

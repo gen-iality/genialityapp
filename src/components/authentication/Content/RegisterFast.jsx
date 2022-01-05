@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { app } from 'helpers/firebase';
-import { useContext } from 'react';
-import HelperContext from 'Context/HelperContext';
+
 import { useIntl } from 'react-intl';
 
 const RegisterFast = () => {
   const intl = useIntl();
-  const { handleChangeTypeModal } = useContext(HelperContext);
+
   const ruleEmail = [
     {
       type: 'email',
@@ -27,20 +25,10 @@ const RegisterFast = () => {
       message: 'La contraseña debe tener entre 6 a 18 caracteres',
     },
   ];
-  const ruleName = [
-    { required: true, message: 'Ingrese un nombre para su cuenta en Evius!' },
-    {
-      type: 'string',
-      min: 3,
-      max: 40,
-      message: 'El nombre debe tener entre 3 a 40 caracteres',
-    },
-  ];
+  const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
 
   const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
-  let [modalInfo, setModalInfo] = useState(null);
-  let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   /** request para no mostrar el error que genera el component upload de antd */
   const dummyRequest = ({ file, onSuccess }) => {
@@ -135,7 +123,6 @@ const RegisterFast = () => {
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleName}>
           <Input
-            maxLength={40}
             type='text'
             size='large'
             placeholder={'¿Como te llamas?'}
