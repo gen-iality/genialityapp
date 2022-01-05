@@ -31,6 +31,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { UsersApi } from '../../helpers/request';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from 'Context/eventContext';
+import RegisterUserAndEventUser from './RegisterUserAndEventUser';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -381,7 +382,12 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                <RegisterUser
+                {/* <RegisterUser
+                  screens={screens}
+                  stylePaddingMobile={stylePaddingMobile}
+                  stylePaddingDesktop={stylePaddingDesktop}
+                /> */}
+                <RegisterUserAndEventUser
                   screens={screens}
                   stylePaddingMobile={stylePaddingMobile}
                   stylePaddingDesktop={stylePaddingDesktop}
