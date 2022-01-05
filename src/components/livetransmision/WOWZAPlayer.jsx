@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { getLiveStream, getLiveStreamStatus, getLiveStreamStats } from 'adaptors/wowzaStreamingAPI';
+import IconMute from './IconMute';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [platformurl, setPlatformurl] = useState(null);
+  const [muted, setMuted] = useState(true);
   const [loopBackGround, setLoopBackGround] = useState(false);
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading.mp4?alt=media&token=883ec61c-157a-408b-876c-b09f70402d14';
@@ -29,9 +31,10 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   }, [meeting_id, thereIsConnection]);
 
   return (
-    <>
+    <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      {muted && thereIsConnection !== 'No' && <IconMute callback={() => setMuted(false)} />}
       <ReactPlayer
-        muted={true}
+        muted={muted}
         playing={true}
         loop={loopBackGround}
         width={'100%'}
@@ -48,7 +51,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           },
         }}
       />
-    </>
+    </div>
   );
 }
 
