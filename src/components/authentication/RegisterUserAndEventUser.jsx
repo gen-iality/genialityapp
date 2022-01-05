@@ -16,17 +16,17 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     {
       title: 'First',
       content: <RegisterFast />,
-      icon: <AccountOutlineIcon />,
+      icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
       title: 'Second',
       content: <FormComponent />,
-      icon: <TicketConfirmationOutlineIcon />,
+      icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
       title: 'Last',
       content: <RegistrationResult />,
-      icon: <ScheduleOutlined />,
+      icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
   ];
 
@@ -41,7 +41,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
       <Steps current={current}>
         {steps.map((item) => (
-          <Step key={item.title} title={item.title} icon={item.icon} />
+          <Step key={item.title} icon={item.icon} />
         ))}
       </Steps>
       <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
