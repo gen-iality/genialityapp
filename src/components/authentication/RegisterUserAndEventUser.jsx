@@ -97,7 +97,9 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       ...validationGeneral,
       loading: true,
     });
-    handleValidateAccountEvius();
+    if (current == 0) {
+      handleValidateAccountEvius();
+    }
   };
 
   const prev = () => {
