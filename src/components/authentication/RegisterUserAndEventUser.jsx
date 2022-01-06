@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Steps, Button, message } from 'antd';
+import { Steps, Button, message, Alert } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -187,7 +187,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         )}
       </div>
 
-      {validationGeneral.status && <h1>{validationGeneral.textError}</h1>}
+      {validationGeneral.status && <Alert message={validationGeneral.textError} type='error' />}
     </div>
   );
 };
