@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Steps, Button, message } from 'antd';
+import { Steps, Button, message, Alert } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -9,9 +9,11 @@ import FormComponent from '../events/registrationForm/form';
 import { useEffect } from 'react';
 import { SearchUserbyEmail } from 'helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
+import { useIntl } from 'react-intl';
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+  const intl = useIntl();
   const [current, setCurrent] = React.useState(0);
   const [basicDataUser, setbasicDataUser] = React.useState({
     names: '',
@@ -79,7 +81,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         setValidationGeneral({
           loading: false,
           status: true,
-          textError: 'El correo ya esta registrado, inicia sesión',
+          textError: intl.formatMessage({
+            id: 'modal.feedback.title.error',
+            defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con ese correo.',
+          }),
         });
       } else {
         setValidationGeneral({
@@ -131,7 +136,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         setValidationGeneral({
           ...validationGeneral,
           loading: false,
-          textError: 'LLenar todos los campos correctamente',
+          textError: intl.formatMessage({
+            id: 'feedback.title.error',
+            defaultMessage: 'Complete los campos solicitados correctamente.',
+          }),
           status: true,
         });
       }
@@ -189,7 +197,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         )}
       </div>
 
-      {validationGeneral.status && <h1>{validationGeneral.textError}</h1>}
+      {validationGeneral.status && <Alert message={validationGeneral.textError} type='error' />}
     </div>
   );
 };
