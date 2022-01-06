@@ -62,7 +62,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const next = () => {
     setCurrent(current + 1);
-    console.log('data', basicDataUser);
   };
 
   const prev = () => {
@@ -70,7 +69,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   };
 
   useEffect(() => {
-    console.log('dataEventUser', dataEventUser);
     if (basicDataUser.email && basicDataUser.password && basicDataUser.names) {
       setbuttonStatus(false);
     } else {
@@ -107,8 +105,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           </Button>
         )}
       </div>
-
-      {/* {<h1>Porfavor llena todos los campos antes de </h1>} */}
     </div>
   );
 };
