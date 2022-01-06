@@ -61,7 +61,9 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       setModalInfo,
       setOpenOrCloseTheModalFeedback,
     };
+
     let resp = await createNewUser(newValues);
+
     if (resp) {
       // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
       app
