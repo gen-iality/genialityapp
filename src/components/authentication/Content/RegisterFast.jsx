@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, message } from 'antd';
+import { Form, Input, Button, Space, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
-
 import { useIntl } from 'react-intl';
 
-const RegisterFast = () => {
+const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
 
   const ruleEmail = [
@@ -37,17 +36,23 @@ const RegisterFast = () => {
     }, 0);
   };
 
-  function resetFields() {
-    form.resetFields();
-    setImageAvatar(null);
+  function onFinish(values) {
+    console.log('values', values);
+    handleNext(values);
   }
 
   return (
     <>
-      <Form form={form} autoComplete='off' layout='vertical'>
-        {/* <Typography.Title level={4} type='secondary'>
-                      Nueva organizacion
-                    </Typography.Title> */}
+      <Form
+        initialValues={{
+          names: basicDataUser.names,
+          email: basicDataUser.email,
+          password: basicDataUser.password,
+        }}
+        form={form}
+        autoComplete='off'
+        layout='vertical'
+        onFinish={onFinish}>
         <Form.Item>
           <ImgCrop rotate shape='round'>
             <Upload
@@ -55,6 +60,7 @@ const RegisterFast = () => {
               onChange={(file) => {
                 if (file.fileList.length > 0) {
                   setImageAvatar(file.fileList);
+                  HandleHookForm(null, 'picture', file.fileList);
                 } else {
                   setImageAvatar(null);
                 }
@@ -63,7 +69,7 @@ const RegisterFast = () => {
               multiple={false}
               listType='picture'
               maxCount={1}
-              fileList={imageAvatar}>
+              fileList={basicDataUser.picture ? basicDataUser.picture : imageAvatar}>
               {
                 <Button
                   type='primary'
@@ -91,6 +97,7 @@ const RegisterFast = () => {
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleEmail}>
           <Input
+            onChange={(e) => HandleHookForm(e, 'email')}
             type='email'
             size='large'
             placeholder={'micorreo@ejemplo.com'}
@@ -107,6 +114,7 @@ const RegisterFast = () => {
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={rulePassword}>
           <Input.Password
+            onChange={(e) => HandleHookForm(e, 'password')}
             type='password'
             size='large'
             placeholder={'Crea una contraseña'}
@@ -123,6 +131,7 @@ const RegisterFast = () => {
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleName}>
           <Input
+            onChange={(e) => HandleHookForm(e, 'names')}
             type='text'
             size='large'
             placeholder={'¿Como te llamas?'}

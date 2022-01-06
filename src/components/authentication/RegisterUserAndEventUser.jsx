@@ -1,26 +1,56 @@
-import React from 'react';
-import { Steps, Button, message, Form } from 'antd';
+import React, { useState } from 'react';
+import { Steps, Button, message } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
+import { useEffect } from 'react';
 
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const [current, setCurrent] = React.useState(0);
+  const [basicDataUser, setbasicDataUser] = React.useState({
+    names: '',
+    email: '',
+    password: '',
+    picture: '',
+  });
+  const [dataEventUser, setdataEventUser] = useState({});
+  const [buttonStatus, setbuttonStatus] = useState(true);
+
+  const HandleHookForm = (e, FieldName, picture) => {
+    let value = e.target.value;
+    if (current === 0) {
+      if (FieldName === 'picture') {
+        setbasicDataUser({ ...basicDataUser, [FieldName]: picture });
+      } else {
+        setbasicDataUser({
+          ...basicDataUser,
+          [FieldName]: value,
+        });
+      }
+    } else {
+      setdataEventUser({
+        ...dataEventUser,
+        [FieldName]: value,
+      });
+    }
+  };
 
   const steps = [
     {
       title: 'First',
-      content: <RegisterFast />,
+      content: <RegisterFast basicDataUser={basicDataUser} HandleHookForm={HandleHookForm} />,
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
       title: 'Second',
-      content: <FormComponent />,
+      content: (
+        <FormComponent dataEventUser={dataEventUser} basicDataUser={basicDataUser} HandleHookForm={HandleHookForm} />
+      ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
@@ -32,11 +62,22 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const next = () => {
     setCurrent(current + 1);
+    console.log('data', basicDataUser);
   };
 
   const prev = () => {
     setCurrent(current - 1);
   };
+
+  useEffect(() => {
+    console.log('dataEventUser', dataEventUser);
+    if (basicDataUser.email && basicDataUser.password && basicDataUser.names) {
+      setbuttonStatus(false);
+    } else {
+      setbuttonStatus(true);
+    }
+  }, [basicDataUser, dataEventUser]);
+
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
       <Steps current={current}>
@@ -52,16 +93,22 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button size='large' type='primary' onClick={() => next()}>
+          <Button disabled={buttonStatus} size='large' type='primary' onClick={() => next()}>
             Siguiente
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button size='large' type='primary' onClick={() => message.success('Processing complete!')}>
+          <Button
+            disabled={buttonStatus}
+            size='large'
+            type='primary'
+            onClick={() => message.success('Processing complete!')}>
             Finalizar
           </Button>
         )}
       </div>
+
+      {/* {<h1>Porfavor llena todos los campos antes de </h1>} */}
     </div>
   );
 };
