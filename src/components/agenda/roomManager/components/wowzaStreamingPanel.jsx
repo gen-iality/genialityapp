@@ -1,6 +1,6 @@
-import { Button, Spin, Alert, Typography } from 'antd';
-const { Text, Link, Title } = Typography;
 import { useState, useEffect } from 'react';
+import { Button, Spin, Alert, Typography, Space, Input, Tooltip, message } from 'antd';
+import { CopyFilled, CheckCircleFilled } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import WOWZAPlayer from 'components/livetransmision/WOWZAPlayer';
 import {
@@ -12,27 +12,41 @@ import {
   getLiveStreamStats,
 } from 'adaptors/wowzaStreamingAPI';
 import { realTimeviuschat } from '../../../../helpers/firebase';
+import { UseCurrentUser } from '../../../../Context/userContext';
 
 const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activityDispatch, activityEdit }) => {
-  console.log('props', meeting_id, created_action, stopped_action);
-  //const [livestream, setLivestream] = useState(null);
-  const [livestreamStatus, setLivestreamStatus] = useState(null);
-  const [livestreamStats, setLivestreamStats] = useState(null);
-  const [linkeviusmeets, setLinkeviusmeets] = useState(null);
-  const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
-
-  const queryClient = useQueryClient();
-  console.log('innerRender', meeting_id);
-  const livestreamQuery = useQuery(['livestream', meeting_id], () => getLiveStream(meeting_id));
-
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://eviusmeets.netlify.app/prepare`;
+  let cUser = UseCurrentUser();
+
+  const [livestreamStatus, setLivestreamStatus] = useState(null);
+  const [livestreamStats, setLivestreamStats] = useState(null);
+  const [linkRolAdmin, setLinkRolAdmin] = useState(null);
+  const [linkRolProductor, setLinkRolProductor] = useState(null);
+  const [linkRolAsistente, setLinkRolAsistente] = useState(null);
+  const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
+  const [copySuccessProductor, setCopySuccessProductor] = useState(false);
+  const [copySuccessAsistente, setCopySuccessAsistente] = useState(false);
+
+  const queryClient = useQueryClient();
+  // console.log('innerRender', meeting_id);
+  const livestreamQuery = useQuery(['livestream', meeting_id], () => getLiveStream(meeting_id));
+
   useEffect(() => {
     if (livestreamQuery && livestreamQuery.data) {
+      const { names, email, picture } = cUser.value;
       let rtmplink = livestreamQuery.data.source_connection_information;
-      let linkeviusmeetsi =
-        eviusmeets + `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}`;
-      setLinkeviusmeets(linkeviusmeetsi);
+      let linkAdmin =
+        eviusmeets +
+        `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${
+          rtmplink.stream_name
+        }&rol=1&username=${names}&email=${email}&photo=${picture ? picture : ''}`;
+      let linkProductor =
+        eviusmeets + `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}&rol=1`;
+      let linkAsistente = eviusmeets + `?meetingId=${activityEdit}`;
+      setLinkRolAdmin(linkAdmin);
+      setLinkRolProductor(linkProductor);
+      setLinkRolAsistente(linkAsistente);
     }
   }, [livestreamQuery.data]);
 
@@ -49,14 +63,14 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
     };
   }, []);
 
-  console.log('linkeviusmeets', linkeviusmeets);
+  // console.log('linkeviusmeets', linkRolProductor);
   useEffect(() => {
     if (meeting_id) executer_startMonitorStatus(meeting_id);
   }, [meeting_id]);
 
   const executer_createStream = useMutation(createLiveStream, {
     onSuccess: (data) => {
-      console.log('sucks', data);
+      // console.log('sucks', data);
       queryClient.setQueryData('livestream', data);
       activityDispatch({ type: 'meeting_created', meeting_id: data.id });
       // Invalidate and refetch
@@ -69,7 +83,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
     let live_stream_stats = null;
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
-      console.log('live_stream_status', live_stream_status);
+      // console.log('live_stream_status', live_stream_status);
       setLivestreamStatus(live_stream_status);
 
       live_stream_stats = await getLiveStreamStats(meeting_id);
@@ -92,6 +106,26 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
     queryClient.setQueryData('livestream', null);
   };
 
+  function success() {
+    message.success('URL copiada satisfactoriamente!');
+  }
+
+  function copyToClipboard(type) {
+    if (type === 'Productor') {
+      navigator.clipboard.writeText(linkRolProductor);
+      success();
+      setCopySuccessProductor(true);
+    } else if (type === 'Asistente') {
+      navigator.clipboard.writeText(linkRolAsistente);
+      success();
+      setCopySuccessAsistente(true);
+    }
+    setTimeout(() => {
+      setCopySuccessProductor(false);
+      setCopySuccessAsistente(false);
+    }, 5000);
+  }
+
   if (!livestreamQuery.data)
     return (
       <>
@@ -101,7 +135,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
 
         {executer_createStream.isError && (
           <>
-            {console.log('executer_createStream', executer_createStream)}
+            {/* {console.log('executer_createStream', executer_createStream)} */}
             <Alert
               message={
                 'An error occurred:' +
@@ -123,25 +157,28 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
       <br />
       <br />
       <p>
-        <p>
-          Queda pendiente revisar el estado inicial de la reunión, agregar estados de error a los botones de start,
-          stop,
-        </p>
-        <b>Id:</b> {meeting_id}
+        Queda pendiente revisar el estado inicial de la reunión, agregar estados de error a los botones de start, stop,
       </p>
-      <Button
-        onClick={() => {
-          executer_startStream();
-        }}>
-        Iniciar
-      </Button>
-      <Button
-        onClick={() => {
-          executer_stopStream();
-        }}>
-        Detener
-      </Button>
-      <Button onClick={() => {}}>Reiniciar</Button>
+
+      {livestreamStatus?.state === 'stopped' ? (
+        <Button
+          onClick={() => {
+            executer_startStream();
+          }}>
+          Iniciar
+        </Button>
+      ) : (
+        <>
+          <Button
+            onClick={() => {
+              executer_stopStream();
+            }}>
+            Detener
+          </Button>
+          <Button onClick={() => {}}>Reiniciar</Button>
+        </>
+      )}
+
       <br />
       <br />
 
@@ -156,8 +193,10 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
       {livestreamStatus && (
         <>
           <b>Streaming Status: </b>
-          {livestreamStatus.state !== 'started' && livestreamStatus.state != 'stopped' && <Spin />}
-          {livestreamStatus.state}
+          <Space>
+            {livestreamStatus.state !== 'started' && livestreamStatus.state != 'stopped' && <Spin />}
+            {livestreamStatus.state}
+          </Space>
           <br />
         </>
       )}
@@ -182,20 +221,60 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
       )}
 
       <br />
-      {linkeviusmeets && (
-        <Link href={linkeviusmeets} target='_blank'>
-          Entrar a EviusMeets para transmitir
-        </Link>
-      )}
-      <br />
-      <br />
+
       {livestreamStatus?.state === 'started' && (
         <>
+          <Space direction='vertical'>
+            {linkRolAdmin && (
+              <Button type='primary' href={linkRolAdmin} target='_blank'>
+                Ingresar a EviusMeets para transmitir
+              </Button>
+            )}
+            <b>Ir a EviusMeets: </b>
+
+            {linkRolProductor && (
+              <Input.Group compact>
+                <Input style={{ width: 'calc(100% - 31px)' }} disabled value={linkRolProductor} />
+                <Tooltip title='Copiar productor url'>
+                  <Button
+                    onClick={() => copyToClipboard('Productor')}
+                    icon={
+                      copySuccessProductor ? (
+                        <CheckCircleFilled style={{ color: '#52C41A' }} />
+                      ) : (
+                        <CopyFilled style={{ color: '#0089FF' }} />
+                      )
+                    }
+                  />
+                </Tooltip>
+              </Input.Group>
+            )}
+            {linkRolAsistente && (
+              <Input.Group compact>
+                <Input style={{ width: 'calc(100% - 31px)' }} disabled value={linkRolAsistente} />
+                <Tooltip title='Copiar asistente url'>
+                  <Button
+                    onClick={() => copyToClipboard('Asistente')}
+                    icon={
+                      copySuccessAsistente ? (
+                        <CheckCircleFilled style={{ color: '#52C41A' }} />
+                      ) : (
+                        <CopyFilled style={{ color: '#0089FF' }} />
+                      )
+                    }
+                  />
+                </Tooltip>
+              </Input.Group>
+            )}
+          </Space>
+          <br />
+          <br />
           {livestreamStats?.connected.value === 'Yes' ? (
             <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
           ) : (
             <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
           )}
+          <br />
         </>
       )}
 

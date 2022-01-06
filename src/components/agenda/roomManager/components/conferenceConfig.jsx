@@ -38,7 +38,7 @@ export default function ConferenceConfig({
         {platform}
       </Text>
       <Text>
-        <Text strong>Conference: </Text>
+        <Text strong>Conference Id: </Text>
         {meeting_id}
       </Text>
       {requiresCreateRoom && host_name !== null && <Form.Item label={'Host'}>{host_name}</Form.Item>}
