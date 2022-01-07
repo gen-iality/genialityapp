@@ -7,13 +7,16 @@ import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfi
 import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
 import { useEffect } from 'react';
-import { SearchUserbyEmail } from 'helpers/request';
+import { EventsApi, SearchUserbyEmail, UsersApi } from 'helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
+import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
+import { UseEventContext } from 'Context/eventContext';
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
+  const cEvent = UseEventContext();
   const [current, setCurrent] = React.useState(0);
   const [basicDataUser, setbasicDataUser] = React.useState({
     names: '',
@@ -82,7 +85,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     },
     {
       title: 'Last',
-      content: <RegistrationResult />,
+      content: <RegistrationResult validationGeneral={validationGeneral} basicDataUser={basicDataUser} />,
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
   ];
@@ -110,13 +113,63 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     });
   };
 
+  const handleSubmit = () => {
+    setCurrent(current + 1);
+    let SaveUserEvius = new Promise((resolve, reject) => {
+      async function CreateAccount() {
+        let resp = await createNewUser(basicDataUser);
+        resolve(resp);
+      }
+
+      CreateAccount();
+    });
+
+    async function createEventUser() {
+      let clonBasicDataUser = { ...basicDataUser };
+      delete clonBasicDataUser.password;
+      delete clonBasicDataUser.picture;
+
+      let datauser = {
+        ...clonBasicDataUser,
+        ...dataEventUser,
+      };
+
+      let propertiesuser = { properties: { ...datauser } };
+      let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
+      if (respUser && respUser._id) {
+        setValidationGeneral({
+          status: false,
+          loading: false,
+          textError: 'Te has inscrito correctamente a este evento',
+        });
+        setbasicDataUser({});
+        setdataEventUser({});
+      }
+    }
+
+    SaveUserEvius.then((resp) => {
+      if (resp) {
+        createEventUser();
+      } else {
+        setValidationGeneral({
+          status: false,
+          loading: false,
+          textError: 'Hubo un error al crear el usuario, intente nuevamente',
+        });
+      }
+    });
+  };
+
   const next = () => {
     setValidationGeneral({
       ...validationGeneral,
       loading: true,
     });
+
     if (current == 0) {
       handleValidateAccountEvius();
+    } else if (current == 1) {
+      handleSubmit();
     }
   };
 
@@ -158,6 +211,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       setbuttonStatus(true);
     }
   };
+
   useEffect(() => {
     if (current == 0) {
       ValidateGeneralFields();
@@ -173,7 +227,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       </Steps>
       <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
       <div style={{ marginTop: '30px' }}>
-        {current > 0 && (
+        {current > 0 && current < 2 && (
           <Button
             onClick={() => {
               hookValidations(false, '');
@@ -203,15 +257,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                   </Button>
                 )}
               </>
-            )}
-            {current === steps.length - 1 && (
-              <Button
-                disabled={buttonStatus}
-                size='large'
-                type='primary'
-                onClick={() => message.success('Processing complete!')}>
-                Finalizar
-              </Button>
             )}
           </>
         )}

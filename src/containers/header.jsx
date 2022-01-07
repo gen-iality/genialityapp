@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { app } from '../helpers/firebase';
 import { ApiUrl } from '../helpers/constants';
@@ -15,6 +15,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import ModalAuth from '../components/authentication/ModalAuth';
+import HelperContext from 'Context/HelperContext';
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
@@ -48,6 +49,8 @@ const Headers = (props) => {
   const { cUser, showMenu, loginInfo, cHelper } = props;
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
+
+  let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
 
   const modalClose = () => {
     setdataGeneral({ ...dataGeneral, modalVisible: false, tabModal: '' });
@@ -125,6 +128,11 @@ const Headers = (props) => {
     // }
   }
 
+  const WhereHerePath = () => {
+    let containtorganization = window.location.pathname.includes('/organization');
+    return containtorganization ? 'organization' : 'landing';
+  };
+
   useEffect(() => {
     LoadCurrentUser();
   }, [cUser?.value]);
@@ -161,12 +169,26 @@ const Headers = (props) => {
                   icon={<LockOutlined />}
                   style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                   size='large'
-                  onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '1' })}>
+                  onClick={() => {
+                    HandleControllerLoginVisible({
+                      visible: true,
+                      organization: WhereHerePath(),
+                    });
+
+                    handleChangeTabModal('1');
+                  }}>
                   Iniciar sesión
                 </Button>
                 <Button
                   size='large'
-                  onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '2' })}>
+                  onClick={() => {
+                    HandleControllerLoginVisible({
+                      visible: true,
+                      organization: WhereHerePath(),
+                    });
+
+                    handleChangeTabModal('2');
+                  }}>
                   Registrarme
                 </Button>
               </Space>
@@ -206,12 +228,7 @@ const Headers = (props) => {
             {/* {(window.location.href.toString().includes('events') ||
               window.location.href.toString().split('/').length == 4) &&
               !window.location.href.toString().includes('organization') && ( */}
-            <ModalAuth
-              tab={dataGeneral.tabModal}
-              closeModal={modalClose}
-              organization='register'
-              visible={dataGeneral.modalVisible}
-            />
+            {/* <ModalAuth /> */}
             {/* )} */}
             {<ModalLoginHelpers organization={1} />}
           </Row>

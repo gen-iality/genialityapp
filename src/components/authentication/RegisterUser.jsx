@@ -3,7 +3,6 @@ import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-
 import { Form, Input, Button, Space, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
-import ModalFeedback from './ModalFeedback';
 import { app } from 'helpers/firebase';
 import { useContext } from 'react';
 import HelperContext from 'Context/HelperContext';

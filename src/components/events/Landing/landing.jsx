@@ -153,7 +153,7 @@ const Landing = (props) => {
     <>
       {/* <ModalFeedback /> */}
       <ModalNoRegister />
-      <ModalAuth organization='event' />
+      {/* <ModalAuth /> */}
       <ModalLoginHelpers />
       <ModalPermission />
       <ModalFeedback />

@@ -181,7 +181,7 @@ const FormRegister = ({
         ? cUser.value
         : initialValuesGeneral
     );
-  }, [cUser.value, cEventUser, dataEventUser, basicDataUser]);
+  }, [cUser.value, cEventUser]);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -1001,7 +1001,7 @@ const FormRegister = ({
                   </Col>
                 )}
 
-                {!basicDataUser && (
+                {Object.keys(basicDataUser) == 0 && (
                   <Col span={24} align='center'>
                     {!loadingregister && (
                       <Form.Item>
