@@ -68,7 +68,6 @@ const ModalAuth = (props) => {
 
   useEffect(() => {
     //validar que solo se muestre y active la tab de inicio de sesion para los eventos
-    console.log('EVENTO PRIVATE==>', cEvent.value, typeModal);
     app.auth().onAuthStateChanged((user) => {
       if (
         (!user && cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC') ||
@@ -76,7 +75,6 @@ const ModalAuth = (props) => {
         (!user && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PRIVATE') ||
         (!cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC' && props.visible)
       ) {
-        console.log('EVENTO==>', cEvent.value);
         setmodalVisible(true);
         handleChangeTabModal('1');
       } else {

@@ -128,6 +128,7 @@ const FormRegister = ({
   basicDataUser = {},
   dataEventUser = {},
   HandleHookForm = () => {},
+  hookValidations = () => {},
 }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
@@ -155,13 +156,6 @@ const FormRegister = ({
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState({});
 
-  // if (Object.keys(initialValues).length > 0) {
-  //   if (!basicDataUser) {
-  //     initialValues.contrasena = '';
-  //     initialValues.password = '';
-  //   }
-  // }
-
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || []
   );
@@ -187,7 +181,7 @@ const FormRegister = ({
         ? cUser.value
         : initialValuesGeneral
     );
-  }, [cUser.value, cEventUser]);
+  }, [cUser.value, cEventUser, dataEventUser, basicDataUser]);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -220,7 +214,10 @@ const FormRegister = ({
       let paisSelected = initialValues && pais[0] ? initialValues[pais[0].name] : '';
       setCountry(paisSelected);
     }
+
+    ValidateEmptyFields(dataEventUser);
   }, []);
+
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
@@ -415,8 +412,20 @@ const FormRegister = ({
     }
   };
 
+  const ValidateEmptyFields = (allValues) => {
+    if (basicDataUser || dataEventUser) {
+      let noneEmpyFields = Object.keys(allValues).filter((m) => allValues[m] == '' || allValues[m] == undefined).length;
+      if (noneEmpyFields == 0 && Object.keys(allValues).length != 0) {
+        hookValidations(false, '');
+      } else {
+        hookValidations(true, 'Llene todos los campos');
+      }
+    }
+  };
+
   const valuesChange = (changedValues, allValues) => {
-    console.log('changedValues', Object.keys(changedValues)[0]);
+    //validar que todos los campos de event user esten llenos
+    ValidateEmptyFields(allValues);
     let e = {
       target: {
         value: changedValues[Object.keys(changedValues)[0]],

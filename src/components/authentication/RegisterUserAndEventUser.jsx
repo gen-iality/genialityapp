@@ -29,6 +29,14 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     loading: false,
   });
 
+  const hookValidations = (status, textError) => {
+    setValidationGeneral({
+      status: status,
+      textError: textError,
+      loading: false,
+    });
+  };
+
   const HandleHookForm = (e, FieldName, picture) => {
     let value = '';
     if (FieldName === 'picture') {
@@ -63,7 +71,12 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     {
       title: 'Second',
       content: (
-        <FormComponent dataEventUser={dataEventUser} basicDataUser={basicDataUser} HandleHookForm={HandleHookForm} />
+        <FormComponent
+          hookValidations={hookValidations}
+          dataEventUser={dataEventUser}
+          basicDataUser={basicDataUser}
+          HandleHookForm={HandleHookForm}
+        />
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -83,7 +96,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.title.error',
-            defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con ese correo.',
+            defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
           }),
         });
       } else {
@@ -116,10 +129,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     return re.test(email);
   }
 
-  useEffect(() => {
+  const ValidateGeneralFields = () => {
     if (basicDataUser.email && basicDataUser.password && basicDataUser.names) {
-      console.log('validar email', validateEmail(basicDataUser.email));
-
       if (
         validateEmail(basicDataUser.email) &&
         basicDataUser.password.length >= 6 &&
@@ -146,15 +157,12 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     } else {
       setbuttonStatus(true);
     }
-
-    // console.log('basicDataUser', basicDataUser);
-    // console.log('dataEventUser', dataEventUser);
-
-    // console.log('completo', {
-    //   ...basicDataUser,
-    //   ...dataEventUser,
-    // });
-  }, [basicDataUser, dataEventUser]);
+  };
+  useEffect(() => {
+    if (current == 0) {
+      ValidateGeneralFields();
+    }
+  }, [basicDataUser, dataEventUser, current]);
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
@@ -166,7 +174,13 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
       <div style={{ marginTop: '30px' }}>
         {current > 0 && (
-          <Button size='large' style={{ margin: '0 8px' }} onClick={() => prev()}>
+          <Button
+            onClick={() => {
+              hookValidations(false, '');
+              prev();
+            }}
+            size='large'
+            style={{ margin: '0 8px' }}>
             Anterior
           </Button>
         )}
@@ -178,7 +192,13 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             {!validationGeneral.status && (
               <>
                 {current < steps.length - 1 && (
-                  <Button disabled={buttonStatus} size='large' type='primary' onClick={() => next()}>
+                  <Button
+                    disabled={buttonStatus}
+                    size='large'
+                    type='primary'
+                    onClick={() => {
+                      next();
+                    }}>
                     Siguiente
                   </Button>
                 )}
