@@ -84,6 +84,7 @@ const RedirectUser = ({ basicDataUser }) => {
   return (
     <>
       <Spin icon={antIcon} />
+      <h1>Iniciando sesión con tu cuenta!</h1>
     </>
   );
 };
