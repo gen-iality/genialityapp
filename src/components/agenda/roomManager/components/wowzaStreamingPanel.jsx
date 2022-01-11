@@ -210,7 +210,7 @@ const WowzaStreamingPanel = ({
                   {linkRolAdmin && (
                     <Button
                       type='primary'
-                      href={transmition == 'StreamYard' ? 'https://streamyard.com/' : linkRolAdmin}
+                      href={transmition == 'StreamYard' ? 'https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts' : linkRolAdmin}
                       target='_blank'>
                       {transmition && 'Ingresar a ' + transmition + ' para transmitir'}
                     </Button>
@@ -326,7 +326,7 @@ const WowzaStreamingPanel = ({
         </Row>
       </Card>
       <br />
-    {livestreamStatus?.state === 'started' && <Card bordered style={{ borderRadius: '10px' }}>
+    {livestreamStatus?.state === 'started' && transmition=='EviusMeet' && <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={24}>
             {linkRolProductor && (
