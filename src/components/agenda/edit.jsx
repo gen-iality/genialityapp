@@ -1195,8 +1195,8 @@ class AgendaEdit extends Component {
                 </Row>
               </TabPane>
               <TabPane tab='Transmisión' key='2'>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
+                <Row /* justify='center' */ wrap gutter={12}>
+                  <Col span={24}>
                     <RoomManager
                       event_id={this.props.event._id}
                       activity_id={this.state.activity_id}

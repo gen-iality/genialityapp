@@ -20,7 +20,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [host_id, setHostId] = useState(null);
   const [host_name, setHostName] = useState(null);
   const [habilitar_ingreso, setHabilitarIngreso] = useState('');
-  const [platform, setPlatform] = useState('');
+  const [platform, setPlatform] = useState('wowza');
   const [vimeo_id, setVimeoId] = useState('');
   const [name_host, setNameHost] = useState('');
   const [avalibleGames, setAvailableGames] = useState();
@@ -65,7 +65,7 @@ export const AgendaContextProvider = ({ children }) => {
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
-        setPlatform(configuration.platform ? configuration.platform : null);
+        setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
         setRoomStatus(configuration.habilitar_ingreso);
         setAvailableGames(configuration.avalibleGames || []);

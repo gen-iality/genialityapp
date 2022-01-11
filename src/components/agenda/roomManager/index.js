@@ -215,7 +215,7 @@ class RoomManager extends Component {
 
   // Se usa al eliminar una sala de zoom, elimnar la informacion asociada a ella, se mantiene la configuración de la misma
   restartData = () => {
-    this.context.setPlatform(null);
+    this.context.setPlatform('wowza');
     this.context.setMeetingId('');
     this.context.setHostId(null);
     this.context.setHostName(null);
