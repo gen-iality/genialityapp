@@ -16,6 +16,9 @@ const EventSectionMenuRigth = (props) => {
   let cEvent = UseEventContext();
   let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useContext(HelperContext);
 
+  React.useEffect(() => {
+    console.log('cEvent datos', cEvent.value);
+  }, [cEvent.value]);
   return (
     <Sider
       className='collapse-chatEvent'
