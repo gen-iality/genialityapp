@@ -46,6 +46,8 @@ const EventSectionRoutes = (props) => {
   let { event_id, event_name } = useParams();
   let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal, typeModal } = useContext(HelperContext);
 
+  console.log('propsmuchahoo', props);
+
   //redirigir a evento Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
     window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
@@ -242,7 +244,12 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <AgendaActividadDetalle key='activity' />
+                <AgendaActividadDetalle
+                  socialzonetabs={{
+                    ...props?.generaltabs,
+                  }}
+                  key='activity'
+                />
               </ThisRouteCanBeDisplayed>
             )
           }

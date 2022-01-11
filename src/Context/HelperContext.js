@@ -111,8 +111,8 @@ export const HelperContextProvider = ({ children }) => {
 
   /*CERRAR Y ABRIR MENU DERECHO*/
 
-  function HandleOpenCloseMenuRigth() {
-    setisCollapsedMenuRigth(!isCollapsedMenuRigth);
+  function HandleOpenCloseMenuRigth(status) {
+    setisCollapsedMenuRigth(status);
   }
 
   /*ENTRAR A CHAT O ATTENDE EN EL MENU*/

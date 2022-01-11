@@ -11,26 +11,19 @@ import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import HelperContext from '../../../Context/HelperContext';
 import { UseSurveysContext } from '../../../Context/surveysContext';
 import { isMobile } from 'react-device-detect';
-import { firestore } from '../../../helpers/firebase';
 import * as SurveyActions from '../../../redux/survey/actions';
 import { CheckinActiviy } from './utils';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
-import HeaderColumnswithContext from './HeaderColumns';
 import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import ImageComponentwithContext from './ImageComponent';
-const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
+const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
-  let {
-    chatAttendeChats,
-    HandleOpenCloseMenuRigth,
-    isCollapsedMenuRigth,
-    currentActivity,
-    handleChangeCurrentActivity,
-    setplatformActivity,
-  } = useContext(HelperContext);
+  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, handleChangeCurrentActivity } = useContext(
+    HelperContext
+  );
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
@@ -64,12 +57,18 @@ const AgendaActividadDetalle = (props) => {
 
     props.setTopBanner(false);
     props.setVirtualConference(false);
-    HandleOpenCloseMenuRigth();
+
+    HandleOpenCloseMenuRigth(false);
+    if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
+      HandleOpenCloseMenuRigth(false);
+    } else {
+      HandleOpenCloseMenuRigth(true);
+    }
 
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
-      HandleOpenCloseMenuRigth();
+      HandleOpenCloseMenuRigth(true);
       handleChangeCurrentActivity(null);
     };
   }, []);

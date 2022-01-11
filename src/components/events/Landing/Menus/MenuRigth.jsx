@@ -39,7 +39,7 @@ const MenuRigth = (props) => {
               </>
             }
             style={{ marginTop: '12px', marginBottom: '22px' }}
-            onClick={() => HandleOpenCloseMenuRigth()}></Menu.Item>
+            onClick={() => HandleOpenCloseMenuRigth(false)}></Menu.Item>
         )}
 
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat) && (
@@ -60,7 +60,7 @@ const MenuRigth = (props) => {
             }
             style={{ paddingTop: '20px' }}
             onClick={() => {
-              HandleOpenCloseMenuRigth();
+              HandleOpenCloseMenuRigth(false);
               HandleChatOrAttende('1');
             }}></Menu.Item>
         )}
@@ -80,7 +80,7 @@ const MenuRigth = (props) => {
             }
             style={{ paddingTop: '20px' }}
             onClick={() => {
-              HandleOpenCloseMenuRigth();
+              HandleOpenCloseMenuRigth(false);
               HandleChatOrAttende('2');
             }}></Menu.Item>
         )}
@@ -103,7 +103,7 @@ const MenuRigth = (props) => {
             }
             style={{ paddingTop: '20px' }}
             onClick={() => {
-              HandleOpenCloseMenuRigth();
+              HandleOpenCloseMenuRigth(false);
               HandleChatOrAttende('3');
             }}></Menu.Item>
         )}
@@ -124,7 +124,7 @@ const MenuRigth = (props) => {
                 }
                 style={{ paddingTop: '20px' }}
                 onClick={() => {
-                  HandleOpenCloseMenuRigth();
+                  HandleOpenCloseMenuRigth(false);
                   HandleChatOrAttende('4');
                 }}></Menu.Item>
             )}

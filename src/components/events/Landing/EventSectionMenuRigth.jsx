@@ -38,7 +38,7 @@ const EventSectionMenuRigth = (props) => {
                 id='button_open_menu'
                 className='animate__animated animate__headShake animate__slower animate__infinite'
                 type='link'
-                onClick={() => HandleOpenCloseMenuRigth()}>
+                onClick={() => HandleOpenCloseMenuRigth(true)}>
                 <ArrowRightOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
               </Button>
               <SocialZone
