@@ -268,7 +268,6 @@ class RoomManager extends Component {
           activity_id,
           meeting_id,
         };
-        console.log('data', data);
         const response = await service.getZoomRoom(data);
         if (
           Object.keys(response).length > 0 &&
@@ -384,6 +383,7 @@ class RoomManager extends Component {
 
   render() {
     const { hasVideoconference, /* select_host_manual, */ host_list } = this.state;
+    const { activity_name } = this.props;
     return (
       <>
         <RoomConfig
@@ -396,6 +396,7 @@ class RoomManager extends Component {
           createZoomRoom={this.createZoomRoom}
           deleteRoom={this.deleteRoom}
           saveConfig={this.saveConfig}
+          activity_name={activity_name}
         />
       </>
     );

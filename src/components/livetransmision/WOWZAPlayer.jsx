@@ -5,7 +5,7 @@ import IconMute from './IconMute';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [platformurl, setPlatformurl] = useState(null);
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [loopBackGround, setLoopBackGround] = useState(false);
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading.mp4?alt=media&token=883ec61c-157a-408b-876c-b09f70402d14';
@@ -21,6 +21,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         let live_stream = await getLiveStream(meeting_id);
         let url = live_stream.player_hls_playback_url;
         setPlatformurl(url);
+        setMuted(true);
       };
       asyncfunction();
     }

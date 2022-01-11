@@ -63,6 +63,8 @@ export default function RoomConfig(props) {
                 meeting_id={meeting_id}
                 activityDispatch={activityDispatch}
                 activityEdit={activityEdit}
+                activity_name={props.activity_name}
+                setMeetingId={setMeetingId}
               />
             ),
           }[platform]
@@ -130,12 +132,12 @@ export default function RoomConfig(props) {
                     <Typography.Title level={3}>{'Crea una transmisión con todo el poder de EVIUS'}</Typography.Title>
                     <Space direction='vertical'>
                       {/** create a meeting or reuse and old one */}
-                      <Radio.Group onChange={onChange} value={useAlreadyCreated}>
+                      {/* <Radio.Group onChange={onChange} value={useAlreadyCreated}>
                         {(platform == 'zoom' || platform == 'zoomExterno' || platform == 'wowza') && (
                           <Radio value={false}>Crear nueva transmisión</Radio>
                         )}
                         <Radio value={true}>Tengo ya una transmisión que quiero usar</Radio>
-                      </Radio.Group>
+                      </Radio.Group> */}
 
                       {/** StoreAlreadyCreatedMeeting */}
                       {useAlreadyCreated ? (
@@ -149,6 +151,8 @@ export default function RoomConfig(props) {
                                   meeting_id={meeting_id}
                                   activityDispatch={activityDispatch}
                                   activityEdit={activityEdit}
+                                  activity_name={props.activity_name}
+                                  setMeetingId={setMeetingId}
                                 />
                               ),
                               zoom: (

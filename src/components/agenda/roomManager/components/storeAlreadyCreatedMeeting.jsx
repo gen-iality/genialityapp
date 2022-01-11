@@ -8,11 +8,11 @@ export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id })
       </Form.Item>
       {meeting_id}
 
-      <Form.Item>
+      {/* <Form.Item>
         <Button type='primary' htmlType='submit'>
           Guardar
         </Button>
-      </Form.Item>
+      </Form.Item> */}
     </>
   );
 }
