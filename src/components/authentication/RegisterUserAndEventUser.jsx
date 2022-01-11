@@ -239,7 +239,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         )}
 
         {validationGeneral.loading ? (
-          <LoadingOutlined style={{ fontSize: '17px' }} />
+          <LoadingOutlined style={{ fontSize: '28px' }} />
         ) : (
           <>
             {!validationGeneral.status && (
@@ -261,7 +261,9 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         )}
       </div>
 
-      {validationGeneral.status && <Alert message={validationGeneral.textError} type='error' />}
+      {validationGeneral.status && (
+        <Alert style={{ marginTop: '5px' }} message={validationGeneral.textError} type='error' />
+      )}
     </div>
   );
 };

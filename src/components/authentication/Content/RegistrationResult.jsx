@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Result, Row, Typography } from 'antd';
+import { Result, Row, Space, Typography } from 'antd';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
@@ -85,10 +85,12 @@ const RedirectUser = ({ basicDataUser }) => {
 
   return (
     <>
-      <Spin icon={antIcon} />
-      <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
-        Iniciando sesión con tu cuenta!
-      </Typography.Text>
+      <Space>
+        <LoadingOutlined style={{ fontSize: '28px' }} />
+        <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+          Iniciando sesión con tu cuenta!
+        </Typography.Text>
+      </Space>
     </>
   );
 };

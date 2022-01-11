@@ -419,7 +419,13 @@ const FormRegister = ({
       if (noneEmpyFields == 0 || Object.keys(allValues).length === 0) {
         hookValidations(false, '');
       } else {
-        hookValidations(true, 'Llene todos los campos');
+        hookValidations(
+          true,
+          intl.formatMessage({
+            id: 'feedback.title.error',
+            defaultMessage: 'Complete los campos solicitados correctamente.',
+          })
+        );
       }
     }
   };
