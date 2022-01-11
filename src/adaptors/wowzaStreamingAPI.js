@@ -12,25 +12,25 @@ const wowzaCLient = axios.create({
   },
 });
 
-const stream_config = {
-  live_stream: {
-    aspect_ratio_height: 720,
-    aspect_ratio_width: 1280,
-    billing_mode: 'pay_as_you_go',
-    broadcast_location: 'us_west_california',
-    delivery_method: 'push',
-    disable_authentication: true,
-    //encoder: 'other_webrtc',
-    encoder: 'other_rtmp',
-    name: 'MyLiveStream',
-    transcoder_type: 'transcoded',
-    target_delivery_protocol: 'hls-https',
-    low_latency: true,
-    player_responsive: true,
-  },
-};
+const createLiveStream = async (activity_name) => {
+  const stream_config = {
+    live_stream: {
+      aspect_ratio_height: 720,
+      aspect_ratio_width: 1280,
+      billing_mode: 'pay_as_you_go',
+      broadcast_location: 'us_west_california',
+      delivery_method: 'push',
+      disable_authentication: true,
+      //encoder: 'other_webrtc',
+      encoder: 'other_rtmp',
+      name: activity_name,
+      transcoder_type: 'transcoded',
+      target_delivery_protocol: 'hls-https',
+      low_latency: true,
+      player_responsive: true,
+    },
+  };
 
-const createLiveStream = async () => {
   const res = await wowzaCLient.post('live_streams/', stream_config, { timeout: 10000 });
   return res.data && res.data.live_stream ? res.data.live_stream : null;
 };

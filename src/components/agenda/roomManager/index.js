@@ -6,7 +6,6 @@ import Moment from 'moment';
 import AgendaContext from '../../../Context/AgendaContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
-
 class RoomManager extends Component {
   constructor(props) {
     super(props);
@@ -62,8 +61,8 @@ class RoomManager extends Component {
   static contextType = AgendaContext;
 
   componentDidMount = async () => {
-    const { event_id} = this.props; 
-    const  activity_id = this.context.activityEdit;
+    const { event_id } = this.props;
+    const activity_id = this.context.activityEdit;
     const { host_list } = this.state;
 
     const host_ids = host_list.map((host) => host.host_id);
@@ -99,8 +98,8 @@ class RoomManager extends Component {
 
   // validacion de existencia de sala e inicializacion de estado
   validationRoom = async () => {
-    const { event_id} = this.props;
-    const  activity_id = this.context.activityEdit;
+    const { event_id } = this.props;
+    const activity_id = this.context.activityEdit;
     const { service } = this.state;
     const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
@@ -176,7 +175,7 @@ class RoomManager extends Component {
     let { name } = e.target ? e.target : nameS;
     let { value } = e.target ? e.target : e;
 
-    this.setState({ [ name ]: value });
+    this.setState({ [name]: value });
     if (nameS === 'select_host_manual') {
       this.context.select_host_manual = e;
     }
@@ -231,8 +230,8 @@ class RoomManager extends Component {
 
   // Método para guarda la información de la configuración
   saveConfig = async () => {
-    const { event_id} = this.props;
-    const  activity_id = this.context.activityEdit;
+    const { event_id } = this.props;
+    const activity_id = this.context.activityEdit;
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
@@ -267,7 +266,6 @@ class RoomManager extends Component {
           activity_id,
           meeting_id,
         };
-        console.log("data", data)
         const response = await service.getZoomRoom(data);
         if (
           Object.keys(response).length > 0 &&
@@ -316,7 +314,7 @@ class RoomManager extends Component {
       agenda: activity_name,
       date_start_zoom,
       date_end_zoom,
-      [ host_field ]: host_value,
+      [host_field]: host_value,
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
 
@@ -383,6 +381,7 @@ class RoomManager extends Component {
 
   render() {
     const { hasVideoconference, /* select_host_manual, */ host_list } = this.state;
+    const { activity_name } = this.props;
     return (
       <>
         <RoomConfig
@@ -395,6 +394,7 @@ class RoomManager extends Component {
           createZoomRoom={this.createZoomRoom}
           deleteRoom={this.deleteRoom}
           saveConfig={this.saveConfig}
+          activity_name={activity_name}
         />
       </>
     );
