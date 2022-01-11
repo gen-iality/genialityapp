@@ -413,9 +413,10 @@ const FormRegister = ({
   };
 
   const ValidateEmptyFields = (allValues) => {
+    console.log('allValues', allValues);
     if (basicDataUser || dataEventUser) {
       let noneEmpyFields = Object.keys(allValues).filter((m) => allValues[m] == '' || allValues[m] == undefined).length;
-      if (noneEmpyFields == 0 && Object.keys(allValues).length != 0) {
+      if (noneEmpyFields == 0 || Object.keys(allValues).length === 0) {
         hookValidations(false, '');
       } else {
         hookValidations(true, 'Llene todos los campos');
