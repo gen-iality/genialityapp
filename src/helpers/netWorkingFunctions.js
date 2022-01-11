@@ -91,15 +91,7 @@ export const isMyContacts = (contact, listContacts) => {
 
 export const haveRequest = (user, listRequest, socialZone = 0) => {
   if (listRequest.length > 0) {
-    /*console.log("user==>",user,socialZone)
-    for(let i=0;i<listRequest.length;i++){
-      if(listRequest[i].id_user_requesting==user?.eventUserId){
-      // console.log("ACAESTOY==>",i)
-      }
-    }*/
-    // console.log("USERREQUEST==>",user)
     let request = listRequest?.filter((userRequest) => socialZone == 0 ? userRequest.id_user_requesting == user?._id : userRequest?.id_user_requesting == user?.eventUserId);
-    //console.log("LISTA==>",request,user?.eventUserId)
     if (request.length > 0) {
       return true;
     }

@@ -1,39 +1,16 @@
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  LoadingOutlined,
-  LockOutlined,
-  MailOutlined,
-  PictureOutlined,
-} from '@ant-design/icons';
-import {
-  Modal,
-  Tabs,
-  Form,
-  Input,
-  Button,
-  Divider,
-  Typography,
-  Space,
-  Grid,
-  Alert,
-  Spin,
-  Image,
-  Skeleton,
-  Upload,
-} from 'antd';
-import FormComponent from '../events/registrationForm/form';
+import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 import { app } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
-import { UsersApi } from '../../helpers/request';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from 'Context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
 import { isHome } from 'helpers/helperEvent';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
+import { UseCurrentUser } from 'Context/userContext';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -64,6 +41,7 @@ const ModalAuth = (props) => {
     HandleControllerLoginVisible,
   } = useContext(HelperContext);
   const cEvent = UseEventContext();
+  const cUser = UseCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
@@ -80,29 +58,52 @@ const ModalAuth = (props) => {
     }
   };
 
-  const isModalVisible = () => {
-    let typeEvent = recordTypeForThisEvent(cEvent);
-    switch (typeEvent) {
-      case 'PRIVATE_EVENT':
-        setmodalVisible(true);
-      case 'PUBLIC_EVENT_WITH_REGISTRATION':
-        setmodalVisible(true);
-      case 'UN_REGISTERED_PUBLIC_EVENT':
-        setmodalVisible(false);
-      default:
-        setmodalVisible(true);
-    }
-  };
-
   useEffect(() => {
-    isModalVisible();
-  }, []);
+    async function isModalVisible() {
+      let typeEvent = recordTypeForThisEvent(cEvent);
+      switch (typeEvent) {
+        case 'PRIVATE_EVENT':
+          setmodalVisible(true);
+          HandleControllerLoginVisible({ visible: true });
+          handleChangeTabModal('1');
+          break;
+
+        case 'PUBLIC_EVENT_WITH_REGISTRATION':
+          setmodalVisible(true);
+          HandleControllerLoginVisible({ visible: true });
+          handleChangeTabModal('2');
+          break;
+
+        case 'UN_REGISTERED_PUBLIC_EVENT':
+          setmodalVisible(false);
+          HandleControllerLoginVisible({ visible: false });
+          break;
+
+        default:
+          setmodalVisible(true);
+          break;
+      }
+    }
+
+    async function isUserAuth() {
+      app.auth().onAuthStateChanged((user) => {
+        console.log('user', user);
+        if (user) {
+          setmodalVisible(false);
+          HandleControllerLoginVisible({ visible: false });
+        } else {
+          isModalVisible();
+        }
+      });
+    }
+
+    isUserAuth();
+  }, [cEvent, cUser]);
 
   useEffect(() => {
     form1.resetFields();
     setErrorRegisterUSer(false);
     setErrorLogin(false);
-    console.log('tabLogin', tabLogin);
   }, [typeModal, tabLogin]);
 
   const DetecError = (code) => {
@@ -143,6 +144,8 @@ const ModalAuth = (props) => {
       .then((response) => {
         if (response.user) {
           console.log('response', response);
+          setLoading(false);
+          HandleControllerLoginVisible({ visible: false });
         }
       })
       .catch((error) => {
@@ -157,31 +160,9 @@ const ModalAuth = (props) => {
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
-  /* console.log('props para eventos', props.cEvent.value?.allow_register, props.cEvent.value?.visibility) */
 
-  // const isVisibleRegister = () => {
-  //   if (
-  //     (props.cEventUser?.value == null &&
-  //       !props.cEvent.value?.allow_register &&
-  //       props.cEvent.value?.visibility === 'PUBLIC') ||
-  //     (props.cEventUser?.value == null &&
-  //       (props.cEvent.value?.allow_register === true || props.cEvent.value?.allow_register === 'true') &&
-  //       props.cEvent.value?.visibility === 'PUBLIC' &&
-  //       props.organization !== 'landing' &&
-  //       props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
-  //       props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
-  //       props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
-  //       props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
-  //       props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
-  //       props.cEvent.value?._id != '61aa5b188b4d7c454c05122e') ||
-  //     props.cEvent?.value == null
-  //   ) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
-
+  // console.log('modalVisible', modalVisible);
+  // console.log('controllerLoginVisible.visible', controllerLoginVisible.visible);
   return (
     modalVisible && (
       <Modal

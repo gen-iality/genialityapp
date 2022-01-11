@@ -19,6 +19,7 @@ import { AgendaContextProvider } from '../Context/AgendaContext';
 import { UseCurrentUser } from 'Context/userContext';
 import loadable from '@loadable/component';
 import ModalAuth from 'components/authentication/ModalAuth';
+import ModalNoRegister from 'components/authentication/ModalNoRegister';
 
 //Code splitting
 const Header = loadable(() => import('./header'));
@@ -138,6 +139,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
                     <Header />
                     <Component {...props} />
                     <ModalAuth />
+                    <ModalNoRegister />
                   </Space>
                 </Layout>
               </SurveysProvider>

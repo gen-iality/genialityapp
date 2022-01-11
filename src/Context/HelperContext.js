@@ -75,7 +75,6 @@ export const HelperContextProvider = ({ children }) => {
   })
 
   const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
-    console.log("HandleControllerLoginVisible", visible, idOrganization, organization, logo)
     setcontrollerLoginVisible({
       visible,
       idOrganization,
@@ -83,7 +82,6 @@ export const HelperContextProvider = ({ children }) => {
       logo,
     })
   }
-
 
 
 
@@ -309,7 +307,6 @@ export const HelperContextProvider = ({ children }) => {
   // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    //console.log("RESPUESTA=>",eventUser)
     setpropertiesOtherprofile({ _id: id, properties: eventUser.properties, eventUserId: eventUser._id });
   };
 

@@ -32,7 +32,6 @@ export default function RoomController(props) {
       });
     });
 
-    console.log("avalibleGames", avalibleGames)
     if (avalibleGames?.length === 0) {
       setListOfGames(gamesData);
       handleGamesSelected('newOrUpdate', '', gamesData);
