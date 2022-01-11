@@ -475,7 +475,7 @@ export const DocumentsApi = {
     return await Actions.getOne(`api/events/${event}/documents/`, id);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`api/events/${event}/documents`, data, id);
+    return await Actions.edit(`api/events/${event}/documents/${id}`, data,true );
   },
   deleteOne: async (id, event) => {
     return await Actions.delete(`api/events/${event}/documents`, id);
