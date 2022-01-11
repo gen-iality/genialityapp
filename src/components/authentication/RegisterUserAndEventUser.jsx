@@ -38,6 +38,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       textError: textError,
       loading: false,
     });
+    setbuttonStatus(status);
   };
 
   const HandleHookForm = (e, FieldName, picture) => {
@@ -160,9 +161,11 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   };
 
   const next = () => {
+    setbuttonStatus(true);
     setValidationGeneral({
       ...validationGeneral,
       loading: true,
+      status: false,
     });
 
     if (current == 0) {
