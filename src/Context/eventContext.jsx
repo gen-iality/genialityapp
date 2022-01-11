@@ -60,7 +60,6 @@ export function CurrentEventProvider({ children }) {
     } else if (event) {
       fetchEvent('eventadmin');
     }
-    /* console.log("que lelga por params",event_id, event_name, event) */
   }, [event_id, event_name, event]);
 
   return (

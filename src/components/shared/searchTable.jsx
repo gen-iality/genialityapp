@@ -11,7 +11,7 @@ class SearchComponent extends Component {
       value: '',
       auxArr: [],
       filtered: [],
-      message: ''
+      message: '',
     };
   }
 
@@ -61,20 +61,18 @@ class SearchComponent extends Component {
       });
     } else {
       if (this.props.kind === 'user') {
-       
         arrAux = this.props.data.filter((item) => {
-          
           if (!item.properties) {
             return false;
           }
-          
+
           let found = false;
           //buscamos coindicencia por cada una de las propiedades
           for (let key in item.properties) {
             let propertyValue = item.properties[key];
             if (!propertyValue) continue;
             propertyValue = String(propertyValue);
-            if(item.properties['names']=='Brayan Triana')console.log('busqueda',item.properties)
+            if (item.properties['names'] == 'Brayan Triana') console.log('busqueda', item.properties);
             found = found || propertyValue.search(new RegExp(value, 'i')) >= 0;
           }
           return found;
@@ -105,7 +103,6 @@ class SearchComponent extends Component {
   handleFilter = (input) => {
     let value = input.target.value;
     this.setState({ value });
-    
 
     // if(value === '*'){
     //   let filtered = this.filterByAllColums('');
@@ -121,16 +118,15 @@ class SearchComponent extends Component {
     }
 
     if (value.length <= 2) {
-      console.log("VALUE ACA==>",value.length)
-      if (value.length === 0 || value=='') {
+      if (value.length === 0 || value == '') {
         this.setState({ showMessage: false, message: '' });
-       
+
         this.props.searchResult(this.props.data.slice(0, this.props.data.length));
       } else {
         this.setState(
           {
             showMessage: true,
-            message: 'short'
+            message: 'short',
           },
           () => this.props.searchResult(false)
         );
@@ -146,7 +142,7 @@ class SearchComponent extends Component {
             id='inputSearch'
             type='text'
             size={this.props.size ? this.props.size : 'large'}
-           // onChange={this.handleFilter}
+            // onChange={this.handleFilter}
             onInput={this.handleFilter}
             placeholder={`Buscar ${this.props.placeholder || ''}`}
             value={this.state.value}
@@ -156,12 +152,17 @@ class SearchComponent extends Component {
               </Tooltip>
             }
           />
-         Total: {(this.props.users && this.props.users.length)?this.props.users.length:(this.props.data && this.props.data.length)?this.props.data.length:"-"}
-        {this.state.showMessage && (
-          <p className='help is-danger'>
-            <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />
-          </p>
-        )}
+          Total:{' '}
+          {this.props.users && this.props.users.length
+            ? this.props.users.length
+            : this.props.data && this.props.data.length
+            ? this.props.data.length
+            : '-'}
+          {this.state.showMessage && (
+            <p className='help is-danger'>
+              <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />
+            </p>
+          )}
         </Form.Item>
       </div>
     );

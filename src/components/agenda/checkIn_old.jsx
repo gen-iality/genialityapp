@@ -145,11 +145,9 @@ class CheckAgenda extends Component {
         item = { ...item, ...attendee, idActivity: item._id };
         return item;
       });
-      // console.log('NEWLIST1==>', newList);
       //NO SE ESTAN ELIMINANDO LOS USUARIOS BIEN HACK PARA QUITARLOS
       newList = newList?.filter((users) => users.user !== null);
       newList = await this.obtenerCheckinAttende(userRef, newList);
-      //console.log("NEWLIST==>",newList)
 
       this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn, properties };

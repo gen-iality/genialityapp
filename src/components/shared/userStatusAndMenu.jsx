@@ -145,7 +145,7 @@ const UserStatusAndMenu = (props) => {
           </Menu.Item>
         </Badge>
 
-        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={showPropsConfirm}>
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={() => showPropsConfirm()}>
           <FormattedMessage id='header.logout' defaultMessage='Salir' />
         </Menu.Item>
       </Menu.ItemGroup>
@@ -155,7 +155,7 @@ const UserStatusAndMenu = (props) => {
       {!props.anonimususer ? (
         <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
       ) : (
-        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={showPropsConfirm}>
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={() => showPropsConfirm()}>
           <FormattedMessage id='header.logout' defaultMessage='Salir' />
         </Menu.Item>
       )}

@@ -18,7 +18,6 @@ import { UseEventContext } from 'Context/eventContext';
 const HeaderColumns = (props) => {
   let { currentActivity } = useContext(HelperContext);
   let cEvent = UseEventContext();
-  console.log('cEvent details==>', cEvent);
   const intl = useIntl();
   return (
     <Row align='middle'>
