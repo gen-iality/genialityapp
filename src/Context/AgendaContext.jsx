@@ -29,6 +29,8 @@ export const AgendaContextProvider = ({ children }) => {
   const [roomStatus, setRoomStatus] = useState('');
   const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventContext);
+  const [transmition, setTransmition] = useState('EviusMeet');
+  const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -64,6 +66,7 @@ export const AgendaContextProvider = ({ children }) => {
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+        console.log('GET CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
@@ -117,6 +120,10 @@ export const AgendaContextProvider = ({ children }) => {
         select_host_manual,
         activityState,
         activityDispatch,
+        transmition,
+        setTransmition,
+        useAlreadyCreated,
+        setUseAlreadyCreated,
       }}>
       {children}
     </AgendaContext.Provider>

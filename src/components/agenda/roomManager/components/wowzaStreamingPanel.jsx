@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Button, Spin, Alert, Typography, Space, Input, Tooltip, message, Row, Col, Card, Tabs } from 'antd';
 import { CopyFilled, CheckCircleFilled } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
@@ -13,6 +13,7 @@ import {
 } from 'adaptors/wowzaStreamingAPI';
 import { realTimeviuschat } from '../../../../helpers/firebase';
 import { UseCurrentUser } from '../../../../Context/userContext';
+import AgendaContext from 'Context/AgendaContext';
 
 const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activityDispatch, activityEdit }) => {
   //Link para eviusmeet dónde se origina el video
@@ -27,6 +28,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
   const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
   const [copySuccessProductor, setCopySuccessProductor] = useState(false);
   const [copySuccessAsistente, setCopySuccessAsistente] = useState(false);
+  const { transmition } = useContext(AgendaContext);
 
   const queryClient = useQueryClient();
   // console.log('innerRender', meeting_id);
@@ -65,7 +67,19 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
 
   // console.log('linkeviusmeets', linkRolProductor);
   useEffect(() => {
-    if (meeting_id) executer_startMonitorStatus(meeting_id);
+    if (meeting_id) initializeStream();
+    async function initializeStream() {
+      try {
+        await executer_startStream();
+        await executer_startMonitorStatus(meeting_id);
+        
+      } catch (e) {
+        await executer_startMonitorStatus(meeting_id);
+        /*console.log('AL TRAER EL MEETING==>', e);
+        let livestreamInitial = { state: 'Finished' };
+        setLivestreamStatus(livestreamInitial);*/
+      }
+    }
   }, [meeting_id]);
 
   const executer_createStream = useMutation(createLiveStream, {
@@ -130,7 +144,12 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
     return (
       <>
         <Spin tip='Loading...' spinning={executer_createStream.isLoading}>
-          <Button onClick={() => executer_createStream.mutate()}>Crear nueva transmisión</Button>
+          <Button
+            onClick={() => {
+              executer_createStream.mutate();
+            }}>
+            Crear nueva transmisión
+          </Button>
         </Spin>
 
         {executer_createStream.isError && (
@@ -155,7 +174,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
   return (
     <>
       <br />
-      <Card bordered style={{borderRadius: '10px'}}>
+      <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={24}>
             {livestreamStatus?.state === 'stopped' ? (
@@ -165,12 +184,15 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
                 }}>
                 Iniciar servidor
               </Button>
-            ) : (
+            ) : livestreamStatus?.state === 'started' ? (
               <Row>
                 <Col span={18}>
                   {linkRolAdmin && (
-                    <Button type='primary' href={linkRolAdmin} target='_blank'>
-                      Ingresar a EviusMeets para transmitir
+                    <Button
+                      type='primary'
+                      href={transmition == 'StreamYard' ? 'https://streamyard.com/' : linkRolAdmin}
+                      target='_blank'>
+                      {transmition && 'Ingresar a ' + transmition + ' para transmitir'}
                     </Button>
                   )}
                 </Col>
@@ -178,21 +200,25 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
                   <Button
                     onClick={() => {
                       executer_stopStream();
-                    }}
-                  >
-                  Detener servidor
-                </Button>
+                    }}>
+                    Detener servidor
+                  </Button>
                 </Col>
                 <Col span={3}>
                   <Button onClick={() => {}}>Reiniciar servidor</Button>
                 </Col>
               </Row>
+            ) : (              
+                <>
+                  <Spin />
+                  Iniciando transmisión...
+                </>              
             )}
           </Col>
         </Row>
       </Card>
       <br />
-      <Card bordered style={{borderRadius: '10px'}}>
+      <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={10}>
             {livestreamStats?.connected.value === 'Yes' ? (
@@ -205,72 +231,72 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
             <Tabs defaultActiveKey='1'>
               <Tabs.TabPane tab={'Datos'} key='1'>
                 <Typography.Text>
-                  <b>Nombre: </b><br />
+                  <b>Nombre: </b>
+                  <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   {livestreamQuery.data.source_connection_information.primary_server} <br />
                 </Typography.Text>
                 <Typography.Text>
-                  <b>ID transmisión: </b><br />
+                  <b>ID transmisión: </b>
+                  <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   {livestreamQuery.data.source_connection_information.stream_name} <br />
                 </Typography.Text>
                 <Typography.Text>
-                  <b>Estado de la transmisión: </b><br />
+                  <b>Estado de la transmisión: </b>
+                  <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   <Space>
-                    {livestreamStatus.state !== 'started' && livestreamStatus.state != 'stopped' && <Spin />}
-                    {livestreamStatus.state}
-                  </Space> <br />
+                    {livestreamStatus?.state !== 'started' &&
+                      livestreamStatus?.state != 'stopped' && <Spin />}
+                    {livestreamStatus?.state}
+                  </Space>{' '}
+                  <br />
                 </Typography.Text>
                 <Typography.Text>
-                  <b>Origin Conectado: </b><br />
+                  <b>Origin Conectado: </b>
+                  <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   <Space>
-                    {livestreamStats && livestreamStats.connected && (
-                      <>
-                        {livestreamStats?.connected.value}
-                      </>
-                    )}
-                  </Space> <br />
+                    {livestreamStats && livestreamStats.connected && <>{livestreamStats?.connected.value}</>}
+                  </Space>{' '}
+                  <br />
                 </Typography.Text>
                 <Typography.Text>
-                  <b>Estado del origen: </b><br />
+                  <b>Estado del origen: </b>
+                  <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   <Space>
-                    {livestreamStats && livestreamStats.connected && (
-                      <>
-                        {livestreamStats?.connected.status}
-                      </>
-                    )}
-                  </Space> <br />
+                    {livestreamStats && livestreamStats.connected && <>{livestreamStats?.connected.status}</>}
+                  </Space>{' '}
+                  <br />
                 </Typography.Text>
                 <Typography.Text>
                   <b>Información:</b> <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   <Space>
-                    {livestreamStats && livestreamStats.connected && (
-                      <>
-                        {livestreamStats?.connected.text}
-                      </>
-                    )}
-                  </Space> <br />
+                    {livestreamStats && livestreamStats.connected && <>{livestreamStats?.connected.text}</>}
+                  </Space>{' '}
+                  <br />
                 </Typography.Text>
               </Tabs.TabPane>
               <Tabs.TabPane tab={'RTMP'} key='2'>
                 <Typography.Text>
-                  <b>RTMP url: </b><br />
+                  <b>RTMP url: </b>
+                  <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   {livestreamQuery.data.source_connection_information.primary_server} <br />
                 </Typography.Text>
                 <Typography.Text>
-                  <b>RTMP clave: </b><br />
+                  <b>RTMP clave: </b>
+                  <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
                   {livestreamQuery.data.source_connection_information.stream_name}
@@ -281,7 +307,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
         </Row>
       </Card>
       <br />
-      <Card bordered style={{borderRadius: '10px'}}>
+    {livestreamStatus?.state === 'started' && <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={24}>
             {linkRolProductor && (
@@ -303,7 +329,8 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
                       }
                     />
                   </Tooltip>
-                </Input.Group> <br />
+                </Input.Group>{' '}
+                <br />
               </>
             )}
             {linkRolAsistente && (
@@ -330,7 +357,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
             )}
           </Col>
         </Row>
-      </Card>
+      </Card>}
       {/* <br />
       <br />
       <p>
@@ -457,7 +484,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
 
       <p>Coloca estos datos en tu plataforma de captura de video para transmitirlo:</p>
       <ul> */}
-        {/* Algunos datos adicionales que se podrían mostrar
+      {/* Algunos datos adicionales que se podrían mostrar
             <li>
               <b>player_embed_code: </b>
               {streamconfig.player_embed_code}
@@ -467,7 +494,7 @@ const WowzaStreamingPanel = ({ meeting_id, created_action, stopped_action, activ
               {streamconfig.player_hls_playback_url}
             </li> */}
 
-        {/* <li>
+      {/* <li>
           <b>RTMP url:</b> {livestreamQuery.data.source_connection_information.primary_server}
         </li>
         <li>
