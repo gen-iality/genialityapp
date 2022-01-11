@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Result, Row } from 'antd';
+import { Result, Row, Typography } from 'antd';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
@@ -40,7 +40,9 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
       {validationGeneral.loading ? (
         <>
           <Row>
-            <h1>{fraseLoading}</h1>
+            <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+              {fraseLoading}
+            </Typography.Text>
           </Row>
         </>
       ) : (
@@ -84,7 +86,9 @@ const RedirectUser = ({ basicDataUser }) => {
   return (
     <>
       <Spin icon={antIcon} />
-      <h1>Iniciando sesión con tu cuenta!</h1>
+      <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+        Iniciando sesión con tu cuenta!
+      </Typography.Text>
     </>
   );
 };
