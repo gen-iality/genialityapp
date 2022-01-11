@@ -92,7 +92,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const handleValidateAccountEvius = () => {
     SearchUserbyEmail(basicDataUser.email).then((resp) => {
-      console.log('resp', resp);
       if (resp.length > 0) {
         setValidationGeneral({
           loading: false,

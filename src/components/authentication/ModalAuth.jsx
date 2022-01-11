@@ -87,7 +87,6 @@ const ModalAuth = (props) => {
 
     async function isUserAuth() {
       app.auth().onAuthStateChanged((user) => {
-        console.log('user', user);
         if (user) {
           setmodalVisible(false);
           HandleControllerLoginVisible({ visible: false });

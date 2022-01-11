@@ -49,7 +49,6 @@ const UserStatusAndMenu = (props) => {
   }
   useEffect(() => {
     if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
-    console.log('aja', !props.cUser?.value?.isAnonymous);
   }, [props.eventId]);
 
   let menu = !props.anonimususer ? (
