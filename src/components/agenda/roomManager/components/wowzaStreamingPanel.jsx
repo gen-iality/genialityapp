@@ -145,7 +145,7 @@ const WowzaStreamingPanel = ({
       success();
       setCopySuccessAsistente(true);
     } else if (type === 'URL') {
-      navigator.clipboard.writeText(livestreamQuery.data.source_connection_information.primary_serve);
+      navigator.clipboard.writeText(livestreamQuery.data.source_connection_information.primary_server);
       success();
       setCopySuccessAsistente(true);
     } else if (type === 'Clave') {
