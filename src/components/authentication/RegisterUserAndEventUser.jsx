@@ -252,7 +252,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                     onClick={() => {
                       next();
                     }}>
-                    Siguiente
+                    {current > 0 ? 'Finalizar' : 'Siguiente'}
                   </Button>
                 )}
               </>
