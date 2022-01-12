@@ -223,6 +223,11 @@ const WowzaStreamingPanel = ({
                       {transmition && 'Ingresar a ' + transmition + ' para transmitir'}
                     </Button>
                   )}
+                  {linkRolAdmin && transmition === 'RTMP' && (
+                    <Typography.Title level={5}>
+                      RTMP
+                    </Typography.Title>
+                  )}
                 </>
                 <Space >
                   <Button
