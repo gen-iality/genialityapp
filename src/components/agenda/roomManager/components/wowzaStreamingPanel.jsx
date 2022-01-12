@@ -323,20 +323,48 @@ const WowzaStreamingPanel = ({
               </Tabs.TabPane>
               { transmition === 'EviusMeet' && (
                 <Tabs.TabPane tab={'RTMP'} key='2'>
-                  <Typography.Text>
-                    <b>RTMP url: </b>
+                  <>
+                    <Typography.Text>
+                      <b>RTMP url:</b>
+                    </Typography.Text>
+                    <Input.Group compact>
+                      <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.primary_server} />
+                      <Tooltip title='Copiar RTMP url'>
+                        <Button
+                          onClick={() => copyToClipboard('URL')}
+                          icon={
+                            copySuccessProductor ? (
+                              <CheckCircleFilled style={{ color: '#52C41A' }} />
+                            ) : (
+                              <CopyFilled style={{ color: '#0089FF' }} />
+                            )
+                          }
+                        />
+                      </Tooltip>
+                    </Input.Group>{' '}
                     <br />
-                  </Typography.Text>
-                  <Typography.Text type='secondary'>
-                    {livestreamQuery.data.source_connection_information.primary_server} <br />
-                  </Typography.Text>
-                  <Typography.Text>
-                    <b>RTMP clave: </b>
-                    <br />
-                  </Typography.Text>
-                  <Typography.Text type='secondary'>
-                    {livestreamQuery.data.source_connection_information.stream_name}
-                  </Typography.Text>
+                  </>
+                  
+                  <>
+                    <Typography.Text>
+                      <b>RTMP clave:</b>
+                    </Typography.Text>
+                    <Input.Group compact>
+                      <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.stream_name} />
+                      <Tooltip title='Copiar RTMP clave'>
+                        <Button
+                          onClick={() => copyToClipboard('Clave')}
+                          icon={
+                            copySuccessAsistente ? (
+                              <CheckCircleFilled style={{ color: '#52C41A' }} />
+                            ) : (
+                              <CopyFilled style={{ color: '#0089FF' }} />
+                            )
+                          }
+                        />
+                      </Tooltip>
+                    </Input.Group>
+                  </>
                 </Tabs.TabPane>
               )}
             </Tabs>
