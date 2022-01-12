@@ -11,8 +11,6 @@ const MainRouter = (props) => {
   useEffect(() => {
     props.dispatch(fetchCategories());
     props.dispatch(fetchTypes());
-
-    console.log('1. CUSER MAIN ROUTER==>', cUser.value);
   }, [cUser.value]);
 
   return (

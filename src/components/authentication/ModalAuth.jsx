@@ -1,36 +1,16 @@
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  LoadingOutlined,
-  LockOutlined,
-  MailOutlined,
-  PictureOutlined,
-} from '@ant-design/icons';
-import {
-  Modal,
-  Tabs,
-  Form,
-  Input,
-  Button,
-  Divider,
-  Typography,
-  Space,
-  Grid,
-  Alert,
-  Spin,
-  Image,
-  Skeleton,
-  Upload,
-} from 'antd';
-import FormComponent from '../events/registrationForm/form';
+import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 import { app } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
-import { UsersApi } from '../../helpers/request';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from 'Context/eventContext';
+import RegisterUserAndEventUser from './RegisterUserAndEventUser';
+import { isHome } from 'helpers/helperEvent';
+import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
+import { UseCurrentUser } from 'Context/userContext';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -52,63 +32,72 @@ const ModalAuth = (props) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
-  let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
+  let {
+    handleChangeTypeModal,
+    typeModal,
+    handleChangeTabModal,
+    tabLogin,
+    controllerLoginVisible,
+    HandleControllerLoginVisible,
+  } = useContext(HelperContext);
   const cEvent = UseEventContext();
+  const cUser = UseCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
 
-  useEffect(() => {
-    if (props.tab) {
-      handleChangeTabModal(props.tab);
+  const isVisibleRegister = () => {
+    let typeEvent = recordTypeForThisEvent(cEvent);
+    switch (typeEvent) {
+      case 'PRIVATE_EVENT':
+        return false;
+      case 'PUBLIC_EVENT_WITH_REGISTRATION':
+        return true;
+      default:
+        return true;
     }
-  }, [props.tab]);
-
-  useEffect(() => {
-    //validar que solo se muestre y active la tab de inicio de sesion para los eventos
-    console.log('EVENTO PRIVATE==>', cEvent.value, typeModal);
-    app.auth().onAuthStateChanged((user) => {
-      if (
-        (!user && cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC') ||
-        (!user && !window.location.toString().includes('landing') && !window.location.toString().includes('event')) ||
-        (!user && !cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PRIVATE') ||
-        (!cEvent?.value?.allow_register && cEvent?.value?.visibility == 'PUBLIC' && props.visible)
-      ) {
-        console.log('EVENTO==>', cEvent.value);
-        setmodalVisible(true);
-        handleChangeTabModal('1');
-      } else {
-        setmodalVisible(false);
-      }
-    });
-
-    // if (
-    //   props.cEvent.value?._id === '61816f5a039c0f2db65384a2' ||
-    //   props.cEvent.value?._id === '6193acf6f3b1800733678a64' ||
-    //   props.cEvent.value?._id === '61aa596d8fe0525f9a623c74' ||
-    //   props.cEvent.value?._id === '61aa59af8b4d7c454c051224' ||
-    //   props.cEvent.value?._id === '61aa5a007060fa339c7de8b5' ||
-    //   props.cEvent.value?._id === '61aa5a518fe0525f9a623c7d' ||
-    //   props.cEvent.value?._id === '61aa5adccf4598684c160363' ||
-    //   props.cEvent.value?._id === '61aa5b188b4d7c454c05122e'
-    // ) {
-    //   handleChangeTabModal('1');
-    // }
-
-    return () => {
-      form1.resetFields();
-    };
-  }, [props.cUser.value, props.visible]);
-
-  const registerUser = async (values) => {
-    setLoading(true);
-    try {
-      let resp = await UsersApi.createUser(values);
-    } catch (error) {
-      setErrorRegisterUSer(true);
-    }
-    setLoading(false);
   };
+
+  useEffect(() => {
+    async function isModalVisible() {
+      let typeEvent = recordTypeForThisEvent(cEvent);
+      switch (typeEvent) {
+        case 'PRIVATE_EVENT':
+          setmodalVisible(true);
+          HandleControllerLoginVisible({ visible: true });
+          handleChangeTabModal('1');
+          break;
+
+        case 'PUBLIC_EVENT_WITH_REGISTRATION':
+          setmodalVisible(true);
+          HandleControllerLoginVisible({ visible: true });
+          handleChangeTabModal('2');
+          break;
+
+        case 'UN_REGISTERED_PUBLIC_EVENT':
+          setmodalVisible(false);
+          HandleControllerLoginVisible({ visible: false });
+          break;
+
+        default:
+          setmodalVisible(true);
+          break;
+      }
+    }
+
+    async function isUserAuth() {
+      app.auth().onAuthStateChanged((user) => {
+        if (user) {
+          setmodalVisible(false);
+          HandleControllerLoginVisible({ visible: false });
+        } else {
+          isModalVisible();
+        }
+      });
+    }
+
+    isUserAuth();
+  }, [cEvent, cUser]);
 
   useEffect(() => {
     form1.resetFields();
@@ -154,6 +143,8 @@ const ModalAuth = (props) => {
       .then((response) => {
         if (response.user) {
           console.log('response', response);
+          setLoading(false);
+          HandleControllerLoginVisible({ visible: false });
         }
       })
       .catch((error) => {
@@ -168,42 +159,20 @@ const ModalAuth = (props) => {
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
-  /* console.log('props para eventos', props.cEvent.value?.allow_register, props.cEvent.value?.visibility) */
 
-  const isVisibleRegister = () => {
-    if (
-      (props.cEventUser?.value == null &&
-        !props.cEvent.value?.allow_register &&
-        props.cEvent.value?.visibility === 'PUBLIC') ||
-      (props.cEventUser?.value == null &&
-        (props.cEvent.value?.allow_register === true || props.cEvent.value?.allow_register === 'true') &&
-        props.cEvent.value?.visibility === 'PUBLIC' &&
-        props.organization !== 'landing' &&
-        props.cEvent.value?._id != '61aa596d8fe0525f9a623c74' &&
-        props.cEvent.value?._id != '61aa59af8b4d7c454c051224' &&
-        props.cEvent.value?._id != '61aa5a007060fa339c7de8b5' &&
-        props.cEvent.value?._id != '61aa5a518fe0525f9a623c7d' &&
-        props.cEvent.value?._id != '61aa5adccf4598684c160363' &&
-        props.cEvent.value?._id != '61aa5b188b4d7c454c05122e') ||
-      props.cEvent?.value == null
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
+  // console.log('modalVisible', modalVisible);
+  // console.log('controllerLoginVisible.visible', controllerLoginVisible.visible);
   return (
     modalVisible && (
       <Modal
-        maskStyle={props.organization == 'landing' && { backgroundColor: '#333333' }}
-        onCancel={props.organization == 'register' ? () => props.closeModal() : null}
+        maskStyle={props.organization == 'organization' && { backgroundColor: '#333333' }}
+        onCancel={() => HandleControllerLoginVisible({ visible: false })}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
         footer={null}
         zIndex={1000}
-        visible={props.organization == 'register' ? props.visible : typeModal == null ? true : false}
-        closable={props.organization == 'register' ? true : false}>
+        visible={controllerLoginVisible.visible}
+        closable={controllerLoginVisible.organization !== 'organization' ? true : false}>
         <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane
             tab={intl.formatMessage({
@@ -217,7 +186,7 @@ const ModalAuth = (props) => {
               onFinishFailed={onFinishFailed}
               layout='vertical'
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-              {props.organization == 'landing' && (
+              {props.organization == 'organization' && (
                 <Form.Item>
                   <Image
                     style={{ borderRadius: '100px', objectFit: 'cover' }}
@@ -338,27 +307,13 @@ const ModalAuth = (props) => {
             {props.organization !== 'landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
             {props.organization !== 'landing' && (
               <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-                {/* <Typography.Paragraph type='secondary'>
-                {intl.formatMessage({
-                  id: 'modal.info.options',
-                  defaultMessage: 'Mira otras formas de entrar al evento',
-                })}
-              </Typography.Paragraph> */}
                 <Space direction='vertical' style={{ width: '100%' }}>
-                  {/* <Button
-                  disabled={loading}
-                  block
-                  style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
-                  size='large'>
-                  Invitado anónimo
-                </Button> */}
                   <Button
                     icon={<MailOutlined />}
                     disabled={loading}
                     onClick={() => handleChangeTypeModal('mail')}
                     type='primary'
                     block
-                    // style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                     size='large'>
                     {intl.formatMessage({
                       id: 'modal.option.send',
@@ -372,7 +327,6 @@ const ModalAuth = (props) => {
           {isVisibleRegister() && (
             <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
               <div
-                // className='asistente-list'
                 style={{
                   height: 'auto',
                   overflowY: 'hidden',
@@ -381,11 +335,20 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                <RegisterUser
-                  screens={screens}
-                  stylePaddingMobile={stylePaddingMobile}
-                  stylePaddingDesktop={stylePaddingDesktop}
-                />
+                {isHome() ? (
+                  <RegisterUser
+                    screens={screens}
+                    stylePaddingMobile={stylePaddingMobile}
+                    stylePaddingDesktop={stylePaddingDesktop}
+                  />
+                ) : (
+                  <RegisterUserAndEventUser
+                    screens={screens}
+                    stylePaddingMobile={stylePaddingMobile}
+                    stylePaddingDesktop={stylePaddingDesktop}
+                  />
+                )}
+
                 {/* {props.organization != 'register' && <FormComponent />}
                   {props.organization == 'register' && (
                     <FormComponent

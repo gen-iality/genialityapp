@@ -124,18 +124,13 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
           setSelectedDate(eventDatesRange[0]);
         }
       } catch (error) {
-        /* console.error(error);
-        notification.error({
-          message: 'Error',
-          description: 'Obteniendo las citas del usuario',
-        });*/
       } finally {
         setLoading(false);
       }
     };
 
     loadData();
-  }, [cEvent.status, targetEventUserId, reloadFlag]);
+  }, [targetEventUserId, reloadFlag]);
 
   async function reloadData(resp) {
     setReloadFlag(!reloadFlag);

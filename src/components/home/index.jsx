@@ -68,7 +68,6 @@ class Home extends Component {
 
       console.log('resp.meta.current_page', resp.meta.current_page, pageSize, resp.meta.total);
       //FILTERED
-      //&filtered=[{%22field%22:%22datetime_to%22,%22value%22:%222021-10-10%22,%22comparator%22:%22%3E%22}]
       const events = resp.data.filter((item) => item?.organizer);
 
       this.setState({ events, loading: false, current_page: resp.meta.current_page, total: resp.meta.total });
@@ -89,47 +88,6 @@ class Home extends Component {
     pageSize = pageSize + page;
     this.setState({ pageSize }, async () => await this.fetchEvent(type));
   };
-
-  //ESTE MÉTODO GENERA BUG Y HACE CARGAR TODOS LOS EVENTOS
-  /* UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log("EJECUTADO UNSAFE===>")
-    const search = nextProps.location.search;
-    const params = new URLSearchParams(search);
-    const type = params.get('type');
-    const category = params.get('category');
-    let query = '?';
-    let queryFilter = [];
-    if (type) {
-      queryFilter.push({ id: 'event_type_id', value: type, comparator: 'like' });
-    }
-    if (category) {
-      queryFilter.push({ id: 'category_ids', value: category, comparator: 'like' });
-    }
-    queryFilter = JSON.stringify(queryFilter);
-    query = query + `filtered=${queryFilter}`;
-    this.setState({ loading: true });
-    API.get(`/api/events${query}`)
-      .then(({ data }) => {
-        const events = data.data.filter((item) => item.organizer);
-        this.setState({ events, loading: false, type, category });
-      })
-      .catch((error) => {
-        if (error.response) {
-          const {
-            status,
-            data: { message },
-          } = error.response;
-
-          if (status === 401) this.setState({ timeout: true, loader: false });
-          else this.setState({ serverError: true, loader: false, errorData: { status, message } });
-        } else {
-          let errorData = { message: error.message };
-
-          errorData.status = 520;
-          this.setState({ serverError: true, loader: false, errorData });
-        }
-      });
-  }*/
 
   render() {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;

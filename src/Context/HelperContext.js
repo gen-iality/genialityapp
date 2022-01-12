@@ -28,44 +28,62 @@ export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventuser = UseUserEvent();
-  const [containtNetworking, setcontaintNetworking] = useState(false);
-  const [infoAgenda, setinfoAgenda] = useState(null);
-  const [isNotification, setisNotification] = useState(initialStateNotification);
-  const [totalSolicitudAmistad, setTotalSolicitudAmistad] = useState(0);
-  const [totalsolicitudAgenda, setTotalsolicitudAgenda] = useState(0);
-  const [totalsolicitudes, setTotalsolicitudes] = useState(0);
-  const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
-  const [propertiesProfile, setpropertiesProfile] = useState();
-  const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null);
-  const [activitiesEvent, setactivitiesEvent] = useState(null);
-  const [chatActual, setchatActual] = useState({
+  const [ containtNetworking, setcontaintNetworking ] = useState(false);
+  const [ infoAgenda, setinfoAgenda ] = useState(null);
+  const [ isNotification, setisNotification ] = useState(initialStateNotification);
+  const [ totalSolicitudAmistad, setTotalSolicitudAmistad ] = useState(0);
+  const [ totalsolicitudAgenda, setTotalsolicitudAgenda ] = useState(0);
+  const [ totalsolicitudes, setTotalsolicitudes ] = useState(0);
+  const [ isOpenDrawerProfile, setisOpenDrawerProfile ] = useState(false);
+  const [ propertiesProfile, setpropertiesProfile ] = useState();
+  const [ propertiesOtherprofile, setpropertiesOtherprofile ] = useState(null);
+  const [ activitiesEvent, setactivitiesEvent ] = useState(null);
+  const [ chatActual, setchatActual ] = useState({
     chatid: null,
     idactualuser: null,
     idotheruser: null,
     chatname: null,
   });
-  const [contacts, setContacts] = useState([]);
-  const [privateChatsList, setPrivatechatlist] = useState();
-  const [attendeeList, setAttendeeList] = useState({});
-  const [attendeeListPresence, setAttendeeListPresence] = useState({});
-  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
-  const [chatAttendeChats, setchatAttendeChats] = useState('1');
-  const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
-  const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
-  const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
+  const [ contacts, setContacts ] = useState([]);
+  const [ privateChatsList, setPrivatechatlist ] = useState();
+  const [ attendeeList, setAttendeeList ] = useState({});
+  const [ attendeeListPresence, setAttendeeListPresence ] = useState({});
+  const [ isCollapsedMenuRigth, setisCollapsedMenuRigth ] = useState(true);
+  const [ chatAttendeChats, setchatAttendeChats ] = useState('1');
+  const [ chatPublicPrivate, setchatPublicPrivate ] = useState('public');
+  const [ eventPrivate, seteventPrivate ] = useState({ private: false, section: 'evento' });
+  const [ totalPrivateMessages, settotalPrivateMessages ] = useState(0);
   const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
-  const [requestSend, setRequestSend] = useState([]);
-  const [typeModal, setTypeModal] = useState(null);
-  const [tabLogin, setTabLogin] = useState('2');
-  const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
-  const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
-  const [gameData, setGameData] = useState('');
-  const [currentActivity, setcurrenActivity] = useState(null);
-  const [gameRanking, setGameRanking] = useState([]);
-  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
-  const [tabsGenerals, settabsGenerals] = useState();
-  const [updateEventUser, setUpdateEventUser] = useState(false);
-  const [register, setRegister] = useState(null);
+  const [ requestSend, setRequestSend ] = useState([]);
+  const [ typeModal, setTypeModal ] = useState(null);
+  const [ tabLogin, setTabLogin ] = useState('2');
+  const [ visibleLoginEvents, setVisibleLoginEvents ] = useState(false);
+  const [ reloadTemplatesCms, setreloadTemplatesCms ] = useState(false);
+  const [ gameData, setGameData ] = useState('');
+  const [ currentActivity, setcurrenActivity ] = useState(null);
+  const [ gameRanking, setGameRanking ] = useState([]);
+  const [ theUserHasPlayed, setTheUserHasPlayed ] = useState(null);
+  const [ tabsGenerals, settabsGenerals ] = useState();
+  const [ updateEventUser, setUpdateEventUser ] = useState(false);
+  const [ register, setRegister ] = useState(null);
+
+  const [ controllerLoginVisible, setcontrollerLoginVisible ] = useState({
+    visible: false,
+    idOrganization: '',
+    organization: '',
+    logo: '',
+  })
+
+  const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
+    setcontrollerLoginVisible({
+      visible,
+      idOrganization,
+      organization,
+      logo,
+    })
+  }
+
+
 
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
@@ -89,8 +107,8 @@ export const HelperContextProvider = ({ children }) => {
   useEffect(() => {
     if (!cEvent.value) return;
     let firstroute = Object.keys(cEvent.value.itemsMenu);
-    if (firstroute[0] != undefined) {
-      seteventPrivate({ private: false, section: firstroute[0] });
+    if (firstroute[ 0 ] != undefined) {
+      seteventPrivate({ private: false, section: firstroute[ 0 ] });
     }
   }, []);
 
@@ -133,11 +151,11 @@ export const HelperContextProvider = ({ children }) => {
     if (data == null) return;
 
     let messages = data.participants.filter((participant) => participant.idparticipant != cUser.value.uid);
-    settotalPrivateMessages(parseInt(totalPrivateMessages - messages[0].countmessajes));
-    messages[0].countmessajes = 0;
+    settotalPrivateMessages(parseInt(totalPrivateMessages - messages[ 0 ].countmessajes));
+    messages[ 0 ].countmessajes = 0;
     //otro participante
     let otherparticipant = data.participants.filter((participant) => participant.idparticipant == cUser.value.uid);
-    let participants = [messages[0], otherparticipant[0]];
+    let participants = [ messages[ 0 ], otherparticipant[ 0 ] ];
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/' + data.id)
       .set({ participants: participants, ultimo_mensaje: '' }, { merge: true });
@@ -289,7 +307,6 @@ export const HelperContextProvider = ({ children }) => {
   // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    //console.log("RESPUESTA=>",eventUser)
     setpropertiesOtherprofile({ _id: id, properties: eventUser.properties, eventUserId: eventUser._id });
   };
 
@@ -312,10 +329,10 @@ export const HelperContextProvider = ({ children }) => {
       if (data === null) return;
 
       Object.keys(data).map((key) => {
-        let attendee = attendeeListClone[key] || {};
-        attendee['state'] = data[key]['state'];
-        attendee['last_changed'] = data[key]['last_changed'];
-        attendeeListClone[key] = attendee;
+        let attendee = attendeeListClone[ key ] || {};
+        attendee[ 'state' ] = data[ key ][ 'state' ];
+        attendee[ 'last_changed' ] = data[ key ][ 'last_changed' ];
+        attendeeListClone[ key ] = attendee;
         datalist.push(attendee);
       });
 
@@ -335,7 +352,7 @@ export const HelperContextProvider = ({ children }) => {
 
   const containsNetWorking = () => {
     if (cEvent.value != undefined) {
-      cEvent.value.itemsMenu && cEvent.value.itemsMenu['networking'] !== undefined && setcontaintNetworking(true);
+      cEvent.value.itemsMenu && cEvent.value.itemsMenu[ 'networking' ] !== undefined && setcontaintNetworking(true);
     }
   };
 
@@ -356,7 +373,7 @@ export const HelperContextProvider = ({ children }) => {
 
   const obtenerNombreActivity = (activityID) => {
     const act = infoAgenda && infoAgenda.filter((ac) => ac._id == activityID);
-    return act && act.length > 0 ? act[0] : null;
+    return act && act.length > 0 ? act[ 0 ] : null;
   };
 
   function visibilityLoginEvents(value) {
@@ -371,14 +388,14 @@ export const HelperContextProvider = ({ children }) => {
       getProperties(cEvent.value._id);
       GetActivitiesEvent(cEvent.value._id);
     }
-  }, [cEvent.value]);
+  }, [ cEvent.value ]);
 
   /* CARGAR CHAT PRIVADOS */
   useEffect(() => {
     if (cEvent.value == null || cUser.value == null || cUser.value == undefined) return;
     firestore
       .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
-      .onSnapshot(function(querySnapshot) {
+      .onSnapshot(function (querySnapshot) {
         let list = [];
         let data;
         let newmsj = 0;
@@ -396,8 +413,8 @@ export const HelperContextProvider = ({ children }) => {
           let countsmsj =
             privateuser?.participants &&
             privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
-          if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
-            totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
+          if (countsmsj && countsmsj[ 0 ]?.countmessajes != undefined) {
+            totalNewMessages = totalNewMessages + countsmsj[ 0 ].countmessajes;
           }
         });
 
@@ -413,13 +430,13 @@ export const HelperContextProvider = ({ children }) => {
       .collection(colletion_name)
       .orderBy('state_id', 'asc')
       .limit(100)
-      .onSnapshot(function(querySnapshot) {
+      .onSnapshot(function (querySnapshot) {
         let list = {};
 
         querySnapshot.forEach((doc) => {
           attendee = doc.data();
-          let localattendee = attendeeList[attendee.user?.uid] || {};
-          list[attendee.user?.uid] = { ...localattendee, ...attendee };
+          let localattendee = attendeeList[ attendee.user?.uid ] || {};
+          list[ attendee.user?.uid ] = { ...localattendee, ...attendee };
         });
 
         setAttendeeList(list);
@@ -427,7 +444,7 @@ export const HelperContextProvider = ({ children }) => {
 
     /*DETERMINA ONLINE Y OFFLINE DE LOS USERS*/
     monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
-  }, [cEvent.value, cUser.value]);
+  }, [ cEvent.value, cUser.value ]);
 
   useEffect(() => {
     if (cEvent.value == null || cUser.value == null || cUser.value == undefined) return;
@@ -435,15 +452,15 @@ export const HelperContextProvider = ({ children }) => {
       let ultimomsj = null;
       firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
-        .onSnapshot(function(querySnapshot) {
+        .onSnapshot(function (querySnapshot) {
           if (
-            querySnapshot.docChanges()[0] &&
-            querySnapshot.docChanges()[0].type == 'modified' &&
-            querySnapshot.docChanges()[0].doc.data().ultimo_mensaje != '' &&
-            ultimomsj != querySnapshot.docChanges()[0].doc.data().ultimo_mensaje
+            querySnapshot.docChanges()[ 0 ] &&
+            querySnapshot.docChanges()[ 0 ].type == 'modified' &&
+            querySnapshot.docChanges()[ 0 ].doc.data().ultimo_mensaje != '' &&
+            ultimomsj != querySnapshot.docChanges()[ 0 ].doc.data().ultimo_mensaje
           ) {
-            openNotification(querySnapshot.docChanges()[0].doc.data());
-            ultimomsj = querySnapshot.docChanges()[0].doc.data().ultimo_mensaje;
+            openNotification(querySnapshot.docChanges()[ 0 ].doc.data());
+            ultimomsj = querySnapshot.docChanges()[ 0 ].doc.data().ultimo_mensaje;
           }
         });
     }
@@ -451,7 +468,7 @@ export const HelperContextProvider = ({ children }) => {
     if (cEvent.value != null) {
       fethcNewMessages();
     }
-  }, [cEvent.value, cUser.value]);
+  }, [ cEvent.value, cUser.value ]);
 
   useEffect(() => {
     /*NOTIFICACIONES POR ACTIVIDAD*/
@@ -463,7 +480,7 @@ export const HelperContextProvider = ({ children }) => {
         .collection('activities')
         .onSnapshot((querySnapshot) => {
           if (querySnapshot.empty) return;
-          let change = querySnapshot.docChanges()[0];
+          let change = querySnapshot.docChanges()[ 0 ];
           if (
             change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
             obtenerNombreActivity(change.doc.id)?.name != null &&
@@ -492,7 +509,7 @@ export const HelperContextProvider = ({ children }) => {
     if (cEvent.value != null) {
       fetchActivityChange();
     }
-  }, [cEvent.value, firestore, infoAgenda]);
+  }, [ cEvent.value, firestore, infoAgenda ]);
 
   useEffect(() => {
     async function fetchNetworkingChange() {
@@ -506,7 +523,7 @@ export const HelperContextProvider = ({ children }) => {
           let contNotifications = 0;
           let notAg = [];
           let notAm = [];
-          let change = querySnapshot.docChanges()[0];
+          let change = querySnapshot.docChanges()[ 0 ];
 
           querySnapshot.docs.forEach((doc) => {
             let notification = doc.data();
@@ -539,13 +556,13 @@ export const HelperContextProvider = ({ children }) => {
     if (cUser.value != null && cUser.value != undefined && cEvent.value != null) {
       fetchNetworkingChange();
     }
-  }, [cUser.value, cEvent.value]);
+  }, [ cUser.value, cEvent.value ]);
 
   useEffect(() => {
     if (cEventuser.value != null && cEvent.value != null) {
       obtenerContactos();
     }
-  }, [cEventuser.value, cEvent.value]);
+  }, [ cEventuser.value, cEvent.value ]);
 
   /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
   function GetPermissionsEvent() {
@@ -556,8 +573,8 @@ export const HelperContextProvider = ({ children }) => {
         Object.values(cEvent.value.itemsMenu)?.filter((item) => item.section === 'tickets');
       if (
         routePermissions &&
-        routePermissions[0] &&
-        routePermissions[0].permissions == 'assistants' &&
+        routePermissions[ 0 ] &&
+        routePermissions[ 0 ].permissions == 'assistants' &&
         cEventuser.value == null
       ) {
         seteventPrivate({
@@ -628,6 +645,8 @@ export const HelperContextProvider = ({ children }) => {
         setUpdateEventUser,
         register,
         setRegister,
+        HandleControllerLoginVisible,
+        controllerLoginVisible
       }}>
       {children}
     </HelperContext.Provider>

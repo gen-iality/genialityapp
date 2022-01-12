@@ -115,7 +115,6 @@ const Landing = (props) => {
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
       import('../../../helpers/firebase').then((fb) => {
-        console.log('cEventContext', cEventContext);
         fb.firestore
           .collection('events')
           .doc(cEventContext.value?._id)
@@ -152,8 +151,8 @@ const Landing = (props) => {
   return (
     <>
       {/* <ModalFeedback /> */}
-      <ModalNoRegister />
-      <ModalAuth organization='event' />
+      {/* <ModalNoRegister /> */}
+      {/* <ModalAuth /> */}
       <ModalLoginHelpers />
       <ModalPermission />
       <ModalFeedback />

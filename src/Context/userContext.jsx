@@ -45,18 +45,6 @@ export function CurrentUserProvider({ children }) {
             setCurrentUser({ status: 'LOADED', value: null });
           }
         });
-
-        // app.auth().isSignInWithEmailLink((user) => {
-        //   if (user) {
-        //     user.getIdToken().then(async function(idToken) {
-        //       privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
-        //         setCurrentUser({ status: 'LOADED', value: response.data });
-        //       });
-        //     });
-        //   } else {
-        //     setCurrentUser({ status: 'LOADED', value: null });
-        //   }
-        // });
       } catch (e) {
         setCurrentUser({ status: 'ERROR', value: null });
       }

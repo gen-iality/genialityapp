@@ -20,26 +20,27 @@ function DetailsProduct(props) {
   useEffect(() => {
     let idProduct = props.match.params.id;
     let eventId = props.match.params.event_id;
-    firestore.collection('config').doc(eventId).onSnapshot((onSnapshot)=>{
-       if (onSnapshot.exists){        
-          let doc=onSnapshot.data()          
-          setHability(doc.data.habilitar_subasta)
-          setMessage(doc.data.message)
-         
-       }else{
-         setHability(false)
-       }
-    })
+    firestore
+      .collection('config')
+      .doc(eventId)
+      .onSnapshot((onSnapshot) => {
+        if (onSnapshot.exists) {
+          let doc = onSnapshot.data();
+          setHability(doc.data.habilitar_subasta);
+          setMessage(doc.data.message);
+        } else {
+          setHability(false);
+        }
+      });
 
     if (idProduct && eventId && (!updateValue || updateValue)) {
-      setEventId(eventId)
+      setEventId(eventId);
       obtenerDetalleProduct();
     }
     async function obtenerDetalleProduct() {
-      let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);    
+      let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct);
-        console.log("PRODUCT DETAILS==>",detalleProduct)
       }
       setLoading(false);
     }
@@ -47,15 +48,14 @@ function DetailsProduct(props) {
 
   return (
     <>
-      
       {product && !loading && (
         <Row style={{ padding: '24px' }} gutter={[8, 8]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card style={{ width: '100%', height: '450pxs', display: 'grid', justifyContent: 'center' }}>
-              <Carousel showThumbs={product &&
-                  product.image &&
-                  product.image
-                    .filter((img) => img != null).length === 1 ? false : true}>
+              <Carousel
+                showThumbs={
+                  product && product.image && product.image.filter((img) => img != null).length === 1 ? false : true
+                }>
                 {product &&
                   product.image &&
                   product.image
@@ -72,15 +72,25 @@ function DetailsProduct(props) {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Card >
+            <Card>
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
-                {product && (product.price || product.start_price) && <OfertaProduct updateValues={setUpdateValue} hability={habilty} messageF={messageF} product={product} eventId={eventId} />}
-               {product && product.by && <Divider orientation='left'>
-                  <Title style={{ marginBottom: '0px' }} level={5}>
-                    Artista
-                  </Title>
-                </Divider>}
+                {product && (product.price || product.start_price) && (
+                  <OfertaProduct
+                    updateValues={setUpdateValue}
+                    hability={habilty}
+                    messageF={messageF}
+                    product={product}
+                    eventId={eventId}
+                  />
+                )}
+                {product && product.by && (
+                  <Divider orientation='left'>
+                    <Title style={{ marginBottom: '0px' }} level={5}>
+                      Artista
+                    </Title>
+                  </Divider>
+                )}
                 {product && product.by && <Text>{product && product.by ? product.by : 'Sin Artista'} </Text>}
                 <Divider orientation='left'>
                   <Title level={5}>Descripción</Title>
