@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { message as Message, message } from 'antd';
+import { message as Message, message, Modal } from 'antd';
 import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
 import AgendaContext from '../../../Context/AgendaContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 class RoomManager extends Component {
   constructor(props) {
@@ -367,18 +368,51 @@ class RoomManager extends Component {
 
   //Eliminar trasmisión de zoom
   deleteRoom = async () => {
-    const { service, meeting_id, platform } = this.state;
-    const { event_id } = this.props;
+    let self = this;
+    const { service, meeting_id, platform } = self.state;
+    const { event_id } = self.props;
 
-    // Si es una sala de zoom se elimina de la agenda de la api zoom
-    if (platform === 'zoom' || platform === 'zoomExterno') {
-      const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
-      if (updatedData.status === 200) {
-        message.success('Transmisión de Zoom eliminada!');
-      }
-    }
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la transmisión?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Eliminar transmisión',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const loading = message.open({
+          key: 'loading',
+          type: 'loading',
+          content: <> Por favor espere miestras borra la transmisión...</>,
+        });
+        const onHandlerRemove = async () => {
+          try {
+             // Si es una sala de zoom se elimina de la agenda de la api zoom
+            if (platform === 'zoom' || platform === 'zoomExterno') {
+              const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
+              if (updatedData.status === 200) {
+                message.success('Transmisión de Zoom eliminada!');
+              }
+            }
 
-    this.restartData();
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la transmisión correctamente!</>,
+            });
+            self.restartData();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: <>Hubo un error eliminando la transmisión</>,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+   
   };
 
   render() {

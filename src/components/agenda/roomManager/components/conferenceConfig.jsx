@@ -16,8 +16,8 @@ export default function ConferenceConfig({
         <Row gutter={[16, 16]} justify='space-between' align='middle'>
           <Col>
             {/* <Space direction='horizontal'> */}
-              <Form.Item
-                label={'Estado de videoconferencia'}
+              {/* <Form.Item
+                label={'Estado de la transmisión para tus asistentes'}
                 tooltip={
                   <>
                     {'Si desea volver a elegir otra plataforma seleccione el siguiente botón'}
@@ -36,7 +36,20 @@ export default function ConferenceConfig({
                   <Option value='open_meeting_room'>En vivo</Option>
                   <Option value='ended_meeting_room'>Finalizada</Option>
                 </Select>
-              </Form.Item>
+              </Form.Item> */}
+              <Space >
+                <label className='label'>Estado de la transmisión para tus asistentes: </label>
+                <Select
+                  value={roomStatus}
+                  onChange={(value) => {
+                    setRoomStatus(value);
+                  }}>
+                  <Option value=''>Actividad creada</Option>
+                  <Option value='closed_meeting_room'>Iniciará pronto</Option>
+                  <Option value='open_meeting_room'>En vivo</Option>
+                  <Option value='ended_meeting_room'>Finalizada</Option>
+                </Select>
+              </Space>
              {/*  <Text>
                 <Text strong>Platforma: </Text>
                 {platform}

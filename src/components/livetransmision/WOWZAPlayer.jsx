@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { getLiveStream, getLiveStreamStatus, getLiveStreamStats } from 'adaptors/wowzaStreamingAPI';
 import IconMute from './IconMute';
+import { AudioMutedOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [platformurl, setPlatformurl] = useState(null);
@@ -34,12 +36,27 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   return (
     <>
       <div className='mediaplayer'>
-       {muted && thereIsConnection !== 'No' && <IconMute callback={() => setMuted(false)} />}
+        {muted && thereIsConnection !== 'No' && 
+          <Button 
+            onClick={() => setMuted(false)}
+            shape="circle"
+            style={{
+              /* fontSize: '25px',  */
+              position:'absolute', 
+              top: '4%',
+              /* color: 'white', */
+              left: '3%',
+              zIndex: '500'
+            }}
+            icon={<AudioMutedOutlined />}
+          />
+        }
         <ReactPlayer
           muted={muted}
           playing={true}
           loop={loopBackGround}
-          style={{ height: '55vh', objectFit: 'cover' }}
+          /* style={{ height: '100% !important', objectFit: 'cover' }} */
+          height='100%'
           width='100%'
           url={platformurl}
           controls={!loopBackGround}

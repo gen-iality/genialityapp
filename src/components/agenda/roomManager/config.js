@@ -91,7 +91,7 @@ export default function RoomConfig(props) {
               {/**Selección plataforma de la conferencia */}
               <Form.Item label={'Proveedor de transmisión'} tooltip={'Proveedor de transmisión'}>
                 <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
-                  <Option value={''}>Seleccionar...</Option>
+                  {/* <Option value={''}>Seleccionar...</Option> */}
                   <Option value='wowza'>
                     Evius streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
                   </Option>
@@ -104,15 +104,15 @@ export default function RoomConfig(props) {
                 </Select>
               </Form.Item>
 
-              <Form.Item label={'Plataforma de streaming'} tooltip={'Plataforma de streaming'}>
+              <Form.Item label={'Origen de transmisión'} tooltip={'Origen de transmisión'}>
                 <List itemLayout='horizontal' bordered={false} >
-                  <List.Item
+                  {/* <List.Item
                     style={{borderRadius: '10px', border: '1px solid lightgray', padding: '10px', marginBottom: '10px'}}
                     actions={[
                       <Radio checked={transmition === 'EviusMeet'} onChange={(e) => setTransmition('EviusMeet')} />,
                     ]}>
-                    <List.Item.Meta title={<b>Evius streaming</b>} />
-                  </List.Item>
+                    <List.Item.Meta title={<b>Evius Meet</b>} />
+                  </List.Item> */}
                   <List.Item
                     style={{borderRadius: '10px', border: '1px solid lightgray', padding: '10px', marginBottom: '10px'}}
                     actions={[

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Button, Spin, Alert, Typography, Space, Input, Tooltip, message, Row, Col, Card, Tabs } from 'antd';
+import { Button, Spin, Alert, Typography, Space, Input, Tooltip, message, Row, Col, Card, Tabs, Dropdown, Menu, Badge } from 'antd';
 import { CopyFilled, CheckCircleFilled } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import WOWZAPlayer from 'components/livetransmision/WOWZAPlayer';
@@ -29,7 +29,7 @@ const WowzaStreamingPanel = ({
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://eviusmeets.netlify.app/prepare`;
   let cUser = UseCurrentUser();
-  console.log('debug ', meeting_id);
+  /* console.log('debug ', meeting_id); */
   const [livestreamStatus, setLivestreamStatus] = useState(null);
   const [livestreamStats, setLivestreamStats] = useState(null);
   const [linkRolAdmin, setLinkRolAdmin] = useState(null);
@@ -163,7 +163,7 @@ const WowzaStreamingPanel = ({
     return (
       <>
         <Spin tip='Loading...' spinning={executer_createStream.isLoading}>
-          <Space direction='vertical'>
+          <Space direction='horizontal' wrap>
             <Button
               onClick={() => {
                 executer_createStream.mutate();
@@ -173,7 +173,13 @@ const WowzaStreamingPanel = ({
             </Button>
           {/* </Spin>
           <Spin tip='Loading...' spinning={executer_createStream.isLoading}> */}
-            <Button onClick={() => setStreamAlreadyCreated(true)}>Tengo ya una transmisión que quiero usar</Button>
+          <Dropdown.Button placement="bottomCenter" overlay={
+            <Menu>
+              <Menu.Item onClick={() => setStreamAlreadyCreated(true)}>Tengo ya una transmisión que quiero usar</Menu.Item>
+            </Menu>
+          }>
+            Avanzado
+          </Dropdown.Button>
           </Space>
         </Spin>
         <br />
@@ -237,10 +243,10 @@ const WowzaStreamingPanel = ({
                     danger
                     type='primary'
                   >
-                    Detener servidor
+                    Detener transmisión
                   </Button>
                 
-                  <Button type='ghost' onClick={() => ResetLiveStream(meeting_id)}>Reiniciar servidor</Button>
+                  <Button type='ghost' onClick={() => ResetLiveStream(meeting_id)}>Reiniciar transmisión</Button>
                 </Space>
               </Row>
             ) : (              
@@ -256,117 +262,121 @@ const WowzaStreamingPanel = ({
       <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={10}>
-            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
-           {/*  {livestreamStats?.connected.value === 'Yes' ? (
-              <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+            {/* <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} /> */}
+            {livestreamStats?.connected.value === 'Yes' ? (
+              <Badge.Ribbon text="En transmisión" color="red">
+                <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+              </Badge.Ribbon>
             ) : (
               <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
-            )} */}
+            )}
           </Col>
           <Col span={14}>
             <Tabs defaultActiveKey='1'>
               <Tabs.TabPane tab={'Datos'} key='1'>
-                <Typography.Text>
-                  <b>Nombre: </b>
+                <Typography.Text type='secondary'>
+                  Nombre: 
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
-                  {livestreamQuery.data.name} <br />
+                <Typography.Text >
+                  <b>{livestreamQuery.data.name}</b> <br />
                 </Typography.Text>
-                <Typography.Text>
-                  <b>ID transmisión: </b>
+                <Typography.Text type='secondary'>
+                  ID transmisión: 
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
-                  {livestreamQuery.data.id} <br />
+                <Typography.Text >
+                  <b>{livestreamQuery.data.id}</b> <br />
                 </Typography.Text>
-                <Typography.Text>
-                  <b>Estado de la transmisión: </b>
+                <Typography.Text type='secondary'>
+                  Estado de la transmisión: 
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text >
                   <Space>
-                    {livestreamStatus?.state !== 'started' && livestreamStatus?.state != 'stopped' && <Spin />}
-                    {livestreamStatus?.state}
+                    <b>{livestreamStatus?.state !== 'started' && livestreamStatus?.state != 'stopped' && <Spin />}
+                    {livestreamStatus?.state}</b>
                   </Space>{' '}
                   <br />
                 </Typography.Text>
-                <Typography.Text>
-                  <b>Origin Conectado: </b>
+                <Typography.Text type='secondary'>
+                  Origin Conectado: 
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text >
                   <Space>
-                    {livestreamStats && livestreamStats?.connected && <>{livestreamStats?.connected.value}</>}
+                    <b>{livestreamStats && livestreamStats?.connected && <>{livestreamStats?.connected.value}</>}</b>
                   </Space>{' '}
                   <br />
                 </Typography.Text>
-                <Typography.Text>
-                  <b>Estado del origen: </b>
+                <Typography.Text type='secondary'>
+                  Estado del origen: 
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text >
                   <Space>
-                    {livestreamStats && livestreamStats?.connected && <>{livestreamStats?.connected.status}</>}
+                    <b>{livestreamStats && livestreamStats?.connected && <>{livestreamStats?.connected.status}</>}</b>
                   </Space>{' '}
                   <br />
                 </Typography.Text>
-                <Typography.Text>
-                  <b>Información:</b> <br />
-                </Typography.Text>
                 <Typography.Text type='secondary'>
+                  Información: <br />
+                </Typography.Text>
+                <Typography.Text >
                   <Space>
-                    {livestreamStats && livestreamStats?.connected && <>{livestreamStats?.connected.text}</>}
+                    <b>{livestreamStats && livestreamStats?.connected && <>{livestreamStats?.connected.text}</>}</b>
                   </Space>{' '}
                   <br />
                 </Typography.Text>
               </Tabs.TabPane>
-              { transmition === 'EviusMeet' && (
+              {/* { transmition === 'EviusMeet' && ( */}
                 <Tabs.TabPane tab={'RTMP'} key='2'>
-                  <>
-                    <Typography.Text>
-                      <b>RTMP url:</b>
-                    </Typography.Text>
-                    <Input.Group compact>
-                      <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.primary_server} />
-                      <Tooltip title='Copiar RTMP url'>
-                        <Button
-                          onClick={() => copyToClipboard('URL')}
-                          icon={
-                            copySuccessProductor ? (
-                              <CheckCircleFilled style={{ color: '#52C41A' }} />
-                            ) : (
-                              <CopyFilled style={{ color: '#0089FF' }} />
-                            )
-                          }
-                        />
-                      </Tooltip>
-                    </Input.Group>{' '}
-                    <br />
-                  </>
-                  
-                  <>
-                    <Typography.Text>
-                      <b>RTMP clave:</b>
-                    </Typography.Text>
-                    <Input.Group compact>
-                      <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.stream_name} />
-                      <Tooltip title='Copiar RTMP clave'>
-                        <Button
-                          onClick={() => copyToClipboard('Clave')}
-                          icon={
-                            copySuccessAsistente ? (
-                              <CheckCircleFilled style={{ color: '#52C41A' }} />
-                            ) : (
-                              <CopyFilled style={{ color: '#0089FF' }} />
-                            )
-                          }
-                        />
-                      </Tooltip>
-                    </Input.Group>
-                  </>
+                  {livestreamStatus?.state === 'started' ? (
+                    <>
+                      <Typography.Text>
+                        <b>RTMP url:</b>
+                      </Typography.Text>
+                      <Input.Group compact>
+                        <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.primary_server} />
+                        <Tooltip title='Copiar RTMP url'>
+                          <Button
+                            onClick={() => copyToClipboard('URL')}
+                            icon={
+                              copySuccessProductor ? (
+                                <CheckCircleFilled style={{ color: '#52C41A' }} />
+                              ) : (
+                                <CopyFilled style={{ color: '#0089FF' }} />
+                              )
+                            }
+                          />
+                        </Tooltip>
+                      </Input.Group>{' '}
+                      <br />
+                    
+                      <Typography.Text>
+                        <b>RTMP clave:</b>
+                      </Typography.Text>
+                      <Input.Group compact>
+                        <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.stream_name} />
+                        <Tooltip title='Copiar RTMP clave'>
+                          <Button
+                            onClick={() => copyToClipboard('Clave')}
+                            icon={
+                              copySuccessAsistente ? (
+                                <CheckCircleFilled style={{ color: '#52C41A' }} />
+                              ) : (
+                                <CopyFilled style={{ color: '#0089FF' }} />
+                              )
+                            }
+                          />
+                        </Tooltip>
+                      </Input.Group>
+                    </>
+                  ) : (
+                    <Spin>Cargando</Spin>
+                  )}
                 </Tabs.TabPane>
-              )}
+              {/* )} */}
             </Tabs>
           </Col>
         </Row>
@@ -424,7 +434,7 @@ const WowzaStreamingPanel = ({
         </Row>
       </Card>}
 
-      {livestreamStatus?.state === 'started' && transmition !== 'EviusMeet' && <Card bordered style={{ borderRadius: '10px' }}>
+      {/* {livestreamStatus?.state === 'started' && transmition !== 'EviusMeet' && <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={24}>
             
@@ -472,7 +482,7 @@ const WowzaStreamingPanel = ({
             </>
           </Col>
         </Row>
-      </Card>}
+      </Card>} */}
       {/* <br />
       <br />
       <p>
