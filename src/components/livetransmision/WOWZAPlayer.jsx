@@ -32,27 +32,46 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   }, [meeting_id, thereIsConnection]);
 
   return (
-    <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      {muted && thereIsConnection !== 'No' && <IconMute callback={() => setMuted(false)} />}
-      <ReactPlayer
-        muted={muted}
-        playing={true}
-        loop={loopBackGround}
-        width={'100%'}
-        height={'35vw'}
-        style={{
-          display: 'block',
-          margin: '0 auto',
-        }}
-        url={platformurl}
-        controls={!loopBackGround}
-        config={{
-          file: {
-            forceHLS: loopBackGround,
-          },
-        }}
-      />
-    </div>
+    <>
+      <div className='mediaplayer'>
+       {muted && thereIsConnection !== 'No' && <IconMute callback={() => setMuted(false)} />}
+        <ReactPlayer
+          muted={muted}
+          playing={true}
+          loop={loopBackGround}
+          style={{ height: '55vh', objectFit: 'cover' }}
+          width='100%'
+          url={platformurl}
+          controls={!loopBackGround}
+          config={{
+            file: {
+              forceHLS: loopBackGround,
+            },
+          }}
+        />
+      </div>
+      {/* <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        {muted && thereIsConnection !== 'No' && <IconMute callback={() => setMuted(false)} />}
+        <ReactPlayer
+          muted={muted}
+          playing={true}
+          loop={loopBackGround}
+          width={'100%'}
+          height={'35vw'}
+          style={{
+            display: 'block',
+            margin: '0 auto',
+          }}
+          url={platformurl}
+          controls={!loopBackGround}
+          config={{
+            file: {
+              forceHLS: loopBackGround,
+            },
+          }}
+        />
+      </div> */}
+    </>
   );
 }
 

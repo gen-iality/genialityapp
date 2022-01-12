@@ -144,6 +144,14 @@ const WowzaStreamingPanel = ({
       navigator.clipboard.writeText(linkRolAsistente);
       success();
       setCopySuccessAsistente(true);
+    } else if (type === 'URL') {
+      navigator.clipboard.writeText(livestreamQuery.data.source_connection_information.primary_serve);
+      success();
+      setCopySuccessAsistente(true);
+    } else if (type === 'Clave') {
+      navigator.clipboard.writeText(livestreamQuery.data.source_connection_information.stream_name);
+      success();
+      setCopySuccessAsistente(true);
     }
     setTimeout(() => {
       setCopySuccessProductor(false);
@@ -154,8 +162,8 @@ const WowzaStreamingPanel = ({
   if (!livestreamQuery.data)
     return (
       <>
-        <Space>
-          <Spin tip='Loading...' spinning={executer_createStream.isLoading}>
+        <Spin tip='Loading...' spinning={executer_createStream.isLoading}>
+          <Space direction='vertical'>
             <Button
               onClick={() => {
                 executer_createStream.mutate();
@@ -163,11 +171,11 @@ const WowzaStreamingPanel = ({
               }}>
               Crear nueva transmisión
             </Button>
-          </Spin>
-          <Spin tip='Loading...' spinning={executer_createStream.isLoading}>
+          {/* </Spin>
+          <Spin tip='Loading...' spinning={executer_createStream.isLoading}> */}
             <Button onClick={() => setStreamAlreadyCreated(true)}>Tengo ya una transmisión que quiero usar</Button>
-          </Spin>
-        </Space>
+          </Space>
+        </Spin>
         <br />
         <br />
         {streamAlreadyCreated && <StoreAlreadyCreatedMeeting {...{ setMeetingId, meeting_id }} />}
@@ -205,9 +213,9 @@ const WowzaStreamingPanel = ({
                 Iniciar servidor
               </Button>
             ) : livestreamStatus?.state === 'started' ? (
-              <Row>
-                <Col span={18}>
-                  {linkRolAdmin && (
+              <Row justify='space-between'>
+                <>
+                  {linkRolAdmin && transmition !== 'RTMP' && (
                     <Button
                       type='primary'
                       href={transmition == 'StreamYard' ? 'https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts' : linkRolAdmin}
@@ -215,18 +223,20 @@ const WowzaStreamingPanel = ({
                       {transmition && 'Ingresar a ' + transmition + ' para transmitir'}
                     </Button>
                   )}
-                </Col>
-                <Col span={3}>
+                </>
+                <Space >
                   <Button
                     onClick={() => {
                       executer_stopStream();
-                    }}>
+                    }}
+                    danger
+                    type='primary'
+                  >
                     Detener servidor
                   </Button>
-                </Col>
-                <Col span={3}>
-                  <Button onClick={() => ResetLiveStream(meeting_id)}>Reiniciar servidor</Button>
-                </Col>
+                
+                  <Button type='ghost' onClick={() => ResetLiveStream(meeting_id)}>Reiniciar servidor</Button>
+                </Space>
               </Row>
             ) : (              
                 <>
@@ -241,11 +251,12 @@ const WowzaStreamingPanel = ({
       <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={10}>
-            {livestreamStats?.connected.value === 'Yes' ? (
+            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+           {/*  {livestreamStats?.connected.value === 'Yes' ? (
               <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
             ) : (
               <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
-            )}
+            )} */}
           </Col>
           <Col span={14}>
             <Tabs defaultActiveKey='1'>
@@ -305,28 +316,30 @@ const WowzaStreamingPanel = ({
                   <br />
                 </Typography.Text>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={'RTMP'} key='2'>
-                <Typography.Text>
-                  <b>RTMP url: </b>
-                  <br />
-                </Typography.Text>
-                <Typography.Text type='secondary'>
-                  {livestreamQuery.data.source_connection_information.primary_server} <br />
-                </Typography.Text>
-                <Typography.Text>
-                  <b>RTMP clave: </b>
-                  <br />
-                </Typography.Text>
-                <Typography.Text type='secondary'>
-                  {livestreamQuery.data.source_connection_information.stream_name}
-                </Typography.Text>
-              </Tabs.TabPane>
+              { transmition === 'EviusMeet' && (
+                <Tabs.TabPane tab={'RTMP'} key='2'>
+                  <Typography.Text>
+                    <b>RTMP url: </b>
+                    <br />
+                  </Typography.Text>
+                  <Typography.Text type='secondary'>
+                    {livestreamQuery.data.source_connection_information.primary_server} <br />
+                  </Typography.Text>
+                  <Typography.Text>
+                    <b>RTMP clave: </b>
+                    <br />
+                  </Typography.Text>
+                  <Typography.Text type='secondary'>
+                    {livestreamQuery.data.source_connection_information.stream_name}
+                  </Typography.Text>
+                </Tabs.TabPane>
+              )}
             </Tabs>
           </Col>
         </Row>
       </Card>
       <br />
-    {livestreamStatus?.state === 'started' && transmition=='EviusMeet' && <Card bordered style={{ borderRadius: '10px' }}>
+      {livestreamStatus?.state === 'started' && transmition === 'EviusMeet' && <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]}>
           <Col span={24}>
             {linkRolProductor && (
@@ -374,6 +387,56 @@ const WowzaStreamingPanel = ({
                 </Input.Group>
               </>
             )}
+          </Col>
+        </Row>
+      </Card>}
+
+      {livestreamStatus?.state === 'started' && transmition !== 'EviusMeet' && <Card bordered style={{ borderRadius: '10px' }}>
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            
+            <>
+              <Typography.Text>
+                <b>RTMP url:</b>
+              </Typography.Text>
+              <Input.Group compact>
+                <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.primary_serve} />
+                <Tooltip title='Copiar RTMP url'>
+                  <Button
+                    onClick={() => copyToClipboard('URL')}
+                    icon={
+                      copySuccessProductor ? (
+                        <CheckCircleFilled style={{ color: '#52C41A' }} />
+                      ) : (
+                        <CopyFilled style={{ color: '#0089FF' }} />
+                      )
+                    }
+                  />
+                </Tooltip>
+              </Input.Group>{' '}
+              <br />
+            </>
+            
+            <>
+              <Typography.Text>
+                <b>RTMP clave:</b>
+              </Typography.Text>
+              <Input.Group compact>
+                <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.stream_name} />
+                <Tooltip title='Copiar RTMP clave'>
+                  <Button
+                    onClick={() => copyToClipboard('Clave')}
+                    icon={
+                      copySuccessAsistente ? (
+                        <CheckCircleFilled style={{ color: '#52C41A' }} />
+                      ) : (
+                        <CopyFilled style={{ color: '#0089FF' }} />
+                      )
+                    }
+                  />
+                </Tooltip>
+              </Input.Group>
+            </>
           </Col>
         </Row>
       </Card>}

@@ -1,4 +1,4 @@
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Alert } from 'antd';
 export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id }) {
   return (
     <>
@@ -7,6 +7,13 @@ export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id })
         <Input type='text' name='meeting_id' onChange={(e) => setMeetingId(e.target.value)} value={meeting_id} />
       </Form.Item>
       {meeting_id}
+
+      <Alert
+        message="Tenga en cuenta!"
+        description="Para colocar el ID de la conferencia se le recomienda que pegue el mismo para que no le redireccione a la siguente página incompleta"
+        type="warning"
+        showIcon
+      />
 
       {/* <Form.Item>
         <Button type='primary' htmlType='submit'>
