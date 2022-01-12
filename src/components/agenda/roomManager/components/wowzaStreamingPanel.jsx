@@ -405,7 +405,7 @@ const WowzaStreamingPanel = ({
                 <b>RTMP url:</b>
               </Typography.Text>
               <Input.Group compact>
-                <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.primary_serve} />
+                <Input style={{ width: 'calc(100% - 31px)' }} disabled value={livestreamQuery.data.source_connection_information.primary_server} />
                 <Tooltip title='Copiar RTMP url'>
                   <Button
                     onClick={() => copyToClipboard('URL')}
