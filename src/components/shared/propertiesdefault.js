@@ -12,7 +12,7 @@ export const DefaultProperties = [
   },
   {
     name: 'names',
-    label: 'Nombres Y Apellidos',
+    label: 'Nombre completo',
     unique: false,
     mandatory: false,
     justonebyattendee: false,
