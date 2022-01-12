@@ -216,7 +216,7 @@ const WowzaStreamingPanel = ({
                 onClick={() => {
                   executer_startStream();
                 }}>
-                Iniciar servidor
+                Iniciar transmisión
               </Button>
             ) : livestreamStatus?.state === 'started' ? (
               <Row justify='space-between'>
