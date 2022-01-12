@@ -215,6 +215,7 @@ const FormRegister = ({
       setCountry(paisSelected);
     }
 
+    // console.log('extraFields', initialValues);
     ValidateEmptyFields(dataEventUser);
   }, []);
 
@@ -413,10 +414,15 @@ const FormRegister = ({
   };
 
   const ValidateEmptyFields = (allValues) => {
-    console.log('allValues', allValues);
+    if (allValues.picture == '') {
+      delete allValues.picture;
+    }
+
     if (basicDataUser || dataEventUser) {
       let noneEmpyFields = Object.keys(allValues).filter((m) => allValues[m] == '' || allValues[m] == undefined).length;
-      if (noneEmpyFields == 0 || Object.keys(allValues).length === 0) {
+      console.log('leng', noneEmpyFields, Object.keys(allValues).length);
+      if (noneEmpyFields == 0) {
+        console.log('activelo');
         hookValidations(false, '');
       } else {
         hookValidations(
