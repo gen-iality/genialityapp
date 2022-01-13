@@ -92,6 +92,15 @@ const stopLiveStream = async (stream_id) => {
 
   return null;
 };
+const deleteLiveStream = async (stream_id) => {
+  const res = await wowzaCLient.delete('live_streams/' + stream_id, { timeout: 5000 });
+
+  if (res?.status === 204) {
+    return 'LiveStream deleted';
+  }
+
+  return null;
+};
 
 export {
   getLiveStream,
@@ -101,4 +110,5 @@ export {
   startLiveStream,
   stopLiveStream,
   createLiveStream,
+  deleteLiveStream,
 };
