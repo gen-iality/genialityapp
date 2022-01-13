@@ -128,7 +128,8 @@ const FormRegister = ({
   basicDataUser = {},
   dataEventUser = {},
   HandleHookForm = () => {},
-  hookValidations = () => {},
+  setvalidateEventUser = () => {},
+  validateEventUser,
 }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
@@ -163,6 +164,7 @@ const FormRegister = ({
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {}
   );
+  const buttonSubmit = useRef(null);
 
   useEffect(() => {
     let initialValuesGeneral = {};
@@ -182,6 +184,12 @@ const FormRegister = ({
         : initialValuesGeneral
     );
   }, [cUser.value, cEventUser]);
+
+  useEffect(() => {
+    if (validateEventUser.status) {
+      buttonSubmit.current.click();
+    }
+  }, [validateEventUser.status, validateEventUser.statusFields]);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -214,16 +222,18 @@ const FormRegister = ({
       let paisSelected = initialValues && pais[0] ? initialValues[pais[0].name] : '';
       setCountry(paisSelected);
     }
-
-    // console.log('extraFields', initialValues);
-    ValidateEmptyFields(dataEventUser);
   }, []);
 
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
   }, [tabLogin, typeModal]);
+
   const showGeneralMessage = (values, error, date) => {
+    setvalidateEventUser({
+      ...validateEventUser,
+      statusFields: false,
+    });
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
@@ -237,6 +247,14 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
+    if (Object.keys(basicDataUser).length > 0) {
+      setvalidateEventUser({
+        statusFields: true,
+        status: false,
+      });
+      return;
+    }
+
     if (values['email']) {
       values['email'] = values['email'].toLowerCase();
     }
@@ -414,26 +432,25 @@ const FormRegister = ({
   };
 
   const ValidateEmptyFields = (allValues) => {
-    if (allValues.picture == '') {
-      delete allValues.picture;
-    }
-
-    if (basicDataUser || dataEventUser) {
-      let noneEmpyFields = Object.keys(allValues).filter((m) => allValues[m] == '' || allValues[m] == undefined).length;
-      console.log('leng', noneEmpyFields, Object.keys(allValues).length);
-      if (noneEmpyFields == 0) {
-        console.log('activelo');
-        hookValidations(false, '');
-      } else {
-        hookValidations(
-          true,
-          intl.formatMessage({
-            id: 'feedback.title.error',
-            defaultMessage: 'Complete los campos solicitados correctamente.',
-          })
-        );
-      }
-    }
+    // if (allValues.picture == '') {
+    //   delete allValues.picture;
+    // }
+    // if (basicDataUser || dataEventUser) {
+    //   let noneEmpyFields = Object.keys(allValues).filter((m) => allValues[m] == '' || allValues[m] == undefined).length;
+    //   console.log('leng', noneEmpyFields, Object.keys(allValues).length);
+    //   if (noneEmpyFields == 0) {
+    //     console.log('activelo');
+    //     hookValidations(false, '');
+    //   } else {
+    //     hookValidations(
+    //       true,
+    //       intl.formatMessage({
+    //         id: 'feedback.title.error',
+    //         defaultMessage: 'Complete los campos solicitados correctamente.',
+    //       })
+    //     );
+    //   }
+    // }
   };
 
   const valuesChange = (changedValues, allValues) => {
@@ -658,6 +675,7 @@ const FormRegister = ({
                     valuePropName={'checked'}
                     name={name}
                     rules={[rule]}
+                    form={form}
                     key={'l' + key}
                     htmlFor={key}
                     initialValue={value}>
@@ -1014,32 +1032,38 @@ const FormRegister = ({
                   </Col>
                 )}
 
-                {Object.keys(basicDataUser) == 0 && (
-                  <Col span={24} align='center'>
-                    {!loadingregister && (
-                      <Form.Item>
-                        <Button type='primary' htmlType='submit'>
-                          {(initialValues != null && cEventUser.value !== null) ||
-                          (initialValues != null && Object.keys(initialValues).length > 0)
-                            ? intl.formatMessage({ id: 'modal.feedback.accept' })
-                            : intl.formatMessage({ id: 'registration.button.create' })}
-                        </Button>
-                        {options &&
-                          initialValues != null &&
-                          options.map((option) => (
-                            <Button
-                              icon={option.icon}
-                              onClick={() => option.action(eventUser)}
-                              type={option.type}
-                              style={{ marginLeft: 10 }}>
-                              {option.text}
-                            </Button>
-                          ))}
-                      </Form.Item>
-                    )}
-                    {loadingregister && <Spin />}
-                  </Col>
-                )}
+                <Col span={24} align='center'>
+                  {!loadingregister && (
+                    <Form.Item>
+                      <Button
+                        ref={buttonSubmit}
+                        style={{
+                          display: Object.keys(basicDataUser) ? 'none' : 'block',
+                        }}
+                        type='primary'
+                        htmlType='submit'>
+                        {(initialValues != null && cEventUser.value !== null) ||
+                        (initialValues != null && Object.keys(initialValues).length > 0)
+                          ? intl.formatMessage({ id: 'modal.feedback.accept' })
+                          : intl.formatMessage({ id: 'registration.button.create' })}
+                      </Button>
+                      {options &&
+                        initialValues != null &&
+                        options.map((option) => (
+                          <Button
+                            icon={option.icon}
+                            onClick={() => option.action(eventUser)}
+                            type={option.type}
+                            style={{
+                              marginLeft: 10,
+                            }}>
+                            {option.text}
+                          </Button>
+                        ))}
+                    </Form.Item>
+                  )}
+                  {loadingregister && <Spin />}
+                </Col>
               </Row>
             </Form>
           </Card>
