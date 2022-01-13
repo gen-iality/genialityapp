@@ -31,6 +31,11 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     textError: '',
     loading: false,
   });
+  const [validateEventUser, setvalidateEventUser] = useState({
+    status: false,
+    textError: '',
+    statusFields: false,
+  });
 
   const hookValidations = (status, textError) => {
     setValidationGeneral({
@@ -80,6 +85,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           dataEventUser={dataEventUser}
           basicDataUser={basicDataUser}
           HandleHookForm={HandleHookForm}
+          validateEventUser={validateEventUser}
+          setvalidateEventUser={setvalidateEventUser}
         />
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
@@ -161,7 +168,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   };
 
   const next = () => {
-    setbuttonStatus(true);
     setValidationGeneral({
       ...validationGeneral,
       loading: true,
@@ -169,11 +175,22 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     });
 
     if (current == 0) {
+      setbuttonStatus(true);
       handleValidateAccountEvius();
     } else if (current == 1) {
-      handleSubmit();
+      // handleSubmit();
+      setvalidateEventUser({
+        status: true,
+        textError: '',
+      });
     }
   };
+
+  useEffect(() => {
+    if (validateEventUser.statusFields) {
+      handleSubmit();
+    }
+  }, [validateEventUser.statusFields]);
 
   const prev = () => {
     setCurrent(current - 1);
@@ -218,6 +235,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     if (current == 0) {
       ValidateGeneralFields();
     }
+
+    console.log('dataEventUser', dataEventUser);
   }, [basicDataUser, dataEventUser, current]);
 
   return (
@@ -249,7 +268,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               <>
                 {current < steps.length - 1 && (
                   <Button
-                    disabled={buttonStatus}
                     size='large'
                     type='primary'
                     onClick={() => {
