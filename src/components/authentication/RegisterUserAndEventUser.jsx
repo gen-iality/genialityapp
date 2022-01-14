@@ -168,17 +168,15 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   };
 
   const next = () => {
-    setValidationGeneral({
-      ...validationGeneral,
-      loading: true,
-      status: false,
-    });
-
     if (current == 0) {
-      setbuttonStatus(true);
+      setValidationGeneral({
+        ...validationGeneral,
+        loading: true,
+        status: false,
+      });
+
       handleValidateAccountEvius();
     } else if (current == 1) {
-      // handleSubmit();
       setvalidateEventUser({
         status: true,
         textError: '',
@@ -188,12 +186,18 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   useEffect(() => {
     if (validateEventUser.statusFields) {
+      setValidationGeneral({
+        ...validationGeneral,
+        loading: true,
+        status: false,
+      });
       handleSubmit();
     }
   }, [validateEventUser.statusFields]);
 
   const prev = () => {
     setCurrent(current - 1);
+    setbuttonStatus(false);
   };
 
   function validateEmail(email) {
@@ -268,6 +272,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               <>
                 {current < steps.length - 1 && (
                   <Button
+                    disabled={buttonStatus}
                     size='large'
                     type='primary'
                     onClick={() => {
