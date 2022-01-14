@@ -73,6 +73,12 @@ export const Actions = {
   },
 };
 
+export const SearchUserbyEmail = (email) => {
+  const url = `${ApiUrl}/api/users/findByEmail/${email}`;
+  return Actions.get(url);
+}
+
+
 //BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
 export const getCurrentUser = async () => {
   let token = await GetTokenUserFirebase();
@@ -133,14 +139,14 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
     return eventUser;
   },
 
   getcurrentUserEventUser: async (event_id) => {
     let token = await GetTokenUserFirebase();
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
-    let eventUser = response.data && response.data[0] ? response.data[0] : null;
+    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
     return eventUser;
   },
 
@@ -475,7 +481,7 @@ export const DocumentsApi = {
     return await Actions.getOne(`api/events/${event}/documents/`, id);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`api/events/${event}/documents`, data, id);
+    return await Actions.edit(`api/events/${event}/documents/${id}`, data,true );
   },
   deleteOne: async (id, event) => {
     return await Actions.delete(`api/events/${event}/documents`, id);
@@ -647,7 +653,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers['content-type'],
+            type: response.headers[ 'content-type' ],
             blob: response.data,
           });
         });

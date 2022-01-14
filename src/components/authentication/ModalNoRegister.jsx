@@ -17,23 +17,6 @@ const ModalNoRegister = (props) => {
       'Este evento es privado, solo se puede acceder por invitación,  contacte al administrador del evento.',
   });
 
-  // console.log(
-  //   'vvalidation',
-  //   ((props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister') &&
-  //     props.cEvent?.value?.allow_register &&
-  //     props.cEvent?.value?.visibility == 'PUBLIC') ||
-  //     (!props.cEvent?.value?.allow_register &&
-  //       props.cEvent?.value?.visibility == 'PRIVATE' &&
-  //       props.cHelper.typeModal != 'visitors' &&
-  //       !props.cEventUser?.value)
-  // );
-
-  console.log(
-    'visible evento',
-
-    props.cHelper.typeModal
-  );
-
   return (
     <Modal
       onCancel={() => {

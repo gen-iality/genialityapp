@@ -79,11 +79,11 @@ class EventOrganization extends Component {
           backgroundColor: `${this.state.organization?.styles?.containerBgColor || '#FFFFFF'}`,
         }}>
         {console.log('Org', this.state.organization)}
-        <ModalAuth
+        {/* <ModalAuth
           organization={'landing'}
           idOrganization={this.props.match.params.id}
           logo={this.state.organization?.styles?.event_image}
-        />
+        /> */}
         <ModalLoginHelpers />
         {!this.state.loading && this.state.orgId ? (
           <>

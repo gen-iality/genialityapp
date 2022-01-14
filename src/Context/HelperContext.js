@@ -51,7 +51,7 @@ export const HelperContextProvider = ({ children }) => {
   const [ isCollapsedMenuRigth, setisCollapsedMenuRigth ] = useState(true);
   const [ chatAttendeChats, setchatAttendeChats ] = useState('1');
   const [ chatPublicPrivate, setchatPublicPrivate ] = useState('public');
-  const [ eventPrivate, seteventPrivate ] = useState({});
+  const [ eventPrivate, seteventPrivate ] = useState({ private: false, section: 'evento' });
   const [ totalPrivateMessages, settotalPrivateMessages ] = useState(0);
   const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
   const [ requestSend, setRequestSend ] = useState([]);
@@ -66,6 +66,24 @@ export const HelperContextProvider = ({ children }) => {
   const [ tabsGenerals, settabsGenerals ] = useState();
   const [ updateEventUser, setUpdateEventUser ] = useState(false);
   const [ register, setRegister ] = useState(null);
+
+  const [ controllerLoginVisible, setcontrollerLoginVisible ] = useState({
+    visible: false,
+    idOrganization: '',
+    organization: '',
+    logo: '',
+  })
+
+  const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
+    setcontrollerLoginVisible({
+      visible,
+      idOrganization,
+      organization,
+      logo,
+    })
+  }
+
+
 
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
@@ -289,7 +307,6 @@ export const HelperContextProvider = ({ children }) => {
   // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    //console.log("RESPUESTA=>",eventUser)
     setpropertiesOtherprofile({ _id: id, properties: eventUser.properties, eventUserId: eventUser._id });
   };
 
@@ -628,6 +645,8 @@ export const HelperContextProvider = ({ children }) => {
         setUpdateEventUser,
         register,
         setRegister,
+        HandleControllerLoginVisible,
+        controllerLoginVisible
       }}>
       {children}
     </HelperContext.Provider>

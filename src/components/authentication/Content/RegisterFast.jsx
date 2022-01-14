@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, message } from 'antd';
+import { Form, Input, Button, Space, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import createNewUser from './ModalsFunctions/createNewUser';
-import { app } from 'helpers/firebase';
-import { useContext } from 'react';
-import HelperContext from 'Context/HelperContext';
 import { useIntl } from 'react-intl';
 
-const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
-  const { handleChangeTypeModal } = useContext(HelperContext);
+
   const ruleEmail = [
     {
       type: 'email',
@@ -32,8 +28,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
 
   const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
-  let [modalInfo, setModalInfo] = useState(null);
-  let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   /** request para no mostrar el error que genera el component upload de antd */
   const dummyRequest = ({ file, onSuccess }) => {
@@ -42,62 +36,23 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     }, 0);
   };
 
-  function resetFields() {
-    form.resetFields();
-    setImageAvatar(null);
+  function onFinish(values) {
+    console.log('values', values);
+    handleNext(values);
   }
 
-  const onFinishCreateNewUser = async (values) => {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere...</>,
-    });
-    const newValues = {
-      ...values,
-      picture: imageAvatar,
-      resetFields,
-      setModalInfo,
-      setOpenOrCloseTheModalFeedback,
-    };
-
-    let resp = await createNewUser(newValues);
-
-    if (resp) {
-      // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
-      app
-        .auth()
-        .signInWithEmailAndPassword(newValues.email, newValues.password)
-        .then((login) => {
-          if (login) {
-            //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
-            if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
-              handleChangeTypeModal('loginSuccess');
-            } else {
-              handleChangeTypeModal('loginSuccess');
-            }
-          }
-        })
-        .catch((err) => {
-          handleChangeTypeModal('loginError');
-        });
-    } else {
-      handleChangeTypeModal('loginError');
-    }
-    message.destroy(loading.key);
-  };
   return (
     <>
-      {' '}
       <Form
-        onFinish={onFinishCreateNewUser}
+        initialValues={{
+          names: basicDataUser.names,
+          email: basicDataUser.email,
+          password: basicDataUser.password,
+        }}
         form={form}
         autoComplete='off'
         layout='vertical'
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-        {/* <Typography.Title level={4} type='secondary'>
-                      Nueva organizacion
-                    </Typography.Title> */}
+        onFinish={onFinish}>
         <Form.Item>
           <ImgCrop rotate shape='round'>
             <Upload
@@ -105,6 +60,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               onChange={(file) => {
                 if (file.fileList.length > 0) {
                   setImageAvatar(file.fileList);
+                  HandleHookForm(null, 'picture', file.fileList);
                 } else {
                   setImageAvatar(null);
                 }
@@ -113,7 +69,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               multiple={false}
               listType='picture'
               maxCount={1}
-              fileList={imageAvatar}>
+              fileList={basicDataUser.picture ? basicDataUser.picture : imageAvatar}>
               {
                 <Button
                   type='primary'
@@ -141,6 +97,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleEmail}>
           <Input
+            onChange={(e) => HandleHookForm(e, 'email')}
             type='email'
             size='large'
             placeholder={'micorreo@ejemplo.com'}
@@ -157,6 +114,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={rulePassword}>
           <Input.Password
+            onChange={(e) => HandleHookForm(e, 'password')}
             type='password'
             size='large'
             placeholder={'Crea una contraseña'}
@@ -173,28 +131,16 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleName}>
           <Input
+            onChange={(e) => HandleHookForm(e, 'names')}
             type='text'
             size='large'
             placeholder={'¿Como te llamas?'}
             prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-          <Button
-            id={'submitButton'}
-            htmlType='submit'
-            block
-            style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'>
-            {intl.formatMessage({
-              id: 'modal.label.create_user',
-              defaultMessage: 'Crear cuenta de usuario',
-            })}
-          </Button>
-        </Form.Item>
       </Form>
     </>
   );
 };
 
-export default RegisterUser;
+export default RegisterFast;

@@ -3,7 +3,10 @@ import { Form, Button, Row, Col, Input, Typography } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { app } from 'helpers/firebase';
 import { FormattedMessage } from 'react-intl';
+import { UseCurrentUser } from '../../../Context/userContext';
 import { UseEventContext } from '../../../Context/eventContext';
+import { UseUserEvent } from '../../../Context/eventUserContext';
+import { AttendeeApi } from '../../../helpers/request';
 
 const layout = {
   labelCol: { span: 6 },
@@ -14,8 +17,11 @@ const { Text } = Typography;
 function AnonymousEvenUserForm() {
   const history = useHistory();
   let cEvent = UseEventContext();
+  let cEventUser = UseUserEvent();
 
   const onFinish = (values) => {
+    const { name, email } = values;
+
     app
       .auth()
       .signInAnonymously()
@@ -23,21 +29,23 @@ function AnonymousEvenUserForm() {
         app
           .auth()
           .currentUser.updateProfile({
-            displayName: values.name,
-            photoURL: 'https://example.com/jane-q-user/profile.jpg',
+            displayName: name,
+            /**almacenamos el email en el photoURL para poder setearlo en el context del usuario y asi llamar el eventUser anonimo */
+            photoURL: email,
           })
-          .then(async (respother) => {
+          .then(async () => {
+            const body = {
+              event_id: cEvent.value._id,
+              uid: user.user.uid,
+              anonymous: true,
+              properties: {
+                email: email,
+                names: name,
+              },
+            };
+            await AttendeeApi.create(cEvent.value._id, body);
             await app.auth().currentUser.reload();
-            console.log('RESP OTHER==>', respother);
-            /* app
-              .auth()
-              .currentUser.updateEmail(values.email)
-              .then((resp) => {
-                console.log('EMAIL VALUES==>', values.email);
-                console.log('LOGIN ANONIMO', resp);
-                setUserAnosimous({ ...values });
-              })
-              .catch((err) => console.log('ERROR==>', err));*/
+            cEventUser.setUpdateUser(true);
           });
       });
   };

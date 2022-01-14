@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { message as Message, message } from 'antd';
+import { message as Message, message, Modal } from 'antd';
 import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
 import AgendaContext from '../../../Context/AgendaContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
-
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 class RoomManager extends Component {
   constructor(props) {
@@ -62,8 +62,8 @@ class RoomManager extends Component {
   static contextType = AgendaContext;
 
   componentDidMount = async () => {
-    const { event_id} = this.props; 
-    const  activity_id = this.context.activityEdit;
+    const { event_id } = this.props;
+    const activity_id = this.context.activityEdit;
     const { host_list } = this.state;
 
     const host_ids = host_list.map((host) => host.host_id);
@@ -99,8 +99,8 @@ class RoomManager extends Component {
 
   // validacion de existencia de sala e inicializacion de estado
   validationRoom = async () => {
-    const { event_id} = this.props;
-    const  activity_id = this.context.activityEdit;
+    const { event_id } = this.props;
+    const activity_id = this.context.activityEdit;
     const { service } = this.state;
     const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
@@ -176,7 +176,7 @@ class RoomManager extends Component {
     let { name } = e.target ? e.target : nameS;
     let { value } = e.target ? e.target : e;
 
-    this.setState({ [ name ]: value });
+    this.setState({ [name]: value });
     if (nameS === 'select_host_manual') {
       this.context.select_host_manual = e;
     }
@@ -199,6 +199,7 @@ class RoomManager extends Component {
       host_id,
       host_name,
       avalibleGames,
+      transmition,
     } = this.context;
     const roomInfo = {
       habilitar_ingreso: roomStatus,
@@ -208,6 +209,7 @@ class RoomManager extends Component {
       host_id,
       host_name,
       avalibleGames,
+      transmition,
     };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
@@ -215,7 +217,7 @@ class RoomManager extends Component {
 
   // Se usa al eliminar una sala de zoom, elimnar la informacion asociada a ella, se mantiene la configuración de la misma
   restartData = () => {
-    this.context.setPlatform(null);
+    this.context.setPlatform('wowza');
     this.context.setMeetingId('');
     this.context.setHostId(null);
     this.context.setHostName(null);
@@ -231,8 +233,8 @@ class RoomManager extends Component {
 
   // Método para guarda la información de la configuración
   saveConfig = async () => {
-    const { event_id} = this.props;
-    const  activity_id = this.context.activityEdit;
+    const { event_id } = this.props;
+    const activity_id = this.context.activityEdit;
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
@@ -267,7 +269,6 @@ class RoomManager extends Component {
           activity_id,
           meeting_id,
         };
-        console.log("data", data)
         const response = await service.getZoomRoom(data);
         if (
           Object.keys(response).length > 0 &&
@@ -316,7 +317,7 @@ class RoomManager extends Component {
       agenda: activity_name,
       date_start_zoom,
       date_end_zoom,
-      [ host_field ]: host_value,
+      [host_field]: host_value,
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
 
@@ -367,22 +368,56 @@ class RoomManager extends Component {
 
   //Eliminar trasmisión de zoom
   deleteRoom = async () => {
-    const { service, meeting_id, platform } = this.state;
-    const { event_id } = this.props;
+    let self = this;
+    const { service, meeting_id, platform } = self.state;
+    const { event_id } = self.props;
 
-    // Si es una sala de zoom se elimina de la agenda de la api zoom
-    if (platform === 'zoom' || platform === 'zoomExterno') {
-      const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
-      if (updatedData.status === 200) {
-        message.success('Transmisión de Zoom eliminada!');
-      }
-    }
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la transmisión?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Eliminar transmisión',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const loading = message.open({
+          key: 'loading',
+          type: 'loading',
+          content: <> Por favor espere miestras borra la transmisión...</>,
+        });
+        const onHandlerRemove = async () => {
+          try {
+             // Si es una sala de zoom se elimina de la agenda de la api zoom
+            if (platform === 'zoom' || platform === 'zoomExterno') {
+              const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
+              if (updatedData.status === 200) {
+                message.success('Transmisión de Zoom eliminada!');
+              }
+            }
 
-    this.restartData();
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la transmisión correctamente!</>,
+            });
+            self.restartData();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: <>Hubo un error eliminando la transmisión</>,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+   
   };
 
   render() {
     const { hasVideoconference, /* select_host_manual, */ host_list } = this.state;
+    const { activity_name } = this.props;
     return (
       <>
         <RoomConfig
@@ -395,6 +430,7 @@ class RoomManager extends Component {
           createZoomRoom={this.createZoomRoom}
           deleteRoom={this.deleteRoom}
           saveConfig={this.saveConfig}
+          activity_name={activity_name}
         />
       </>
     );

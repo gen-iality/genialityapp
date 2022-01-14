@@ -15,10 +15,10 @@ export const parseUrl = (url) => {
   try {
     let temporal = {};
     url
-      .split('?')[1]
+      .split('?')[ 1 ]
       .split('&')
       .map((obj) => {
-        return (temporal[obj.split('=')[0]] = obj.split('=')[1]);
+        return (temporal[ obj.split('=')[ 0 ] ] = obj.split('=')[ 1 ]);
       });
     return temporal;
   } catch (error) {
@@ -28,7 +28,7 @@ export const parseUrl = (url) => {
 export const parseCookies = (cookies) => {
   let temporal = [];
   cookies.split('&').map((obj) => {
-    return temporal.push({ [obj.split('=')[0]]: obj.split('=')[1] });
+    return temporal.push({ [ obj.split('=')[ 0 ] ]: obj.split('=')[ 1 ] });
   });
   return temporal;
 };
@@ -89,7 +89,7 @@ export const rolPermissions = {
   },
 };
 export const typeInputs = [
-  { value: '', label: 'Seleccione una opción'},
+  { value: '', label: 'Seleccione una opción' },
   { value: 'text', label: 'Texto' },
   { value: 'country', label: 'Pais ' },
   { value: 'city', label: 'Ciudad ' },
@@ -110,14 +110,14 @@ export const typeInputs = [
 ];
 export const toolbarEditor = {
   toolbar: [
-    [{ font: [] }],
-    [{ header: [0, 1, 2, 3] }],
-    [{ size: [] }],
-    [{ align: [] }],
-    [{ syntax: true }],
-    ['bold', 'italic', 'blockquote'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image'],
+    [ { font: [] } ],
+    [ { header: [ 0, 1, 2, 3 ] } ],
+    [ { size: [] } ],
+    [ { align: [] } ],
+    [ { syntax: true } ],
+    [ 'bold', 'italic', 'blockquote' ],
+    [ { list: 'ordered' }, { list: 'bullet' } ],
+    [ 'link', 'image' ],
   ],
 };
 
@@ -418,8 +418,8 @@ export const activitiesCode = [
   '61732b4cfbe4ff412315beb6',
   '6172f380c5c23b745b6a3905',
 ];
-export const cityValid = ['medellin', 'Medellin', 'medellín', 'Medellín'];
-export const codeActivity = ['EDC21CF110', 'EDC21IPH', 'EDC21MID7', 'EDC21CV48', '1EDC21OFF', '1EDC50OF21'];
+export const cityValid = [ 'medellin', 'Medellin', 'medellín', 'Medellín' ];
+export const codeActivity = [ 'EDC21CF110', 'EDC21IPH', 'EDC21MID7', 'EDC21CV48', '1EDC21OFF', '1EDC50OF21' ];
 
 export const femaleicons = [
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Ffemale%2F002-woman.png?alt=media&token=e01354bd-9119-4a91-983b-321424a7fe0c',

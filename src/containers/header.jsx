@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { app } from '../helpers/firebase';
-import { ApiUrl } from '../helpers/constants';
-// import { OrganizationApi, EventsApi } from '../helpers/request';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -14,7 +12,8 @@ import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
-import ModalAuth from '../components/authentication/ModalAuth';
+import HelperContext from 'Context/HelperContext';
+import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
@@ -45,13 +44,16 @@ const initialDataGeneral = {
 };
 
 const Headers = (props) => {
-  const { cUser, showMenu, loginInfo, cHelper } = props;
+  const { cUser, showMenu, loginInfo, cHelpe, cEvent } = props;
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
+  const [showButtons, setshowButtons] = useState({
+    buttonregister: true,
+    buttonlogin: true,
+  });
 
-  const modalClose = () => {
-    setdataGeneral({ ...dataGeneral, modalVisible: false, tabModal: '' });
-  };
+  let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
+
   const logout = () => {
     app
       .auth()
@@ -68,26 +70,9 @@ const Headers = (props) => {
     setdataGeneral({ ...dataGeneral, menuOpen: !dataGeneral.menuOpen, filterOpen: false });
   };
 
-  const goReport = (e) => {
-    e.preventDefault();
-    window.location.replace(`${ApiUrl}/events/reports`);
-  };
-
   const handleMenuEvent = () => {
     setdataGeneral({ ...dataGeneral, showEventMenu: !dataGeneral.showEventMenu });
     showMenu();
-  };
-
-  const handleMenu = (location) => {
-    const splited = location.pathname.split('/');
-    if (splited[1] === '') {
-      setdataGeneral({ ...dataGeneral, showAdmin: false, menuOpen: false });
-    } else if (splited[1] === 'eventadmin' || splited[1] === 'orgadmin') {
-      setdataGeneral({ ...dataGeneral, showAdmin: false, menuOpen: false, showEventMenu: false });
-      window.scrollTo(0, 0);
-    } else {
-      setdataGeneral({ ...dataGeneral, showAdmin: false, menuOpen: false, showEventMenu: false });
-    }
   };
 
   const showDrawer = () => {
@@ -96,12 +81,6 @@ const Headers = (props) => {
 
   const onClose = () => {
     setdataGeneral({ ...dataGeneral, showEventMenu: false });
-  };
-
-  const setEventId = () => {
-    const path = window.location.pathname.split('/');
-    let eventId = path[2] || path[1];
-    return eventId;
   };
 
   async function LoadCurrentUser() {
@@ -125,9 +104,53 @@ const Headers = (props) => {
     // }
   }
 
+  const WhereHerePath = () => {
+    let containtorganization = window.location.pathname.includes('/organization');
+    return containtorganization ? 'organization' : 'landing';
+  };
+
   useEffect(() => {
     LoadCurrentUser();
   }, [cUser?.value]);
+
+  useEffect(() => {
+    async function RenderButtonsForTypeEvent() {
+      let typeEvent = recordTypeForThisEvent(cEvent);
+      switch (typeEvent) {
+        case 'PRIVATE_EVENT':
+          setshowButtons({
+            buttonregister: false,
+            buttonlogin: true,
+          });
+          break;
+
+        case 'PUBLIC_EVENT_WITH_REGISTRATION':
+          setshowButtons({
+            buttonregister: true,
+            buttonlogin: true,
+          });
+          break;
+
+        case 'UN_REGISTERED_PUBLIC_EVENT':
+          setshowButtons({
+            buttonregister: false,
+            buttonlogin: false,
+          });
+          break;
+
+        default:
+          setshowButtons({
+            buttonregister: true,
+            buttonlogin: true,
+          });
+          break;
+      }
+    }
+
+    if (cEvent?.value) {
+      RenderButtonsForTypeEvent();
+    }
+  }, [cEvent]);
 
   return (
     <React.Fragment>
@@ -135,7 +158,6 @@ const Headers = (props) => {
         <Menu theme='light' mode='horizontal'>
           <Row justify='space-between' align='middle'>
             <Row className='logo-header' justify='space-between' align='middle'>
-              <Link to={'/'}>{/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}</Link>
               {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
               {dataGeneral?.showAdmin && (
                 <Col span={2} offset={3} data-target='navbarBasicExample'>
@@ -157,18 +179,37 @@ const Headers = (props) => {
               <Spin />
             ) : !dataGeneral.userEvent ? (
               <Space>
-                <Button
-                  icon={<LockOutlined />}
-                  style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                  size='large'
-                  onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '1' })}>
-                  Iniciar sesión
-                </Button>
-                <Button
-                  size='large'
-                  onClick={() => setdataGeneral({ ...dataGeneral, modalVisible: true, tabModal: '2' })}>
-                  Registrarme
-                </Button>
+                {showButtons.buttonlogin && (
+                  <Button
+                    icon={<LockOutlined />}
+                    style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                    size='large'
+                    onClick={() => {
+                      HandleControllerLoginVisible({
+                        visible: true,
+                        organization: WhereHerePath(),
+                      });
+
+                      handleChangeTabModal('1');
+                    }}>
+                    Iniciar sesión
+                  </Button>
+                )}
+
+                {showButtons.buttonregister && (
+                  <Button
+                    size='large'
+                    onClick={() => {
+                      HandleControllerLoginVisible({
+                        visible: true,
+                        organization: WhereHerePath(),
+                      });
+
+                      handleChangeTabModal('2');
+                    }}>
+                    Registrarme
+                  </Button>
+                )}
               </Space>
             ) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
               <UserStatusAndMenu
@@ -203,16 +244,7 @@ const Headers = (props) => {
                 />
               )
             )}
-            {/* {(window.location.href.toString().includes('events') ||
-              window.location.href.toString().split('/').length == 4) &&
-              !window.location.href.toString().includes('organization') && ( */}
-            <ModalAuth
-              tab={dataGeneral.tabModal}
-              closeModal={modalClose}
-              organization='register'
-              visible={dataGeneral.modalVisible}
-            />
-            {/* )} */}
+
             {<ModalLoginHelpers organization={1} />}
           </Row>
         </Menu>

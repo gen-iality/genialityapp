@@ -49,7 +49,6 @@ const UserStatusAndMenu = (props) => {
   }
   useEffect(() => {
     if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
-    console.log('aja', !props.cUser?.value?.isAnonymous);
   }, [props.eventId]);
 
   let menu = !props.anonimususer ? (
@@ -145,7 +144,7 @@ const UserStatusAndMenu = (props) => {
           </Menu.Item>
         </Badge>
 
-        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={showPropsConfirm}>
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={() => showPropsConfirm()}>
           <FormattedMessage id='header.logout' defaultMessage='Salir' />
         </Menu.Item>
       </Menu.ItemGroup>
@@ -155,7 +154,7 @@ const UserStatusAndMenu = (props) => {
       {!props.anonimususer ? (
         <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
       ) : (
-        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={showPropsConfirm}>
+        <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={() => showPropsConfirm()}>
           <FormattedMessage id='header.logout' defaultMessage='Salir' />
         </Menu.Item>
       )}

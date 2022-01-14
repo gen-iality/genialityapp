@@ -12,7 +12,6 @@ import { withRouter } from 'react-router-dom';
 import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
-import { realTimeviuschat } from '../../../helpers/firebase';
 
 const RenderComponent = (props) => {
   let {
@@ -35,7 +34,6 @@ const RenderComponent = (props) => {
   const [renderGame, setRenderGame] = useState('');
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
-  // const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
 
   const Preloader = () => (
     <Space
@@ -63,7 +61,7 @@ const RenderComponent = (props) => {
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
         const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
-        console.log('DATA FIREBASE==>', habilitar_ingreso, meeting_id, platform, tabs, avalibleGames);
+        // console.log('DATA FIREBASE==>', habilitar_ingreso, meeting_id, platform, tabs, avalibleGames);
         setplatform(platform);
         setactivityState(habilitar_ingreso);
         setactivityStateGlobal(habilitar_ingreso);
@@ -80,30 +78,14 @@ const RenderComponent = (props) => {
 
     handleChangeCurrentActivity(tempactivty);
   }
-  console.log('1. ACTIVITY HELPER==>', currentActivity);
   useEffect(() => {
-    // let realTimeRef = null;
-    // let unsubscribe = null;
-
     async function GetStateMeetingRoom() {
       await listeningStateMeetingRoom(props.cEvent.value._id, currentActivity._id);
     }
 
     if (currentActivity) {
-      console.log('1. CURRENT==>', currentActivity);
       GetStateMeetingRoom();
-      // realTimeRef = realTimeviuschat.ref('meets/' + currentActivity._id + '/streamingStatus');
-      // unsubscribe = realTimeRef.on('value', (snapshot) => {
-      //   const data = snapshot?.val();
-      //   setWebHookStreamStatus(data?.status);
-      // });
     }
-
-    // return () => {
-    //   if (realTimeRef && unsubscribe) {
-    //     realTimeRef.off('value', unsubscribe);
-    //   }
-    // };
   }, [currentActivity]);
 
   useEffect(() => {
@@ -118,7 +100,6 @@ const RenderComponent = (props) => {
   }, [chatAttendeChats]);
 
   function RenderizarComponente(plataforma, actividad_estado, reder_Game) {
-    console.log('10. si los recibe', plataforma);
     switch (plataforma) {
       case 'vimeo':
         switch (actividad_estado) {
@@ -140,6 +121,7 @@ const RenderComponent = (props) => {
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
+            console.log('debu currentActivity?.video ', currentActivity?.video);
             return currentActivity?.video && <VideoActivity />;
         }
 
@@ -223,7 +205,7 @@ const RenderComponent = (props) => {
             return currentActivity?.video && <VideoActivity />;
         }
       case null:
-        return <VideoActivity />;
+        return currentActivity?.video ? <VideoActivity /> : '';
     }
   }
 
@@ -231,7 +213,6 @@ const RenderComponent = (props) => {
     <>
       {' '}
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      {console.log('PLATFORM==>', platform, activityState, renderGame)}
       {RenderizarComponente(platform, activityState, renderGame)}
     </>
   );

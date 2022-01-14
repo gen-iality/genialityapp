@@ -57,7 +57,6 @@ const EventSectionRoutes = (props) => {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
     }
-    console.log('props.cEventUser?.value', props.cEventUser?.value, props.cEventUser?.status, typeModal);
     if (
       props.cEventUser?.value == null &&
       props.cEventUser?.status == 'LOADED' &&
@@ -65,8 +64,6 @@ const EventSectionRoutes = (props) => {
       typeModal !== 'loginSuccess' &&
       typeModal !== 'visitors'
     ) {
-      console.log('1. ingreso aca a type modal');
-      //handleChangeTypeModal('registerForTheEvent');
       handleChangeTypeModal('preregisterMessage');
     } else if (
       props.cEventUser?.value !== null &&

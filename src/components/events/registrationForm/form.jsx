@@ -125,6 +125,11 @@ const FormRegister = ({
   loadingregister,
   setSectionPermissions,
   errorRegisterUser,
+  basicDataUser = {},
+  dataEventUser = {},
+  HandleHookForm = () => {},
+  setvalidateEventUser = () => {},
+  validateEventUser,
 }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
@@ -151,10 +156,6 @@ const FormRegister = ({
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState({});
-  if (Object.keys(initialValues).length > 0) {
-    initialValues.contrasena = '';
-    initialValues.password = '';
-  }
 
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || []
@@ -163,8 +164,16 @@ const FormRegister = ({
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {}
   );
+  const buttonSubmit = useRef(null);
 
   useEffect(() => {
+    let initialValuesGeneral = {};
+    if (basicDataUser || basicDataUser) {
+      initialValuesGeneral = {
+        ...basicDataUser,
+        ...dataEventUser,
+      };
+    }
     setinitialValues(
       organization
         ? initialOtherValue
@@ -172,9 +181,16 @@ const FormRegister = ({
         ? cEventUser?.value?.properties
         : cUser.value
         ? cUser.value
-        : {}
+        : initialValuesGeneral
     );
   }, [cUser.value, cEventUser]);
+
+  useEffect(() => {
+    if (validateEventUser.status) {
+      buttonSubmit.current.click();
+    }
+  }, [validateEventUser.status, validateEventUser.statusFields]);
+
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
@@ -207,11 +223,17 @@ const FormRegister = ({
       setCountry(paisSelected);
     }
   }, []);
+
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
   }, [tabLogin, typeModal]);
+
   const showGeneralMessage = (values, error, date) => {
+    setvalidateEventUser({
+      ...validateEventUser,
+      statusFields: false,
+    });
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
@@ -225,6 +247,14 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
+    if (Object.keys(basicDataUser).length > 0) {
+      setvalidateEventUser({
+        statusFields: true,
+        status: false,
+      });
+      return;
+    }
+
     if (values['email']) {
       values['email'] = values['email'].toLowerCase();
     }
@@ -322,16 +352,10 @@ const FormRegister = ({
             let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
             updateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
 
-            //FIN CAMPO LISTA  tipo justonebyattendee //
-
-            //if (resp.status !== 'UPDATED') {
-
             if (resp && resp._id) {
               setSuccessMessageInRegisterForm(resp.status);
               cEventUser.setUpdateUser(true);
               handleChangeTypeModal(null);
-              // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
-              // textMessage.content = "Usuario " + statusMessage;
               textMessage.content = 'Usuario ' + formMessage.successMessage;
 
               let $msg =
@@ -347,21 +371,13 @@ const FormRegister = ({
 
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
-              // console.log('INITIAL TOKEN AND VALID EMAIL', resp.data.user.initial_token, cEvent.value?.validateEmail);
               if (!cEvent?.value?.validateEmail && resp._id) {
-                //setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
                 const loginFirebase = async () => {
                   app
                     .auth()
                     .signInWithEmailAndPassword(resp.email || resp.properties.email, values.password)
                     .then((response) => {
                       if (response.user) {
-                        // if (cEventUser.value) {
-                        //   //cEventUser.setUpdateUser(true);
-                        //   //handleChangeTypeModal(null);
-                        //   //setSubmittedForm(false);
-                        //   window.location.reload();
-                        // } else {
                         cEventUser.setUpdateUser(true);
                         handleChangeTypeModal(null);
                         setSubmittedForm(false);
@@ -381,30 +397,12 @@ const FormRegister = ({
                     });
                 };
                 loginFirebase();
-                /*setTimeout(function() {
-                  window.location.replace(
-                    cEvent.value?._id == '60cb7c70a9e4de51ac7945a2'
-                      ? `/landing/${cEvent.value?._id}/success/${
-                          cEventUser.value == null ? typeRegister : 'free'
-                        }?token=${resp.data.user.initial_token}`
-                      : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
-                          !eventUser?._id ? 2 : 4
-                        }&token=${resp.data.user.initial_token}`
-                  );
-                }, 100);*/
               } else {
                 window.location.replace(
                   `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
                 );
               }
             } else {
-              // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
-              //Usuario ACTUALIZADO
-              // let msg =
-              //   'Ya se ha realizado previamente el registro con el correo: ' +
-              //   values.email +
-              //   ', se ha enviado un nuevo correo con enlace de ingreso.';
-              // textMessage.content = msg;
               if (typeRegister == 'free') {
                 let msg =
                   intl.formatMessage({ id: 'registration.already.registered' }) +
@@ -418,26 +416,52 @@ const FormRegister = ({
                 setNotLoggedAndRegister(true);
                 message.success(msg);
               } else {
-                //alert('A PAGAR');
                 setPayMessage(true);
               }
             }
           } catch (err) {
-            // textMessage.content = "Error... Intentalo mas tarde";
             textMessage.content = formMessage.errorMessage;
             textMessage.key = key;
             message.error(textMessage);
           }
         }
       } else {
-        // alert("YA ESTAS REGISTRADO..")
         setNotLoggedAndRegister(true);
       }
     }
   };
 
+  const ValidateEmptyFields = (allValues) => {
+    // if (allValues.picture == '') {
+    //   delete allValues.picture;
+    // }
+    // if (basicDataUser || dataEventUser) {
+    //   let noneEmpyFields = Object.keys(allValues).filter((m) => allValues[m] == '' || allValues[m] == undefined).length;
+    //   console.log('leng', noneEmpyFields, Object.keys(allValues).length);
+    //   if (noneEmpyFields == 0) {
+    //     console.log('activelo');
+    //     hookValidations(false, '');
+    //   } else {
+    //     hookValidations(
+    //       true,
+    //       intl.formatMessage({
+    //         id: 'feedback.title.error',
+    //         defaultMessage: 'Complete los campos solicitados correctamente.',
+    //       })
+    //     );
+    //   }
+    // }
+  };
+
   const valuesChange = (changedValues, allValues) => {
-    // console.log('VALUES==>', allValues);
+    //validar que todos los campos de event user esten llenos
+    ValidateEmptyFields(allValues);
+    let e = {
+      target: {
+        value: changedValues[Object.keys(changedValues)[0]],
+      },
+    };
+    HandleHookForm(e, Object.keys(changedValues)[0], null);
     updateFieldsVisibility(conditionals, allValues);
   };
 
@@ -476,11 +500,6 @@ const FormRegister = ({
   };
 
   const beforeUpload = (file) => {
-    // const isJpgOrPng = file.type === 'application/pdf';
-    // if (!isJpgOrPng) {
-    //   message.error('You can only upload PDF file!');
-    // }
-
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
       message.error('Image must smaller than 5MB!');
@@ -653,16 +672,10 @@ const FormRegister = ({
               {
                 <>
                   <Form.Item
-                    // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
-                    // style={eventUserId && hideFields}
                     valuePropName={'checked'}
-                    /* label={
-                    (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
-                      ? label
-                      : '' && (labelPosition !== 'arriba' || !labelPosition)
-                  }*/
                     name={name}
                     rules={[rule]}
+                    form={form}
                     key={'l' + key}
                     htmlFor={key}
                     initialValue={value}>
@@ -793,22 +806,6 @@ const FormRegister = ({
           );
         }
 
-        // if (type === 'password') {
-        //   input = (
-        //     <Password
-        //       name='password'
-        //       placeholder='Ingrese su password'
-        //       onChange={(e) => setPassword(e.target.value)}
-        //       key={key}
-        //       defaultValue={value}
-        //       value={password}
-        //       //pattern='^(?=\w*\d)(?=\w*[a-z])\S{8,16}$'
-        //       title={intl.formatMessage({ id: 'form.validate.message.password' })}
-        //       //required={true}
-        //       message={intl.formatMessage({ id: 'form.field.required' })}
-        //     />
-        //   );
-        // }
         //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
         if (type === 'avatar') {
           ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
@@ -820,16 +817,7 @@ const FormRegister = ({
                   action={'https://api.evius.co/api/files/upload/'}
                   accept='image/png,image/jpeg'
                   onChange={(file) => {
-                    //alert("ONCHANGE")
-                    //console.log("FILE==>",file.fileList)
-                    //console.log("FILEFORMATTER==>",file)
                     setImageAvatar(file);
-                    /*  setImgUrl(fls);
-                 const fls = (file ? file.fileList : [])
-                  .map(fl => ({
-                    ...fl,
-                    status: 'success',
-                  }))*/
                   }}
                   multiple={false}
                   listType='picture'
@@ -867,8 +855,6 @@ const FormRegister = ({
                 message: 'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales',
               }
             : rule;
-        // let hideFields =
-        //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
         return (
           type !== 'boolean' && (
@@ -1049,7 +1035,13 @@ const FormRegister = ({
                 <Col span={24} align='center'>
                   {!loadingregister && (
                     <Form.Item>
-                      <Button type='primary' htmlType='submit'>
+                      <Button
+                        ref={buttonSubmit}
+                        style={{
+                          display: Object.keys(basicDataUser) ? 'none' : 'block',
+                        }}
+                        type='primary'
+                        htmlType='submit'>
                         {(initialValues != null && cEventUser.value !== null) ||
                         (initialValues != null && Object.keys(initialValues).length > 0)
                           ? intl.formatMessage({ id: 'modal.feedback.accept' })
@@ -1062,7 +1054,9 @@ const FormRegister = ({
                             icon={option.icon}
                             onClick={() => option.action(eventUser)}
                             type={option.type}
-                            style={{ marginLeft: 10 }}>
+                            style={{
+                              marginLeft: 10,
+                            }}>
                             {option.text}
                           </Button>
                         ))}

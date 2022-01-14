@@ -10,8 +10,8 @@ export function GetIdEvent() {
 }
 
 export function uniqueID() {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+  return ([ 1e7 ] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[ 0 ] & (15 >> (c / 4)))).toString(16)
   );
 }
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
@@ -49,11 +49,11 @@ export function uploadImage(file) {
 }
 
 export function fieldNameEmailFirst(array) {
-  let fields = [...array];
+  let fields = [ ...array ];
   const idxName = array.findIndex(({ name }) => name === 'names');
-  fields.splice(0, 0, fields.splice(idxName, 1)[0]);
+  fields.splice(0, 0, fields.splice(idxName, 1)[ 0 ]);
   const idxEmail = fields.findIndex(({ name }) => name === 'email');
-  fields.splice(1, 0, fields.splice(idxEmail, 1)[0]);
+  fields.splice(1, 0, fields.splice(idxEmail, 1)[ 0 ]);
   return fields;
 }
 
@@ -73,73 +73,73 @@ export function handleRequestError(error) {
   return info;
 }
 
-export function parseData2Excel(data, fields,roles=null) {
- 
+export function parseData2Excel(data, fields, roles = null) {
+
   let info = [];
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
-  
-  data.map((item, key) => {
-    info[key] = {};
-    info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
-    info[key]['checked'] = (item.checkedin_at !== 'null' &&  item.checkedin_at!=null && item.checkedin_at!='')  ? 'TRUE' : 'FALSE';
 
-    info[key]['Hora checkIn'] =
-       item.checkedin_at
-      ? moment(item.checkedin_at).format('DD/MM/YYYY H:mm:ss A')
-      : '';
-    fields.map(({ name, type, label, _id}) => {
-      
+  data.map((item, key) => {
+    info[ key ] = {};
+    info[ key ][ '_id' ] = item._id ? item._id : 'UNDEFINED';
+    info[ key ][ 'checked' ] = (item.checkedin_at !== 'null' && item.checkedin_at != null && item.checkedin_at != '') ? 'TRUE' : 'FALSE';
+
+    info[ key ][ 'Hora checkIn' ] =
+      item.checkedin_at
+        ? moment(item.checkedin_at).format('DD/MM/YYYY H:mm:ss A')
+        : '';
+    fields.map(({ name, type, label, _id }) => {
+
       let str;
-      if(item?.properties){
-      switch (type) {
-        case 'number':
-          str = item.properties[name] ? item.properties[name].toString() : item?.user[name];
-          break;
-        case 'boolean':
-          str = item[name] ?  item[name]:'';
-          break;
-        case 'complex':
-          console.log("ITEM1==>",item.properties[name])
-          if( item.properties[name]?.includes("url")){
-            let document= item.properties[name] && item.properties[name]?.includes("url") && JSON.parse(item.properties[name] )
-          str =  (document[0] ? document[0]?.url :item.properties[name] ? item.properties[name].response : item?.user[name]).toString();
-          }else{
-            str=''
-          }
-          break;
-        case 'multiplelist':
-          str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
-          break;
-          case 'multiplelisttable':           
-          str = Array.isArray(item.properties[name]) ? item.properties[name][0].label : item.properties[name];
-          break;
-          case 'codearea':           
-            str = item[name];
+      if (item?.properties) {
+        switch (type) {
+          case 'number':
+            str = item.properties[ name ] ? item.properties[ name ].toString() : item?.user[ name ];
             break;
-        case 'file':
-          str =
-            item.properties[name] && item.properties[name].file
-              ? item.properties[name].file.response
-              : item.properties[name];
-          break;
-        default:
-          str = name === 'id' ? item['_id'] : item?.properties[name] ? item?.properties[name] : item?.user ? item?.user[name]:'';
-      }}
+          case 'boolean':
+            str = item[ name ] ? item[ name ] : '';
+            break;
+          case 'complex':
+            if (item.properties[ name ]?.includes("url")) {
+              let document = item.properties[ name ] && item.properties[ name ]?.includes("url") && JSON.parse(item.properties[ name ])
+              str = (document[ 0 ] ? document[ 0 ]?.url : item.properties[ name ] ? item.properties[ name ].response : item?.user[ name ]).toString();
+            } else {
+              str = ''
+            }
+            break;
+          case 'multiplelist':
+            str = Array.isArray(item.properties[ name ]) ? item.properties[ name ].join() : item.properties[ name ];
+            break;
+          case 'multiplelisttable':
+            str = Array.isArray(item.properties[ name ]) ? item.properties[ name ][ 0 ].label : item.properties[ name ];
+            break;
+          case 'codearea':
+            str = item[ name ];
+            break;
+          case 'file':
+            str =
+              item.properties[ name ] && item.properties[ name ].file
+                ? item.properties[ name ].file.response
+                : item.properties[ name ];
+            break;
+          default:
+            str = name === 'id' ? item[ '_id' ] : item?.properties[ name ] ? item?.properties[ name ] : item?.user ? item?.user[ name ] : '';
+        }
+      }
 
       if (type === 'complex' && str) {
-       /* Object.keys(str).map((prop) => {
-          return (info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop]);
-        });*/
-        return info[key][label]=str
-      } else return (info[key][label] = str);
+        /* Object.keys(str).map((prop) => {
+           return (info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop]);
+         });*/
+        return info[ key ][ label ] = str
+      } else return (info[ key ][ label ] = str);
 
       return null;
     });
-    if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
-    info[key]['Tipo asistente'] = roles?.filter((role)=>role._id==item.rol_id)[0]?.name;
-    info[key]['Actualizado'] = item.updated_at;
-    info[key]['Creado'] = item.created_at;
+    if (item.rol) info[ key ][ 'rol' ] = item.rol.label ? item.rol.label.toUpperCase() : '';
+    info[ key ][ 'Tipo asistente' ] = roles?.filter((role) => role._id == item.rol_id)[ 0 ]?.name;
+    info[ key ][ 'Actualizado' ] = item.updated_at;
+    info[ key ][ 'Creado' ] = item.created_at;
     return info;
   });
   return info;
@@ -154,7 +154,7 @@ export const sweetAlert = {
     });
   },
 
-  hideLoading: () => modal!=null && modal.destroy(),
+  hideLoading: () => modal != null && modal.destroy(),
   twoButton: (title, type, showCancelButton, confirmButtonText, cb) =>
     Modal.confirm({
       title: title,
@@ -174,18 +174,18 @@ export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-M
   const endDate = moment(rangeEndDate);
 
   if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate)) {
-    const datesRange = [startDate.format(dateFormat)];
+    const datesRange = [ startDate.format(dateFormat) ];
     let nextDay = startDate.add(1, 'day');
 
     while (nextDay.isBefore(endDate)) {
-      if(!datesRange.includes(nextDay.format(dateFormat))){
+      if (!datesRange.includes(nextDay.format(dateFormat))) {
         datesRange.push(nextDay.format(dateFormat));
         nextDay = nextDay.add(1, 'day');
-      }     
+      }
     }
     return datesRange;
   } else if (startDate.isValid() && endDate.isValid() && startDate.isSame(endDate)) {
-    return [startDate.format(dateFormat)];
+    return [ startDate.format(dateFormat) ];
   }
 
   return [];
@@ -199,10 +199,10 @@ export function formatDataToString(data, property) {
     if (!(data === null)) {
       if (Array.isArray(data)) {
         for (let i = 0; i < data.length; i++) {
-          if (data[i].label) {
-            result += data[i].label + '\n';
+          if (data[ i ].label) {
+            result += data[ i ].label + '\n';
           } else {
-            result += data[i] + '\n';
+            result += data[ i ] + '\n';
           }
         }
       } else {
@@ -241,15 +241,15 @@ const hexToRgb = (hex) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
+      r: parseInt(result[ 1 ], 16),
+      g: parseInt(result[ 2 ], 16),
+      b: parseInt(result[ 3 ], 16),
+    }
     : null;
 };
 const setContrast = (rgb) =>
   (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000 > 125 ? "black" : "white";
 
-export const getCorrectColor = (color) =>{
-    return setContrast(hexToRgb(color))
+export const getCorrectColor = (color) => {
+  return setContrast(hexToRgb(color))
 };

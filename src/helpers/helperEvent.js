@@ -1,6 +1,19 @@
 import { firestore } from './firebase';
 import { EventFieldsApi } from './request';
 
+
+//METODO PARA SABER SI ESTA EN EL HOME DE EVIUS O EN UN EVENTO
+export function isHome() {
+  let isHome = window.location.pathname.includes('/landing');
+  if (isHome) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+
 // //METODO PARA OBTENER ENCUESTAS New
 export function listenSurveysData(
   event_id,
@@ -30,7 +43,7 @@ export function listenSurveysData(
 function changeInSurveyDocChanges(docChanges) {
   let changeInSurvey = null;
   if (docChanges.length) {
-    let lastChange = docChanges[docChanges.length - 1];
+    let lastChange = docChanges[ docChanges.length - 1 ];
     switch (lastChange.type) {
       case 'removed':
         changeInSurvey = null;
@@ -69,7 +82,7 @@ export let monitorNewChatMessages = (event, user) => {
   let totalNewMessages = 0;
   firestore
     .collection('eventchats/' + event._id + '/userchats/' + user.uid + '/' + 'chats/')
-    .onSnapshot(function(querySnapshot) {
+    .onSnapshot(function (querySnapshot) {
       let data;
       querySnapshot.forEach((doc) => {
         data = doc.data();
@@ -130,7 +143,7 @@ export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
   firestore
     .collection('events')
     .doc(event_id)
-    .onSnapshot(function(eventSnapshot) {
+    .onSnapshot(function (eventSnapshot) {
       if (eventSnapshot.exists) {
         if (eventSnapshot.data().tabs !== undefined) {
           setgeneraltabs(eventSnapshot.data().tabs);

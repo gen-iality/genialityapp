@@ -20,7 +20,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [host_id, setHostId] = useState(null);
   const [host_name, setHostName] = useState(null);
   const [habilitar_ingreso, setHabilitarIngreso] = useState('');
-  const [platform, setPlatform] = useState('');
+  const [platform, setPlatform] = useState('wowza');
   const [vimeo_id, setVimeoId] = useState('');
   const [name_host, setNameHost] = useState('');
   const [avalibleGames, setAvailableGames] = useState();
@@ -29,12 +29,14 @@ export const AgendaContextProvider = ({ children }) => {
   const [roomStatus, setRoomStatus] = useState('');
   const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventContext);
+  const [transmition, setTransmition] = useState('EviusMeet');//EviusMeet Para cuando se tenga terminada
+  const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
     switch (action.type) {
       case 'meeting_created':
-        console.log('meeting_created', action);
+        /* console.log('meeting_created', action); */
         return { ...state, meeting_id: action.meeting_id };
 
       case 'stop':
@@ -64,8 +66,9 @@ export const AgendaContextProvider = ({ children }) => {
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+        /* console.log('GET CONFIGURATION==>', configuration); */
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
-        setPlatform(configuration.platform ? configuration.platform : null);
+        setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
         setRoomStatus(configuration.habilitar_ingreso);
         setAvailableGames(configuration.avalibleGames || []);
@@ -117,6 +120,10 @@ export const AgendaContextProvider = ({ children }) => {
         select_host_manual,
         activityState,
         activityDispatch,
+        transmition,
+        setTransmition,
+        useAlreadyCreated,
+        setUseAlreadyCreated,
       }}>
       {children}
     </AgendaContext.Provider>
