@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { getLiveStream, getLiveStreamStatus, getLiveStreamStats } from 'adaptors/wowzaStreamingAPI';
-import IconMute from './IconMute';
-import { AudioMutedOutlined } from '@ant-design/icons';
+import { getLiveStream } from 'adaptors/wowzaStreamingAPI';
+import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button } from 'antd';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
@@ -49,12 +48,12 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             style={{
               /* fontSize: '25px',  */
               position: 'absolute',
-              top: '4%',
+              top: /* !iconLocation ? '4%' : 'auto' */ 'auto',
               /* color: 'white', */
-              left: '3%',
+              left: 'auto' /* '3%' */,
               zIndex: '500',
             }}
-            icon={<AudioMutedOutlined />}
+            icon={<VolumeOff />}
           />
         )}
         <ReactPlayer
@@ -73,28 +72,6 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           // }}
         />
       </div>
-
-      {/* <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        {muted && thereIsConnection !== 'No' && <IconMute callback={() => setMuted(false)} />}
-        <ReactPlayer
-          muted={muted}
-          playing={true}
-          loop={loopBackGround}
-          width={'100%'}
-          height={'35vw'}
-          style={{
-            display: 'block',
-            margin: '0 auto',
-          }}
-          url={platformurl}
-          controls={!loopBackGround}
-          config={{
-            file: {
-              forceHLS: loopBackGround,
-            },
-          }}
-        />
-      </div> */}
     </>
   );
 }
