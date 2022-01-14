@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player';
 import { getLiveStream, getLiveStreamStatus, getLiveStreamStats } from 'adaptors/wowzaStreamingAPI';
 import IconMute from './IconMute';
 import { AudioMutedOutlined } from '@ant-design/icons';
+import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button } from 'antd';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
@@ -11,6 +12,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [loopBackGround, setLoopBackGround] = useState(false);
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading.mp4?alt=media&token=883ec61c-157a-408b-876c-b09f70402d14';
+  /* const iconLocation = window.location.pathname.includes('landing'); */
 
   useEffect(() => {
     setPlatformurl(null);
@@ -43,12 +45,12 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             style={{
               /* fontSize: '25px',  */
               position:'absolute', 
-              top: '4%',
+              top: /* !iconLocation ? '4%' : 'auto' */'auto',
               /* color: 'white', */
-              left: '3%',
+              left: 'auto' /* '3%' */,
               zIndex: '500'
             }}
-            icon={<AudioMutedOutlined />}
+            icon={<VolumeOff />}
           />
         }
         <ReactPlayer
