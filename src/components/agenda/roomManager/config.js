@@ -109,7 +109,12 @@ export default function RoomConfig(props) {
               <Form.Item label={'Origen de transmisión'} tooltip={'Origen de transmisión'}>
                 <List itemLayout='horizontal' bordered={false}>
                   <List.Item
-                    style={{borderRadius: '10px', border: '1px solid lightgray', padding: '10px', marginBottom: '10px'}}
+                    style={{
+                      borderRadius: '10px',
+                      border: '1px solid lightgray',
+                      padding: '10px',
+                      marginBottom: '10px',
+                    }}
                     actions={[
                       <Radio checked={transmition === 'EviusMeet'} onChange={(e) => setTransmition('EviusMeet')} />,
                     ]}>
@@ -129,8 +134,7 @@ export default function RoomConfig(props) {
                   </List.Item>
                   <List.Item
                     style={{ borderRadius: '10px', border: '1px solid lightgray', padding: '10px' }}
-                    actions={[
-                      <Radio checked={transmition === 'RTMP'} onChange={(e) => setTransmition('RTMP')} />]}>
+                    actions={[<Radio checked={transmition === 'RTMP'} onChange={(e) => setTransmition('RTMP')} />]}>
                     <List.Item.Meta title={<b>RTMP</b>} />
                   </List.Item>
                 </List>

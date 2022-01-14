@@ -6,6 +6,7 @@ import Moment from 'moment';
 import AgendaContext from '../../../Context/AgendaContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { stopLiveStream, deleteLiveStream, getLiveStreamStatus } from 'adaptors/wowzaStreamingAPI';
 
 class RoomManager extends Component {
   constructor(props) {
@@ -371,7 +372,8 @@ class RoomManager extends Component {
     let self = this;
     const { service, meeting_id, platform } = self.state;
     const { event_id } = self.props;
-
+    const streamingMeetingId = self.context.meeting_id;
+    const streamingPlatForm = self.context.platform;
     Modal.confirm({
       title: `¿Está seguro de eliminar la transmisión?`,
       icon: <ExclamationCircleOutlined />,
@@ -387,19 +389,26 @@ class RoomManager extends Component {
         });
         const onHandlerRemove = async () => {
           try {
-             // Si es una sala de zoom se elimina de la agenda de la api zoom
+            // Si es una sala de zoom se elimina de la agenda de la api zoom
             if (platform === 'zoom' || platform === 'zoomExterno') {
               const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
               if (updatedData.status === 200) {
                 message.success('Transmisión de Zoom eliminada!');
               }
             }
-
+            if (streamingPlatForm === 'wowza') {
+              const { state } = await getLiveStreamStatus(streamingMeetingId);
+              if (state === 'started') {
+                await stopLiveStream(streamingMeetingId);
+              }
+              await deleteLiveStream(streamingMeetingId);
+            }
             message.destroy(loading.key);
             message.open({
               type: 'success',
               content: <> Se eliminó la transmisión correctamente!</>,
             });
+
             self.restartData();
           } catch (e) {
             message.destroy(loading.key);
@@ -412,7 +421,6 @@ class RoomManager extends Component {
         onHandlerRemove();
       },
     });
-   
   };
 
   render() {
