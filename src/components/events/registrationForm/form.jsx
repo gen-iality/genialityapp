@@ -1038,7 +1038,7 @@ const FormRegister = ({
                       <Button
                         ref={buttonSubmit}
                         style={{
-                          display: Object.keys(basicDataUser).length>0 ? 'none' : 'block',
+                          display: Object.keys(basicDataUser).length > 0 ? 'none' : 'block',
                         }}
                         type='primary'
                         htmlType='submit'>
