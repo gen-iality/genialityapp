@@ -32,6 +32,7 @@ import { realTimeviuschat } from '../../../../helpers/firebase';
 import { UseCurrentUser } from '../../../../Context/userContext';
 import AgendaContext from 'Context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';
+import Loading from '../../../profile/loading';
 
 const WowzaStreamingPanel = ({
   meeting_id,
@@ -283,13 +284,21 @@ const WowzaStreamingPanel = ({
         <Row gutter={[16, 16]}>
           <Col span={10}>
             {/* <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} /> */}
-            {livestreamStats?.connected.value === 'Yes' ? (
-              <Badge.Ribbon text='En transmisión' color='red'>
-                <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
-              </Badge.Ribbon>
+            {livestreamStatus?.state === 'starting' ? (
+              <Loading />
             ) : (
-              <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+              <>
+                {livestreamStats?.connected.value === 'Yes' ? (
+                  <Badge.Ribbon text='En transmisión' color='red'>
+                    <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+                  </Badge.Ribbon>
+                ) : (
+                  <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+                )}
+              </>
             )}
+
+            {/* starting */}
           </Col>
           <Col span={14}>
             <Tabs defaultActiveKey='1'>
@@ -315,7 +324,7 @@ const WowzaStreamingPanel = ({
                 <Typography.Text>
                   <Space>
                     <b>
-                      {livestreamStatus?.state !== 'started' && livestreamStatus?.state != 'stopped' && <Spin />}
+                      {livestreamStatus?.state !== 'started' && livestreamStatus?.state !== 'stopped' && <Spin />}
                       {livestreamStatus?.state}
                     </b>
                   </Space>{' '}

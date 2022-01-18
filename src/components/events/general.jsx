@@ -478,7 +478,7 @@ class General extends Component {
       category_ids: categories,
       organizer_id:
         this.state.selectedOrganizer && this.state.selectedOrganizer.value ? this.state.selectedOrganizer.value : null,
-      event_type_id: this.state.selectedType.value,
+      event_type_id: this.state.selectedType?.value,
       app_configuration: this.state.info.app_configuration,
       banner_image: this.state.banner_image,
       banner_image_link: this.state.banner_image_link,
