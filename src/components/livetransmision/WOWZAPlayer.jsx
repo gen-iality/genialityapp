@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player';
 import { getLiveStream, getLiveStreamStatus, getLiveStreamStats } from 'adaptors/wowzaStreamingAPI';
 import IconMute from './IconMute';
 import { AudioMutedOutlined } from '@ant-design/icons';
+import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button } from 'antd';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
@@ -43,12 +44,11 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             style={{
               /* fontSize: '25px',  */
               position:'absolute', 
-              top: '4%',
-              /* color: 'white', */
-              left: '3%',
+              top: 'auto',
+              left: 'auto',
               zIndex: '500'
             }}
-            icon={<AudioMutedOutlined />}
+            icon={<VolumeOff />}
           />
         }
         <ReactPlayer
