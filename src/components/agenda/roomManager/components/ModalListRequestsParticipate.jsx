@@ -16,17 +16,22 @@ for (let i = 0; i < 5; i++) {
 
 const initialTargetKeys = mockData.filter((item) => +item.key > 10).map((item) => item.key);
 
-const ModalListRequestsParticipate = ({ handleModal, visible }) => {
+const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => {
   const screens = useBreakpoint();
   const [targetKeys, setTargetKeys] = useState([]);
   const [dataRequest, setDataRequest] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const { request } = useContext(AgendaContext);
-  const onChange = (nextTargetKeys, direction, moveKeys) => {
+  const { request, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
+  const onChange = async (nextTargetKeys, direction, moveKeys) => {
+    //ELIMINAMOS LA SOLICITUD
     if (direction === 'left') {
-      console.log('A ELIMINAR');
+      await removeRequest(refActivity, moveKeys[0]);
     }
-    console.log('DIRECTION==>', direction === 'left', nextTargetKeys);
+    //APPROVAMOS LA SOLICITUD
+    if (direction === 'right') {
+      await approvedOrRejectedRequest(refActivity, moveKeys[0], true);
+    }
+    console.log('DIRECTION==>', direction === 'left', nextTargetKeys, moveKeys);
     setTargetKeys(nextTargetKeys);
   };
 

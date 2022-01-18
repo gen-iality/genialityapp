@@ -18,7 +18,7 @@ export default function ConferenceConfig({
   host_name, //g3bcjcjf
 }) {
   const eventContext = useContext(CurrentEventContext);
-  const { activityEdit, getRequestByActivity, addRequest } = useContext(AgendaContext);
+  const { activityEdit, getRequestByActivity, addRequest, request } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
 
@@ -82,7 +82,9 @@ export default function ConferenceConfig({
             {/* </Space> */}
           </Col>
           <Col>
-            <Badge onClick={() => setViewModal(true)} count={1}>
+            <Badge
+              onClick={() => setViewModal(true)}
+              count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}>
               <Button type='primary'>Solicitudes de participacion</Button>
             </Badge>
           </Col>
@@ -96,7 +98,7 @@ export default function ConferenceConfig({
       <Button onClick={() => addRequest(refActivity, { id: 1, name: 'Jaime', date: new Date().getTime() })}>
         Crear solicitud
       </Button>
-      <ModalListRequestsParticipate visible={viewModal} handleModal={setViewModal} />
+      <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { keyOf } from 'core-js/library/core/dict';
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
 import { fireRealtime, firestore } from '../helpers/firebase';
@@ -92,12 +93,12 @@ export const AgendaContextProvider = ({ children }) => {
       .on('value', (snapshot) => {
         let listRequest = [];
         if (snapshot.exists()) {
-          console.log('1. DATA ACA==>', snapshot.val());
           let data = snapshot.val();
           if (Object.keys(data).length > 0) {
             Object.keys(data).map((requestData) => {
               listRequest.push({
-                key: data[requestData].id,
+                key: requestData,
+                id: data[requestData].id,
                 title: data[requestData].name,
                 date: data[requestData].date,
                 active: false,
@@ -106,7 +107,6 @@ export const AgendaContextProvider = ({ children }) => {
             setRequest(listRequest);
           }
         } else {
-          console.log('1. NOT DATA', snapshot.val());
           setRequest([]);
         }
       });
@@ -118,17 +118,20 @@ export const AgendaContextProvider = ({ children }) => {
     }
   };
 
-  const removeRequest = (refActivity, id) => {
-    if (id) {
-      fireRealtime.ref(refActivity).push(request);
+  const removeRequest = async (refActivity, key) => {
+    if (key) {
+      await fireRealtime
+        .ref(refActivity)
+        .child(key)
+        .remove();
     }
   };
 
-  const approvedOrRejectedRequest = (refActivity, id, status) => {
-    if (id) {
-      fireRealtime
+  const approvedOrRejectedRequest = async (refActivity, key, status) => {
+    if (key) {
+      await fireRealtime
         .ref(refActivity)
-        .child(id)
+        .child(key)
         .update({ active: status });
     }
   };
