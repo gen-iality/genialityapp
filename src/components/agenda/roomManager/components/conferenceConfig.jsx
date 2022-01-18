@@ -1,5 +1,8 @@
-import { Form, Select, Button, Space, Typography, Row, Col, Card } from 'antd';
+import { Form, Select, Button, Space, Typography, Row, Col, Card, Badge } from 'antd';
+import React from 'react';
+import ModalListRequestsParticipate from './ModalListRequestsParticipate';
 const { Text, Link } = Typography;
+const { Option } = Select;
 
 export default function ConferenceConfig({
   roomStatus,
@@ -12,11 +15,11 @@ export default function ConferenceConfig({
 }) {
   return (
     <>
-      <Card bordered style={{borderRadius: '10px'}}>
+      <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]} justify='space-between' align='middle'>
           <Col>
             {/* <Space direction='horizontal'> */}
-              {/* <Form.Item
+            {/* <Form.Item
                 label={'Estado de la transmisión para tus asistentes'}
                 tooltip={
                   <>
@@ -37,20 +40,20 @@ export default function ConferenceConfig({
                   <Option value='ended_meeting_room'>Finalizada</Option>
                 </Select>
               </Form.Item> */}
-              <Space >
-                <label className='label'>Estado de la transmisión para tus asistentes: </label>
-                <Select
-                  value={roomStatus}
-                  onChange={(value) => {
-                    setRoomStatus(value);
-                  }}>
-                  <Option value=''>Actividad creada</Option>
-                  <Option value='closed_meeting_room'>Iniciará pronto</Option>
-                  <Option value='open_meeting_room'>En vivo</Option>
-                  <Option value='ended_meeting_room'>Finalizada</Option>
-                </Select>
-              </Space>
-             {/*  <Text>
+            <Space>
+              <label className='label'>Estado de la transmisión para tus asistentes: </label>
+              <Select
+                value={roomStatus}
+                onChange={(value) => {
+                  setRoomStatus(value);
+                }}>
+                <Option value=''>Actividad creada</Option>
+                <Option value='closed_meeting_room'>Iniciará pronto</Option>
+                <Option value='open_meeting_room'>En vivo</Option>
+                <Option value='ended_meeting_room'>Finalizada</Option>
+              </Select>
+            </Space>
+            {/*  <Text>
                 <Text strong>Platforma: </Text>
                 {platform}
               </Text>
@@ -59,10 +62,15 @@ export default function ConferenceConfig({
                 {meeting_id}
               </Text>
               {requiresCreateRoom && host_name !== null && <Form.Item label={'Host'}>{host_name}</Form.Item>} */}
-              {/* <Button onClick={deleteRoom} danger>
+            {/* <Button onClick={deleteRoom} danger>
                 Eliminar transmisión
               </Button> */}
             {/* </Space> */}
+          </Col>
+          <Col>
+            <Badge count={1}>
+              <Button type='primary'>Solicitudes de participacion</Button>
+            </Badge>
           </Col>
           <Col>
             <Button onClick={deleteRoom} danger>
@@ -71,7 +79,7 @@ export default function ConferenceConfig({
           </Col>
         </Row>
       </Card>
-      
+      <ModalListRequestsParticipate />
     </>
   );
 }
