@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Col, Modal, Row, Transfer, Typography, Grid } from 'antd';
 import { FastForwardOutlined } from '@ant-design/icons';
+import AgendaContext from 'Context/AgendaContext';
 
 const { useBreakpoint } = Grid;
 
@@ -15,14 +16,17 @@ for (let i = 0; i < 5; i++) {
 
 const initialTargetKeys = mockData.filter((item) => +item.key > 10).map((item) => item.key);
 
-const ModalListRequestsParticipate = () => {
+const ModalListRequestsParticipate = ({ handleModal, visible }) => {
   const screens = useBreakpoint();
-  const [targetKeys, setTargetKeys] = useState(initialTargetKeys);
+  const [targetKeys, setTargetKeys] = useState([]);
+  const [dataRequest, setDataRequest] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const { request } = useContext(AgendaContext);
   const onChange = (nextTargetKeys, direction, moveKeys) => {
-    console.log('targetKeys:', nextTargetKeys);
-    console.log('direction:', direction);
-    console.log('moveKeys:', moveKeys);
+    if (direction === 'left') {
+      console.log('A ELIMINAR');
+    }
+    console.log('DIRECTION==>', direction === 'left', nextTargetKeys);
     setTargetKeys(nextTargetKeys);
   };
 
@@ -36,12 +40,19 @@ const ModalListRequestsParticipate = () => {
     console.log('direction:', direction);
     console.log('target:', e.target);
   };
+  useEffect(() => {
+    if (request) {
+      setDataRequest(request);
+      setTargetKeys(request);
+    }
+  }, [request]);
   return (
     <Modal
       width={700}
       // bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       closable={true}
-      visible={true}
+      onCancel={() => handleModal(false)}
+      visible={visible}
       footer={null}>
       <Row gutter={[8, 8]}>
         <Col>
@@ -57,10 +68,10 @@ const ModalListRequestsParticipate = () => {
               width: screens.xs ? 135 : 300,
               height: screens.xs ? 225 : 300,
             }}
-            dataSource={mockData}
+            dataSource={dataRequest}
             titles={['Solicitudes', 'Aprobadas']}
-            targetKeys={targetKeys}
             selectedKeys={selectedKeys}
+            targetKeys={targetKeys}
             onChange={onChange}
             onSelectChange={onSelectChange}
             onScroll={onScroll}
