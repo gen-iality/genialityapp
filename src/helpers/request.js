@@ -709,13 +709,16 @@ export const FaqsApi = {
     return await Actions.get(`api/events/${eventId}/faqs/`, id);
   },
   editOne: async (data, id, eventId) => {
-    return await Actions.edit(`api/events/${eventId}/faqs`, data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`api/events/${eventId}/faqs/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id, eventId) => {
-    return await Actions.delete(`api/events/${eventId}/faqs`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${eventId}/faqs`, `${id}?token=${token}`);
   },
   create: async (data, id) => {
-    return await Actions.create(`api/events/${id}/faqs`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`api/events/${id}/faqs?token=${token}`, data);
   },
 };
 
