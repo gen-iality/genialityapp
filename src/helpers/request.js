@@ -835,11 +835,11 @@ export const AgendaApi = {
   },
   deleteOne: async (id, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/events/${event}/activities?token=${token}`, id, true);
+    return await Actions.delete(`api/events/${event}/activities`, `${id}?token=${token}`);
   },
   create: async (event, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.create(`api/events/${event}/activities?token=${token}`, data, true);
+    return await Actions.create(`api/events/${event}/activities?token=${token}`, data);
   },
   duplicate: async (event, data, id) => {
     return await Actions.create(`api/events/${event}/duplicateactivitie/${id}`, data);

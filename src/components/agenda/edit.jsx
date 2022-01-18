@@ -677,12 +677,13 @@ class AgendaEdit extends Component {
 
   //FN para eliminar la actividad
   remove = async () => {
+    let self = this;
     const loading = message.open({
       key: 'loading',
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    if (this.state.activity_id) {
+    if (self.state.activity_id) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -693,14 +694,14 @@ class AgendaEdit extends Component {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id);
+              await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
               message.destroy(loading.key);
               message.open({
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              this.setState({ redirect: true });
-              history.push(`${props.matchUrl}`);
+              self.setState({ redirect: true });
+              self.props.history.push(`${self.props.matchUrl}`);
             } catch (e) {
               message.destroy(loading.key);
               message.open({
