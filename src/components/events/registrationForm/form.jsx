@@ -186,10 +186,10 @@ const FormRegister = ({
   }, [cUser.value, cEventUser]);
 
   useEffect(() => {
-    if (validateEventUser.status) {
+    if (validateEventUser?.status) {
       buttonSubmit.current.click();
     }
-  }, [validateEventUser.status, validateEventUser.statusFields]);
+  }, [validateEventUser?.status, validateEventUser?.statusFields]);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -1038,7 +1038,7 @@ const FormRegister = ({
                       <Button
                         ref={buttonSubmit}
                         style={{
-                          display: Object.keys(basicDataUser) ? 'none' : 'block',
+                          display: Object.keys(basicDataUser).length>0 ? 'none' : 'block',
                         }}
                         type='primary'
                         htmlType='submit'>
