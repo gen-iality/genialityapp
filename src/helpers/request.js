@@ -854,13 +854,15 @@ export const SpeakersApi = {
   },
   editOne: async (data, id, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit(`api/events/${event}/host/${id}`, data, `?token=${token}`);
+    return await Actions.edit(`api/events/${event}/host/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id, event) => {
-    return await Actions.delete(`api/events/${event}/host`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${event}/host`, `${id}?token=${token}`);
   },
   create: async (event, data) => {
-    return await Actions.create(`api/events/${event}/host`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`api/events/${event}/host?token=${token}`, data);
   },
 };
 
