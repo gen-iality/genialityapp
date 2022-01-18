@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import WithEviusContext from '../../../Context/withContext';
 import ImageComponentwithContext from './ImageComponent';
 import { HelperContext } from '../../../Context/HelperContext';
@@ -34,6 +34,8 @@ const RenderComponent = (props) => {
   const [renderGame, setRenderGame] = useState('');
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
+  //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
+  const [transmition, setTransmiton] = useState(null);
 
   const Preloader = () => (
     <Space
@@ -62,10 +64,12 @@ const RenderComponent = (props) => {
         const data = infoActivity.data();
         const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
         // console.log('DATA FIREBASE==>', habilitar_ingreso, meeting_id, platform, tabs, avalibleGames);
+        console.log("DATA ACTIVITY==>",data)
         setplatform(platform);
         setactivityState(habilitar_ingreso);
         setactivityStateGlobal(habilitar_ingreso);
         setmeetingId(meeting_id);
+        setTransmiton(data.transmition)
         settabsGeneral(tabs);
         if (!tabs.games) {
           HandleChatOrAttende('1');
@@ -99,7 +103,7 @@ const RenderComponent = (props) => {
     }
   }, [chatAttendeChats]);
 
-  function RenderizarComponente(plataforma, actividad_estado, reder_Game) {
+  const RenderizarComponente=useCallback((plataforma, actividad_estado, reder_Game)=> {
     switch (plataforma) {
       case 'vimeo':
         switch (actividad_estado) {
@@ -178,7 +182,7 @@ const RenderComponent = (props) => {
               case 'game':
                 return (
                   <>
-                    <WowzaStreamingPlayer meeting_id={meetingId} />
+                    <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
                     <GameDrawer />
                   </>
                 );
@@ -192,7 +196,7 @@ const RenderComponent = (props) => {
                     <br />
                   </>
                 )} */}
-                <WowzaStreamingPlayer meeting_id={meetingId} />
+                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
               </>
             );
 
@@ -207,7 +211,7 @@ const RenderComponent = (props) => {
       case null:
         return currentActivity?.video ? <VideoActivity /> : '';
     }
-  }
+  })
 
   return (
     <>

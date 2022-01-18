@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
-import { firestore } from '../helpers/firebase';
+import { fireRealtime, firestore } from '../helpers/firebase';
 import { AgendaApi } from '../helpers/request';
 import { CurrentEventContext } from './eventContext';
 
@@ -31,6 +31,7 @@ export const AgendaContextProvider = ({ children }) => {
   const cEvent = useContext(CurrentEventContext);
   const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet Para cuando se tenga terminada
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
+  const [request, setRequest] = useState([]);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -84,6 +85,54 @@ export const AgendaContextProvider = ({ children }) => {
     }
   }, [activityEdit]);
 
+  const getRequestByActivity = (refActivity) => {
+    fireRealtime
+      .ref(refActivity)
+      .orderByChild('date')
+      .on('value', (snapshot) => {
+        let listRequest = [];
+        if (snapshot.exists()) {
+          console.log('1. DATA ACA==>', snapshot.val());
+          let data = snapshot.val();
+          if (Object.keys(data).length > 0) {
+            Object.keys(data).map((requestData) => {
+              listRequest.push({
+                key: data[requestData].id,
+                title: data[requestData].name,
+                date: data[requestData].date,
+                active: false,
+              });
+            });
+            setRequest(listRequest);
+          }
+        } else {
+          console.log('1. NOT DATA', snapshot.val());
+          setRequest([]);
+        }
+      });
+  };
+
+  const addRequest = (refActivity, request) => {
+    if (request) {
+      fireRealtime.ref(refActivity).push(request);
+    }
+  };
+
+  const removeRequest = (refActivity, id) => {
+    if (id) {
+      fireRealtime.ref(refActivity).push(request);
+    }
+  };
+
+  const approvedOrRejectedRequest = (refActivity, id, status) => {
+    if (id) {
+      fireRealtime
+        .ref(refActivity)
+        .child(id)
+        .update({ active: status });
+    }
+  };
+
   return (
     <AgendaContext.Provider
       value={{
@@ -124,6 +173,11 @@ export const AgendaContextProvider = ({ children }) => {
         setTransmition,
         useAlreadyCreated,
         setUseAlreadyCreated,
+        getRequestByActivity,
+        request,
+        addRequest,
+        removeRequest,
+        approvedOrRejectedRequest,
       }}>
       {children}
     </AgendaContext.Provider>

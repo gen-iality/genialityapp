@@ -1,5 +1,9 @@
 import { Form, Select, Button, Space, Typography, Row, Col, Card, Badge } from 'antd';
-import React from 'react';
+import AgendaContext from 'Context/AgendaContext';
+import { CurrentEventContext } from 'Context/eventContext';
+import { fireRealtime } from 'helpers/firebase';
+import React, { useState, useContext } from 'react';
+import { useEffect } from 'react';
 import ModalListRequestsParticipate from './ModalListRequestsParticipate';
 const { Text, Link } = Typography;
 const { Option } = Select;
@@ -13,6 +17,16 @@ export default function ConferenceConfig({
   requiresCreateRoom,
   host_name, //g3bcjcjf
 }) {
+  const eventContext = useContext(CurrentEventContext);
+  const { activityEdit, getRequestByActivity, addRequest } = useContext(AgendaContext);
+  const [viewModal, setViewModal] = useState(false);
+  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+
+  useEffect(() => {
+    if (!eventContext.value || !activityEdit) return;
+    getRequestByActivity(refActivity);
+  }, [eventContext.value, activityEdit]);
+
   return (
     <>
       <Card bordered style={{ borderRadius: '10px' }}>
@@ -68,7 +82,7 @@ export default function ConferenceConfig({
             {/* </Space> */}
           </Col>
           <Col>
-            <Badge count={1}>
+            <Badge onClick={() => setViewModal(true)} count={1}>
               <Button type='primary'>Solicitudes de participacion</Button>
             </Badge>
           </Col>
@@ -79,7 +93,10 @@ export default function ConferenceConfig({
           </Col>
         </Row>
       </Card>
-      <ModalListRequestsParticipate />
+      <Button onClick={() => addRequest(refActivity, { id: 1, name: 'Jaime', date: new Date().getTime() })}>
+        Crear solicitud
+      </Button>
+      <ModalListRequestsParticipate visible={viewModal} handleModal={setViewModal} />
     </>
   );
 }
