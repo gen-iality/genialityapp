@@ -200,7 +200,7 @@ class Product extends Component {
                   ellipsis={{
                     rows: 3,
                     expandable: true,
-                    symbol: <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver mas</span>,
+                    symbol: <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver más</span>,
                   }}>
                   {data.name}
                 </Paragraph>
