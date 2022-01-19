@@ -24,25 +24,21 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   const { requestList, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
   const onChange = async (nextTargetKeys, direction, moveKeys) => {
     //ELIMINAMOS LA SOLICITUD
-    console.log('1. ONCHANGE SELECT ALL');
     if (direction === 'left') {
-      console.log('1. ELIMINO SOLICITUD');
       await Promise.all(
         moveKeys?.map(async (key) => {
           await removeRequest(`${refActivity}`, key);
         })
       );
     }
-    //APPROVAMOS LA SOLICITUD
+    //APPROBAMOS LA SOLICITUD
     if (direction === 'right') {
-      console.log('1. APRUEBO SOLICITUD');
       await Promise.all(
         moveKeys?.map(async (key) => {
           await approvedOrRejectedRequest(`${refActivity}`, key, true);
         })
       );
     }
-    console.log('1. DIRECTION==>', direction === 'left', nextTargetKeys, moveKeys);
     setTargetKeys(nextTargetKeys);
   };
 
@@ -58,10 +54,6 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   };
   useEffect(() => {
     if (requestList) {
-      console.log(
-        '1. REQUEST ACTIVE===>',
-        requestList.filter((request) => request.active)
-      );
       let approvedRequest = requestList.filter((request) => request.active).map((item) => item.key);
       setDataRequest(requestList);
       setTargetKeys(approvedRequest);
@@ -77,7 +69,6 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
       footer={null}>
       <Row gutter={[8, 8]}>
         <Col>
-          {console.log('SELECTED KEYS===>', targetKeys)}
           <Typography.Title level={4}>Solicitudes para participar en la transmisión</Typography.Title>
         </Col>
         <Col>

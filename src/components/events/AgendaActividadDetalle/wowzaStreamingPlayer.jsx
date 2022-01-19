@@ -3,6 +3,8 @@ import WOWZAPlayer from '../../livetransmision/WOWZAPlayer';
 import { getLiveStreamStatus, getLiveStreamStats } from 'adaptors/wowzaStreamingAPI';
 import { CurrentUserContext } from 'Context/userContext';
 import { Grid } from 'antd';
+import AgendaContext from 'Context/AgendaContext';
+import { CurrentEventUserContext } from 'Context/eventUserContext';
 
 const { useBreakpoint } = Grid;
 
@@ -10,20 +12,30 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   const screens = useBreakpoint();
   const [livestreamStats, setLivestreamStats] = useState(null);
   const userContext = useContext(CurrentUserContext);
-  const [visibleMeets, setVisibleMeets] = useState(true);
+  const { request } = useContext(AgendaContext);
+  const evetUserContext = useContext(CurrentEventUserContext);
+  const [visibleMeets, setVisibleMeets] = useState(false);
   //   const [livestreamStatus, setLivestreamStatus] = useState(null);
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
   const eviusmeetUrl = `https://eviusmeets.netlify.app/?meetingId=${activity._id}&rol=0&username=${
     userContext.value?.names
   }&email=${userContext.value?.email}&photo=${userContext.value?.picture || urlDefault}`;
-  console.log('User_ID==>', userContext.value);
 
+  useEffect(() => {
+    if (transmition !== 'EviusMeet' || !evetUserContext.value) return;
+    if (request && request[evetUserContext.value._id] && request[evetUserContext.value._id].active) {
+      setVisibleMeets(true);
+    } else {
+      setVisibleMeets(false);
+    }
+  }, [transmition, request, evetUserContext.value]);
   let timer_id = null;
 
   const executer_startMonitorStatus = async () => {
     let live_stream_status = null;
     let live_stream_stats = null;
+    console.log('EJECUTADO START MONITOR');
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
       //   setLivestreamStatus(live_stream_status);
@@ -37,6 +49,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
     }
   };
 
+  //EFECTO PARA DETENER O INICIAR TIMER WOWZA
   useEffect(() => {
     if (visibleMeets) {
       if (timer_id) {
@@ -50,6 +63,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
     }
   }, [visibleMeets]);
 
+  // SI EXISTE UN MEETING ID SE EJECUTA EL MONITOR, PERO SE QUEDA COLGADO (TIMER)
   useEffect(() => {
     if (!meeting_id) return;
     !visibleMeets && executer_startMonitorStatus();
@@ -95,6 +109,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       ) : (
         <h1>Streaming detenido</h1>
       )} */}
+      {console.log('1. RESPUESTA ACA==>', livestreamStats?.connected.value)}
     </>
   );
 }

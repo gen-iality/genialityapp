@@ -34,18 +34,11 @@ const HeaderColumns = (props) => {
 
   //SE EJECUTA CUANDO TIENE UNA ACTIVIDAD PARA ESTABLECER LA REFERENCIA Y OBTENER LOS REQUEST
   useEffect(() => {
-    if (!currentActivity) return;
+    if (!currentActivity || transmition !== 'EviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
     setRefActivity(refActivity);
     getRequestByActivity(refActivity);
-  }, [currentActivity]);
-
-  // EFECTO QUE ESTÁ A LA ESCUCHA DE SI SE LE APRUEBA O NO LA PARTICIPACIÓN
-  useEffect(() => {
-    if (request && request[cEventUSer.value?._id]) {
-      console.log('REQUEST ACA==>', request[cEventUSer.value?._id]);
-    }
-  }, [request]);
+  }, [currentActivity, transmition]);
 
   const haveRequest = () => {
     if ((request && !request[cEventUSer.value?._id]) || !request) {

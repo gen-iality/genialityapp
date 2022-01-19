@@ -13,7 +13,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
 
   useEffect(() => {
     if (!meeting_id) return;
-    if (thereIsConnection === 'No') {
+    if (thereIsConnection === 'No' || !thereIsConnection) {
       setLoopBackGround(false);
       setPlatformurl(defaultVideo);
       setMuted(true);
