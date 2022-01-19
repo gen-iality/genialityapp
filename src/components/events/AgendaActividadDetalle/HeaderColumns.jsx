@@ -14,6 +14,7 @@ import WithEviusContext from '../../../Context/withContext';
 import EnVivo from '../../../EnVivo.svg';
 import Moment from 'moment-timezone';
 import { UseEventContext } from 'Context/eventContext';
+import HumanGreetingIcon from '@2fd/ant-design-icons/lib/HumanGreeting';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useContext(HelperContext);
@@ -160,6 +161,11 @@ const HeaderColumns = (props) => {
 
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
+          <Col>
+            <Button icon={<HumanGreetingIcon />} type='primary'>
+              Solicitar participar en la transmisión 
+            </Button>
+          </Col>
         </div>
       </Col>
     </Row>
