@@ -32,7 +32,9 @@ export const AgendaContextProvider = ({ children }) => {
   const cEvent = useContext(CurrentEventContext);
   const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet Para cuando se tenga terminada
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
-  const [request, setRequest] = useState([]);
+  const [request, setRequest] = useState({});
+  const [requestList, setRequestList] = useState([]);
+  const [refActivity, setRefActivity] = useState(null);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -91,30 +93,41 @@ export const AgendaContextProvider = ({ children }) => {
       .ref(refActivity)
       .orderByChild('date')
       .on('value', (snapshot) => {
-        let listRequest = [];
+        let listRequest = {};
+        let listRequestArray = [];
         if (snapshot.exists()) {
           let data = snapshot.val();
           if (Object.keys(data).length > 0) {
             Object.keys(data).map((requestData) => {
-              listRequest.push({
+              listRequest[requestData] = {
                 key: requestData,
                 id: data[requestData].id,
                 title: data[requestData].name,
                 date: data[requestData].date,
-                active: false,
+                active: data[requestData].active || false,
+              };
+              listRequestArray.push({
+                key: requestData,
+                id: data[requestData].id,
+                title: data[requestData].name,
+                date: data[requestData].date,
+                active: data[requestData].active || false,
               });
             });
+            console.log('1. LISTADO ACA==>', listRequestArray);
             setRequest(listRequest);
+            setRequestList(listRequestArray);
           }
         } else {
-          setRequest([]);
+          setRequest({});
+          setRequestList([]);
         }
       });
   };
-
   const addRequest = (refActivity, request) => {
     if (request) {
-      fireRealtime.ref(refActivity).push(request);
+      console.log('ADD REQUEST');
+      fireRealtime.ref(refActivity).set(request);
     }
   };
 
@@ -128,9 +141,10 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const approvedOrRejectedRequest = async (refActivity, key, status) => {
-    if (key) {
+    console.log('1. APROVE ACA=>', refActivity);
+    if (refActivity) {
       await fireRealtime
-        .ref(refActivity)
+        .ref(`${refActivity}`)
         .child(key)
         .update({ active: status });
     }
@@ -181,6 +195,9 @@ export const AgendaContextProvider = ({ children }) => {
         addRequest,
         removeRequest,
         approvedOrRejectedRequest,
+        setRefActivity,
+        refActivity,
+        requestList,
       }}>
       {children}
     </AgendaContext.Provider>

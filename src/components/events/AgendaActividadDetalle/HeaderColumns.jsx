@@ -1,5 +1,5 @@
 import { Button, Col, Row } from 'antd';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
@@ -15,10 +15,58 @@ import EnVivo from '../../../EnVivo.svg';
 import Moment from 'moment-timezone';
 import { UseEventContext } from 'Context/eventContext';
 import HumanGreetingIcon from '@2fd/ant-design-icons/lib/HumanGreeting';
+import AgendaContext from 'Context/AgendaContext';
+import { CurrentEventUserContext } from 'Context/eventUserContext';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useContext(HelperContext);
   let cEvent = UseEventContext();
+  let cEventUSer = useContext(CurrentEventUserContext);
+  let {
+    request,
+    transmition,
+    getRequestByActivity,
+    addRequest,
+    setRefActivity,
+    refActivity,
+    removeRequest,
+  } = useContext(AgendaContext);
+
+  //SE EJECUTA CUANDO TIENE UNA ACTIVIDAD PARA ESTABLECER LA REFERENCIA Y OBTENER LOS REQUEST
+  useEffect(() => {
+    if (!currentActivity) return;
+    const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
+    setRefActivity(refActivity);
+    getRequestByActivity(refActivity);
+  }, [currentActivity]);
+
+  // EFECTO QUE ESTÁ A LA ESCUCHA DE SI SE LE APRUEBA O NO LA PARTICIPACIÓN
+  useEffect(() => {
+    if (request && request[cEventUSer.value?._id]) {
+      console.log('REQUEST ACA==>', request[cEventUSer.value?._id]);
+    }
+  }, [request]);
+
+  const haveRequest = () => {
+    if ((request && !request[cEventUSer.value?._id]) || !request) {
+      return false;
+    }
+    return true;
+  };
+
+  const sendOrCancelRequest = async () => {
+    if (!haveRequest()) {
+      await addRequest(refActivity + '/' + cEventUSer.value?._id, {
+        id: cEventUSer.value?._id,
+        name: cEventUSer.value?.user?.names,
+        date: new Date().getTime(),
+      });
+    } else {
+      //REMOVER O CANCELAR REQUEST
+      await removeRequest(refActivity, cEventUSer.value?._id);
+    }
+  };
+
   const intl = useIntl();
   return (
     <Row align='middle'>
@@ -162,9 +210,15 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-            <Button icon={<HumanGreetingIcon />} type='primary'>
-              Solicitar participar en la transmisión 
-            </Button>
+            {transmition == 'EviusMeet' && (
+              <Button
+                onClick={() => sendOrCancelRequest()}
+                icon={<HumanGreetingIcon />}
+                disabled={request && request[cEventUSer.value?._id]?.active}
+                type={!haveRequest() ? 'primary' : 'danger'}>
+                {!haveRequest() ? 'Solicitar participar en la transmisión' : 'Cancelar solicitud'}
+              </Button>
+            )}
           </Col>
         </div>
       </Col>

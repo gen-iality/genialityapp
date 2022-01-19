@@ -21,17 +21,28 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   const [targetKeys, setTargetKeys] = useState([]);
   const [dataRequest, setDataRequest] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const { request, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
+  const { requestList, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
   const onChange = async (nextTargetKeys, direction, moveKeys) => {
     //ELIMINAMOS LA SOLICITUD
+    console.log('1. ONCHANGE SELECT ALL');
     if (direction === 'left') {
-      await removeRequest(refActivity, moveKeys[0]);
+      console.log('1. ELIMINO SOLICITUD');
+      await Promise.all(
+        moveKeys?.map(async (key) => {
+          await removeRequest(`${refActivity}`, key);
+        })
+      );
     }
     //APPROVAMOS LA SOLICITUD
     if (direction === 'right') {
-      await approvedOrRejectedRequest(refActivity, moveKeys[0], true);
+      console.log('1. APRUEBO SOLICITUD');
+      await Promise.all(
+        moveKeys?.map(async (key) => {
+          await approvedOrRejectedRequest(`${refActivity}`, key, true);
+        })
+      );
     }
-    console.log('DIRECTION==>', direction === 'left', nextTargetKeys, moveKeys);
+    console.log('1. DIRECTION==>', direction === 'left', nextTargetKeys, moveKeys);
     setTargetKeys(nextTargetKeys);
   };
 
@@ -46,11 +57,16 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
     console.log('target:', e.target);
   };
   useEffect(() => {
-    if (request) {
-      setDataRequest(request);
-      setTargetKeys(request);
+    if (requestList) {
+      console.log(
+        '1. REQUEST ACTIVE===>',
+        requestList.filter((request) => request.active)
+      );
+      let approvedRequest = requestList.filter((request) => request.active).map((item) => item.key);
+      setDataRequest(requestList);
+      setTargetKeys(approvedRequest);
     }
-  }, [request]);
+  }, [requestList]);
   return (
     <Modal
       width={700}
@@ -61,6 +77,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
       footer={null}>
       <Row gutter={[8, 8]}>
         <Col>
+          {console.log('SELECTED KEYS===>', targetKeys)}
           <Typography.Title level={4}>Solicitudes para participar en la transmisión</Typography.Title>
         </Col>
         <Col>
