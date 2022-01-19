@@ -419,10 +419,12 @@ export const EventFieldsApi = {
     return await Actions.getOne(`/api/events/${event}/userproperties/${id}`);
   },
   createOne: async (data, event) => {
-    return await Actions.post(`/api/events/${event}/userproperties`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${event}/userproperties?token=${token}`, data);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`/api/events/${event}/userproperties/${id}`, data, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`/api/events/${event}/userproperties/${id}?token=${token}`, data, true);
   },
   registerListFieldOptionTaken: async (data, id, event) => {
     return await Actions.put(`/api/events/${event}/userproperties/${id}/RegisterListFieldOptionTaken`, data);
@@ -671,7 +673,7 @@ export const NewsFeed = {
   },
   editOne: async (data, id, eventId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit(`api/events/${eventId}/newsfeed`, data, `${id}?token=${token}`);
+    return await Actions.edit(`api/events/${eventId}/newsfeed/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id, eventId) => {
     let token = await GetTokenUserFirebase();

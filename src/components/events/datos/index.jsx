@@ -124,7 +124,7 @@ class Datos extends Component {
   };
   //Guardar campo en el evento
   saveField = async (field) => {
-    console.log('FIELD==>', field);
+    /* console.log('FIELD==>', field); */
     try {
       let totaluser = {};
       const organizationId = this?.organization?._id;
