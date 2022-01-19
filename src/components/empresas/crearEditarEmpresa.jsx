@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, notification, Row, Input, message, Modal } from 'antd';
+import { Button, Col, Form, notification, Row, Input, message, Modal, Switch, Spin } from 'antd';
 import { Field, FieldArray, Formik } from 'formik';
 import { apply, keys } from 'ramda';
 import { Link } from 'react-router-dom';
@@ -242,7 +242,7 @@ function CrearEditarEmpresa( props ) {
               form
               remove={remove}
               edit={props.location.state.edit}
-              /* extra={(<Field name='visible' component={SwitchField} label='Visible' />)} */
+              extra={(<Field name='visible' component={SwitchField} label='Visible' labelCol/>)}
             />
             <Row justify='center'>
               <Col span={20}>
@@ -257,7 +257,7 @@ function CrearEditarEmpresa( props ) {
 
                 <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
 
-                <Field name='visible' component={SwitchField} label='Visible' />
+                {/* <Field name='visible' component={SwitchField} label='Visible' /> */}
 
                 <ImageField required name='stand_image' label='Banner de la empresa' />
 

@@ -33,6 +33,7 @@ function SwitchField(rawProps) {
       required={formItemProps.required}
       help={fieldError}
       validateStatus={fieldError ? "error" : undefined}
+      labelCol={props.labelCol ? { span: 12 } : ''}
     >
       <Switch
         style={switchStyle}
@@ -41,6 +42,8 @@ function SwitchField(rawProps) {
         checked={formikProps.field.value}
         onBlur={handleBlur}
         onChange={handleChange}
+        checkedChildren= {props.labelCol ? 'Sí' : ''}
+        unCheckedChildren= {props.labelCol ? 'No' : ''}
       />
     </FormItem>
   )
