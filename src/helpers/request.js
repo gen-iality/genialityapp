@@ -560,10 +560,12 @@ export const OrganizationApi = {
     return await Actions.put(`api/organizations/${org}?token=${token}`, data);
   },
   editOneUserProperties: async (org, fieldId, data) => {
-    return await Actions.edit(`api/organizations/${org}/userproperties/${fieldId}`, data, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`api/organizations/${org}/userproperties/${fieldId}?token=${token}`, data, true);
   },
   createOneUserProperties: async (org, data) => {
-    return await Actions.post(`/api/organizations/${org}/userproperties`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/organizations/${org}/userproperties?token=${token}`, data, true);
   },
   getUserProperties: async (org) => {
     return await Actions.get(`/api/organizations/${org}/userproperties`);
