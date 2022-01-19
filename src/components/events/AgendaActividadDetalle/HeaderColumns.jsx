@@ -15,6 +15,7 @@ import EnVivo from '../../../EnVivo.svg';
 import Moment from 'moment-timezone';
 import { UseEventContext } from 'Context/eventContext';
 import HumanGreetingIcon from '@2fd/ant-design-icons/lib/HumanGreeting';
+import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
 import AgendaContext from 'Context/AgendaContext';
 import { CurrentEventUserContext } from 'Context/eventUserContext';
 
@@ -203,10 +204,17 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-            {transmition == 'EviusMeet' && (
+            {transmition == 'EviusMeet' && !request[cEventUSer.value?._id]?.active && (
               <Button
+                style={{ transition: 'all 1s' }}
                 onClick={() => sendOrCancelRequest()}
-                icon={<HumanGreetingIcon />}
+                icon={
+                  !haveRequest() ? (
+                    <HumanGreetingIcon style={{ fontSize: '16px' }} />
+                  ) : (
+                    <CancelIcon style={{ fontSize: '16px' }} />
+                  )
+                }
                 disabled={request && request[cEventUSer.value?._id]?.active}
                 type={!haveRequest() ? 'primary' : 'danger'}>
                 {!haveRequest() ? 'Solicitar participar en la transmisión' : 'Cancelar solicitud'}
