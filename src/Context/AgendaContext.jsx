@@ -63,6 +63,7 @@ export const AgendaContextProvider = ({ children }) => {
   useEffect(() => {
     if (activityEdit) {
       obtenerDetalleActivity();
+      setMeetingId(null);
     }
     async function obtenerDetalleActivity() {
       //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
@@ -70,11 +71,12 @@ export const AgendaContextProvider = ({ children }) => {
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
-        /* console.log('GET CONFIGURATION==>', configuration); */
+        console.log('GET CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
         setRoomStatus(configuration.habilitar_ingreso);
+        setTransmition(configuration.transmition || null);
         setAvailableGames(configuration.avalibleGames || []);
         setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
         setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);

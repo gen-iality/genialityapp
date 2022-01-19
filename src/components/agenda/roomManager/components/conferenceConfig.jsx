@@ -18,10 +18,9 @@ export default function ConferenceConfig({
   host_name, //g3bcjcjf
 }) {
   const eventContext = useContext(CurrentEventContext);
-  const { activityEdit, getRequestByActivity, addRequest, request } = useContext(AgendaContext);
+  const { activityEdit, getRequestByActivity, request, transmition } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
-
   useEffect(() => {
     if (!eventContext.value || !activityEdit) return;
     getRequestByActivity(refActivity);
@@ -81,13 +80,15 @@ export default function ConferenceConfig({
               </Button> */}
             {/* </Space> */}
           </Col>
-          <Col>
-            <Badge
-              onClick={() => setViewModal(true)}
-              count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}>
-              <Button type='primary'>Solicitudes de participacion</Button>
-            </Badge>
-          </Col>
+          {transmition == 'EviusMeet' && (
+            <Col>
+              <Badge
+                onClick={() => setViewModal(true)}
+                count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}>
+                <Button type='primary'>Solicitudes de participacion</Button>
+              </Badge>
+            </Col>
+          )}
           <Col>
             <Button onClick={deleteRoom} danger>
               Eliminar transmisión
@@ -95,9 +96,6 @@ export default function ConferenceConfig({
           </Col>
         </Row>
       </Card>
-      <Button onClick={() => addRequest(refActivity, { id: 1, name: 'Jaime', date: new Date().getTime() })}>
-        Crear solicitud
-      </Button>
       <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
     </>
   );
