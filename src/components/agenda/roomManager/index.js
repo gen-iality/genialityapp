@@ -233,7 +233,7 @@ class RoomManager extends Component {
   };
 
   // Método para guarda la información de la configuración
-  saveConfig = async () => {
+  saveConfig = async (notify) => {
     const { event_id } = this.props;
     const activity_id = this.context.activityEdit;
 
@@ -242,7 +242,7 @@ class RoomManager extends Component {
     const { service } = this.state;
     try {
       const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
-      if (result) Message.success(result.message);
+      if (result && !notify) Message.success(result.message);
       return result;
     } catch (err) {
       Message.error('Error', err);

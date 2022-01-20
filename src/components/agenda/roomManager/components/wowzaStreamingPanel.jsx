@@ -104,7 +104,7 @@ const WowzaStreamingPanel = ({
     }
     async function initializeStream() {
       try {
-        await saveConfig();
+        await saveConfig(1);
         await executer_startStream();
         await executer_startMonitorStatus(meeting_id);
       } catch (e) {
