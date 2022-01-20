@@ -29,6 +29,7 @@ function ValidateAccessRouteCms({ children }) {
     setCEventUserRolId(cEventUser.value.rol_id);
   }, [cEventUser.value]);
 
+  /** No se permite acceso al cms si el usuario no tiene eventUser */
   if (!cEventUser.value && cEventUser.status === 'LOADED') return <Redirect to={`/noaccesstocms/${eventId}`} />;
 
   const showComponent = () => {

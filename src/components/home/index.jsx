@@ -143,7 +143,7 @@ class Home extends Component {
               </Row>
             )}
             {/*hasMore === true && typeEvent === 'prev'*/}
-            {hasMore === true ? (
+            {hasMore === true && events.length > 20 ? (
               <Button
                 className='button is-primary is-medium is-fullwidth is-outlined'
                 size='large'

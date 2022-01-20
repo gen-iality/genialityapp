@@ -53,7 +53,10 @@ function SelectField(rawProps) {
         onChange={handleChange}
       >
         {isArray(options)
-          ? options.map(optionsMapper)
+          ? <>
+            <Option value=''>Seleccionar una opción</Option>
+            {options.map(optionsMapper)}
+          </>
           : children
         }
       </Select>

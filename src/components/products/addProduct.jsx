@@ -170,7 +170,7 @@ function AddProduct(props) {
         }
       } catch (e) {
         e;
-        console.log('10. error ', e);
+        /* console.log('10. error ', e); */
       }
     }
   };
@@ -242,7 +242,7 @@ function AddProduct(props) {
             rules={[{ required: false }]}>
             <Input
               value={creator}
-              placeholder='Nombre del autor, creador o descripcion corta'
+              placeholder='Nombre del autor, creador o descripción corta'
               name={'creator'}
               onChange={(e) => changeInput(e, 'creator')}
             />
@@ -284,12 +284,12 @@ function AddProduct(props) {
             picture={picture}
             imageFile={imageFile}
             divClass={'drop-img'}
-            content={<img src={picture} alt={'Imagen Perfil'} />}
+            content={<img src={picture} alt={'Imagen Producto'} />}
             classDrop={'dropzone'}
             contentDrop={
               <button
                 onClick={(e) => {
-                  // e.preventDefault();
+                  e.preventDefault();
                 }}
                 className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
                 Cambiar foto

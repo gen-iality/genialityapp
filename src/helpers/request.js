@@ -432,10 +432,12 @@ export const EventFieldsApi = {
     return await Actions.getOne(`/api/events/${event}/userproperties/${id}`);
   },
   createOne: async (data, event) => {
-    return await Actions.post(`/api/events/${event}/userproperties`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${event}/userproperties?token=${token}`, data);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`/api/events/${event}/userproperties/${id}`, data, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`/api/events/${event}/userproperties/${id}?token=${token}`, data, true);
   },
   registerListFieldOptionTaken: async (data, id, event) => {
     return await Actions.put(`/api/events/${event}/userproperties/${id}/RegisterListFieldOptionTaken`, data);
@@ -571,10 +573,12 @@ export const OrganizationApi = {
     return await Actions.put(`api/organizations/${org}?token=${token}`, data);
   },
   editOneUserProperties: async (org, fieldId, data) => {
-    return await Actions.edit(`api/organizations/${org}/userproperties/${fieldId}`, data, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`api/organizations/${org}/userproperties/${fieldId}?token=${token}`, data, true);
   },
   createOneUserProperties: async (org, data) => {
-    return await Actions.post(`/api/organizations/${org}/userproperties`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/organizations/${org}/userproperties?token=${token}`, data, true);
   },
   getUserProperties: async (org) => {
     return await Actions.get(`/api/organizations/${org}/userproperties`);
@@ -780,7 +784,7 @@ export const MessageApi = {
 
 export const SpacesApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/spaces`, true).then(({ data }) => data);
+    return await Actions.getAll(`api/events/${event}/spaces`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
     return await Actions.get(`api/events/${event}/spaces/`, id);
@@ -848,11 +852,11 @@ export const AgendaApi = {
   },
   deleteOne: async (id, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/events/${event}/activities?token=${token}`, id, true);
+    return await Actions.delete(`api/events/${event}/activities`, `${id}?token=${token}`);
   },
   create: async (event, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.create(`api/events/${event}/activities?token=${token}`, data, true);
+    return await Actions.create(`api/events/${event}/activities?token=${token}`, data);
   },
   duplicate: async (event, data, id) => {
     return await Actions.create(`api/events/${event}/duplicateactivitie/${id}`, data);
@@ -873,7 +877,8 @@ export const SpeakersApi = {
     return await Actions.edit(`api/events/${event}/host/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id, event) => {
-    return await Actions.delete(`api/events/${event}/host`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${event}/host`, `${id}?token=${token}`);
   },
   create: async (event, data) => {
     let token = await GetTokenUserFirebase();

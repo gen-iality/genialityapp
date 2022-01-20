@@ -144,6 +144,7 @@ function Empresas({ event, match }) {
     {
       title: 'Visible',
       dataIndex: 'visible',
+      width: '100px',
       ellipsis: true,
       render(visible) {
         return visible ? <Tag color='green'>{'Visible'}</Tag> : <Tag color='red'>{'Oculto'}</Tag>;

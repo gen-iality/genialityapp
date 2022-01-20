@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, notification, Row, Input, message, Modal } from 'antd';
+import { Button, Col, Form, notification, Row, Input, message, Modal, Switch, Spin } from 'antd';
 import { Field, FieldArray, Formik } from 'formik';
 import { apply, keys } from 'ramda';
 import { Link } from 'react-router-dom';
@@ -51,8 +51,8 @@ const validationSchema = yup.object().shape({
     .required('El nombre de la empresa es requerido'),
   description: yup.string(),
   short_description: yup.string(),
-  stand_image: yup.string().required('la imagen es requerida'),
-  list_image: yup.string().required('la imagen es requerida'),
+  /* stand_image: yup.string().required('La imagen es requerida'),
+  list_image: yup.string().required('La imagen es requerida'), */
   times_and_venues: yup.string(),
   contact_info: yup.object().shape({
     //image: yup.string(),
@@ -121,7 +121,7 @@ export const defaultInitialValues = {
   stand_type: '',
   stand_image: '',
   list_image: '',
-  visible: false,
+  visible: true,
   description: '',
   short_description: '',
   times_and_venues: '',
@@ -161,20 +161,26 @@ function CrearEditarEmpresa( props ) {
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
-      const isNewRecord = !props.location.state.edit;
-      const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
-      const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, props.location.state.edit, values];
-      const errorObject = {
-        message: 'Error',
-        description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
-      };
-      setSubmitting(true);
-      apply(createOrEdit, paramsArray)
-        .then(() => history.push(`/eventadmin/${event._id}/empresas`))
-        .catch((error) => {
-          notification.error(errorObject);
-          setSubmitting(false);
-        });
+      console.log(values, 'vals')
+      if(values.stand_image && values.list_image) {
+        const isNewRecord = !props.location.state.edit;
+        const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
+        const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, props.location.state.edit, values];
+        const errorObject = {
+          message: 'Error',
+          description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
+        };
+        setSubmitting(true);
+        apply(createOrEdit, paramsArray)
+          .then(() => history.push(`/eventadmin/${event._id}/empresas`))
+          .catch((error) => {
+            notification.error(errorObject);
+            setSubmitting(false);
+          });
+      } else {
+        message.error('Favor de llenar los campos requeridos');
+      }
+      
     },
     [history, event._id, props.location.state.edit, tamanio]
   );
@@ -242,7 +248,7 @@ function CrearEditarEmpresa( props ) {
               form
               remove={remove}
               edit={props.location.state.edit}
-              /* extra={(<Field name='visible' component={SwitchField} label='Visible' />)} */
+              extra={(<Field name='visible' component={SwitchField} label='Visible' labelCol/>)}
             />
             <Row justify='center'>
               <Col span={20}>
@@ -257,7 +263,7 @@ function CrearEditarEmpresa( props ) {
 
                 <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
 
-                <Field name='visible' component={SwitchField} label='Visible' />
+                {/* <Field name='visible' component={SwitchField} label='Visible' /> */}
 
                 <ImageField required name='stand_image' label='Banner de la empresa' />
 
