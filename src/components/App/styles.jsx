@@ -6,7 +6,7 @@ import { Actions, OrganizationApi } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../shared/logOut';
 import { SketchPicker } from 'react-color';
-import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select } from 'antd';
+import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select, Spin } from 'antd';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import Header from '../../antdComponents/Header';
@@ -581,37 +581,40 @@ class Styles extends Component {
 
               {this.imageDrawer.map((item, key) => (
                 <div key={key}>
-                  <Form.Item label={item.title}>
+                  <Form.Item >
+                    <label className='label'>{item.title}</label>
                     {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-
-                    <ImageInput
-                      picture={this.state.styles[item.imageFieldName]}
-                      width={item.width}
-                      height={item.height}
-                      changeImg={(files) => {
-                        this.saveEventImage(files, item.imageFieldName);
-                      }}
-                      errImg={this.state.errImg}
-                      btnRemove={<></>}
-                      /* btnRemove={
-                        this.state.styles[item.imageFieldName] && (
-                          <button
-                            onClick={async (e) => {
-                              e.stopPropagation();
-                              this.deleteInfoBanner(item.imageFieldName);
-                            }}
-                            className={`button is-primary is-inverted is-outlined`}>
-                            Eliminar Imagen
-                          </button>
-                        )
-                      } */
-                    />
-                    {this.state.styles[item.imageFieldName] && (
-                      <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
-                    )}
+                    
+                    <Spin tip='cargando' spinning={this.state.isLoading}>
+                      <ImageInput
+                        picture={this.state.styles[item.imageFieldName]}
+                        width={item.width}
+                        height={item.height}
+                        changeImg={(files) => {
+                          this.saveEventImage(files, item.imageFieldName);
+                        }}
+                        errImg={this.state.errImg}
+                        btnRemove={<></>}
+                        /* btnRemove={
+                          this.state.styles[item.imageFieldName] && (
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                this.deleteInfoBanner(item.imageFieldName);
+                              }}
+                              className={`button is-primary is-inverted is-outlined`}>
+                              Eliminar Imagen
+                            </button>
+                          )
+                        } */
+                      />
+                      {this.state.styles[item.imageFieldName] && (
+                        <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
+                      )}
+                    </Spin>
                   </Form.Item>
 
-                  {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
+                  {/* {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>} */}
                 </div>
               ))}
             </Col>
