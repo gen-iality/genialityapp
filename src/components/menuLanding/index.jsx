@@ -21,7 +21,7 @@ class menuLanding extends Component {
       menu: {
         evento: {
           name: 'Evento',
-          position: '',
+          position: 30,
           section: 'evento',
           icon: 'CalendarOutlined',
           checked: false,
@@ -29,7 +29,7 @@ class menuLanding extends Component {
         },
         agenda: {
           name: 'Agenda',
-          position: '',
+          position: 30,
           section: 'agenda',
           icon: 'ReadOutlined',
           checked: false,
@@ -37,7 +37,7 @@ class menuLanding extends Component {
         },
         speakers: {
           name: 'Conferencistas',
-          position: '',
+          position: 30,
           section: 'speakers',
           icon: 'AudioOutlined',
           checked: false,
@@ -45,7 +45,7 @@ class menuLanding extends Component {
         },
         /* tickets: {
           name: 'Registro',
-          position: '',
+          position: 30,
           section: 'tickets',
           icon: 'CreditCardOutlined',
           checked: false,
@@ -53,7 +53,7 @@ class menuLanding extends Component {
         }, */
         certs: {
           name: 'Certificados',
-          position: '',
+          position: 30,
           section: 'certs',
           icon: 'FileDoneOutlined',
           checked: false,
@@ -61,7 +61,7 @@ class menuLanding extends Component {
         },
         documents: {
           name: 'Documentos',
-          position: '',
+          position: 30,
           section: 'documents',
           icon: 'FolderOutlined',
           checked: false,
@@ -69,7 +69,7 @@ class menuLanding extends Component {
         },
         wall: {
           name: 'Muro',
-          position: '',
+          position: 30,
           section: 'wall',
           icon: 'TeamOutlined',
           checked: false,
@@ -77,7 +77,7 @@ class menuLanding extends Component {
         },
         survey: {
           name: 'Encuestas',
-          position: '',
+          position: 30,
           section: 'survey',
           icon: 'FileUnknownOutlined',
           checked: false,
@@ -85,7 +85,7 @@ class menuLanding extends Component {
         },
         faqs: {
           name: 'Preguntas Frecuentes',
-          position: '',
+          position: 30,
           section: 'faqs',
           icon: 'QuestionOutlined',
           checked: false,
@@ -93,7 +93,7 @@ class menuLanding extends Component {
         },
         networking: {
           name: 'Networking',
-          position: '',
+          position: 30,
           section: 'networking',
           icon: 'LaptopOutlined',
           checked: false,
@@ -101,7 +101,7 @@ class menuLanding extends Component {
         },
         interviews: {
           name: 'Citas',
-          position: '',
+          position: 30,
           section: 'interviews',
           icon: 'UserOutlined',
           checked: false,
@@ -109,7 +109,7 @@ class menuLanding extends Component {
         },
         trophies: {
           name: 'Trofeos',
-          position: '',
+          position: 30,
           section: 'trophies',
           icon: 'TrophyOutlined',
           checked: false,
@@ -117,7 +117,7 @@ class menuLanding extends Component {
         },
         my_sesions: {
           name: 'Mis Actividades',
-          position: '',
+          position: 30,
           section: 'my_sesions',
           icon: 'TeamOutlined',
           checked: false,
@@ -126,7 +126,7 @@ class menuLanding extends Component {
 
         informativeSection: {
           name: 'Seccion Informativa',
-          position: '',
+          position: 30,
           section: 'informativeSection',
           icon: 'FileDoneOutlined',
           markup: '',
@@ -135,7 +135,7 @@ class menuLanding extends Component {
         },
         informativeSection1: {
           name: 'Seccion Informativa',
-          position: '',
+          position: 30,
           section: 'informativeSection1',
           icon: 'FileDoneOutlined',
           markup: '',
@@ -153,6 +153,7 @@ class menuLanding extends Component {
         partners: {
           name: 'Patrocinadores',
           section: 'partners',
+          position: 30,
           icon: 'DeploymentUnitOutlined',
           checked: false,
           permissions: 'public',
@@ -160,6 +161,7 @@ class menuLanding extends Component {
         ferias: {
           name: 'Ferias',
           section: 'ferias',
+          position: 30,
           icon: 'FundProjectionScreenOutlined',
           checked: false,
           permissions: 'public',
@@ -167,6 +169,7 @@ class menuLanding extends Component {
         noticias: {
           name: 'Noticias',
           section: 'noticias',
+          position: 30,
           icon: 'NotificationOutlined',
           checked: false,
           permissions: 'public',
@@ -174,6 +177,7 @@ class menuLanding extends Component {
         producto: {
           name: 'Producto',
           section: 'producto',
+          position: 30,
           icon: 'ShopOutlined ',
           checked: false,
           permissions: 'public',
@@ -181,6 +185,7 @@ class menuLanding extends Component {
         videos: {
           name: 'Videos',
           section: 'videos',
+          position: 30,
           icon: 'PlaySquareOutlined',
           checked: false,
           permissions: 'public',
@@ -205,14 +210,14 @@ class menuLanding extends Component {
       // alert("ORGANIZATION")
 
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
-      console.log('ITEMS==>', menuLanding.itemsMenu);
+      /* console.log('ITEMS==>', menuLanding.itemsMenu); */
       this.state.itemsMenu = menuLanding.itemsMenu;
       let items = menuLanding.itemsMenu;
     }
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
         if (prop1 === prop) {
-          console.log('INGRESO ACA');
+          /* console.log('INGRESO ACA'); */
           this.mapActiveItemsToAvailable(prop);
           this.changeNameMenu(prop, menuLanding.itemsMenu[prop1]?.name);
           this.changePositionMenu(prop, menuLanding.itemsMenu[prop1].position);
@@ -276,7 +281,7 @@ class menuLanding extends Component {
       };
       let resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
       if (resp) {
-        console.log('MENU GUARDADDO==>', newMenu);
+        /* console.log('MENU GUARDADDO==>', newMenu); */
       }
     }
     toast.success('Información guardada');
@@ -290,11 +295,11 @@ class menuLanding extends Component {
   async mapActiveItemsToAvailable(key) {
     let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
-    console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
+    /* console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
     console.log('items menù', itemsMenuDB);
-    console.log('primero=>', menuBase[key]);
+    console.log('primero=>', menuBase[key]); */
     menuBase[key].checked = !menuBase[key].checked;
-    console.log('segundo=>', menuBase[key]);
+    /* console.log('segundo=>', menuBase[key]); */
 
     if (menuBase[key].checked) {
       itemsMenuDB[key] = menuBase[key];
@@ -308,7 +313,7 @@ class menuLanding extends Component {
   changeNameMenu(key, name) {
     let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
-    console.log('CHANGEMENU==>', key, name);
+    /* console.log('CHANGEMENU==>', key, name); */
     if (name !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].name = name;
@@ -343,7 +348,7 @@ class menuLanding extends Component {
   changePermissions(key, access) {
     let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
-    console.log('itemsMenuDB', itemsMenuDB);
+    /* console.log('itemsMenuDB', itemsMenuDB); */
     if (itemsMenuDB[key]) {
       itemsMenuDB[key].permissions = access;
       menuBase[key].permissions = itemsMenuDB[key].permissions || access;
@@ -372,69 +377,56 @@ class menuLanding extends Component {
             form
           />
 
-          <Row gutter={[8, 8]} wrap>
-            {this.state.isLoading ? (
-              <div
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                  height: '100%',
-                }}>
-                <Spin />
-              </div>
-            ) : (
-              <>
-                {Object.keys(this.state.menu).map((key, index) => (
-                  <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                    <Card title={this.state.menu[key].name} bordered={true}>
-                      <Form.Item name={this.state.menu[key].name}>
-                        <Button
-                          onClick={() => {
-                            this.mapActiveItemsToAvailable(key);
-                          }}>
-                          {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                        </Button>
-                      </Form.Item>
-                      <Form.Item label={'Cambiar nombre de la sección'}>
-                        <Input
-                          name={`name${index}`}
-                          disabled={this.state.menu[key].checked === true ? false : true}
-                          //value={this.state.menu[key].name}
-                          onChange={(e) => {
-                            this.changeNameMenu(key, e.target.value);
-                          }}
-                          placeholder={this.state.menu[key].name}
-                        />
-                      </Form.Item>
-                      <Form.Item label={'Permisos para la sección'}>
-                        <Select
-                          name={`permissions${index}`}
-                          key={this.state.keySelect}
-                          disabled={this.state.menu[key].checked === true ? false : true}
-                          value={this.state.menu[key].permissions}
-                          onChange={(e) => {
-                            this.changePermissions(key, e);
-                          }}>
-                          <Option value='public'>Abierto para todos</Option>
-                          <Option value='assistants'>Usuarios inscritos al evento</Option>
-                        </Select>
-                      </Form.Item>
-                      <Form.Item label={'Posición en el menú'}>
-                        <InputNumber
-                          name={`position${index}`}
-                          disabled={this.state.menu[key].checked === true ? false : true}
-                          value={this.state.menu[key].position}
-                          onChange={(e) => this.orderPosition(key, e)}
-                        />
-                      </Form.Item>
-                    </Card>
-                  </Col>
-                ))}
-              </>
-            )}
-          </Row>
+          <Spin tip='Cargando...' size='large' spinning={this.state.isLoading}>
+            <Row gutter={[8, 8]} wrap>
+              {Object.keys(this.state.menu).map((key, index) => (
+                <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
+                  <Card title={this.state.menu[key].name} bordered={true}>
+                    <Form.Item name={this.state.menu[key].name}>
+                      <Button
+                        onClick={() => {
+                          this.mapActiveItemsToAvailable(key);
+                        }}>
+                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                      </Button>
+                    </Form.Item>
+                    <Form.Item label={'Cambiar nombre de la sección'}>
+                      <Input
+                        name={`name${index}`}
+                        disabled={this.state.menu[key].checked === true ? false : true}
+                        //value={this.state.menu[key].name}
+                        onChange={(e) => {
+                          this.changeNameMenu(key, e.target.value);
+                        }}
+                        placeholder={this.state.menu[key].name}
+                      />
+                    </Form.Item>
+                    <Form.Item label={'Permisos para la sección'}>
+                      <Select
+                        name={`permissions${index}`}
+                        key={this.state.keySelect}
+                        disabled={this.state.menu[key].checked === true ? false : true}
+                        value={this.state.menu[key].permissions}
+                        onChange={(e) => {
+                          this.changePermissions(key, e);
+                        }}>
+                        <Option value='public'>Abierto para todos</Option>
+                        <Option value='assistants'>Usuarios inscritos al evento</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label={'Posición en el menú'}>
+                      <InputNumber
+                        name={`position${index}`}
+                        disabled={this.state.menu[key].checked === true ? false : true}
+                        value={this.state.menu[key].position}
+                        onChange={(e) => this.orderPosition(key, e)}
+                      />
+                    </Form.Item>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </Spin>
           <BackTop />
         </Form>
 

@@ -48,9 +48,8 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             style={{
               /* fontSize: '25px',  */
               position: 'absolute',
-              top: /* !iconLocation ? '4%' : 'auto' */ 'auto',
-              /* color: 'white', */
-              left: 'auto' /* '3%' */,
+              top: 'auto',
+              left: 'auto',
               zIndex: '500',
             }}
             icon={<VolumeOff />}
