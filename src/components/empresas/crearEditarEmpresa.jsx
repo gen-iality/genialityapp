@@ -51,8 +51,8 @@ const validationSchema = yup.object().shape({
     .required('El nombre de la empresa es requerido'),
   description: yup.string(),
   short_description: yup.string(),
-  stand_image: yup.string().required('La imagen es requerida'),
-  list_image: yup.string().required('La imagen es requerida'),
+  /* stand_image: yup.string().required('La imagen es requerida'),
+  list_image: yup.string().required('La imagen es requerida'), */
   times_and_venues: yup.string(),
   contact_info: yup.object().shape({
     //image: yup.string(),
@@ -161,20 +161,26 @@ function CrearEditarEmpresa( props ) {
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
-      const isNewRecord = !props.location.state.edit;
-      const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
-      const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, props.location.state.edit, values];
-      const errorObject = {
-        message: 'Error',
-        description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
-      };
-      setSubmitting(true);
-      apply(createOrEdit, paramsArray)
-        .then(() => history.push(`/eventadmin/${event._id}/empresas`))
-        .catch((error) => {
-          notification.error(errorObject);
-          setSubmitting(false);
-        });
+      console.log(values, 'vals')
+      if(values.stand_image && values.list_image) {
+        const isNewRecord = !props.location.state.edit;
+        const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
+        const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, props.location.state.edit, values];
+        const errorObject = {
+          message: 'Error',
+          description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
+        };
+        setSubmitting(true);
+        apply(createOrEdit, paramsArray)
+          .then(() => history.push(`/eventadmin/${event._id}/empresas`))
+          .catch((error) => {
+            notification.error(errorObject);
+            setSubmitting(false);
+          });
+      } else {
+        message.error('Favor de llenar los campos requeridos');
+      }
+      
     },
     [history, event._id, props.location.state.edit, tamanio]
   );
