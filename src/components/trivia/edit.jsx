@@ -148,7 +148,7 @@ class triviaEdit extends Component {
       this.getQuestions();
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
-      console.log(dataAgenda, 'dataAgenda');
+      /* console.log(dataAgenda, 'dataAgenda'); */
       this.setState({
         dataAgenda: dataAgenda.data,
       });
@@ -607,7 +607,7 @@ class triviaEdit extends Component {
         },
       },
       {
-        title: 'Acciones',
+        title: 'Opciones',
         key: 'action',
         render: (text, record) => (
           <Row gutter={[8, 8]}>
@@ -640,7 +640,20 @@ class triviaEdit extends Component {
 
     return (
       <Form onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit} {...formLayout}>
-        <Header title={'Encuesta'} back save form remove={this.remove} edit={this.state.idSurvey} />
+        <Header 
+          title={'Encuesta'} back save form remove={this.remove} edit={this.state.idSurvey} 
+          extra={
+            <Form.Item label={'Publicar'} labelCol={{span: 14}}>
+              <Switch
+                name={'publish'}
+                checked={publish === 'true' || publish === true}
+                checkedChildren='Sí'
+                unCheckedChildren='No'
+                onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
+              />
+            </Form.Item>
+          }
+        />
         <Row justify='center' wrap gutter={8}>
           <Col span={16}>
             {isLoading ? (
@@ -681,7 +694,7 @@ class triviaEdit extends Component {
                 </Form.Item>
                 <Row justify='space-between' wrap gutter={[8, 8]}>
                   <Col>
-                    <Form.Item label={'Permitir usuarios anonimos'}>
+                    <Form.Item label={'Permitir usuarios anónimos'}>
                       <Switch
                         name={'allow_anonymous_answers'}
                         checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
@@ -689,7 +702,7 @@ class triviaEdit extends Component {
                       />
                     </Form.Item>
                   </Col>
-                  <Col>
+                  {/* <Col>
                     <Form.Item label={'Publicar encuesta'}>
                       <Switch
                         name={'publish'}
@@ -697,7 +710,7 @@ class triviaEdit extends Component {
                         onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                   <Col>
                     <Form.Item label={'Mostar gráficas en las encuestas'}>
                       <Switch
@@ -717,7 +730,7 @@ class triviaEdit extends Component {
                     </Form.Item>
                   </Col>
                 </Row>
-                <Form.Item label={'Elegir tipo de grafica'}>
+                <Form.Item label={'Elegir tipo de gráfica'}>
                   <Select
                     name={'graphyType'}
                     defaultValue={this.state.graphyType}
@@ -780,7 +793,7 @@ class triviaEdit extends Component {
                 <Form.Item label={'Relacionar esta encuesta a una actividad'}>
                   <Select
                     name={'activity_id'}
-                    value={activity_id}
+                    value={activity_id || ''}
                     onChange={(relation) => {
                       this.setState({ activity_id: relation });
                     }}>

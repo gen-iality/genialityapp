@@ -8,12 +8,16 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import HelperContext from 'Context/HelperContext';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
+import { FormattedMessage } from 'react-intl';
+import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
+
+const { useBreakpoint } = Grid;
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
@@ -51,7 +55,7 @@ const Headers = (props) => {
     buttonregister: true,
     buttonlogin: true,
   });
-
+  const screens = useBreakpoint();
   let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
 
   const logout = () => {
@@ -108,6 +112,35 @@ const Headers = (props) => {
     let containtorganization = window.location.pathname.includes('/organization');
     return containtorganization ? 'organization' : 'landing';
   };
+
+  const MenuMobile = (
+    <Menu>
+      {showButtons.buttonlogin && 
+        <Menu.Item onClick={() => {
+          HandleControllerLoginVisible({
+            visible: true,
+            organization: WhereHerePath(),
+          });
+
+          handleChangeTabModal('1');
+        }}>
+          <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
+        </Menu.Item>
+      }
+      {showButtons.buttonregister && 
+        <Menu.Item onClick={() => {
+          HandleControllerLoginVisible({
+            visible: true,
+            organization: WhereHerePath(),
+          });
+
+          handleChangeTabModal('2');
+        }}>
+          <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
+        </Menu.Item>
+      }
+    </Menu>
+  )
 
   useEffect(() => {
     LoadCurrentUser();
@@ -178,39 +211,47 @@ const Headers = (props) => {
             {headerIsLoading ? (
               <Spin />
             ) : !dataGeneral.userEvent ? (
-              <Space>
-                {showButtons.buttonlogin && (
-                  <Button
-                    icon={<LockOutlined />}
-                    style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size='large'
-                    onClick={() => {
-                      HandleControllerLoginVisible({
-                        visible: true,
-                        organization: WhereHerePath(),
-                      });
+              screens.xs ? (
+                <Space>
+                  <Dropdown overlay={MenuMobile}>
+                    <Button style={{ backgroundColor: '#3681E3', color: '#FFFFFF', border: 'none' }} size='large' shape='circle' icon={<AccountCircleIcon style={{fontSize: '28px'}}/>} />
+                  </Dropdown>
+                </Space>
+              ) : (
+                <Space>
+                  {showButtons.buttonlogin && (
+                    <Button
+                      icon={<LockOutlined />}
+                      style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                      size='large'
+                      onClick={() => {
+                        HandleControllerLoginVisible({
+                          visible: true,
+                          organization: WhereHerePath(),
+                        });
 
-                      handleChangeTabModal('1');
-                    }}>
-                    Iniciar sesión
-                  </Button>
-                )}
+                        handleChangeTabModal('1');
+                      }}>
+                      Iniciar sesión
+                    </Button>
+                  )}
 
-                {showButtons.buttonregister && (
-                  <Button
-                    size='large'
-                    onClick={() => {
-                      HandleControllerLoginVisible({
-                        visible: true,
-                        organization: WhereHerePath(),
-                      });
+                  {showButtons.buttonregister && (
+                    <Button
+                      size='large'
+                      onClick={() => {
+                        HandleControllerLoginVisible({
+                          visible: true,
+                          organization: WhereHerePath(),
+                        });
 
-                      handleChangeTabModal('2');
-                    }}>
-                    Registrarme
-                  </Button>
-                )}
-              </Space>
+                        handleChangeTabModal('2');
+                      }}>
+                      Registrarme
+                    </Button>
+                  )}
+                </Space>
+              )
             ) : dataGeneral.userEvent != null && !dataGeneral.anonimususer ? (
               <UserStatusAndMenu
                 user={dataGeneral.user}
