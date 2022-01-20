@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
 import { firestore, fireRealtime } from '../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/request';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
 import { UseUserEvent } from './eventUserContext';
@@ -66,7 +66,6 @@ export const HelperContextProvider = ({ children }) => {
   const [tabsGenerals, settabsGenerals] = useState();
   const [updateEventUser, setUpdateEventUser] = useState(false);
   const [register, setRegister] = useState(null);
-  const [allRolls, setAllRolls] = useState('roles');
 
   const [controllerLoginVisible, setcontrollerLoginVisible] = useState({
     visible: false,
@@ -101,6 +100,12 @@ export const HelperContextProvider = ({ children }) => {
   }
   function handleChangeTabModal(tab) {
     setTabLogin(tab);
+  }
+
+  async function rolHasPermissions(rolId) {
+    if (!rolId) return;
+    let permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId);
+    return permissionsForThisRole;
   }
 
   useEffect(() => {
@@ -646,7 +651,7 @@ export const HelperContextProvider = ({ children }) => {
         setRegister,
         HandleControllerLoginVisible,
         controllerLoginVisible,
-        allRolls,
+        rolHasPermissions,
       }}>
       {children}
     </HelperContext.Provider>

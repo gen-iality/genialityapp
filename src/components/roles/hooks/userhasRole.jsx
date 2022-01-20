@@ -1,13 +1,13 @@
-const userHasRole = (roleNames, cEventUserRolId) => {
-  //   console.log('debug validator', roleNames, cEventUserRolId);
+const userHasRole = (rolesPermisionsForThisEvent, cEventUserRolId) => {
+  let arrrayRolesPermisionsForThisEvent = rolesPermisionsForThisEvent.data;
   if (!cEventUserRolId) {
     return false;
   }
-  if (typeof roleNames === 'string') {
-    return cEventUserRolId === roleNames;
-  } else if (Array.isArray(roleNames)) {
-    const thisRoleExists = roleNames.find((role) => role.id === cEventUserRolId);
-    return thisRoleExists?.type === 'administrador';
+  if (typeof rolesPermisionsForThisEvent === 'string') {
+    return cEventUserRolId === rolesPermisionsForThisEvent;
+  } else if (Array.isArray(arrrayRolesPermisionsForThisEvent)) {
+    const thisRoleExists = arrrayRolesPermisionsForThisEvent.find((role) => role.rol_id === cEventUserRolId);
+    return thisRoleExists?.rol.type === 'admin';
   }
   return false;
 };

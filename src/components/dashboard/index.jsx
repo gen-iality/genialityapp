@@ -141,9 +141,10 @@ class DashboardEvent extends Component {
       message.error('No existen datos que exportar');
     }
   };
-  fetchDataMails() {
+  async fetchDataMails() {
+    let token = await GetTokenUserFirebase();
     return new Promise((resolve, reject) => {
-      API.get(`/api/events/${this.props.eventId}/messages`)
+      API.get(`/api/events/${this.props.eventId}/messages/?token=${token}`)
         .then(({ data }) => {
           resolve(data.data);
         })
