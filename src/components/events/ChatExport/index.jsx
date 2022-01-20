@@ -206,18 +206,22 @@ const ChatExport = ({ eventId, event }) => {
         /* exportData
         fileName={'ReportChats'} */
         titleTable={
-          <Row gutter={[8, 8]} wrap>
-            <Col>
-              <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
-                Exportar
-              </Button>
-            </Col>
-            <Col>
-              <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
-                Eliminar Chat
-              </Button>
-            </Col>
-          </Row>
+          <>
+            {datamsjevent && datamsjevent.length > 0 && (
+              <Row gutter={[8, 8]} wrap>
+                <Col>
+                  <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
+                    Exportar
+                  </Button>
+                </Col>
+                <Col>
+                  <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
+                    Eliminar Chat
+                  </Button>
+                </Col>
+              </Row>
+            )}
+          </>
         }
         search
         setColumnsData={setColumnsData}
