@@ -31,14 +31,22 @@ const HeaderColumns = (props) => {
     setRefActivity,
     refActivity,
     removeRequest,
+    setActivityEdit,
   } = useContext(AgendaContext);
 
   //SE EJECUTA CUANDO TIENE UNA ACTIVIDAD PARA ESTABLECER LA REFERENCIA Y OBTENER LOS REQUEST
   useEffect(() => {
+    if (currentActivity) {
+      //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
+      setActivityEdit(currentActivity._id);
+    }
     if (!currentActivity || transmition !== 'EviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
     setRefActivity(refActivity);
     getRequestByActivity(refActivity);
+    return () => {
+      setActivityEdit(null);
+    };
   }, [currentActivity, transmition]);
 
   const haveRequest = () => {

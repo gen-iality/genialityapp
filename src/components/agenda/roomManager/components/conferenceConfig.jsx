@@ -85,7 +85,7 @@ export default function ConferenceConfig({
               <Badge
                 onClick={() => setViewModal(true)}
                 count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}>
-                <Button type='primary'>Solicitudes de participacion</Button>
+                <Button type='primary'>Solicitudes de participación</Button>
               </Badge>
             </Col>
           )}

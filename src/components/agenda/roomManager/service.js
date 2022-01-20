@@ -27,52 +27,55 @@ class Service {
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
-    console.log(event_id, activity_id, roomInfo, tabs, 'service');
-    const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
-    const { roomState, habilitar_ingreso, platform, meeting_id, isPublished, host_id, host_name, } = roomInfo;
-    // eslint-disable-next-line no-unused-vars
-    return new Promise((resolve, reject) => {
-      this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
-        if (existActivity) {
-          // console.log('avalibleGames', avalibleGames);
-          this.firestore
-            .collection('events')
-            .doc(event_id)
-            .collection('activities')
-            .doc(activity_id)
-            .update({
-              habilitar_ingreso,
-              platform,
-              meeting_id,
-              tabs,
-              isPublished: isPublished ? isPublished : false,
-              host_id,
-              host_name,
-              transmition:roomInfo.transmition||null,
-              avalibleGames: roomInfo?.avalibleGames || [],
-            })
-            .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
-        } else {
-          this.firestore
-            .collection('events')
-            .doc(event_id)
-            .collection('activities')
-            .doc(activity_id)
-            .set({
-              habilitar_ingreso,
-              platform,
-              meeting_id,
-              isPublished: isPublished || null,
-              host_id,
-              host_name,
-              tabs: tabsSchema,
-              avalibleGames: roomInfo?.avalibleGames || [],
-              roomState: roomState || null,
-            })
-            .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
-        }
+    //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
+    if (activity_id) {
+      console.log(event_id, activity_id, roomInfo, tabs, 'service');
+      const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
+      const { roomState, habilitar_ingreso, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
+      // eslint-disable-next-line no-unused-vars
+      return new Promise((resolve, reject) => {
+        this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
+          if (existActivity) {
+            // console.log('avalibleGames', avalibleGames);
+            this.firestore
+              .collection('events')
+              .doc(event_id)
+              .collection('activities')
+              .doc(activity_id)
+              .update({
+                habilitar_ingreso,
+                platform,
+                meeting_id,
+                tabs,
+                isPublished: isPublished ? isPublished : false,
+                host_id,
+                host_name,
+                transmition: roomInfo.transmition || null,
+                avalibleGames: roomInfo?.avalibleGames || [],
+              })
+              .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
+          } else {
+            this.firestore
+              .collection('events')
+              .doc(event_id)
+              .collection('activities')
+              .doc(activity_id)
+              .set({
+                habilitar_ingreso,
+                platform,
+                meeting_id,
+                isPublished: isPublished || null,
+                host_id,
+                host_name,
+                tabs: tabsSchema,
+                avalibleGames: roomInfo?.avalibleGames || [],
+                roomState: roomState || null,
+              })
+              .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
+          }
+        });
       });
-    });
+    }
   };
 
   getConfiguration = (event_id, activity_id) => {

@@ -70,10 +70,11 @@ const AgendaActividadDetalle = (props) => {
       props.setVirtualConference(true);
       HandleOpenCloseMenuRigth(true);
       handleChangeCurrentActivity(null);
+      setactivity(null);
     };
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (currentActivity) {
       cSurveys.set_current_activity(currentActivity);
       CheckinActiviy(props.cEvent.value._id, currentActivity._id, props.cEventUser, props.cUser);
@@ -108,9 +109,9 @@ const AgendaActividadDetalle = (props) => {
         height: '96px',
       });
     } else {
-     setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
-    setVideoButtonStyles({ display: 'none' });
-    }  
+      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
+      setVideoButtonStyles({ display: 'none' });
+    }
   }, [chatAttendeChats, isMobile]);
 
   // VALIDAR ACTIVIDADES POR CODIGO

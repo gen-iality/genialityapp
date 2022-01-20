@@ -398,10 +398,12 @@ class RoomManager extends Component {
             }
             if (streamingPlatForm === 'wowza') {
               const { state } = await getLiveStreamStatus(streamingMeetingId);
+              const refActivity = `request/${self.props.event_id}/activities/${self.context.activityEdit}`;
               if (state === 'started') {
                 await stopLiveStream(streamingMeetingId);
               }
               await deleteLiveStream(streamingMeetingId);
+              await self.context.removeAllRequest(refActivity);
             }
             message.destroy(loading.key);
             message.open({
@@ -411,6 +413,7 @@ class RoomManager extends Component {
 
             self.restartData();
           } catch (e) {
+            console.log('EXCEPCION===>', e);
             message.destroy(loading.key);
             message.open({
               type: 'error',

@@ -12,6 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
+import AgendaContext from 'Context/AgendaContext';
 
 const RenderComponent = (props) => {
   let {
@@ -35,7 +36,7 @@ const RenderComponent = (props) => {
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  const [transmition, setTransmiton] = useState(null);
+  let { transmition, setTransmition } = useContext(AgendaContext);
 
   const Preloader = () => (
     <Space
@@ -64,12 +65,12 @@ const RenderComponent = (props) => {
         const data = infoActivity.data();
         const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
         // console.log('DATA FIREBASE==>', habilitar_ingreso, meeting_id, platform, tabs, avalibleGames);
-        console.log("DATA ACTIVITY==>",data)
+        console.log('DATA ACTIVITY==>', data);
         setplatform(platform);
         setactivityState(habilitar_ingreso);
         setactivityStateGlobal(habilitar_ingreso);
         setmeetingId(meeting_id);
-        setTransmiton(data.transmition)
+        setTransmition(data.transmition);
         settabsGeneral(tabs);
         if (!tabs.games) {
           HandleChatOrAttende('1');
@@ -103,7 +104,7 @@ const RenderComponent = (props) => {
     }
   }, [chatAttendeChats]);
 
-  const RenderizarComponente=useCallback((plataforma, actividad_estado, reder_Game)=> {
+  const RenderizarComponente = useCallback((plataforma, actividad_estado, reder_Game) => {
     switch (plataforma) {
       case 'vimeo':
         switch (actividad_estado) {
@@ -211,7 +212,7 @@ const RenderComponent = (props) => {
       case null:
         return currentActivity?.video ? <VideoActivity /> : '';
     }
-  })
+  });
 
   return (
     <>

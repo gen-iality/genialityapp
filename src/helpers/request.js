@@ -252,8 +252,10 @@ export const EventsApi = {
     return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
   },
   getStatusRegister: async (eventId, email) => {
+    let token = await GetTokenUserFirebase();
     return await Actions.get(
-      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`
+      `api/events/${eventId}/eventusers?token=${token}&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
+      true
     );
   },
   recoveryPassword: async (eventId, url, email) => {
@@ -770,7 +772,6 @@ export const MessageApi = {
 
 export const SpacesApi = {
   byEvent: async (event) => {
-    
     return await Actions.getAll(`api/events/${event}/spaces`).then(({ data }) => data);
   },
   getOne: async (id, event) => {

@@ -33,6 +33,7 @@ import { UseCurrentUser } from '../../../../Context/userContext';
 import AgendaContext from 'Context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';
 import Loading from '../../../profile/loading';
+import { CurrentEventContext } from 'Context/eventContext';
 
 const WowzaStreamingPanel = ({
   meeting_id,
@@ -42,6 +43,7 @@ const WowzaStreamingPanel = ({
   activityEdit,
   activity_name,
   setMeetingId,
+  saveConfig,
 }) => {
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://eviusmeets.netlify.app/prepare`;
@@ -55,7 +57,9 @@ const WowzaStreamingPanel = ({
   const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
   const [copySuccessProductor, setCopySuccessProductor] = useState(false);
   const [copySuccessAsistente, setCopySuccessAsistente] = useState(false);
-  const { transmition } = useContext(AgendaContext);
+  const eventContext = useContext(CurrentEventContext);
+  const { transmition, removeAllRequest } = useContext(AgendaContext);
+  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
   const [streamAlreadyCreated, setStreamAlreadyCreated] = useState(false);
 
   const queryClient = useQueryClient();
@@ -95,9 +99,12 @@ const WowzaStreamingPanel = ({
 
   // console.log('linkeviusmeets', linkRolProductor);
   useEffect(() => {
-    if (meeting_id) initializeStream();
+    if (meeting_id) {
+      initializeStream();
+    }
     async function initializeStream() {
       try {
+        await saveConfig();
         await executer_startStream();
         await executer_startMonitorStatus(meeting_id);
       } catch (e) {
@@ -143,6 +150,7 @@ const WowzaStreamingPanel = ({
   };
 
   const executer_stopStream = async () => {
+    await removeAllRequest(refActivity);
     const liveStreamresponse = await stopLiveStream(meeting_id);
     queryClient.setQueryData('livestream', null);
   };

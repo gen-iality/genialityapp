@@ -142,6 +142,12 @@ export const AgendaContextProvider = ({ children }) => {
     }
   };
 
+  const removeAllRequest = async (refActivity) => {
+    if (refActivity) {
+      await fireRealtime.ref(refActivity).remove();
+    }
+  };
+
   const approvedOrRejectedRequest = async (refActivity, key, status) => {
     console.log('1. APROVE ACA=>', refActivity);
     if (refActivity) {
@@ -200,6 +206,7 @@ export const AgendaContextProvider = ({ children }) => {
         setRefActivity,
         refActivity,
         requestList,
+        removeAllRequest,
       }}>
       {children}
     </AgendaContext.Provider>

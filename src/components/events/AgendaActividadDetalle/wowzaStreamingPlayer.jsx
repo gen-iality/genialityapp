@@ -15,6 +15,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   const { request } = useContext(AgendaContext);
   const evetUserContext = useContext(CurrentEventUserContext);
   const [visibleMeets, setVisibleMeets] = useState(false);
+  const [timer_id, setTimerId] = useState(null);
   //   const [livestreamStatus, setLivestreamStatus] = useState(null);
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
@@ -30,43 +31,31 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       setVisibleMeets(false);
     }
   }, [transmition, request, evetUserContext.value]);
-  let timer_id = null;
 
   const executer_startMonitorStatus = async () => {
     let live_stream_status = null;
     let live_stream_stats = null;
-    console.log('EJECUTADO START MONITOR');
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
       //   setLivestreamStatus(live_stream_status);
       live_stream_stats = await getLiveStreamStats(meeting_id);
       setLivestreamStats(live_stream_stats);
     } catch (e) {}
-    timer_id = setTimeout(executer_startMonitorStatus, 5000);
-
-    if (live_stream_status && live_stream_status.state === 'stopped') {
-      clearTimeout(timer_id);
-    }
+    let timerId = setTimeout(executer_startMonitorStatus, 5000);
+    setTimerId(timerId);
   };
-
-  //EFECTO PARA DETENER O INICIAR TIMER WOWZA
+  //ESCUCHA CUANDO LA TRANSMISION SE DETIENE
   useEffect(() => {
-    if (visibleMeets) {
-      if (timer_id) {
-        clearTimeout(timer_id);
-        setLivestreamStats(null);
-      }
-    } else {
-      if (!timer_id) {
-        executer_startMonitorStatus();
-      }
+    if (livestreamStats && (livestreamStats.state === 'stopped' || !livestreamStats.state)) {
+      clearTimeout(timer_id);
+      setTimerId(null);
     }
-  }, [visibleMeets]);
+  }, [livestreamStats]);
 
   // SI EXISTE UN MEETING ID SE EJECUTA EL MONITOR, PERO SE QUEDA COLGADO (TIMER)
   useEffect(() => {
     if (!meeting_id) return;
-    !visibleMeets && executer_startMonitorStatus();
+    executer_startMonitorStatus();
     return () => {
       clearTimeout(timer_id);
       setLivestreamStats(null);
@@ -76,9 +65,23 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   return (
     <>
       {livestreamStats?.connected.value === 'Yes' ? (
-        ((transmition == 'EviusMeet' && !visibleMeets) || transmition !== 'EviusMeet') && (
-          <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
-        )
+        <>
+          {((transmition == 'EviusMeet' && !visibleMeets) || transmition !== 'EviusMeet') && (
+            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+          )}
+          {transmition == 'EviusMeet' && visibleMeets && (
+            <div style={{ aspectRatio: screens.xs ? '9/12' : '16/9' }}>
+              <iframe
+                width={'100%'}
+                style={{ height: '100%' }}
+                allow='autoplay; fullscreen; camera *;microphone *'
+                // sandbox='allow-scripts;allow-presentation; allow-modals'
+                allowFullScreen
+                allowusermedia
+                src={eviusmeetUrl}></iframe>
+            </div>
+          )}
+        </>
       ) : (
         <>
           {((transmition == 'EviusMeet' && !visibleMeets) || transmition !== 'EviusMeet') && (
@@ -109,7 +112,6 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       ) : (
         <h1>Streaming detenido</h1>
       )} */}
-      {console.log('1. RESPUESTA ACA==>', livestreamStats?.connected.value)}
     </>
   );
 }

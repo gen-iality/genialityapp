@@ -45,7 +45,7 @@ const getLiveStream = async (stream_id) => {
 
 const getLiveStreamStatus = async (stream_id) => {
   const res = await wowzaCLient.get('live_streams/' + stream_id + '/state');
-
+  console.log('RESPUESTA ACA==>', res);
   if (res.data && res.data.live_stream) {
     return res.data.live_stream;
   }
