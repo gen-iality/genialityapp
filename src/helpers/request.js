@@ -459,31 +459,42 @@ export const SurveysApi = {
     return await Actions.getAll(`/api/events/${event}/surveys/?token=${token}`);
   },
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/surveys`, true).then(({ data }) => data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event}/surveys/?token=${token}`, true).then(({ data }) => data);
   },
   getByActivity: async (event, activity_id) => {
-    return await Actions.getAll(`/api/events/${event}/surveys?indexby=activity_id&value=${activity_id}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(
+      `/api/events/${event}/surveys/?token=${token}&indexby=activity_id&value=${activity_id}`
+    );
   },
   getOne: async (event, id) => {
-    return await Actions.getOne(`/api/events/${event}/surveys/`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/events/${event}/surveys/${id}/?token=${token}`, true);
   },
   createOne: async (event, data) => {
-    return await Actions.create(`/api/events/${event}/surveys/`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`/api/events/${event}/surveys//?token=${token}`, data, true);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`/api/events/${event}/surveys/${id}`, data, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`/api/events/${event}/surveys/${id}/?token=${token}`, data, true);
   },
   deleteOne: async (id, event) => {
-    return await Actions.delete(`/api/events/${event}/surveys`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/surveys/${id}/?token=${token}`, true);
   },
   createQuestion: async (event, id, data) => {
-    return await Actions.put(`/api/events/${event}/surveys/${id}?newquestion=1`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/surveys/${id}/?token=${token}&newquestion=1`, data, true);
   },
   deleteQuestion: async (event, surveyId, index) => {
-    return await Actions.delete(`/api/events/${event}/surveys/${surveyId}?delete=`, index, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/surveys/${surveyId}/?token=${token}&delete=${index}`, '', true);
   },
   editQuestion: async (event, id, index, data) => {
-    return await Actions.put(`/api/events/${event}/questionedit/${id}?questionNo=${index}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/questionedit/${id}/?token=${token}&questionNo=${index}`, data, true);
   },
 };
 
