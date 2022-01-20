@@ -350,7 +350,7 @@ const FormEdit = (
                           style={{ display: 'block', marginRight: 0 }}>
                           {fields.map((field, index) => (
                             <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                              <Checkbox value={index} style={{ display: 'block', width: '100%' }}>
+                              <Checkbox value={index} style={{ width: '100%' }}>
                                 <Form.Item
                                   {...field}
                                   validateTrigger={['onChange', 'onBlur']}
