@@ -44,7 +44,7 @@ function OrgMembers(props) {
 
       fieldsMembersData.push(properties);
     });
-    console.log('debu fieldsMembersData ', fieldsMembersData);
+
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }

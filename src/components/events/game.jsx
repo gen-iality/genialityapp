@@ -27,7 +27,7 @@ function Game(props) {
         ('/?uid=' +
           (currentUser && currentUser._id ? currentUser._id : '5e9caaa1d74d5c2f6a02a3c2') +
           '&displayName=' +
-          (currentUser.displayName ? currentUser.displayName : 'anonimo') +
+          (currentUser.names ? currentUser.names : 'anonimo') +
           '&email=' +
           (currentUser.email ? currentUser.email : 'evius@evius.co'))
       }

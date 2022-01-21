@@ -36,6 +36,7 @@ function SurveyDrawer(props) {
       {validationsToOpenTheDrawer() && (
         <Drawer
           zIndex={1000}
+          destroyOnClose={true}
           title={
             cSurveys.currentSurvey && cSurveys.currentSurvey?.allow_gradable_survey ? (
               <Space>
