@@ -69,10 +69,8 @@ const ModalLoginHelpers = (props) => {
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
     console.log("typeModal",typeModal,props.organization)
-    if (typeModal == 'recover') {
-      if (!props.organization) {    
-          handleRecoveryPass(values);
-      }    
+    if (typeModal == 'recover') {      
+          handleRecoveryPass(values);        
       setLoading(false);     
     } else {
       //ENVIAR ACCESO AL CORREO
