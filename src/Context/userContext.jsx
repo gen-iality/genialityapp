@@ -17,7 +17,12 @@ export function CurrentUserProvider({ children }) {
           if (!user?.isAnonymous && user) {
             user.getIdToken().then(async function(idToken) {
               privateInstance.get(`/auth/currentUser?evius_token=${idToken}`).then((response) => {
+                console.log("RESPONSE===>",response)
+                if(response.data){
                 setCurrentUser({ status: 'LOADED', value: response.data });
+                }else{
+                  setCurrentUser({ status: 'LOADED', value: null });
+                }
               });
             });
           } else if (user?.isAnonymous && user) {

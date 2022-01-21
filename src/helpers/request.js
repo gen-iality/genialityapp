@@ -254,9 +254,17 @@ export const EventsApi = {
     return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
   },
   getStatusRegister: async (eventId, email) => {
-    let token = await GetTokenUserFirebase();
+    let token;
+    /** Se agrega el try catch para evitar que si no hay una sesion se detenga el flujo */
+    try {
+      token = await GetTokenUserFirebase();
+    } catch (error) {
+      token = false;
+    }
     return await Actions.get(
-      `api/events/${eventId}/eventusers?token=${token}&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
+      `api/events/${eventId}/eventusers${
+        token ? `/?token=${token}` : '/'
+      }&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
       true
     );
   },
@@ -327,7 +335,8 @@ export const UsersApi = {
     return await Actions.edit(`/api/users/${id}/?token=${token}`, data, true);
   },
   findByEmail: async (email) => {
-    return await Actions.getOne(`api/users/findByEmail/`, email);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`,true ); 
   },
 
   mineOrdes: async (id) => {
