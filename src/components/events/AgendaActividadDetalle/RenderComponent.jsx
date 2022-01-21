@@ -126,7 +126,6 @@ const RenderComponent = (props) => {
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            console.log('debu currentActivity?.video ', currentActivity?.video);
             return currentActivity?.video && <VideoActivity />;
         }
 
