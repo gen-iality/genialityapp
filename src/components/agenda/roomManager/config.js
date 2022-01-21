@@ -67,6 +67,7 @@ export default function RoomConfig(props) {
                 activityEdit={activityEdit}
                 activity_name={props.activity_name}
                 setMeetingId={setMeetingId}
+                saveConfig={saveConfig}
               />
             ),
           }[platform]
@@ -187,6 +188,7 @@ export default function RoomConfig(props) {
                                   activityEdit={activityEdit}
                                   activity_name={props.activity_name}
                                   setMeetingId={setMeetingId}
+                                  saveConfig={saveConfig}
                                 />
                               ),
                               zoom: (

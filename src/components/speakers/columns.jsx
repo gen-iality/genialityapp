@@ -11,6 +11,7 @@ export const columns = (columnsData) => [
       title: '',
       dataIndex: 'move',
       width: '50px',
+      align: 'center',
       render(val, item) {
          const DragHandle = sortableHandle(() => <DragOutlined id={`drag${item.index}`} style={{ cursor: 'grab', color: '#999', 'visibility': 'visible' }} />);
          return <DragHandle />;
@@ -19,6 +20,7 @@ export const columns = (columnsData) => [
    {
       title: 'Orden',
       dataIndex: 'index',
+      width: '70px',
       render(val, item) {
          return <div>{val + 1}</div>;
       },
@@ -26,6 +28,7 @@ export const columns = (columnsData) => [
    {
       title: 'Imagen',
       dataIndex: 'image',
+      width: '100px',
       ellipsis: true,
       render(val, item) {
          /*
@@ -74,6 +77,7 @@ export const columns = (columnsData) => [
       title: 'Visible',
       dataIndex: 'published',
       ellipsis: true,
+      width: '80px',
       render(val, item) {
          const [publish, setPublish] = useState(item.published);
          const update = async (checked) => {

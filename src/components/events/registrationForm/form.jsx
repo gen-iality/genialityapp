@@ -186,10 +186,8 @@ const FormRegister = ({
   }, [cUser.value, cEventUser]);
 
   useEffect(() => {
-    if (basicDataUser && validateEventUser) {
-      if (validateEventUser.status) {
-        buttonSubmit.current.click();
-      }
+    if (validateEventUser?.status) {
+      buttonSubmit.current.click();
     }
   }, [validateEventUser?.status, validateEventUser?.statusFields]);
 

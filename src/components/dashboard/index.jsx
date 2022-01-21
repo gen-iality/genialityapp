@@ -118,7 +118,7 @@ class DashboardEvent extends Component {
       totalOpened = 0,
       totalSent = 0,
       totalBounced = 0;
-    list.length > 0 &&
+    list?.length > 0 &&
       list.map((m, index) => {
         totalClicked += m.total_clicked ? m.total_clicked : 0;
         totalDeliverd += m.total_delivered ? m.total_delivered : 0;
@@ -141,9 +141,10 @@ class DashboardEvent extends Component {
       message.error('No existen datos que exportar');
     }
   };
-  fetchDataMails() {
+  async fetchDataMails() {
+    let token = await GetTokenUserFirebase();
     return new Promise((resolve, reject) => {
-      API.get(`/api/events/${this.props.eventId}/messages`)
+      API.get(`/api/events/${this.props.eventId}/messages/?token=${token}`)
         .then(({ data }) => {
           resolve(data.data);
         })

@@ -67,7 +67,7 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   let [datamsjevent, setdatamsjevent] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   let [columnsData, setColumnsData] = useState({});
 
   const renderMensaje = (text, record) => (
@@ -139,6 +139,7 @@ const ChatExport = ({ eventId, event }) => {
           datamessagesthisevent.push(msjnew);
         });
         setdatamsjevent(datamessagesthisevent);
+        setLoading(false);
         // console.log("CHAT=>>",datamessagesthisevent)
       })
       .catch();
@@ -150,7 +151,7 @@ const ChatExport = ({ eventId, event }) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    confirm({
+    Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
       content: 'Una vez eliminado, no lo podrá recuperar',
@@ -205,18 +206,22 @@ const ChatExport = ({ eventId, event }) => {
         /* exportData
         fileName={'ReportChats'} */
         titleTable={
-          <Row gutter={[8, 8]} wrap>
-            <Col>
-              <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
-                Exportar
-              </Button>
-            </Col>
-            <Col>
-              <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
-                Eliminar Chat
-              </Button>
-            </Col>
-          </Row>
+          <>
+            {datamsjevent && datamsjevent.length > 0 && (
+              <Row gutter={[8, 8]} wrap>
+                <Col>
+                  <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
+                    Exportar
+                  </Button>
+                </Col>
+                <Col>
+                  <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
+                    Eliminar Chat
+                  </Button>
+                </Col>
+              </Row>
+            )}
+          </>
         }
         search
         setColumnsData={setColumnsData}

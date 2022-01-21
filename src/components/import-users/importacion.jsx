@@ -3,7 +3,7 @@ import XLSX from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, Divider } from 'antd';
 import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 
 Moment.locale('es');
@@ -68,7 +68,9 @@ class Importacion extends Component {
     this.props.extraFields.map((extra) => {
       return (data[0][extra.name] = '');
     });
-    data[0]['tiquete'] = '';
+    // data[0]['tiquete'] = '';
+    /** Se agrega campo requerido que no viene en la consulta de la base de datos */
+    data[0]['rol'] = '';
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     let name = this.props.organization ? 'usersorganization_template' : 'attendees_template';
@@ -78,7 +80,14 @@ class Importacion extends Component {
     XLSX.writeFile(wb, `${name}${Moment().format('DDMMYY')}.xls`);
   };
 
+  /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */
+  addMoreItemsToExtraFields = () => {
+    let modifiedExtraFields = [...this.props.extraFields, { name: 'rol', type: 'rol' }];
+    return modifiedExtraFields;
+  };
+
   render() {
+    // console.log('debug this.props.extraFields', this.addMoreItemsToExtraFields());
     return (
       <React.Fragment>
         <div className='importacion-txt'>
@@ -90,9 +99,10 @@ class Importacion extends Component {
         </div>
         <h2 className='has-text-grey has-text-weight-bold'>CAMPOS REQUERIDOS</h2>
         <Row wrap gutter={[8, 8]}>
-          {this.props.extraFields.map((extra, key) => (
+          {this.addMoreItemsToExtraFields().map((extra, key) => (
             <Col key={key}>
-              <span className='has-text-grey-light'>{extra.name}</span>
+              <span className='has-text-grey-light'>{extra?.label || extra?.name}</span>
+              <Divider type='vertical' />
             </Col>
           ))}
         </Row>
@@ -100,7 +110,9 @@ class Importacion extends Component {
         <Row justify='center' wrap gutter={[16, 16]}>
           <Col>
             <Dropzone onDrop={this.handleXlsFile} accept='.xls,.xlsx' className='zone'>
-              <Button type='primary' icon={<UploadOutlined />}>Importar Excel</Button>
+              <Button type='primary' icon={<UploadOutlined />}>
+                Importar Excel
+              </Button>
             </Dropzone>
           </Col>
           <Col>

@@ -101,7 +101,7 @@ const NoticiasDetails = ({ setVirtualConference, match, setTopBanner }) => {
                 </Card>
                 <br />
                 <Title level={3} style={{ textAlign: 'center', textDecoration: 'underline' }}>
-                  Ver mas Noticias
+                  Ver más Noticias
                 </Title>
                 {/* <br /> */}
                 <NoticiaList size={screens.xs ? 1 : screens.lg ? 3 : 2} newId={noticia._id} />

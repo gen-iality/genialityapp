@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import WithEviusContext from '../../../Context/withContext';
 import ImageComponentwithContext from './ImageComponent';
 import { HelperContext } from '../../../Context/HelperContext';
@@ -12,6 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
+import AgendaContext from 'Context/AgendaContext';
 
 const RenderComponent = (props) => {
   let {
@@ -34,6 +35,8 @@ const RenderComponent = (props) => {
   const [renderGame, setRenderGame] = useState('');
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
+  //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
+  let { transmition, setTransmition } = useContext(AgendaContext);
 
   const Preloader = () => (
     <Space
@@ -62,10 +65,12 @@ const RenderComponent = (props) => {
         const data = infoActivity.data();
         const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
         // console.log('DATA FIREBASE==>', habilitar_ingreso, meeting_id, platform, tabs, avalibleGames);
+        console.log('DATA ACTIVITY==>', data);
         setplatform(platform);
         setactivityState(habilitar_ingreso);
         setactivityStateGlobal(habilitar_ingreso);
         setmeetingId(meeting_id);
+        setTransmition(data.transmition);
         settabsGeneral(tabs);
         if (!tabs.games) {
           HandleChatOrAttende('1');
@@ -99,7 +104,7 @@ const RenderComponent = (props) => {
     }
   }, [chatAttendeChats]);
 
-  function RenderizarComponente(plataforma, actividad_estado, reder_Game) {
+  const RenderizarComponente = useCallback((plataforma, actividad_estado, reder_Game) => {
     switch (plataforma) {
       case 'vimeo':
         switch (actividad_estado) {
@@ -121,7 +126,6 @@ const RenderComponent = (props) => {
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            console.log('debu currentActivity?.video ', currentActivity?.video);
             return currentActivity?.video && <VideoActivity />;
         }
 
@@ -178,7 +182,7 @@ const RenderComponent = (props) => {
               case 'game':
                 return (
                   <>
-                    <WowzaStreamingPlayer meeting_id={meetingId} />
+                    <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
                     <GameDrawer />
                   </>
                 );
@@ -192,7 +196,7 @@ const RenderComponent = (props) => {
                     <br />
                   </>
                 )} */}
-                <WowzaStreamingPlayer meeting_id={meetingId} />
+                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
               </>
             );
 
@@ -207,7 +211,7 @@ const RenderComponent = (props) => {
       case null:
         return currentActivity?.video ? <VideoActivity /> : '';
     }
-  }
+  });
 
   return (
     <>

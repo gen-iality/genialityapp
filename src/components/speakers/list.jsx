@@ -21,7 +21,7 @@ function SpeakersList(props) {
   let { isLoading, data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
 
   useEffect(() => {
-    console.log('dataSpeakers', data);
+    /* console.log('dataSpeakers', data); */
     setdataSpeakers(data);
   }, [data]);
 
