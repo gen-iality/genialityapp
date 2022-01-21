@@ -46,7 +46,7 @@ class Datos extends Component {
       visibleModal: false,
       isEditTemplate: { status: false, datafields: [], template: null },
     };
-    this.eventID = this.props.eventID;
+    this.eventId = this.props.eventId;
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
     this.updateTable = this.updateTable.bind(this);
@@ -80,8 +80,8 @@ class Datos extends Component {
       let fields = [];
       let fieldsReplace = [];
       if (
-        (organizationId && !this.props.eventID && this.props.edittemplate) ||
-        (organizationId && !this.props.eventID && !this.props.edittemplate)
+        (organizationId && !this.props.eventId && this.props.edittemplate) ||
+        (organizationId && !this.props.eventId && !this.props.edittemplate)
       ) {
         fields = await this.props.getFields();
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
@@ -93,7 +93,7 @@ class Datos extends Component {
         fields = this.orderFieldsByWeight(fieldsReplace);
         fields = this.updateIndex(fieldsReplace);
       } else if (!this.props.edittemplate) {
-        fields = await EventFieldsApi.getAll(this.props.eventID);
+        fields = await EventFieldsApi.getAll(this.props.eventId);
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
         fields.map((field) => {
           if (field.name !== 'password' && field.name !== 'contrasena' && field.name !== 'avatar') {
@@ -133,13 +133,13 @@ class Datos extends Component {
           await this.props.editField(field._id || field.id, field, this.state.isEditTemplate, this.updateTable);
         else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
       } else {
-        if (this.state.edit) await EventFieldsApi.editOne(field, field._id || field.id, this.eventID);
-        else await EventFieldsApi.createOne(field, this.eventID);
-        totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
+        if (this.state.edit) await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
+        else await EventFieldsApi.createOne(field, this.eventId);
+        totaluser = await firestore.collection(`${this.eventId}_event_attendees`).get();
       }
       if (totaluser?.docs?.length > 0 && field.name == 'pesovoto') {
         firestore
-          .collection(`${this.eventID}_event_attendees`)
+          .collection(`${this.eventId}_event_attendees`)
           .get()
           .then((resp) => {
             if (resp.docs.length > 0) {
@@ -150,7 +150,7 @@ class Datos extends Component {
                 objectP = { ...objectP, pesovoto: properties && properties.pesovoto ? properties.pesovoto : 1 };
                 datos.properties = objectP;
                 firestore
-                  .collection(`${this.eventID}_event_attendees`)
+                  .collection(`${this.eventId}_event_attendees`)
                   .doc(doc.id)
                   .set(datos);
               });
@@ -167,11 +167,11 @@ class Datos extends Component {
   //Funcion para guardar el orden de los datos
   async submitOrder() {
     const organizationId = this?.organization?._id;
-    if (organizationId && !this.eventID) {
+    if (organizationId && !this.eventId) {
       await this.props.orderFields(this.state.properties);
-    } else if (this.eventID && !organizationId && this.props.byEvent) {
+    } else if (this.eventId && !organizationId && this.props.byEvent) {
       let token = await GetTokenUserFirebase();
-      await Actions.put(`api/events/${this.props.eventID}?token=${token}`, this.state.properties);
+      await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
     } else {
       await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
     }
@@ -195,7 +195,7 @@ class Datos extends Component {
       if (organizationId) {
         await this.props.deleteField(item, this.state.isEditTemplate, this.updateTable);
       } else {
-        await EventFieldsApi.deleteOne(item, this.eventID);
+        await EventFieldsApi.deleteOne(item, this.eventId);
       }
       message.destroy(loading.key);
       message.open({
@@ -241,7 +241,7 @@ class Datos extends Component {
         await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
       } else {
-        await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
+        await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventId);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
       }
       await this.fetchFields();
@@ -355,7 +355,7 @@ class Datos extends Component {
   onChange1 = async (e, plantId) => {
     /* console.log('e, radio checked', plantId); */
     this.setState({ value: '' });
-    await OrganizationPlantillaApi.putOne(this.props.eventID, plantId);
+    await OrganizationPlantillaApi.putOne(this.props.eventId, plantId);
   };
 
   handlevisibleModal = () => {
@@ -510,7 +510,7 @@ class Datos extends Component {
             <ModalCreateTemplate
               visible={this.state.visibleModal}
               handlevisibleModal={this.handlevisibleModal}
-              organizationid={this.props.eventID}
+              organizationid={this.props.eventId}
             />
           )}
 
@@ -605,9 +605,9 @@ class Datos extends Component {
             </TabPane>
           )}
 
-          {/* {this.props.eventID && this.props.type != 'organization' && (
+          {/* {this.props.eventId && this.props.type != 'organization' && (
             <TabPane tab='Campos Relacionados' key='2'>
-              <RelationField eventId={this.props.eventID} fields={fields} />
+              <RelationField eventId={this.props.eventId} fields={fields} />
             </TabPane>
           )} */}
 
@@ -729,7 +729,7 @@ class Datos extends Component {
               ) : (
                 <CMS
                   API={OrganizationPlantillaApi}
-                  eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventID}
+                  eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventId}
                   title={'Plantillas de recoleccion de datos'}
                   addFn={() => this.setState({ visibleModal: true })}
                   columns={colsPlant}

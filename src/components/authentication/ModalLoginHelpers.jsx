@@ -39,31 +39,26 @@ const ModalLoginHelpers = (props) => {
       ? intl.formatMessage({ id: 'modal.restore.button', defaultMessage: 'Restablecer contraseña' })
       : intl.formatMessage({ id: 'modal.send.button', defaultMessage: 'Enviar link de acceso al correo' });
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
-  const handleRecoveryPass = async ({ email }) => {
+  const handleRecoveryPass = async ({ email }) => {    
     try {
       let resp;
-      if (props.cEvent.value !== null && props.cEvent.value !== undefined) {
-        resp = await EventsApi.changePassword(props.cEvent.value?._id, email);
-      } else {
-        resp = await EventsApi.changePasswordUser(email);
-      }
-
+      resp = await EventsApi.changePasswordUser(email);
       if (resp) {
-        console.log('1. RESPUESTA API DEV===>', resp);
+        setSendRecovery(
+          `${intl.formatMessage({
+            id: 'modal.restore.alert.success',
+            defaultMessage: 'Se ha enviado una nueva contraseña a:',
+          })} ${email} `
+        );
+        setresul('OK');
       }
-      setSendRecovery(
-        `${intl.formatMessage({
-          id: 'modal.restore.alert.success',
-          defaultMessage: 'Se ha enviado una nueva contraseña a:',
-        })} ${email} `
-      );
-      setresul('OK');
+      
     } catch (error) {
       setSendRecovery(
-        `${intl.formatMessage({
-          id: 'modal.restore.alert.error',
-          defaultMessage: 'Error al solicitar una nueva contraseña',
-        })}`
+        `${email} ${intl.formatMessage({
+          id: 'modal.message.notregistered.org',
+          defaultMessage: 'no se encuentra registrado.',
+        })} `
       );
     }
   };
@@ -73,53 +68,25 @@ const ModalLoginHelpers = (props) => {
     setRegisterUser(false);
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
+    console.log("typeModal",typeModal,props.organization)
     if (typeModal == 'recover') {
-      if (!props.organization) {
-        const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
-        if (data.length == 0) {
-          setRegisterUser(true);
-        } else {
-          //RECUPERAR CONTRASEÑA
+      if (!props.organization) {    
           handleRecoveryPass(values);
-        }
-      } else {
-        //alert('ACA');
-        const userExists = await UsersApi.findByEmail(values.email);
-        if (userExists.length > 0) {
-          handleRecoveryPass(values);
-          setSendRecovery(
-            `${intl.formatMessage({
-              id: 'modal.restore.alert.success',
-              defaultMessage: 'Se ha enviado una nueva contraseña a:',
-            })} ${values.email} `
-          );
-          setresul('OK');
-          //setRegisterUser(true);
-        } else {
-          setSendRecovery(
-            `${values.email} ${intl.formatMessage({
-              id: 'modal.message.notregistered.org',
-              defaultMessage: 'no se encuentra registrado.',
-            })} `
-          );
-        }
-        setLoading(false);
-      }
+      }    
+      setLoading(false);     
     } else {
       //ENVIAR ACCESO AL CORREO
       try {
         //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
         let resp;
         //SE VALIDA DE ESTA MANERA PARA
-        if (cEvent.value !== null && cEvent.value !== undefined) {
-          resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);
-        } else {
-          console.log('INGRESA ACA');
+        if (cEvent.value !== null && cEvent.value !== undefined) {          
+          resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);          
+        } else {          
           resp = await EventsApi.requestLinkEmailUSer(values.email);
         }
 
-        if (resp) {
-          console.log('1. RESPUESTA ENVíO DE LINK');
+        if (resp) {         
           setSendRecovery(
             `${intl.formatMessage({
               id: 'modal.send.alert.success',

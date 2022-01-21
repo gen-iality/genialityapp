@@ -8,6 +8,7 @@ import { Actions, EventsApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import EviusReactQuill from '../shared/eviusReactQuill';
+import { handleRequestError } from '../../helpers/utils';
 
 export const toolbarEditor = {
   toolbar: [
@@ -202,7 +203,7 @@ function AddProduct(props) {
               message.destroy(loading.key);
               message.open({
                 type: 'error',
-                content: handleRequestError(e).message,
+                content: handleRequestError(e)?.message,
               });
             }
           };

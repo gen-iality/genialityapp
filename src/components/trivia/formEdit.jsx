@@ -264,7 +264,7 @@ const FormEdit = (
                             validator: fieldValidation,
                           },
                         ]}>
-                        <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
+                        <Select placeholder='Seleccione una Opción' onChange={handleFunction}>
                           {field.selectOptions.map((option, index) =>
                             option.text ? (
                               <Option key={`type${index}`} value={option.value}>
@@ -283,7 +283,7 @@ const FormEdit = (
                 )}
               </div>
             )}
-            <div>
+            {/* <div>
               <Form.Item key={`img`} name={'image'} label={'Imagen'}>
                 <Upload
                   multiple={false}
@@ -297,7 +297,7 @@ const FormEdit = (
                   <Button icon={<UploadOutlined />}>Cargar imagen</Button>
                 </Upload>
               </Form.Item>
-            </div>
+            </div> */}
 
             <Form.List name={`choices`}>
               {(fields, { add, remove }) => {
@@ -306,7 +306,7 @@ const FormEdit = (
                     {questionType === 'radiogroup' ? (
                       <Radio.Group
                         onChange={handleRadio}
-                        disabled={!allowGradableSurvey}
+                        /* disabled={!allowGradableSurvey} */
                         value={correctAnswerIndex}
                         style={{ display: 'block', marginRight: 0 }}>
                         {fields.map((field, index) => (
@@ -345,12 +345,12 @@ const FormEdit = (
                       questionType === 'checkbox' && (
                         <Checkbox.Group
                           onChange={handleCheckbox}
-                          disabled={!allowGradableSurvey}
+                          /* disabled={!allowGradableSurvey} */
                           value={correctAnswerIndex}
                           style={{ display: 'block', marginRight: 0 }}>
                           {fields.map((field, index) => (
                             <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                              <Checkbox value={index} style={{ display: 'block', width: '100%' }}>
+                              <Checkbox value={index} style={{ width: '100%' }}>
                                 <Form.Item
                                   {...field}
                                   validateTrigger={['onChange', 'onBlur']}

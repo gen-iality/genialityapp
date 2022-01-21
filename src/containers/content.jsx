@@ -45,6 +45,8 @@ const ForbiddenPage = loadable(() => import('../components/forbiddenPage'));
 const QueryTesting = loadable(() => import('../components/events/surveys/components/queryTesting'));
 const EventFinished = loadable(() => import('../components/eventFinished/eventFinished'));
 const LoginWithCode = loadable(() => import('../components/AdminUsers/WithCode'));
+const NoMatchPage = loadable(() => import('../components/notFoundPage/noMatchPage'));
+
 const { useBreakpoint } = Grid;
 const ContentContainer = () => {
   const screens = useBreakpoint();
@@ -74,7 +76,6 @@ const ContentContainer = () => {
         {/* <WithFooter> */}
         <Route path='/page/:id' component={HomeProfile} />
         <PrivateRoute path='/my_events' component={Events} />
-        <PrivateRoute path='/orgadmin/:event' component={Event} />
         <PrivateRoute path='/create-event/:user?'>
           <NewEventProvider>
             <NewEvent />
@@ -90,6 +91,7 @@ const ContentContainer = () => {
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
+        <PrivateRoute path='/noaccesstocms/:id' component={NoMatchPage} />
         <Route path='/terms' component={Terms} />
         <Route path='/privacy' component={Privacy} />
         <Route path='/policies' component={Policies} />

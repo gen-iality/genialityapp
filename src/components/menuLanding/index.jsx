@@ -125,7 +125,7 @@ class menuLanding extends Component {
         },
 
         informativeSection: {
-          name: 'Seccion Informativa',
+          name: 'Sección Informativa',
           position: 30,
           section: 'informativeSection',
           icon: 'FileDoneOutlined',
@@ -134,7 +134,7 @@ class menuLanding extends Component {
           permissions: 'public',
         },
         informativeSection1: {
-          name: 'Seccion Informativa',
+          name: 'Sección Informativa',
           position: 30,
           section: 'informativeSection1',
           icon: 'FileDoneOutlined',

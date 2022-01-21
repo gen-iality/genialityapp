@@ -207,14 +207,16 @@ export const EventsApi = {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
   },
   metrics: async (id) => {
-    return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyevent');
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/events/${id}/totalmetricsbyevent/?token=${token}`, '');
   },
   metricsByActivity: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyactivity');
   },
   metricsRegisterBydate: async (id, type, fechaInicial, fechaFinal) => {
+    let token = await GetTokenUserFirebase();
     return await Actions.get(
-      `/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`
+      `/api/events/${id}/metricsbydate/eventusers/?token=${token}&metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`
     );
   },
 
@@ -238,7 +240,7 @@ export const EventsApi = {
   },
   deleteProduct: async (galleryId, eventId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/events/${eventId}/products`, `${galleryId}?token=${token}`);
+    return await Actions.delete(`/api/events/${eventId}/products/${galleryId}?token=${token}`, '', true);
   },
   validPrice: async (eventId, productId) => {
     return await Actions.get(`/api/events/${eventId}/products/${productId}/minimumauctionvalue`);
@@ -307,8 +309,9 @@ export const InvitationsApi = {
 
 export const UsersApi = {
   getAll: async (id, query) => {
+    let token = await GetTokenUserFirebase();
     query = query ? query : '';
-    return await Actions.getAll(`/api/events/${id}/eventusers${query}`);
+    return await Actions.getAll(`/api/events/${id}/eventusers?token=${token}&${query}`);
   },
   getOne: async (event_id, user_id) => {
     return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}`);
@@ -324,7 +327,8 @@ export const UsersApi = {
     return await Actions.edit(`/api/users/${id}/?token=${token}`, data, true);
   },
   findByEmail: async (email) => {
-    return await Actions.getOne(`api/users/findByEmail/`, email);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`,true ); 
   },
 
   mineOrdes: async (id) => {
@@ -333,7 +337,20 @@ export const UsersApi = {
   createOne: async (data, id) => {
     //Este primero es que deberia estar pero no sirve
     //return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
-    return await Actions.post(`/api/events/${id}/adduserwithemailvalidation`, data);
+    /** Se envia token para validar si el rol es cambiado por un damin */
+    let token;
+    /** Se agrega el try catch para evitar que si no hay una sesion se detenga el flujo */
+    try {
+      token = await GetTokenUserFirebase();
+    } catch (error) {
+      token = false;
+    }
+
+    return await Actions.post(
+      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}` : '/'}`,
+      data,
+      true
+    );
   },
   deleteOne: async (user, id) => {
     return await Actions.delete(`/api/user/events/${id}`, user);
@@ -439,34 +456,46 @@ export const EventFieldsApi = {
 
 export const SurveysApi = {
   getAll: async (event) => {
-    return await Actions.getAll(`/api/events/${event}/surveys`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`/api/events/${event}/surveys/?token=${token}`);
   },
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/surveys`, true).then(({ data }) => data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event}/surveys/?token=${token}`, true).then(({ data }) => data);
   },
   getByActivity: async (event, activity_id) => {
-    return await Actions.getAll(`/api/events/${event}/surveys?indexby=activity_id&value=${activity_id}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(
+      `/api/events/${event}/surveys/?token=${token}&indexby=activity_id&value=${activity_id}`
+    );
   },
   getOne: async (event, id) => {
-    return await Actions.getOne(`/api/events/${event}/surveys/`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/events/${event}/surveys/${id}/?token=${token}`, true);
   },
   createOne: async (event, data) => {
-    return await Actions.create(`/api/events/${event}/surveys/`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`/api/events/${event}/surveys//?token=${token}`, data, true);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(`/api/events/${event}/surveys/${id}`, data, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.edit(`/api/events/${event}/surveys/${id}/?token=${token}`, data, true);
   },
   deleteOne: async (id, event) => {
-    return await Actions.delete(`/api/events/${event}/surveys`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/surveys/${id}/?token=${token}`, true);
   },
   createQuestion: async (event, id, data) => {
-    return await Actions.put(`/api/events/${event}/surveys/${id}?newquestion=1`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/surveys/${id}/?token=${token}&newquestion=1`, data, true);
   },
   deleteQuestion: async (event, surveyId, index) => {
-    return await Actions.delete(`/api/events/${event}/surveys/${surveyId}?delete=`, index, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/surveys/${surveyId}/?token=${token}&delete=${index}`, '', true);
   },
   editQuestion: async (event, id, index, data) => {
-    return await Actions.put(`/api/events/${event}/questionedit/${id}?questionNo=${index}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${event}/questionedit/${id}/?token=${token}&questionNo=${index}`, data, true);
   },
 };
 
@@ -651,9 +680,10 @@ export const CertsApi = {
   },
   generateCert: async (body) => {
     // eslint-disable-next-line no-unused-vars
-    return new Promise((resolve, reject) => {
-      privateInstance
-        .post('/api/generatecertificate?download=1', body, {
+    return new Promise(async (resolve, reject) => {
+      let token = await GetTokenUserFirebase();
+      publicInstance
+        .post(`/api/generatecertificate?token=${token}&download=1`, body, {
           responseType: 'blob',
         })
         .then((response) => {
@@ -716,15 +746,15 @@ export const FaqsApi = {
   },
   editOne: async (data, id, eventId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit(`api/events/${eventId}/faqs/${id}?token=${token}`, data, true);
+    return await Actions.edit(`api/events/${eventId}/faqs/${id}/?token=${token}`, data, true);
   },
   deleteOne: async (id, eventId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/events/${eventId}/faqs`, `${id}?token=${token}`);
+    return await Actions.delete(`api/events/${eventId}/faqs/${id}/?token=${token}`, '', true);
   },
   create: async (data, id) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.create(`api/events/${id}/faqs?token=${token}`, data);
+    return await Actions.create(`api/events/${id}/faqs/?token=${token}`, data, true);
   },
 };
 
@@ -749,15 +779,21 @@ export const RolAttApi = {
   create: async (data, event) => {
     return await Actions.create(`api/events/${event}/rolesattendees`, data);
   },
+  getRoleHasPermissionsinThisEvent: async (rolId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/rolespermissionsevents/findbyrol/${rolId}/?token=${token}`, true);
+  },
 };
 
 export const MessageApi = {
   byEvent: async (eventId) => {
-    return await Actions.getAll(`api/events/${eventId}/messages`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${eventId}/messages/?token=${token}`, true);
   },
   getOne: async (id, eventId) => {
     /* return await Actions.get(`api/events/${eventId}/messages/`, id); */
-    return await Actions.get(`/api/events/${eventId}/message/${id}/messageUser`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/events/${eventId}/message/${id}/messageUser/?token=${token}`, true);
   },
   /* editOne: async (data, id, eventId) => {
     return await Actions.edit(`/api/events/${eventId}/messages`, data, id);
@@ -783,11 +819,11 @@ export const SpacesApi = {
   },
   deleteOne: async (id, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/events/${event}/spaces`, `${id}?token=${token}`);
+    return await Actions.delete(`api/events/${event}/spaces/${id}?token=${token}`, true);
   },
   create: async (data, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.create(`api/events/${event}/spaces?token=${token}`, data);
+    return await Actions.create(`api/events/${event}/spaces?token=${token}`, data, true);
   },
 };
 export const CategoriesAgendaApi = {
@@ -870,7 +906,7 @@ export const SpeakersApi = {
   },
   create: async (event, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.create(`api/events/${event}/host?token=${token}`, data);
+    return await Actions.create(`api/events/${event}/host?token=${token}`, data, true);
   },
 };
 
