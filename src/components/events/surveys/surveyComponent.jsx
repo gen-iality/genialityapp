@@ -78,7 +78,7 @@ function SurveyComponent(props) {
 
       /* Survey.StylesManager.applyTheme("darkblue"); */
       let surveyModelData = new Survey.Model(loadSurveyData);
-      console.log(surveyModelData)
+      /* console.log(surveyModelData) */
       surveyModelData.currentPageNo = surveyRealTime.currentPage;
       surveyModelData.locale = 'es';
       //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
