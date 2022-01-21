@@ -20,6 +20,10 @@ import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 // import { firestore, fireRealtime } from '../../../helpers/firebase';
 
+let myCss = {
+   navigationButton: "color-btn-survey"
+};
+
 function SurveyComponent(props) {
    const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
 
@@ -74,6 +78,7 @@ function SurveyComponent(props) {
 
       /* Survey.StylesManager.applyTheme("darkblue"); */
       let surveyModelData = new Survey.Model(loadSurveyData);
+      console.log(surveyModelData)
       surveyModelData.currentPageNo = surveyRealTime.currentPage;
       surveyModelData.locale = 'es';
       //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
@@ -231,6 +236,7 @@ function SurveyComponent(props) {
                            onCurrentPageChanged={(surveyModel, options) =>
                               setOnCurrentPageChanged({ surveyModel, options }, setShowOrHideSurvey(true))
                            }
+                           css={myCss}
                         />
                      </div>
                   )}
