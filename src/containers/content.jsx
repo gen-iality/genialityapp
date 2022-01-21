@@ -134,18 +134,20 @@ const RouteContext = ({ component: Component, ...rest }) => (
       <CurrentEventProvider>
         <CurrentUserEventProvider>
           <CurrentUserProvider>
-            <HelperContextProvider>
-              <SurveysProvider>
-                <Layout>
-                  <Space direction='vertical' size={65}>
-                    <Header />
-                    <Component {...props} />
-                    <ModalAuth />
-                    <ModalNoRegister />
-                  </Space>
-                </Layout>
-              </SurveysProvider>
-            </HelperContextProvider>
+            <AgendaContextProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <Layout>
+                    <Space direction='vertical' size={65}>
+                      <Header />
+                      <Component {...props} />
+                      <ModalAuth />
+                      <ModalNoRegister />
+                    </Space>
+                  </Layout>
+                </SurveysProvider>
+              </HelperContextProvider>
+            </AgendaContextProvider>
           </CurrentUserProvider>
         </CurrentUserEventProvider>
       </CurrentEventProvider>
@@ -193,9 +195,11 @@ const RouteContextChildren = ({ children: children, ...rest }) => (
     <CurrentEventProvider>
       <CurrentUserEventProvider>
         <CurrentUserProvider>
-          <HelperContextProvider>
-            <SurveysProvider>{children}</SurveysProvider>
-          </HelperContextProvider>
+          <AgendaContextProvider>
+            <HelperContextProvider>
+              <SurveysProvider>{children}</SurveysProvider>
+            </HelperContextProvider>
+          </AgendaContextProvider>
         </CurrentUserProvider>
       </CurrentUserEventProvider>
     </CurrentEventProvider>

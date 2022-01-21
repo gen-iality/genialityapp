@@ -70,6 +70,7 @@ const AgendaActividadDetalle = (props) => {
       props.setVirtualConference(true);
       HandleOpenCloseMenuRigth(true);
       handleChangeCurrentActivity(null);
+      setactivity(null);
     };
   }, []);
 

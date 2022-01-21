@@ -5,20 +5,25 @@ import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button } from 'antd';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
-  const [platformurl, setPlatformurl] = useState(null);
-  const [muted, setMuted] = useState(false);
-  const [loopBackGround, setLoopBackGround] = useState(false);
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FCortinillaProntoIniciamos.mp4?alt=media&token=b31c0745-4542-4b55-b79c-357db7633c53';
 
+  const [platformurl, setPlatformurl] = useState(defaultVideo);
+  const [muted, setMuted] = useState(false);
+  const [loopBackGround, setLoopBackGround] = useState(false);
+  //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA ACTIVIDAD
+  const [conected, setConected] = useState('No');
+
   useEffect(() => {
     if (!meeting_id) return;
-    if (thereIsConnection === 'No') {
+    if (thereIsConnection === 'No' || !thereIsConnection) {
+      setConected('No');
       setLoopBackGround(false);
       setPlatformurl(defaultVideo);
       setMuted(true);
     } else if (thereIsConnection === 'Yes') {
       let asyncfunction = async () => {
+        setConected('Yes');
         setLoopBackGround(true);
         setPlatformurl('none');
         let live_stream = await getLiveStream(meeting_id);
@@ -41,7 +46,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   return (
     <>
       <div className='mediaplayer'>
-        {muted && thereIsConnection !== 'No' && (
+        {muted && conected !== 'No' && (
           <Button
             onClick={() => setMuted(false)}
             shape='circle'

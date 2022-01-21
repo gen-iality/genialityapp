@@ -5,6 +5,16 @@ import RenderComponent from './RenderComponent';
 
 const HCOActividad = () => {
   let { currentActivity } = useContext(HelperContext);
+  const imageVisible = () => {
+    if (
+      ((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null) &&
+        (currentActivity?.video == null || !currentActivity?.video)) ||
+      (!currentActivity?.habilitar_ingreso && !currentActivity?.video)
+    ) {
+      return true;
+    }
+    return false;
+  };
   return (
     <header>
       <div>
@@ -12,9 +22,7 @@ const HCOActividad = () => {
 
         {/* {currentActivity && currentActivity.secondvideo && <SecondVideoActivity />} */}
 
-        {(((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null) &&
-          (currentActivity?.video == null || !currentActivity?.video)) ||
-          (!currentActivity?.habilitar_ingreso && !currentActivity?.video)) && <ImageComponentwithContext />}
+        {imageVisible() && <ImageComponentwithContext />}
       </div>
     </header>
   );
