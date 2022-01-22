@@ -1,6 +1,7 @@
+import { keyOf } from 'core-js/library/core/dict';
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
-import { firestore } from '../helpers/firebase';
+import { fireRealtime, firestore } from '../helpers/firebase';
 import { AgendaApi } from '../helpers/request';
 import { CurrentEventContext } from './eventContext';
 
@@ -31,6 +32,9 @@ export const AgendaContextProvider = ({ children }) => {
   const cEvent = useContext(CurrentEventContext);
   const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet Para cuando se tenga terminada
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
+  const [request, setRequest] = useState({});
+  const [requestList, setRequestList] = useState([]);
+  const [refActivity, setRefActivity] = useState(null);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -59,6 +63,7 @@ export const AgendaContextProvider = ({ children }) => {
   useEffect(() => {
     if (activityEdit) {
       obtenerDetalleActivity();
+      setMeetingId(null);
     }
     async function obtenerDetalleActivity() {
       //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
@@ -66,11 +71,12 @@ export const AgendaContextProvider = ({ children }) => {
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
-        /* console.log('GET CONFIGURATION==>', configuration); */
+        console.log('GET CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
         setRoomStatus(configuration.habilitar_ingreso);
+        setTransmition(configuration.transmition || null);
         setAvailableGames(configuration.avalibleGames || []);
         setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
         setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
@@ -83,6 +89,74 @@ export const AgendaContextProvider = ({ children }) => {
       }
     }
   }, [activityEdit]);
+
+  const getRequestByActivity = (refActivity) => {
+    fireRealtime
+      .ref(refActivity)
+      .orderByChild('date')
+      .on('value', (snapshot) => {
+        let listRequest = {};
+        let listRequestArray = [];
+        if (snapshot.exists()) {
+          let data = snapshot.val();
+          if (Object.keys(data).length > 0) {
+            Object.keys(data).map((requestData) => {
+              listRequest[requestData] = {
+                key: requestData,
+                id: data[requestData].id,
+                title: data[requestData].name,
+                date: data[requestData].date,
+                active: data[requestData].active || false,
+              };
+              listRequestArray.push({
+                key: requestData,
+                id: data[requestData].id,
+                title: data[requestData].name,
+                date: data[requestData].date,
+                active: data[requestData].active || false,
+              });
+            });
+            console.log('1. LISTADO ACA==>', listRequestArray);
+            setRequest(listRequest);
+            setRequestList(listRequestArray);
+          }
+        } else {
+          setRequest({});
+          setRequestList([]);
+        }
+      });
+  };
+  const addRequest = (refActivity, request) => {
+    if (request) {
+      console.log('ADD REQUEST');
+      fireRealtime.ref(refActivity).set(request);
+    }
+  };
+
+  const removeRequest = async (refActivity, key) => {
+    if (key) {
+      await fireRealtime
+        .ref(refActivity)
+        .child(key)
+        .remove();
+    }
+  };
+
+  const removeAllRequest = async (refActivity) => {
+    if (refActivity) {
+      await fireRealtime.ref(refActivity).remove();
+    }
+  };
+
+  const approvedOrRejectedRequest = async (refActivity, key, status) => {
+    console.log('1. APROVE ACA=>', refActivity);
+    if (refActivity) {
+      await fireRealtime
+        .ref(`${refActivity}`)
+        .child(key)
+        .update({ active: status });
+    }
+  };
 
   return (
     <AgendaContext.Provider
@@ -124,6 +198,15 @@ export const AgendaContextProvider = ({ children }) => {
         setTransmition,
         useAlreadyCreated,
         setUseAlreadyCreated,
+        getRequestByActivity,
+        request,
+        addRequest,
+        removeRequest,
+        approvedOrRejectedRequest,
+        setRefActivity,
+        refActivity,
+        requestList,
+        removeAllRequest,
       }}>
       {children}
     </AgendaContext.Provider>
