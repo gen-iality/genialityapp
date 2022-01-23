@@ -17,6 +17,7 @@ function ValidateAccessRouteCms({ children }) {
 
   useEffect(() => {
     if (!cEventUser.value) return;
+    // console.log('debug rolId   ', cEventUser.value.rol_id);
     showComponent(cEventUser.value.rol_id);
   }, [cEventUser.value, children]);
 
