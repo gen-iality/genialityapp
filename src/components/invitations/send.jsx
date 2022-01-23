@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
-import { Button, Checkbox, Row, Space, Col, Form, Input, Modal } from 'antd';
+import { Button, Checkbox, Row, Space, Col, Form, Input, Modal, message } from 'antd';
 Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -129,6 +129,11 @@ class SendRsvp extends Component {
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
     let users = [];
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se envía la información..</>,
+    });
     selection.map((item) => {
       return users.push(item._id);
     });
@@ -160,10 +165,21 @@ class SendRsvp extends Component {
       }
       /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
-      toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />);
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />,
+      });
+
+      /* toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />); */
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
     } catch (e) {
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+      });
+      /* toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />); */
       this.setState({ disabled: false, timeout: true, loader: false });
     }
   }
@@ -213,7 +229,19 @@ class SendRsvp extends Component {
                 />
               </Form.Item>
 
-              <div className='rsvp-pic'>
+              <Form.Item>
+                <label className='label'>Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small></label>
+
+                <ImageInput
+                  picture={this.state.rsvp.image_header}
+                  imageFile={this.state.imageFileHeader}
+                  changeImg={this.changeImgHeader}
+                  errImg={this.state.errImg}
+                  btnRemove={<></>}
+                />
+              </Form.Item>
+
+              {/* <div className='rsvp-pic'>
                 <p className='rsvp-pic-txt'>
                   Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small>
                 </p>
@@ -235,13 +263,13 @@ class SendRsvp extends Component {
                   changeImg={this.changeImgHeader}
                   errImg={this.state.errImg}
                 />
-              </div>
+              </div> */}
 
               <Form.Item label={'Cabecera del correo'}>
                 <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' />
               </Form.Item>
 
-              <Form.Item label={'Especificar fecha del evento'}>
+              <Form.Item label={'Específicar fecha del evento'}>
                 <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
               </Form.Item>
 
@@ -287,7 +315,32 @@ class SendRsvp extends Component {
                   </span>
                 </Col>
               </Row>
-              <div className='rsvp-pic'>
+              <Form.Item>
+                <label className='label'>Sube una imagen <br /> <small>(Por defecto será la del evento)</small></label>
+
+                <Row style={{ margin: 10 }}>
+                  {!this.state.showimgDefault ? (
+                    <Button onClick={() => this.setState({ showimgDefault: true })} type='success'>
+                      Mostrar imagen por defecto
+                    </Button>
+                  ) : (
+                    <Button onClick={() => this.setState({ showimgDefault: false })} danger>
+                      Quitar imagen por defecto
+                    </Button>
+                  )}
+                </Row>
+
+                {this.state.showimgDefault && (
+                  <ImageInput
+                    picture={this.state.rsvp?.image}
+                    imageFile={this.state.imageFile}
+                    changeImg={this.changeImg}
+                    errImg={this.state.errImg}
+                    btnRemove={<></>}
+                  />
+                )}
+              </Form.Item>
+              {/* <div className='rsvp-pic'>
                 <Space direction='vertical'>
                   <p className='rsvp-pic-txt'>
                     Sube una imagen <br /> <small>(Por defecto será la del evento)</small>
@@ -319,15 +372,29 @@ class SendRsvp extends Component {
                       changeImg={this.changeImg}
                       errImg={this.state.errImg}
                     />
-                  </Row>
+                  </Row> 
                 )}
-              </div>
+              </div> */}
 
               <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del evento)'}>
                 <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' />
               </Form.Item>
 
-              <div className='rsvp-pic'>
+              <Form.Item>
+                <label className='label'>Sube una imagen <br />{' '}
+                  <small>
+                    (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
+                  </small></label>
+                <ImageInput
+                  picture={this.state.rsvp.image_footer}
+                  imageFile={this.state.imageFileFooter}
+                  changeImg={this.changeImgFooter}
+                  errImg={this.state.errImg}
+                  btnRemove={<></>}
+                />
+              </Form.Item>
+
+              {/* <div className='rsvp-pic'>
                 <p className='rsvp-pic-txt'>
                   Sube una imagen <br />{' '}
                   <small>
@@ -352,7 +419,7 @@ class SendRsvp extends Component {
                   changeImg={this.changeImgFooter}
                   errImg={this.state.errImg}
                 />
-              </div>
+              </div> */}
 
               <div className='box rsvp-send'>
                 <Row gutter={8} wrap justify='center'>
