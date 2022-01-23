@@ -127,14 +127,14 @@ class SendRsvp extends Component {
     });
 
   async submit() {
-    const { event } = this.props;
-    const { rsvp, include_date, selection } = this.state;
-    let users = [];
     const loading = message.open({
       key: 'loading',
       type: 'loading',
       content: <> Por favor espere miestras se envía la información..</>,
     });
+    const { event } = this.props;
+    const { rsvp, include_date, selection } = this.state;
+    let users = [];
     selection.map((item) => {
       return users.push(item._id);
     });
@@ -166,21 +166,21 @@ class SendRsvp extends Component {
       }
       /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
+      
+      toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />);
+      this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
       message.destroy(loading.key);
-      message.open({
+      /* message.open({
         type: 'success',
         content: <FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />,
-      });
-
-      /* toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />); */
-      this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
+      }); */
     } catch (e) {
       message.destroy(loading.key);
-      message.open({
+      /* message.open({
         type: 'error',
         content: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
-      });
-      /* toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />); */
+      }); */
+      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       this.setState({ disabled: false, timeout: true, loader: false });
     }
   }
