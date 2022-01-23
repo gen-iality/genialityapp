@@ -679,7 +679,7 @@ const FormRegister = ({
                     key={'l' + key}
                     htmlFor={key}
                     initialValue={value}>
-                    <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
+                    <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
                       {mandatory ? (
                         <span>
                           <span style={{ color: 'red' }}>* </span>

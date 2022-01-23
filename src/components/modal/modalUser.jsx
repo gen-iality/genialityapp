@@ -342,6 +342,7 @@ class UserModal extends Component {
             options={this.options}
             callback={this.saveUser}
             loadingregister={this.state.loadingregister}
+            checkin={checked_in}
           />
         </div>
       </Modal>

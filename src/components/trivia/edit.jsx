@@ -808,7 +808,14 @@ class triviaEdit extends Component {
 
                 {allow_gradable_survey === 'true' && (
                   <>
-                    <Form.Item label={'Texto de muestra para la pantalla inicial de la encuesta'}>
+                    <Form.Item 
+                      /* label={'Texto de muestra para la pantalla inicial de la encuesta'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Texto de muestra para la pantalla inicial de la encuesta'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'initialMessage'}
                         id={'initialMessage'}
@@ -817,7 +824,14 @@ class triviaEdit extends Component {
                         onChange={this.onChange}
                       />
                     </Form.Item>
-                    <Form.Item label={'Mensaje al ganar'}>
+                    <Form.Item 
+                      /* label={'Mensaje al ganar'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Mensaje al ganar'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'win_Message'}
                         id={'win_Message'}
@@ -826,7 +840,14 @@ class triviaEdit extends Component {
                         onChange={this.onChangeWin}
                       />
                     </Form.Item>
-                    <Form.Item label={'Mensaje neutral'}>
+                    <Form.Item 
+                      /* label={'Mensaje neutral'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Mensaje neutral'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'neutral_Message'}
                         id={'neutral_Message'}
@@ -835,7 +856,14 @@ class triviaEdit extends Component {
                         onChange={this.onChangeNeutral}
                       />
                     </Form.Item>
-                    <Form.Item label={'Mensaje al perder'}>
+                    <Form.Item 
+                      /* label={'Mensaje al perder'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Mensaje al perder'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'lose_Message'}
                         id={'lose_Message'}
@@ -853,7 +881,7 @@ class triviaEdit extends Component {
                 {this.state.idSurvey && Object.entries(currentQuestion).length !== 0 && (
                   <Modal
                     width={700}
-                    title='Editando Pregunta'
+                    title={'Gestionar Pregunta'}
                     visible={visibleModal}
                     onOk={this.sendForm}
                     onCancel={this.closeModal}
@@ -861,7 +889,7 @@ class triviaEdit extends Component {
                       <Button key='back' onClick={this.closeModal}>
                         Cancelar
                       </Button>,
-                      <Button key='submit' type='primary' loading={confirmLoading} onClick={this.sendForm}>
+                      <Button key='submit' type='primary' disabled={confirmLoading} loading={confirmLoading} onClick={this.sendForm}>
                         Guardar
                       </Button>,
                     ]}>
