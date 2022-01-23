@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
+import EviusReactQuill from '../shared/eviusReactQuill';
 import { Button, Checkbox, Row, Space, Col, Form, Input, Modal, message } from 'antd';
 Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
@@ -266,7 +267,12 @@ class SendRsvp extends Component {
               </div> */}
 
               <Form.Item label={'Cabecera del correo'}>
-                <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' />
+                <EviusReactQuill
+                  name='content_header'
+                  data={this.state.rsvp.content_header}
+                  handleChange={(e) => this.QuillComplement1}
+                />
+                {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
               </Form.Item>
 
               <Form.Item label={'Específicar fecha del evento'}>
@@ -377,7 +383,12 @@ class SendRsvp extends Component {
               </div> */}
 
               <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del evento)'}>
-                <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' />
+                <EviusReactQuill
+                  name='message'
+                  data={this.state.rsvp.message}
+                  handleChange={(e) => this.QuillComplement2}
+                />
+                {/* <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' /> */}
               </Form.Item>
 
               <Form.Item>
