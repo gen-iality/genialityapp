@@ -18,7 +18,6 @@ class Result extends Component {
       fails: 0,
       updated: 0,
       step: 1,
-      loading: true,
     };
   }
 
