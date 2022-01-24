@@ -33,7 +33,7 @@ function RankingList(props) {
   };
 
   return (
-    <div style={{ marginTop: 16, width: '26vw' }}>
+    <div style={{ marginTop: 16, width: `${props.noWidth}` ? 'none' : '26vw' }}>
       <Row justify='center'>
         <h1
           style={{
