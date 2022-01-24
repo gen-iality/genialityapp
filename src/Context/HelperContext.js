@@ -102,10 +102,31 @@ export const HelperContextProvider = ({ children }) => {
     setTabLogin(tab);
   }
 
+  /**
+   * Get the permissions for a role in a given event.
+   * @param rolId - The id of the role you want to check permissions for.
+   * @returns The array of permissions for this role.
+   */
   async function rolHasPermissions(rolId) {
     if (!rolId) return;
     let permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId);
     return permissionsForThisRole;
+  }
+
+  /**
+   * Validate the existence of a specific role
+   * @param rolId - The id of the role you want to validate exists
+   * @returns The role object data.
+   */
+  async function theRoleExists(rolId) {
+    if (!rolId) return;
+    let ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
+    console.log(
+      `%cdebug Value: ifTheRoleExists`,
+      'font-family:calibri; background:#0be881; color: #5D6D7E; font-size:16px; font-weight: bold; border-radius:5px; padding:5px;',
+      ifTheRoleExists
+    );
+    return ifTheRoleExists;
   }
 
   useEffect(() => {
@@ -652,6 +673,7 @@ export const HelperContextProvider = ({ children }) => {
         HandleControllerLoginVisible,
         controllerLoginVisible,
         rolHasPermissions,
+        theRoleExists,
       }}>
       {children}
     </HelperContext.Provider>

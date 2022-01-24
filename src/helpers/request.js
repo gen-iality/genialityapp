@@ -328,7 +328,7 @@ export const UsersApi = {
   },
   findByEmail: async (email) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`,true ); 
+    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`, true);
   },
 
   mineOrdes: async (id) => {
@@ -782,6 +782,14 @@ export const RolAttApi = {
   getRoleHasPermissionsinThisEvent: async (rolId) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/rolespermissionsevents/findbyrol/${rolId}/?token=${token}`, true);
+  },
+  ifTheRoleExists: async (rolId) => {
+    let token = await GetTokenUserFirebase();
+    try {
+      return await Actions.get(`api/rols/${rolId}/rolseventspublic/?token=${token}`, true);
+    } catch (error) {
+      if (error.response.status === 404) return { type: 'the role does not exist' };
+    }
   },
 };
 

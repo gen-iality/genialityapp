@@ -11,7 +11,7 @@ function ValidateAccessRouteCms({ children }) {
   const [cEventUserRolId, setCEventUserRolId] = useState(null);
   const [rolesPermisionsForThisEvent, setRolesPermisionsForThisEvent] = useState(null);
   const [thisComponentIsLoading, setThisComponentIsLoading] = useState(true);
-  const { rolHasPermissions } = useContext(HelperContext);
+  const { theRoleExists } = useContext(HelperContext);
 
   let cEventUser = UseUserEvent();
 
@@ -27,9 +27,10 @@ function ValidateAccessRouteCms({ children }) {
   const showComponent = async (rol) => {
     if (!cEventUser.value) return;
     /** obtenemos el listado de permisos para el rol del usuario actual */
-    let permissionsForTheCurrentRole = await rolHasPermissions(rol);
+    let ifTheRoleExists = await theRoleExists(rol);
+
     /** Se valida si el rol es administrador, si es asi devuelve true */
-    const canClaimWithRolAdmin = useHasRole(permissionsForTheCurrentRole, rol);
+    const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, rol);
     if (children?.key === 'cms') {
       // console.log('debug ', children?.key, canClaimWithRolAdmin);
       if (canClaimWithRolAdmin) {
