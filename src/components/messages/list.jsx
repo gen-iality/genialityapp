@@ -49,6 +49,12 @@ function InvitationsList(props) {
       key: 'clicked',
       render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
     },
+    {
+      title: 'Enviado',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      render: (text) => <span>{text} </span>,
+    },
   ];
 
   return (
