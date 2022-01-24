@@ -1,4 +1,4 @@
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Modal, Row } from 'antd';
 import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HelperContext from '../../../Context/HelperContext';
@@ -8,6 +8,7 @@ import {
   CaretRightOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
+  ExclamationCircleOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
 import WithEviusContext from '../../../Context/withContext';
@@ -33,6 +34,27 @@ const HeaderColumns = (props) => {
     removeRequest,
     setActivityEdit,
   } = useContext(AgendaContext);
+
+  function showPropsConfirm() {
+    Modal.confirm({
+      centered: true,
+      title: 'Seguro que desea cambiar a la transmisión en vivo',
+      icon: <ExclamationCircleOutlined />,
+      content: '',
+      okText: 'Aceptar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        removeRequestTransmision();
+        async function removeRequestTransmision() {
+          await removeRequest(refActivity, cEventUSer.value?._id);
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
 
   //SE EJECUTA CUANDO TIENE UNA ACTIVIDAD PARA ESTABLECER LA REFERENCIA Y OBTENER LOS REQUEST
   useEffect(() => {
@@ -212,22 +234,41 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-            {transmition == 'EviusMeet' && !request[cEventUSer.value?._id]?.active && (
-              <Button
-                style={{ transition: 'all 1s' }}
-                onClick={() => sendOrCancelRequest()}
-                icon={
-                  !haveRequest() ? (
-                    <HumanGreetingIcon style={{ fontSize: '16px' }} />
-                  ) : (
-                    <CancelIcon style={{ fontSize: '16px' }} />
-                  )
-                }
-                disabled={request && request[cEventUSer.value?._id]?.active}
-                type={!haveRequest() ? 'primary' : 'danger'}>
-                {!haveRequest() ? 'Solicitar participar en la transmisión' : 'Cancelar solicitud'}
-              </Button>
-            )}
+            {transmition == 'EviusMeet' &&
+              !request[cEventUSer.value?._id]?.active &&
+              props.activityState === 'open_meeting_room' && (
+                <Button
+                  style={{ transition: 'all 1s' }}
+                  onClick={() => sendOrCancelRequest()}
+                  icon={
+                    !haveRequest() ? (
+                      <HumanGreetingIcon style={{ fontSize: '16px' }} />
+                    ) : (
+                      <CancelIcon style={{ fontSize: '16px' }} />
+                    )
+                  }
+                  disabled={request && request[cEventUSer.value?._id]?.active}
+                  type={!haveRequest() ? 'primary' : 'danger'}>
+                  {!haveRequest() ? 'Solicitar participar en la transmisión' : 'Cancelar solicitud'}
+                </Button>
+              )}
+            {transmition == 'EviusMeet' &&
+              request[cEventUSer.value?._id]?.active &&
+              props.activityState === 'open_meeting_room' && (
+                <Button
+                  style={{ transition: 'all 1s' }}
+                  onClick={() => showPropsConfirm()}
+                  icon={
+                    !haveRequest() ? (
+                      <HumanGreetingIcon style={{ fontSize: '16px' }} />
+                    ) : (
+                      <CancelIcon style={{ fontSize: '16px' }} />
+                    )
+                  }
+                  type={!haveRequest() ? 'primary' : 'danger'}>
+                  Cambiar a modo transmisión en vivo
+                </Button>
+              )}
           </Col>
         </div>
       </Col>
