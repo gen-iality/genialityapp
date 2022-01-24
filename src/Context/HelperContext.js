@@ -121,11 +121,7 @@ export const HelperContextProvider = ({ children }) => {
   async function theRoleExists(rolId) {
     if (!rolId) return;
     let ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
-    console.log(
-      `%cdebug Value: ifTheRoleExists`,
-      'font-family:calibri; background:#0be881; color: #5D6D7E; font-size:16px; font-weight: bold; border-radius:5px; padding:5px;',
-      ifTheRoleExists
-    );
+
     return ifTheRoleExists;
   }
 

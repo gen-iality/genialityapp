@@ -9,28 +9,30 @@ function NoMatchPage(props) {
       title='Lo sentimos!'
       subTitle={
         <div>
-          Lamentablemente la ruta actual <div>{props.eventId && <code>{props.location.pathname}</code>}</div> no está
-          disponible
+          Lamentablemente la ruta actual{' '}
+          <div>{(props.eventId || props?.org?._id) && <code>{props.location.pathname}</code>}</div> no está disponible
         </div>
       }
       extra={[
-        props?.path ? (
-          <Link to={`${props.path}/main`}>
-            <Button type='primary' key='eventData'>
-              Ir a datos del evento
-            </Button>
-          </Link>
-        ) : (
-          <Link to={`/`}>
-            <Button type='primary' key='eventData'>
-              Ver más eventos
-            </Button>
-          </Link>
-        ),
-
-        <Link to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}>
-          <Button key='moreEvents'>Ir a la landing de este evento</Button>
-        </Link>,
+        !props?.org?._id &&
+          (props?.path ? (
+            <Link to={`${props.path}/main`}>
+              <Button type='primary' key='eventData'>
+                Ir a datos del evento
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to={`/`}>
+                <Button type='primary' key='eventData'>
+                  Ver más eventos
+                </Button>
+              </Link>
+              <Link to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}>
+                <Button key='moreEvents'>Ir a la landing de este evento</Button>
+              </Link>
+            </>
+          )),
       ]}
     />
   );

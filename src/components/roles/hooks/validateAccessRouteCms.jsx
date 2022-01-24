@@ -4,28 +4,38 @@ import useHasRole from './userhasRole';
 import { Spin } from 'antd';
 import { HelperContext } from '../../../Context/HelperContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
-import Loading from 'components/profile/loading';
+
 function ValidateAccessRouteCms({ children }) {
-  // console.log('debug ', children);
+  // console.log('debug children', children.key);
   const { eventId } = children.props;
   const [cEventUserRolId, setCEventUserRolId] = useState(null);
-  const [rolesPermisionsForThisEvent, setRolesPermisionsForThisEvent] = useState(null);
   const [thisComponentIsLoading, setThisComponentIsLoading] = useState(true);
   const { theRoleExists } = useContext(HelperContext);
 
   let cEventUser = UseUserEvent();
 
+  /** Validating role for the cms of an organization */
+  useEffect(() => {
+    showOrgCmsComponent();
+  }, [children]);
+
+  const showOrgCmsComponent = async () => {
+    if (children?.key === 'cmsOrg') {
+      setCEventUserRolId(children);
+      setThisComponentIsLoading(false);
+    }
+  };
+
+  /** validating role for the cms of an event */
   useEffect(() => {
     if (!cEventUser.value) return;
-    // console.log('debug rolId   ', cEventUser.value.rol_id);
-    showComponent(cEventUser.value.rol_id);
+    showEventCmsComponent(cEventUser.value.rol_id);
   }, [cEventUser.value, children]);
 
   /** No se permite acceso al cms si el usuario no tiene eventUser */
   if (!cEventUser.value && cEventUser.status === 'LOADED') return <Redirect to={`/noaccesstocms/${eventId}`} />;
 
-  const showComponent = async (rol) => {
-    if (!cEventUser.value) return;
+  const showEventCmsComponent = async (rol) => {
     /** obtenemos el listado de permisos para el rol del usuario actual */
     let ifTheRoleExists = await theRoleExists(rol);
 
@@ -51,7 +61,6 @@ function ValidateAccessRouteCms({ children }) {
       {cEventUserRolId}
     </Spin>
   );
-  // return <>{thisComponentIsLoading ? <Loading /> : cEventUserRolId}</>;
 }
 
 export default ValidateAccessRouteCms;
