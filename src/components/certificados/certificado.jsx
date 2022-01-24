@@ -81,11 +81,15 @@ const Certificado = (props) => {
       try {
         if (locationState.edit) {
           const data = {
+            name: certificado.name,
             content: certificado.content,
             background: certificado.image?.data || certificado.image,
             rol: certificado?.rol,
+            rol_id: certificado.rol?._id,
+            event_id: props.event._id,
           };
           await CertsApi.editOne(data, locationState.edit);
+          console.log(data)
         } else {
           const data = {
             name: certificado.name,
