@@ -89,7 +89,7 @@ const Certificado = (props) => {
             event_id: props.event._id,
           };
           await CertsApi.editOne(data, locationState.edit);
-          console.log(data)
+          /* console.log(data) */
         } else {
           const data = {
             name: certificado.name,

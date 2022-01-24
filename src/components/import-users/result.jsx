@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Async from 'async';
 import { Actions } from '../../helpers/request';
-import { Row, Col, Tag, Tabs, Table } from 'antd';
+import { Row, Col, Tag, Tabs, Table, Spin } from 'antd';
 
 const { TabPane } = Tabs;
 const { Column } = Table;
@@ -18,6 +18,7 @@ class Result extends Component {
       fails: 0,
       updated: 0,
       step: 1,
+      loading: true,
     };
   }
 
@@ -172,56 +173,61 @@ class Result extends Component {
         {total > 0 && (
           <React.Fragment>
             <Tabs defaultActiveKey='0'>
-              <TabPane tab='Incorrectos' key='0'>
-                <Table
-                  size='small'
-                  rowKey='index'
-                  dataSource={data[0]}
-                  pagination
-                  /* scroll={{ x: 2500 }} */
-                >
-                  <Column
-                    title={extraFields[0].name}
-                    dataIndex={extraFields[0].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title={extraFields[1].name}
-                    dataIndex={extraFields[1].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title='Estado'
-                    dataIndex='status'
-                    ellipsis={true}
-                  />
-                </Table>
+              <TabPane tab='Correctos' key='0'>
+                <Spin tip={'Cargando...'} spinning={data[1].length === 0}>
+                  <Table
+                    size='small'
+                    rowKey='index'
+                    dataSource={data[1]}
+                    pagination
+                    /* scroll={{ x: 2500 }} */
+                  >
+                    <Column
+                      title={extraFields[0].name}
+                      dataIndex={extraFields[0].name}
+                      ellipsis={true}
+                    />
+                    <Column
+                      title={extraFields[1].name}
+                      dataIndex={extraFields[1].name}
+                      ellipsis={true}
+                    />
+                    <Column
+                      title='Estado'
+                      dataIndex='status'
+                      ellipsis={true}
+                    />
+                  </Table>
+                </Spin>
               </TabPane>
-              <TabPane tab='Correctos' key='1'>
-                <Table
-                  size='small'
-                  rowKey='index'
-                  dataSource={data[1]}
-                  pagination
-                  /* scroll={{ x: 2500 }} */
-                >
-                  <Column
-                    title={extraFields[0].name}
-                    dataIndex={extraFields[0].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title={extraFields[1].name}
-                    dataIndex={extraFields[1].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title='Estado'
-                    dataIndex='status'
-                    ellipsis={true}
-                  />
-                </Table>
+              <TabPane tab='Incorrectos' key='1'>
+                {/* <Spin tip={'Cargando...'} spinning={data[0].length === 0}> */}
+                  <Table
+                    size='small'
+                    rowKey='index'
+                    dataSource={data[0]}
+                    pagination
+                    /* scroll={{ x: 2500 }} */
+                  >
+                    <Column
+                      title={extraFields[0].name}
+                      dataIndex={extraFields[0].name}
+                      ellipsis={true}
+                    />
+                    <Column
+                      title={extraFields[1].name}
+                      dataIndex={extraFields[1].name}
+                      ellipsis={true}
+                    />
+                    <Column
+                      title='Estado'
+                      dataIndex='status'
+                      ellipsis={true}
+                    />
+                  </Table>
+                {/* </Spin> */}
               </TabPane>
+              
             </Tabs>
           </React.Fragment>
         )}

@@ -133,7 +133,7 @@ class SendRsvp extends Component {
     const loading = message.open({
       key: 'loading',
       type: 'loading',
-      content: <> Por favor espere miestras se envía la información..</>,
+      content: <> Por favor espere mientras se envía la información..</>,
     });
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
