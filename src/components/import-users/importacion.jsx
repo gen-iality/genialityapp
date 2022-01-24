@@ -3,7 +3,7 @@ import XLSX from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
-import { Row, Col, Button, Divider } from 'antd';
+import { Row, Col, Button, Divider, message } from 'antd';
 import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 
 Moment.locale('es');
@@ -20,47 +20,71 @@ class Importacion extends Component {
   }
 
   handleXlsFile(files) {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se envía la información..</>,
+    });
     const f = files[0];
     const reader = new FileReader();
     const self = this;
-    reader.onload = (e) => {
-      const data = e.target.result;
-      const workbook = XLSX.read(data, { type: 'binary' });
-      const sheetName = workbook.SheetNames[0];
-      const sheetObj = workbook.Sheets[sheetName];
-      if (sheetObj['!ref']) {
-        var range = XLSX.utils.decode_range(sheetObj['!ref']);
+    try {
 
-        let fields = [];
-
-        for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
-          const keyCell = sheetObj[XLSX.utils.encode_cell({ r: range.s.r, c: colNum })];
-          let key = keyCell ? keyCell.v.trim() : undefined;
-          //columna vacia continuamos
-          if (!key) continue;
-
-          fields[colNum] = { key: key, list: [], used: false };
-
-          for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
-            const secondCell = sheetObj[XLSX.utils.encode_cell({ r: rowNum, c: colNum })];
-            let val = secondCell ? secondCell.v : undefined;
-            fields[colNum].list.push(val);
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const sheetObj = workbook.Sheets[sheetName];
+        if (sheetObj['!ref']) {
+          var range = XLSX.utils.decode_range(sheetObj['!ref']);
+  
+          let fields = [];
+  
+          for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
+            const keyCell = sheetObj[XLSX.utils.encode_cell({ r: range.s.r, c: colNum })];
+            let key = keyCell ? keyCell.v.trim() : undefined;
+            //columna vacia continuamos
+            if (!key) continue;
+  
+            fields[colNum] = { key: key, list: [], used: false };
+  
+            for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
+              const secondCell = sheetObj[XLSX.utils.encode_cell({ r: rowNum, c: colNum })];
+              let val = secondCell ? secondCell.v : undefined;
+              fields[colNum].list.push(val);
+            }
           }
-        }
-
-        //por si no pudimos agregar ningún dato
-        if (!fields.length) {
-          this.setState({ errMsg: 'Excel en blanco, o algún problema con el archivo o el formato' });
+          message.destroy(loading.key);
+          message.open({
+            type: 'success',
+            content: <>Importación de usuarios exitosa</>,
+          });
+  
+          //por si no pudimos agregar ningún dato
+          if (!fields.length) {
+            this.setState({ errMsg: 'Excel en blanco, o algún problema con el archivo o el formato' });
+            return;
+          }
+  
+          self.props.handleXls(fields);
           return;
+        } else {
+          message.destroy(loading.key);
+          message.open({
+            type: 'error',
+            content: <>Excel en blanco</>,
+          });
+          this.setState({ errMsg: 'Excel en blanco' });
         }
-
-        self.props.handleXls(fields);
-        return;
-      } else {
-        this.setState({ errMsg: 'Excel en blanco' });
-      }
-    };
-    reader.readAsBinaryString(f);
+      };
+      reader.readAsBinaryString(f);
+    } catch (e) {
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: <>Error cargando la información</>,
+      });
+    }
   }
 
   downloadExcel = () => {
