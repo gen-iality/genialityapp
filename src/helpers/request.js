@@ -782,10 +782,12 @@ export const RolAttApi = {
     return await Actions.edit(`/api/events/${event}/rolesattendees/${id}`, data, `?token=${token}`);
   },
   deleteOne: async (id, event) => {
-    return await Actions.delete(`/api/events/${event}/rolesattendees`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/rolesattendees`, `${id}?token=${token}`);
   },
   create: async (data, event) => {
-    return await Actions.create(`api/events/${event}/rolesattendees`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`api/events/${event}/rolesattendees?token=${token}`, data);
   },
   getRoleHasPermissionsinThisEvent: async (rolId) => {
     let token = await GetTokenUserFirebase();
