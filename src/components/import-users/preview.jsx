@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ErrorServe from '../modal/serverError';
 import LogOut from '../shared/logOut';
-import { Row, Col, Button, Dropdown, Menu } from 'antd';
+import { Row, Col, Button, Dropdown, Menu, message } from 'antd';
 import { UploadOutlined, ExclamationCircleOutlined, ReloadOutlined, DownOutlined } from '@ant-design/icons';
 
 class Preview extends Component {

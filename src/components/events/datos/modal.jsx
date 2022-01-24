@@ -29,6 +29,7 @@ class DatosModal extends Component {
         justonebyattendee: false,
       },
       valid: true,
+      loading: false,
     };
   }
 
@@ -139,6 +140,7 @@ class DatosModal extends Component {
     values.visibleByAdmin = info?.visibleByAdmin;
     values.visibleByContacts = info.visibleByContacts;
     values.description = info.description;
+    this.setState({loading: true});
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
     await this.props.action(values, this.state.event?._id);
     const initModal = {
@@ -151,11 +153,11 @@ class DatosModal extends Component {
       options: [],
       justonebyattendee: false,
     };
-    this.setState({ info: initModal });
+    this.setState({ info: initModal, loading: false });
   };
 
   render() {
-    const { inputValue, info, valid } = this.state;
+    const { inputValue, info, valid, loading } = this.state;
     const { edit } = this.props;
 
     return (
@@ -282,12 +284,12 @@ class DatosModal extends Component {
           </Form.Item>
           <Form.Item>
             <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Button style={{ marginRight: 20 }} type='primary' htmlType='submit' id='btnSave'>
-                Guardar
+              <Button style={{ marginRight: 20 }} type='primary' htmlType='submit' id='btnSave' disabled={loading} loading={loading}>
+                {'Guardar'}
               </Button>
 
               <Button onClick={() => this.props.cancel()} type='default' tmlType='button'>
-                Cancelar
+                {'Cancelar'}
               </Button>
             </Row>
           </Form.Item>

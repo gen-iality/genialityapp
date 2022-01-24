@@ -336,7 +336,7 @@ export const UsersApi = {
   },
   findByEmail: async (email) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`,true ); 
+    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`, true);
   },
 
   mineOrdes: async (id) => {

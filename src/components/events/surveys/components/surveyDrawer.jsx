@@ -119,7 +119,7 @@ function SurveyDrawer(props) {
             <Col hidden={rankingVisible} xl={8} xxl={8}>
               <div style={{ width: '100%' }}>
                 <div style={{ justifyContent: 'center', display: 'grid' }}>
-                  {cSurveys.shouldDisplayRanking() && <RankingTrivia />}
+                  {cSurveys.shouldDisplayRanking() && <RankingTrivia noWidth/>}
                 </div>
               </div>
             </Col>
