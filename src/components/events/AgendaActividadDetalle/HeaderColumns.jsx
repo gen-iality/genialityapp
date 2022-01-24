@@ -212,22 +212,24 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-            {transmition == 'EviusMeet' && !request[cEventUSer.value?._id]?.active && (
-              <Button
-                style={{ transition: 'all 1s' }}
-                onClick={() => sendOrCancelRequest()}
-                icon={
-                  !haveRequest() ? (
-                    <HumanGreetingIcon style={{ fontSize: '16px' }} />
-                  ) : (
-                    <CancelIcon style={{ fontSize: '16px' }} />
-                  )
-                }
-                disabled={request && request[cEventUSer.value?._id]?.active}
-                type={!haveRequest() ? 'primary' : 'danger'}>
-                {!haveRequest() ? 'Solicitar participar en la transmisión' : 'Cancelar solicitud'}
-              </Button>
-            )}
+            {transmition == 'EviusMeet' &&
+              !request[cEventUSer.value?._id]?.active &&
+              props.activityState === 'open_meeting_room' && (
+                <Button
+                  style={{ transition: 'all 1s' }}
+                  onClick={() => sendOrCancelRequest()}
+                  icon={
+                    !haveRequest() ? (
+                      <HumanGreetingIcon style={{ fontSize: '16px' }} />
+                    ) : (
+                      <CancelIcon style={{ fontSize: '16px' }} />
+                    )
+                  }
+                  disabled={request && request[cEventUSer.value?._id]?.active}
+                  type={!haveRequest() ? 'primary' : 'danger'}>
+                  {!haveRequest() ? 'Solicitar participar en la transmisión' : 'Cancelar solicitud'}
+                </Button>
+              )}
           </Col>
         </div>
       </Col>
