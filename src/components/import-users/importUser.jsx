@@ -5,7 +5,7 @@ import Preview from './preview';
 import Result from './result';
 import Async from 'async';
 import Header from '../../antdComponents/Header';
-import { Steps, Divider } from 'antd';
+import { Steps, Divider, message } from 'antd';
 
 const { Step } = Steps;
 
@@ -29,55 +29,75 @@ class ImportUsers extends Component {
 
   importUsers = (users) => {
     const self = this;
-
-    /* Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde */
-    users = users.map((column) => {
-      if (column.key === 'ticket_id') {
-        column.used = true;
-      }
-      return column;
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se envía la información..</>,
     });
 
-    console.log('USERS COLUMNS==>', users);
+    try {
 
-    //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos
-    //al componente result que realiza la importación uno a uno usando el api
-    Async.waterfall(
-      [
-        function(cb) {
-          let newUsers = users.filter((user) => {
-            return user.used;
-          });
-          cb(null, newUsers);
-        },
-        function(newUsers, cb) {
-          let long = newUsers[0].list.length;
-          let itemsecondwaterfall = [];
-          let initwaterfallcounter = 0;
-          for (; initwaterfallcounter < long; ) {
-            itemsecondwaterfall[initwaterfallcounter] = {};
-            initwaterfallcounter++;
-          }
-          if (initwaterfallcounter === long) {
-            cb(null, itemsecondwaterfall, newUsers);
-          }
-        },
-        function(items, newUsers, cb) {
-          let len = newUsers.length;
-          for (let i = 0; i < items.length; i++) {
-            for (let j = 0; j < len; j++) {
-              items[i][newUsers[j].key] = newUsers[j].list[i];
+      /* Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde */
+      users = users.map((column) => {
+        if (column.key === 'ticket_id') {
+          column.used = true;
+        }
+        return column;
+      });
+  
+      /* console.log('USERS COLUMNS==>', users); */
+  
+      //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos
+      //al componente result que realiza la importación uno a uno usando el api
+      Async.waterfall(
+        [
+          function(cb) {
+            let newUsers = users.filter((user) => {
+              return user.used;
+            });
+            cb(null, newUsers);
+          },
+          function(newUsers, cb) {
+            let long = newUsers[0].list.length;
+            let itemsecondwaterfall = [];
+            let initwaterfallcounter = 0;
+            for (; initwaterfallcounter < long; ) {
+              itemsecondwaterfall[initwaterfallcounter] = {};
+              initwaterfallcounter++;
             }
-          }
-          cb(items);
-        },
-      ],
-      function(result) {
-        self.setState((prevState) => {
-          return { step: prevState.step + 1, toImport: result };
-        });
-      }
-    );
+            if (initwaterfallcounter === long) {
+              cb(null, itemsecondwaterfall, newUsers);
+            }
+          },
+          function(items, newUsers, cb) {
+            let len = newUsers.length;
+            for (let i = 0; i < items.length; i++) {
+              for (let j = 0; j < len; j++) {
+                items[i][newUsers[j].key] = newUsers[j].list[i];
+              }
+            }
+            cb(items);
+          },
+        ],
+        function(result) {
+          self.setState((prevState) => {
+            return { step: prevState.step + 1, toImport: result };
+          });
+        }
+      );
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <>Información cargada correctamente!</>,
+      });
+    } catch (e) {
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: <>Error cargando la información</>,
+      });
+    }
+
   };
 
   closeModal = () => {
