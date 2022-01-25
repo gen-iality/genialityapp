@@ -16,26 +16,36 @@ const columns = [
     title: 'Creado',
     dataIndex: 'registerDate',
     key: 'registerDate',
+    ellipsis: true,
+    sorter: (a, b) => a.registerDate.localeCompare(b.registerDate),
   },
   {
     title: 'Nombre',
     dataIndex: 'userName',
     key: 'userName',
+    ellipsis: true,
+    sorter: (a, b) => a.userName.localeCompare(b.userName),
   },
   {
     title: 'Email',
     dataIndex: 'userEmail',
     key: 'userEmail',
+    ellipsis: true,
+    sorter: (a, b) => a.userEmail.localeCompare(b.userEmail),
   },
   {
     title: '# Preguntas',
     dataIndex: 'totalQuestions',
     key: 'totalQuestions',
+    ellipsis: true,
+    sorter: (a, b) => a.totalQuestions - b.totalQuestions,
   },
   {
     title: '# Respuestas OK',
     dataIndex: 'correctAnswers',
     key: 'correctAnswers',
+    ellipsis: true,
+    sorter: (a, b) => a.correctAnswers - b.correctAnswers,
   },
 ];
 class Ranking extends Component {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ErrorServe from '../modal/serverError';
 import LogOut from '../shared/logOut';
-import { Row, Col, Button, Dropdown, Menu, message } from 'antd';
+import { Row, Col, Button, Dropdown, Menu, message, Divider } from 'antd';
 import { UploadOutlined, ExclamationCircleOutlined, ReloadOutlined, DownOutlined } from '@ant-design/icons';
 
 class Preview extends Component {
@@ -147,17 +147,18 @@ class Preview extends Component {
         >
           Importar
         </Button>
+        <br /><br />
         {
           this.state.loading ? (
             <Row justify='center'>Parsing excel</Row>
         ) : (
           <Row wrap gutter={[16, 16]} >
             <Col span={14} >
-              <Row wrap gutter={[8, 8]}>
+              <Row wrap gutter={[16, 16]}>
                 {list.map((item, index) => {
                   return (
                     <Col key={index}>
-                      <div style={{border: '1px solid', borderColor: 'gray', borderRadius: '5px', padding: '5px'}}>
+                      <div style={{border: '1px solid gray', borderRadius: '3px', padding: '5px'/* , boxShadow: '5px 5px 5px gray' */}}>
                         <div style={{textAlign: 'center'}}>
                           {!item.used && auxArr.length > 0 && (
                             <ReloadOutlined />
@@ -167,9 +168,12 @@ class Preview extends Component {
                               item.used
                                 ? 'has-text-success'
                                 : `${auxArr.length > 0 ? 'has-text-danger' : 'has-text-warning'}`
-                            }`}>
-                            {item.key}
+                            }`}
+                            style={{fontSize: '16px'}}
+                          >
+                            Campo "{item.key}"
                           </span>
+                          {/* <Divider style={{margin: '0 !important'}} /> */}
                           {!item.used && auxArr.length > 0 && (
                             <Dropdown overlay={(
                               <Menu>

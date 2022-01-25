@@ -57,6 +57,8 @@ const WowzaStreamingPanel = ({
   const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
   const [copySuccessProductor, setCopySuccessProductor] = useState(false);
   const [copySuccessAsistente, setCopySuccessAsistente] = useState(false);
+  const [copySuccessURL, setCopySuccessURL] = useState(false);
+  const [copySuccessClave, setCopySuccessClave] = useState(false);
   const eventContext = useContext(CurrentEventContext);
   const { transmition, removeAllRequest } = useContext(AgendaContext);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
@@ -171,15 +173,17 @@ const WowzaStreamingPanel = ({
     } else if (type === 'URL') {
       navigator.clipboard.writeText(livestreamQuery.data.source_connection_information.primary_server);
       success();
-      setCopySuccessAsistente(true);
+      setCopySuccessURL(true);
     } else if (type === 'Clave') {
       navigator.clipboard.writeText(livestreamQuery.data.source_connection_information.stream_name);
       success();
-      setCopySuccessAsistente(true);
+      setCopySuccessClave(true);
     }
     setTimeout(() => {
       setCopySuccessProductor(false);
       setCopySuccessAsistente(false);
+      setCopySuccessURL(false);
+      setCopySuccessClave(false);
     }, 5000);
   }
 
@@ -386,7 +390,7 @@ const WowzaStreamingPanel = ({
                           <Button
                             onClick={() => copyToClipboard('URL')}
                             icon={
-                              copySuccessProductor ? (
+                              copySuccessURL ? (
                                 <CheckCircleFilled style={{ color: '#52C41A' }} />
                               ) : (
                                 <CopyFilled style={{ color: '#0089FF' }} />
@@ -409,7 +413,7 @@ const WowzaStreamingPanel = ({
                           <Button
                             onClick={() => copyToClipboard('Clave')}
                             icon={
-                              copySuccessAsistente ? (
+                              copySuccessClave ? (
                                 <CheckCircleFilled style={{ color: '#52C41A' }} />
                               ) : (
                                 <CopyFilled style={{ color: '#0089FF' }} />
@@ -498,7 +502,7 @@ const WowzaStreamingPanel = ({
                   <Button
                     onClick={() => copyToClipboard('URL')}
                     icon={
-                      copySuccessProductor ? (
+                      copySuccessURL ? (
                         <CheckCircleFilled style={{ color: '#52C41A' }} />
                       ) : (
                         <CopyFilled style={{ color: '#0089FF' }} />
@@ -520,7 +524,7 @@ const WowzaStreamingPanel = ({
                   <Button
                     onClick={() => copyToClipboard('Clave')}
                     icon={
-                      copySuccessAsistente ? (
+                      copySuccessClave ? (
                         <CheckCircleFilled style={{ color: '#52C41A' }} />
                       ) : (
                         <CopyFilled style={{ color: '#0089FF' }} />
