@@ -82,20 +82,12 @@ class Ranking extends Component {
 
   render() {
     let { nameQuestion, listOfUserResponse } = this.state;
+
     return (
       <Fragment>
-        <Header 
-          title={'Ranking'}
-          back
-        />
+        <Header title={'Ranking'} back />
 
-        <Table 
-          header={columns}
-          list={listOfUserResponse}
-          pagination={false}
-          exportData
-          fileName={`Ranking`}
-        />
+        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={`Ranking`} />
 
         {/* <EventContent title={nameQuestion} closeAction={this.goBack}>
           <Divider orientation='right'>Reporte</Divider>

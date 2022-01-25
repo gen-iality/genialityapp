@@ -97,7 +97,7 @@ export const getTriviaRanking = (surveyId) => {
       .then((result) => {
         if (!result.empty) {
           result.forEach((item) => {
-            let registerDate = Moment.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm a');
+            let registerDate = Moment.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm:ss a');
 
             list.push({ ...item.data(), _id: item.id, registerDate });
           });

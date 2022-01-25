@@ -483,7 +483,7 @@ export const SurveysApi = {
   },
   createOne: async (event, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.create(`/api/events/${event}/surveys//?token=${token}`, data, true);
+    return await Actions.create(`/api/events/${event}/surveys/?token=${token}`, data, true);
   },
   editOne: async (data, id, event) => {
     let token = await GetTokenUserFirebase();
