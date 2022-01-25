@@ -64,7 +64,7 @@ const TipoAsistente = (props) => {
           type: 'success',
           content: <> Información guardada correctamente!</>,
         });
-        history.push(`${props.matchUrl}/tipo-asistentes`);
+        history.push(`${props.matchUrl}`);
       } catch (e) {
         message.destroy(loading.key);
         message.open({
@@ -100,7 +100,7 @@ const TipoAsistente = (props) => {
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              history.push(`${props.matchUrl}/tipo-asistentes`);
+              history.push(`${props.matchUrl}`);
             } catch (e) {
               message.destroy(loading.key);
               message.open({

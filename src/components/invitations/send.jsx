@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Button, Checkbox, Row, Space, Col, Form, Input, Modal, message } from 'antd';
+import { Button, Checkbox, Row, Space, Col, Form, Input, Modal, message, Spin } from 'antd';
 Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -30,6 +30,7 @@ class SendRsvp extends Component {
       include_date: true,
       selection: [],
       showimgDefault: true,
+      loading_image: false,
     };
     this.submit = this.submit.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
@@ -90,6 +91,7 @@ class SendRsvp extends Component {
   };
 
   uploadImg = (imageFieldName, imageStateName) => {
+    this.setState({ loading_image: true })
     let data = new FormData();
     const url = '/api/files/upload',
       self = this;
@@ -102,10 +104,11 @@ class SendRsvp extends Component {
             [imageStateName]: image,
           },
           [imageFieldName]: false,
+          loading_image: false,
         });
       })
       .catch(() => {
-        this.setState({ timeout: true, loader: false });
+        this.setState({ timeout: true, loader: false, loading_image: false });
       });
   };
 
@@ -130,7 +133,7 @@ class SendRsvp extends Component {
     const loading = message.open({
       key: 'loading',
       type: 'loading',
-      content: <> Por favor espere miestras se envía la información..</>,
+      content: <> Por favor espere mientras se envía la información..</>,
     });
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
@@ -233,13 +236,15 @@ class SendRsvp extends Component {
               <Form.Item>
                 <label className='label'>Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small></label>
 
-                <ImageInput
-                  picture={this.state.rsvp.image_header}
-                  imageFile={this.state.imageFileHeader}
-                  changeImg={this.changeImgHeader}
-                  errImg={this.state.errImg}
-                  btnRemove={<></>}
-                />
+                <Spin tip='Cargando...' spinning={this.state.loading_image}>
+                  <ImageInput
+                    picture={this.state.rsvp?.image_header}
+                    imageFile={this.state.imageFileHeader}
+                    changeImg={this.changeImgHeader}
+                    errImg={this.state.errImg}
+                    btnRemove={<></>}
+                  />
+                </Spin>
               </Form.Item>
 
               {/* <div className='rsvp-pic'>
@@ -270,7 +275,7 @@ class SendRsvp extends Component {
                 <EviusReactQuill
                   name='content_header'
                   data={this.state.rsvp.content_header}
-                  handleChange={(e) => this.QuillComplement1}
+                  handleChange={(e) => this.QuillComplement1(e)}
                 />
                 {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
               </Form.Item>
@@ -337,13 +342,15 @@ class SendRsvp extends Component {
                 </Row>
 
                 {this.state.showimgDefault && (
-                  <ImageInput
-                    picture={this.state.rsvp?.image}
-                    imageFile={this.state.imageFile}
-                    changeImg={this.changeImg}
-                    errImg={this.state.errImg}
-                    btnRemove={<></>}
-                  />
+                  <Spin tip='Cargando...' spinning={this.state.loading_image}>
+                    <ImageInput
+                      picture={this.state.rsvp?.image}
+                      imageFile={this.state.imageFile}
+                      changeImg={this.changeImg}
+                      errImg={this.state.errImg}
+                      btnRemove={<></>}
+                    />
+                  </Spin>
                 )}
               </Form.Item>
               {/* <div className='rsvp-pic'>
@@ -386,7 +393,7 @@ class SendRsvp extends Component {
                 <EviusReactQuill
                   name='message'
                   data={this.state.rsvp.message}
-                  handleChange={(e) => this.QuillComplement2}
+                  handleChange={(e) => this.QuillComplement2(e)}
                 />
                 {/* <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' /> */}
               </Form.Item>
@@ -396,13 +403,15 @@ class SendRsvp extends Component {
                   <small>
                     (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
                   </small></label>
-                <ImageInput
-                  picture={this.state.rsvp.image_footer}
-                  imageFile={this.state.imageFileFooter}
-                  changeImg={this.changeImgFooter}
-                  errImg={this.state.errImg}
-                  btnRemove={<></>}
-                />
+                <Spin tip='Cargando...' spinning={this.state.loading_image}>
+                  <ImageInput
+                    picture={this.state.rsvp.image_footer}
+                    imageFile={this.state.imageFileFooter}
+                    changeImg={this.changeImgFooter}
+                    errImg={this.state.errImg}
+                    btnRemove={<></>}
+                  />
+                </Spin>
               </Form.Item>
 
               {/* <div className='rsvp-pic'>

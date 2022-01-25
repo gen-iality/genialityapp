@@ -10,9 +10,16 @@ let initialContextState = { status: 'LOADING', value: null };
 export function CurrentUserEventProvider({ children }) {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-
   const [userEvent, setuserEvent] = useState(initialContextState);
   let [updateUser, setUpdateUser] = useState(true);
+
+  useEffect(() => {
+    app.auth().onAuthStateChanged((user) => {
+      if (!user?.isAnonymous && user) {
+        setUpdateUser(true);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     let event_id = cEvent.value?._id;
@@ -32,9 +39,9 @@ export function CurrentUserEventProvider({ children }) {
         setUpdateUser(false);
       }
     }
-    if (event_id) {
-      asyncdata();
-    }
+
+    if (!event_id) return;
+    asyncdata();
   }, [cEvent.value, cUser.value, updateUser]);
 
   return (

@@ -60,18 +60,18 @@ const Certificado = (props) => {
 
   const getOne = async () => {
     const data = await CertsApi.getOne(locationState.edit);
-    if (!data.content && data.content === '<p><br></p>') {
+    if (!data?.content && data?.content === '<p><br></p>') {
       setCertificado({ ...data, content: initContent });
     }
     /* if(!data.rol) {
       setRol({});
     } */
-    setCertificado({ ...data, imageFile: data.background });
-    setCertificado({ ...data, imageFile: data.background });
+    setCertificado({ ...data, imageFile: data?.background });
+    setCertificado({ ...data, imageFile: data?.background });
   };
 
   const onSubmit = async () => {
-    if (certificado.name && certificado.rol) {
+    if (certificado.name) { // && certificado.rol
       const loading = message.open({
         key: 'loading',
         type: 'loading',
@@ -81,19 +81,23 @@ const Certificado = (props) => {
       try {
         if (locationState.edit) {
           const data = {
+            name: certificado.name,
             content: certificado.content,
-            background: certificado.image.data || certificado.image,
-            rol: certificado.rol,
+            background: certificado.image?.data || certificado.image,
+            rol: certificado?.rol,
+            rol_id: certificado.rol?._id,
+            event_id: props.event._id,
           };
           await CertsApi.editOne(data, locationState.edit);
+          /* console.log(data) */
         } else {
           const data = {
             name: certificado.name,
-            rol_id: certificado.rol._id,
+            rol_id: certificado.rol?._id,
             content: certificado.content,
             event_id: props.event._id,
-            background: certificado.image.data || certificado.image,
-            rol: certificado.rol,
+            background: certificado.image?.data || certificado.image,
+            rol: certificado?.rol,
           };
           await CertsApi.create(data);
         }
@@ -112,7 +116,7 @@ const Certificado = (props) => {
         });
       }
     } else {
-      message.error('El nombre y el rol son requerido');
+      message.error('El nombre es requerido');//y el rol son
     }
   };
 
@@ -166,8 +170,8 @@ const Certificado = (props) => {
   };
 
   const onChangeRol = async (e) => {
-    setRol(roles.find((rol) => rol._id === e));
-    setCertificado({ ...certificado, rol: roles.find((rol) => rol._id === e) });
+    setRol(roles.find((rol) => rol?._id === e));
+    setCertificado({ ...certificado, rol: roles.find((rol) => rol?._id === e) });
   };
 
   const chgTxt = (content) => {
@@ -318,21 +322,22 @@ const Certificado = (props) => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={
+                label={'Rol'}
+                /* label={
                   <label style={{ marginTop: '2%' }} className='label'>
                     Rol <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El rol es requerido' }]}>
+                rules={[{ required: true, message: 'El rol es requerido' }]} */>
                 <Select
                   name={'rol'}
                   onChange={(e) => {
                     onChangeRol(e);
                   }}
                   placeholder={'Seleccione Rol'}
-                  value={certificado.rol?._id || rol._id}>
+                  value={certificado.rol?._id || rol?._id}>
                   {roles.map((rol) => (
-                    <Option key={rol._id} value={rol._id}>
+                    <Option key={rol?._id} value={rol?._id}>
                       {rol.name}
                     </Option>
                   ))}
@@ -371,7 +376,7 @@ const Certificado = (props) => {
                 }
               />
               <Image
-                src={certificado.imageFile.data ? certificado.imageFile.data : certificado.imageFile || imageFile}
+                src={certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile}
                 alt={'Imagen Certificado'}
                 preview={previewCert}
               />

@@ -6,14 +6,17 @@ import OrganizationProfile from './profile';
 import Styles from '../App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
-import Datos from '../events/datos';
 import MemberSettings from './memberSettings';
+import TemplateMemberSettings from './templateMemberSettings';
 import { Tag, Menu, Row, Col, Button } from 'antd';
 import { DoubleRightOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import MenuLanding from '../menuLanding';
+import NoMatchPage from '../notFoundPage/noMatchPage';
+import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms';
 
 function Organization(props) {
   const [organization, setOrganization] = useState({});
+
   const [isLoading, setIsLoading] = useState(true);
   const organizationId = props.match.params.id;
   const [collapseMenu, setCollapseMenu] = useState(false);
@@ -27,22 +30,6 @@ function Organization(props) {
     getOrganizationData();
   }, [props.location.pathname]);
 
-  console.log('props.match.params.id', props.match.params.id);
-  async function updateTemplate(template, fields) {
-    let newTemplate = {
-      name: template.template.name,
-      user_properties: fields,
-    };
-    let resp = await OrganizationApi.updateTemplateOrganization(
-      props.match.params.id,
-      template.template._id,
-      newTemplate
-    );
-    if (resp) {
-      return true;
-    }
-    return false;
-  }
   return (
     <>
       {isLoading ? (
@@ -124,79 +111,65 @@ function Organization(props) {
                       path={`${props.match.url}/`}
                       render={() => <Redirect to={`${props.match.url}/events`} />}
                     />
-                    <Route exact path={`${props.match.url}/events`} render={() => <OrgEvents org={organization} />} />
-                    <Route
+                    {/* <Route exact path={`${props.match.url}/events`} render={() => <OrgEvents org={organization} />} /> */}
+                    <Protected
+                      exact
+                      path={`${props.match.url}/events`}
+                      component={OrgEvents}
+                      org={organization}
+                      componentKey='events'
+                    />
+                    <Protected
                       exact
                       path={`${props.match.url}/information`}
-                      render={() => <OrganizationProfile org={organization} />}
+                      component={OrganizationProfile}
+                      org={organization}
+                      componentKey='information'
                     />
-                    <Route exact path={`${props.match.url}/appearance`} render={() => <Styles org={organization} />} />
-                    <Route
+                    <Protected
+                      exact
+                      path={`${props.match.url}/appearance`}
+                      component={Styles}
+                      org={organization}
+                      componentKey='appearance'
+                    />
+                    <Protected
                       exact
                       path={`${props.match.url}/members`}
-                      render={() => <OrgMembers org={organization} url={props.match.url} />}
+                      component={OrgMembers}
+                      org={organization}
+                      componentKey='members'
                     />
-                    <Route
+                    <Protected
                       exact
                       path={`${props.match.url}/membersettings`}
-                      render={() => <MemberSettings org={organization} url={props.match.url} />}
+                      component={MemberSettings}
+                      org={organization}
+                      componentKey='membersettings'
                     />
-
-                    <Route
+                    <Protected
                       exact
                       path={`${props.match.url}/templatesettings`}
-                      render={() => (
-                        <Datos
-                          type='organization'
-                          eventID={props.match.params.id}
-                          org={organization}
-                          url={props.match.url}
-                          edittemplate={true}
-                          createNewField={async (fields, template, updateTable) => {
-                            let fieldsNew = Array.from(template.datafields || []);
-                            fieldsNew.push(fields);
-                            let resp = await updateTemplate(template, fieldsNew);
-                            if (resp) {
-                              updateTable(fieldsNew);
-                            }
-                            //console.log('ADDFILED==>', resp, newTemplate);
-                          }}
-                          orderFields={async (fields, template, updateTable) => {
-                            let resp = await updateTemplate(template, fields);
-                            if (resp) {
-                              updateTable(fields);
-                            }
-                          }}
-                          editField={async (fieldId, fieldupdate, template, updateTable) => {
-                            template.datafields = template.datafields.map((field) => {
-                              return field?.order_weight == fieldupdate?.order_weight ? fieldupdate : field;
-                            });
-                            let resp = await updateTemplate(template, template.datafields);
-                            if (resp) {
-                              updateTable(template.datafields);
-                            }
-                          }}
-                          deleteField={async (nameField, template, updateTable) => {
-                            console.log(nameField, template);
-                            console.log('ELIMINAR ESTO');
-                            let newtemplate = template.datafields?.filter((field) => field.name != nameField);
-                            console.log('TEMPLATES==>', newtemplate);
-                            let resp = await updateTemplate(template, newtemplate);
-                            if (resp) {
-                              updateTable(newtemplate);
-                            }
-                          }}
-                        />
-                      )}
+                      component={TemplateMemberSettings}
+                      org={organization}
+                      componentKey='templatesettings'
                     />
-
-                    <Route
+                    <Protected
                       exact
                       path={`${props.match.url}/menuItems`}
-                      render={() => <MenuLanding organizationObj={organization} organization={1} />}
+                      component={MenuLanding}
+                      org={organization}
+                      organizationObj={organization}
+                      organization={1}
+                      componentKey='menuItems'
                     />
 
-                    <Route component={NoMatch} />
+                    <Protected
+                      path={`${props.match.url}`}
+                      component={NoMatchPage}
+                      org={organization}
+                      componentKey='NoMatch'
+                    />
                   </Switch>
                 </section>
               )}
@@ -208,14 +181,20 @@ function Organization(props) {
   );
 }
 
-function NoMatch({ location }) {
-  return (
-    <div>
-      <h3>
-        No match for <code>{location.pathname}</code>
-      </h3>
-    </div>
-  );
-}
+const Protected = ({ component: Component, org, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      org?._id ? (
+        <ValidateAccessRouteCms>
+          <Component key='cmsOrg' {...props} {...rest} org={org} />
+        </ValidateAccessRouteCms>
+      ) : (
+        // <Redirect push to={`${url}/agenda`} />
+        console.log('debug no hay orgId')
+      )
+    }
+  />
+);
 
 export default withRouter(Organization);

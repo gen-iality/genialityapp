@@ -1,13 +1,11 @@
-const userHasRole = (rolesPermisionsForThisEvent, cEventUserRolId) => {
-  let arrrayRolesPermisionsForThisEvent = rolesPermisionsForThisEvent.data;
+const userHasRole = (ifTheRoleExists, cEventUserRolId) => {
   if (!cEventUserRolId) {
     return false;
   }
-  if (typeof rolesPermisionsForThisEvent === 'string') {
-    return cEventUserRolId === rolesPermisionsForThisEvent;
-  } else if (Array.isArray(arrrayRolesPermisionsForThisEvent)) {
-    const thisRoleExists = arrrayRolesPermisionsForThisEvent.find((role) => role.rol_id === cEventUserRolId);
-    return thisRoleExists?.rol.type === 'admin';
+  if (typeof ifTheRoleExists === 'string') {
+    return cEventUserRolId === ifTheRoleExists;
+  } else if (typeof ifTheRoleExists === 'object') {
+    return ifTheRoleExists?.type === 'admin';
   }
   return false;
 };
