@@ -1,9 +1,11 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { getLiveStream } from 'adaptors/wowzaStreamingAPI';
 import { Form, Input, Button, Alert, message } from 'antd';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import AgendaContext from 'Context/AgendaContext';
 export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id }) {
   const [meetingValue, setMeetingValue] = useState();
+  const { platform } = useContext(AgendaContext);
   return (
     <>
       {/*rules={[{ required: true }]}*/}
@@ -14,7 +16,7 @@ export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id })
             <div
               style={{ cursor: 'pointer' }}
               onClick={async () => {
-                if (meetingValue) {
+                if (meetingValue && platform == 'wowza') {
                   try {
                     const exist = await getLiveStream(meetingValue);
                     if (exist) {
@@ -25,6 +27,8 @@ export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id })
                   } catch (e) {
                     message.error('El id de la transmisión es incorrecto!');
                   }
+                } else if (meetingValue && platform != 'wowza') {
+                  setMeetingId(meetingValue);
                 } else {
                   message.error('Ingrese un id para la transmisión!');
                 }

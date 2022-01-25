@@ -243,6 +243,7 @@ const HeaderColumns = (props) => {
           <Col>
             {transmition == 'EviusMeet' &&
               !request[cEventUSer.value?._id]?.active &&
+              cEventUSer.value?._id &&
               props.activityState === 'open_meeting_room' && (
                 <Button
                   style={{ transition: 'all 1s' }}
