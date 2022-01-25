@@ -380,7 +380,15 @@ export const AttendeeApi = {
     return await Actions.getAll(`/api/events/${eventId}/eventusers`);
   },
   create: async (eventId, data) => {
-    return await Actions.post(`/api/events/${eventId}/eventusers`, data);
+    /** Se envia token para validar si el rol es cambiado por un damin */
+    let token;
+    /** Se agrega el try catch para evitar que si no hay una sesion se detenga el flujo */
+    try {
+      token = await GetTokenUserFirebase();
+    } catch (error) {
+      token = false;
+    }
+    return await Actions.post(`/api/events/${eventId}/eventusers/?token=${token}`, data, true);
   },
   update: async (eventId, data, id) => {
     return await Actions.put(`api/events/${eventId}/eventusers/${id}`, data);

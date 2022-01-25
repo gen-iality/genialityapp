@@ -42,7 +42,7 @@ const AditionalInformation = (props) => {
             key='description'>
             <div
               dangerouslySetInnerHTML={{
-                __html: currentActivity !== null && currentActivity.description,
+                __html: currentActivity && currentActivity.description,
               }}></div>
             <br />
             {(currentActivity !== null && currentActivity.hosts.length === 0) ||
