@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import { UnorderedListOutlined } from '@ant-design/icons'
+import { UnorderedListOutlined } from '@ant-design/icons';
+import { deleteSurvey } from './services';
 
 const trivia = (props) => {
   let [columnsData, setColumnsData] = useState({});
@@ -13,7 +14,7 @@ const trivia = (props) => {
       dataIndex: 'survey',
       ellipsis: true,
       sorter: (a, b) => a.survey.localeCompare(b.survey),
-      ...getColumnSearchProps('survey', columnsData)
+      ...getColumnSearchProps('survey', columnsData),
     },
     {
       title: 'Publicada',
@@ -22,13 +23,15 @@ const trivia = (props) => {
       sorter: (a, b) => a.publish.localeCompare(b.publish),
       ...getColumnSearchProps('publish', columnsData),
       render(val, item) {
-        return <p>{item.publish ? 'Cierto' : 'Falso'}</p>
-      }
+        return <p>{item.publish ? 'Cierto' : 'Falso'}</p>;
+      },
     },
   ];
-
+  async function deleteCallback(surveyId) {
+    await deleteSurvey(surveyId);
+  }
   return (
-    <CMS 
+    <CMS
       API={SurveysApi}
       eventId={props.event._id}
       title={'Encuesta'}
@@ -50,8 +53,9 @@ const trivia = (props) => {
       extraPathId
       extraPathStateName={`${props.matchUrl}/ranking`}
       widthAction={160}
+      deleteCallback={(surveyId) => deleteCallback(surveyId)}
     />
   );
-}
+};
 
 export default trivia;
