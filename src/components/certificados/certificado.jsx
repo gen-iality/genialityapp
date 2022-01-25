@@ -7,6 +7,7 @@ import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import ReactQuill from 'react-quill';
+import EviusReactQuill from '../shared/eviusReactQuill';
 import { toolbarEditor } from '../../helpers/constants';
 import moment from 'moment';
 import { firestore } from '../../helpers/firebase';
@@ -60,14 +61,14 @@ const Certificado = (props) => {
 
   const getOne = async () => {
     const data = await CertsApi.getOne(locationState.edit);
-    if (!data?.content && data?.content === '<p><br></p>') {
+    if (!data.content && data.content === '<p><br></p>') {
       setCertificado({ ...data, content: initContent });
     }
     /* if(!data.rol) {
       setRol({});
     } */
-    setCertificado({ ...data, imageFile: data?.background });
-    setCertificado({ ...data, imageFile: data?.background });
+    setCertificado({ ...data, imageFile: data.background });
+    setCertificado({ ...data, imageFile: data.background });
   };
 
   const onSubmit = async () => {
@@ -233,10 +234,12 @@ const Certificado = (props) => {
             }
           });
           setPreviewCert(content);
+          /* console.log(content, 'content') */
           const body = {
             content: content,
-            image: certificado.imageFile?.data ? certificado.imageFile?.data : imageFile,
+            image: certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile,
           };
+          /* console.log(body, 'body') */
           CertsApi.generateCert(body).then((file) => {
             const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
             // IE doesn't allow using a blob object directly as link href
@@ -384,9 +387,14 @@ const Certificado = (props) => {
           </Row>
 
           <Form.Item label={'Certificado'}>
-            <div className='editor-certificado'>
+            <EviusReactQuill
+              name='content'
+              data={certificado.content}
+              handleChange={chgTxt}
+            />
+            {/* <div className='editor-certificado'>
               <div style={{ border: '1px solid', width: '800px', position: 'relative', margin: 'auto' }}>
-                <div /* className='texto-certificado' */>
+                <div className='texto-certificado'>
                   <ReactQuill
                     id='certContent'
                     value={certificado.content}
@@ -396,7 +404,7 @@ const Certificado = (props) => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </Form.Item>
         </Col>
       </Row>
