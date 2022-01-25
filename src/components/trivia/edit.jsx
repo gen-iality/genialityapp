@@ -172,6 +172,11 @@ class triviaEdit extends Component {
   //Funcion para guardar los datos a actualizar
   async submit() {
     if(this.state.survey) {
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras guarda la información...</>,
+      });
       //Se recogen los datos a actualizar
       const data = {
         survey: this.state.survey,
@@ -201,33 +206,47 @@ class triviaEdit extends Component {
 
         minimumScore: 0,
       };
-      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-      const save = await SurveysApi.createOne(this.props.event._id, data);
-      const idSurvey = save._id;
+      try {
 
-      // Esto permite almacenar los estados en firebase
-      await createOrUpdateSurvey(
-        idSurvey,
-        {
-          // Survey Config
-          allow_anonymous_answers: data.allow_anonymous_answers,
-          allow_gradable_survey: data.allow_gradable_survey,
-          hasMinimumScore: data.hasMinimumScore,
-          isGlobal: data.isGlobal,
-          showNoVotos: data.showNoVotos,
-          time_limit: parseInt(this.state.time_limit),
-
-          //survey state
-          freezeGame: data.freezeGame,
-          isOpened: data.open,
-          isPublished: data.publish,
-
-          minimumScore: data.minimumScore,
-        },
-        { eventId: this.props.event._id, name: save.survey, category: 'none' }
-      );
-
-      await this.setState({ idSurvey });
+        // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+        const save = await SurveysApi.createOne(this.props.event._id, data);
+        const idSurvey = save._id;
+  
+        // Esto permite almacenar los estados en firebase
+        await createOrUpdateSurvey(
+          idSurvey,
+          {
+            // Survey Config
+            allow_anonymous_answers: data.allow_anonymous_answers,
+            allow_gradable_survey: data.allow_gradable_survey,
+            hasMinimumScore: data.hasMinimumScore,
+            isGlobal: data.isGlobal,
+            showNoVotos: data.showNoVotos,
+            time_limit: parseInt(this.state.time_limit),
+  
+            //survey state
+            freezeGame: data.freezeGame,
+            isOpened: data.open,
+            isPublished: data.publish,
+  
+            minimumScore: data.minimumScore,
+          },
+          { eventId: this.props.event._id, name: save.survey, category: 'none' }
+        );
+  
+        await this.setState({ idSurvey });
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> La encuesta se guardo correctamente!</>,
+        });
+      } catch (e) {
+        message.destroy(loading.key);
+        message.open({
+          type: 'error',
+          content: handleRequestError(e).message,
+        });
+      }
     } else {
       message.error('El nombre es requerido');
     }
@@ -369,17 +388,48 @@ class triviaEdit extends Component {
 
   // Borrar pregunta
   deleteQuestion = async (questionId) => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
     let { question, _id } = this.state;
     const { event } = this.props;
 
     let questionIndex = question.findIndex((question) => question.id === questionId);
-
-    SurveysApi.deleteQuestion(event._id, _id, questionIndex).then((response) => {
-      // Se actualiza el estado local, borrando la pregunta de la tabla
-      let newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
-
-      this.setState({ question: newListQuestion });
-      message.success({ content: response, key: 'updating' });
+    confirm({
+      title: `¿Está seguro de eliminar la pregunta?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminada, no la podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            SurveysApi.deleteQuestion(event._id, _id, questionIndex).then((response) => {
+              // Se actualiza el estado local, borrando la pregunta de la tabla
+              let newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
+        
+              this.setState({ question: newListQuestion });
+              message.success({ content: response, key: 'updating' });
+            });
+            
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: response, key: 'updating',
+            });
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
     });
   };
 
@@ -808,7 +858,14 @@ class triviaEdit extends Component {
 
                 {allow_gradable_survey === 'true' && (
                   <>
-                    <Form.Item label={'Texto de muestra para la pantalla inicial de la encuesta'}>
+                    <Form.Item 
+                      /* label={'Texto de muestra para la pantalla inicial de la encuesta'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Texto de muestra para la pantalla inicial de la encuesta'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'initialMessage'}
                         id={'initialMessage'}
@@ -817,7 +874,14 @@ class triviaEdit extends Component {
                         onChange={this.onChange}
                       />
                     </Form.Item>
-                    <Form.Item label={'Mensaje al ganar'}>
+                    <Form.Item 
+                      /* label={'Mensaje al ganar'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Mensaje al ganar'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'win_Message'}
                         id={'win_Message'}
@@ -826,7 +890,14 @@ class triviaEdit extends Component {
                         onChange={this.onChangeWin}
                       />
                     </Form.Item>
-                    <Form.Item label={'Mensaje neutral'}>
+                    <Form.Item 
+                      /* label={'Mensaje neutral'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Mensaje neutral'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'neutral_Message'}
                         id={'neutral_Message'}
@@ -835,7 +906,14 @@ class triviaEdit extends Component {
                         onChange={this.onChangeNeutral}
                       />
                     </Form.Item>
-                    <Form.Item label={'Mensaje al perder'}>
+                    <Form.Item 
+                      /* label={'Mensaje al perder'} */
+                      label={
+                        <label style={{ marginTop: '2%' }} className='label'>
+                          {'Mensaje al perder'} <label style={{ color: 'red' }}>*</label>
+                        </label>
+                      }
+                    >
                       <ReactQuill
                         name={'lose_Message'}
                         id={'lose_Message'}
@@ -853,15 +931,16 @@ class triviaEdit extends Component {
                 {this.state.idSurvey && Object.entries(currentQuestion).length !== 0 && (
                   <Modal
                     width={700}
-                    title='Editando Pregunta'
+                    title={'Gestionar Pregunta'}
                     visible={visibleModal}
+                    maskClosable={false}
                     onOk={this.sendForm}
                     onCancel={this.closeModal}
                     footer={[
                       <Button key='back' onClick={this.closeModal}>
                         Cancelar
                       </Button>,
-                      <Button key='submit' type='primary' loading={confirmLoading} onClick={this.sendForm}>
+                      <Button key='submit' type='primary' disabled={confirmLoading} loading={confirmLoading} onClick={this.sendForm}>
                         Guardar
                       </Button>,
                     ]}>

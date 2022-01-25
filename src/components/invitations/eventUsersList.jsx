@@ -79,6 +79,7 @@ class eventUsersList extends Component {
     columnsTable.push({
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
+      width: '150px',
       ellipsis: true,
       sorter: (a, b) => a.checkedin_at.length - b.checkedin_at.length,
       ...this.getColumnSearchProps('checkedin_at'),
@@ -96,6 +97,7 @@ class eventUsersList extends Component {
     columnsTable.push({
       title: 'Tiquete',
       dataIndex: 'ticket',
+      width: '130px',
       filters: filterTickets,
       ellipsis: true,
       /* sorter: (a, b) => a.ticket.length - b.ticket.length, */
@@ -109,7 +111,7 @@ class eventUsersList extends Component {
       columnsTable.push({
         title: propertiesTable[i].label ? propertiesTable[i].label : propertiesTable[i].name,
         dataIndex: propertiesTable[i].name,
-        /* width: 300, */
+        /* width: '300', */
         ellipsis: true,
         sorter: (a, b) => a[propertiesTable[i].name]?.length - b[propertiesTable[i].name]?.length,
         ...this.getColumnSearchProps(propertiesTable[i].name),
@@ -121,7 +123,7 @@ class eventUsersList extends Component {
       {
         title: 'Creado',
         dataIndex: 'created_at',
-        /* width: 300, */
+        width: '160px',
         ellipsis: true,
         sorter: (a, b) => a.created_at - b.created_at,
         ...this.getColumnSearchProps('created_at'),
@@ -129,7 +131,7 @@ class eventUsersList extends Component {
       {
         title: 'Actualizado',
         dataIndex: 'updated_at',
-        /*  width: 300, */
+         width: '160px',
         ellipsis: true,
         sorter: (a, b) => a.updated_at - b.updated_at,
         ...this.getColumnSearchProps('updated_at'),
@@ -309,7 +311,7 @@ class eventUsersList extends Component {
           title={() => (
             <Row wrap gutter={[8, 8]} justify='end'>
               <Col>
-                <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
+                <Button onClick={() => this.goToSendMessage()} disabled={selectedRowKeys.length === 0}>Enviar comunicación / Correo</Button>
                 <ModalAdvise visible={this.state.modalVisible} />
               </Col>
               <Col>

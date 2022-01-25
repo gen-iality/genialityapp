@@ -173,7 +173,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                         {cUser.value ? (
                           <Component {...props} />
                         ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                          <ForbiddenPage />
+                          <>
+                            <ModalAuth />
+                            <ForbiddenPage />
+                          </>
                         ) : (
                           <Spin />
                         )}

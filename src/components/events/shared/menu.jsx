@@ -73,13 +73,15 @@ class MenuConfig extends Component {
     return (
       <Fragment>
         <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
+          defaultSelectedKeys={['11']}
+          defaultOpenKeys={['sub2']}
           mode='inline'
-          inlineCollapsed={this.state.collapsed}>
-          {/* Configuración de contenido */}
+          inlineCollapsed={this.state.collapsed}
+        >
 
-          <SubMenu
+          {/* Configuración de contraseña */}
+
+          {/* <SubMenu
             key='sub10'
             title={
               <span>
@@ -91,81 +93,8 @@ class MenuConfig extends Component {
               Consultar password usuarios
               <NavLink to={`${url}/adminUsers`}></NavLink>
             </Menu.Item>
-          </SubMenu>
+          </SubMenu> */}
 
-          <SubMenu
-            key='sub1'
-            title={
-              <span>
-                <EditOutlined />
-                <span>Contenido del evento</span>
-              </span>
-            }>
-            <Menu.Item key='1'>
-              Agenda/Actividades
-              <NavLink onClick={this.handleClick} to={`${url}/agenda`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='empresas'>
-              Empresas
-              <NavLink onClick={this.handleClick} to={`${url}/empresas`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='2'>
-              Host/Anfitriones
-              <NavLink onClick={this.handleClick} to={`${url}/speakers`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='3'>
-              <NavLink onClick={this.handleClick} to={`${url}/espacios`}>
-                Espacios
-              </NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='4'>
-              Certificados
-              <NavLink onClick={this.handleClick} to={`${url}/certificados`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='5'>
-              Encuestas
-              <NavLink onClick={this.handleClick} to={`${url}/trivia`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='6'>
-              Noticias
-              <NavLink onClick={this.handleClick} to={`${url}/news`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='7'>
-              Preguntas Frecuentes
-              <NavLink onClick={this.handleClick} to={`${url}/faqs`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='8'>
-              Documentos
-              <NavLink onClick={this.handleClick} to={`${url}/documents`}></NavLink>
-            </Menu.Item>
-            <Menu.Item key='110'>
-              Contenido Informativo
-              <NavLink onClick={this.handleClick} to={`${url}/informativesection`}></NavLink>
-            </Menu.Item>
-            <Menu.Item key='9'>
-              Reporte de Networking
-              <NavLink onClick={this.handleClick} to={`${url}/reportNetworking`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='10'>
-              Producto
-              <NavLink onClick={this.handleClick} to={`${url}/product`}></NavLink>
-            </Menu.Item>
-
-            {/* <Menu.Item key="9">
-                <NavLink onClick={this.handleClick} to={`${url}/pages`}>
-                  Agregar sección
-                </NavLink>
-              </Menu.Item> */}
-          </SubMenu>
 
           <SubMenu
             key='sub2'
@@ -272,6 +201,81 @@ class MenuConfig extends Component {
                 <NavLink onClick={this.handleClick} to={`${url}/badge`}></NavLink>
               </Menu.Item>
             )}
+          </SubMenu>
+
+          {/* Configuración de Contendio*/}
+          <SubMenu
+            key='sub1'
+            title={
+              <span>
+                <EditOutlined />
+                <span>Contenido del evento</span>
+              </span>
+            }>
+            <Menu.Item key='1'>
+              Agenda/Actividades
+              <NavLink onClick={this.handleClick} to={`${url}/agenda`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='empresas'>
+              Empresas
+              <NavLink onClick={this.handleClick} to={`${url}/empresas`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='2'>
+              Host/Anfitriones
+              <NavLink onClick={this.handleClick} to={`${url}/speakers`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='3'>
+              <NavLink onClick={this.handleClick} to={`${url}/espacios`}>
+                Espacios
+              </NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='4'>
+              Certificados
+              <NavLink onClick={this.handleClick} to={`${url}/certificados`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='5'>
+              Encuestas
+              <NavLink onClick={this.handleClick} to={`${url}/trivia`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='6'>
+              Noticias
+              <NavLink onClick={this.handleClick} to={`${url}/news`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='7'>
+              Preguntas Frecuentes
+              <NavLink onClick={this.handleClick} to={`${url}/faqs`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='8'>
+              Documentos
+              <NavLink onClick={this.handleClick} to={`${url}/documents`}></NavLink>
+            </Menu.Item>
+            <Menu.Item key='110'>
+              Contenido Informativo
+              <NavLink onClick={this.handleClick} to={`${url}/informativesection`}></NavLink>
+            </Menu.Item>
+            <Menu.Item key='9'>
+              Reporte de Networking
+              <NavLink onClick={this.handleClick} to={`${url}/reportNetworking`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='10'>
+              Producto
+              <NavLink onClick={this.handleClick} to={`${url}/product`}></NavLink>
+            </Menu.Item>
+
+            {/* <Menu.Item key="9">
+                <NavLink onClick={this.handleClick} to={`${url}/pages`}>
+                  Agregar sección
+                </NavLink>
+              </Menu.Item> */}
           </SubMenu>
 
           {/* COnfiguración de invitados */}

@@ -16,26 +16,36 @@ const columns = [
     title: 'Creado',
     dataIndex: 'registerDate',
     key: 'registerDate',
+    ellipsis: true,
+    sorter: (a, b) => a.registerDate.localeCompare(b.registerDate),
   },
   {
     title: 'Nombre',
     dataIndex: 'userName',
     key: 'userName',
+    ellipsis: true,
+    sorter: (a, b) => a.userName.localeCompare(b.userName),
   },
   {
     title: 'Email',
     dataIndex: 'userEmail',
     key: 'userEmail',
+    ellipsis: true,
+    sorter: (a, b) => a.userEmail.localeCompare(b.userEmail),
   },
   {
     title: '# Preguntas',
     dataIndex: 'totalQuestions',
     key: 'totalQuestions',
+    ellipsis: true,
+    sorter: (a, b) => a.totalQuestions - b.totalQuestions,
   },
   {
     title: '# Respuestas OK',
     dataIndex: 'correctAnswers',
     key: 'correctAnswers',
+    ellipsis: true,
+    sorter: (a, b) => a.correctAnswers - b.correctAnswers,
   },
 ];
 class Ranking extends Component {
@@ -82,20 +92,12 @@ class Ranking extends Component {
 
   render() {
     let { nameQuestion, listOfUserResponse } = this.state;
+
     return (
       <Fragment>
-        <Header 
-          title={'Ranking'}
-          back
-        />
+        <Header title={'Ranking'} back />
 
-        <Table 
-          header={columns}
-          list={listOfUserResponse}
-          pagination={false}
-          exportData
-          fileName={`Ranking`}
-        />
+        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={`Ranking`} />
 
         {/* <EventContent title={nameQuestion} closeAction={this.goBack}>
           <Divider orientation='right'>Reporte</Divider>

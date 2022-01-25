@@ -7,6 +7,7 @@ import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import ReactQuill from 'react-quill';
+import EviusReactQuill from '../shared/eviusReactQuill';
 import { toolbarEditor } from '../../helpers/constants';
 import moment from 'moment';
 import { firestore } from '../../helpers/firebase';
@@ -71,7 +72,7 @@ const Certificado = (props) => {
   };
 
   const onSubmit = async () => {
-    if (certificado.name && certificado.rol) {
+    if (certificado.name) { // && certificado.rol
       const loading = message.open({
         key: 'loading',
         type: 'loading',
@@ -81,19 +82,23 @@ const Certificado = (props) => {
       try {
         if (locationState.edit) {
           const data = {
+            name: certificado.name,
             content: certificado.content,
-            background: certificado.image.data || certificado.image,
-            rol: certificado.rol,
+            background: certificado.image?.data || certificado.image,
+            rol: certificado?.rol,
+            rol_id: certificado.rol?._id,
+            event_id: props.event._id,
           };
           await CertsApi.editOne(data, locationState.edit);
+          /* console.log(data) */
         } else {
           const data = {
             name: certificado.name,
-            rol_id: certificado.rol._id,
+            rol_id: certificado.rol?._id,
             content: certificado.content,
             event_id: props.event._id,
-            background: certificado.image.data || certificado.image,
-            rol: certificado.rol,
+            background: certificado.image?.data || certificado.image,
+            rol: certificado?.rol,
           };
           await CertsApi.create(data);
         }
@@ -112,7 +117,7 @@ const Certificado = (props) => {
         });
       }
     } else {
-      message.error('El nombre y el rol son requerido');
+      message.error('El nombre es requerido');//y el rol son
     }
   };
 
@@ -166,8 +171,8 @@ const Certificado = (props) => {
   };
 
   const onChangeRol = async (e) => {
-    setRol(roles.find((rol) => rol._id === e));
-    setCertificado({ ...certificado, rol: roles.find((rol) => rol._id === e) });
+    setRol(roles.find((rol) => rol?._id === e));
+    setCertificado({ ...certificado, rol: roles.find((rol) => rol?._id === e) });
   };
 
   const chgTxt = (content) => {
@@ -229,10 +234,12 @@ const Certificado = (props) => {
             }
           });
           setPreviewCert(content);
+          /* console.log(content, 'content') */
           const body = {
             content: content,
-            image: certificado.imageFile?.data ? certificado.imageFile?.data : imageFile,
+            image: certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile,
           };
+          /* console.log(body, 'body') */
           CertsApi.generateCert(body).then((file) => {
             const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
             // IE doesn't allow using a blob object directly as link href
@@ -318,21 +325,22 @@ const Certificado = (props) => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={
+                label={'Rol'}
+                /* label={
                   <label style={{ marginTop: '2%' }} className='label'>
                     Rol <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El rol es requerido' }]}>
+                rules={[{ required: true, message: 'El rol es requerido' }]} */>
                 <Select
                   name={'rol'}
                   onChange={(e) => {
                     onChangeRol(e);
                   }}
                   placeholder={'Seleccione Rol'}
-                  value={certificado.rol?._id || rol._id}>
+                  value={certificado.rol?._id || rol?._id}>
                   {roles.map((rol) => (
-                    <Option key={rol._id} value={rol._id}>
+                    <Option key={rol?._id} value={rol?._id}>
                       {rol.name}
                     </Option>
                   ))}
@@ -371,7 +379,7 @@ const Certificado = (props) => {
                 }
               />
               <Image
-                src={certificado.imageFile.data ? certificado.imageFile.data : certificado.imageFile || imageFile}
+                src={certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile}
                 alt={'Imagen Certificado'}
                 preview={previewCert}
               />
@@ -379,9 +387,14 @@ const Certificado = (props) => {
           </Row>
 
           <Form.Item label={'Certificado'}>
-            <div className='editor-certificado'>
+            <EviusReactQuill
+              name='content'
+              data={certificado.content}
+              handleChange={chgTxt}
+            />
+            {/* <div className='editor-certificado'>
               <div style={{ border: '1px solid', width: '800px', position: 'relative', margin: 'auto' }}>
-                <div /* className='texto-certificado' */>
+                <div className='texto-certificado'>
                   <ReactQuill
                     id='certContent'
                     value={certificado.content}
@@ -391,7 +404,7 @@ const Certificado = (props) => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </Form.Item>
         </Col>
       </Row>

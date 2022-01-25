@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 import { app } from '../helpers/firebase';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
@@ -57,13 +57,20 @@ const Headers = (props) => {
   });
   const screens = useBreakpoint();
   let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
+  let history = useHistory();
 
   const logout = () => {
     app
       .auth()
       .signOut()
       .then(() => {
-        window.location.reload();
+        const routeUrl = props.match?.url;
+        const weAreOnTheLanding = routeUrl.includes('landing');
+        if (weAreOnTheLanding) {
+          window.location.reload();
+        } else {
+          history.push('/');
+        }
       })
       .catch(function(error) {
         console.log('error', error);
@@ -115,32 +122,34 @@ const Headers = (props) => {
 
   const MenuMobile = (
     <Menu>
-      {showButtons.buttonlogin && 
-        <Menu.Item onClick={() => {
-          HandleControllerLoginVisible({
-            visible: true,
-            organization: WhereHerePath(),
-          });
+      {showButtons.buttonlogin && (
+        <Menu.Item
+          onClick={() => {
+            HandleControllerLoginVisible({
+              visible: true,
+              organization: WhereHerePath(),
+            });
 
-          handleChangeTabModal('1');
-        }}>
+            handleChangeTabModal('1');
+          }}>
           <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
         </Menu.Item>
-      }
-      {showButtons.buttonregister && 
-        <Menu.Item onClick={() => {
-          HandleControllerLoginVisible({
-            visible: true,
-            organization: WhereHerePath(),
-          });
+      )}
+      {showButtons.buttonregister && (
+        <Menu.Item
+          onClick={() => {
+            HandleControllerLoginVisible({
+              visible: true,
+              organization: WhereHerePath(),
+            });
 
-          handleChangeTabModal('2');
-        }}>
+            handleChangeTabModal('2');
+          }}>
           <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
         </Menu.Item>
-      }
+      )}
     </Menu>
-  )
+  );
 
   useEffect(() => {
     LoadCurrentUser();
@@ -214,7 +223,12 @@ const Headers = (props) => {
               screens.xs ? (
                 <Space>
                   <Dropdown overlay={MenuMobile}>
-                    <Button style={{ backgroundColor: '#3681E3', color: '#FFFFFF', border: 'none' }} size='large' shape='circle' icon={<AccountCircleIcon style={{fontSize: '28px'}}/>} />
+                    <Button
+                      style={{ backgroundColor: '#3681E3', color: '#FFFFFF', border: 'none' }}
+                      size='large'
+                      shape='circle'
+                      icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
+                    />
                   </Dropdown>
                 </Space>
               ) : (

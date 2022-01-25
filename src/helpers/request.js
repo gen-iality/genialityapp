@@ -254,9 +254,17 @@ export const EventsApi = {
     return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
   },
   getStatusRegister: async (eventId, email) => {
-    let token = await GetTokenUserFirebase();
+    let token;
+    /** Se agrega el try catch para evitar que si no hay una sesion se detenga el flujo */
+    try {
+      token = await GetTokenUserFirebase();
+    } catch (error) {
+      token = false;
+    }
     return await Actions.get(
-      `api/events/${eventId}/eventusers?token=${token}&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
+      `api/events/${eventId}/eventusers${
+        token ? `/?token=${token}` : '/'
+      }&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
       true
     );
   },
@@ -328,7 +336,7 @@ export const UsersApi = {
   },
   findByEmail: async (email) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`,true ); 
+    return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`, true);
   },
 
   mineOrdes: async (id) => {
@@ -475,7 +483,7 @@ export const SurveysApi = {
   },
   createOne: async (event, data) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.create(`/api/events/${event}/surveys//?token=${token}`, data, true);
+    return await Actions.create(`/api/events/${event}/surveys/?token=${token}`, data, true);
   },
   editOne: async (data, id, event) => {
     let token = await GetTokenUserFirebase();
@@ -774,14 +782,24 @@ export const RolAttApi = {
     return await Actions.edit(`/api/events/${event}/rolesattendees/${id}`, data, `?token=${token}`);
   },
   deleteOne: async (id, event) => {
-    return await Actions.delete(`/api/events/${event}/rolesattendees`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${event}/rolesattendees`, `${id}?token=${token}`);
   },
   create: async (data, event) => {
-    return await Actions.create(`api/events/${event}/rolesattendees`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.create(`api/events/${event}/rolesattendees?token=${token}`, data);
   },
   getRoleHasPermissionsinThisEvent: async (rolId) => {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/rolespermissionsevents/findbyrol/${rolId}/?token=${token}`, true);
+  },
+  ifTheRoleExists: async (rolId) => {
+    let token = await GetTokenUserFirebase();
+    try {
+      return await Actions.get(`api/rols/${rolId}/rolseventspublic/?token=${token}`, true);
+    } catch (error) {
+      if (error.response.status === 404) return { type: 'the role does not exist' };
+    }
   },
 };
 

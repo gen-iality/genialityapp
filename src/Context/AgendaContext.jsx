@@ -71,7 +71,6 @@ export const AgendaContextProvider = ({ children }) => {
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
-        console.log('GET CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
@@ -128,7 +127,6 @@ export const AgendaContextProvider = ({ children }) => {
   };
   const addRequest = (refActivity, request) => {
     if (request) {
-      console.log('ADD REQUEST');
       fireRealtime.ref(refActivity).set(request);
     }
   };
