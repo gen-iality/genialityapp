@@ -1,5 +1,5 @@
-import { Button, Col, Modal, Row } from 'antd';
-import React, { useContext, useEffect } from 'react';
+import { Button, Col, message, Modal, Row, Spin } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
@@ -24,6 +24,7 @@ const HeaderColumns = (props) => {
   let { currentActivity } = useContext(HelperContext);
   let cEvent = UseEventContext();
   let cEventUSer = useContext(CurrentEventUserContext);
+  let [loading, setLoading] = useState(false);
   let {
     request,
     transmition,
@@ -45,9 +46,11 @@ const HeaderColumns = (props) => {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
+        setLoading(true);
         removeRequestTransmision();
         async function removeRequestTransmision() {
           await removeRequest(refActivity, cEventUSer.value?._id);
+          setLoading(false);
         }
       },
       onCancel() {
@@ -79,16 +82,20 @@ const HeaderColumns = (props) => {
   };
 
   const sendOrCancelRequest = async () => {
-    if (!haveRequest()) {
+    setLoading(true);
+    if (!haveRequest() && cEventUSer.value?._id) {
       await addRequest(refActivity + '/' + cEventUSer.value?._id, {
         id: cEventUSer.value?._id,
         name: cEventUSer.value?.user?.names,
         date: new Date().getTime(),
       });
-    } else {
+    } else if (haveRequest() && cEventUSer.value?._id) {
       //REMOVER O CANCELAR REQUEST
       await removeRequest(refActivity, cEventUSer.value?._id);
+    } else {
+      message.error('Error al enviar solicitud');
     }
+    setLoading(false);
   };
 
   const intl = useIntl();
@@ -239,17 +246,23 @@ const HeaderColumns = (props) => {
               props.activityState === 'open_meeting_room' && (
                 <Button
                   style={{ transition: 'all 1s' }}
-                  onClick={() => sendOrCancelRequest()}
+                  onClick={() => (!loading ? sendOrCancelRequest() : null)}
                   icon={
-                    !haveRequest() ? (
+                    !haveRequest() && !loading ? (
                       <HumanGreetingIcon style={{ fontSize: '16px' }} />
-                    ) : (
+                    ) : haveRequest() && !loading ? (
                       <CancelIcon style={{ fontSize: '16px' }} />
+                    ) : (
+                      <Spin />
                     )
                   }
                   disabled={request && request[cEventUSer.value?._id]?.active}
                   type={!haveRequest() ? 'primary' : 'danger'}>
-                  {!haveRequest() ? 'Solicitar participar en la transmisión' : 'Cancelar solicitud'}
+                  {!haveRequest() && !loading
+                    ? 'Solicitar participar en la transmisión'
+                    : !loading
+                    ? 'Cancelar solicitud'
+                    : 'Espere...'}
                 </Button>
               )}
             {transmition == 'EviusMeet' &&

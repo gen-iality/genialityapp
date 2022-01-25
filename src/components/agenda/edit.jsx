@@ -112,7 +112,7 @@ class AgendaEdit extends Component {
       length: '',
       latitude: '',
       isPhysical: false,
-
+      transmition: null,
       //Estado para detectar cambios en la fecha/hora de la actividad sin guardar
       pendingChangesSave: false,
 
@@ -147,6 +147,8 @@ class AgendaEdit extends Component {
     const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, activity_id);
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(this.props.event._id, activity_id);
+      console.log('GET CONFIGURATION===>', configuration);
+      console.log('2. activityEdit==>', activity_id);
       this.setState({
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
@@ -154,6 +156,7 @@ class AgendaEdit extends Component {
         platform: configuration.platform ? configuration.platform : null,
         meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
         roomStatus: configuration.roomStatus || null,
+        transmition: configuration.transmition || null,
         avalibleGames: configuration.avalibleGames || [],
         chat: configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false,
         surveys: configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false,
@@ -294,6 +297,8 @@ class AgendaEdit extends Component {
       });
     } else {
       this.setState({ days });
+      //SE SETEA EN EL CONTEXTO LA ACTIVIDAD PARA QUE NO QUEDE CON UN ID ANTERIOR
+      this.context.setActivityEdit(null);
     }
 
     const isLoading = { types: false, categories: false };
@@ -785,6 +790,7 @@ class AgendaEdit extends Component {
       host_id,
       host_name,
       avalibleGames,
+      transmition,
     } = this.context;
     const { isPublished } = this.state;
 
@@ -796,6 +802,7 @@ class AgendaEdit extends Component {
       host_name,
       avalibleGames,
       habilitar_ingreso: roomStatus,
+      transmition: transmition || null,
     };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
