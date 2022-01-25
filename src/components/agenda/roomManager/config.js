@@ -234,6 +234,7 @@ export default function RoomConfig(props) {
                           ? 'https://intinor.com/wp-content/uploads/2017/01/RTMP.png'
                           : 'https://evius.co/wp-content/uploads/2021/03/logo_3.png'
                       }
+                      preview={false}
                     />
                   </Col>
                 </Row>
