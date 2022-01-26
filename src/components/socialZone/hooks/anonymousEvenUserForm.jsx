@@ -43,8 +43,8 @@ function AnonymousEvenUserForm() {
                 names: name,
               },
             };
-            await AttendeeApi.create(cEvent.value._id, body);
             await app.auth().currentUser.reload();
+            await AttendeeApi.create(cEvent.value._id, body);
             cEventUser.setUpdateUser(true);
           });
       });
@@ -72,7 +72,7 @@ function AnonymousEvenUserForm() {
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-        <Button htmlType='submit' onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
+        <Button htmlType='submit' type='primary'>
           {/*<FormattedMessage id='form.button.register' defaultMessage='Registrarme' />*/}
           Ingresar
         </Button>

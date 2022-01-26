@@ -48,6 +48,7 @@ const CMS = (props) => {
     extraPathStateName,
     scroll,
     widthAction,
+    deleteCallback,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
@@ -61,13 +62,17 @@ const CMS = (props) => {
   const getList = async () => {
     const data = await API.byEvent(eventId);
     if (data.data) {
-      setList(data.data.sort(function(a, b) {
-        return a.created_at.localeCompare(-b.created_at);
-      }));
+      setList(
+        data.data.sort(function(a, b) {
+          return a.created_at.localeCompare(-b.created_at);
+        })
+      );
     } else {
-      setList(data.sort(function(a, b) {
-        return a.created_at.localeCompare(-b.created_at);
-      }));
+      setList(
+        data.sort(function(a, b) {
+          return a.created_at.localeCompare(-b.created_at);
+        })
+      );
     }
     setLoading(false);
   };
@@ -88,6 +93,7 @@ const CMS = (props) => {
         });
         const onHandlerRemove = async () => {
           try {
+            if (deleteCallback) await deleteCallback(id);
             await API.deleteOne(id, eventId);
             message.destroy(loading.key);
             message.open({
@@ -110,14 +116,14 @@ const CMS = (props) => {
 
   return (
     <div>
-      <Header 
-        title={title} 
-        titleTooltip={titleTooltip} 
-        back={back} 
-        addUrl={addUrl} 
-        extra={extra} 
-        addFn={addFn} 
-        description={description} 
+      <Header
+        title={title}
+        titleTooltip={titleTooltip}
+        back={back}
+        addUrl={addUrl}
+        extra={extra}
+        addFn={addFn}
+        description={description}
         form={form}
         back={back}
         save={save}
