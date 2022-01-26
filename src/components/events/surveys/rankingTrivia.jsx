@@ -19,34 +19,34 @@ function RankingTrivia(props) {
 
   const [myScore, setMyScore] = useState({ name: '', score: 0 });
 
-  useEffect(() => {
-    let unsubscribe;
-    if (!currentSurvey) return;
-    if (!(Object.keys(currentUser).length === 0)) {
-      const initialValues = {
-        name: currentUser.names ? currentUser.names : currentUser.name,
-        score: 0,
-      };
+  // useEffect(() => {
+  //   let unsubscribe;
+  //   if (!currentSurvey) return;
+  //   if (!(Object.keys(currentUser).length === 0)) {
+  //     const initialValues = {
+  //       name: currentUser.names ? currentUser.names : currentUser.name,
+  //       score: 0,
+  //     };
 
-      unsubscribe = firestore
-        .collection('surveys')
-        .doc(currentSurvey._id)
-        .collection('ranking')
-        .doc(currentUser._id)
-        .onSnapshot(function(result) {
-          if (result.exists) {
-            const data = result.data();
-            setMyScore({ ...initialValues, score: data.correctAnswers });
-          } else {
-            setMyScore(initialValues);
-          }
-        });
-    }
-    return () => {
-      unsubscribe();
-      setMyScore({ name: '', score: 0 });
-    };
-  }, [currentUser, currentSurvey]);
+  //     unsubscribe = firestore
+  //       .collection('surveys')
+  //       .doc(currentSurvey._id)
+  //       .collection('ranking')
+  //       .doc(currentUser._id)
+  //       .onSnapshot(function(result) {
+  //         if (result.exists) {
+  //           const data = result.data();
+  //           setMyScore({ ...initialValues, score: data.correctAnswers });
+  //         } else {
+  //           setMyScore(initialValues);
+  //         }
+  //       });
+  //   }
+  //   return () => {
+  //     unsubscribe();
+  //     setMyScore({ name: '', score: 0 });
+  //   };
+  // }, [currentUser, currentSurvey]);
 
   useEffect(() => {
     let unsubscribe;
@@ -57,11 +57,11 @@ function RankingTrivia(props) {
         .doc(currentSurvey._id)
         .collection('ranking')
         .orderBy('correctAnswers', 'desc')
-        .limit(10)
+        // .limit(10)
         .onSnapshot(async (querySnapshot) => {
           var puntajes = [];
           puntajes = await Promise.all(
-            querySnapshot.docs.map(async (doc) => {
+            querySnapshot.docs.map(async (doc, index) => {
               const result = doc.data();
               let picture;
               if (result?.userId) {
@@ -70,15 +70,23 @@ function RankingTrivia(props) {
               result['score'] = result.correctAnswers;
               result['name'] = result.userName;
               result['imageProfile'] = picture;
+              result['index'] = index + 1;
               return result;
             })
           );
+          const cUserId = cUser.value?._id;
+          const filterForRankingUserId = puntajes.find((rankingUsers) => rankingUsers.userId === cUserId);
 
-          setGameRanking(puntajes);
+          /** Puntaje individual */
+          if (filterForRankingUserId) setMyScore(filterForRankingUserId);
+
+          /** Puntaje de todos los participantes */
+          setGameRanking(puntajes.slice(0, 10));
         });
     }
     return () => {
       unsubscribe();
+      setMyScore({ name: '', score: 0 });
       setGameRanking([]);
     };
   }, [currentSurvey, currentUser]);
@@ -90,7 +98,10 @@ function RankingTrivia(props) {
       .get();
 
     if (user.docs.length > 0 && user.docs[0].data()) {
-      return user.docs[0].data().user?.picture;
+      const userPicture = user.docs[0].data().user?.picture;
+      /** Se filtra para las imagenes que llegan con esta ruta './scripts/img/' en cambio de una Url  https://*/
+      const userPictureFiltered = userPicture?.includes('./scripts/img/') ? null : userPicture;
+      return userPictureFiltered;
     }
     return undefined;
   };

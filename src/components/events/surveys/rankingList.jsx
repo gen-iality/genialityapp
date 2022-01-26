@@ -19,21 +19,8 @@ function RankingList(props) {
     setloading(false);
   }, [gameRanking]);
 
-  const styleListPlayer = {
-    background: 'white',
-    color: '#333F44',
-    padding: 5,
-    margin: 4,
-    display: 'flex',
-    borderRadius: '5px',
-    fontWeight: '500',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    height: '6vh',
-  };
-
   return (
-    <div style={{ marginTop: 16, width: `${props.noWidth}` ? 'none' : '26vw' }}>
+    <div style={{ marginTop: 16 }}>
       <Row justify='center'>
         <h1
           style={{
