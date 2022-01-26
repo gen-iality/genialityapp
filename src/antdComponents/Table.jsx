@@ -158,7 +158,7 @@ const Table = (props) => {
                 <Button
                   key={`removeAction${item.index}`}
                   id={`removeAction${item.index}`}
-                  onClick={() => remove(item._id)}
+                  onClick={() => remove(item.chatId ? item.chatId : item._id)}
                   icon={<DeleteOutlined />}
                   type='danger'
                   size='small'

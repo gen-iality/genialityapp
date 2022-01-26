@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip } from 'antd';
-import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
@@ -11,6 +11,7 @@ import moment from 'moment';
 import { getColumnSearchProps } from 'components/speakers/getColumnSearch';
 import Header from 'antdComponents/Header';
 import Table from 'antdComponents/Table';
+import { handleRequestError } from '../../../helpers/utils';
 
 var chatFirebase = app.initializeApp(
   {
@@ -151,6 +152,7 @@ const ChatExport = ({ eventId, event }) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
+    const eventID = eventId;
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -163,7 +165,7 @@ const ChatExport = ({ eventId, event }) => {
           try {
             setLoading(true);
             datamsjevent.forEach(async (item) => {
-              await deleteSingleChat(eventId, item.chatId);
+              await deleteSingleChat(eventID, item.chatId);
             });
             setdatamsjevent([]);
             setLoading(false);
@@ -195,6 +197,40 @@ const ChatExport = ({ eventId, event }) => {
     });
   }
 
+  function remove(id) {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    const eventID = eventId;
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            setLoading(true);
+            await deleteSingleChat(eventID, id);
+            getChat();
+            setLoading(false);
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+  }
+
   return (
     <>
       <Header title={'Gestión de chats del evento'} />
@@ -205,10 +241,17 @@ const ChatExport = ({ eventId, event }) => {
         loading={loading}
         /* exportData
         fileName={'ReportChats'} */
+        actions
+        remove={remove}
         titleTable={
           <>
             {datamsjevent && datamsjevent.length > 0 && (
               <Row gutter={[8, 8]} wrap>
+                <Col>
+                  <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
+                    Recargar
+                  </Button>
+                </Col>
                 <Col>
                   <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
                     Exportar
