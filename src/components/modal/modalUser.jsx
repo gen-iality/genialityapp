@@ -131,8 +131,9 @@ class UserModal extends Component {
         });
         const onHandlerRemove = async () => {
           try {
+            let token = await GetTokenUserFirebase();
             !self.props.byActivity &&
-              (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, user._id));
+              (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, `${user._id}`));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
             toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
