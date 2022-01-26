@@ -9,15 +9,13 @@ import { HelperContext } from '../../../Context/HelperContext';
 import { UseEventContext } from '../../../Context/eventContext';
 
 function RankingTrivia(props) {
-  const { setGameRanking } = useContext(HelperContext);
+  const { setGameRanking, setMyScore } = useContext(HelperContext);
   let cSurveys = UseSurveysContext();
   let cUser = UseCurrentUser();
   let eventContext = UseEventContext();
   let currentSurvey = cSurveys.currentSurvey;
   let currentUser = cUser.value;
   let currentEvent = eventContext.value;
-
-  const [myScore, setMyScore] = useState({ name: '', score: 0 });
 
   // useEffect(() => {
   //   let unsubscribe;
@@ -75,10 +73,10 @@ function RankingTrivia(props) {
             })
           );
           const cUserId = cUser.value?._id;
-          const filterForRankingUserId = puntajes.find((rankingUsers) => rankingUsers.userId === cUserId);
+          const filterForRankingUserId = puntajes.filter((rankingUsers) => rankingUsers.userId === cUserId);
 
           /** Puntaje individual */
-          if (filterForRankingUserId) setMyScore(filterForRankingUserId);
+          if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
 
           /** Puntaje de todos los participantes */
           setGameRanking(puntajes.slice(0, 10));
@@ -86,7 +84,7 @@ function RankingTrivia(props) {
     }
     return () => {
       unsubscribe();
-      setMyScore({ name: '', score: 0 });
+      setMyScore([{ name: '', score: 0 }]);
       setGameRanking([]);
     };
   }, [currentSurvey, currentUser]);
@@ -110,7 +108,7 @@ function RankingTrivia(props) {
     <>
       {!(Object.keys(currentUser).length === 0) && (
         <>
-          <RankingMyScore myScore={myScore} />
+          <RankingMyScore />
           <Divider />
           <RankingList />
         </>

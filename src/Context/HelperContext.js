@@ -62,6 +62,7 @@ export const HelperContextProvider = ({ children }) => {
   const [gameData, setGameData] = useState('');
   const [currentActivity, setcurrenActivity] = useState(null);
   const [gameRanking, setGameRanking] = useState([]);
+  const [myScore, setMyScore] = useState([{ name: '', score: 0 }]);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [tabsGenerals, settabsGenerals] = useState();
   const [updateEventUser, setUpdateEventUser] = useState(false);
@@ -660,6 +661,8 @@ export const HelperContextProvider = ({ children }) => {
         currentActivity,
         gameRanking,
         setGameRanking,
+        myScore,
+        setMyScore,
         tabsGenerals,
         handleChangeTabs,
         updateEventUser,

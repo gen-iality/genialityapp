@@ -1,48 +1,53 @@
-import React, { useContext } from 'react';
-import { Row, Col, Avatar, Spin } from 'antd';
-import { HelperContext } from '../../../Context/HelperContext';
+import React, { useState, useEffect } from 'react';
+import { Row, Divider, List } from 'antd';
+import withContext from '../../../Context/withContext';
+import UsersCard from '../../shared/usersCard';
 
-export default function RankingMyScore({ myScore }) {
-  let { imageforDefaultProfile } = useContext(HelperContext);
-  const { name, score, imageProfile, index } = myScore;
+function RankingList(props) {
+  const { cEvent, cHelper } = props;
+  const styles = cEvent.value.styles;
+  const { myScore } = cHelper;
 
-  function formatName(name) {
-    const result = decodeURIComponent(name);
-    return result;
-  }
+  const [loading, setloading] = useState(false);
+
+  useEffect(() => {
+    setloading(true);
+    setloading(false);
+  }, [myScore]);
+
+  /** Se valida si el usuario ya participo, el name vacio es el estado inicial */
+  const theUserAlreadyParticipated = myScore[0]?.name === '' ? true : false;
+
   return (
     <>
-      {!myScore ? (
-        <Spin tip='Cargando...' size='large' />
+      {theUserAlreadyParticipated ? (
+        <div className='card-games-ranking ranking-user'></div>
       ) : (
-        <div style={{ marginTop: 16 }}>
-          {name === '' ? (
-            <div className='card-games-ranking ranking-user'></div>
-          ) : (
-            <div className='card-games-ranking ranking-user'>
-              <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
-              <Row justify='space-between'>
-                <Col span={4}>
-                  <Avatar
-                    src={imageProfile ? imageProfile : imageforDefaultProfile}
-                    style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }}
-                    size={45}
-                  />
-                </Col>
-                <Col span={10}>
-                  <h3 style={{ fontWeight: '700' }}>{formatName(name ? name : ' ')}</h3>
-                </Col>
-                <Col span={6}>
-                  <h4>{score ? score : 0} pts</h4>
-                </Col>
-                <Col span={4}>
-                  <h3 style={{ fontWeight: '700' }}>{index ? index : ' '}</h3>
-                </Col>
-              </Row>
-            </div>
-          )}
+        <div style={{ marginTop: 16 }} className='card-games-ranking ranking-user'>
+          <Row justify='center'>
+            <h1
+              style={{
+                fontSize: '25px',
+                fontWeight: 'bold',
+                lineHeight: '3px',
+                color: `${styles && styles.textMenu}`,
+              }}>
+              Mi Puntaje
+            </h1>
+            <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
+          </Row>
+          <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
+            <List
+              className='demo-loadmore-list'
+              loading={loading}
+              itemLayout='horizontal'
+              dataSource={myScore}
+              renderItem={(item, key) => <UsersCard type='ranking' item={item} />}
+            />
+          </div>
         </div>
       )}
     </>
   );
 }
+export default withContext(RankingList);

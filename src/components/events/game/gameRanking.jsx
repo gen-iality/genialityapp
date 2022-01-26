@@ -10,8 +10,7 @@ function GameRanking(props) {
   const { cUser, cEvent, cHelper } = props;
   const currentUser = cUser.value;
   const currentEvent = cEvent.value;
-  const { setGameRanking } = cHelper;
-  const [myScore, setMyScore] = useState({ name: '', score: 0 });
+  const { setGameRanking, setMyScore } = cHelper;
 
   const styleRanking = {
     backgroundColor: `${currentEvent.styles.toolbarDefaultBg}`,
@@ -57,10 +56,10 @@ function GameRanking(props) {
           })
         );
         const cUserId = currentUser?._id;
-        const filterForRankingUserId = puntajes.find((rankingUsers) => rankingUsers.eventUser_id === cUserId);
+        const filterForRankingUserId = puntajes.filter((rankingUsers) => rankingUsers.eventUser_id === cUserId);
 
         /** Puntaje individual */
-        if (filterForRankingUserId) setMyScore(filterForRankingUserId);
+        if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
 
         /** Puntaje de todos los participantes */
         setGameRanking(puntajes.slice(0, 10));
@@ -68,7 +67,7 @@ function GameRanking(props) {
     return () => {
       unsubscribeAllScores();
       // unsubscribeCurrentUserScore();
-      setMyScore({ name: '', score: 0 });
+      setMyScore([{ name: '', score: 0 }]);
       setGameRanking([]);
     };
   }, [currentUser]);
@@ -92,7 +91,7 @@ function GameRanking(props) {
       {!(Object.keys(currentUser).length === 0) && (
         <>
           {/*RANKING*/}
-          <RankingMyScore myScore={myScore} />
+          <RankingMyScore />
           <Divider />
           <RankingList />
         </>
