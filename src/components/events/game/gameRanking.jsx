@@ -10,8 +10,7 @@ function GameRanking(props) {
   const { cUser, cEvent, cHelper } = props;
   const currentUser = cUser.value;
   const currentEvent = cEvent.value;
-  const { setGameRanking } = cHelper;
-  const [myScore, setMyScore] = useState('');
+  const { setGameRanking, setMyScore } = cHelper;
 
   const styleRanking = {
     backgroundColor: `${currentEvent.styles.toolbarDefaultBg}`,
@@ -20,48 +19,55 @@ function GameRanking(props) {
   };
 
   useEffect(() => {
-    console.log('debug ');
     let gameId = '0biWfCwWbUGhbZmfhkvu';
-    let unsubscribeCurrentUserScore;
-    //Consulta del puntaje del currentUser
-    if (!(Object.keys(currentUser).length === 0)) {
-      unsubscribeCurrentUserScore = firestore
-        .collection('juegos/' + gameId + '/puntajes/')
-        .doc(currentUser._id)
-        .onSnapshot(function(response) {
-          const myScore = response.data();
-          if (myScore) {
-            let userScore = {
-              ...myScore,
-              score: myScore.puntaje,
-            };
-            setMyScore(userScore);
-          }
-        });
-    }
+    // let unsubscribeCurrentUserScore;
+    // //Consulta del puntaje del currentUser
+    // if (!(Object.keys(currentUser).length === 0)) {
+    //   unsubscribeCurrentUserScore = firestore
+    //     .collection('juegos/' + gameId + '/puntajes/')
+    //     .doc(currentUser._id)
+    //     .onSnapshot(function(response) {
+    //       const myScore = response.data();
+    //       if (myScore) {
+    //         let userScore = {
+    //           ...myScore,
+    //           score: myScore.puntaje,
+    //         };
+    //         setMyScore(userScore);
+    //       }
+    //     });
+    // }
     //Consulta de todos los puntajes
     let unsubscribeAllScores = firestore
       .collection('juegos/' + gameId + '/puntajes/')
       .orderBy('puntaje', 'desc')
-      .limit(10)
+      // .limit(10)
       .onSnapshot(async (querySnapshot) => {
         var puntajes = [];
         puntajes = await Promise.all(
-          querySnapshot.docs.map(async (doc) => {
+          querySnapshot.docs.map(async (doc, index) => {
             const result = doc.data();
 
             let picture = await getDataUser(result.eventUser_id);
             result['score'] = result.puntaje;
             result['imageProfile'] = picture;
+            result['index'] = index + 1;
             return result;
           })
         );
-        setGameRanking(puntajes);
+        const cUserId = currentUser?._id;
+        const filterForRankingUserId = puntajes.filter((rankingUsers) => rankingUsers.eventUser_id === cUserId);
+
+        /** Puntaje individual */
+        if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
+
+        /** Puntaje de todos los participantes */
+        setGameRanking(puntajes.slice(0, 10));
       });
     return () => {
       unsubscribeAllScores();
-      unsubscribeCurrentUserScore();
-      setMyScore('');
+      // unsubscribeCurrentUserScore();
+      setMyScore([{ name: '', score: 0 }]);
       setGameRanking([]);
     };
   }, [currentUser]);
@@ -73,7 +79,10 @@ function GameRanking(props) {
       .get();
 
     if (user.docs.length > 0 && user.docs[0].data()) {
-      return user.docs[0].data().user?.picture;
+      const userPicture = user.docs[0].data().user?.picture;
+      /** Se filtra para las imagenes que llegan con esta ruta './scripts/img/' en cambio de una Url  https://*/
+      const userPictureFiltered = userPicture?.includes('./scripts/img/') ? null : userPicture;
+      return userPictureFiltered;
     }
     return undefined;
   };
@@ -82,11 +91,9 @@ function GameRanking(props) {
       {!(Object.keys(currentUser).length === 0) && (
         <>
           {/*RANKING*/}
-          {/* <Row justify='center' style={styleRanking}> */}
-          <RankingMyScore myScore={myScore} />
+          <RankingMyScore />
           <Divider />
           <RankingList />
-          {/* </Row> */}
         </>
       )}
     </>
