@@ -171,7 +171,7 @@ class triviaEdit extends Component {
 
   //Funcion para guardar los datos a actualizar
   async submit() {
-    if(this.state.survey) {
+    if (this.state.survey) {
       const loading = message.open({
         key: 'loading',
         type: 'loading',
@@ -207,11 +207,10 @@ class triviaEdit extends Component {
         minimumScore: 0,
       };
       try {
-
         // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
         const save = await SurveysApi.createOne(this.props.event._id, data);
         const idSurvey = save._id;
-  
+
         // Esto permite almacenar los estados en firebase
         await createOrUpdateSurvey(
           idSurvey,
@@ -223,17 +222,17 @@ class triviaEdit extends Component {
             isGlobal: data.isGlobal,
             showNoVotos: data.showNoVotos,
             time_limit: parseInt(this.state.time_limit),
-  
+
             //survey state
             freezeGame: data.freezeGame,
             isOpened: data.open,
             isPublished: data.publish,
-  
+
             minimumScore: data.minimumScore,
           },
           { eventId: this.props.event._id, name: save.survey, category: 'none' }
         );
-  
+
         await this.setState({ idSurvey });
         message.destroy(loading.key);
         message.open({
@@ -387,14 +386,15 @@ class triviaEdit extends Component {
   // -------------------- Funciones para los servicios -----------------------------------
 
   // Borrar pregunta
-  deleteQuestion = async (questionId) => {
+  deleteOneQuestion = async (questionId) => {
+    let self = this;
     const loading = message.open({
       key: 'loading',
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    let { question, _id } = this.state;
-    const { event } = this.props;
+    let { question, _id } = self.state;
+    const { event } = self.props;
 
     let questionIndex = question.findIndex((question) => question.id === questionId);
     confirm({
@@ -410,15 +410,15 @@ class triviaEdit extends Component {
             SurveysApi.deleteQuestion(event._id, _id, questionIndex).then((response) => {
               // Se actualiza el estado local, borrando la pregunta de la tabla
               let newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
-        
-              this.setState({ question: newListQuestion });
+
+              self.setState({ question: newListQuestion });
               message.success({ content: response, key: 'updating' });
-            });
-            
-            message.destroy(loading.key);
-            message.open({
-              type: 'success',
-              content: response, key: 'updating',
+              message.destroy(loading.key);
+              message.open({
+                type: 'success',
+                content: response,
+                key: 'updating',
+              });
             });
           } catch (e) {
             message.destroy(loading.key);
@@ -676,7 +676,7 @@ class triviaEdit extends Component {
                 <Button
                   key={`removeAction${record.index}`}
                   id={`removeAction${record.index}`}
-                  onClick={() => this.deleteQuestion(record.id)}
+                  onClick={() => this.deleteOneQuestion(record.id)}
                   icon={<DeleteOutlined />}
                   type='danger'
                   size='small'
@@ -690,10 +690,15 @@ class triviaEdit extends Component {
 
     return (
       <Form onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit} {...formLayout}>
-        <Header 
-          title={'Encuesta'} back save form remove={this.remove} edit={this.state.idSurvey} 
+        <Header
+          title={'Encuesta'}
+          back
+          save
+          form
+          remove={this.remove}
+          edit={this.state.idSurvey}
           extra={
-            <Form.Item label={'Publicar'} labelCol={{span: 14}}>
+            <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
               <Switch
                 name={'publish'}
                 checked={publish === 'true' || publish === true}
@@ -709,14 +714,13 @@ class triviaEdit extends Component {
             {isLoading ? (
               <Loading />
             ) : (
-              <Form.Item 
+              <Form.Item
                 label={
                   <label style={{ marginTop: '2%' }} className='label'>
                     Nombre <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El nombre es requerido' }]}
-              >
+                rules={[{ required: true, message: 'El nombre es requerido' }]}>
                 <Input
                   value={survey}
                   placeholder={'Nombre de la encuesta'}
@@ -858,14 +862,14 @@ class triviaEdit extends Component {
 
                 {allow_gradable_survey === 'true' && (
                   <>
-                    <Form.Item 
+                    <Form.Item
                       /* label={'Texto de muestra para la pantalla inicial de la encuesta'} */
                       label={
                         <label style={{ marginTop: '2%' }} className='label'>
-                          {'Texto de muestra para la pantalla inicial de la encuesta'} <label style={{ color: 'red' }}>*</label>
+                          {'Texto de muestra para la pantalla inicial de la encuesta'}{' '}
+                          <label style={{ color: 'red' }}>*</label>
                         </label>
-                      }
-                    >
+                      }>
                       <ReactQuill
                         name={'initialMessage'}
                         id={'initialMessage'}
@@ -874,14 +878,13 @@ class triviaEdit extends Component {
                         onChange={this.onChange}
                       />
                     </Form.Item>
-                    <Form.Item 
+                    <Form.Item
                       /* label={'Mensaje al ganar'} */
                       label={
                         <label style={{ marginTop: '2%' }} className='label'>
                           {'Mensaje al ganar'} <label style={{ color: 'red' }}>*</label>
                         </label>
-                      }
-                    >
+                      }>
                       <ReactQuill
                         name={'win_Message'}
                         id={'win_Message'}
@@ -890,14 +893,13 @@ class triviaEdit extends Component {
                         onChange={this.onChangeWin}
                       />
                     </Form.Item>
-                    <Form.Item 
+                    <Form.Item
                       /* label={'Mensaje neutral'} */
                       label={
                         <label style={{ marginTop: '2%' }} className='label'>
                           {'Mensaje neutral'} <label style={{ color: 'red' }}>*</label>
                         </label>
-                      }
-                    >
+                      }>
                       <ReactQuill
                         name={'neutral_Message'}
                         id={'neutral_Message'}
@@ -906,14 +908,13 @@ class triviaEdit extends Component {
                         onChange={this.onChangeNeutral}
                       />
                     </Form.Item>
-                    <Form.Item 
+                    <Form.Item
                       /* label={'Mensaje al perder'} */
                       label={
                         <label style={{ marginTop: '2%' }} className='label'>
                           {'Mensaje al perder'} <label style={{ color: 'red' }}>*</label>
                         </label>
-                      }
-                    >
+                      }>
                       <ReactQuill
                         name={'lose_Message'}
                         id={'lose_Message'}
@@ -940,7 +941,12 @@ class triviaEdit extends Component {
                       <Button key='back' onClick={this.closeModal}>
                         Cancelar
                       </Button>,
-                      <Button key='submit' type='primary' disabled={confirmLoading} loading={confirmLoading} onClick={this.sendForm}>
+                      <Button
+                        key='submit'
+                        type='primary'
+                        disabled={confirmLoading}
+                        loading={confirmLoading}
+                        onClick={this.sendForm}>
                         Guardar
                       </Button>,
                     ]}>
