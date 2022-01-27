@@ -53,7 +53,7 @@ export const HelperContextProvider = ({ children }) => {
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
-  const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
+  const imageforDefaultProfile = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('2');
@@ -62,6 +62,7 @@ export const HelperContextProvider = ({ children }) => {
   const [gameData, setGameData] = useState('');
   const [currentActivity, setcurrenActivity] = useState(null);
   const [gameRanking, setGameRanking] = useState([]);
+  const [myScore, setMyScore] = useState([{ name: '', score: 0 }]);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [tabsGenerals, settabsGenerals] = useState();
   const [updateEventUser, setUpdateEventUser] = useState(false);
@@ -660,6 +661,8 @@ export const HelperContextProvider = ({ children }) => {
         currentActivity,
         gameRanking,
         setGameRanking,
+        myScore,
+        setMyScore,
         tabsGenerals,
         handleChangeTabs,
         updateEventUser,

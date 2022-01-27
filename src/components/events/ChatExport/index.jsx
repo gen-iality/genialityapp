@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip } from 'antd';
-import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined, StopOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
@@ -11,6 +11,7 @@ import moment from 'moment';
 import { getColumnSearchProps } from 'components/speakers/getColumnSearch';
 import Header from 'antdComponents/Header';
 import Table from 'antdComponents/Table';
+import { handleRequestError } from '../../../helpers/utils';
 
 var chatFirebase = app.initializeApp(
   {
@@ -195,6 +196,73 @@ const ChatExport = ({ eventId, event }) => {
     });
   }
 
+  function remove(id) {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            setLoading(true);
+            await deleteSingleChat(eventId, id);
+            getChat();
+            setLoading(false);
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+  }
+
+  function blockUser(item) {
+    console.log(item)
+    /* const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras bloquea el usuario del chat...</>,
+    });
+    Modal.confirm({
+      title: `¿Está seguro de bloquear usuario para el chat?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez bloqueado puede desbloquearlo',
+      okText: 'Bloquear',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerBlock = async () => {
+          try {
+            setLoading(true);
+            //Código de bloqueo
+            getChat();
+            setLoading(false);
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        };
+        onHandlerBlock();
+      },
+    }); */
+  }
+
   return (
     <>
       <Header title={'Gestión de chats del evento'} />
@@ -205,10 +273,21 @@ const ChatExport = ({ eventId, event }) => {
         loading={loading}
         /* exportData
         fileName={'ReportChats'} */
+        actions
+        remove={remove}
+        extraFn={blockUser}
+        extraFnTitle={'Bloquear usuario'}
+        extraFnType={'ghost'}
+        extraFnIcon={<StopOutlined />}
         titleTable={
           <>
             {datamsjevent && datamsjevent.length > 0 && (
               <Row gutter={[8, 8]} wrap>
+                <Col>
+                  <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
+                    Recargar
+                  </Button>
+                </Col>
                 <Col>
                   <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
                     Exportar
