@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip } from 'antd';
-import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined, StopOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
@@ -152,7 +152,6 @@ const ChatExport = ({ eventId, event }) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    const eventID = eventId;
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -165,7 +164,7 @@ const ChatExport = ({ eventId, event }) => {
           try {
             setLoading(true);
             datamsjevent.forEach(async (item) => {
-              await deleteSingleChat(eventID, item.chatId);
+              await deleteSingleChat(eventId, item.chatId);
             });
             setdatamsjevent([]);
             setLoading(false);
@@ -203,7 +202,6 @@ const ChatExport = ({ eventId, event }) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    const eventID = eventId;
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -215,7 +213,7 @@ const ChatExport = ({ eventId, event }) => {
         const onHandlerRemove = async () => {
           try {
             setLoading(true);
-            await deleteSingleChat(eventID, id);
+            await deleteSingleChat(eventId, id);
             getChat();
             setLoading(false);
           } catch (e) {
@@ -231,6 +229,40 @@ const ChatExport = ({ eventId, event }) => {
     });
   }
 
+  function blockUser(item) {
+    console.log(item)
+    /* const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras bloquea el usuario del chat...</>,
+    });
+    Modal.confirm({
+      title: `¿Está seguro de bloquear usuario para el chat?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez bloqueado puede desbloquearlo',
+      okText: 'Bloquear',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerBlock = async () => {
+          try {
+            setLoading(true);
+            //Código de bloqueo
+            getChat();
+            setLoading(false);
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        };
+        onHandlerBlock();
+      },
+    }); */
+  }
+
   return (
     <>
       <Header title={'Gestión de chats del evento'} />
@@ -243,6 +275,10 @@ const ChatExport = ({ eventId, event }) => {
         fileName={'ReportChats'} */
         actions
         remove={remove}
+        extraFn={blockUser}
+        extraFnTitle={'Bloquear usuario'}
+        extraFnType={'ghost'}
+        extraFnIcon={<StopOutlined />}
         titleTable={
           <>
             {datamsjevent && datamsjevent.length > 0 && (
