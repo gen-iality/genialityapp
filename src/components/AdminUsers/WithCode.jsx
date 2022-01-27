@@ -40,6 +40,14 @@ const WithCode = () => {
           const refreshLink = await EventsApi.refreshLinkEmailUser(email);
           if (refreshLink) {
             window.location.href = refreshLink;
+            /*fetch(refreshLink).then((result) => {
+              if (event && result) {
+                console.log('RESULTACA===>', result);
+                // window.location.href = `${window.location.origin}/landing/${event}`;
+              } else {
+                window.location.href = `${window.location.origin}`;
+              }
+            });*/
           } else {
             console.log('NOT REQUEST');
           }
