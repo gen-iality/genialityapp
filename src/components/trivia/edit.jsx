@@ -743,7 +743,7 @@ class triviaEdit extends Component {
                   </Select>
                 </Form.Item>
                 <Row justify='space-between' wrap gutter={[8, 8]}>
-                  <Col>
+                  {/* <Col>
                     <Form.Item label={'Permitir usuarios anónimos'}>
                       <Switch
                         name={'allow_anonymous_answers'}
@@ -751,7 +751,7 @@ class triviaEdit extends Component {
                         onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                   {/* <Col>
                     <Form.Item label={'Publicar encuesta'}>
                       <Switch
