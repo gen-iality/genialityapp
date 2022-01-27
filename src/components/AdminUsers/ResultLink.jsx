@@ -5,7 +5,7 @@ import logo from '../../logo.svg';
 
 const { useBreakpoint } = Grid;
 
-const ResultLink = ({ status, data, event }) => {
+const ResultLink = ({ status, data, event, verifyLink }) => {
   const screens = useBreakpoint();
   // statust -> loading || error
   status = status ? status : 'loading';
@@ -50,7 +50,11 @@ const ResultLink = ({ status, data, event }) => {
           status={status === 'loading' ? null : 'error'}
           title={
             <Typography.Title level={1}>
-              {status === 'loading' ? 'Iniciando la sesión...' : 'Acceso denegado'}
+              {status === 'loading' && verifyLink
+                ? 'Iniciando la sesión...'
+                : status === 'loading' && !verifyLink
+                ? 'Verificando link'
+                : 'Acceso denegado'}
             </Typography.Title>
           }
           subTitle={
