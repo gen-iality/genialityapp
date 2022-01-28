@@ -293,6 +293,10 @@ export const EventsApi = {
   refreshLinkEmailUser: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true });
   },
+  //REFRESH URL LINK DE ACCESSO A EVENTO
+  refreshLinkEmailUserEvent: async (email, eventId) => {
+    return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true, event_id: eventId });
+  },
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
       `/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,
