@@ -98,6 +98,7 @@ const ChatExport = ({ eventId, event }) => {
             name: doc.data().name,
             text: doc.data().text,
             hora: conversion,
+            idparticipant: doc.data().idparticipant,
           };
           datamessagesthisevent.push(msjnew);
         });
@@ -211,7 +212,14 @@ const ChatExport = ({ eventId, event }) => {
             setLoading(true);
             //Código de bloqueo
             let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
-            console.log('🚀 ~ file: index.jsx ~ line 215 ~ onHandlerBlock ~ path', path);
+            await firestore
+              .doc(path)
+              .update({
+                blocked: true,
+              })
+              .then((res) => {
+                message.success('Usuario bloqueado');
+              });
             getChat();
             setLoading(false);
           } catch (e) {
