@@ -31,7 +31,7 @@ const createNewUser = async (props) => {
     };
     try {
       let response = await UsersApi.createUser(body);
-      if (response){
+      if (response._id){
         /* setModalInfo({
           status: 'success',
           title: `Bienvenido ${response.names}`,
