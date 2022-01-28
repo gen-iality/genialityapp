@@ -201,7 +201,8 @@ export const EventsApi = {
     return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id) => {
-    return await Actions.delete('/api/events', id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${id}/?token=${token}`, '', true);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
