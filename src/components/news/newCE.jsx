@@ -35,6 +35,7 @@ const NewCE = (props) => {
   const getNew = async () => {
     const data = await NewsFeed.getOne(props.eventId, locationState.edit);
     setNotice(data);
+    setNotice(data);
   };
 
   const handleChange = (e) => {
@@ -207,7 +208,7 @@ const NewCE = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout} initialValues={notice}>
-      <Header title={'Noticia'} back save form edit={locationState.edit} remove={remove} />
+      <Header title={'Noticia'} back save form edit={locationState?.edit} remove={remove} />
 
       <Row justify='center' wrap gutter={12}>
         <Col span={16}>
