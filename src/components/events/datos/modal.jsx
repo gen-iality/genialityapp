@@ -52,7 +52,7 @@ class DatosModal extends Component {
     let tmpInfo = { ...this.state.info };
 
     //Generamos el nombre del campo para la base de datos(name) a partir del  label solo si el campo se esta creando
-    if (name == 'label' && this.state.info._id == undefined) {
+    if (name == 'label') {
       if (tmpInfo['name'] !== 'names' && tmpInfo['name'] !== 'email' && tmpInfo['name'] !== 'picture') {
         tmpInfo['name'] = this.generateFieldNameForLabel(name, value);
         this.formRef.current.setFieldsValue({
@@ -140,7 +140,7 @@ class DatosModal extends Component {
     values.visibleByAdmin = info?.visibleByAdmin;
     values.visibleByContacts = info.visibleByContacts;
     values.description = info.description;
-    this.setState({loading: true});
+    this.setState({ loading: true });
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
     await this.props.action(values, this.state.event?._id);
     const initModal = {
@@ -174,7 +174,7 @@ class DatosModal extends Component {
             label={'Nombre Campo'}
             name={'label'}
             rules={[{ required: true }]}>
-            <Input name='label' type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
+            <Input name={'label'} type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
           </Form.Item>
           <Form.Item name='name' initialValue={this.props.info?.name}>
             <Input
@@ -284,7 +284,13 @@ class DatosModal extends Component {
           </Form.Item>
           <Form.Item>
             <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Button style={{ marginRight: 20 }} type='primary' htmlType='submit' id='btnSave' disabled={loading} loading={loading}>
+              <Button
+                style={{ marginRight: 20 }}
+                type='primary'
+                htmlType='submit'
+                id='btnSave'
+                disabled={loading}
+                loading={loading}>
                 {'Guardar'}
               </Button>
 
