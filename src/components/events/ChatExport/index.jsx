@@ -1,33 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip } from 'antd';
-import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined, StopOutlined } from '@ant-design/icons';
+import {
+  QuestionCircleOutlined,
+  ExclamationCircleOutlined,
+  DeleteOutlined,
+  DownloadOutlined,
+  ReloadOutlined,
+  StopOutlined,
+} from '@ant-design/icons';
 import XLSX from 'xlsx';
-import app from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/storage';
-import 'firebase/database';
 import moment from 'moment';
 import { getColumnSearchProps } from 'components/speakers/getColumnSearch';
 import Header from 'antdComponents/Header';
 import Table from 'antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
-
-var chatFirebase = app.initializeApp(
-  {
-    apiKey: 'AIzaSyD4_AiJFGf1nIvn9BY_rZeoITinzxfkl70',
-    authDomain: 'chatevius.firebaseapp.com',
-    databaseURL: 'https://chatevius.firebaseio.com',
-    projectId: 'chatevius',
-    storageBucket: 'chatevius.appspot.com',
-    messagingSenderId: '114050756597',
-    appId: '1:114050756597:web:53eada24e6a5ae43fffabc',
-    measurementId: 'G-5V3L65YQKP',
-  },
-  'nameOfOtherApp'
-);
-
-const firestore = chatFirebase.firestore();
+import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
+import { UseEventContext } from '../../../Context/eventContext';
 
 function formatAMPM(hours, minutes) {
   // var hours = date.getHours();
@@ -41,35 +29,10 @@ function formatAMPM(hours, minutes) {
 }
 
 const ChatExport = ({ eventId, event }) => {
-  function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = [
-      'Enero',
-      'Febrero',
-      'Marzo',
-      'Abril',
-      'Mayo',
-      'Junio',
-      'Julio',
-      'Agosto',
-      'Septiembre',
-      'Octubre',
-      'Noviembre',
-      'Deciembre',
-    ];
-    var year = a.getYear() - 69;
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var time = date + ' ' + month + ' ' + year + ' ' + formatAMPM(hour, min);
-
-    return time;
-  }
-
   let [datamsjevent, setdatamsjevent] = useState([]);
   const [loading, setLoading] = useState(true);
   let [columnsData, setColumnsData] = useState({});
+  let cEvent = UseEventContext();
 
   const renderMensaje = (text, record) => (
     <Tooltip title={record.text} placement='topLeft'>
@@ -124,13 +87,12 @@ const ChatExport = ({ eventId, event }) => {
   function getChat() {
     let datamessagesthisevent = [];
 
-    firestore
+    firestoreeviuschat
       .collection('messagesevent_' + eventId)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           let conversion = moment(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
-
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,
@@ -183,7 +145,7 @@ const ChatExport = ({ eventId, event }) => {
 
   function deleteSingleChat(eventId, chatId) {
     return new Promise((resolve, reject) => {
-      firestore
+      firestoreeviuschat
         .collection('messagesevent_' + eventId)
         .doc(chatId)
         .delete()
@@ -230,8 +192,8 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function blockUser(item) {
-    console.log(item)
-    /* const loading = message.open({
+    console.log('🚀 ~ file: index.jsx ~ line 195 ~ blockUser ~ item', item);
+    const loading = message.open({
       key: 'loading',
       type: 'loading',
       content: <> Por favor espere miestras bloquea el usuario del chat...</>,
@@ -248,6 +210,8 @@ const ChatExport = ({ eventId, event }) => {
           try {
             setLoading(true);
             //Código de bloqueo
+            let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
+            console.log('🚀 ~ file: index.jsx ~ line 215 ~ onHandlerBlock ~ path', path);
             getChat();
             setLoading(false);
           } catch (e) {
@@ -260,7 +224,7 @@ const ChatExport = ({ eventId, event }) => {
         };
         onHandlerBlock();
       },
-    }); */
+    });
   }
 
   return (
