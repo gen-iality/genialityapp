@@ -201,7 +201,8 @@ export const EventsApi = {
     return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id) => {
-    return await Actions.delete('/api/events', id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${id}/?token=${token}`, '', true);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
@@ -293,6 +294,10 @@ export const EventsApi = {
   refreshLinkEmailUser: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true });
   },
+  //REFRESH URL LINK DE ACCESSO A EVENTO
+  refreshLinkEmailUserEvent: async (email, eventId) => {
+    return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true, event_id: eventId });
+  },
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
       `/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,
@@ -374,8 +379,7 @@ export const UsersApi = {
     return await Actions.delete(`/api/users`, `${user}?token=${token}`);
   },
   createUser: async (user) => {
-    let token = await GetTokenUserFirebase();
-    return await Actions.post(`/api/users?token=${token}`, user);
+    return await Actions.post(`/api/users`, user);
   },
   editEventUser: async (data, eventId, eventUserId) => {
     let token = await GetTokenUserFirebase();

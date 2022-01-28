@@ -36,8 +36,12 @@ const WithCode = () => {
         })
         .catch(async (error) => {
           console.log('Error al loguearse1..', error);
-
-          const refreshLink = await EventsApi.refreshLinkEmailUser(email);
+          let refreshLink;
+          if (event) {
+            refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event);
+          } else {
+            refreshLink = await EventsApi.refreshLinkEmailUser(email);
+          }
           if (refreshLink) {
             window.location.href = refreshLink;
             /*fetch(refreshLink).then((result) => {
