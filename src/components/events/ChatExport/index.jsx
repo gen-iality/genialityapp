@@ -16,6 +16,7 @@ import Table from 'antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
 import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
 import { UseEventContext } from '../../../Context/eventContext';
+import AccountCancelOutline from '@2fd/ant-design-icons/lib/AccountCancelOutline';
 
 function formatAMPM(hours, minutes) {
   // var hours = date.getHours();
@@ -193,7 +194,7 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function blockUser(item) {
-    console.log('🚀 ~ file: index.jsx ~ line 195 ~ blockUser ~ item', item);
+    /* console.log('🚀 ~ file: index.jsx ~ line 195 ~ blockUser ~ item', item); */
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -243,36 +244,34 @@ const ChatExport = ({ eventId, event }) => {
         header={columns}
         list={datamsjevent}
         loading={loading}
-        /* exportData
-        fileName={'ReportChats'} */
         actions
         remove={remove}
         extraFn={blockUser}
         extraFnTitle={'Bloquear usuario'}
         extraFnType={'ghost'}
-        extraFnIcon={<StopOutlined />}
+        extraFnIcon={<AccountCancelOutline />}
         titleTable={
-          <>
-            {datamsjevent && datamsjevent.length > 0 && (
-              <Row gutter={[8, 8]} wrap>
-                <Col>
-                  <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
-                    Recargar
-                  </Button>
-                </Col>
-                <Col>
-                  <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
-                    Exportar
-                  </Button>
-                </Col>
-                <Col>
-                  <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
-                    Eliminar Chat
-                  </Button>
-                </Col>
-              </Row>
-            )}
-          </>
+          <Row gutter={[8, 8]} wrap>
+            <Col>
+              <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
+                Recargar
+              </Button>
+            </Col>
+            <Col>
+              {datamsjevent && datamsjevent.length > 0 && (
+                <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
+                  Exportar
+                </Button>
+              )}
+            </Col>
+            <Col>
+              {datamsjevent && datamsjevent.length > 0 && (
+                <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
+                  Eliminar Chat
+                </Button>
+              )}
+            </Col>
+          </Row>
         }
         search
         setColumnsData={setColumnsData}
