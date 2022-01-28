@@ -543,6 +543,7 @@ class General extends Component {
   }
   //Delete event
   async deleteEvent() {
+    const self = this;
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -558,7 +559,7 @@ class General extends Component {
       onOk() {
         const onHandlerRemove = async () => {
           try {
-            /* await EventsApi.deleteOne(this.state.event._id); */
+            await EventsApi.deleteOne(self.state.event._id);
             message.destroy(loading.key);
             message.open({
               type: 'success',
