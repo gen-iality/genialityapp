@@ -374,8 +374,7 @@ export const UsersApi = {
     return await Actions.delete(`/api/users`, `${user}?token=${token}`);
   },
   createUser: async (user) => {
-    let token = await GetTokenUserFirebase();
-    return await Actions.post(`/api/users?token=${token}`, user);
+    return await Actions.post(`/api/users`, user);
   },
   editEventUser: async (data, eventId, eventUserId) => {
     let token = await GetTokenUserFirebase();
