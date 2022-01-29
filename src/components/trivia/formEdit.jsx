@@ -69,11 +69,13 @@ const FormEdit = (
     setDefaultImgValue([
       {
         uid: 'img-' + questionId,
-        //name: 'xxx',
+        name: 'banner',
         status: 'done',
-        //type: 'image/png',
+        type: 'image',
         thumbUrl: response,
-        url: response,
+        imageLink: response,
+        imageWidth: '500px',
+        imageHeight: '300px',
       },
     ]);
   }
@@ -152,8 +154,8 @@ const FormEdit = (
       });
     }
     // eslint-disable-next-line no-unused-vars
-    const pointsValue = values.points ? values.points :'1'
-    const dataValues = {...values, points: pointsValue}
+    const pointsValue = values.points ? values.points : '1';
+    const dataValues = { ...values, points: pointsValue };
     const exclude = ({ questionOptions, ...rest }) => rest;
     if (questionIndex === undefined) {
       return SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
@@ -283,7 +285,7 @@ const FormEdit = (
                 )}
               </div>
             )}
-            {/* <div>
+            <div>
               <Form.Item key={`img`} name={'image'} label={'Imagen'}>
                 <Upload
                   multiple={false}
@@ -297,7 +299,7 @@ const FormEdit = (
                   <Button icon={<UploadOutlined />}>Cargar imagen</Button>
                 </Upload>
               </Form.Item>
-            </div> */}
+            </div>
 
             <Form.List name={`choices`}>
               {(fields, { add, remove }) => {
