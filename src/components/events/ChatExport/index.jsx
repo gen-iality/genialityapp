@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip } from 'antd';
+import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip, Tabs } from 'antd';
 import {
   QuestionCircleOutlined,
   ExclamationCircleOutlined,
@@ -16,7 +16,10 @@ import Table from 'antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
 import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
 import { UseEventContext } from '../../../Context/eventContext';
-import AccountCancelOutline from '@2fd/ant-design-icons/lib/AccountCancelOutline';
+import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
+import Account from '@2fd/ant-design-icons/lib/Account';
+
+const { TabPane } = Tabs;
 
 function formatAMPM(hours, minutes) {
   // var hours = date.getHours();
@@ -33,6 +36,7 @@ const ChatExport = ({ eventId, event }) => {
   let [datamsjevent, setdatamsjevent] = useState([]);
   const [loading, setLoading] = useState(true);
   let [columnsData, setColumnsData] = useState({});
+  let [listUsersBlocked, setlistUsersBlocked] = useState([]);
   let cEvent = UseEventContext();
 
   const renderMensaje = (text, record) => (
@@ -71,6 +75,36 @@ const ChatExport = ({ eventId, event }) => {
     },
   ];
 
+  const columnsUserBlocked = [
+    {
+      title: 'Usuario',
+      dataIndex: 'name',
+      key: 'name',
+      ellipsis: true,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      ...getColumnSearchProps('name', columnsData),
+    },
+    {
+      title: 'Email',
+      key: 'email',
+      dataIndex: 'email',
+      ellipsis: true,
+      sorter: (a, b) => a.email.localeCompare(b.email),
+      ...getColumnSearchProps('email', columnsData),
+    },
+    {
+      title: 'Estatus',
+      key: 'blocked',
+      dataIndex: 'blocked',
+      ellipsis: true,
+      render(val, item) {
+        return (
+          <p>Bloqueado</p>
+        )
+      }
+    },
+  ];
+
   const exportFile = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -105,9 +139,33 @@ const ChatExport = ({ eventId, event }) => {
         });
         setdatamsjevent(datamessagesthisevent);
         setLoading(false);
-        // console.log("CHAT=>>",datamessagesthisevent)
       })
       .catch();
+  }
+
+  function getBlocketdUsers() {
+    let list = [];
+    let path = cEvent.value._id + '_event_attendees/';
+    
+    setLoading(true);
+    firestore
+    .collection(path)
+    .where('blocked', '==', true)
+    .get()
+    .then((res) => {
+      res.forEach((user) => {
+        let newUser = {
+          name: user.data().user.names,
+          email: user.data().user.email,
+          idparticipant: user.data()._id,
+          blocked: user.data().blocked,
+        }
+        list.push(newUser)
+      });
+      setlistUsersBlocked(list)
+      setLoading(false);
+    })
+    .catch;
   }
 
   function deleteAllChat() {
@@ -194,7 +252,6 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function blockUser(item) {
-    /* console.log('🚀 ~ file: index.jsx ~ line 195 ~ blockUser ~ item', item); */
     let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
     
     let searchDataUser = new Promise ((resolve, reject) => {
@@ -235,6 +292,7 @@ const ChatExport = ({ eventId, event }) => {
                   message.success(`${userBlocked ? 'Usuario desbloqueado' : 'Usuario bloqueado'}`);
                 });
               getChat();
+              getBlocketdUsers();
               setLoading(false);
             } catch (e) {
               message.destroy(loading.key);
@@ -251,70 +309,73 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   return (
-    <>
-      <Header title={'Gestión de chats del evento'} />
+    <Tabs defaultActiveKey='1' onChange={getChat, getBlocketdUsers}>
+      <TabPane tab='Gestión de chats del evento' key='1'>
+        {/* <Header title={'Gestión de chats del evento'} /> */}
 
-      <Table
-        header={columns}
-        list={datamsjevent}
-        loading={loading}
-        actions
-        remove={remove}
-        extraFn={blockUser}
-        extraFnTitle={'Administrar bloqueo'}
-        //extraFnTitle={'Bloquear usuario'}
-        extraFnType={'ghost'}
-        extraFnIcon={<AccountCancelOutline />}
-        titleTable={
-          <Row gutter={[8, 8]} wrap>
-            <Col>
-              <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
-                Recargar
-              </Button>
-            </Col>
-            <Col>
-              {datamsjevent && datamsjevent.length > 0 && (
-                <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
-                  Exportar
+        <Table
+          header={columns}
+          list={datamsjevent}
+          loading={loading}
+          actions
+          remove={remove}
+          extraFn={blockUser}
+          extraFnTitle={'Bloquear usuarios'}
+          extraFnType={'ghost'}
+          extraFnIcon={<AccountCancel />}
+          titleTable={
+            <Row gutter={[8, 8]} wrap>
+              <Col>
+                <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
+                  Recargar
                 </Button>
-              )}
-            </Col>
-            <Col>
-              {datamsjevent && datamsjevent.length > 0 && (
-                <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
-                  Eliminar Chat
+              </Col>
+              <Col>
+                {datamsjevent && datamsjevent.length > 0 && (
+                  <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
+                    Exportar
+                  </Button>
+                )}
+              </Col>
+              <Col>
+                {datamsjevent && datamsjevent.length > 0 && (
+                  <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
+                    Eliminar Chat
+                  </Button>
+                )}
+              </Col>
+            </Row>
+          }
+          search
+          setColumnsData={setColumnsData}
+        />
+      </TabPane>
+      <TabPane tab='Gestión de usuarios de bloqueados' key='2'>
+        <Table
+          header={columnsUserBlocked}
+          list={listUsersBlocked}
+          loading={loading}
+          actions
+          extraFn={blockUser}
+          extraFnTitle={'Desbloquear usuario'}
+          extraFnType={'ghost'}
+          extraFnIcon={<Account />}
+          exportData
+          fileName={'Usuarios Bloqueados'}
+          titleTable={
+            <Row gutter={[8, 8]} wrap>
+              <Col>
+                <Button onClick={getBlocketdUsers} type='primary' icon={<ReloadOutlined />}>
+                  Recargar
                 </Button>
-              )}
-            </Col>
-          </Row>
-        }
-        search
-        setColumnsData={setColumnsData}
-      />
-      {/* <div className='column is-narrow has-text-centered export button-c is-centered'>
-        <button onClick={(e) => exportFile(e)} className='button is-primary' style={{ marginRight: 80 }}>
-          <span className='icon'>
-            <i className='fas fa-download' />
-          </span>
-          <span className='text-button'>Exportar</span>
-        </button>
-        <Popconfirm
-          title='¿Está seguro que desea eliminar el chat de forma permanente?'
-          onConfirm={deleteAllChat}
-          okText='Si'
-          cancelText='No'
-          style={{ width: '170px' }}
-          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}>
-          <Button danger>
-            <span className='icon'>
-              <i className='fas fa-trash' />
-            </span>
-            <span className='text-button'>Eliminar Chat</span>
-          </Button>
-        </Popconfirm>
-      </div>
-      {loading ? <Spin /> : <TableA columns={columns} dataSource={datamsjevent} />} */}
-    </>
+              </Col>
+            </Row>
+          }
+          search
+          setColumnsData={setColumnsData}
+        />
+      </TabPane>
+    </Tabs>
   );
 };
 
