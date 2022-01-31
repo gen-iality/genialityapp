@@ -311,10 +311,11 @@ class UserModal extends Component {
     }
 
     if (resp || respActivity) {
-      message.success('Usuario agregado correctamente');
+      message.success(this.props?.edit ? 'Usuario editado correctamente' : 'Usuario agregado correctamente');
       this.props.handleModal();
     } else {
       message.error('error al guardar');
+      console.log(resp)
     }
 
     this.setState({ loadingregister: false });

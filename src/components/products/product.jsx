@@ -105,18 +105,29 @@ class Product extends Component {
   };
 
   removeProduct = (data) => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se borra la configuración..</>,
+    });
     let self = this;
     confirm({
+      title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
       content: 'Está seguro de borrar este producto?',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
       onOk() {
         return new Promise((resolve, reject) => {
           EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
             self.fetchItem();
             if (res === 1) {
+              message.destroy(loading.key);
               message.success('Producto eliminado correctamente');
               resolve(true);
             } else {
+              message.destroy(loading.key);
               message.error('Lo sentimos el producto no pudo ser eliminado intente nuevamente');
               reject(false);
             }
