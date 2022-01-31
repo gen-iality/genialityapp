@@ -195,45 +195,59 @@ const ChatExport = ({ eventId, event }) => {
 
   function blockUser(item) {
     /* console.log('🚀 ~ file: index.jsx ~ line 195 ~ blockUser ~ item', item); */
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras bloquea el usuario del chat...</>,
-    });
-    Modal.confirm({
-      title: `¿Está seguro de bloquear usuario para el chat?`,
-      icon: <ExclamationCircleOutlined />,
-      content: 'Una vez bloqueado puede desbloquearlo',
-      okText: 'Bloquear',
-      okType: 'danger',
-      cancelText: 'Cancelar',
-      onOk() {
-        const onHandlerBlock = async () => {
-          try {
-            setLoading(true);
-            //Código de bloqueo
-            let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
-            await firestore
-              .doc(path)
-              .update({
-                blocked: true,
-              })
-              .then((res) => {
-                message.success('Usuario bloqueado');
+    let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
+    
+    let searchDataUser = new Promise ((resolve, reject) => {
+      firestore
+      .doc(path)
+      .get()
+      .then((res) => {
+        resolve({status: 200, data: res.data().blocked})
+      });
+    })
+
+    searchDataUser.then((res) => {
+      let userBlocked = res.data;
+      const loading = message.open({
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras {userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...</>,
+      });
+      Modal.confirm({
+        title: `¿Está seguro de ${userBlocked ? 'desbloquear' : 'bloquear'} usuario para el chat?`,
+        icon: <ExclamationCircleOutlined />,
+        content: `${userBlocked ? 'Una vez desbloqueado puede bloquearlo' : 'Una vez bloqueado puede desbloquearlo'}`,
+        okText: `${userBlocked ? 'Desbloquear' : 'Bloquear'}`,
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerBlock = async () => {
+            try {
+              setLoading(true);
+              //Código de bloqueo
+              //let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
+              await firestore
+                .doc(path)
+                .update({
+                  blocked: !userBlocked,
+                })
+                .then((res) => {
+                  message.success(`${userBlocked ? 'Usuario desbloqueado' : 'Usuario bloqueado'}`);
+                });
+              getChat();
+              setLoading(false);
+            } catch (e) {
+              message.destroy(loading.key);
+              message.open({
+                type: 'error',
+                content: handleRequestError(e).message,
               });
-            getChat();
-            setLoading(false);
-          } catch (e) {
-            message.destroy(loading.key);
-            message.open({
-              type: 'error',
-              content: handleRequestError(e).message,
-            });
-          }
-        };
-        onHandlerBlock();
-      },
-    });
+            }
+          };
+          onHandlerBlock();
+        },
+      });
+    })
   }
 
   return (
@@ -247,9 +261,10 @@ const ChatExport = ({ eventId, event }) => {
         actions
         remove={remove}
         extraFn={blockUser}
-        extraFnTitle={'Bloquear usuario'}
+        extraFnTitle={'Administrar'}
+        //extraFnTitle={'Bloquear usuario'}
         extraFnType={'ghost'}
-        extraFnIcon={<AccountCancelOutline />}
+        //extraFnIcon={<AccountCancelOutline />}
         titleTable={
           <Row gutter={[8, 8]} wrap>
             <Col>
