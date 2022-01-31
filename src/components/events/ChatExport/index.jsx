@@ -43,7 +43,7 @@ const ChatExport = ({ eventId, event }) => {
   const renderFecha = (val, item) => <p>{moment(val).format('DD/MM/YYYY HH:mm')}</p>;
   const columns = [
     {
-      title: 'usuario',
+      title: 'Usuario',
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
