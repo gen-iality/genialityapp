@@ -1,6 +1,6 @@
 import { ControlOutlined } from '@ant-design/icons';
 import { Spin, Result, Button, Typography } from 'antd';
-import { app } from 'helpers/firebase';
+import { app, firestore } from 'helpers/firebase';
 import { EventsApi } from 'helpers/request';
 import { fieldNameEmailFirst } from 'helpers/utils';
 import React, { useEffect, useState } from 'react';
@@ -12,15 +12,29 @@ const WithCode = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [verifyLink, setVerifyLink] = useState(false);
+  const conectionRef = firestore.collection(`connections`);
   useEffect(() => {
+    //REFERENCIA FIRESTORE
+
     const querystring = window.location.search;
     const params = new URLSearchParams(querystring);
-    const email = params.get('email');
+    let email = params.get('email');
     const event = params.get('event_id');
     if (email) {
       setEmail(email);
       setEvent(event);
-      loginWithCode();
+      email = email.replace('%40', '@');
+      conectionRef
+        .where('email', '==', email)
+        .get()
+        .then((resp) => {
+          if (resp.docs.length == 0) {
+            loginWithCode();
+          } else {
+            setError(true);
+            setLoading(false);
+          }
+        });
     }
     async function loginWithCode() {
       app
