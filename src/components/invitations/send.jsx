@@ -56,7 +56,7 @@ class SendRsvp extends Component {
             ? this.props.event.styles.banner_footer
             : this.props.event.picture,
       },
-      selection: this.props.selection.length > 0 ? this.props.selection : this.props.location.selection,
+      selection: this.props.selection === undefined ? "Todos" : this.props.selection,
     });
   }
 
@@ -138,9 +138,14 @@ class SendRsvp extends Component {
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
     let users = [];
-    selection.map((item) => {
-      return users.push(item._id);
-    });
+    console.log(selection)
+    if (selection === "Todos"){
+      users = "all";
+    }else {
+      selection.map((item) => {
+        return users.push(item._id);
+      });
+    }
     this.setState({ dataMail: users, disabled: true });
     try {
       let data;
@@ -444,22 +449,30 @@ class SendRsvp extends Component {
               <div className='box rsvp-send'>
                 <Row gutter={8} wrap justify='center'>
                   <p className='rsvp-send-title'>
-                    Seleccionados <span>{this.state.selection?.length}</span>
+                    Seleccionados <span>{this.state.selection === "Todos" ? "Todos" : this.state.selection.length}</span>
                   </p>
                   <p>
-                    {this.state.selection?.map((el) => {
-                      return el.properties.email + ', ';
-                    })}
+                    {
+                      this.state.selection === "Todos"
+                          ? null
+                          :this.state.selection?.map((el) => {
+                            return el.properties.email + ', ';
+                          })
+                    }
                   </p>
                 </Row>
                 <Row gutter={8} wrap>
-                  {this.state.selection?.map((item, key) => {
-                    return (
-                      <p key={key} className='selection'>
-                        {item.email}
-                      </p>
-                    );
-                  })}
+                  {
+                    this.state.selection === "Todos"
+                        ? (<p>{this.state.selection}</p>)
+                        :this.state.selection?.map((item, key) => {
+                          return (
+                              <p key={key} className='selection'>
+                                {item.email}
+                              </p>
+                          );
+                        })
+                  }
                 </Row>
                 <Row justify='center' gutter={8} wrap>
                   <Link to={{ pathname: `${this.props.matchUrl}` }}>

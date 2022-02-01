@@ -255,12 +255,13 @@ class eventUsersList extends Component {
     const { attendeesForSendMessage, modalVisible } = this.state;
     /* console.log('lista', attendeesForSendMessage); */
     //Actualizar el estado del padre
-    if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
-      this.props.setGuestSelected(attendeesForSendMessage);
-      this.props.history.push(`${this.props.matchUrl}/createmessage`);
-    } else {
-      this.setState({ modalVisible: modalVisible === true ? false : true });
-    }
+
+    // if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
+    this.props.setGuestSelected(attendeesForSendMessage);
+    this.props.history.push(`${this.props.matchUrl}/createmessage`);
+    // } else {
+    //   this.setState({ modalVisible: modalVisible === true ? false : true });
+    // }
   };
 
   render() {
@@ -311,7 +312,7 @@ class eventUsersList extends Component {
           title={() => (
             <Row wrap gutter={[8, 8]} justify='end'>
               <Col>
-                <Button onClick={() => this.goToSendMessage()} disabled={selectedRowKeys.length === 0}>Enviar comunicación / Correo</Button>
+                <Button onClick={() => this.goToSendMessage()} >Enviar comunicación a :  {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}</Button>
                 <ModalAdvise visible={this.state.modalVisible} />
               </Col>
               <Col>
