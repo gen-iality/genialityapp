@@ -4,9 +4,14 @@ function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
 
   let questions = surveyData.pages;
 
+  /** iteramos las preguntas para validar el puntaje total para la comparativa de puntaje ganado vs puntaje total */
   questions.forEach((item) => {
-    if (item.questions[0].points) {
-      totalQuestions += parseInt(item.questions[0].points);
+    if (item.questions) {
+      if (item.questions.length === 1 && item.questions[0]?.points) {
+        totalQuestions += parseInt(item.questions[0]?.points);
+      } else if (item.questions.length === 2 && item.questions[1]?.points) {
+        totalQuestions += parseInt(item.questions[1]?.points);
+      }
     }
   });
 

@@ -450,9 +450,10 @@ export const TicketsApi = {
   checkInAttendee: async (event_id, eventUser_id) => {
     let token = await GetTokenUserFirebase();
     let data = {
+      event: event_id,
       checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
     };
-    return await Actions.put(`/api/events/${event_id}/eventusers/${eventUser_id}?token=${token}`, data);
+    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, data);
   },
 };
 
