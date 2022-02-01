@@ -375,6 +375,7 @@ class Datos extends Component {
       {
         title: 'Dato',
         dataIndex: 'label',
+        width: 180,
         ellipsis: true,
         sorter: (a, b) => a.label.localeCompare(b.label),
         /* render (val, item) {
@@ -442,7 +443,7 @@ class Datos extends Component {
           ),
       },
       {
-        title: 'Action',
+        title: 'Opciones',
         dataIndex: '',
         render: (key) => (
           <Row wrap gutter={[8, 8]}>
