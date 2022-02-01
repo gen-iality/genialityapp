@@ -42,6 +42,8 @@ import {
   UploadOutlined,
   DownloadOutlined,
   SearchOutlined,
+  UsergroupAddOutlined,
+  StarOutlined,
 } from '@ant-design/icons';
 
 import Header from '../../antdComponents/Header';
@@ -825,28 +827,31 @@ class ListEventUser extends Component {
         <Row gutter={8}>
           <Col>
             <p>
-              <small>
-                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
-              </small>
+              <strong> Última Sincronización </strong>: <FormattedDate value={lastUpdate} />{' '}
+              <FormattedTime value={lastUpdate} />
             </p>
           </Col>
         </Row>
 
         <Row wrap gutter={[8, 8]}>
           <Col>
-            <Tag>
-              <small>
-                Inscritos:
-                {inscritos || 0}
-              </small>
+            <Tag
+              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
+              color='lightgrey'
+              icon={<UsergroupAddOutlined />}>
+              Inscritos: <span style={{ fontSize: '13px' }}>{inscritos}</span>
             </Tag>
           </Col>
           <Col>
-            <Tag>
-              <small>
-                Participantes:
+            <Tag
+              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
+              color='lightgrey'
+              icon={<StarOutlined />}>
+              Participantes:{' '}
+              <span style={{ fontSize: '13px' }}>
+                {' '}
                 {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-              </small>
+              </span>
             </Tag>
           </Col>
           <Col>
@@ -862,60 +867,6 @@ class ListEventUser extends Component {
             )}
           </Col>
         </Row>
-
-        {/* {event_stages && event_stages.length > 0 && (
-          <div className='filter'>
-            <button className='button icon-filter'>
-              <span className='icon'>
-                <i className='fas fa-filter'></i>
-              </span>
-              <span className='text-button'>Filtrar</span>
-            </button>
-            <div className='filter-menu'>
-              <p className='filter-help'>Filtra Usuarios por Tiquete</p>
-              <div className='columns'>
-                <div className='column field'>
-                  <div className='control'>
-                    <label className='label'>Etapa</label>
-                    <div className='control'>
-                      <div className='select'>
-                        <select value={stage} onChange={this.changeStage} name={'stage'}>
-                          <option value={''}>Escoge la etapa...</option>
-                          {event_stages.map((item, key) => {
-                            return (
-                              <option key={key} value={item.stage_id}>
-                                {item.title}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='column field'>
-                  <div className='control'>
-                    <label className='label'>Tiquete</label>
-                    <div className='control'>
-                      <div className='select'>
-                        <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                          <option value={''}>Escoge el tiquete...</option>
-                          {ticketsOptions.map((item, key) => {
-                            return (
-                              <option key={key} value={item._id}>
-                                {item.title}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )} */}
 
         <TableA
           list={users}
