@@ -394,6 +394,7 @@ class Datos extends Component {
         title: 'Tipo de dato',
         dataIndex: 'type',
         ellipsis: true,
+        width: 120,
         sorter: (a, b) => a.type.localeCompare(b.type),
       },
       {

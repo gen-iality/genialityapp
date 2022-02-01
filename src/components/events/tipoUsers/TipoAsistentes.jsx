@@ -16,6 +16,7 @@ const TipoAsistentes = (props) => {
     {
       title: 'Fecha de Creación',
       dataIndex: 'created_at',
+      width: 160,
       render (val, item) {
         return (
           <div>

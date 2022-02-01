@@ -179,7 +179,7 @@ class Product extends Component {
             rowKey='index'
             dataSource={this.state.list}
             pagination={false} //pageSize: 6, position: ['bottomCenter'] }}
-            scroll={{ x: 1300 }}
+            /* scroll={{ x: 1300 }} */
             components={{
               body: {
                 wrapper: this.DraggableContainer,
@@ -190,6 +190,7 @@ class Product extends Component {
               title=''
               dataIndex='move'
               width='50px'
+              align='center'
               render={(data, index) => {
                 const DragHandle = sortableHandle(() => (
                   <DragOutlined
@@ -200,7 +201,22 @@ class Product extends Component {
                 return <DragHandle />;
               }}
             />
-            <Column title='Posición' dataIndex='index' width='100px' render={(data, index) => <div>{data + 1}</div>} />
+            <Column title='Posición' align='center' dataIndex='index' width='80px' render={(data, index) => <div>{data + 1}</div>} />
+            <Column
+              key='_id'
+              title='Imagen'
+              align='center'
+              width='90px'
+              render={(data, index) => (
+                <Space key={index} size='small'>
+                  {data.image &&
+                    Array.isArray(data.image) &&
+                    data.image.map((images, index) => {
+                      return <Image key={index} width={70} src={images} />;
+                    })}
+                </Space>
+              )}
+            />
             <Column
               key='_id'
               title='Nombre'
@@ -220,7 +236,8 @@ class Product extends Component {
             <Column
               key='_id'
               title='Por'
-              align='center'
+              /* align='center' */
+              width='120px'
               dataIndex='by'
               ellipsis={true}
               sorter={(a, b) => a.by?.localeCompare(b.by)}
@@ -228,26 +245,13 @@ class Product extends Component {
             <Column
               key='_id'
               title='Valor'
-              align='center'
+              /* align='center' */
+              width='120px'
               dataIndex='price'
               render={(data, prod) => <div>$ {prod.price}</div>}
               ellipsis={true}
             />
             {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
-            <Column
-              key='_id'
-              title='Imagenes del producto'
-              align='center'
-              render={(data, index) => (
-                <Space key={index} size='small'>
-                  {data.image &&
-                    Array.isArray(data.image) &&
-                    data.image.map((images, index) => {
-                      return <Image key={index} width={70} src={images} />;
-                    })}
-                </Space>
-              )}
-            />
             <Column
               title='Opciones'
               key='_id'

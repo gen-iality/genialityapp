@@ -20,6 +20,7 @@ const News = (props) => {
       title: 'Fecha de Publicación',
       dataIndex: 'time',
       ellipsis: true,
+      width: 200,
       sorter: (a, b) => a.time.localeCompare(b.time),
       ...getColumnSearchProps('time', columnsData),
       render(val, item) {

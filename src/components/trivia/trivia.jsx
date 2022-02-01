@@ -20,6 +20,7 @@ const trivia = (props) => {
       title: 'Publicada',
       dataIndex: 'publish',
       ellipsis: true,
+      width: 130,
       sorter: (a, b) => a.publish.localeCompare(b.publish),
       ...getColumnSearchProps('publish', columnsData),
       render(val, item) {
