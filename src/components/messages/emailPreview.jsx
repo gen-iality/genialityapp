@@ -54,7 +54,9 @@ const EmailPrev = (props) => {
             Confirmar asistencia
           </Tag>
         </p>
-        <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt={'Imagen Perfil'} />
+        {props.item.image || props.event.image &&
+          <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt={'Imagen Perfil'} />
+        }
         <div
           style={{ textAlign: 'center' }}
           dangerouslySetInnerHTML={{
