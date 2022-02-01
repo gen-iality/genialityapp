@@ -56,25 +56,6 @@ const imgNotFound =
   'https://www.latercera.com/resizer/m0bOOb9drSJfRI-C8RtRL_B4EGE=/375x250/smart/arc-anglerfish-arc2-prod-copesa.s3.amazonaws.com/public/Z2NK6DYAPBHO3BVPUE25LQ22ZA.jpg';
 const { Title } = Typography;
 
-/*            switch (field.type) {
-              case "boolean":
-                value = item.properties[field.name] ? "SI" : "NO";
-                break;
-              case "complex":
-                value = (
-                  <span
-                    className="icon has-text-grey action_pointer"
-                    data-tooltip={"Detalle"}
-                    onClick={() => this.showMetaData(item.properties[field.name])}>
-                    <i className="fas fa-eye" />
-                  </span>
-                );
-                break;
-              default:
-                value = item.properties[field.name];
-            }
-*/
-
 const html = document.querySelector('html');
 class ListEventUser extends Component {
   constructor(props) {
@@ -134,15 +115,6 @@ class ListEventUser extends Component {
       <Tooltip placement='topLeft' title='Editar'>
         <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
       </Tooltip>
-      /* <span
-        className='icon has-text-grey action_pointer'
-        data-tooltip={'Editar'}
-        // eslint-disable-next-line no-unused-vars
-        onClick={(e) => {
-          this.openEditModalUser(item);
-        }}>
-        <EditOutlined />
-      </span> */
     );
   };
 
@@ -190,19 +162,6 @@ class ListEventUser extends Component {
             self.checkIn(item._id, item);
           }}
         />
-        {/* <Checkbox
-          className='is-checkradio is-primary is-small'
-          id={'checkinUser' + item._id}
-          disabled={item.checkedin_at}
-          type='checkbox'
-          name={'checkinUser' + item._id}
-          checked={item.checkedin_at || item.properties?.checkedin_at}
-          // eslint-disable-next-line no-unused-vars
-          onChange={(e) => {
-            self.checkIn(item._id, item);
-          }}
-        />
-        <label htmlFor={'checkinUser' + item._id} /> */}
       </div>
     );
   };
@@ -536,13 +495,12 @@ class ListEventUser extends Component {
     const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;
-    try {
+    /*  try {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
-
       //toast.success('Usuario Chequeado');
     } catch (e) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-    }
+    } */
     //return;
     const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
 
@@ -774,27 +732,6 @@ class ListEventUser extends Component {
 
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
-
-    // function nameHere(str) {
-    //   return str.match(/[A-Z]/);
-    // }
-
-    // function isUpperCase(str) {
-    //   return str === str.toUpperCase();
-    // }
-
-    // let sonono = [];
-
-    // usersReq.map((item) => {
-    //   let es = nameHere(item.email);
-    //   console.log("es",es, item.properties["email"])
-    //   // if (es) {
-    //   //   if (isUpperCase(es[0])) {
-    //   //     sonono.push(item.name);
-    //   //   }
-    //   // }
-    // });
-    // console.log('AJA', sonono);
 
     return (
       <React.Fragment>
