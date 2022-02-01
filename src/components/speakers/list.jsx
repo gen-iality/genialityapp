@@ -93,7 +93,7 @@ function SpeakersList(props) {
       if (queryData.state === 'update') {
         queryData.newData.map((speaker, index) => {
           let speakerChange = { ...speaker, order: index + 1 };
-          SpeakersApi.editOne(speakerChange, speaker._id, queryData.eventId);
+          SpeakersApi.editOne(speakerChange, speaker._id, props.eventID);
         });
       } else {
         SpeakersApi.deleteOne(queryData.speakerData._id, queryData.eventId);
