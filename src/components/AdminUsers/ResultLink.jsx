@@ -51,12 +51,12 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
           icon={status === 'loading' && <LoadingOutlined />}
           status={status === 'loading' ? null : 'error'}
           title={
-            <Typography.Title level={1}>
+            <Typography.Title level={screens.xs ? 2 : 1}>
               {status === 'loading' && verifyLink
                 ? 'Iniciando la sesión...'
                 : status === 'loading' && !verifyLink
                 ? 'Verificando link'
-                : 'Acceso denegado'}
+                : 'Ya has iniciado la sesión en otro dispositivo'}
             </Typography.Title>
           }
           subTitle={
@@ -65,10 +65,11 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                 type='secondary'
                 style={{
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
-                  maxWidth: '550px',
                   overflowWrap: 'anywhere',
                 }}>
-                El enlace enviado a {data} ya fue usado, ingrese al evento para solicitar uno nuevo.
+                Necesitamos cerrar tu sesión para que puedas seguir utilizando la aplicación. Si no quiere que se cierre
+                la sesión automáticamente en su otro dispositivo, haga clic en cancelar, de lo contrario, haga clic en
+                continuar.
               </Typography.Paragraph>
             )
           }
@@ -76,17 +77,6 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
             status === 'loading'
               ? null
               : [
-                  event && (
-                    <Button
-                      onClick={() => {
-                        window.location.href = `${window.location.origin}/landing/${event}`;
-                      }}
-                      size='large'
-                      type='primary'
-                      key='goToEvent'>
-                      Ir al evento
-                    </Button>
-                  ),
                   <Button
                     onClick={() => {
                       window.location.href = `${window.location.origin}`;
@@ -95,7 +85,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     type='text'
                     disabled={loading}
                     key='goToEvius'>
-                    Ir a Evius
+                    Cancelar
                   </Button>,
                   <Button
                     onClick={async () => {
@@ -112,9 +102,9 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     }}
                     size='large'
                     loading={loading}
-                    type='text'
+                    type='primary'
                     key='goToEvius'>
-                    Iniciar la sesión acá
+                    Continuar
                   </Button>,
                 ]
           }
