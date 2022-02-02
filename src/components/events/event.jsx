@@ -57,7 +57,7 @@ const DashboardEvent = loadable(() => import('../dashboard'));
 const OrdersEvent = loadable(() => import('../orders'));
 const ListCertificados = loadable(() => import('../certificados'));
 const ReporteCertificados = loadable(() => import('../certificados/reporte'));
-const ConfigurationApp = loadable(() => import('../App/configuration'));
+/* const ConfigurationApp = loadable(() => import('../App/configuration')); */
 const NotificationsApp = loadable(() => import('../pushNotifications/index'));
 const Wall = loadable(() => import('../wall/index'));
 
@@ -396,13 +396,13 @@ class Event extends Component {
                 componentKey='styles'
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
-              <Protected
+              {/* <Protected
                 path={`${match.url}/configurationApp`}
                 component={ConfigurationApp}
                 eventId={this.state.event._id}
                 event={this.state.event}
                 componentKey='configurationApp'
-              />
+              /> */}
               <Protected
                 path={`${match.url}/notificationsApp`}
                 component={NotificationsApp}

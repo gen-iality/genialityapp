@@ -51,7 +51,7 @@ class Styles extends Component {
     };
     //Se establecen las funciones para su posterior uso
     this.saveEventImage = this.saveEventImage.bind(this);
-    this.getDataLoaderPage = this.getDataLoaderPage.bind(this);
+    /* this.getDataLoaderPage = this.getDataLoaderPage.bind(this); */
     this.submit = this.submit.bind(this);
 
     this.imageDrawer = [
@@ -73,14 +73,14 @@ class Styles extends Component {
         width: 320,
         height: 180,
       },
-      {
+      /* {
         title:
           'Elige una imagen para el banner en mobile (opcional en caso de no observar bien el banner superior en celular): (Tamaño recomendado 1080x556)',
         imageFieldName: 'mobile_banner',
         button: 'eliminar banner en mobile',
         width: 1080,
         height: 556,
-      },
+      }, */
       {
         title: 'Elige una imagen(textura) para el fondo: (Tamaño recomendado 1920x2160)',
         imageFieldName: 'BackgroundImage',
@@ -470,11 +470,11 @@ class Styles extends Component {
     this.setState({ styles: styles });
   }
 
-  getDataLoaderPage(data) {
+  /* getDataLoaderPage(data) {
     let styles = { ...this.state.styles };
     styles['data_loader_page'] = data;
     this.setState({ styles: styles });
-  }
+  } */
 
   render() {
     const { timeout } = this.state;
@@ -529,8 +529,8 @@ class Styles extends Component {
                     </Modal>
                   )}
 
-                  <Form.Item label={item.title} onClick={() => this.handleClickSelectColor(key)}>
-                    {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
+                  <Form.Item label={item.title} help={item.description} onClick={() => this.handleClickSelectColor(key)}>
+                    {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
                     <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                       {this.state.styles[item.fieldColorName]}
                     </Tag>
@@ -555,7 +555,7 @@ class Styles extends Component {
                     </Select>
                   </Form.Item>
 
-                  {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
+                  {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
                     <Form.Item label={'Link de video'}>
                       <Input
                         defaultValue={this.state.styles['data_loader_page']}
@@ -575,48 +575,50 @@ class Styles extends Component {
                         modules={toolbarEditor}
                       />
                     </Form.Item>
-                  )}
+                  )} */}
                 </div>
               ))}
 
-              {this.imageDrawer.map((item, key) => (
-                <div key={key}>
-                  <Form.Item >
-                    <label className='label'>{item.title}</label>
-                    {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-                    
-                    <Spin tip='cargando' spinning={this.state.isLoading}>
-                      <ImageInput
-                        picture={this.state.styles[item.imageFieldName]}
-                        width={item.width}
-                        height={item.height}
-                        changeImg={(files) => {
-                          this.saveEventImage(files, item.imageFieldName);
-                        }}
-                        errImg={this.state.errImg}
-                        btnRemove={<></>}
-                        /* btnRemove={
-                          this.state.styles[item.imageFieldName] && (
-                            <button
-                              onClick={async (e) => {
-                                e.stopPropagation();
-                                this.deleteInfoBanner(item.imageFieldName);
-                              }}
-                              className={`button is-primary is-inverted is-outlined`}>
-                              Eliminar Imagen
-                            </button>
-                          )
-                        } */
-                      />
-                      {this.state.styles[item.imageFieldName] && (
-                        <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
-                      )}
-                    </Spin>
-                  </Form.Item>
+              <Space direction='vertical' wrap>
+                {this.imageDrawer.map((item, key) => (
+                  <div key={key}>
+                    <Form.Item label={item.title} help={item.description}>
+                      {/* <label className='label'>{item.title}</label> */}
+                      {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
+                      
+                      <Spin tip='Cargando...' spinning={this.state.isLoading}>
+                        <ImageInput
+                          picture={this.state.styles[item.imageFieldName]}
+                          width={item.width}
+                          height={item.height}
+                          changeImg={(files) => {
+                            this.saveEventImage(files, item.imageFieldName);
+                          }}
+                          errImg={this.state.errImg}
+                          btnRemove={<></>}
+                          /* btnRemove={
+                            this.state.styles[item.imageFieldName] && (
+                              <button
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  this.deleteInfoBanner(item.imageFieldName);
+                                }}
+                                className={`button is-primary is-inverted is-outlined`}>
+                                Eliminar Imagen
+                              </button>
+                            )
+                          } */
+                        />
+                        {this.state.styles[item.imageFieldName] && (
+                          <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
+                        )}
+                      </Spin>
+                    </Form.Item>
 
-                  {/* {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>} */}
-                </div>
-              ))}
+                    {/* {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>} */}
+                  </div>
+                ))}
+              </Space>
             </Col>
           </Row>
           <BackTop />
