@@ -68,6 +68,7 @@ const ChatExport = ({ eventId, event }) => {
       title: 'Fecha',
       dataIndex: 'hora',
       key: 'hora',
+      width: 150,
       ellipsis: true,
       sorter: (a, b) => a.hora.localeCompare(b.hora),
       ...getColumnSearchProps('hora', columnsData),
@@ -97,6 +98,7 @@ const ChatExport = ({ eventId, event }) => {
       key: 'blocked',
       dataIndex: 'blocked',
       ellipsis: true,
+      width: 100,
       render(val, item) {
         return (
           <p>Bloqueado</p>

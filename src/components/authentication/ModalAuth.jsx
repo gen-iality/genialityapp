@@ -2,7 +2,7 @@ import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOu
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
-import { app } from '../../helpers/firebase';
+import { app, firestore } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
@@ -140,9 +140,8 @@ const ModalAuth = (props) => {
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      .then((response) => {
+      .then(async (response) => {
         if (response.user) {
-          console.log('response', response);
           setLoading(false);
           HandleControllerLoginVisible({ visible: false });
         }

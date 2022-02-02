@@ -146,13 +146,7 @@ class UserModal extends Component {
               type: 'success',
               content: <> Se eliminó la información correctamente!</>,
             });
-          } catch (e) {
-            message.destroy(loading.key);
-            message.open({
-              type: 'warning',
-              content: <>El usuario se eliminó</>,
-            });
-          } finally {
+
             userRef
               .doc(self.state.userId)
               .delete()
@@ -169,6 +163,12 @@ class UserModal extends Component {
               messages.class = messages.content = '';
               self.closeModal();
             }, 500);
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: <>Error eliminando el usuario</>,
+            });
           }
         };
         onHandlerRemove();
@@ -250,7 +250,12 @@ class UserModal extends Component {
       } else {
         if (!this.props.edit) {
           console.log('EVENT==>', this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
-          resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
+          try {
+            resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
+          } catch (e) {
+            message.error('Usuario ya registrado en el evento');
+            respActivity = false;
+          }
           console.log('RESPUESTA==>', resp);
         } else {
           resp = await UsersApi.editEventUser(
@@ -314,7 +319,7 @@ class UserModal extends Component {
       message.success(this.props?.edit ? 'Usuario editado correctamente' : 'Usuario agregado correctamente');
       this.props.handleModal();
     } else {
-      message.error('error al guardar');
+      message.error('Error al guardar el usuario');
       console.log(resp)
     }
 

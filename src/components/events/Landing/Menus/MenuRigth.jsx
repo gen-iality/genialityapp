@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Menu, Badge } from 'antd';
 import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
@@ -7,8 +7,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../../../Context/withContext';
 import { HelperContext } from '../../../../Context/HelperContext';
+import { UseEventContext } from 'Context/eventContext';
+import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed';
 
 const MenuRigth = (props) => {
+  let cEvent = UseEventContext();
+  const [typeEvent, settypeEvent] = useState();
+
   let {
     HandleOpenCloseMenuRigth,
     HandleChatOrAttende,
@@ -17,6 +22,10 @@ const MenuRigth = (props) => {
     currentActivity,
     tabsGenerals,
   } = useContext(HelperContext);
+
+  useEffect(() => {
+    settypeEvent(recordTypeForThisEvent(cEvent));
+  }, [cEvent]);
 
   const animateIcon = 'animate__animated animate__bounceIn';
 
@@ -66,7 +75,7 @@ const MenuRigth = (props) => {
         )}
 
         {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
-        {props.generalTabs?.attendees && (
+        {props.generalTabs?.attendees && typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
           <Menu.Item
             key='2'
             icon={
@@ -85,28 +94,30 @@ const MenuRigth = (props) => {
             }}></Menu.Item>
         )}
 
-        {currentActivity != null && currentActivity.habilitar_ingreso === 'open_meeting_room' && (
-          <Menu.Item
-            key='3'
-            icon={
-              <span>
-                <Badge dot={props.hasOpenSurveys}>
-                  <PieChartOutlined
-                    className={animateIcon + ' animate__delay-3s'}
-                    style={{
-                      fontSize: '30px',
-                      color: props.cEvent.value.styles?.textMenu,
-                    }}
-                  />
-                </Badge>
-              </span>
-            }
-            style={{ paddingTop: '20px' }}
-            onClick={() => {
-              HandleOpenCloseMenuRigth(false);
-              HandleChatOrAttende('3');
-            }}></Menu.Item>
-        )}
+        {currentActivity != null &&
+          currentActivity.habilitar_ingreso === 'open_meeting_room' &&
+          typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
+            <Menu.Item
+              key='3'
+              icon={
+                <span>
+                  <Badge dot={props.hasOpenSurveys}>
+                    <PieChartOutlined
+                      className={animateIcon + ' animate__delay-3s'}
+                      style={{
+                        fontSize: '30px',
+                        color: props.cEvent.value.styles?.textMenu,
+                      }}
+                    />
+                  </Badge>
+                </span>
+              }
+              style={{ paddingTop: '20px' }}
+              onClick={() => {
+                HandleOpenCloseMenuRigth(false);
+                HandleChatOrAttende('3');
+              }}></Menu.Item>
+          )}
 
         {currentActivity != null && currentActivity.habilitar_ingreso === 'open_meeting_room' && (
           <>

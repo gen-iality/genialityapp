@@ -4,7 +4,6 @@ import Moment from 'moment';
 import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
-import { BaseUrl } from '../../helpers/constants';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss';
@@ -513,7 +512,7 @@ class General extends Component {
         const result = await Actions.create('/api/events', data);
         this.setState({ loading: false });
         if (result._id) {
-          window.location.replace(`${BaseUrl}/event/${result._id}`);
+          window.location.replace(`${window.location.origin}/event/${result._id}`);
         } else {
           toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
           this.setState({ msg: 'Cant Create', create: false });
@@ -566,7 +565,7 @@ class General extends Component {
               type: 'success',
               content: <> Se eliminó la información correctamente!</>,
             });
-            window.location.replace(`${BaseUrl}/myprofile`);
+            window.location.replace(`${window.location.origin}/myprofile`);
           } catch (e) {
             message.destroy(loading.key);
             message.open({

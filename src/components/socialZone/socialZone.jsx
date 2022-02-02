@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import React, { useContext, useState, useEffect } from 'react';
-import { Tabs, Row, Badge, Col, Button, Alert, Space } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
+import { Tabs, Row, Badge, Button, Alert, Space } from 'antd';
+import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
@@ -17,6 +17,7 @@ import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../Context/HelperContext';
 import ThisRouteCanBeDisplayed from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
@@ -37,19 +38,16 @@ let SocialZone = function(props) {
     HandleChatOrAttende,
     chatAttendeChats,
     totalPrivateMessages,
-    setTheUserHasPlayed,
     currentActivity,
     tabsGenerals,
   } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
-  const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
   let [strAttende, setstrAttende] = useState();
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
   let history = useHistory();
-
-  const [tabsSocialzone, settabsSocialzone] = useState();
+  const [typeEvent, settypeEvent] = useState();
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -79,6 +77,11 @@ let SocialZone = function(props) {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
 
+  useEffect(() => {
+    let eventype = recordTypeForThisEvent(cEvent);
+    settypeEvent(eventype);
+  }, [cEvent]);
+
   return (
     <Tabs
       style={{ marginTop: '-15px' }}
@@ -92,88 +95,91 @@ let SocialZone = function(props) {
         className='asistente-chat-list'
         tab={
           <>
-            <Badge
-              onClick={() => HandleChatOrAttende('1')}
-              size='small'
-              // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
-              count={totalPrivateMessages}>
+            <Badge onClick={() => HandleChatOrAttende('1')} size='small' count={totalPrivateMessages}>
               <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
             </Badge>
           </>
         }
         key='1'>
         <ThisRouteCanBeDisplayed>
-          <ChatList key='ChatList' props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
+          <ChatList
+            typeEvent={typeEvent}
+            key='ChatList'
+            props={props}
+            setCurrentUser={setCurrentUser}
+            generalTabs={props.generalTabs}
+          />
         </ThisRouteCanBeDisplayed>
       </TabPane>
 
       <>
-        <TabPane
-          style={styleTabAttendes}
-          tab={
-            <div style={{ color: cEvent.value.styles.textMenu }}>
-              <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
-            </div>
-          }
-          key='2'>
-          <ThisRouteCanBeDisplayed>
-            <div key='AttendeList'>
-              <Row>
-                <Space size={10} style={{ width: '100%' }}>
-                  {!Object.keys(attendeeList).length ? (
-                    ''
-                  ) : (
-                    <div
-                      className='control'
-                      style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
-                      <input
-                        style={{ color: cEvent.value.styles.textMenu }}
-                        ref={busquedaRef}
-                        autoFocus
-                        //className='input'
-                        type='text'
-                        name={'name'}
-                        onChange={handleChange}
-                        placeholder='Buscar participante...'
-                      />
-                    </div>
-                  )}
-                  {!Object.keys(attendeeList).length
-                    ? null
-                    : busqueda !== null && (
-                        <Button
-                          icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
-                          shape='round'
-                          onClick={searhAttende}>
-                          {!isFiltered && 'Buscar'}
-                          {isFiltered && 'Borrar'}
-                        </Button>
-                      )}
-                </Space>
-              </Row>
-              <div className='asistente-list'>
-                {!Object.keys(attendeeList).length ? (
-                  <Row justify='center'>
-                    <p>No hay asistentes aún</p>
-                  </Row>
-                ) : (
-                  <AttendeList
-                    agendarCita={props.agendarCita}
-                    notificacion={props.notificacion}
-                    sendFriendship={props.sendFriendship}
-                    perfil={props.perfil}
-                    section={props.section}
-                    containNetWorking={props.containNetWorking}
-                    busqueda={strAttende}
-                  />
-                )}
+        {typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
+          <TabPane
+            style={styleTabAttendes}
+            tab={
+              <div style={{ color: cEvent.value.styles.textMenu }}>
+                <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
               </div>
-            </div>
-          </ThisRouteCanBeDisplayed>
-        </TabPane>
+            }
+            key='2'>
+            <ThisRouteCanBeDisplayed>
+              <div key='AttendeList'>
+                <Row>
+                  <Space size={10} style={{ width: '100%' }}>
+                    {!Object.keys(attendeeList).length ? (
+                      ''
+                    ) : (
+                      <div
+                        className='control'
+                        style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
+                        <input
+                          style={{ color: cEvent.value.styles.textMenu }}
+                          ref={busquedaRef}
+                          autoFocus
+                          type='text'
+                          name={'name'}
+                          onChange={handleChange}
+                          placeholder='Buscar participante...'
+                        />
+                      </div>
+                    )}
+                    {!Object.keys(attendeeList).length
+                      ? null
+                      : busqueda !== null && (
+                          <Button
+                            icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
+                            shape='round'
+                            onClick={searhAttende}>
+                            {!isFiltered && 'Buscar'}
+                            {isFiltered && 'Borrar'}
+                          </Button>
+                        )}
+                  </Space>
+                </Row>
+                <div className='asistente-list'>
+                  {!Object.keys(attendeeList).length ? (
+                    <Row justify='center'>
+                      <p>No hay asistentes aún</p>
+                    </Row>
+                  ) : (
+                    <AttendeList
+                      agendarCita={props.agendarCita}
+                      notificacion={props.notificacion}
+                      sendFriendship={props.sendFriendship}
+                      perfil={props.perfil}
+                      section={props.section}
+                      containNetWorking={props.containNetWorking}
+                      busqueda={strAttende}
+                    />
+                  )}
+                </div>
+              </div>
+            </ThisRouteCanBeDisplayed>
+          </TabPane>
+        )}
       </>
 
-      {currentActivity !== null && (
+      {currentActivity !== null && typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={

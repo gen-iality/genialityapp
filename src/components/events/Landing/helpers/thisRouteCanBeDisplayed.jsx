@@ -47,16 +47,6 @@ function ThisRouteCanBeDisplayed({ children }) {
             title={
               <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title' })}</Typography.Title>
             }
-            // subTitle={
-            //   <Typography.Paragraph
-            //     type='secondary'
-            //     style={{
-            //       fontSize: '18px',
-            //       overflowWrap: 'anywhere',
-            //     }}>
-            //     {intl.formatMessage({ id: 'modal.no_register.msg_public' })}
-            //   </Typography.Paragraph>
-            // }
             extra={[
               <Button
                 onClick={() => handleChangeTypeModal('registerForTheEvent')}
@@ -108,16 +98,6 @@ function ThisRouteCanBeDisplayed({ children }) {
                 {intl.formatMessage({ id: 'modal.no_register.msg_anonymous.title' })}
               </Typography.Title>
             }
-            // subTitle={
-            //   <Typography.Paragraph
-            //     type='secondary'
-            //     style={{
-            //       fontSize: '18px',
-            //       overflowWrap: 'anywhere',
-            //     }}>
-            //     {intl.formatMessage({ id: 'modal.no_register.msg_anonymous' })}
-            //   </Typography.Paragraph>
-            // }
           />
         );
     }
@@ -152,8 +132,7 @@ function ThisRouteCanBeDisplayed({ children }) {
         );
     }
   }
-  // console.log('debu iAmRegisteredInThisEvent ', iAmRegisteredInThisEvent(cEventUser));
-  // console.log('debu recordTypeForThisEvent ', recordTypeForThisEvent(cEvent));
+
   return (
     <>
       {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&

@@ -19,6 +19,7 @@ const Espacios = (props) => {
       title: 'Fecha de creación',
       dataIndex: 'created_at',
       ellipsis: true,
+      width: 110,
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
