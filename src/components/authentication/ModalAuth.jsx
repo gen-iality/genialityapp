@@ -132,11 +132,6 @@ const ModalAuth = (props) => {
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
-    const conectionRef = firestore.collection(`connections`);
-    const docRef = await conectionRef.where('email', '==', values.email).get();
-    if (docRef.docs.length > 0) {
-      await conectionRef.doc(docRef.docs[0].id).delete();
-    }
     loginFirebase(values);
   };
 
@@ -145,8 +140,13 @@ const ModalAuth = (props) => {
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      .then((response) => {
+      .then(async (response) => {
         if (response.user) {
+          const conectionRef = firestore.collection(`connections`);
+          const docRef = await conectionRef.where('email', '==', data.email).get();
+          if (docRef.docs.length > 0) {
+            await conectionRef.doc(docRef.docs[0].id).delete();
+          }
           console.log('response', response);
           setLoading(false);
           HandleControllerLoginVisible({ visible: false });

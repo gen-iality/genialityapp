@@ -63,6 +63,7 @@ const WowzaStreamingPanel = ({
   const { transmition, removeAllRequest } = useContext(AgendaContext);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
   const [streamAlreadyCreated, setStreamAlreadyCreated] = useState(false);
+  const [timerId, setTimerId] = useState(null);
 
   const queryClient = useQueryClient();
   // console.log('innerRender', meeting_id);
@@ -103,11 +104,12 @@ const WowzaStreamingPanel = ({
   useEffect(() => {
     if (meeting_id) {
       initializeStream();
+    } else {
+      clearTimeout(timerId);
     }
     async function initializeStream() {
       try {
         await saveConfig(1);
-        await executer_startStream();
         await executer_startMonitorStatus(meeting_id);
       } catch (e) {
         await executer_startMonitorStatus(meeting_id);
@@ -140,6 +142,7 @@ const WowzaStreamingPanel = ({
       setLivestreamStats(live_stream_stats);
     } catch (e) {}
     const timer_id = setTimeout(executer_startMonitorStatus, 5000);
+    setTimerId(timer_id);
     if (live_stream_status && live_stream_status?.state == 'stopped') {
       clearTimeout(timer_id);
     }
