@@ -59,7 +59,8 @@ export default function ConferenceConfig({
                 value={roomStatus}
                 onChange={(value) => {
                   setRoomStatus(value);
-                }}>
+                }}
+                style={{width: '180px'}}>
                 <Option value=''>Actividad creada</Option>
                 <Option value='closed_meeting_room'>Iniciará pronto</Option>
                 <Option value='open_meeting_room'>En vivo</Option>
