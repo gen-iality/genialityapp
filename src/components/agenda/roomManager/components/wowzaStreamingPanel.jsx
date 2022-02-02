@@ -204,7 +204,7 @@ const WowzaStreamingPanel = ({
             </Button>
             {/* </Spin>
           <Spin tip='Loading...' spinning={executer_createStream.isLoading}> */}
-            <Dropdown.Button
+            <Dropdown
               placement='bottomCenter'
               overlay={
                 <Menu>
@@ -213,8 +213,10 @@ const WowzaStreamingPanel = ({
                   </Menu.Item>
                 </Menu>
               }>
-              Avanzado
-            </Dropdown.Button>
+                <Button>
+                  Avanzado
+                </Button>
+            </Dropdown>
           </Space>
         </Spin>
         <br />
