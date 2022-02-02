@@ -1,4 +1,4 @@
-import { app } from 'helpers/firebase';
+import { app, firestore } from 'helpers/firebase';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import privateInstance from '../helpers/request';
@@ -8,6 +8,7 @@ let initialContextState = { status: 'LOADING', value: undefined };
 
 export function CurrentUserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(initialContextState);
+  const conectionRef = firestore.collection(`connections`);
 
   //seteando con el auth al current user || falta eventUser
   useEffect(() => {
@@ -18,18 +19,32 @@ export function CurrentUserProvider({ children }) {
             user.getIdToken().then(async function(idToken) {
               privateInstance
                 .get(`/auth/currentUser?evius_token=${idToken}`)
-                .then((response) => {
+                .then(async (response) => {
                   if (response.data) {
+                    conectionRef.doc(response?.data?._id).set({
+                      status: true,
+                      id: response?.data?._id,
+                      email: response?.data?.email,
+                      name: response?.data?.names,
+                      date: new Date().getTime(),
+                    });
                     setCurrentUser({ status: 'LOADED', value: response.data });
                   } else {
                     setCurrentUser({ status: 'LOADED', value: null });
                   }
                 })
                 .catch((e) => {
+                  //ESTE CATCH SIRVE PARA CUANDO SE CAMBIA DE STAGIN A PROD//USUARIOS QUE NO SE ENCUENTRAN EN LA OTRA BD
                   app
                     .auth()
                     .signOut()
-                    .then((resp) => {
+                    .then(async (resp) => {
+                      const docRef = await conectionRef.where('email', '==', app.auth().currentUser?.email).get();
+                      if (docRef.docs.length > 0) {
+                        //console.log('DOCUMENT ID==>', docRef.docs[0].id);
+                        await conectionRef.doc(docRef.docs[0].id).delete();
+                      }
+
                       setCurrentUser({ status: 'LOADED', value: null });
                     })
                     .catch(() => setCurrentUser({ status: 'LOADED', value: null }));

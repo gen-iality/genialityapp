@@ -2,7 +2,7 @@ import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOu
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
-import { app } from '../../helpers/firebase';
+import { app, firestore } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
@@ -132,6 +132,11 @@ const ModalAuth = (props) => {
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
+    const conectionRef = firestore.collection(`connections`);
+    const docRef = await conectionRef.where('email', '==', values.email).get();
+    if (docRef.docs.length > 0) {
+      await conectionRef.doc(docRef.docs[0].id).delete();
+    }
     loginFirebase(values);
   };
 

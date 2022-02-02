@@ -39,7 +39,7 @@ const ModalLoginHelpers = (props) => {
       ? intl.formatMessage({ id: 'modal.restore.button', defaultMessage: 'Restablecer contraseña' })
       : intl.formatMessage({ id: 'modal.send.button', defaultMessage: 'Enviar link de acceso al correo' });
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
-  const handleRecoveryPass = async ({ email }) => {    
+  const handleRecoveryPass = async ({ email }) => {
     try {
       let resp;
       resp = await EventsApi.changePasswordUser(email);
@@ -52,7 +52,6 @@ const ModalLoginHelpers = (props) => {
         );
         setresul('OK');
       }
-      
     } catch (error) {
       setSendRecovery(
         `${email} ${intl.formatMessage({
@@ -68,23 +67,23 @@ const ModalLoginHelpers = (props) => {
     setRegisterUser(false);
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
-    console.log("typeModal",typeModal,props.organization)
-    if (typeModal == 'recover') {      
-          handleRecoveryPass(values);        
-      setLoading(false);     
+    console.log('typeModal', typeModal, props.organization);
+    if (typeModal == 'recover') {
+      handleRecoveryPass(values);
+      setLoading(false);
     } else {
       //ENVIAR ACCESO AL CORREO
       try {
         //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
         let resp;
         //SE VALIDA DE ESTA MANERA PARA
-        if (cEvent.value !== null && cEvent.value !== undefined) {          
-          resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);          
-        } else {          
+        if (cEvent.value !== null && cEvent.value !== undefined) {
+          resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);
+        } else {
           resp = await EventsApi.requestLinkEmailUSer(values.email);
         }
 
-        if (resp) {         
+        if (resp) {
           setSendRecovery(
             `${intl.formatMessage({
               id: 'modal.send.alert.success',
