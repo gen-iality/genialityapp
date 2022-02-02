@@ -138,14 +138,14 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
     return eventUser;
   },
 
   getcurrentUserEventUser: async (event_id) => {
     let token = await GetTokenUserFirebase();
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
-    let eventUser = response.data && response.data[0] ? response.data[0] : null;
+    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
     return eventUser;
   },
 
@@ -201,7 +201,8 @@ export const EventsApi = {
     return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id) => {
-    return await Actions.delete('/api/events', id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/events/${id}/?token=${token}`, '', true);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
@@ -262,8 +263,7 @@ export const EventsApi = {
       token = false;
     }
     return await Actions.get(
-      `api/events/${eventId}/eventusers${
-        token ? `/?token=${token}` : '/'
+      `api/events/${eventId}/eventusers${token ? `/?token=${token}` : '/'
       }&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
       true
     );
@@ -288,6 +288,14 @@ export const EventsApi = {
   //ACCEDER POR LINK AL CORREO SIN EVENTO
   requestLinkEmailUSer: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email });
+  },
+  //REFRESH URL LINK DE ACCESSO
+  refreshLinkEmailUser: async (email) => {
+    return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true });
+  },
+  //REFRESH URL LINK DE ACCESSO A EVENTO
+  refreshLinkEmailUserEvent: async (email, eventId) => {
+    return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true, event_id: eventId });
   },
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
@@ -361,17 +369,20 @@ export const UsersApi = {
     );
   },
   deleteOne: async (user, id) => {
-    return await Actions.delete(`/api/user/events/${id}`, user);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/user/events/${id}?token=${token}`, user);
   },
 
   deleteUsers: async (user) => {
-    return await Actions.delete(`/api/users`, user);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/users`, `${user}?token=${token}`);
   },
   createUser: async (user) => {
-    return await Actions.post(`/api/users`, user, true);
+    return await Actions.post(`/api/users`, user);
   },
   editEventUser: async (data, eventId, eventUserId) => {
-    return await Actions.put(`/api/events/${eventId}/eventusers/${eventUserId}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${eventId}/eventusers/${eventUserId}?token=${token}`, data, true);
   },
 };
 
@@ -391,10 +402,12 @@ export const AttendeeApi = {
     return await Actions.post(`/api/events/${eventId}/eventusers/?token=${token}`, data, true);
   },
   update: async (eventId, data, id) => {
-    return await Actions.put(`api/events/${eventId}/eventusers/${id}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/events/${eventId}/eventusers/${id}?token=${token}`, data, true);
   },
   delete: async (eventId, id) => {
-    return await Actions.delete(`api/events/${eventId}/eventusers`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${eventId}/eventusers`, `${id}?token=${token}`);
   },
 };
 
@@ -435,11 +448,12 @@ export const TicketsApi = {
   },
 
   checkInAttendee: async (event_id, eventUser_id) => {
-    //let data = { checkedin_at: new Date().toISOString() };
+    let token = await GetTokenUserFirebase();
     let data = {
+      event: event_id,
       checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
     };
-    return await Actions.put(`/api/events/${event_id}/eventusers/${eventUser_id}`, data);
+    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, data);
   },
 };
 
@@ -499,7 +513,7 @@ export const SurveysApi = {
   },
   deleteOne: async (id, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/events/${event}/surveys/${id}/?token=${token}`, true);
+    return await Actions.delete(`/api/events/${event}/surveys/${id}/?token=${token}`, '', true);
   },
   createQuestion: async (event, id, data) => {
     let token = await GetTokenUserFirebase();
@@ -704,7 +718,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers['content-type'],
+            type: response.headers[ 'content-type' ],
             blob: response.data,
           });
         });
@@ -964,12 +978,13 @@ export const ExternalSurvey = async (meeting_id) => {
 
 export const Activity = {
   Register: async (event, user_id, activity_id) => {
+    let token = await GetTokenUserFirebase();
     var info = {
       event_id: event,
       user_id,
       activity_id,
     };
-    return await Actions.create(`api/events/${event}/activities_attendees`, info);
+    return await Actions.create(`api/events/${event}/activities_attendees/?token=${token}`, info);
   },
   GetUserActivity: async (event, user_id) => {
     return await Actions.get(`api/events/${event}/activities_attendees?user_id=${user_id}`);
@@ -983,27 +998,30 @@ export const Activity = {
   },
 
   checkInAttendeeActivity: async (event_id, activity_id, user_id) => {
+    let token = await GetTokenUserFirebase();
     //let data = { checkedin_at: new Date().toISOString() };
     let data = {
       user_id,
       activity_id,
       checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
     };
-    let result = await Actions.put(`api/events/${event_id}/activities_attendees/checkin`, data);
+    let result = await Actions.put(`api/events/${event_id}/activities_attendees/checkin?token=${token}`, data);
     return result;
   },
 
   DeleteRegister: async (event, id) => {
-    return await Actions.delete(`api/events/${event}/activities_attendees`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${event}/activities_attendees`, `${id}?token=${token}`);
   },
 
   Update: async (event, user_id, data) => {
+    let token = await GetTokenUserFirebase();
     var info = {
       event_id: event,
       user_id,
       // activity_id,
     };
-    return await Actions.put(`api/events/${event}/activities_attendees/${user_id}`, data);
+    return await Actions.put(`api/events/${event}/activities_attendees/${user_id}?token=${token}`, data);
   },
 };
 

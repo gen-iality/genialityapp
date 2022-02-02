@@ -4,7 +4,6 @@ import Moment from 'moment';
 import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
-import { BaseUrl } from '../../helpers/constants';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss';
@@ -34,6 +33,7 @@ import {
   Badge,
   Space,
   Grid,
+  Divider,
 } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
@@ -512,7 +512,7 @@ class General extends Component {
         const result = await Actions.create('/api/events', data);
         this.setState({ loading: false });
         if (result._id) {
-          window.location.replace(`${BaseUrl}/event/${result._id}`);
+          window.location.replace(`${window.location.origin}/event/${result._id}`);
         } else {
           toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
           this.setState({ msg: 'Cant Create', create: false });
@@ -543,6 +543,7 @@ class General extends Component {
   }
   //Delete event
   async deleteEvent() {
+    const self = this;
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -558,13 +559,13 @@ class General extends Component {
       onOk() {
         const onHandlerRemove = async () => {
           try {
-            /* await EventsApi.deleteOne(this.state.event._id); */
+            await EventsApi.deleteOne(self.state.event._id);
             message.destroy(loading.key);
             message.open({
               type: 'success',
               content: <> Se eliminó la información correctamente!</>,
             });
-            window.location.replace(`${BaseUrl}/myprofile`);
+            window.location.replace(`${window.location.origin}/myprofile`);
           } catch (e) {
             message.destroy(loading.key);
             message.open({
@@ -1045,18 +1046,18 @@ class General extends Component {
             <Tabs.TabPane tab='Tipos de acceso' key='2'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
-                  <Form.Item label={'Formas de acceso'}>
+                  <Form.Item label={''}>
                     <Row gutter={[16, 16]} wrap>
                       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                         <Badge
                           count={
                             this.state.typeEvent === 0 ? (
-                              <CheckCircleFilled style={{ fontSize: '20px', color: '#135200' }} />
+                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
                             ) : (
                               ''
                             )
                           }>
-                          <div /* className='cards-type-information'  */
+                          <div
                             onClick={() => this.changetypeEvent(0)}
                             style={{
                               border: '1px solid #D3D3D3',
@@ -1067,29 +1068,13 @@ class General extends Component {
                             }}>
                             <Space direction='vertical'>
                               <Text strong>Evento Público con Registro</Text>
+                              <Divider />
                               <Text type='secondary'>
-                                {/*  Se mostrara el inicio de sesión y registro. Configuración por defecto */}
                                 <ul>
                                   <li>Tiene registro para todos.</li>
                                   <br />
                                   <li>Tiene inicio de sesión para todos.</li>
                                 </ul>
-                                {/* <b>Contiene:</b><br />
-                                <ul>
-                                  <li>Registro al evento</li>
-                                  <li>Inicio de sesión</li>
-                                </ul>
-                                <b>Formas de Registro:</b><br />
-                                <ul>
-                                  <li>Email y Password</li>
-                                  <li>Número de celular</li>
-                                </ul>
-                                <b>Formas de Inicio de sesión:</b><br />
-                                <ul>
-                                  <li>Email y Password</li>
-                                  <li>Solo email</li>
-                                  <li>Número de celular</li>
-                                </ul> */}
                               </Text>
                             </Space>
                           </div>
@@ -1099,7 +1084,7 @@ class General extends Component {
                         <Badge
                           count={
                             this.state.typeEvent === 1 ? (
-                              <CheckCircleFilled style={{ fontSize: '20px', color: '#135200' }} />
+                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
                             ) : (
                               ''
                             )
@@ -1116,6 +1101,7 @@ class General extends Component {
                             }}>
                             <Space direction='vertical'>
                               <Text strong>Evento Público sin Registro</Text>
+                              <Divider />
                               <Text type='secondary'>
                                 {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
                                 <ul>
@@ -1123,18 +1109,6 @@ class General extends Component {
                                   <br />
                                   <li>No tendrá inicio de sesión ni registro.</li>
                                 </ul>
-                                {/* <b>Contiene:</b><br />
-                                <ul>
-                                  <li>Sin modal del login</li>
-                                </ul>
-                                <b>Formas de Registro:</b><br />
-                                <ul>
-                                  <li>Sin Registro</li>
-                                </ul>
-                                <b>Formas de Inicio de sesión:</b><br />
-                                <ul>
-                                  <li>Anónimo</li>
-                                </ul> */}
                               </Text>
                             </Space>
                           </div>
@@ -1144,7 +1118,7 @@ class General extends Component {
                         <Badge
                           count={
                             this.state.typeEvent === 2 ? (
-                              <CheckCircleFilled style={{ fontSize: '20px', color: '#135200' }} />
+                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
                             ) : (
                               ''
                             )
@@ -1161,6 +1135,7 @@ class General extends Component {
                             }}>
                             <Space direction='vertical'>
                               <Text strong>Evento Privado por invitación</Text>
+                              <Divider />
                               <Text type='secondary'>
                                 {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}
                                 <ul>
@@ -1168,20 +1143,6 @@ class General extends Component {
                                   <br />
                                   <li>Sólo se mostrará el inicio de sesión.</li>
                                 </ul>
-                                {/* <b>Contiene:</b><br />
-                                <ul>
-                                  <li>Inicio de sesión</li>
-                                </ul>
-                                <b>Formas de Registro:</b><br />
-                                <ul>
-                                  <li>Por Organización</li>
-                                </ul>
-                                <b>Formas de Inicio de sesión:</b><br />
-                                <ul>
-                                  <li>Email y Password</li>
-                                  <li>Solo email</li>
-                                  <li>Número de celular</li>
-                                </ul> */}
                               </Text>
                             </Space>
                           </div>
@@ -1189,56 +1150,6 @@ class General extends Component {
                       </Col>
                     </Row>
                   </Form.Item>
-                  {/* <Form.Item label={'Habilitar formulario de registro'}>
-                    <Checkbox
-                      defaultChecked={event.allow_register || event.allow_register === 'true'}
-                      onChange={(e) => this.handleChange(e, 'allow_register')}
-                      name={'allow_register'}
-                    />
-                  </Form.Item>
-                  {(event.allow_register || event.allow_register === 'true') && (
-                    <div>
-                      <Card
-                        title={<Title level={4}>{registerForm.name}</Title>}
-                        bordered={true}
-                      >
-
-                        <Form.Item label={'Cambiar nombre de la sección'}>
-                          <Input
-                            defaultValue={registerForm.name}
-                            onChange={(e) => {
-                              this.setState({ registerForm: { ...registerForm, name: e.target.value } });
-                            }}
-                          />
-                        </Form.Item>
-                        
-                        <Form.Item label={'Posición en el menú'}>
-                          <InputNumber
-                            defaultValue={registerForm.position}
-                            value={registerForm.position}
-                            onChange={(e) => {
-                              this.setState({ registerForm: { ...registerForm, position: e.target } });
-                            }}
-                          />
-                        </Form.Item>
-                      </Card>
-                    </div>
-                  )}
-
-                  <Form.Item label={'Mostrar el evento en la página principal de Evius'}>
-                    <Checkbox
-                      defaultChecked={event.visibility === 'PUBLIC'}
-                      onChange={(e) => this.handleChange(e, 'visibility')}
-                      name={'visibility'} />
-                  </Form.Item> */}
-
-                  {/* <Form.Item label={'El evento requiere pago'}>
-                    <Checkbox
-                      defaultChecked={event.has_payment || event.has_payment === 'true'}
-                      onChange={(e) => this.handleChange(e, 'has_payment')}
-                      name={'has_payment'}
-                    />
-                  </Form.Item> */}
                 </Col>
               </Row>
             </Tabs.TabPane>

@@ -76,6 +76,7 @@ function SpeakersList(props) {
 
   //FN para el draggable 1/3
   function onSortEnd({ oldIndex, newIndex }) {
+    const eventId = props.eventID;
     if (oldIndex !== newIndex) {
       let newData = arrayMove([].concat(sortAndIndexSpeakers()), oldIndex, newIndex).filter((el) => !!el);
       if (newData) {
@@ -83,20 +84,22 @@ function SpeakersList(props) {
           return { ...speaker, index: key };
         });
       }
-      updateOrDeleteSpeakers.mutateAsync({ newData, state: 'update' });
+      updateOrDeleteSpeakers.mutateAsync({ newData, state: 'update', eventId });
     }
   }
 
   const updateOrDeleteSpeakers = useMutation(
     'getSpeakersByEvent',
-    (queryData) => {
+    async (queryData) => {
       if (queryData.state === 'update') {
-        queryData.newData.map((speaker, index) => {
-          let speakerChange = { ...speaker, order: index + 1 };
-          SpeakersApi.editOne(speakerChange, speaker._id, props.eventID);
-        });
+        await Promise.all(
+          queryData.newData.map(async (speaker, index) => {
+            let speakerChange = { ...speaker, order: index + 1 };
+            const data = await SpeakersApi.editOne(speakerChange, speaker._id, queryData.eventId);
+          })
+        );
       } else {
-        SpeakersApi.deleteOne(queryData.speakerData._id, queryData.eventId);
+        await SpeakersApi.deleteOne(queryData.speakerData._id, queryData.eventId);
       }
     },
     {
@@ -115,12 +118,12 @@ function SpeakersList(props) {
           queryClient.setQueryData('getSpeakersByEvent', () => previousValue);
           message.open({
             type: 'error',
-            content: <> Hubo un error al guardar la posición del speaker!</>,
+            content: `Hubo un error al guardar la posición de los conferencista, Error tipo: ${err.response.statusText}`,
           });
         } else {
           message.open({
             type: 'error',
-            content: `Hubo un error intentando borrar a ${queryData.speakerData.name}`,
+            content: `Hubo un error intentando borrar el conferencista ${queryData.speakerData.name}, Error tipo: ${err.response.statusText}`,
           });
         }
       },
@@ -130,15 +133,19 @@ function SpeakersList(props) {
           queryClient.setQueryData('getSpeakersByEvent', queryData.newData);
           message.open({
             type: 'success',
-            content: <> Posición del speaker guardada correctamente!</>,
+            content: <>La Posición de los conferencistas ha sido actualizada correctamente!</>,
           });
         } else {
-          queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
-            staleTime: 500,
-          });
+          // queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
+          //   staleTime: 500,
+          // });
+          const updateSpeakersAfterADelete = dataSpeakers.filter(
+            (speakers) => speakers._id !== queryData.speakerData._id
+          );
+          setdataSpeakers(updateSpeakersAfterADelete);
           message.open({
             type: 'success',
-            content: `Se eliminó a ${queryData.speakerData.name}`,
+            content: `El conferencista  ${queryData.speakerData.name} ha sido eliminado satisfactoriamente`,
           });
           sortAndIndexSpeakers();
         }

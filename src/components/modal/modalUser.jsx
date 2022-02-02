@@ -16,6 +16,7 @@ import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
+import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 
 const { confirm } = Modal;
 
@@ -131,8 +132,9 @@ class UserModal extends Component {
         });
         const onHandlerRemove = async () => {
           try {
+            let token = await GetTokenUserFirebase();
             !self.props.byActivity &&
-              (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, user._id));
+              (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, `${user._id}?token=${token}`));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
             toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
@@ -309,10 +311,11 @@ class UserModal extends Component {
     }
 
     if (resp || respActivity) {
-      message.success('Usuario agregado correctamente');
+      message.success(this.props?.edit ? 'Usuario editado correctamente' : 'Usuario agregado correctamente');
       this.props.handleModal();
     } else {
       message.error('error al guardar');
+      console.log(resp)
     }
 
     this.setState({ loadingregister: false });

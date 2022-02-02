@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Alert, Form, Select, Input, Button, Radio, Space, List, Typography, Image } from 'antd';
 import AgendaContext from 'Context/AgendaContext';
 import WowzaStreamingPanel from './components/wowzaStreamingPanel';
+import VimeoStreamingPanel from './components/vimeoStreamingPanel';
 
 import ConferenceConfig from './components/conferenceConfig';
 import PlatformZoomCreate from './components/platformZoomCreate';
@@ -60,6 +61,16 @@ export default function RoomConfig(props) {
         />
         {
           {
+            vimeo: (
+              <VimeoStreamingPanel
+                meeting_id={meeting_id}
+                activityDispatch={activityDispatch}
+                activityEdit={activityEdit}
+                activity_name={props.activity_name}
+                setMeetingId={setMeetingId}
+                saveConfig={saveConfig}
+              />
+            ),
             wowza: (
               <WowzaStreamingPanel
                 meeting_id={meeting_id}
@@ -99,7 +110,7 @@ export default function RoomConfig(props) {
                     Evius streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
                   </Option>
                   <Option value='vimeo'>Vimeo</Option>
-                  <Option value='youtube'>Youtube</Option>
+                  {/* <Option value='youtube'>Youtube</Option> */}
                   {/* <Option value='zoom'>Zoom</Option>
                       <Option value='zoomExterno'>ZoomExterno</Option> */}
 
@@ -180,7 +191,18 @@ export default function RoomConfig(props) {
                       ) : (
                         <>
                           {
+                            (console.log('debug ', platform),
                             {
+                              vimeo: (
+                                <VimeoStreamingPanel
+                                  meeting_id={meeting_id}
+                                  activityDispatch={activityDispatch}
+                                  activityEdit={activityEdit}
+                                  activity_name={props.activity_name}
+                                  setMeetingId={setMeetingId}
+                                  saveConfig={saveConfig}
+                                />
+                              ),
                               wowza: (
                                 <WowzaStreamingPanel
                                   meeting_id={meeting_id}
@@ -219,7 +241,7 @@ export default function RoomConfig(props) {
                                   }}
                                 />
                               ),
-                            }[platform]
+                            }[platform])
                           }
                         </>
                       )}

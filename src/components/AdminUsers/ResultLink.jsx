@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Spin, Result, Button, Typography, Grid } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import logo from '../../logo.svg';
+import { firestore } from 'helpers/firebase';
 
 const { useBreakpoint } = Grid;
 
-const ResultLink = ({ status, data, event }) => {
+const ResultLink = ({ status, data, event, verifyLink }) => {
   const screens = useBreakpoint();
+  const [loading, setLoading] = useState(false);
   // statust -> loading || error
   status = status ? status : 'loading';
   return (
@@ -49,8 +51,12 @@ const ResultLink = ({ status, data, event }) => {
           icon={status === 'loading' && <LoadingOutlined />}
           status={status === 'loading' ? null : 'error'}
           title={
-            <Typography.Title level={1}>
-              {status === 'loading' ? 'Iniciando la sesión...' : 'Acceso denegado'}
+            <Typography.Title level={screens.xs ? 2 : 1}>
+              {status === 'loading' && verifyLink
+                ? 'Iniciando la sesión...'
+                : status === 'loading' && !verifyLink
+                ? 'Verificando link'
+                : 'Ya has iniciado la sesión en otro dispositivo'}
             </Typography.Title>
           }
           subTitle={
@@ -59,10 +65,11 @@ const ResultLink = ({ status, data, event }) => {
                 type='secondary'
                 style={{
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
-                  maxWidth: '550px',
                   overflowWrap: 'anywhere',
                 }}>
-                El enlace enviado a {data} ya fue usado, ingrese al evento para solicitar uno nuevo.
+                Necesitamos cerrar tu sesión para que puedas seguir utilizando la aplicación. Si no quiere que se cierre
+                la sesión automáticamente en su otro dispositivo, haga clic en cancelar, de lo contrario, haga clic en
+                continuar.
               </Typography.Paragraph>
             )
           }
@@ -70,25 +77,34 @@ const ResultLink = ({ status, data, event }) => {
             status === 'loading'
               ? null
               : [
-                  event && (
-                    <Button
-                      onClick={() => {
-                        window.location.href = `${window.location.origin}/landing/${event}`;
-                      }}
-                      size='large'
-                      type='primary'
-                      key='goToEvent'>
-                      Ir al evento
-                    </Button>
-                  ),
                   <Button
                     onClick={() => {
                       window.location.href = `${window.location.origin}`;
                     }}
                     size='large'
                     type='text'
+                    disabled={loading}
                     key='goToEvius'>
-                    Ir a Evius
+                    Cancelar
+                  </Button>,
+                  <Button
+                    onClick={async () => {
+                      setLoading(true);
+                      const conectionRef = firestore.collection(`connections`);
+                      const docRef = await conectionRef.where('email', '==', data).get();
+                      if (docRef.docs.length > 0) {
+                        //console.log('DOCUMENT ID==>', docRef.docs[0].id);
+                        await conectionRef.doc(docRef.docs[0].id).delete();
+                        setLoading(false);
+                        window.location.href = window.location.href;
+                      }
+                      setLoading(false);
+                    }}
+                    size='large'
+                    loading={loading}
+                    type='primary'
+                    key='goToEvius'>
+                    Continuar
                   </Button>,
                 ]
           }

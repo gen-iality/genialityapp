@@ -403,6 +403,7 @@ class RoomManager extends Component {
                 await stopLiveStream(streamingMeetingId);
               }
               await deleteLiveStream(streamingMeetingId);
+              self.context.setMeetingId(null);
               await self.context.removeAllRequest(refActivity);
             }
             message.destroy(loading.key);

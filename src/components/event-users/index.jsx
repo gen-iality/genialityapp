@@ -42,6 +42,8 @@ import {
   UploadOutlined,
   DownloadOutlined,
   SearchOutlined,
+  UsergroupAddOutlined,
+  StarOutlined,
 } from '@ant-design/icons';
 
 import Header from '../../antdComponents/Header';
@@ -53,25 +55,6 @@ const { Option } = Select;
 const imgNotFound =
   'https://www.latercera.com/resizer/m0bOOb9drSJfRI-C8RtRL_B4EGE=/375x250/smart/arc-anglerfish-arc2-prod-copesa.s3.amazonaws.com/public/Z2NK6DYAPBHO3BVPUE25LQ22ZA.jpg';
 const { Title } = Typography;
-
-/*            switch (field.type) {
-              case "boolean":
-                value = item.properties[field.name] ? "SI" : "NO";
-                break;
-              case "complex":
-                value = (
-                  <span
-                    className="icon has-text-grey action_pointer"
-                    data-tooltip={"Detalle"}
-                    onClick={() => this.showMetaData(item.properties[field.name])}>
-                    <i className="fas fa-eye" />
-                  </span>
-                );
-                break;
-              default:
-                value = item.properties[field.name];
-            }
-*/
 
 const html = document.querySelector('html');
 class ListEventUser extends Component {
@@ -132,15 +115,6 @@ class ListEventUser extends Component {
       <Tooltip placement='topLeft' title='Editar'>
         <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
       </Tooltip>
-      /* <span
-        className='icon has-text-grey action_pointer'
-        data-tooltip={'Editar'}
-        // eslint-disable-next-line no-unused-vars
-        onClick={(e) => {
-          this.openEditModalUser(item);
-        }}>
-        <EditOutlined />
-      </span> */
     );
   };
 
@@ -188,19 +162,6 @@ class ListEventUser extends Component {
             self.checkIn(item._id, item);
           }}
         />
-        {/* <Checkbox
-          className='is-checkradio is-primary is-small'
-          id={'checkinUser' + item._id}
-          disabled={item.checkedin_at}
-          type='checkbox'
-          name={'checkinUser' + item._id}
-          checked={item.checkedin_at || item.properties?.checkedin_at}
-          // eslint-disable-next-line no-unused-vars
-          onChange={(e) => {
-            self.checkIn(item._id, item);
-          }}
-        />
-        <label htmlFor={'checkinUser' + item._id} /> */}
       </div>
     );
   };
@@ -534,13 +495,12 @@ class ListEventUser extends Component {
     const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;
-    try {
+    /*  try {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
-
       //toast.success('Usuario Chequeado');
     } catch (e) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-    }
+    } */
     //return;
     const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
 
@@ -773,27 +733,6 @@ class ListEventUser extends Component {
     const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
-    // function nameHere(str) {
-    //   return str.match(/[A-Z]/);
-    // }
-
-    // function isUpperCase(str) {
-    //   return str === str.toUpperCase();
-    // }
-
-    // let sonono = [];
-
-    // usersReq.map((item) => {
-    //   let es = nameHere(item.email);
-    //   console.log("es",es, item.properties["email"])
-    //   // if (es) {
-    //   //   if (isUpperCase(es[0])) {
-    //   //     sonono.push(item.name);
-    //   //   }
-    //   // }
-    // });
-    // console.log('AJA', sonono);
-
     return (
       <React.Fragment>
         <Header
@@ -825,28 +764,31 @@ class ListEventUser extends Component {
         <Row gutter={8}>
           <Col>
             <p>
-              <small>
-                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
-              </small>
+              <strong> Última Sincronización </strong>: <FormattedDate value={lastUpdate} />{' '}
+              <FormattedTime value={lastUpdate} />
             </p>
           </Col>
         </Row>
 
         <Row wrap gutter={[8, 8]}>
           <Col>
-            <Tag>
-              <small>
-                Inscritos:
-                {inscritos || 0}
-              </small>
+            <Tag
+              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
+              color='lightgrey'
+              icon={<UsergroupAddOutlined />}>
+              Inscritos: <span style={{ fontSize: '13px' }}>{inscritos}</span>
             </Tag>
           </Col>
           <Col>
-            <Tag>
-              <small>
-                Participantes:
+            <Tag
+              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
+              color='lightgrey'
+              icon={<StarOutlined />}>
+              Participantes:{' '}
+              <span style={{ fontSize: '13px' }}>
+                {' '}
                 {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-              </small>
+              </span>
             </Tag>
           </Col>
           <Col>
@@ -862,60 +804,6 @@ class ListEventUser extends Component {
             )}
           </Col>
         </Row>
-
-        {/* {event_stages && event_stages.length > 0 && (
-          <div className='filter'>
-            <button className='button icon-filter'>
-              <span className='icon'>
-                <i className='fas fa-filter'></i>
-              </span>
-              <span className='text-button'>Filtrar</span>
-            </button>
-            <div className='filter-menu'>
-              <p className='filter-help'>Filtra Usuarios por Tiquete</p>
-              <div className='columns'>
-                <div className='column field'>
-                  <div className='control'>
-                    <label className='label'>Etapa</label>
-                    <div className='control'>
-                      <div className='select'>
-                        <select value={stage} onChange={this.changeStage} name={'stage'}>
-                          <option value={''}>Escoge la etapa...</option>
-                          {event_stages.map((item, key) => {
-                            return (
-                              <option key={key} value={item.stage_id}>
-                                {item.title}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='column field'>
-                  <div className='control'>
-                    <label className='label'>Tiquete</label>
-                    <div className='control'>
-                      <div className='select'>
-                        <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                          <option value={''}>Escoge el tiquete...</option>
-                          {ticketsOptions.map((item, key) => {
-                            return (
-                              <option key={key} value={item._id}>
-                                {item.title}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )} */}
 
         <TableA
           list={users}

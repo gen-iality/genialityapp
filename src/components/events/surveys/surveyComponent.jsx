@@ -105,8 +105,13 @@ function SurveyComponent(props) {
     if (status === 'completed') {
       props.setShowSurveyTemporarily(true);
     }
-    const question = surveyModel.currentPage.questions[0];
-
+    let question;
+    let surveyQuestions = surveyModel.currentPage.questions;
+    if (surveyQuestions.length === 1) {
+      question = surveyModel.currentPage.questions[0];
+    } else {
+      question = surveyModel.currentPage.questions[1];
+    }
     const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
 
     setRankingPoints(pointsForCorrectAnswer);

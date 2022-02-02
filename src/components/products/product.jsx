@@ -105,18 +105,29 @@ class Product extends Component {
   };
 
   removeProduct = (data) => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se borra la configuración..</>,
+    });
     let self = this;
     confirm({
+      title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
       content: 'Está seguro de borrar este producto?',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
       onOk() {
         return new Promise((resolve, reject) => {
           EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
             self.fetchItem();
             if (res === 1) {
+              message.destroy(loading.key);
               message.success('Producto eliminado correctamente');
               resolve(true);
             } else {
+              message.destroy(loading.key);
               message.error('Lo sentimos el producto no pudo ser eliminado intente nuevamente');
               reject(false);
             }
@@ -168,7 +179,7 @@ class Product extends Component {
             rowKey='index'
             dataSource={this.state.list}
             pagination={false} //pageSize: 6, position: ['bottomCenter'] }}
-            scroll={{ x: 1300 }}
+            /* scroll={{ x: 1300 }} */
             components={{
               body: {
                 wrapper: this.DraggableContainer,
@@ -179,6 +190,7 @@ class Product extends Component {
               title=''
               dataIndex='move'
               width='50px'
+              align='center'
               render={(data, index) => {
                 const DragHandle = sortableHandle(() => (
                   <DragOutlined
@@ -189,7 +201,22 @@ class Product extends Component {
                 return <DragHandle />;
               }}
             />
-            <Column title='Posición' dataIndex='index' width='100px' render={(data, index) => <div>{data + 1}</div>} />
+            <Column title='Posición' align='center' dataIndex='index' width='80px' render={(data, index) => <div>{data + 1}</div>} />
+            <Column
+              key='_id'
+              title='Imagen'
+              align='center'
+              width='90px'
+              render={(data, index) => (
+                <Space key={index} size='small'>
+                  {data.image &&
+                    Array.isArray(data.image) &&
+                    data.image.map((images, index) => {
+                      return <Image key={index} width={70} src={images} />;
+                    })}
+                </Space>
+              )}
+            />
             <Column
               key='_id'
               title='Nombre'
@@ -209,7 +236,8 @@ class Product extends Component {
             <Column
               key='_id'
               title='Por'
-              align='center'
+              /* align='center' */
+              width='120px'
               dataIndex='by'
               ellipsis={true}
               sorter={(a, b) => a.by?.localeCompare(b.by)}
@@ -217,26 +245,13 @@ class Product extends Component {
             <Column
               key='_id'
               title='Valor'
-              align='center'
+              /* align='center' */
+              width='120px'
               dataIndex='price'
               render={(data, prod) => <div>$ {prod.price}</div>}
               ellipsis={true}
             />
             {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
-            <Column
-              key='_id'
-              title='Imagenes del producto'
-              align='center'
-              render={(data, index) => (
-                <Space key={index} size='small'>
-                  {data.image &&
-                    Array.isArray(data.image) &&
-                    data.image.map((images, index) => {
-                      return <Image key={index} width={70} src={images} />;
-                    })}
-                </Space>
-              )}
-            />
             <Column
               title='Opciones'
               key='_id'

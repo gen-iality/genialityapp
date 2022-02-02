@@ -90,7 +90,7 @@ const ChatList = (props) => {
         </TabPane>
       )}
 
-      {props.generalTabs.privateChat && (
+      {props.generalTabs.privateChat && recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT' && (
         <TabPane
           tab={
             <>

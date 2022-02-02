@@ -51,7 +51,19 @@ function UsersCard(props) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
-  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time, picture } = props.item;
+  const {
+    names,
+    name,
+    imageProfile,
+    status,
+    uid,
+    participants,
+    ultimo_mensaje,
+    score,
+    time,
+    picture,
+    index,
+  } = props.item;
 
   const isAnImage = ultimo_mensaje ? ultimo_mensaje.includes('https://firebasestorage.googleapis.com') : false;
 
@@ -73,7 +85,7 @@ function UsersCard(props) {
   }
 
   function podiumValidate() {
-    switch (props.position + 1) {
+    switch (index) {
       case 1:
         return <CrownFilled style={{ fontSize: '30px', color: '#FFD800' }} rotate={-45} />;
       case 2:
@@ -225,18 +237,10 @@ function UsersCard(props) {
       <Text
         style={{
           fontSize: '24px',
-          color: `${
-            props.position + 1 === 1
-              ? '#FFD800'
-              : props.position + 1 === 2
-              ? '#DADDE9'
-              : props.position + 1 === 3
-              ? '#D36A62'
-              : '#DDDDDD'
-          }`,
+          color: `${index === 1 ? '#FFD800' : index === 2 ? '#DADDE9' : index === 3 ? '#D36A62' : '#DDDDDD'}`,
           fontWeight: '600',
         }}>
-        {props.position + 1}
+        {index}
       </Text>
     );
     setTitle(() => {
@@ -267,9 +271,10 @@ function UsersCard(props) {
           <Avatar
             src={imageProfile ? imageProfile : imageforDefaultProfile}
             style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }}
-            size={45}>
-            {!imageProfile && name && name.charAt(0).toUpperCase()}
-          </Avatar>
+            size={45}
+          />
+          {/* {!imageProfile && name && name.charAt(0).toUpperCase()} */}
+          {/* </Avatar> */}
         </Badge>
       );
     });

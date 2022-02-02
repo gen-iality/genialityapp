@@ -2,7 +2,7 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message } from 'antd';
+import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message, Alert } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Actions } from '../../helpers/request';
 
@@ -69,11 +69,13 @@ const FormEdit = (
     setDefaultImgValue([
       {
         uid: 'img-' + questionId,
-        //name: 'xxx',
+        name: 'banner',
         status: 'done',
-        //type: 'image/png',
+        type: 'image',
         thumbUrl: response,
-        url: response,
+        imageLink: response,
+        imageWidth: '500px',
+        imageHeight: '300px',
       },
     ]);
   }
@@ -152,8 +154,8 @@ const FormEdit = (
       });
     }
     // eslint-disable-next-line no-unused-vars
-    const pointsValue = values.points ? values.points :'1'
-    const dataValues = {...values, points: pointsValue}
+    const pointsValue = values.points ? values.points : '1';
+    const dataValues = { ...values, points: pointsValue };
     const exclude = ({ questionOptions, ...rest }) => rest;
     if (questionIndex === undefined) {
       return SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
@@ -283,7 +285,7 @@ const FormEdit = (
                 )}
               </div>
             )}
-            {/* <div>
+            <div>
               <Form.Item key={`img`} name={'image'} label={'Imagen'}>
                 <Upload
                   multiple={false}
@@ -296,8 +298,9 @@ const FormEdit = (
                   onRemove={handleRemoveImg}>
                   <Button icon={<UploadOutlined />}>Cargar imagen</Button>
                 </Upload>
+                <p><small>Tenga en cuenta que la dimensión de la imagen debe ser 500px*300px ó 600px*300px</small></p>
               </Form.Item>
-            </div> */}
+            </div>
 
             <Form.List name={`choices`}>
               {(fields, { add, remove }) => {

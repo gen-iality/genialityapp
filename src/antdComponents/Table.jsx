@@ -64,8 +64,8 @@ const Table = (props) => {
     render(val, item) {
       return (
         <Row wrap gutter={[8, 8]}>
-          <Col>
-            {extraFn && (
+          {extraFn && (
+            <Col>
               <Tooltip placement='topLeft' title={extraFnTitle}>
                 <Button
                   key={`extraAction${item.index}`}
@@ -76,10 +76,10 @@ const Table = (props) => {
                   size='small'
                 />
               </Tooltip>
-            )}
-          </Col>
-          <Col>
-            {extraPath && (
+            </Col>
+          )}
+          {extraPath && (
+            <Col>
               <Tooltip placement='topLeft' title={extraPathTitle}>
                 <Link
                   key={`extraPathAction${item.index}`}
@@ -96,11 +96,11 @@ const Table = (props) => {
                   />
                 </Link>
               </Tooltip>
-            )}
-          </Col>
+            </Col>
+          )}
           {/*Esto de momento es por la encuesta el ranking, esto queda pendiente para modificar*/}
-          <Col>
-            {extraPathStateName && (
+          {extraPathStateName && (
+            <Col>
               <Tooltip placement='topLeft' title={extraPathTitle ? 'Ranking' : ''}>
                 <Link
                   key={`extraPathAction${item.index}`}
@@ -109,10 +109,10 @@ const Table = (props) => {
                   <Button icon={<CrownOutlined />} type={extraPathType ? extraPathType : 'primary'} size='small' />
                 </Link>
               </Tooltip>
-            )}
-          </Col>
-          <Col>
-            {downloadFile && item.type !== 'folder' && (
+            </Col>
+          )}
+          {downloadFile && item.type !== 'folder' && (
+            <Col>
               <Tooltip placement='topLeft' title='Descargar'>
                 <a href={item.file} target='_blank'>
                   <Button
@@ -124,10 +124,10 @@ const Table = (props) => {
                   />
                 </a>
               </Tooltip>
-            )}
-          </Col>
-          <Col>
-            {editPath && (
+            </Col>
+          )}
+          {editPath && (
+            <Col>
               <Tooltip placement='topLeft' title='Editar'>
                 <Link
                   key={`editAction${item.index}`}
@@ -136,36 +136,36 @@ const Table = (props) => {
                   <Button icon={<EditOutlined />} type='primary' size='small' />
                 </Link>
               </Tooltip>
-            )}
-            {editFn && (
-              <>
-                <Tooltip placement='topLeft' title='Editar'>
-                  <Button
-                    key={`editAction${item.index}`}
-                    id={`editAction${item.index}`}
-                    onClick={() => editFn(item)}
-                    icon={<EditOutlined />}
-                    type='primary'
-                    size='small'
-                  />
-                </Tooltip>
-              </>
-            )}
-          </Col>
-          <Col>
-            {remove && !noRemove && (
+            </Col>
+          )}
+          {editFn && (
+            <Col>
+              <Tooltip placement='topLeft' title='Editar'>
+                <Button
+                  key={`editAction${item.index}`}
+                  id={`editAction${item.index}`}
+                  onClick={() => editFn(item)}
+                  icon={<EditOutlined />}
+                  type='primary'
+                  size='small'
+                />
+              </Tooltip>
+            </Col>
+          )}
+          {remove && !noRemove && (
+            <Col>
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button
                   key={`removeAction${item.index}`}
                   id={`removeAction${item.index}`}
-                  onClick={() => remove(item._id)}
+                  onClick={() => remove(item.chatId ? item.chatId : item._id)}
                   icon={<DeleteOutlined />}
                   type='danger'
                   size='small'
                 />
               </Tooltip>
-            )}
-          </Col>
+            </Col>
+          )}
         </Row>
       );
     },

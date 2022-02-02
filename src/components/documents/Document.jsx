@@ -267,7 +267,10 @@ const Document = ( props ) => {
                   name={'file'}
                   type='file'
                   defaultFileList={documentList}
-                  onChange={(e) => onHandlerFile(e)}
+                  onChange={(e) => {
+                    onHandlerFile(e);
+                    e.file.status = 'success'
+                  }}
                 >
                   <Button icon={<UploadOutlined />}>Toca para subir archivo</Button>
                 </Upload>

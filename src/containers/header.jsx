@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, withRouter, useHistory } from 'react-router-dom';
-import { app } from '../helpers/firebase';
+import { app, firestore } from '../helpers/firebase';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -58,12 +58,14 @@ const Headers = (props) => {
   const screens = useBreakpoint();
   let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
   let history = useHistory();
+  const conectionRef = firestore.collection(`connections`);
 
   const logout = () => {
     app
       .auth()
       .signOut()
-      .then(() => {
+      .then(async () => {
+        await conectionRef.doc(cUser.value?._id).delete();
         const routeUrl = props.match?.url;
         const weAreOnTheLanding = routeUrl.includes('landing');
         if (weAreOnTheLanding) {
@@ -76,6 +78,23 @@ const Headers = (props) => {
         console.log('error', error);
       });
   };
+
+  useEffect(() => {
+    if (!cUser.value) return;
+    //console.log('EJECUTADO EL SNAPSHOT ACAAA', cUser.value.email);
+    conectionRef.onSnapshot((snapshot) => {
+      const changes = snapshot.docChanges();
+      //console.log('CHANGES ACA==>', changes);
+      if (changes) {
+        changes.forEach((change) => {
+          if (change.type === 'removed' && change?.doc?.data()?.email == cUser.value?.email) {
+            // console.log('ACÁ DEBO CERRAR LA SESIÓN', change.doc.data());
+            logout();
+          }
+        });
+      }
+    });
+  }, [cUser.value]);
 
   const openMenu = () => {
     setdataGeneral({ ...dataGeneral, menuOpen: !dataGeneral.menuOpen, filterOpen: false });

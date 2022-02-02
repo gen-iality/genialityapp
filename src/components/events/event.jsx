@@ -194,7 +194,7 @@ class Event extends Component {
               <Route
                 exact
                 path={`${match.url}/`}
-                render={() => <Redirect to={`${match.url}${match.url.substr(-1) === '/' ? 'agenda' : '/agenda'}`} />}
+                render={() => <Redirect to={`${match.url}${match.url.substr(-1) === '/' ? 'main' : '/main'}`} />}
               />
               {/* <Protected exact path={`${match.url}/`} component={Redirect} componentKey='/' /> */}
               <Protected
