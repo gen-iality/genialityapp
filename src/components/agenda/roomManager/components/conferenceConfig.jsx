@@ -1,7 +1,7 @@
+import { getLiveStream, getLiveStreamStatus } from 'adaptors/wowzaStreamingAPI';
 import { Form, Select, Button, Space, Typography, Row, Col, Card, Badge } from 'antd';
 import AgendaContext from 'Context/AgendaContext';
 import { CurrentEventContext } from 'Context/eventContext';
-import { fireRealtime } from 'helpers/firebase';
 import React, { useState, useContext } from 'react';
 import { useEffect } from 'react';
 import ModalListRequestsParticipate from './ModalListRequestsParticipate';
@@ -21,11 +21,29 @@ export default function ConferenceConfig({
   const { activityEdit, getRequestByActivity, request, transmition } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+  const [status, setStatus] = useState();
+
   useEffect(() => {
     if (!eventContext.value || !activityEdit) return;
     getRequestByActivity(refActivity);
   }, [eventContext.value, activityEdit]);
 
+  useEffect(() => {
+    let timerID = null;
+    if (meeting_id) {
+      obtenerStatusTransmision();
+      async function obtenerStatusTransmision() {
+        const live_stream_status = await getLiveStreamStatus(meeting_id);
+        live_stream_status.state && setStatus(live_stream_status.state);
+        timerID = setTimeout(obtenerStatusTransmision, 5000);
+        /*if (live_stream_status && live_stream_status?.state == 'stopped') {
+        clearTimeout(timerID);
+      }*/
+      }
+    } else {
+      timerID && clearTimeout(timerID);
+    }
+  }, [meeting_id]);
   return (
     <>
       <Card bordered style={{ borderRadius: '10px' }}>
@@ -60,8 +78,7 @@ export default function ConferenceConfig({
                 onChange={(value) => {
                   setRoomStatus(value);
                 }}
-                style={{width: '180px'}}
-              >
+                style={{ width: '180px' }}>
                 <Option value=''>Actividad creada</Option>
                 <Option value='closed_meeting_room'>Iniciará pronto</Option>
                 <Option value='open_meeting_room'>En vivo</Option>
@@ -92,9 +109,12 @@ export default function ConferenceConfig({
             </Col>
           )}
           <Col>
-            <Button onClick={deleteRoom} danger>
-              Eliminar transmisión
-            </Button>
+            {console.log('status==>', status)}
+            {status == 'started' && (
+              <Button onClick={deleteRoom} danger>
+                Eliminar transmisión
+              </Button>
+            )}
           </Col>
         </Row>
       </Card>
