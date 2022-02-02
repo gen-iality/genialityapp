@@ -138,7 +138,6 @@ class SendRsvp extends Component {
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
     let users = [];
-    console.log(selection)
     if (selection === "Todos"){
       users = "all";
     }else {
@@ -174,22 +173,19 @@ class SendRsvp extends Component {
       }
       /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
-      
-      toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />);
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
       message.destroy(loading.key);
-      /* message.open({
+       message.open({
         type: 'success',
-        content: <FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />,
-      }); */
+        content: 'Las notificaciones se mandaron de manera satisfactoria',
+      });
     } catch (e) {
       message.destroy(loading.key);
-      /* message.open({
+      message.open({
         type: 'error',
-        content: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
-      }); */
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-      this.setState({ disabled: false, timeout: true, loader: false });
+        content: `Lo sentimos las notificaciones no pudieron ser enviadas, código de error ${e.response.status}`,
+      });
+      this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
     }
   }
 
@@ -492,11 +488,10 @@ class SendRsvp extends Component {
             cancelText={'Cancelar'}
             okText={'Envíar'}>
             <p>
-              Se van a enviar {this.state.selection?.length}{' '}
+              Se van a enviar {this.state.selection === "Todos" ? "a todos las" : this.state.selection.length}{' '}
               {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}
             </p>
           </Modal>
-          {timeout && <LogOut />}
           <BackTop />
         </Form>
       </>

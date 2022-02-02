@@ -299,7 +299,7 @@ class eventUsersList extends Component {
         <Header title={'Enviar información o correo a asistentes'} />
         <div>
           <small>
-            <Tag>Seleccionados: {selectedRowKeys.length}</Tag>
+            <Tag>Seleccionados: {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}</Tag>
           </small>
         </div>
 
