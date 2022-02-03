@@ -169,7 +169,7 @@ class Datos extends Component {
     const organizationId = this?.organization?._id;
     if (organizationId && !this.eventId) {
       await this.props.orderFields(this.state.properties);
-    } else if (this.eventId && !organizationId && this.props.byEvent) {
+    } else if (this.eventId && !organizationId) {
       let token = await GetTokenUserFirebase();
       await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
     } else {
