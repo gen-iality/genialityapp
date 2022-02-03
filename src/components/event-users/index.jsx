@@ -9,7 +9,7 @@ import ErrorServe from '../modal/serverError';
 import SearchComponent from '../shared/searchTable';
 import Loading from '../loaders/loading';
 import 'react-toastify/dist/ReactToastify.css';
-import QrModal from './qrModal';
+/* import QrModal from './qrModal_old(nuevo)'; */
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import EventContent from '../events/shared/content';
 import Moment from 'moment';
@@ -618,11 +618,12 @@ class ListEventUser extends Component {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
 
-  handleChange = (e) => {
-    /* console.log(e); */
+  /* handleChange = (e) => {
+    Pendiente actualizar QR
+    console.log(e);
     this.setState({ typeScanner: e });
     this.checkModal();
-  };
+  }; */
 
   // Set options in dropdown list
   clearOption = () => {
@@ -817,19 +818,20 @@ class ListEventUser extends Component {
                   Expandir
                 </Button>
               </Col>
-              <Col>
+              {/* <Col>
+                Pendiente por actualizar QR
                 <Select
                   name={'type-scanner'}
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
-                  /* style={{ width: 220 }} */
+                  style={{ width: 220 }}
                 >
                   <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
                   <Option value='scanner-document'>Escanear Documento</Option>
                 </Select>
-              </Col>
+              </Col> */}
               <Col>
                 {usersReq.length > 0 && (
                   <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
@@ -869,7 +871,7 @@ class ListEventUser extends Component {
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
-        {this.state.qrModal && (
+        {/* {this.state.qrModal && (
           <QrModal
             fields={extraFields}
             usersReq={usersReq}
@@ -880,7 +882,7 @@ class ListEventUser extends Component {
             closeModal={this.closeQRModal}
             openEditModalUser={this.openEditModalUser}
           />
-        )}
+        )} */}
         {timeout && <ErrorServe errorData={this.state.errorData} />}
 
         <Drawer

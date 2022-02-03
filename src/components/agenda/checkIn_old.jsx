@@ -5,7 +5,7 @@ import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '../../
 import { firestore } from '../../helpers/firebase';
 import Loading from '../loaders/loading';
 import { FormattedMessage } from 'react-intl';
-import CheckSpace from '../event-users/checkSpace';
+import CheckSpace from '../event-users/checkSpace_old';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '../../helpers/utils';
 import { firestore } from '../../helpers/firebase';
 import { FormattedMessage } from 'react-intl';
-import CheckSpace from '../event-users/checkSpace';
+/* import CheckSpace from '../event-users/checkSpace_old'; */
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';
@@ -303,11 +303,12 @@ class CheckAgenda extends Component {
   };
 
   //FN Modal, abre y cierra
-  checkModal = () => {
+  //Falta actualizar este modulo
+  /* checkModal = () => {
     this.setState((prevState) => {
       return { qrModal: !prevState.qrModal };
     });
-  };
+  }; */
   addUser = () => {
     this.setState((prevState) => {
       return { editUser: !prevState.editUser, edit: false };
@@ -559,11 +560,12 @@ class CheckAgenda extends Component {
           scroll={{ x: 3200 }}
           titleTable={
             <Row gutter={[8, 8]} wrap justify='end'>
-              <Col>
+              {/* <Col>
+                Queda pendiente por actualizar
                 <Button onClick={this.checkModal} type='primary' icon={<QrcodeOutlined />}>
                   {'Leer Código QR'}
                 </Button>
-              </Col>
+              </Col> */}
               <Col>
                 <Button onClick={this.goToSendMessage} type='primary' icon={<SendOutlined />}>
                   {'Enviar Comunicación/Correo'}
@@ -592,7 +594,7 @@ class CheckAgenda extends Component {
             </Row>
           }
         />
-        {qrModal && (
+        {/* {qrModal && (
           <CheckSpace
             list={attendees}
             closeModal={this.closeQRModal}
@@ -600,7 +602,7 @@ class CheckAgenda extends Component {
             agendaID={agendaID}
             checkIn={this.checkIn}
           />
-        )}
+        )} */}
       </Fragment>
     );
   }
