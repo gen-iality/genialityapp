@@ -30,7 +30,7 @@ const AditionalInformation = (props) => {
   }
 
   return (
-    <div className='card-content has-text-left container_calendar-description'>
+    <Card bordered={false} bodyStyle={{margin: '20px'}}>
       <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
         {
           <TabPane
@@ -51,10 +51,10 @@ const AditionalInformation = (props) => {
             ) : (
               <div className='List-conferencistas'>
                 <Title level={5}>{intl.formatMessage({ id: 'title.panelists' })} </Title>
-                <p style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                <p style={{ marginTop: '5%', marginBottom: '5%' }}>
                   {props.orderedHost.length > 0 ? (
-                    <>
-                      <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: '0 auto' }}>
+                    <Row>
+                      <Col span={24}>
                         <Card style={{ textAlign: 'left' }}>
                           <List
                             itemLayout='horizontal'
@@ -98,7 +98,7 @@ const AditionalInformation = (props) => {
                           )}
                         </Card>
                       </Col>
-                    </>
+                    </Row>
                   ) : (
                     <></>
                   )}
@@ -117,7 +117,7 @@ const AditionalInformation = (props) => {
             }
             key='docs'>
             <div>
-              <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+              <div style={{ marginTop: '5%', marginBottom: '5%' }} >
                 <b>Documentos:</b> &nbsp;
                 <div>
                   <DocumentsList data={currentActivity !== null && currentActivity.selected_document} />
@@ -167,15 +167,7 @@ const AditionalInformation = (props) => {
             key='games'></TabPane>
         )}
       </Tabs>
-
-      <div
-        className='card-footer is-12 is-flex'
-        style={{
-          borderTop: 'none',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-        }}></div>
-    </div>
+    </Card>
   );
 };
 
