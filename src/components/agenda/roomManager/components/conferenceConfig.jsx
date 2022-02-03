@@ -63,7 +63,7 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
           )}
           <Col>
             {console.log('status==>', status)}
-            {status == 'started' && (
+            {status !== 'starting' && (
               <Button onClick={deleteRoom} danger>
                 Eliminar transmisión
               </Button>

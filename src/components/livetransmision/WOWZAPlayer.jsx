@@ -6,7 +6,7 @@ import { Button } from 'antd';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const defaultVideo =
-    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FCortinillaProntoIniciamos.mp4?alt=media&token=b31c0745-4542-4b55-b79c-357db7633c53';
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
 
   const [platformurl, setPlatformurl] = useState(defaultVideo);
   const [muted, setMuted] = useState(false);

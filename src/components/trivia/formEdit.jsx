@@ -298,7 +298,9 @@ const FormEdit = (
                   onRemove={handleRemoveImg}>
                   <Button icon={<UploadOutlined />}>Cargar imagen</Button>
                 </Upload>
-                <p><small>Tenga en cuenta que la dimensión de la imagen debe ser 500px*300px ó 600px*300px</small></p>
+                <p>
+                  <small>Tenga en cuenta que la dimensión de la imagen debe ser 500px*300px ó 600px*300px</small>
+                </p>
               </Form.Item>
             </div>
 
