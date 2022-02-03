@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NewCert from './modalNewCert';
+import NewCert from './modalNewCert_old';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import Moment from 'moment';
 import Dialog from '../modal/twoAction';

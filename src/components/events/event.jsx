@@ -56,7 +56,7 @@ const Styles = loadable(() => import('../App/styles'));
 const DashboardEvent = loadable(() => import('../dashboard'));
 const OrdersEvent = loadable(() => import('../orders'));
 const ListCertificados = loadable(() => import('../certificados'));
-const ReporteCertificados = loadable(() => import('../certificados/reporte'));
+/* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
 /* const ConfigurationApp = loadable(() => import('../App/configuration')); */
 const NotificationsApp = loadable(() => import('../pushNotifications/index'));
 const Wall = loadable(() => import('../wall/index'));
