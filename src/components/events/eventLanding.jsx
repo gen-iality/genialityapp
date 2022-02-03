@@ -72,7 +72,7 @@ class eventLanding extends Component {
           {/* Si event video existe */}
           {/* {console.log("this.props.cEvent.value?.video_position",this.props.cEvent.value?.video)} */}
           {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
-            <div className='column is-centered mediaplayer'>
+            <div className='mediaplayer'>
               <ReactPlayer
                 width={'100%'}
                 height={'35vw'}
@@ -369,7 +369,7 @@ class eventLanding extends Component {
           {(this.props.cEvent.value?.video_position == 'false' ||
             this.props.cEvent.value.video_position == undefined) &&
             this.props.cEvent.value.video && (
-              <div className='column is-centered mediaplayer'>
+              <div className='mediaplayer'>
                 <ReactPlayer
                   width={'100%'}
                   height={'35vw'}

@@ -27,7 +27,7 @@ const Home = loadable(() => import('../components/home'));
 const HomeProfile = loadable(() => import('../components/home/profile'));
 const Landing = loadable(() => import('../components/events/Landing/landing'));
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'));
-const Events = loadable(() => import('../components/events'));
+/* const Events = loadable(() => import('../components/events')); */
 const NewEvent = loadable(() => import('../components/events/newEvent'));
 const MyProfile = loadable(() => import('../components/profile'));
 const Purchase = loadable(() => import('../components/profile/purchase'));
@@ -75,7 +75,7 @@ const ContentContainer = () => {
         <Route path='/notfound' component={NotFoundPage} />
         {/* <WithFooter> */}
         <Route path='/page/:id' component={HomeProfile} />
-        <PrivateRoute path='/my_events' component={Events} />
+        A
         <PrivateRoute path='/create-event/:user?'>
           <NewEventProvider>
             <NewEvent />
