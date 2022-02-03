@@ -42,7 +42,7 @@ const { Sider, Content } = Layout;
 
 //Code Splitting
 const General = loadable(() => import('./general'));
-const Badge = loadable(() => import('../badge'));
+/* const Badge = loadable(() => import('../badge')); */
 const Informativesection = loadable(() => import('../events/informativeSections/adminInformativeSection'));
 
 //invitations
@@ -301,13 +301,13 @@ class Event extends Component {
                 url={match.url}
               />
 
-              <Protected
+              {/* <Protected
                 path={`${match.url}/badge`}
                 component={Badge}
                 eventId={this.state.event._id}
                 event={this.state.event}
                 url={match.url}
-              />
+              /> */}
 
               <Protected
                 path={`${match.url}/informativesection`}

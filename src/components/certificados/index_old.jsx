@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import List from './listado';
+import List from './listado_old';
 import Certificado from './certificado';
 
 class Certificados extends Component {
