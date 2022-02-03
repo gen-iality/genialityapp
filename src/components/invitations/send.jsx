@@ -56,7 +56,7 @@ class SendRsvp extends Component {
             ? this.props.event.styles.banner_footer
             : this.props.event.picture,
       },
-      selection: this.props.selection.length > 0 ? this.props.selection : this.props.location.selection,
+      selection: this.props.selection === undefined ? "Todos" : this.props.selection,
     });
   }
 
@@ -138,9 +138,13 @@ class SendRsvp extends Component {
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
     let users = [];
-    selection.map((item) => {
-      return users.push(item._id);
-    });
+    if (selection === "Todos"){
+      users = "all";
+    }else {
+      selection.map((item) => {
+        return users.push(item._id);
+      });
+    }
     this.setState({ dataMail: users, disabled: true });
     try {
       let data;
@@ -169,22 +173,19 @@ class SendRsvp extends Component {
       }
       /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
-      
-      toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />);
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
       message.destroy(loading.key);
-      /* message.open({
+       message.open({
         type: 'success',
-        content: <FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />,
-      }); */
+        content: 'Las notificaciones se mandaron de manera satisfactoria',
+      });
     } catch (e) {
       message.destroy(loading.key);
-      /* message.open({
+      message.open({
         type: 'error',
-        content: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
-      }); */
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-      this.setState({ disabled: false, timeout: true, loader: false });
+        content: `Lo sentimos las notificaciones no pudieron ser enviadas, código de error ${e.response.status}`,
+      });
+      this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
     }
   }
 
@@ -444,22 +445,30 @@ class SendRsvp extends Component {
               <div className='box rsvp-send'>
                 <Row gutter={8} wrap justify='center'>
                   <p className='rsvp-send-title'>
-                    Seleccionados <span>{this.state.selection?.length}</span>
+                    Seleccionados <span>{this.state.selection === "Todos" ? "Todos" : this.state.selection.length}</span>
                   </p>
                   <p>
-                    {this.state.selection?.map((el) => {
-                      return el.properties.email + ', ';
-                    })}
+                    {
+                      this.state.selection === "Todos"
+                          ? null
+                          :this.state.selection?.map((el) => {
+                            return el.properties.email + ', ';
+                          })
+                    }
                   </p>
                 </Row>
                 <Row gutter={8} wrap>
-                  {this.state.selection?.map((item, key) => {
-                    return (
-                      <p key={key} className='selection'>
-                        {item.email}
-                      </p>
-                    );
-                  })}
+                  {
+                    this.state.selection === "Todos"
+                        ? (<p>{this.state.selection}</p>)
+                        :this.state.selection?.map((item, key) => {
+                          return (
+                              <p key={key} className='selection'>
+                                {item.email}
+                              </p>
+                          );
+                        })
+                  }
                 </Row>
                 <Row justify='center' gutter={8} wrap>
                   <Link to={{ pathname: `${this.props.matchUrl}` }}>
@@ -479,11 +488,10 @@ class SendRsvp extends Component {
             cancelText={'Cancelar'}
             okText={'Envíar'}>
             <p>
-              Se van a enviar {this.state.selection?.length}{' '}
+              Se van a enviar {this.state.selection === "Todos" ? "a todos las" : this.state.selection.length}{' '}
               {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}
             </p>
           </Modal>
-          {timeout && <LogOut />}
           <BackTop />
         </Form>
       </>
