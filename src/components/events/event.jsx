@@ -374,12 +374,12 @@ class Event extends Component {
                 event={this.state.event}
                 componentKey='espacios'
               />
-              <Protected
+              {/* <Protected
                 path={`${match.url}/reporte-certificados`}
                 component={ReporteCertificados}
                 event={this.state.event}
                 componentKey='reporte-certificados'
-              />
+              /> */}
               <Protected
                 path={`${match.url}/speakers`}
                 component={Speakers}
