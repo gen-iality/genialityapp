@@ -468,7 +468,7 @@ class General extends Component {
       analytics: event.analytics,
       address: event.address,
       has_date: event.has_date === 'true' || event.has_date === true ? true : false,
-      allow_register: event.allow_register === 'true' || event.allow_register === true ? true : false,
+      allow_register: event.allow_register,
       allow_detail_calendar:
         event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
       enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
@@ -495,11 +495,6 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
-      itemsMenu: /* event.allow_register === 'false' || event.allow_register === false
-          ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
-          : */ {
-        ...this.state.itemsMenu,
-      },
     };
 
     try {
