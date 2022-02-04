@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip, Tabs } from 'antd';
+import { Tag, Spin, Button, message, Modal, Row, Col, Tooltip, Tabs } from 'antd';
 import {
-  QuestionCircleOutlined,
   ExclamationCircleOutlined,
   DeleteOutlined,
   DownloadOutlined,
   ReloadOutlined,
-  StopOutlined,
 } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import moment from 'moment';
