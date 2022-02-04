@@ -113,7 +113,7 @@ const AgendaActividadDetalle = (props) => {
       setVideoButtonStyles({ display: 'none' });
     }
   }, [chatAttendeChats, isMobile]);
-
+  
   // VALIDAR ACTIVIDADES POR CODIGO
   useEffect(() => {
     if (props.cEvent.value && props.cUser) {
@@ -137,8 +137,8 @@ const AgendaActividadDetalle = (props) => {
   }, [props.cEvent.value, props.cEventUser.value, props.cUser.value]);
 
   return (
-    <div className='is-centered'>
-      <div className=' container_agenda-information container-calendar2 is-three-fifths'>
+    <div>
+      <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
           {!blockActivity ? (

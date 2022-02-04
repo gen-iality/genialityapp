@@ -12,7 +12,7 @@ const ImageComponent = (props) => {
   }, [currentActivity]);
 
   function RenderTextActivity(state) {
-    console.log('que llega', state);
+    //console.log('que llega', state);
     switch (state) {
       case 'closed_meeting_room':
         return 'Esta actividad esta por iniciar';
@@ -37,7 +37,7 @@ const ImageComponent = (props) => {
   }
 
   return (
-    <div className='column is-centered mediaplayer'>
+    <div className='mediaplayer'>
       {props.cEvent.value.styles.toolbarDefaultBg != undefined || props.cEvent.value.styles.toolbarDefaultBg != '' ? (
         <img
           className='activity_image'
