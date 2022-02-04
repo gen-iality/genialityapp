@@ -1,5 +1,5 @@
 import React from 'react';
-import WithLoading from './../shared/withLoading';
+import WithLoading from '../shared/withLoading';
 import { Badge, Menu, Spin } from 'antd';
 import ScrollTo from 'react-scroll-into-view';
 
@@ -226,9 +226,9 @@ class MenuEvent extends Component {
           // defaultOpenKeys={['sub1']}
           style={stylesMenuItems}>
           {loading && (
-            <div className='columns is-centered'>
+            <Row justify='center' align='middle'>
               <Spin tip='Cargando Menú...'></Spin>
-            </div>
+            </Row>
           )}
           {this.state.itemsMenu &&
             Object.keys(this.state.itemsMenu).map((key) => {

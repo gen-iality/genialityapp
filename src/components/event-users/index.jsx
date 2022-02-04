@@ -454,7 +454,7 @@ class ListEventUser extends Component {
     e.stopPropagation();
 
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
-
+    
     const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
@@ -463,7 +463,6 @@ class ListEventUser extends Component {
   };
 
   addUser = () => {
-    html.classList.add('is-clipped');
     this.setState({ edit: false }, () => {
       this.setState((prevState) => {
         return { editUser: !prevState.editUser, selectedUser: null };
@@ -472,20 +471,17 @@ class ListEventUser extends Component {
   };
 
   modalUser = () => {
-    html.classList.remove('is-clipped');
     this.setState((prevState) => {
       return { editUser: !prevState.editUser, edit: undefined };
     });
   };
 
   checkModal = () => {
-    html.classList.add('is-clipped');
     this.setState((prevState) => {
       return { qrModal: !prevState.qrModal };
     });
   };
   closeQRModal = () => {
-    html.classList.add('is-clipped');
     this.setState((prevState) => {
       return { qrModal: !prevState.qrModal };
     });
@@ -538,12 +534,9 @@ class ListEventUser extends Component {
   };
 
   showMetaData = (value) => {
-    html.classList.add('is-clipped');
     let content = '';
     Object.keys(value).map((key) => (content += `<p><b>${key}:</b> ${value[key]}</p>`));
-    sweetAlert.simple('Información', content, 'Cerrar', '#1CDCB7', () => {
-      html.classList.remove('is-clipped');
-    });
+    sweetAlert.simple('Información', content, 'Cerrar', '#1CDCB7', () => {});
   };
 
   // Function to check the firebase persistence and load page if this return false
@@ -555,7 +548,6 @@ class ListEventUser extends Component {
   };
 
   openEditModalUser = (item) => {
-    html.classList.add('is-clipped');
     item = {
       ...item,
       checked_in: item.properties?.checked_in || item.checked_in,

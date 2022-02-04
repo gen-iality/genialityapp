@@ -11,7 +11,7 @@ import {
   AttendeeApi,
   discountCodesApi,
 } from '../../helpers/request';
-import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
+import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge, Row } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
@@ -703,19 +703,17 @@ class Agenda extends Component {
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (
-          <div className='container-calendar-section'>
-            <div className='columns is-centered'>
-              <Card>
-                <Spin tip='Cargando...'></Spin>
-              </Card>
-            </div>
-          </div>
+          <Row justify='center' align='middle'>
+            <Card>
+              <Spin tip='Cargando...'></Spin>
+            </Card>
+          </Row>
         )}
 
         {!currentActivity && !loading && (
           <div className='container-calendar-section'>
-            <div className='columns is-centered'>
-              <div className='container-calendar is-three-fifths'>
+            <Row justify='center'>
+              <div className='container-calendar '>
                 {/* ACTIVIDADES SIN AGRUPAR */}
                 {this.props.cEvent.value &&
                   this.props.cEvent.value.styles &&
@@ -788,7 +786,7 @@ class Agenda extends Component {
                     </Tabs>
                   )}
               </div>
-            </div>
+            </Row>
           </div>
         )}
       </div>

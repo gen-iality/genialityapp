@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { imageCenter } from '../helpers/csshelpers';
-import MenuEvent from '../../menuEvent';
+import MenuEvent from '../../menuEvent_old';
 const { Sider } = Layout;
 
 const MenuDevices = (props) => {
