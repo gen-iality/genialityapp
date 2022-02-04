@@ -27,9 +27,26 @@ const WithCode = () => {
       conectionRef
         .where('email', '==', email)
         .get()
-        .then((resp) => {
-          if (resp.docs.length == 0) {
-            loginWithCode();
+        .then(async (resp) => {
+          if (
+            (resp.docs.length == 0 && app.auth().currentUser?.email != email) ||
+            (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
+            (resp.docs.length == 0 && !app.auth().currentUser)
+          ) {
+            console.log('ENTRO ACA===>');
+            if (app.auth().currentUser) {
+              const docRef = await conectionRef.where('email', '==', email).get();
+              console.log('RESPUESTA ACA===>', docRef.docs.length, docRef.docs[0].id);
+              if (docRef.docs.length > 0) {
+                //console.log('DOCUMENT ID==>', docRef.docs[0].id);
+                conectionRef.doc(docRef.docs[0].id).delete();
+                //await app.auth().signOut();
+                console.log('CERRË LA SESION ACA');
+                window.location.href = window.location.href;
+              }
+            } else {
+              await loginWithCode();
+            }
           } else {
             setError(true);
             setLoading(false);
