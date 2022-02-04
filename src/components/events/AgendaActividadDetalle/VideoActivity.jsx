@@ -23,8 +23,9 @@ export const VideoActivity = () => {
         /> */
         <div className='mediaplayer'>
           <ReactPlayer
-            style={{ height: `${screens.xs ? '25vh' : '55vh'}`, objectFit: 'cover' }}
+            style={{ objectFit: 'cover' }}
             width='100%'
+            height={`${screens.xs ? '100%' : '55vh'}`}
             url={currentActivity && currentActivity?.video}
             controls
           />

@@ -49,7 +49,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
         />
         <Result
           icon={status === 'loading' && <LoadingOutlined />}
-          status={status === 'loading' ? null : 'error'}
+          status={status === 'loading' ? null : 'info'}
           title={
             <Typography.Title level={screens.xs ? 2 : 1}>
               {status === 'loading' && verifyLink
@@ -67,9 +67,8 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
                   overflowWrap: 'anywhere',
                 }}>
-                Necesitamos cerrar tu sesión para que puedas seguir utilizando la aplicación. Si no quiere que se cierre
-                la sesión automáticamente en su otro dispositivo, haga clic en cancelar, de lo contrario, haga clic en
-                continuar.
+                Si quieres acceder a la plataforma en este dispositivo has clic en Continuar y cerraremos tu sesión en
+                el otro dispositivo que tienes vinculado, de lo contrario dar clic en Cancelar.
               </Typography.Paragraph>
             )
           }
