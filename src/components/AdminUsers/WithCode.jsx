@@ -36,14 +36,14 @@ const WithCode = () => {
             console.log('ENTRO ACA===>');
             if (app.auth().currentUser) {
               const docRef = await conectionRef.where('email', '==', email).get();
-              console.log('RESPUESTA ACA===>', docRef.docs.length, docRef.docs[0].id);
+              // console.log('RESPUESTA ACA===>', docRef.docs.length, docRef.docs[0].id);
               if (docRef.docs.length > 0) {
                 //console.log('DOCUMENT ID==>', docRef.docs[0].id);
                 conectionRef.doc(docRef.docs[0].id).delete();
                 //await app.auth().signOut();
-                console.log('CERRË LA SESION ACA');
-                window.location.href = window.location.href;
+                console.log('CERRË LA SESION ACA'); //window.location.href = window.location.href;
               }
+              await loginWithCode();
             } else {
               await loginWithCode();
             }
