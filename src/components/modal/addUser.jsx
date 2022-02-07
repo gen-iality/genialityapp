@@ -129,18 +129,6 @@ class AddUser extends Component {
             )
           }
         </>
-        /*<div key={'g' + key} className='field'>
-          {m.type !== 'boolean' && (
-            <label
-              style={{textTransform: 'capitalize'}}
-              className={`label has-text-grey-light ${mandatory ? 'required' : ''}`}
-              key={'l' + key}
-              htmlFor={key}>
-              {name}
-            </label>
-          )}
-          <div className='control'>{input}</div>
-        </div>*/
       );
     });
     return formUI;

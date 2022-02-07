@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { uniqueID } from '../../../helpers/utils';
-import FieldEvent from '../../modal/fieldEvent';
+import FieldEvent from '../../modal/fieldEvent_old';
 
 const initModal = { name: '', mandatory: false, label: '', description: '', type: '', options: [] };
 class InfoAsistentes extends Component {
