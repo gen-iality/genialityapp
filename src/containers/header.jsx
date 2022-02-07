@@ -12,7 +12,6 @@ import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown } f
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
-import HelperContext from 'Context/HelperContext';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
@@ -48,7 +47,7 @@ const initialDataGeneral = {
 };
 
 const Headers = (props) => {
-  const { cUser, showMenu, loginInfo, cHelpe, cEvent } = props;
+  const { cUser, showMenu, loginInfo, cHelper, cEvent } = props;
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
   const [showButtons, setshowButtons] = useState({
@@ -56,7 +55,6 @@ const Headers = (props) => {
     buttonlogin: true,
   });
   const screens = useBreakpoint();
-  let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
   let history = useHistory();
   const conectionRef = firestore.collection(`connections`);
 
@@ -141,32 +139,32 @@ const Headers = (props) => {
 
   const MenuMobile = (
     <Menu>
-      {showButtons.buttonlogin && (
-        <Menu.Item
-          onClick={() => {
-            HandleControllerLoginVisible({
-              visible: true,
-              organization: WhereHerePath(),
-            });
+      {/* {showButtons.buttonlogin && ( */}
+      <Menu.Item
+        onClick={() => {
+          cHelper.HandleControllerLoginVisible({
+            visible: true,
+            organization: WhereHerePath(),
+          });
 
-            handleChangeTabModal('1');
-          }}>
-          <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
-        </Menu.Item>
-      )}
-      {showButtons.buttonregister && (
-        <Menu.Item
-          onClick={() => {
-            HandleControllerLoginVisible({
-              visible: true,
-              organization: WhereHerePath(),
-            });
+          cHelper.handleChangeTabModal('1');
+        }}>
+        <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
+      </Menu.Item>
+      {/* )} */}
+      {/* {showButtons.buttonregister && ( */}
+      <Menu.Item
+        onClick={() => {
+          cHelper.HandleControllerLoginVisible({
+            visible: true,
+            organization: WhereHerePath(),
+          });
 
-            handleChangeTabModal('2');
-          }}>
-          <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
-        </Menu.Item>
-      )}
+          cHelper.handleChangeTabModal('2');
+        }}>
+        <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
+      </Menu.Item>
+      {/* )} */}
     </Menu>
   );
 
@@ -252,33 +250,44 @@ const Headers = (props) => {
                 </Space>
               ) : (
                 <Space>
-                  {showButtons.buttonlogin && (
+                  {showButtons.buttonlogin ? (
                     <Button
                       icon={<LockOutlined />}
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                       size='large'
                       onClick={() => {
-                        HandleControllerLoginVisible({
+                        cHelper.HandleControllerLoginVisible({
                           visible: true,
                           organization: WhereHerePath(),
                         });
 
-                        handleChangeTabModal('1');
+                        cHelper.handleChangeTabModal('1');
                       }}>
                       Iniciar sesión
                     </Button>
+                  ) : (
+                    <Space>
+                      <Dropdown overlay={MenuMobile}>
+                        <Button
+                          style={{ backgroundColor: '#3681E3', color: '#FFFFFF', border: 'none' }}
+                          size='large'
+                          shape='circle'
+                          icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
+                        />
+                      </Dropdown>
+                    </Space>
                   )}
 
                   {showButtons.buttonregister && (
                     <Button
                       size='large'
                       onClick={() => {
-                        HandleControllerLoginVisible({
+                        cHelper.HandleControllerLoginVisible({
                           visible: true,
                           organization: WhereHerePath(),
                         });
 
-                        handleChangeTabModal('2');
+                        cHelper.handleChangeTabModal('2');
                       }}>
                       Registrarme
                     </Button>
