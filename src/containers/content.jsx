@@ -30,7 +30,7 @@ const Transition = loadable(() => import('../components/shared/Animate_Img/index
 /* const Events = loadable(() => import('../components/events')); */
 const NewEvent = loadable(() => import('../components/events/newEvent'));
 /* const MyProfile = loadable(() => import('../components/profile/index_old')); */
-const Purchase = loadable(() => import('../components/profile/purchase'));
+/* const Purchase = loadable(() => import('../components/profile/purchase_old')); */
 /* const EventEdit = loadable(() => import('../components/profile/events_old')); */
 const Terms = loadable(() => import('../components/policies/termsService'));
 const Privacy = loadable(() => import('../components/policies/privacyPolicy'));
@@ -88,7 +88,7 @@ const ContentContainer = () => {
         <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
         <RouteContext exact path='/organization/:id' component={EventOrganization} />
         <PrivateRoute path='/admin/organization/:id' component={Organization} />
-        <PrivateRoute path='/purchase/:id' component={Purchase} />
+        {/* <PrivateRoute path='/purchase/:id' component={Purchase} /> */}
         {/* <PrivateRoute path='/eventEdit/:id' component={EventEdit} /> */}
         <PrivateRoute path='/tickets/:id' component={Tickets} />
         <PrivateRoute path='/noaccesstocms/:id' component={NoMatchPage} />

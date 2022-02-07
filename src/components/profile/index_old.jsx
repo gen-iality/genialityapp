@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Dialog from '../modal/twoAction_old';
 import { auth } from '../../helpers/firebase';
 import { DateTimePicker } from 'react-widgets';
-import FormNetwork from '../shared/networkForm';
+import FormNetwork from '../shared/networkForm_old';
 import { FormattedMessage } from 'react-intl';
 import ErrorServe from '../modal/serverError';
 

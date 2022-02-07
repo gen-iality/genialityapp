@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
+import { Button, Typography } from 'antd';
 
 let FileInput = ( props ) => {
   //Esto es para detectar cuando despues de cargar una imagen, la imagen efectivamente cargo y quitar el loading
@@ -23,13 +24,17 @@ let FileInput = ( props ) => {
     borderRadius: 10,
   };
   let contentDrop = props.contentDrop || (
-    <button
+    <Button
+      type='text'
+      size="large"
+      block
       onClick={ ( e ) => {
         e.preventDefault();
       } }
-      className={ `button is-primary  is-outlined ${ stillOldImage ? "is-loading" : "" }` }>
+      loading={stillOldImage}
+    >
       Cambiar Archivo
-    </button>
+    </Button>
   );
   // let divClass = props.divClass || "drop-img";
   let classDrop = props.classDrop || "dropzone";
@@ -59,10 +64,7 @@ let FileInput = ( props ) => {
       ) : (
           <div>
             <Dropzone onDrop={ props.changeImg } style={ style }>
-              <div className="has-text-grey has-text-weight-bold has-text-centered">
-                <span>Subir Archivo</span>
-
-              </div>
+              <Typography.Text strong style={{fontSize: '16px'}}>Subir Archivo</Typography.Text>
             </Dropzone>
             <span>{ props.errImg }</span>
           </div>

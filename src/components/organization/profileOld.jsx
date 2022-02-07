@@ -12,7 +12,7 @@ import { BaseUrl } from '../../helpers/constants';
 import ImageInput from '../shared/imageInput';
 import Loading from '../loaders/loading';
 import LogOut from '../shared/logOut';
-import FormNetwork from '../shared/networkForm';
+import FormNetwork from '../shared/networkForm_old';
 import Dialog from '../modal/twoAction_old';
 import ErrorServe from '../modal/serverError';
 import 'react-toastify/dist/ReactToastify.css';
