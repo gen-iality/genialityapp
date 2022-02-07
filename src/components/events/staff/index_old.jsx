@@ -11,8 +11,8 @@ import { FormattedMessage } from 'react-intl';
 import LogOut from '../../shared/logOut';
 import EventContent from '../shared/content_old';
 import EvenTable from '../shared/table';
-import EventModal from '../shared/eventModal';
-import StaffModal from './modal';
+import EventModal from '../shared/eventModal_old';
+import StaffModal from './modal_old';
 
 class AdminRol extends Component {
   constructor(props) {
