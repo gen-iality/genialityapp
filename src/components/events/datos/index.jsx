@@ -2,7 +2,7 @@ import React, { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
-import EventContent from '../shared/content';
+import EventContent from '../shared/content_old';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';

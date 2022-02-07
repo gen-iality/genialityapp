@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '../../helpers/utils';
 import { firestore } from '../../helpers/firebase';
 import Loading from '../loaders/loading';

@@ -4,7 +4,7 @@ import { Actions, PushFeed } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import Loading from '../loaders/loading';
 import { handleRequestError, sweetAlert } from '../../helpers/utils';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import EvenTable from '../events/shared/table';
 
 class pushNotification extends Component {

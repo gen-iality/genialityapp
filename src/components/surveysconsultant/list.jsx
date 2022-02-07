@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link, Redirect, withRouter} from "react-router-dom";
 import {SpeakersApi} from "../../helpers/request";
-import EventContent from "../events/shared/content";
+import EventContent from "../events/shared/content_old";
 import Loading from "../loaders/loading";
 import EvenTable from "../events/shared/table";
 import {handleRequestError, sweetAlert} from "../../helpers/utils";

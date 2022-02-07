@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { ChromePicker } from 'react-color';
 import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import Loading from '../loaders/loading';
 import EvenTable from '../events/shared/table';
 import TableAction from '../events/shared/tableAction';

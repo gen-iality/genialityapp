@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import EvenTable from '../events/shared/table';
 import { DocumentsApi } from '../../helpers/request';
 import { Link, Redirect } from 'react-router-dom';

@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddUser from '../modal/addUser';
 import Loading from '../loaders/loading';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import EvenTable from '../events/shared/table';
 import Pagination from '../shared/pagination';
 import ModalAdvise from './modal';

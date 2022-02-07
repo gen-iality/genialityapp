@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 import EvenTable from '../events/shared/table';

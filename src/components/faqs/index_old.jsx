@@ -4,7 +4,7 @@ import { toolbarEditor } from '../../helpers/constants';
 import ReactQuill from 'react-quill';
 import Loading from '../loaders/loading';
 import Moment from 'moment';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import EvenTable from '../events/shared/table';
 import TableAction from '../events/shared/tableAction';
 import { handleRequestError, sweetAlert } from '../../helpers/utils';

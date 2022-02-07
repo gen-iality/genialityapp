@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import { Redirect, withRouter } from 'react-router-dom';
 import { DocumentsApi, RolAttApi, UsersApi } from '../../helpers/request';
 import Select from 'react-select';

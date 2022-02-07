@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import EventContent from "../events/shared/content";
+import EventContent from "../events/shared/content_old";
 import { AgendaApi } from "../../helpers/request";
 import { Table, Tag, Input, Button, Space } from 'antd';
 import Highlighter from 'react-highlight-words';

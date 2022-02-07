@@ -34,7 +34,7 @@ const trivia = (props) => {
       sorter: (a, b) => a.publish.localeCompare(b.publish),
       ...getColumnSearchProps('publish', columnsData),
       render(val, item) {
-        return <p>{item.publish ? 'Cierto' : 'Falso'}</p>;
+        return <p>{item.publish ? 'Sí' : 'No'}</p>;
       },
     },
   ];

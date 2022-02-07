@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import { deleteSurvey } from './services';
 import 'react-tabs/style/react-tabs.css';

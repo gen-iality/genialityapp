@@ -3,7 +3,7 @@ import {Link, Redirect, withRouter} from "react-router-dom";
 import Dropzone from "react-dropzone";
 import ReactQuill from "react-quill";
 import {FaChevronLeft} from "react-icons/fa";
-import EventContent from "../events/shared/content";
+import EventContent from "../events/shared/content_old";
 import Loading from "../loaders/loading";
 import {handleRequestError, sweetAlert, uploadImage} from "../../helpers/utils";
 import {imageBox, toolbarEditor} from "../../helpers/constants";

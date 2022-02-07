@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Moment from 'moment';
 import { Actions } from '../../helpers/request';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import EvenTable from '../events/shared/table';
 import SearchComponent from '../shared/searchTable';
 import { AgendaApi } from '../../helpers/request';

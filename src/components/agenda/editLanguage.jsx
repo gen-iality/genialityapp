@@ -6,7 +6,7 @@ import { DateTimePicker } from 'react-widgets';
 import Select from 'react-select';
 import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import Loading from '../loaders/loading';
 import {
   AgendaApi,

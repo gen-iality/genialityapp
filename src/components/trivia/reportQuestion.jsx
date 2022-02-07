@@ -5,7 +5,7 @@ import XLSX from 'xlsx';
 
 import { getAnswersByQuestion } from './services';
 
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 
 import { Table as TableA, Divider, Button } from 'antd';
 import Header from '../../antdComponents/Header';

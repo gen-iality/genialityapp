@@ -11,7 +11,7 @@ import Loading from '../loaders/loading';
 import 'react-toastify/dist/ReactToastify.css';
 /* import QrModal from './qrModal_old(nuevo)'; */
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import Moment from 'moment';
 import { TicketsApi } from '../../helpers/request';
 import {

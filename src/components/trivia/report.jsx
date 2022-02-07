@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 
 import { SurveysApi } from '../../helpers/request';
 import { getTotalVotes } from './services';

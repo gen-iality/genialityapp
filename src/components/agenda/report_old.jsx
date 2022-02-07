@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import { AgendaApi } from '../../helpers/request';
-import EventContent from '../events/shared/content';
+import EventContent from '../events/shared/content_old';
 import SearchComponent from '../shared/searchTable';
 import { Select, Table } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
