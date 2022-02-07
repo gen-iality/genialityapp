@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../crud.css';
-import Pagination from '../../../shared/pagination';
+import Pagination from '../../pagination';
 
 class ListCrud extends Component {
   constructor(props) {

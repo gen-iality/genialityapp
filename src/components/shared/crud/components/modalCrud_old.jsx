@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { icon } from '../../../../helpers/constants';
 import { Actions } from '../../../../helpers/request';
-import ImageInput from '../../../shared/imageInput';
+import ImageInput from '../../imageInput';
 import axios from 'axios/index';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';

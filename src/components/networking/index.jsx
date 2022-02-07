@@ -552,20 +552,9 @@ class ListEventUser extends Component {
                         xl={12}
                         xxl={8}>
                         <Card
-                          extra={
-                            <a
-                            /* style={{ color: "white" }}
-                              onClick={() => 4
-                                this.SendFriendship({
-                                  eventUserIdReceiver: users._id,
-                                  userName: users.properties.names || users.properties.email,
-                                });
-                              }}*/
-                            ></a>
-                          }
                           hoverable={8}
                           headStyle={
-                            users.destacado && users.destacado == true
+                            users.destacado && users.destacado === true
                               ? { backgroundColor: '#6ddab5' }
                               : {
                                   backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,

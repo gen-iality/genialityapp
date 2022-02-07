@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, Pagination as PaginationAnt } from 'antd';
 
 class Pagination extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class Pagination extends Component {
   }
 
   setPage = (page, items) => {
-    const pageSize = 15;
+    const pageSize = 10;
     let pageOfItems;
     const pager = this.getPager(items.length, page, pageSize);
 
@@ -94,31 +95,40 @@ class Pagination extends Component {
       return null;
     }
     return (
-      <nav className='pagination is-centered' role='navigation' aria-label='pagination'>
-        <button
-          onClick={() => this.setPage(pager.currentPage - 1, this.state.datos)}
-          className={`button pagination-previous`}
-          disabled={pager.currentPage === 1}>
-          <span className='icon'>
-            <i className='fas fa-angle-double-left' />
-          </span>
-        </button>
-        <button
-          onClick={() => this.setPage(pager.currentPage + 1, this.state.datos)}
-          className={`button pagination-next`}
-          disabled={pager.currentPage === pager.totalPages}>
-          <span className='icon'>
-            <i className='fas fa-angle-double-right' />
-          </span>
-        </button>
-        <ul className='pagination-list'>
-          {pager.pages.map((page, index) => (
-            <li key={index} onClick={() => this.setPage(page, this.state.datos)}>
-              <span className={`pagination-link ${pager.currentPage === page ? 'is-current' : ''}`}>{page}</span>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <>
+        <PaginationAnt
+          defaultCurrent={1}
+          current={pager.currentPage}
+          defaultPageSize={10}
+          total={this.props.items.length}
+          onChange={(e) => this.setPage(e, this.state.datos)}
+        />
+        {/* <nav className='pagination is-centered' role='navigation' aria-label='pagination'>
+          <button
+            onClick={() => this.setPage(pager.currentPage - 1, this.state.datos)}
+            className={`button pagination-previous`}
+            disabled={pager.currentPage === 1}>
+            <span className='icon'>
+              <i className='fas fa-angle-double-left' />
+            </span>
+          </button>
+          <button
+            onClick={() => this.setPage(pager.currentPage + 1, this.state.datos)}
+            className={`button pagination-next`}
+            disabled={pager.currentPage === pager.totalPages}>
+            <span className='icon'>
+              <i className='fas fa-angle-double-right' />
+            </span>
+          </button>
+          <ul className='pagination-list'>
+            {pager.pages.map((page, index) => (
+              <li key={index} onClick={() => this.setPage(page, this.state.datos)}>
+                <span className={`pagination-link ${pager.currentPage === page ? 'is-current' : ''}`}>{page}</span>
+              </li>
+            ))}
+          </ul>
+        </nav> */}
+      </>
     );
   }
 }
