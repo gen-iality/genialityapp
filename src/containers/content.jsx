@@ -24,7 +24,7 @@ import ModalNoRegister from 'components/authentication/ModalNoRegister';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../components/home'));
-const HomeProfile = loadable(() => import('../components/home/profile'));
+/* const HomeProfile = loadable(() => import('../components/home/profile_old')); */
 const Landing = loadable(() => import('../components/events/Landing/landing'));
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'));
 /* const Events = loadable(() => import('../components/events')); */
@@ -74,8 +74,8 @@ const ContentContainer = () => {
 
         <Route path='/notfound' component={NotFoundPage} />
         {/* <WithFooter> */}
-        <Route path='/page/:id' component={HomeProfile} />
-        A
+        {/* <Route path='/page/:id' component={HomeProfile} /> */}
+        
         <PrivateRoute path='/create-event/:user?'>
           <NewEventProvider>
             <NewEvent />
