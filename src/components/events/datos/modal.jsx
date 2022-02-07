@@ -34,7 +34,6 @@ class DatosModal extends Component {
   }
 
   componentDidMount() {
-    html.classList.add('is-clipped');
     if (this.props.info) this.setState({ info: this.props.info });
   }
 
@@ -132,7 +131,6 @@ class DatosModal extends Component {
 
   //Guardar campo en el evento
   saveField = async (values) => {
-    html.classList.remove('is-clipped');
     const info = Object.assign({}, this.state.info);
     info.name = toCapitalizeLower(info.name);
     values.mandatory = info?.mandatory;
@@ -184,7 +182,7 @@ class DatosModal extends Component {
               //onChange={this.handleChange}
             />
           </Form.Item>
-          <Form.Item label={'Posición Nombre del Campo'} name='labelPosition'>
+          {/* <Form.Item label={'Posición Nombre del Campo'} name='labelPosition'>
             <Radio.Group onChange={this.handleChange} value={info.labelPosition} name={'labelPosition'}>
               <Radio value={'arriba'} checked={info.labelPosition === 'arriba' || !info.labelPosition}>
                 Arriba &nbsp;
@@ -196,7 +194,7 @@ class DatosModal extends Component {
                 Derecha &nbsp;
               </Radio>
             </Radio.Group>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             initialValue={info?.type}
             label={'Tipo de dato'}

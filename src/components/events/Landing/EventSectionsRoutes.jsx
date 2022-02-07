@@ -12,7 +12,7 @@ import FaqsForm from '../../faqsLanding';
 import Partners from '../Partners';
 import Agenda from '../agendaLanding';
 import EventHome from '../eventHome';
-import TicketsForm from '../../tickets/formTicket';
+/* import TicketsForm from '../../tickets/formTicket'; */
 import WallForm from '../../wall/index';
 import Ferias from '../ferias/index';
 import VirtualConferenceBig from '../virtualConferenceBig';
