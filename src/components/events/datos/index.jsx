@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import EventContent from '../shared/content_old';
 import EventModal from '../shared/eventModal_old';
 import DatosModal from './modal';
-import Dialog from '../../modal/twoAction';
+import Dialog from '../../modal/twoAction_old';
 import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
 import RelationField from './relationshipFields';
 import {

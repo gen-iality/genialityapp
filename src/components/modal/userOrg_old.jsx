@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { icon } from '../../helpers/constants';
-import Dialog from './twoAction';
+import Dialog from './twoAction_old';
 
 class UserOrg extends Component {
   constructor(props) {

@@ -29,7 +29,7 @@ const Landing = loadable(() => import('../components/events/Landing/landing'));
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'));
 /* const Events = loadable(() => import('../components/events')); */
 const NewEvent = loadable(() => import('../components/events/newEvent'));
-const MyProfile = loadable(() => import('../components/profile'));
+/* const MyProfile = loadable(() => import('../components/profile/index_old')); */
 const Purchase = loadable(() => import('../components/profile/purchase'));
 const EventEdit = loadable(() => import('../components/profile/events'));
 const Terms = loadable(() => import('../components/policies/termsService'));
@@ -84,7 +84,7 @@ const ContentContainer = () => {
         <PrivateRoute path='/eventadmin/:event' component={Event} />
         <PrivateRoute path='/orgadmin/:event' component={Event} />
         <PrivateRoute path='/create-event' component={NewEvent} />
-        <PrivateRoute path='/profile/:id' component={MyProfile} />
+        {/* <PrivateRoute path='/profile/:id' component={MyProfile} /> */}
         <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
         <RouteContext exact path='/organization/:id' component={EventOrganization} />
         <PrivateRoute path='/admin/organization/:id' component={Organization} />

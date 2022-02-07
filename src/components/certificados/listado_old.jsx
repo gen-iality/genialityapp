@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import NewCert from './modalNewCert_old';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import Moment from 'moment';
-import Dialog from '../modal/twoAction';
+import Dialog from '../modal/twoAction_old';
 import Loading from '../loaders/loading';
 Moment.locale('es');
 

@@ -3,7 +3,7 @@ import { Redirect, Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import 'moment/locale/es-us';
 import { Actions, EventsApi } from '../../helpers/request';
-import Dialog from '../modal/twoAction';
+import Dialog from '../modal/twoAction_old';
 import ImageInput from '../shared/imageInput';
 import LogOut from '../shared/logOut';
 import { toast } from 'react-toastify';

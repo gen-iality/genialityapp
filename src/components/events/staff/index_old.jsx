@@ -5,7 +5,7 @@ import Pagination from '../../shared/pagination';
 import ErrorServe from '../../modal/serverError';
 import connect from 'react-redux/es/connect/connect';
 import { HelperApi } from '../../../helpers/request';
-import Dialog from '../../modal/twoAction';
+import Dialog from '../../modal/twoAction_old';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../../shared/logOut';

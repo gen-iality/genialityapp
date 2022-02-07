@@ -12,7 +12,7 @@ import ImageInput from '../shared/imageInput';
 import { TiArrowLoopOutline } from 'react-icons/ti';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Dialog from '../modal/twoAction';
+import Dialog from '../modal/twoAction_old';
 import { auth } from '../../helpers/firebase';
 import { DateTimePicker } from 'react-widgets';
 import FormNetwork from '../shared/networkForm';
