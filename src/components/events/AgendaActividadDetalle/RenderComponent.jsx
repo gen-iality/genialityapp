@@ -64,8 +64,6 @@ const RenderComponent = (props) => {
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
         const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
-        // console.log('DATA FIREBASE==>', habilitar_ingreso, meeting_id, platform, tabs, avalibleGames);
-        console.log('DATA ACTIVITY==>', data);
         setplatform(platform);
         setactivityState(habilitar_ingreso);
         setactivityStateGlobal(habilitar_ingreso);
