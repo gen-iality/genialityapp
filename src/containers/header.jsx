@@ -336,7 +336,7 @@ const Headers = (props) => {
       {/* Menu mobile */}
 
       {dataGeneral.showAdmin && dataGeneral.showEventMenu && (
-        <div id='navbarBasicExample' className={`${eventMenu ? 'is-active' : ''}`}>
+        <div id='navbarBasicExample'>
           <Drawer
             className='hiddenMenuMobile_Landing'
             title='Administrar evento'
