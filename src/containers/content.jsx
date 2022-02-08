@@ -37,7 +37,7 @@ const Privacy = loadable(() => import('../components/policies/privacyPolicy'));
 const Policies = loadable(() => import('../components/policies/policies'));
 const About = loadable(() => import('../components/policies/about'));
 const Faqs = loadable(() => import('../components/faqs/index'));
-const Tickets = loadable(() => import('../components/tickets'));
+/* const Tickets = loadable(() => import('../components/tickets/index_old')); */
 const socialZone = loadable(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = loadable(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = loadable(() => import('../components/notFoundPage'));
@@ -90,7 +90,7 @@ const ContentContainer = () => {
         <PrivateRoute path='/admin/organization/:id' component={Organization} />
         {/* <PrivateRoute path='/purchase/:id' component={Purchase} /> */}
         {/* <PrivateRoute path='/eventEdit/:id' component={EventEdit} /> */}
-        <PrivateRoute path='/tickets/:id' component={Tickets} />
+        {/* <PrivateRoute path='/tickets/:id' component={Tickets} /> */}
         <PrivateRoute path='/noaccesstocms/:id' component={NoMatchPage} />
         <Route path='/terms' component={Terms} />
         <Route path='/privacy' component={Privacy} />

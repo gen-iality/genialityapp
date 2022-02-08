@@ -51,7 +51,7 @@ const InvitedUsers = loadable(() => import('../invitations'));
 //Messages
 const Messages = loadable(() => import('../messages'));
 
-const TicketInfo = loadable(() => import('../tickets'));
+/* const TicketInfo = loadable(() => import('../tickets/index_old')); */
 const Styles = loadable(() => import('../App/styles'));
 const DashboardEvent = loadable(() => import('../dashboard'));
 const OrdersEvent = loadable(() => import('../orders'));
@@ -342,12 +342,12 @@ class Event extends Component {
                 event={this.state.event}
                 componentKey='tipo-asistentes'
               />
-              <Protected
+              {/* <Protected
                 path={`${match.url}/ticket`}
                 component={TicketInfo}
                 event={this.state.event}
                 componentKey='ticket'
-              />
+              /> */}
               <Protected
                 path={`${match.url}/dashboard`}
                 component={DashboardEvent}
