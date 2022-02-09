@@ -22,7 +22,7 @@ const HCOActividad = () => {
 
         {/* {currentActivity && currentActivity.secondvideo && <SecondVideoActivity />} */}
 
-        {imageVisible() && <ImageComponentwithContext />}
+        {/* {imageVisible() && <ImageComponentwithContext />} */}
       </div>
     </header>
   );

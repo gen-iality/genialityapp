@@ -35,7 +35,7 @@ function Game(props) {
       allow='autoplay; fullscreen; camera *;microphone *'
       allowFullScreen
       allowusermedia
-      style={{ zIndex: '10', width: '100%', height: '65vh' }}></iframe>
+      style={{ zIndex: '10', width: '100%', height: '65vh', overscrollBehavior: 'none' }}></iframe>
   );
 }
 
