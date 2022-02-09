@@ -50,7 +50,6 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
-  console.log(' props.generalTabs?.publicChat', props.generalTabs?.publicChat);
   if (
     (iAmRegisteredInThisEvent(cEventUser) === 'LOADING' || iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED') &&
     recordTypeForThisEvent(cEvent) == 'UN_REGISTERED_PUBLIC_EVENT' &&
