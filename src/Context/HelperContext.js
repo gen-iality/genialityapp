@@ -673,6 +673,7 @@ export const HelperContextProvider = ({ children }) => {
         controllerLoginVisible,
         rolHasPermissions,
         theRoleExists,
+        setcurrenActivity
       }}>
       {children}
     </HelperContext.Provider>

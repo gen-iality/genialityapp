@@ -50,7 +50,6 @@ const MenuRigth = (props) => {
             style={{ marginTop: '12px', marginBottom: '22px' }}
             onClick={() => HandleOpenCloseMenuRigth(false)}></Menu.Item>
         )}
-
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat) && (
           <Menu.Item
             key='1'
@@ -73,7 +72,6 @@ const MenuRigth = (props) => {
               HandleChatOrAttende('1');
             }}></Menu.Item>
         )}
-
         {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
         {props.generalTabs?.attendees && typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
           <Menu.Item
@@ -93,7 +91,6 @@ const MenuRigth = (props) => {
               HandleChatOrAttende('2');
             }}></Menu.Item>
         )}
-
         {currentActivity != null &&
           // currentActivity.habilitar_ingreso === 'open_meeting_room' &&
           typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
@@ -118,37 +115,30 @@ const MenuRigth = (props) => {
                 HandleChatOrAttende('3');
               }}></Menu.Item>
           )}
-
-        {currentActivity != null && currentActivity.habilitar_ingreso === 'open_meeting_room' && (
-          <>
-            {tabsGenerals !== null && (tabsGenerals.games === 'true' || tabsGenerals.games === true) && (
-              <Menu.Item
-                key='4'
-                icon={
-                  <GamepadVariantOutline
-                    // className={animateIcon + ' animate__delay-4s'}
-                    style={{
-                      fontSize: '32px',
-                      color: props.cEvent.value.styles?.textMenu,
-                    }}
-                  />
-                }
-                style={{ paddingTop: '20px' }}
-                onClick={() => {
-                  HandleOpenCloseMenuRigth(false);
-                  HandleChatOrAttende('4');
-                }}></Menu.Item>
-            )}
-          </>
-        )}
+        <>
+          {tabsGenerals && tabsGenerals.games && currentActivity != null && (
+            <Menu.Item
+              key='4'
+              icon={
+                <GamepadVariantOutline
+                  // className={animateIcon + ' animate__delay-4s'}
+                  style={{
+                    fontSize: '32px',
+                    color: props.cEvent.value.styles?.textMenu,
+                  }}
+                />
+              }
+              style={{ paddingTop: '20px' }}
+              onClick={() => {
+                HandleOpenCloseMenuRigth(false);
+                HandleChatOrAttende('4');
+              }}></Menu.Item>
+          )}
+        </>
       </>
     </Menu>
   );
 };
 
-const mapStateToProps = (state) => ({
-  currentActivity: state.stage.data.currentActivity,
-});
-
 let MenuRigthWithContext = withContext(MenuRigth);
-export default connect(mapStateToProps, null)(withRouter(MenuRigthWithContext));
+export default connect(null, null)(withRouter(MenuRigthWithContext));

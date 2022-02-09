@@ -15,14 +15,6 @@ import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import AgendaContext from 'Context/AgendaContext';
 
 const RenderComponent = (props) => {
-  let {
-    currentActivity,
-    chatAttendeChats,
-    handleChangeTabs,
-    handleChangeCurrentActivity,
-    HandleChatOrAttende,
-    HandlePublicPrivate,
-  } = useContext(HelperContext);
   let tabsdefault = {
     attendees: false,
     chat: true,
@@ -37,21 +29,15 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
   let { transmition, setTransmition } = useContext(AgendaContext);
-
-  const Preloader = () => (
-    <Space
-      direction='horizontal'
-      style={{
-        background: '#F7F7F7',
-        display: 'flex',
-        justifyContent: 'center',
-        alignContent: 'center',
-        width: '100%',
-        height: '80vh',
-      }}>
-      <LoadingOutlined style={{ fontSize: '100px', color: 'black' }} spin />
-    </Space>
-  );
+  let {
+    currentActivity,
+    chatAttendeChats,
+    handleChangeTabs,
+    handleChangeCurrentActivity,
+    setcurrenActivity,
+    HandleChatOrAttende,
+    HandlePublicPrivate,
+  } = useContext(HelperContext);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     let tempactivty = currentActivity;
@@ -65,11 +51,11 @@ const RenderComponent = (props) => {
         const data = infoActivity.data();
         const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
         setplatform(platform);
+        settabsGeneral(tabs);
         setactivityState(habilitar_ingreso);
         setactivityStateGlobal(habilitar_ingreso);
         setmeetingId(meeting_id);
         setTransmition(data.transmition);
-        settabsGeneral(tabs);
         if (!tabs.games) {
           HandleChatOrAttende('1');
           HandlePublicPrivate('public');
@@ -82,19 +68,19 @@ const RenderComponent = (props) => {
         handleChangeTabs(tabs);
         tempactivty.habilitar_ingreso = habilitar_ingreso;
         tempactivty.avalibleGames = avalibleGames;
+        setcurrenActivity(tempactivty);
+        console.log('tempactivty', tempactivty);
       });
-
-    handleChangeCurrentActivity(tempactivty);
   }
   useEffect(() => {
     async function GetStateMeetingRoom() {
       await listeningStateMeetingRoom(props.cEvent.value._id, currentActivity._id);
     }
 
-    if (currentActivity) {
+    if (currentActivity != null) {
       GetStateMeetingRoom();
     }
-  }, [currentActivity, props.cEvent.value]);
+  }, [currentActivity, props.cEvent]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
