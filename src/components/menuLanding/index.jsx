@@ -75,14 +75,14 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
-        survey: {
+        /* survey: {
           name: 'Encuestas',
           position: 30,
           section: 'survey',
           icon: 'FileUnknownOutlined',
           checked: false,
           permissions: 'public',
-        },
+        }, */
         faqs: {
           name: 'Preguntas Frecuentes',
           position: 30,
