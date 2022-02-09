@@ -94,7 +94,7 @@ const RenderComponent = (props) => {
     if (currentActivity) {
       GetStateMeetingRoom();
     }
-  }, [currentActivity, props]);
+  }, [currentActivity, props.cEvent.value]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
