@@ -116,24 +116,27 @@ const MenuRigth = (props) => {
               }}></Menu.Item>
           )}
         <>
-          {tabsGenerals && tabsGenerals.games && currentActivity != null && (
-            <Menu.Item
-              key='4'
-              icon={
-                <GamepadVariantOutline
-                  // className={animateIcon + ' animate__delay-4s'}
-                  style={{
-                    fontSize: '32px',
-                    color: props.cEvent.value.styles?.textMenu,
-                  }}
-                />
-              }
-              style={{ paddingTop: '20px' }}
-              onClick={() => {
-                HandleOpenCloseMenuRigth(false);
-                HandleChatOrAttende('4');
-              }}></Menu.Item>
-          )}
+          {tabsGenerals &&
+            tabsGenerals.games &&
+            currentActivity != null &&
+            currentActivity.habilitar_ingreso === 'open_meeting_room' && (
+              <Menu.Item
+                key='4'
+                icon={
+                  <GamepadVariantOutline
+                    // className={animateIcon + ' animate__delay-4s'}
+                    style={{
+                      fontSize: '32px',
+                      color: props.cEvent.value.styles?.textMenu,
+                    }}
+                  />
+                }
+                style={{ paddingTop: '20px' }}
+                onClick={() => {
+                  HandleOpenCloseMenuRigth(false);
+                  HandleChatOrAttende('4');
+                }}></Menu.Item>
+            )}
         </>
       </>
     </Menu>
