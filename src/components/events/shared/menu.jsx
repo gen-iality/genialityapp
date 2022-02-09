@@ -226,10 +226,10 @@ class MenuConfig extends Component {
               <NavLink onClick={this.handleClick} to={`${url}/confirmacion-registro`}></NavLink>
             </Menu.Item>
 
-            <Menu.Item key='17'>
+            {/* <Menu.Item key='17'>
               Tipo de asistentes
               <NavLink onClick={this.handleClick} to={`${url}/tipo-asistentes`}></NavLink>
-            </Menu.Item>
+            </Menu.Item> */}
 
             {permissions.data.ids.includes(rolPermissions.admin_staff._id) && false && (
               <Menu.Item key='18'>
