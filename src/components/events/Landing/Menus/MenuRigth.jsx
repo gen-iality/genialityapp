@@ -35,7 +35,7 @@ const MenuRigth = (props) => {
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat || props.generalTabs?.attendees) && (
           <Menu.Item
             id={'openMenu'}
-            className='animate__animated animate__headShake animate__slower animate__infinite'
+            // className='animate__animated animate__headShake animate__slower animate__infinite'
             key='0'
             icon={
               <>
@@ -58,7 +58,7 @@ const MenuRigth = (props) => {
               <span>
                 <Badge count={totalPrivateMessages}>
                   <CommentOutlined
-                    className={animateIcon}
+                    // className={animateIcon}
                     style={{
                       fontSize: '30px',
                       color: props.cEvent.value.styles?.textMenu,
@@ -80,7 +80,7 @@ const MenuRigth = (props) => {
             key='2'
             icon={
               <TeamOutlined
-                className={animateIcon + ' animate__delay-2s'}
+                // className={animateIcon + ' animate__delay-2s'}
                 style={{
                   fontSize: '30px',
                   color: props.cEvent.value.styles?.textMenu,
@@ -103,7 +103,7 @@ const MenuRigth = (props) => {
                 <span>
                   <Badge dot={props.hasOpenSurveys}>
                     <PieChartOutlined
-                      className={animateIcon + ' animate__delay-3s'}
+                      // className={animateIcon + ' animate__delay-3s'}
                       style={{
                         fontSize: '30px',
                         color: props.cEvent.value.styles?.textMenu,
@@ -126,7 +126,7 @@ const MenuRigth = (props) => {
                 key='4'
                 icon={
                   <GamepadVariantOutline
-                    className={animateIcon + ' animate__delay-4s'}
+                    // className={animateIcon + ' animate__delay-4s'}
                     style={{
                       fontSize: '32px',
                       color: props.cEvent.value.styles?.textMenu,

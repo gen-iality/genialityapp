@@ -74,6 +74,11 @@ const RenderComponent = (props) => {
           HandleChatOrAttende('1');
           HandlePublicPrivate('public');
         }
+        //Validacion para colombina (quitar apenas pase el evento)
+        if (event_id == '619d09f7cbd9a47c2d386372') {
+          HandleChatOrAttende('4');
+        }
+
         handleChangeTabs(tabs);
         tempactivty.habilitar_ingreso = habilitar_ingreso;
         tempactivty.avalibleGames = avalibleGames;
@@ -89,7 +94,7 @@ const RenderComponent = (props) => {
     if (currentActivity) {
       GetStateMeetingRoom();
     }
-  }, [currentActivity]);
+  }, [currentActivity, props]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {

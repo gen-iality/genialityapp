@@ -5,6 +5,7 @@ import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutli
 import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { HelperContext } from '../../Context/HelperContext';
 import { UseCurrentUser } from '../../Context/userContext';
+import { UseEventContext } from '../../Context/eventContext';
 import moment from 'moment';
 
 const { Paragraph, Title, Text } = Typography;
@@ -39,6 +40,10 @@ const styleListPointer = {
 
 function UsersCard(props) {
   let cUser = UseCurrentUser();
+  let cEvent = UseEventContext();
+  let eventValues = cEvent.value;
+
+  let eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';
   let {
     createNewOneToOneChat,
     HandleChatOrAttende,
@@ -318,10 +323,10 @@ function UsersCard(props) {
     // });
     setAvatar(() => {
       return (
-        <Badge offset={[-40, 3]} count={podiumValidate()}>
+        <Badge offset={[-40, 3]}>
           <Avatar
             src={picture && picture}
-            style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }}
+            style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))', backgroundColor: eventColor }}
             size={45}>
             {!picture && name && name.charAt(0).toUpperCase()}
           </Avatar>
