@@ -56,7 +56,7 @@ const ChatList = (props) => {
   )
     return <AnonymousEvenUserForm />;
 
-  let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
+  let userNameActive = cUser.value?.name ? cUser.value.name : cUser.value.names;
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
   return (
     <Tabs style={{ marginTop: '-18px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
