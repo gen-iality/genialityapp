@@ -214,7 +214,7 @@ const NewCE = (props) => {
         <Col span={16}>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -229,7 +229,7 @@ const NewCE = (props) => {
 
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Subtítulo <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -244,7 +244,7 @@ const NewCE = (props) => {
 
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Noticia <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -260,7 +260,7 @@ const NewCE = (props) => {
 
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Imagen <label style={{ color: 'red' }}>*</label>
               </label>
             }

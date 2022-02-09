@@ -220,7 +220,7 @@ function AddProduct(props) {
         <Col span={16}>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Nombre del producto <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -235,7 +235,7 @@ function AddProduct(props) {
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Por
               </label>
             }
@@ -250,7 +250,7 @@ function AddProduct(props) {
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Descripción <label style={{ color: 'red' }}>*</label>
               </label>
             }>
@@ -261,7 +261,7 @@ function AddProduct(props) {
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Valor
               </label>
             }
@@ -274,7 +274,7 @@ function AddProduct(props) {
             />{' '}
           </Form.Item>
 
-          <label style={{ marginTop: '2%' }} className='label'>
+          <label style={{ marginTop: '2%' }} >
             Imagen <label style={{ color: 'red' }}>*</label>
           </label>
 
@@ -320,7 +320,7 @@ function AddProduct(props) {
           />
           {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
 
-          <label style={{ marginTop: '2%' }} className='label'>
+          <label style={{ marginTop: '2%' }} >
             Imagen opcional
           </label>
 
