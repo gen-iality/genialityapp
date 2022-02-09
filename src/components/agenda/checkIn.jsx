@@ -225,6 +225,7 @@ class CheckAgenda extends Component {
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
       ellipsis: true,
+      width: 130,
       sorter: (a, b) => a.checkedin_at - b.checkedin_at,
       render: self.checkedincomponent,
     });
@@ -566,11 +567,11 @@ class CheckAgenda extends Component {
           scroll={{ x: 3200 }}
           titleTable={
             <Row gutter={[8, 8]} wrap justify='end'>
-              <Col>
+              {/* <Col>
                 <Button onClick={this.checkModal} type='primary' icon={<QrcodeOutlined />}>
                   {'Leer Código QR'}
                 </Button>
-              </Col>
+              </Col> */}
               <Col>
                 <Button onClick={this.goToSendMessage} type='primary' icon={<SendOutlined />}>
                   {'Enviar Comunicación/Correo'}

@@ -131,78 +131,6 @@ class MenuConfig extends Component {
             </Menu.Item>
           </SubMenu>
 
-          {/* Configuración de Asistentes */}
-
-          <SubMenu
-            className='SubMenuCofigASIS'
-            key='sub3'
-            title={
-              <span>
-                <SolutionOutlined />
-                <span>Configuración Asistentes</span>
-              </span>
-            }>
-            <Menu.Item key='15'>
-              Datos/Campos a recolectar de asistentes
-              <NavLink onClick={this.handleClick} to={`${url}/datos`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='16'>
-              Confirmación registro
-              <NavLink onClick={this.handleClick} to={`${url}/confirmacion-registro`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='17'>
-              Tipo de asistentes
-              <NavLink onClick={this.handleClick} to={`${url}/tipo-asistentes`}></NavLink>
-            </Menu.Item>
-
-            {permissions.data.ids.includes(rolPermissions.admin_staff._id) && false && (
-              <Menu.Item key='18'>
-                Organizadores
-                <NavLink onClick={this.handleClick} to={`${url}/staff`}></NavLink>
-              </Menu.Item>
-            )}
-          </SubMenu>
-
-          {/* Sección de checkin */}
-
-          <SubMenu
-            key='sub6'
-            title={
-              <span>
-                <IdcardOutlined />
-                <span>Asistentes</span>
-              </span>
-            }>
-            <Menu.Item key='19'>
-              Asistentes / Checkin
-              <NavLink onClick={this.handleClick} to={`${url}/assistants`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='20'>
-              Check In por Actividad
-              <NavLink onClick={this.handleClick} to={`${url}/checkin-actividad`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item>
-              Gestion de Chats
-              <NavLink onClick={this.handleClick} to={`${url}/chatexport`}></NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='21'>
-              Enviar Correos a Asistentes
-              <NavLink onClick={this.handleClick} to={`${url}/invitados`}></NavLink>
-            </Menu.Item>
-
-            {permissions.data.ids.includes(rolPermissions.admin_badge._id) && (
-              <Menu.Item key='22'>
-                Configurarr Escarapela
-                <NavLink onClick={this.handleClick} to={`${url}/badge`}></NavLink>
-              </Menu.Item>
-            )}
-          </SubMenu>
-
           {/* Configuración de Contendio*/}
           <SubMenu
             key='sub1'
@@ -278,7 +206,77 @@ class MenuConfig extends Component {
               </Menu.Item> */}
           </SubMenu>
 
-          {/* COnfiguración de invitados */}
+          {/* Configuración de Asistentes */}
+          <SubMenu
+            className='SubMenuCofigASIS'
+            key='sub3'
+            title={
+              <span>
+                <SolutionOutlined />
+                <span>Configuración Asistentes</span>
+              </span>
+            }>
+            <Menu.Item key='15'>
+              Datos/Campos a recolectar de asistentes
+              <NavLink onClick={this.handleClick} to={`${url}/datos`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='16'>
+              Confirmación registro
+              <NavLink onClick={this.handleClick} to={`${url}/confirmacion-registro`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='17'>
+              Tipo de asistentes
+              <NavLink onClick={this.handleClick} to={`${url}/tipo-asistentes`}></NavLink>
+            </Menu.Item>
+
+            {permissions.data.ids.includes(rolPermissions.admin_staff._id) && false && (
+              <Menu.Item key='18'>
+                Organizadores
+                <NavLink onClick={this.handleClick} to={`${url}/staff`}></NavLink>
+              </Menu.Item>
+            )}
+          </SubMenu>
+
+          {/* Sección de checkin */}
+          <SubMenu
+            key='sub6'
+            title={
+              <span>
+                <IdcardOutlined />
+                <span>Asistentes</span>
+              </span>
+            }>
+            <Menu.Item key='19'>
+              Asistentes / Checkin
+              <NavLink onClick={this.handleClick} to={`${url}/assistants`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='20'>
+              Check In por Actividad
+              <NavLink onClick={this.handleClick} to={`${url}/checkin-actividad`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item>
+              Gestion de Chats
+              <NavLink onClick={this.handleClick} to={`${url}/chatexport`}></NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='21'>
+              Enviar Correos a Asistentes
+              <NavLink onClick={this.handleClick} to={`${url}/invitados`}></NavLink>
+            </Menu.Item>
+
+            {permissions.data.ids.includes(rolPermissions.admin_badge._id) && (
+              <Menu.Item key='22'>
+                Configurarr Escarapela
+                <NavLink onClick={this.handleClick} to={`${url}/badge`}></NavLink>
+              </Menu.Item>
+            )}
+          </SubMenu>
+
+          {/* Configuración de invitados */}
           {permissions.data.ids.includes(rolPermissions.admin_invitations._id) && false && (
             <SubMenu
               key='sub4'
@@ -320,10 +318,10 @@ class MenuConfig extends Component {
                 <NavLink onClick={this.handleClick} to={`${url}/messages`}></NavLink>
               </Menu.Item>
 
-              <Menu.Item key='27'>
+              {/* <Menu.Item key='27'>
                 Push Notificaciones
                 <NavLink onClick={this.handleClick} to={`${url}/notificationsApp`}></NavLink>
-              </Menu.Item>
+              </Menu.Item> */}
 
               <Menu.Item key='28'>
                 Enviar información a asistentes
