@@ -110,12 +110,12 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
       case 'zoom':
@@ -133,12 +133,12 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
       case 'dolby':
@@ -156,12 +156,12 @@ const RenderComponent = (props) => {
             return <DolbyCard />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
       case 'wowza':
@@ -190,15 +190,15 @@ const RenderComponent = (props) => {
             );
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
       case null:
-        return currentActivity?.video ? <VideoActivity /> : '';
+        return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
     }
   });
 
