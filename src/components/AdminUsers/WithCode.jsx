@@ -43,7 +43,7 @@ const WithCode = () => {
         .then((result) => {
           setVerifyLink(true);
           if (event && result) {
-            window.setInterval(() => `${window.location.origin}/landing/${event}`, 3000);
+            window.setInterval(() => (window.location.href = `${window.location.origin}/landing/${event}}`), 3000);
           } else {
             window.setInterval(() => (window.location.href = `${window.location.origin}`), 3000);
           }
