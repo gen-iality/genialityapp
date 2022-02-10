@@ -95,7 +95,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                         //console.log('DOCUMENT ID==>', docRef.docs[0].id);
                         await conectionRef.doc(docRef.docs[0].id).delete();
                         setLoading(false);
-                        window.location.href = window.location.href;
+                        window.setInterval(() => (window.location.href = refreshLink), 3000);
                       }
                       setLoading(false);
                     }}
