@@ -43,9 +43,9 @@ const WithCode = () => {
         .then((result) => {
           setVerifyLink(true);
           if (event && result) {
-            window.setInterval(() => (window.location.href = `${window.location.origin}/landing/${event}}`), 3000);
+            window.location.href = `${window.location.origin}/landing/${event}}`;
           } else {
-            window.setInterval(() => (window.location.href = `${window.location.origin}`), 3000);
+            window.location.href = `${window.location.origin}`;
           }
         })
         .catch(async (error) => {
