@@ -43,7 +43,7 @@ const WithCode = () => {
         .then((result) => {
           setVerifyLink(true);
           if (event && result) {
-            window.location.href = `${window.location.origin}/landing/${event}}`;
+            window.location.href = `${window.location.origin}/landing/${event}`;
           } else {
             window.location.href = `${window.location.origin}`;
           }
