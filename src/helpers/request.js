@@ -183,7 +183,8 @@ export const EventsApi = {
     return await Actions.post(`/api/events/${eventId}/invitation`, data);
   },
   sendRsvp: async (data, id) => {
-    return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/rsvp/sendeventrsvp/${id}?token=${token}`, data, true);
   },
   mine: async () => {
     let token = await GetTokenUserFirebase();
