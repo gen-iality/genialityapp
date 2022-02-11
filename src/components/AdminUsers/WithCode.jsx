@@ -30,7 +30,7 @@ const WithCode = () => {
         .then(async (resp) => {
           if (
             (resp.docs.length == 0 && app.auth().currentUser?.email != email) ||
-            (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
+            (app.auth().currentUser?.email == email && resp.docs.length == 0) ||
             (resp.docs.length == 0 && !app.auth().currentUser)
           ) {
             if (app.auth().currentUser) {
@@ -78,7 +78,15 @@ const WithCode = () => {
             refreshLink = await EventsApi.refreshLinkEmailUser(email);
           }
           if (refreshLink) {
-            window.location.href = refreshLink;
+            window.setInterval(() => (window.location.href = refreshLink), 3000);
+            /*fetch(refreshLink).then((result) => {
+              if (event && result) {
+                console.log('RESULTACA===>', result);
+                // window.location.href = `${window.location.origin}/landing/${event}`;
+              } else {
+                window.location.href = `${window.location.origin}`;
+              }
+            });*/
           } else {
             console.log('NOT REQUEST');
           }
