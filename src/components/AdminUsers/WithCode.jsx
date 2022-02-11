@@ -33,15 +33,13 @@ const WithCode = () => {
             (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
             (resp.docs.length == 0 && !app.auth().currentUser)
           ) {
-            console.log('ENTRO ACA===>');
             if (app.auth().currentUser) {
+              if (app.auth().currentUser.email == email) {
+                await app.auth().signOut();
+              }
               const docRef = await conectionRef.where('email', '==', email).get();
-              // console.log('RESPUESTA ACA===>', docRef.docs.length, docRef.docs[0].id);
               if (docRef.docs.length > 0) {
-                //console.log('DOCUMENT ID==>', docRef.docs[0].id);
-                conectionRef.doc(docRef.docs[0].id).delete();
-                //await app.auth().signOut();
-                console.log('CERRË LA SESION ACA'); //window.location.href = window.location.href;
+                await conectionRef.doc(docRef.docs[0].id).delete();
               }
               await loginWithCode();
             } else {
@@ -59,14 +57,20 @@ const WithCode = () => {
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
           setVerifyLink(true);
+          let urlredirect;
           if (event && result) {
-            window.location.href = `${window.location.origin}/landing/${event}`;
+            urlredirect = `${window.location.origin}/landing/${event}`;
           } else {
-            window.location.href = `${window.location.origin}`;
+            urlredirect = `${window.location.origin}`;
+          }
+          if (urlredirect) {
+            setTimeout(() => redirectUrlFunction(), 3000);
+            const redirectUrlFunction = () => {
+              window.location.href = urlredirect;
+            };
           }
         })
         .catch(async (error) => {
-          console.log('Error al loguearse1..', error);
           let refreshLink;
           if (event) {
             refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event);
@@ -75,14 +79,6 @@ const WithCode = () => {
           }
           if (refreshLink) {
             window.location.href = refreshLink;
-            /*fetch(refreshLink).then((result) => {
-              if (event && result) {
-                console.log('RESULTACA===>', result);
-                // window.location.href = `${window.location.origin}/landing/${event}`;
-              } else {
-                window.location.href = `${window.location.origin}`;
-              }
-            });*/
           } else {
             console.log('NOT REQUEST');
           }
