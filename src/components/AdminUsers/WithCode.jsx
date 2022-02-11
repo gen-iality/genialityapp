@@ -30,13 +30,11 @@ const WithCode = () => {
         .then(async (resp) => {
           if (
             (resp.docs.length == 0 && app.auth().currentUser?.email != email) ||
-            (app.auth().currentUser?.email == email && resp.docs.length == 0) ||
+            (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
             (resp.docs.length == 0 && !app.auth().currentUser)
           ) {
             if (app.auth().currentUser) {
-              if (app.auth().currentUser.email == email) {
-                await app.auth().signOut();
-              }
+              await app.auth().signOut();
               const docRef = await conectionRef.where('email', '==', email).get();
               if (docRef.docs.length > 0) {
                 await conectionRef.doc(docRef.docs[0].id).delete();
