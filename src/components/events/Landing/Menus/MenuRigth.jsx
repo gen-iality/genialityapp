@@ -27,7 +27,7 @@ const MenuRigth = (props) => {
     settypeEvent(recordTypeForThisEvent(cEvent));
   }, [cEvent]);
 
-  const animateIcon = 'animate__animated animate__bounceIn';
+  // const animateIcon = 'animate__animated animate__bounceIn';
 
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
@@ -35,7 +35,7 @@ const MenuRigth = (props) => {
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat || props.generalTabs?.attendees) && (
           <Menu.Item
             id={'openMenu'}
-            className='animate__animated animate__headShake animate__slower animate__infinite'
+            // className='animate__animated animate__headShake animate__slower animate__infinite'
             key='0'
             icon={
               <>
@@ -50,7 +50,6 @@ const MenuRigth = (props) => {
             style={{ marginTop: '12px', marginBottom: '22px' }}
             onClick={() => HandleOpenCloseMenuRigth(false)}></Menu.Item>
         )}
-
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat) && (
           <Menu.Item
             key='1'
@@ -58,7 +57,7 @@ const MenuRigth = (props) => {
               <span>
                 <Badge count={totalPrivateMessages}>
                   <CommentOutlined
-                    className={animateIcon}
+                    // className={animateIcon}
                     style={{
                       fontSize: '30px',
                       color: props.cEvent.value.styles?.textMenu,
@@ -73,14 +72,13 @@ const MenuRigth = (props) => {
               HandleChatOrAttende('1');
             }}></Menu.Item>
         )}
-
         {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
         {props.generalTabs?.attendees && typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
           <Menu.Item
             key='2'
             icon={
               <TeamOutlined
-                className={animateIcon + ' animate__delay-2s'}
+                // className={animateIcon + ' animate__delay-2s'}
                 style={{
                   fontSize: '30px',
                   color: props.cEvent.value.styles?.textMenu,
@@ -93,9 +91,8 @@ const MenuRigth = (props) => {
               HandleChatOrAttende('2');
             }}></Menu.Item>
         )}
-
         {currentActivity != null &&
-          currentActivity.habilitar_ingreso === 'open_meeting_room' &&
+          // currentActivity.habilitar_ingreso === 'open_meeting_room' &&
           typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
             <Menu.Item
               key='3'
@@ -103,7 +100,7 @@ const MenuRigth = (props) => {
                 <span>
                   <Badge dot={props.hasOpenSurveys}>
                     <PieChartOutlined
-                      className={animateIcon + ' animate__delay-3s'}
+                      // className={animateIcon + ' animate__delay-3s'}
                       style={{
                         fontSize: '30px',
                         color: props.cEvent.value.styles?.textMenu,
@@ -118,15 +115,16 @@ const MenuRigth = (props) => {
                 HandleChatOrAttende('3');
               }}></Menu.Item>
           )}
-
-        {currentActivity != null && currentActivity.habilitar_ingreso === 'open_meeting_room' && (
-          <>
-            {tabsGenerals !== null && (tabsGenerals.games === 'true' || tabsGenerals.games === true) && (
+        <>
+          {tabsGenerals &&
+            tabsGenerals.games &&
+            currentActivity != null &&
+            currentActivity.habilitar_ingreso === 'open_meeting_room' && (
               <Menu.Item
                 key='4'
                 icon={
                   <GamepadVariantOutline
-                    className={animateIcon + ' animate__delay-4s'}
+                    // className={animateIcon + ' animate__delay-4s'}
                     style={{
                       fontSize: '32px',
                       color: props.cEvent.value.styles?.textMenu,
@@ -139,16 +137,11 @@ const MenuRigth = (props) => {
                   HandleChatOrAttende('4');
                 }}></Menu.Item>
             )}
-          </>
-        )}
+        </>
       </>
     </Menu>
   );
 };
 
-const mapStateToProps = (state) => ({
-  currentActivity: state.stage.data.currentActivity,
-});
-
 let MenuRigthWithContext = withContext(MenuRigth);
-export default connect(mapStateToProps, null)(withRouter(MenuRigthWithContext));
+export default connect(null, null)(withRouter(MenuRigthWithContext));

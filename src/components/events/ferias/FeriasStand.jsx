@@ -36,7 +36,7 @@ function FeriasStand (props) {
                 src={props.image}
                 style={{
                 width: '100%',
-                border:`10px solid white`, borderRadius:'12px',
+                /* border:`10px solid white`, borderRadius:'12px', */
                 height:'20vh',
                 objectFit:'contain'
                 }}
@@ -46,7 +46,7 @@ function FeriasStand (props) {
                 src={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FViews%2F2021-08-04.png?alt=media&token=fc7df0fa-1b18-406f-8d0a-59bf030a5372'}
                 style={{
                 width: '100%',
-                border:`10px solid white`, borderRadius:'12px',
+                /* border:`10px solid white`, borderRadius:'12px', */
                 height:'35vh',
                 objectFit:'contain'
                 }}

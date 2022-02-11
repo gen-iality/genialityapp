@@ -2,9 +2,10 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message, Alert } from 'antd';
+import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message, Alert, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Actions } from '../../helpers/request';
+import { saveImageStorage } from '../../helpers/helperSaveImage';
 
 const { Option } = Select;
 
@@ -36,6 +37,13 @@ const FormEdit = (
   const [questionType, setQuestionType] = useState(null);
   const [defaultImgValue, setDefaultImgValue] = useState(null);
   const [loading, setLoading] = useState(false);
+  /** se almacenan las dimenciones de la imagen para mostarlas en el error */
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  /** Estado para validar algun error en las dimensiones de la imagen */
+  const [wrongDimensions, setWrongDimensions] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -48,36 +56,68 @@ const FormEdit = (
 
     return () => {
       setDefaultImgValue(null);
+      setWrongDimensions(false);
       unmountForm();
     };
   }, []);
 
-  async function saveEventImage(file) {
-    const url = '/api/files/upload';
-    const data = new FormData();
-    data.append('file', file);
-    let response = null;
-    response = await Actions.post(url, data)
-      .then((result) => {
-        return result;
-      })
-      .catch((err) => {
-        response = null;
-        console.error(err);
-      });
+  /** request para no mostrar el error que genera el component upload de antd */
+  const dummyRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess('ok');
+    }, 0);
+  };
 
-    setDefaultImgValue([
-      {
-        uid: 'img-' + questionId,
-        name: 'banner',
-        status: 'done',
-        type: 'image',
-        thumbUrl: response,
-        imageLink: response,
-        imageWidth: '500px',
-        imageHeight: '300px',
-      },
-    ]);
+  /**
+   * * This function is used to upload an image to the firebase Blob Storage.
+   * * The image is selected from the default image dropdown list.
+   * * If the image is selected, the image is uploaded to the firebase Blob Storage.
+   * * The image is then returned.
+   * @returns The URL of the uploaded image.
+   */
+  async function saveEventImage() {
+    const selectedLogo = defaultImgValue !== null ? defaultImgValue[0].thumbUrl : null;
+
+    if (selectedLogo) {
+      const urlOfTheUploadedImage = await saveImageStorage(selectedLogo);
+
+      return urlOfTheUploadedImage;
+    }
+    return null;
+  }
+
+  /**
+   * The function validates the image dimensions of the uploaded image
+   * @returns The return value is the boolean value of the validation.
+   */
+  function validatingImageDimensions(blobImage) {
+    var reader = new FileReader(); //Initiate the FileReader object.
+    //Read the contents of Image File.
+    reader.readAsDataURL(blobImage);
+    reader.onload = function(e) {
+      //Initiate the JavaScript Image object.
+      var image = new Image();
+
+      //Set the Base64 string return from FileReader as source.
+      image.src = e.target.result;
+
+      //Validate the File Height and Width.
+      image.onload = function() {
+        var height = this.height;
+        var width = this.width;
+        if (height > 300 || width > 600) {
+          setDimensions({
+            width: width,
+            height: height,
+          });
+          setDefaultImgValue(null);
+          setWrongDimensions(true);
+
+          return false;
+        }
+        return true;
+      };
+    };
   }
 
   useEffect(() => {
@@ -124,13 +164,31 @@ const FormEdit = (
     }
   };
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     values['id'] = questionId;
 
+    const imageUrl = await saveEventImage();
+
     delete values.image;
-    if (defaultImgValue != null) {
-      values.image = defaultImgValue;
+
+    if (imageUrl) {
+      const newImagenValue = [
+        {
+          uid: 'img-' + questionId,
+          name: 'banner',
+          status: 'done',
+          type: 'image',
+          thumbUrl: imageUrl,
+          imageLink: imageUrl,
+          imageWidth: '500px',
+          imageHeight: '300px',
+        },
+      ];
+      values.image = newImagenValue;
+    } else {
+      values.image = imageUrl;
     }
+
     if (allowGradableSurvey) {
       switch (questionType) {
         case 'radiogroup':
@@ -287,20 +345,59 @@ const FormEdit = (
             )}
             <div>
               <Form.Item key={`img`} name={'image'} label={'Imagen'}>
-                <Upload
-                  multiple={false}
-                  accept='image/png, image/jpeg'
-                  name='logo'
-                  listType='picture'
-                  maxCount={1}
-                  defaultFileList={defaultImgValue}
-                  action={(file) => saveEventImage(file)}
-                  onRemove={handleRemoveImg}>
-                  <Button icon={<UploadOutlined />}>Cargar imagen</Button>
-                </Upload>
-                <p>
-                  <small>Tenga en cuenta que la dimensión de la imagen debe ser 500px*300px ó 600px*300px</small>
-                </p>
+                <Space direction='vertical'>
+                  <Upload
+                    multiple={false}
+                    accept='image/png, image/jpeg'
+                    name='logo'
+                    listType='picture'
+                    maxCount={1}
+                    /** Se envia el blob del upload para validar las dimensiones */
+                    action={(file) => validatingImageDimensions(file)}
+                    onChange={(file) => {
+                      if (file.fileList.length > 0) {
+                        setDefaultImgValue(file.fileList);
+                        setWrongDimensions(false);
+                      } else {
+                        setWrongDimensions(false);
+                        setDefaultImgValue(null);
+                      }
+                    }}
+                    customRequest={dummyRequest}
+                    fileList={defaultImgValue}
+                    onRemove={handleRemoveImg}>
+                    <Button icon={<UploadOutlined />}>Cargar imagen</Button>
+                  </Upload>
+                  {wrongDimensions && (
+                    <Alert
+                      showIcon
+                      closable
+                      className='animate__animated animate__bounceIn'
+                      style={{
+                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                        backgroundColor: '#FFFFFF',
+                        color: '#000000',
+                        borderLeft: '5px solid #FF4E50',
+                        fontSize: '14px',
+                        textAlign: 'start',
+                        borderRadius: '5px',
+                      }}
+                      type='error'
+                      message={
+                        <p>
+                          Las dimensiones de la imagen actual son:{' '}
+                          <strong>
+                            {dimensions.width}*{dimensions.height}
+                          </strong>
+                          .
+                        </p>
+                      }
+                    />
+                  )}
+                  <p>
+                    <small>Tenga en cuenta que la dimensión de la imagen debe ser 500px*300px ó 600px*300px</small>
+                  </p>
+                </Space>
               </Form.Item>
             </div>
 

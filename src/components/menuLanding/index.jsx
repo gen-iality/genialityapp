@@ -75,14 +75,14 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
-        survey: {
+        /* survey: {
           name: 'Encuestas',
           position: 30,
           section: 'survey',
           icon: 'FileUnknownOutlined',
           checked: false,
           permissions: 'public',
-        },
+        }, */
         faqs: {
           name: 'Preguntas Frecuentes',
           position: 30,
@@ -263,11 +263,12 @@ class menuLanding extends Component {
     let menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
 
-    if (newMenu.itemsMenu.tickets) {
+    /*if (newMenu.itemsMenu.tickets) {
       newMenu.allow_register = true;
     } else {
       newMenu.allow_register = false;
-    }
+    }*/
+
     if (this.props.organization !== 1) {
       let token = await GetTokenUserFirebase();
       const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);

@@ -75,7 +75,7 @@ const ModalAuth = (props) => {
           break;
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
-          setmodalVisible(false);
+          setmodalVisible(true);
           HandleControllerLoginVisible({ visible: false });
           break;
 

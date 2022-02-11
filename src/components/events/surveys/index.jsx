@@ -104,9 +104,9 @@ class SurveyForm extends Component {
     //this.listenSurveysData(prevProps);
 
     //Método que permite al componente conectar con un componente superior y subir el estado  de la encuesta actual seleccionada
-    if (prevState.selectedSurvey !== this.state.selectedSurvey) {
+    /* if (prevState.selectedSurvey !== this.state.selectedSurvey) {
       this.props.mountCurrentSurvey(this.state.selectedSurvey);
-    }
+    } */
 
     //No es la manera ideal pero aqui forzamos una revisión en la base de datos para asber si el usuario ya voto
     //mejor tener esto en forma de contexto o algo similar

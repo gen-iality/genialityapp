@@ -95,9 +95,11 @@ let SocialZone = function(props) {
         className='asistente-chat-list'
         tab={
           <>
-            <Badge onClick={() => HandleChatOrAttende('1')} size='small' count={totalPrivateMessages}>
-              <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
-            </Badge>
+            {props.generalTabs.publicChat && (
+              <Badge onClick={() => HandleChatOrAttende('1')} size='small' count={totalPrivateMessages}>
+                <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
+              </Badge>
+            )}
           </>
         }
         key='1'>
@@ -117,9 +119,13 @@ let SocialZone = function(props) {
           <TabPane
             style={styleTabAttendes}
             tab={
-              <div style={{ color: cEvent.value.styles.textMenu }}>
-                <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
-              </div>
+              <>
+                {props.generalTabs?.attendees && (
+                  <div style={{ color: cEvent.value.styles.textMenu }}>
+                    <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
+                  </div>
+                )}
+              </>
             }
             key='2'>
             <ThisRouteCanBeDisplayed>
@@ -238,9 +244,15 @@ let SocialZone = function(props) {
               </>
             }
             key='4'>
-            <ThisRouteCanBeDisplayed>
-              <GameList key='GameList' />
-            </ThisRouteCanBeDisplayed>
+            <>
+              {cEvent.value._id == '619d09f7cbd9a47c2d386372' ? (
+                <GameList key='GameList' />
+              ) : (
+                <ThisRouteCanBeDisplayed>
+                  <GameList key='GameList' />
+                </ThisRouteCanBeDisplayed>
+              )}
+            </>
           </TabPane>
         )}
     </Tabs>

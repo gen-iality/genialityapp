@@ -40,7 +40,7 @@ const MenuTabletsSocialZone = loadable(() => import('./Menus/MenuTabletsSocialZo
 const iniitalstatetabs = {
   attendees: false,
   privateChat: false,
-  publicChat: true,
+  publicChat: false,
 };
 
 const IconRender = (type) => {

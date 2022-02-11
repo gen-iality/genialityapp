@@ -52,12 +52,15 @@ const ChatList = (props) => {
 
   if (
     (iAmRegisteredInThisEvent(cEventUser) === 'LOADING' || iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED') &&
-    recordTypeForThisEvent(cEvent) == 'UN_REGISTERED_PUBLIC_EVENT'
-  )
+    recordTypeForThisEvent(cEvent) == 'UN_REGISTERED_PUBLIC_EVENT' &&
+    props.generalTabs?.publicChat
+  ) {
     return <AnonymousEvenUserForm />;
+  }
 
-  let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
+  let userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
+
   return (
     <Tabs style={{ marginTop: '-18px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
