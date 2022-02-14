@@ -223,6 +223,7 @@ class CheckAgenda extends Component {
       dataIndex: 'checkedin_at',
       width: 120,
       ellipsis: true,
+      width: 130,
       sorter: (a, b) => a.checkedin_at - b.checkedin_at,
       render: self.checkedincomponent,
     });

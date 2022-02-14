@@ -27,15 +27,15 @@ function Game(props) {
         ('/?uid=' +
           (currentUser && currentUser._id ? currentUser._id : '5e9caaa1d74d5c2f6a02a3c2') +
           '&displayName=' +
-          (currentUser.names ? currentUser.names : 'anonimo') +
+          (currentUser ? currentUser.names : 'anonimo') +
           '&email=' +
-          (currentUser.email ? currentUser.email : 'evius@evius.co'))
+          (currentUser ? currentUser.email : 'evius@evius.co'))
       }
       frameBorder='0'
       allow='autoplay; fullscreen; camera *;microphone *'
       allowFullScreen
       allowusermedia
-      style={{ zIndex: '10', width: '100%', height: '65vh' }}></iframe>
+      style={{ zIndex: '10', width: '100%', height: '65vh', overscrollBehavior: 'none' }}></iframe>
   );
 }
 

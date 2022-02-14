@@ -4,11 +4,15 @@ import { HelperContext } from '../../../Context/HelperContext';
 import { Result } from 'antd';
 
 const ImageComponent = (props) => {
+  let { willStartSoon } = props;
   let { currentActivity } = useContext(HelperContext);
   const [activityState, setactivityState] = useState('');
 
   useEffect(() => {
     setactivityState(currentActivity?.habilitar_ingreso);
+    return () => {
+      setactivityState('');
+    };
   }, [currentActivity]);
 
   function RenderTextActivity(state) {
@@ -47,13 +51,15 @@ const ImageComponent = (props) => {
             objectFit: 'cover',
           }}
           src={
-            props.cEvent.value.styles?.banner_image
-              ? props.cEvent.value.styles?.banner_image
-              : currentActivity?.image
+            willStartSoon
               ? currentActivity?.image
-              : props.cEvent.value.styles.event_image
-              ? props.cEvent.value.styles.event_image
-              : imagePlaceHolder
+                ? currentActivity?.image
+                : props.cEvent.value.styles?.banner_image
+                ? props.cEvent.value.styles?.banner_image
+                : props.cEvent.value.styles.event_image
+                ? props.cEvent.value.styles.event_image
+                : imagePlaceHolder
+              : props.cEvent.value.styles?.banner_image
           }
           alt='Activity'
         />
@@ -65,4 +71,4 @@ const ImageComponent = (props) => {
 };
 
 let ImageComponentwithContext = WithEviusContext(ImageComponent);
-export default ImageComponentwithContext;
+export default React.memo(ImageComponentwithContext);

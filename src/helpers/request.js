@@ -138,14 +138,14 @@ export const EventsApi = {
       .collection(`${event_id}_event_attendees`)
       .where('account_id', '==', user_id)
       .get();
-    const eventUser = !snapshot.empty ? snapshot.docs[ 0 ].data() : null;
+    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
     return eventUser;
   },
 
   getcurrentUserEventUser: async (event_id) => {
     let token = await GetTokenUserFirebase();
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
-    let eventUser = response.data && response.data[ 0 ] ? response.data[ 0 ] : null;
+    let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
 
@@ -263,7 +263,8 @@ export const EventsApi = {
       token = false;
     }
     return await Actions.get(
-      `api/events/${eventId}/eventusers${token ? `/?token=${token}` : '/'
+      `api/events/${eventId}/eventusers${
+        token ? `/?token=${token}` : '/'
       }&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
       true
     );
@@ -599,8 +600,13 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
   },
-  getUser: async (org, member) => {
-    return await Actions.getOne(`/api/organizations/${org}/users/`, member);
+  getEpecificUser: async (orgId, memberId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/organizations/${orgId}/organizationusers/${memberId}?token=${token}`, '', true);
+  },
+  getMeUser: async (orgId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/me/organizations/${orgId}/?token=${token}`, '', true);
   },
   saveUser: async (org, data) => {
     return await Actions.post(`/api/organizations/${org}/addorganizationuser`, data);
@@ -718,7 +724,7 @@ export const CertsApi = {
         })
         .then((response) => {
           resolve({
-            type: response.headers[ 'content-type' ],
+            type: response.headers['content-type'],
             blob: response.data,
           });
         });
@@ -820,7 +826,7 @@ export const RolAttApi = {
     try {
       return await Actions.get(`api/rols/${rolId}/rolseventspublic/?token=${token}`, true);
     } catch (error) {
-      if (error.response.status === 404) return { type: 'the role does not exist' };
+      if (error?.response?.status === 404) return { type: 'the role does not exist' };
     }
   },
 };

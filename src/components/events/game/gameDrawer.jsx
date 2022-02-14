@@ -68,25 +68,29 @@ function GameDrawer(props) {
         visible={gameVisible}
         onClose={closeDrawer}
         width={window.screen.width >= 768 ? (rankingVisible === false ? '100%' : '70%') : '100%'}>
-        <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
-          {
-            <Button type='primary' onClick={showRanking}>
-              {rankingVisible === false ? 'Cerrar ranking' : 'Abrir ranking'}
-            </Button>
-          }
-        </div>
+        {cEvent.value._id !== '619d09f7cbd9a47c2d386372' && (
+          <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
+            {
+              <Button type='primary' onClick={showRanking}>
+                {rankingVisible === false ? 'Cerrar ranking' : 'Abrir ranking'}
+              </Button>
+            }
+          </div>
+        )}
 
         <Row gutter={[8, 8]} justify='center'>
           <Col xl={rankingVisible === true ? 24 : 16} xxl={rankingVisible === true ? 24 : 16}>
             <Game />
           </Col>
-          <Col hidden={rankingVisible} xl={8} xxl={8}>
-            <div style={{ width: '100%' }}>
-              <div style={{ justifyContent: 'center', display: 'grid' }}>
-                <GameRanking />
+          {cEvent.value._id !== '619d09f7cbd9a47c2d386372' && (
+            <Col hidden={rankingVisible} xl={8} xxl={8}>
+              <div style={{ width: '100%' }}>
+                <div style={{ justifyContent: 'center', display: 'grid' }}>
+                  <GameRanking />
+                </div>
               </div>
-            </div>
-          </Col>
+            </Col>
+          )}
         </Row>
       </Drawer>
     </>

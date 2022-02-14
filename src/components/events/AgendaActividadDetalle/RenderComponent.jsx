@@ -15,14 +15,6 @@ import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import AgendaContext from 'Context/AgendaContext';
 
 const RenderComponent = (props) => {
-  let {
-    currentActivity,
-    chatAttendeChats,
-    handleChangeTabs,
-    handleChangeCurrentActivity,
-    HandleChatOrAttende,
-    HandlePublicPrivate,
-  } = useContext(HelperContext);
   let tabsdefault = {
     attendees: false,
     chat: true,
@@ -37,21 +29,15 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
   let { transmition, setTransmition } = useContext(AgendaContext);
-
-  const Preloader = () => (
-    <Space
-      direction='horizontal'
-      style={{
-        background: '#F7F7F7',
-        display: 'flex',
-        justifyContent: 'center',
-        alignContent: 'center',
-        width: '100%',
-        height: '80vh',
-      }}>
-      <LoadingOutlined style={{ fontSize: '100px', color: 'black' }} spin />
-    </Space>
-  );
+  let {
+    currentActivity,
+    chatAttendeChats,
+    handleChangeTabs,
+    handleChangeCurrentActivity,
+    setcurrenActivity,
+    HandleChatOrAttende,
+    HandlePublicPrivate,
+  } = useContext(HelperContext);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     let tempactivty = currentActivity;
@@ -65,31 +51,36 @@ const RenderComponent = (props) => {
         const data = infoActivity.data();
         const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
         setplatform(platform);
+        settabsGeneral(tabs);
         setactivityState(habilitar_ingreso);
         setactivityStateGlobal(habilitar_ingreso);
         setmeetingId(meeting_id);
         setTransmition(data.transmition);
-        settabsGeneral(tabs);
         if (!tabs.games) {
           HandleChatOrAttende('1');
           HandlePublicPrivate('public');
         }
+        //Validacion para colombina (quitar apenas pase el evento)
+        if (event_id == '619d09f7cbd9a47c2d386372') {
+          HandleChatOrAttende('4');
+        }
+
         handleChangeTabs(tabs);
         tempactivty.habilitar_ingreso = habilitar_ingreso;
         tempactivty.avalibleGames = avalibleGames;
+        setcurrenActivity(tempactivty);
+        console.log('tempactivty', tempactivty);
       });
-
-    handleChangeCurrentActivity(tempactivty);
   }
   useEffect(() => {
     async function GetStateMeetingRoom() {
       await listeningStateMeetingRoom(props.cEvent.value._id, currentActivity._id);
     }
 
-    if (currentActivity) {
+    if (currentActivity != null) {
       GetStateMeetingRoom();
     }
-  }, [currentActivity]);
+  }, [currentActivity, props.cEvent]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
@@ -119,12 +110,12 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
       case 'zoom':
@@ -142,12 +133,12 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
       case 'dolby':
@@ -165,12 +156,12 @@ const RenderComponent = (props) => {
             return <DolbyCard />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
       case 'wowza':
@@ -199,15 +190,15 @@ const RenderComponent = (props) => {
             );
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext />;
+            return <ImageComponentwithContext willStartSoon={true} />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
-            return currentActivity?.video && <VideoActivity />;
+            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
       case null:
-        return currentActivity?.video ? <VideoActivity /> : '';
+        return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
     }
   });
 

@@ -162,7 +162,7 @@ const AgendaActividadDetalle = (props) => {
           ) : (
             <>
               <Row>
-                <ImageComponentwithContext />
+                {/* <ImageComponentwithContext /> */}
                 <Alert
                   showIcon
                   style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}

@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
 import { firestore, fireRealtime } from '../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi } from '../helpers/request';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
 import { UseUserEvent } from './eventUserContext';
@@ -124,6 +124,19 @@ export const HelperContextProvider = ({ children }) => {
     let ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
 
     return ifTheRoleExists;
+  }
+
+  /**
+   * Get the user details for a member of an organization
+   * @param orgId - The ID of the organization.
+   * @param memberId - The ID of the user you want to get.
+   * @returns The OrganizationUser object.
+   */
+  async function getOrganizationUser(orgId) {
+    if (!orgId) return;
+    let { data } = await OrganizationApi.getMeUser(orgId);
+
+    return data;
   }
 
   useEffect(() => {
@@ -673,6 +686,8 @@ export const HelperContextProvider = ({ children }) => {
         controllerLoginVisible,
         rolHasPermissions,
         theRoleExists,
+        setcurrenActivity,
+        getOrganizationUser,
       }}>
       {children}
     </HelperContext.Provider>

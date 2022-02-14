@@ -91,7 +91,7 @@ const ContentContainer = () => {
         {/* <PrivateRoute path='/purchase/:id' component={Purchase} /> */}
         {/* <PrivateRoute path='/eventEdit/:id' component={EventEdit} /> */}
         {/* <PrivateRoute path='/tickets/:id' component={Tickets} /> */}
-        <PrivateRoute path='/noaccesstocms/:id' component={NoMatchPage} />
+        <PrivateRoute path='/noaccesstocms/:id/:withoutPermissions' component={NoMatchPage} />
         <Route path='/terms' component={Terms} />
         <Route path='/privacy' component={Privacy} />
         <Route path='/policies' component={Policies} />
