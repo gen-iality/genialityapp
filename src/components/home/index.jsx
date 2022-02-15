@@ -175,7 +175,6 @@ class Home extends Component {
                 {/*hasMore === true && typeEvent === 'prev'*/}
                 {hasMore === true && events.length > 20 ? (
                   <Button
-                    className='button is-primary is-medium is-fullwidth is-outlined'
                     size='large'
                     block
                     loading={loading}
