@@ -27,9 +27,22 @@ const WithCode = () => {
       conectionRef
         .where('email', '==', email)
         .get()
-        .then((resp) => {
-          if (resp.docs.length == 0) {
-            loginWithCode();
+        .then(async (resp) => {
+          if (
+            (resp.docs.length == 0 && app.auth()?.currentUser?.email != email) ||
+            (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
+            (resp.docs.length == 0 && !app.auth()?.currentUser)
+          ) {
+            if (app.auth().currentUser) {
+              await app.auth().signOut();
+              const docRef = await conectionRef.where('email', '==', email).get();
+              if (docRef.docs.length > 0) {
+                await conectionRef.doc(docRef.docs[0].id).delete();
+              }
+              await loginWithCode();
+            } else {
+              await loginWithCode();
+            }
           } else {
             setError(true);
             setLoading(false);
@@ -42,14 +55,20 @@ const WithCode = () => {
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
           setVerifyLink(true);
+          let urlredirect;
           if (event && result) {
-            window.location.href = `${window.location.origin}/landing/${event}`;
+            urlredirect = `${window.location.origin}/landing/${event}`;
           } else {
-            window.location.href = `${window.location.origin}`;
+            urlredirect = `${window.location.origin}`;
+          }
+          if (urlredirect) {
+            setTimeout(() => redirectUrlFunction(), 3000);
+            const redirectUrlFunction = () => {
+              window.location.href = urlredirect;
+            };
           }
         })
         .catch(async (error) => {
-          console.log('Error al loguearse1..', error);
           let refreshLink;
           if (event) {
             refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event);
@@ -57,7 +76,7 @@ const WithCode = () => {
             refreshLink = await EventsApi.refreshLinkEmailUser(email);
           }
           if (refreshLink) {
-            window.setInterval(() => (window.location.href = refreshLink), 3000);
+            window.location.href = refreshLink
             /*fetch(refreshLink).then((result) => {
               if (event && result) {
                 console.log('RESULTACA===>', result);
