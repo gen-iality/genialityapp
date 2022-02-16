@@ -3,7 +3,7 @@ import { Row, Col } from 'antd';
 import EventLanding from './eventLanding';
 import { UseEventContext } from '../../Context/eventContext';
 import Lobby from '../fair/lobby/Lobby';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 const EventHome = () => {
   /*Contextos*/

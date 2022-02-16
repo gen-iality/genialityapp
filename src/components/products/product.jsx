@@ -13,7 +13,7 @@ import { sortableContainer, sortableElement, sortableHandle } from 'react-sortab
 import arrayMove from 'array-move';
 import { EventsApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import Header from '../../antdComponents/Header';
 
 const { Column } = Table;

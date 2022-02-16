@@ -31,7 +31,7 @@ import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../Context/withContext';
-import { Layout, Space, Row, Col } from 'antd';
+import { Layout, Space, Row, Col, Button } from 'antd';
 import { AdminUsers } from 'components/AdminUsers/AdminUsers';
 import loadable from '@loadable/component';
 import NoMatchPage from '../notFoundPage/noMatchPage';
@@ -176,17 +176,20 @@ class Event extends Component {
     if (timeout) return <LogOut />;
     return (
       <Layout className='columns'>
-        <Sider className={` menu event-aside is-hidden-touch ${!showMenu ? 'is-hidden' : ''}`}>
+        <Sider className={` menu event-aside `}>
           <Menu match={match} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
           <Row gutter={[16, 16]} wrap>
             <Col>
-              <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
-                <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                  Ir al evento{/* : (version antigua) */}
+              <Button type='primary' size='small' target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
+                Ir al evento
+              </Button>
+               {/* <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
+                <h2 style={{ fontWeight: 'bold' }} className='name-event'>
+                  Ir al evento
                 </h2>
-              </a>
+              </a> */}
             </Col>
           </Row>
           <section className='section event-wrapper'>

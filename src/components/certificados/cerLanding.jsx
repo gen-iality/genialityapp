@@ -4,7 +4,7 @@ import { firestore } from '../../helpers/firebase';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import { Button, Card, Col, Alert, Modal, Spin, Row } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import withContext from '../../Context/withContext';
 
 // Estructura de boton para descargar certificados
