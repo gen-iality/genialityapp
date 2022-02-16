@@ -23,6 +23,15 @@ $tabs-link-padding: 0.5em 3em;
 $breakpoint-mobile: 768px;
 $breakpoint-tablet: 1024px;
 $fontColor: #222222;
+$grey: gray;
+$white: white;
+$grey-light: lightgray;
+$grey-lighter: lightgray;
+$grey-dark: darkgray;
+$info: #008cff;
+$link: #0f0fdb;
+$danger: red;
+$black: black;
 
 body {
   font-family: $family-sans-serif !important;
@@ -314,11 +323,7 @@ iframe {
   }
 }
 
-@import '~bulma/bulma';
 @import '~react-widgets/lib/scss/react-widgets';
-@import '~bulma-extensions/bulma-switch/src/sass/index';
-@import '~bulma-extensions/bulma-steps/src/sass/index';
-@import '~bulma-extensions/bulma-checkradio/src/sass/index';
 @import '~react-quill/dist/quill.snow.css';
 @import '~react-quill/dist/quill.bubble.css';
 
