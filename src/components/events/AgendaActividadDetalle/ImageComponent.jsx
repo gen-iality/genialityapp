@@ -39,30 +39,31 @@ const ImageComponent = (props) => {
       '?text=' +
       props.cEvent.value.name;
   }
+  let imageToShow = willStartSoon
+    ? currentActivity?.image
+      ? currentActivity?.image
+      : props.cEvent.value.styles?.banner_image
+      ? props.cEvent.value.styles?.banner_image
+      : props.cEvent.value.styles.event_image
+      ? props.cEvent.value.styles.event_image
+      : imagePlaceHolder
+    : props.cEvent.value.styles?.banner_image;
 
   return (
     <div className='mediaplayer'>
       {props.cEvent.value.styles.toolbarDefaultBg != undefined || props.cEvent.value.styles.toolbarDefaultBg != '' ? (
-        <img
-          className='activity_image'
-          style={{
-            width: '100%',
-            height: '60vh',
-            objectFit: 'cover',
-          }}
-          src={
-            willStartSoon
-              ? currentActivity?.image
-                ? currentActivity?.image
-                : props.cEvent.value.styles?.banner_image
-                ? props.cEvent.value.styles?.banner_image
-                : props.cEvent.value.styles.event_image
-                ? props.cEvent.value.styles.event_image
-                : imagePlaceHolder
-              : props.cEvent.value.styles?.banner_image
-          }
-          alt='Activity'
-        />
+        imageToShow && (
+          <img
+            className='activity_image'
+            style={{
+              width: '100%',
+              height: '60vh',
+              objectFit: 'cover',
+            }}
+            src={imageToShow}
+            alt='Activity'
+          />
+        )
       ) : (
         <Result title={RenderTextActivity(activityState)} />
       )}
@@ -71,4 +72,4 @@ const ImageComponent = (props) => {
 };
 
 let ImageComponentwithContext = WithEviusContext(ImageComponent);
-export default React.memo(ImageComponentwithContext);
+export default ImageComponentwithContext;
