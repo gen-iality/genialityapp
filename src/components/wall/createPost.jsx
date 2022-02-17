@@ -4,7 +4,7 @@ import CameraFeed from './cameraFeed';
 //custom
 import { AuthUrl } from '../../helpers/constants';
 import { saveFirebase } from './helpers';
-import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin } from 'antd';
+import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin, Upload } from 'antd';
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
@@ -125,13 +125,23 @@ class CreatePost extends Component {
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
   previewImage(event) {
+    console.log(event)
     const permitFile = ['png', 'jpg', 'jpeg', 'gif'];
-    event.preventDefault();
-    let file = event.target.files[0];    
+    //event.preventDefault();
+    let file = event.fileList[0];    
     let extension = file.name.split('.').pop();
-    if (permitFile.indexOf(extension) > -1) {
+    /* if (permitFile.indexOf(extension) > -1) {
       let reader = new FileReader();
       reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        this.setState({ image: reader.result, inputKey: Date.now(), errimage: false });
+      };
+    } else {
+      this.setState({ errimage: true });
+    } */
+    if(file) {
+      let reader = new FileReader();
+      reader.readAsDataURL(file.originFileObj);
       reader.onloadend = () => {
         this.setState({ image: reader.result, inputKey: Date.now(), errimage: false });
       };
@@ -218,7 +228,12 @@ class CreatePost extends Component {
               <Col style={{ textAlign: 'center' }} xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
-                  <Space className='file-label ant-btn ant-btn-primary'>
+                  <Upload type='file' accept='image/*' multiple={false} showUploadList={false} onChange={(e) => this.previewImage(e)}>
+                    <Button type='primary' icon={<CloudUploadOutlined />}>
+                    Subir Foto
+                    </Button>
+                  </Upload>
+                  {/* <Space className='file-label ant-btn ant-btn-primary'>
                     <input
                       key={this.state.inputKey}
                       style={{ width: 120 }}
@@ -231,7 +246,7 @@ class CreatePost extends Component {
                     <span>
                       <CloudUploadOutlined />
                     </span>
-                  </Space>
+                  </Space> */}
 
                   {/* Boton para abrir la camara */}
                   <Space>
