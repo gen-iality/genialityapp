@@ -650,7 +650,7 @@ class General extends Component {
                 <Col span={16}>
                   <Form.Item
                     label={
-                      <label style={{ marginTop: '2%' }} className='label'>
+                      <label style={{ marginTop: '2%' }} >
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
@@ -664,7 +664,7 @@ class General extends Component {
                   </Form.Item>
 
                   {event.app_configuration && (
-                    <Form.Item label={'Que modulo desea observar en el inicio'}>
+                    <Form.Item label={'¿Qué módulo desea observar en el inicio?'}>
                       <Select
                         name={'homeSelectedScreen'}
                         value={event.homeSelectedScreen}
@@ -676,7 +676,7 @@ class General extends Component {
                           }>
                           {event.app_configuration.ProfileScreen
                             ? event.app_configuration.ProfileScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={
@@ -684,13 +684,13 @@ class General extends Component {
                           }>
                           {event.app_configuration.CalendarScreen
                             ? event.app_configuration.CalendarScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>
                           {event.app_configuration.NewsScreen
                             ? event.app_configuration.NewsScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={
@@ -700,7 +700,7 @@ class General extends Component {
                           }>
                           {event.app_configuration.EventPlaceScreen
                             ? event.app_configuration.EventPlaceScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={
@@ -708,13 +708,13 @@ class General extends Component {
                           }>
                           {event.app_configuration.SpeakerScreen
                             ? event.app_configuration.SpeakerScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>
                           {event.app_configuration.SurveyScreen
                             ? event.app_configuration.SurveyScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={
@@ -722,24 +722,24 @@ class General extends Component {
                           }>
                           {event.app_configuration.DocumentsScreen
                             ? event.app_configuration.DocumentsScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>
                           {event.app_configuration.WallScreen
                             ? event.app_configuration.WallScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>
                           {event.app_configuration.WebScreen
                             ? event.app_configuration.WebScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>
                           {event.app_configuration.FaqsScreen
                             ? event.app_configuration.FaqsScreen.title
-                            : 'Favor Seleccionar items del menu para la '}
+                            : 'Favor seleccionar items del menú para la '}
                         </Option>
                       </Select>
                     </Form.Item>
@@ -751,8 +751,8 @@ class General extends Component {
                       name={'type_event'}
                       onChange={(e) => this.handleChange(e, 'type_event')}>
                       <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Evento Fisico</Option>
-                      <Option value='onlineEvent'>Evento Virtual</Option>
+                      <Option value='physicalEvent'>Evento físico</Option>
+                      <Option value='onlineEvent'>Evento virtual</Option>
                     </Select>
                   </Form.Item>
 
@@ -873,7 +873,7 @@ class General extends Component {
                   </Form.Item>
 
                   <div>
-                    <label style={{ marginTop: '2%' }} className='label'>
+                    <label style={{ marginTop: '2%' }} >
                       Imagen General (para el listado)
                     </label>
                     <ImageInput
