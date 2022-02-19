@@ -76,7 +76,8 @@ const WithCode = () => {
             refreshLink = await EventsApi.refreshLinkEmailUser(email);
           }
           if (refreshLink) {
-            window.location.href = refreshLink
+            setTimeout(() => (window.location.href = refreshLink), 3000);
+
             /*fetch(refreshLink).then((result) => {
               if (event && result) {
                 console.log('RESULTACA===>', result);
