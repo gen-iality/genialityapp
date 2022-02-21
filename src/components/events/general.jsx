@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss';
 import ErrorServe from '../modal/serverError';
-import Dialog from '../modal/twoAction_old';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import LogOut from '../shared/logOut';
 import axios from 'axios/index';

@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Moment from 'moment';
 import { RolAttApi } from '../../../helpers/request';
-import EventContent from '../shared/content_old';
 import EvenTable from '../shared/table';
 import TableAction from '../shared/tableAction';
 import { handleRequestError, sweetAlert } from '../../../helpers/utils';
