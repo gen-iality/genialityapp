@@ -96,6 +96,7 @@ class ListEventUser extends Component {
       isModalVisible: false,
       fieldsForm: [],
       typeScanner: 'options',
+      nameActivity: props.location.state?.item?.name || '',
     };
   }
 
@@ -175,8 +176,6 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     let self = this;
-    console.log('🚀 ~ file: index.jsx ~ line 177 ~ ListEventUser ~ componentDidMount ~ eventIdSearch', this.props);
-
     this.checkFirebasePersistence();
     try {
       const event = await EventsApi.getOne(this.props.event._id);
@@ -706,6 +705,7 @@ class ListEventUser extends Component {
       quantityUsersSync,
       lastUpdate,
       disabledPersistence,
+      nameActivity,
     } = this.state;
     const { event, type } = this.props;
 
@@ -720,7 +720,7 @@ class ListEventUser extends Component {
     return (
       <React.Fragment>
         <Header
-          title={type == 'activity' ? 'Check-in de ' + event.name : 'Check-in de evento'}
+          title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'}
           description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
           búsqueda.`}
         />
