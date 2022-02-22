@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Actions, NewsFeed } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { toolbarEditor } from '../../helpers/constants';
-import { Col, Row, Input, Form, DatePicker, Modal, Card, message } from 'antd';
+import { Col, Row, Input, Form, DatePicker, Modal, Card, message, Button } from 'antd';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
@@ -274,15 +274,15 @@ const NewCE = (props) => {
                   content={<img src={notice && notice?.picture} alt={'Imagen Perfil'} />}
                   classDrop={'dropzone'}
                   contentDrop={
-                    <button
+                    <Button
                       onClick={(e) => {
                         e.preventDefault();
                       }}
-                      className={`button is-primary is-inverted is-outlined ${
-                        notice && notice.image ? 'is-loading' : ''
-                      }`}>
+                      type='primary'
+                      /* loading={notice && notice.image} */
+                    >
                       Cambiar foto
-                    </button>
+                    </Button>
                   }
                   contentZone={
                     <div className='has-text-grey has-text-weight-bold has-text-centered'>

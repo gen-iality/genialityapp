@@ -60,7 +60,7 @@ function ImageField(rawProps) {
 
         return (
           <div>
-            <label style={{ marginTop: '2%' }} className='label'>
+            <label style={{ marginTop: '2%' }}>
               <label style={{ color: 'red' }}>*</label>
               {formItemProps.label}
             </label>

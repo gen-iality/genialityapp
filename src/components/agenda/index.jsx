@@ -4,8 +4,8 @@ import Agenda from "./agenda";
 import AgendaEdit from "./edit";
 import AgendaTypeCat from "./typecat";
 import AgendaTypeCatCE from "./AgendaTypeCatCE";
-import AgendaEditLanguage from "./editLanguage";
-
+/* import AgendaEditLanguage from "./editLanguage_old";
+ */
 function AgendaRoutes({...props}){
     const {event, match} = props;
     return (
@@ -16,7 +16,7 @@ function AgendaRoutes({...props}){
                 <Route exact path={`${match.url}/tipos`} render={()=><AgendaTypeCat event={event} matchUrl={match.url}/>}/>
                 <Route exact path={`${match.url}/categorias`} render={()=><AgendaTypeCat event={event} matchUrl={match.url}/>}/>
                 <Route exact path={`${match.url}/categorias/categoria`} render={()=><AgendaTypeCatCE event={event} matchUrl={match.url}/>}/>
-                <Route exact path={`${match.url}/Language`} render={()=><AgendaEditLanguage event={event} matchUrl={match.url}/>}/>
+                {/* <Route exact path={`${match.url}/Language`} render={()=><AgendaEditLanguage event={event} matchUrl={match.url}/>}/> */}
             </Switch>
         </Fragment>
     );
