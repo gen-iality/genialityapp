@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
+import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
 import { Layout, Spin, notification, Button } from 'antd';
@@ -19,6 +20,7 @@ import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 
 import loadable from '@loadable/component';
+import { useCheckinUser } from 'helpers/HelperAuth';
 
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
@@ -68,6 +70,7 @@ const IconRender = (type) => {
 const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
+  let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useContext(HelperContext);
 
   const ButtonRender = (status, activity) => {
@@ -142,9 +145,13 @@ const Landing = (props) => {
               }
             });
           });
+
+        if (cEventUser.status === 'LOADED') {
+          useCheckinUser(cEventUser.value._id, cEventContext.value._id);
+        }
       });
     }
-  }, [cEventContext.status]);
+  }, [cEventContext.status, cEventUser.status]);
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 
