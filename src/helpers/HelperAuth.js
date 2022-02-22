@@ -17,11 +17,7 @@ export async function GetTokenUserFirebase() {
 
 
 export const useCheckinUser = (attende, eventId, type = 'event') => {
-  console.log("habla vale mia", {
-    attende,
-    eventId,
-    type
-  })
+
   const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
   if (type == 'event') {
     userRef.onSnapshot(function (doc) {
