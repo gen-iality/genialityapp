@@ -146,8 +146,8 @@ const Landing = (props) => {
             });
           });
 
-        if (cEventUser.status === 'LOADED') {
-          useCheckinUser(cEventUser.value._id, cEventContext.value._id);
+        if (cEventUser.status === 'LOADED' && cEventUser.value != null) {
+          useCheckinUser(cEventUser.value, cEventContext.value._id);
         }
       });
     }

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
@@ -6,14 +6,9 @@ import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
-import SearchComponent from '../shared/searchTable';
-import Loading from '../loaders/loading';
 import 'react-toastify/dist/ReactToastify.css';
-/* import QrModal from './qrModal_old(nuevo)'; */
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
-import EventContent from '../events/shared/content_old';
 import Moment from 'moment';
-import { TicketsApi } from '../../helpers/request';
 import {
   Button,
   Card,
@@ -24,10 +19,8 @@ import {
   message,
   Row,
   Statistic,
-  Table,
   Typography,
   Tag,
-  Select,
   Input,
   Space,
   Tooltip,
@@ -50,13 +43,8 @@ import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 
-const { Option } = Select;
-
-const imgNotFound =
-  'https://www.latercera.com/resizer/m0bOOb9drSJfRI-C8RtRL_B4EGE=/375x250/smart/arc-anglerfish-arc2-prod-copesa.s3.amazonaws.com/public/Z2NK6DYAPBHO3BVPUE25LQ22ZA.jpg';
 const { Title } = Typography;
 
-const html = document.querySelector('html');
 class ListEventUser extends Component {
   constructor(props) {
     super(props);
@@ -66,7 +54,9 @@ class ListEventUser extends Component {
       usersReq: [],
       pageOfItems: [],
       listTickets: [],
-      usersRef: firestore.collection(`${props.event._id}_event_attendees`),
+      usersRef: firestore.collection(
+        `${props.match.params.id ? props.match.params.id : props.event._id}_event_attendees`
+      ),
       pilaRef: firestore.collection('pila'),
       total: 0,
       totalCheckedIn: 0,
@@ -185,6 +175,8 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     let self = this;
+    console.log('🚀 ~ file: index.jsx ~ line 177 ~ ListEventUser ~ componentDidMount ~ eventIdSearch', this.props);
+
     this.checkFirebasePersistence();
     try {
       const event = await EventsApi.getOne(this.props.event._id);
@@ -498,7 +490,8 @@ class ListEventUser extends Component {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     } */
     //return;
-    const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
+    let eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
+    const userRef = firestore.collection(`${eventIdSearch}_event_attendees`).doc(id);
 
     // Actualiza el usuario en la base de datos
 
@@ -714,9 +707,7 @@ class ListEventUser extends Component {
       lastUpdate,
       disabledPersistence,
     } = this.state;
-    const {
-      event: { event_stages },
-    } = this.props;
+    const { event, type } = this.props;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -729,7 +720,7 @@ class ListEventUser extends Component {
     return (
       <React.Fragment>
         <Header
-          title={'Check In'}
+          title={type == 'activity' ? 'Check-in de ' + event.name : 'Check-in de evento'}
           description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
           búsqueda.`}
         />
@@ -863,18 +854,7 @@ class ListEventUser extends Component {
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
-        {/* {this.state.qrModal && (
-          <QrModal
-            fields={extraFields}
-            usersReq={usersReq}
-            typeScanner={this.state.typeScanner}
-            clearOption={this.clearOption}
-            checkIn={this.checkIn}
-            eventID={this.props.event._id}
-            closeModal={this.closeQRModal}
-            openEditModalUser={this.openEditModalUser}
-          />
-        )} */}
+
         {timeout && <ErrorServe errorData={this.state.errorData} />}
 
         <Drawer

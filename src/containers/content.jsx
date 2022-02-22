@@ -57,6 +57,7 @@ const ContentContainer = () => {
 
         {/*Ruta para ver resumen */}
         <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
+
         {screens.xs ? (
           <Route exact path='/myprofile' render={() => <Redirect to='/myprofile/organization' />} />
         ) : (
@@ -75,7 +76,7 @@ const ContentContainer = () => {
         <Route path='/notfound' component={NotFoundPage} />
         {/* <WithFooter> */}
         {/* <Route path='/page/:id' component={HomeProfile} /> */}
-        
+
         <PrivateRoute path='/create-event/:user?'>
           <NewEventProvider>
             <NewEvent />
