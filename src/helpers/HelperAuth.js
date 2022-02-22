@@ -16,15 +16,41 @@ export async function GetTokenUserFirebase() {
 }
 
 
-export const useCheckinUser = (AttendeId, eventId) => {
-  console.log("cuantos usuarios estan en el evento");
-  const userRef = firestore.collection(`${eventId}_event_attendees`).doc(AttendeId);
-  userRef.onSnapshot(function (doc) {
-    if (doc.exists) {
-      userRef.set({
-        checkin: true,
-        checkedin_at: new Date(),
-      }, { merge: true });
-    }
-  });
+export const useCheckinUser = (attende, eventId, type = 'event') => {
+  console.log("habla vale mia", {
+    attende,
+    eventId,
+    type
+  })
+  const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
+  if (type == 'event') {
+    userRef.onSnapshot(function (doc) {
+      if (doc.exists) {
+        if (doc.data().checked_in === false) {
+          userRef.set({
+            checked_in: true,
+            checkedin_at: new Date(),
+          }, { merge: true });
+        }
+      }
+    });
+  } else if (type == 'activity') {
+    console.log("holis")
+    userRef.onSnapshot(function (doc) {
+      if (doc.exists) {
+        console.log("si existe ya")
+        if (doc.data().checked_in === false) {
+          userRef.set({
+            checked_in: true,
+            checkedin_at: new Date(),
+          }, { merge: true });
+        }
+      } else {
+        console.log("entro aca")
+        firestore.collection(`${eventId}_event_attendees`).doc(attende._id).set({
+          ...attende,
+        })
+      }
+    });
+  }
 }

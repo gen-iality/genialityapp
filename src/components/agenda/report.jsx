@@ -1,8 +1,7 @@
-import React, { Component, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import { AgendaApi } from '../../helpers/request';
-import SearchComponent from '../shared/searchTable';
 import { Select, Table as TableA, Row, Col } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import CMS from '../newComponent/CMS';
@@ -10,20 +9,16 @@ import { getColumnSearchProps } from '../../components/speakers/getColumnSearch'
 
 const { Option } = Select;
 
-const ReportList = ( props ) => {
+const ReportList = (props) => {
   const [columnsData, setColumnsData] = useState({});
   const columns = [
     {
-      title: 'Fecha inicio', 
+      title: 'Fecha inicio',
       dataIndex: 'datetime_start',
       ellipsis: true,
       sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
       ...getColumnSearchProps('datetime_start', columnsData),
-      render: (text) => (
-        <>
-          {Moment(text).format('YYYY-MM-DD HH:mm')}            
-        </>
-      ),
+      render: (text) => <>{Moment(text).format('YYYY-MM-DD HH:mm')}</>,
     },
     {
       title: 'Fecha fin',
@@ -31,11 +26,7 @@ const ReportList = ( props ) => {
       ellipsis: true,
       sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),
       ...getColumnSearchProps('datetime_end', columnsData),
-      render: (text) => (
-        <>           
-          {Moment(text).format('YYYY-MM-DD HH:mm')}
-        </>
-      ),
+      render: (text) => <>{Moment(text).format('YYYY-MM-DD HH:mm')}</>,
     },
     {
       title: 'Actividad',
@@ -60,10 +51,10 @@ const ReportList = ( props ) => {
 
   return (
     <div>
-      <CMS 
+      <CMS
         API={AgendaApi}
         eventId={props.event._id}
-        title={'CheckIn por Actividad'}
+        title={'CheckIn por Actividadesss'}
         description={'Para actualizar valores, refrescar la página'}
         columns={columns}
         search
@@ -78,6 +69,6 @@ const ReportList = ( props ) => {
       />
     </div>
   );
-}
+};
 
 export default withRouter(ReportList);

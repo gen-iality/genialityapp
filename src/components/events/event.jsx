@@ -23,7 +23,6 @@ import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
 import Speakers from '../speakers';
 import MenuLanding from '../menuLanding';
-import CheckAgenda from '../agenda/checkIn';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
@@ -182,10 +181,14 @@ class Event extends Component {
         <Content className='column event-main' style={{ width: 500 }}>
           <Row gutter={[16, 16]} wrap>
             <Col>
-              <Button type='primary' size='small' target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
+              <Button
+                type='primary'
+                size='small'
+                target='_blank'
+                href={`${window.location.origin}/landing/${this.state.event._id}`}>
                 Ir al evento
               </Button>
-               {/* <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
+              {/* <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
                 <h2 style={{ fontWeight: 'bold' }} className='name-event'>
                   Ir al evento
                 </h2>
@@ -293,24 +296,22 @@ class Event extends Component {
 
               <Protected
                 path={`${match.url}/checkin/:id`}
-                component={CheckAgenda}
+                component={ListEventUser}
                 event={this.state.event}
+                eventId={this.state.event._id}
                 url={match.url}
+                componentKey='checkin'
+                type='activity'
               />
+
               <Protected
                 path={`${match.url}/checkin-actividad`}
                 component={ReportList}
-                event={this.state.event}
-                url={match.url}
-              />
-
-              {/* <Protected
-                path={`${match.url}/badge`}
-                component={Badge}
                 eventId={this.state.event._id}
                 event={this.state.event}
                 url={match.url}
-              /> */}
+                componentKey='checkin-actividad'
+              />
 
               <Protected
                 path={`${match.url}/informativesection`}
