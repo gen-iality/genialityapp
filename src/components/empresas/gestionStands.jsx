@@ -314,7 +314,7 @@ const Stands = (props) => {
                       onClick={() => null}
                       onChange={null}
                     />
-                    <button className='button'> {!selectedStand ? 'Seleccionar' : 'Escoger'}</button>
+                    <Button > {!selectedStand ? 'Seleccionar' : 'Escoger'}</Button>
                   </div>
                   {viewModalColor && (
                     <div
@@ -333,10 +333,10 @@ const Stands = (props) => {
                             setColorStand(color.hex);
                           }}
                         />
-                        <button style={{ marginTop: 20 }} onClick={() => setViewModalColor(false)} className='button'>
+                        <Button style={{ marginTop: 20 }} onClick={() => setViewModalColor(false)} >
                           {' '}
                           Aceptar
-                        </button>
+                        </Button>
                       </Card>
                     </div>
                   )}

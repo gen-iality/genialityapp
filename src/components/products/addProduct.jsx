@@ -287,13 +287,14 @@ function AddProduct(props) {
             content={<img src={picture} alt={'Imagen Producto'} />}
             classDrop={'dropzone'}
             contentDrop={
-              <button
+              <Button
                 onClick={(e) => {
                   e.preventDefault();
                 }}
-                className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
+                type='primary'
+                >
                 Cambiar foto
-              </button>
+              </Button>
             }
             contentZone={
               <div className='has-text-grey has-text-weight-bold has-text-centered'>

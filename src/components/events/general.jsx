@@ -33,6 +33,7 @@ import {
   Space,
   Grid,
   Divider,
+  Button
 } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
@@ -882,15 +883,15 @@ class General extends Component {
                       content={<img src={event.picture} alt={'Imagen Perfil'} />}
                       classDrop={'dropzone'}
                       contentDrop={
-                        <button
+                        <Button
+                          type='primary'
                           onClick={(e) => {
                             e.preventDefault();
                           }}
-                          className={`button is-primary is-inverted is-outlined ${
-                            this.state.imageFile ? 'is-loading' : ''
-                          }`}>
+                          /* loading={this.state.imageFile} */
+                        >
                           Cambiar foto
-                        </button>
+                        </Button>
                       }
                       contentZone={
                         <div className='has-text-grey has-text-weight-bold has-text-centered'>
