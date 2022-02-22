@@ -35,10 +35,8 @@ export const useCheckinUser = (attende, eventId, type = 'event') => {
       }
     });
   } else if (type == 'activity') {
-    console.log("holis")
     userRef.onSnapshot(function (doc) {
       if (doc.exists) {
-        console.log("si existe ya")
         if (doc.data().checked_in === false) {
           userRef.set({
             checked_in: true,
@@ -46,7 +44,6 @@ export const useCheckinUser = (attende, eventId, type = 'event') => {
           }, { merge: true });
         }
       } else {
-        console.log("entro aca")
         firestore.collection(`${eventId}_event_attendees`).doc(attende._id).set({
           ...attende,
         })
