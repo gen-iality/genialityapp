@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 import { DocumentsApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { Form, Row, Col, message, Input, Modal, Upload, Button, Checkbox, Spin } from 'antd';
-import { ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
 import firebase from 'firebase';
 import Header from '../../antdComponents/Header';
 import moment from 'moment';
@@ -20,7 +20,6 @@ const Document = ( props ) => {
   const history = useHistory();
   const [document, setDocument] = useState({});
   const [documentList, setDocumentList] = useState([]);
-  let [uploadTask, setUploadTask] = useState('');
   let [files, setFiles] = useState('');
   let [fileName, setFileName] = useState('');
   let [extention, setExtention] = useState('');
@@ -28,7 +27,7 @@ const Document = ( props ) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if(locationState.edit) {
+    if(locationState?.edit) {
       getDocument();
     }
   }, []);
@@ -38,9 +37,8 @@ const Document = ( props ) => {
     setDocument(response);
     setFolder(response.folder);
     setFiles([response.file]);
-    setDocumentList([response.file]);
+    setDocumentList(response.documentList);
     setLoading(false);
-    console.log(response, 'response')
   }
 
   const onSubmit = async () => {
@@ -153,7 +151,6 @@ const Document = ( props ) => {
     /* console.log(e.file.originFileObj); */
     setLoading(true);
     setDocumentList(e.fileList);
-    console.log(e.fileList, 'doc')
     
     const ref = firebase.storage().ref();
     setFiles(e.file.originFileObj);
@@ -206,7 +203,7 @@ const Document = ( props ) => {
       console.log(downloadURL);
       setLoading(false);
     });
-    setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'file'});
+    setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'file', documentList: documentList});
   }
 
   /* const createFolder = async () => {
@@ -223,6 +220,10 @@ const Document = ( props ) => {
     });
   }; */
 
+  const reload = () => {
+    history.go(0);
+  }
+
   return (
     <Form
       onFinish={onSubmit}
@@ -234,11 +235,25 @@ const Document = ( props ) => {
         save
         form
         remove={remove}
-        edit={locationState.edit}
+        edit={locationState?.edit}
         loadingSave={loading}
       />
       
-      <Spin spinning={loading} tip={'Por favor espere mientras cargue...'}>
+      <Spin 
+        spinning={loading} 
+        tip={
+          <>
+            Por favor espere mientras cargue... <br />
+            Si el problema persiste, favor de recargar <br />
+            <Button 
+              type='primary' 
+              icon={<ReloadOutlined />} 
+              onClick={() => reload()}>
+                Recargar
+            </Button>
+          </>
+        }
+      >
         <Row justify='center' wrap gutter={12}>
           <Col span={14}>
             {/* <Form.Item label={'¿Desea crear carpeta?'} >
@@ -247,22 +262,6 @@ const Document = ( props ) => {
                 onChange={(e) => setFolder(e.target.checked)}
               />
             </Form.Item> */}
-            <Form.Item 
-              label={
-                <label style={{ marginTop: '2%' }} >
-                  Título <label style={{ color: 'red' }}>*</label>
-                </label>
-              }
-              rules={[{ required: true, message: 'El título es requerido' }]}
-            >
-              <Input 
-                name={'title'}
-                placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
-                value={document.title}
-                onChange={(e) => handleChange(e)}
-                disabled={loading}
-              />
-            </Form.Item>
             {
               !folder && (
                 <Form.Item  
@@ -277,21 +276,36 @@ const Document = ( props ) => {
                     multiple={false}
                     name={'file'}
                     type='file'
-                    //fileList={documentList}
+                    fileList={documentList}
                     defaultValue={documentList}
                     onChange={(e) => {
                       onHandlerFile(e);
                       e.file.status = 'success'
                     }}
+                    listType='picture'
                     maxCount={1}
                   >
-                    <Button icon={<UploadOutlined />}>Toca para subir archivo</Button>
+                    <Button block icon={<UploadOutlined />}>Toca para subir archivo</Button>
                   </Upload>
-                  {documentList} <br />
-                  {files}
                 </Form.Item>
               )
             }
+            <Form.Item 
+              label={
+                <label style={{ marginTop: '2%' }} >
+                  Título <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'El título es requerido' }]}
+            >
+              <Input 
+                name={'title'}
+                placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
+                value={document.title}
+                onChange={(e) => handleChange(e)}
+                disabled={documentList.length === 0 ? true : loading}
+              />
+            </Form.Item>
           </Col>
         </Row>
       </Spin>
@@ -299,4 +313,4 @@ const Document = ( props ) => {
   )
 }
 
-export default Document;
+export default withRouter(Document);
