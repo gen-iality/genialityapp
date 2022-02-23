@@ -25,6 +25,7 @@ const ModalLoginHelpers = (props) => {
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
+  const [status, setStatus] = useState('success');
   const [resul, setresul] = useState('');
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -51,6 +52,7 @@ const ModalLoginHelpers = (props) => {
           })} ${email} `
         );
         setresul('OK');
+        setStatus('success');
       }
     } catch (error) {
       setSendRecovery(
@@ -59,6 +61,7 @@ const ModalLoginHelpers = (props) => {
           defaultMessage: 'no se encuentra registrado.',
         })} `
       );
+      setStatus('error');
     }
   };
   //FUNCIÓN QUE SE EJECUTA AL PRESIONAR EL BOTON
@@ -67,7 +70,6 @@ const ModalLoginHelpers = (props) => {
     setRegisterUser(false);
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
-    console.log('typeModal', typeModal, props.organization);
     if (typeModal == 'recover') {
       handleRecoveryPass(values);
       setLoading(false);
@@ -91,6 +93,7 @@ const ModalLoginHelpers = (props) => {
             })} ${values.email}`
           );
           setresul('OK');
+          setStatus('success');
         } else {
           setSendRecovery(
             `${values.email} ${intl.formatMessage({
@@ -99,6 +102,7 @@ const ModalLoginHelpers = (props) => {
             })}`
           );
           setresul('noRegister');
+          setStatus('error');
         }
       } catch (error) {
         setSendRecovery(
@@ -107,6 +111,7 @@ const ModalLoginHelpers = (props) => {
             defaultMessage: 'Error al solicitar acceso al evento',
           })}`
         );
+        setStatus('error');
       }
     }
     setLoading(false);
@@ -187,7 +192,7 @@ const ModalLoginHelpers = (props) => {
         </Form.Item>
         {sendRecovery != null && (
           <Alert
-            type='warning'
+            type={status}
             message={sendRecovery}
             showIcon
             closable
@@ -196,7 +201,7 @@ const ModalLoginHelpers = (props) => {
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               backgroundColor: '#FFFFFF',
               color: '#000000',
-              borderLeft: '5px solid #FAAD14',
+              borderLeft: `5px solid ${status === 'success' ? '#52C41A' : '#FF4D4F'}`,
               fontSize: '14px',
               textAlign: 'start',
               borderRadius: '5px',
