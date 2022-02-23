@@ -3,7 +3,6 @@ import { Redirect, Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import 'moment/locale/es-us';
 import { Actions, EventsApi } from '../../helpers/request';
-import Dialog from '../modal/twoAction';
 import ImageInput from '../shared/imageInput';
 import LogOut from '../shared/logOut';
 import { toast } from 'react-toastify';
@@ -11,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Button, Checkbox, Row, Space, Col, Form, Input, Modal, message, Spin } from 'antd';
+import { Button, Checkbox, Row, Space, Col, Form, Input, Modal, message, Spin, Card, Typography } from 'antd';
 Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -235,7 +234,7 @@ class SendRsvp extends Component {
               </Form.Item>
 
               <Form.Item>
-                <label className='label'>Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small></label>
+                <label >Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small></label>
 
                 <Spin tip='Cargando...' spinning={this.state.loading_image}>
                   <ImageInput
@@ -328,7 +327,7 @@ class SendRsvp extends Component {
                 </Col>
               </Row>
               <Form.Item>
-                <label className='label'>Sube una imagen <br /> <small>(Por defecto será la del evento)</small></label>
+                <label >Sube una imagen <br /> <small>(Por defecto será la del evento)</small></label>
 
                 <Row style={{ margin: 10 }}>
                   {!this.state.showimgDefault ? (
@@ -400,7 +399,7 @@ class SendRsvp extends Component {
               </Form.Item>
 
               <Form.Item>
-                <label className='label'>Sube una imagen <br />{' '}
+                <label >Sube una imagen <br />{' '}
                   <small>
                     (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
                   </small></label>
@@ -442,12 +441,14 @@ class SendRsvp extends Component {
                 />
               </div> */}
 
-              <div className='box rsvp-send'>
-                <Row gutter={8} wrap justify='center'>
-                  <p className='rsvp-send-title'>
-                    Seleccionados <span>{this.state.selection === "Todos" ? "Todos" : this.state.selection.length}</span>
-                  </p>
-                  <p>
+              <Card >
+                <Row gutter={[8, 8]} wrap justify='center'>
+                  <Col span={24}>
+                    <Typography.Paragraph >
+                      Seleccionados <span>{this.state.selection === "Todos" ? "Todos" : this.state.selection.length}</span>
+                    </Typography.Paragraph>
+                  </Col>
+                  <Typography.Paragraph>
                     {
                       this.state.selection === "Todos"
                           ? null
@@ -455,7 +456,7 @@ class SendRsvp extends Component {
                             return el.properties.email + ', ';
                           })
                     }
-                  </p>
+                  </Typography.Paragraph>
                 </Row>
                 <Row gutter={8} wrap>
                   {
@@ -475,7 +476,7 @@ class SendRsvp extends Component {
                     <Button type='primary'>Editar Seleccionados</Button>
                   </Link>
                 </Row>
-              </div>
+              </Card>
             </Col>
           </Row>
           <Modal

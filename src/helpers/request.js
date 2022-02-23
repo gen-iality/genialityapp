@@ -183,7 +183,8 @@ export const EventsApi = {
     return await Actions.post(`/api/events/${eventId}/invitation`, data);
   },
   sendRsvp: async (data, id) => {
-    return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/rsvp/sendeventrsvp/${id}?token=${token}`, data, true);
   },
   mine: async () => {
     let token = await GetTokenUserFirebase();
@@ -600,8 +601,13 @@ export const OrganizationApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`/api/organizations/${id}/organizationusers?token=${token}`);
   },
-  getUser: async (org, member) => {
-    return await Actions.getOne(`/api/organizations/${org}/users/`, member);
+  getEpecificUser: async (orgId, memberId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/organizations/${orgId}/organizationusers/${memberId}?token=${token}`, '', true);
+  },
+  getMeUser: async (orgId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/me/organizations/${orgId}/?token=${token}`, '', true);
   },
   saveUser: async (org, data) => {
     return await Actions.post(`/api/organizations/${org}/addorganizationuser`, data);

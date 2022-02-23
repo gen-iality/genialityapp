@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import EventImage from '../../eventimage.png';
+import { Card, Row, Col, Skeleton } from 'antd';
 
 class LoadingEvent extends Component {
   constructor(props) {
@@ -10,11 +11,21 @@ class LoadingEvent extends Component {
   render() {
     const events = [0, 1, 2, 3, 4, 5, 6, 7];
     return (
-      <div className='columns home is-multiline'>
+      <Row gutter={[16, 16]}>
         {events.map((event, key) => {
           return (
-            <div className='column is-one-thirds-mobile is-two-thirds-tablet is-one-quarter-widescreen' key={key}>
-              <div className='card'>
+            <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
+              <Card 
+                bordered={false}
+                style={{ width: '100%' }}
+                cover={
+                  <img src={EventImage} alt='Evius.co' />
+                }
+                bodyStyle={{ padding: '5px 0px 5px 0px' }}
+              >
+                <Skeleton title={false} paragraph={{rows: 3, width: [190, 230, 80]}} active/>
+              </Card>
+              {/* <div className='card'>
                 <div className='card-image'>
                   <figure className='image is-16by9'>
                     <img src={EventImage} alt='Evius.co' />
@@ -29,11 +40,11 @@ class LoadingEvent extends Component {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </div> */}
+            </Col>
           );
         })}
-      </div>
+      </Row>
     );
   }
 }

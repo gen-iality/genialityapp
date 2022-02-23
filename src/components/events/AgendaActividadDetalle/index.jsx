@@ -12,12 +12,12 @@ import HelperContext from '../../../Context/HelperContext';
 import { UseSurveysContext } from '../../../Context/surveysContext';
 import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
-import { CheckinActiviy } from './utils';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
 import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
-import ImageComponentwithContext from './ImageComponent';
+import { useCheckinUser } from 'helpers/HelperAuth';
+import { UseUserEvent } from 'Context/eventUserContext';
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
@@ -30,6 +30,7 @@ const AgendaActividadDetalle = (props) => {
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);
   const [activity, setactivity] = useState('');
+  let cEventUser = UseUserEvent();
 
   const intl = useIntl();
   {
@@ -75,11 +76,11 @@ const AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
-    if (currentActivity) {
+    if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
-      CheckinActiviy(props.cEvent.value._id, currentActivity._id, props.cEventUser, props.cUser);
+      useCheckinUser(cEventUser.value, props.match.params.activity_id, 'activity');
     }
-  }, [currentActivity]);
+  }, [currentActivity, cEventUser.status]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
@@ -137,8 +138,8 @@ const AgendaActividadDetalle = (props) => {
   }, [props.cEvent.value, props.cEventUser.value, props.cUser.value]);
 
   return (
-    <div className='is-centered'>
-      <div className=' container_agenda-information container-calendar2 is-three-fifths'>
+    <div>
+      <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
           {!blockActivity ? (

@@ -12,7 +12,7 @@ import FaqsForm from '../../faqsLanding';
 import Partners from '../Partners';
 import Agenda from '../agendaLanding';
 import EventHome from '../eventHome';
-import TicketsForm from '../../tickets/formTicket';
+/* import TicketsForm from '../../tickets/formTicket'; */
 import WallForm from '../../wall/index';
 import Ferias from '../ferias/index';
 import VirtualConferenceBig from '../virtualConferenceBig';
@@ -40,11 +40,14 @@ import { useParams } from 'react-router-dom';
 import AgendaActividadDetalle from '../../events/AgendaActividadDetalle/index';
 import MySection from '../newSection';
 import ThisRouteCanBeDisplayed from './helpers/thisRouteCanBeDisplayed';
+import { UseUserEvent } from 'Context/eventUserContext';
+import { useCheckinUser } from 'helpers/HelperAuth';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
   let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal, typeModal } = useContext(HelperContext);
+  let cEventUser = UseUserEvent();
 
   //redirigir a evento Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -97,6 +100,7 @@ const EventSectionRoutes = (props) => {
       }
     }
   };
+
   useEffect(async () => {
     props.cEvent.value && (await initUserPresence(props.cEvent.value._id));
   }, [props.cEvent.value]);
@@ -108,6 +112,12 @@ const EventSectionRoutes = (props) => {
       window.location.replace('https://app.evius.co/landing/618c502f8ceb9e109464f1c4');
     }
   }, []);
+
+  useEffect(() => {
+    if (cEventUser.value && props.cEvent.value) {
+      useCheckinUser(cEventUser.value, props.cEvent.value._id);
+    }
+  }, [cEventUser.status, props.cEvent.value]);
 
   const validateTypeUrl = () => {
     let url;

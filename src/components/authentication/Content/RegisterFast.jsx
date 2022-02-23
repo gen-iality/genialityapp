@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined, IdcardOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
+import { useCheckinUser } from 'helpers/HelperAuth';
+import { UseEventContext } from 'Context/eventContext';
+import { useEventArkmed } from 'helpers/helperEvent';
 
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
+  const cEvent = UseEventContext();
 
   const ruleEmail = [
     {
@@ -22,6 +26,16 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
       min: 6,
       max: 18,
       message: 'La contraseña debe tener entre 6 a 18 caracteres',
+    },
+  ];
+
+  const ruleCedula = [
+    { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
+    {
+      type: 'string',
+      min: 8,
+      max: 12,
+      message: 'La cedula debe tener entre 6 a 18 caracteres',
     },
   ];
   const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
@@ -104,23 +118,43 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        <Form.Item
-          label={intl.formatMessage({
-            id: 'modal.label.password',
-            defaultMessage: 'Contraseña',
-          })}
-          name='password'
-          hasFeedback
-          style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={rulePassword}>
-          <Input.Password
-            onChange={(e) => HandleHookForm(e, 'password')}
-            type='password'
-            size='large'
-            placeholder={'Crea una contraseña'}
-            prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-          />
-        </Form.Item>
+        {useEventArkmed(cEvent.value?._id).isArkmed ? (
+          <Form.Item
+            label={intl.formatMessage({
+              id: 'modal.label.cedula',
+              defaultMessage: 'Cedula',
+            })}
+            name='password'
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+            rules={ruleCedula}>
+            <Input
+              onChange={(e) => HandleHookForm(e, 'password')}
+              type='number'
+              size='large'
+              placeholder={'Cedula del medico ó especialista'}
+              prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            />
+          </Form.Item>
+        ) : (
+          <Form.Item
+            label={intl.formatMessage({
+              id: 'modal.label.password',
+              defaultMessage: 'Contraseña',
+            })}
+            name='password'
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+            rules={rulePassword}>
+            <Input.Password
+              onChange={(e) => HandleHookForm(e, 'password')}
+              type='password'
+              size='large'
+              placeholder={'Crea una contraseña'}
+              prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            />
+          </Form.Item>
+        )}
         <Form.Item
           label={intl.formatMessage({
             id: 'modal.label.name',

@@ -2,10 +2,7 @@ import React, { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
-import EventContent from '../shared/content';
-import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
-import Dialog from '../../modal/twoAction';
 import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
 import RelationField from './relationshipFields';
 import {
@@ -259,7 +256,6 @@ class Datos extends Component {
   };
 
   closeModal = () => {
-    this.html.classList.remove('is-clipped');
     this.setState({ inputValue: '', modal: false, info: {}, edit: false });
   };
 
@@ -558,33 +554,7 @@ class Datos extends Component {
                     </Row>
                   )}
                 />
-                {/* <EventContent
-                  title={'Recopilación de datos'}
-                  description={`Configure los datos que desea recolectar de los asistentes ${
-                    this.organization ? 'de la organización' : 'del evento'
-                  }`}
-                  addAction={this.addField}
-                  addTitle={'Agregar dato'}>
-                  <Table
-                    columns={columns}
-                    dataSource={fields}
-                    pagination={false}
-                    rowKey='index'
-                    components={{
-                      body: {
-                        wrapper: this.DraggableContainer,
-                        row: this.DraggableBodyRow,
-                      },
-                    }}
-                  />
-                  <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
-                    Guardar orden de Datos
-                  </Button>
-                </EventContent> */}
                 {modal && (
-                  /* <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
-                    <DatosModal edit={edit} info={info} action={this.saveField} />
-                  </EventModal> */
                   <Modal
                     visible={modal}
                     title={edit ? 'Editar Dato' : 'Agregar Dato'}
@@ -594,16 +564,6 @@ class Datos extends Component {
                     <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
                   </Modal>
                 )}
-                {/* {this.state.deleteModal && (
-                  <Dialog
-                    modal={this.state.deleteModal}
-                    title={'Borrar Dato'}
-                    content={<p>Seguro de borrar este dato?</p>}
-                    first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
-                    message={this.state.message}
-                    second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
-                  />
-                )} */}
               </Fragment>
             </TabPane>
           )}
@@ -684,50 +644,6 @@ class Datos extends Component {
                       <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
                     </Modal>
                   )}
-
-                  {/* <EventContent
-                  title={'Recopilación de datos'}
-                  description={`Configure los datos que desea recolectar de los asistentes ${
-                    this.organization ? 'de la organización' : 'del evento'
-                  }`}
-                  addAction={this.addField}
-                  addTitle={'Agregar dato'}>
-                  <Table
-                    columns={columns}
-                    dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
-                    pagination={false}
-                    rowKey='index'
-                    components={{
-                      body: {
-                        wrapper: this.DraggableContainer,
-                        row: this.DraggableBodyRow,
-                      },
-                    }}
-                  />
-                  <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
-                    Guardar orden de Datos
-                  </Button>
-                </EventContent>
-                {modal && (
-                  <>
-                    <EventModal
-                      modal={modal}
-                      title={edit ? 'Editar Dato' : 'Agregar Dato'}
-                      closeModal={this.closeModal}>
-                      <DatosModal edit={edit} info={info} action={this.saveField} />
-                    </EventModal>
-                  </>
-                )}
-                {this.state.deleteModal && (
-                  <Dialog
-                    modal={this.state.deleteModal}
-                    title={'Borrar Dato'}
-                    content={<p>Seguro de borrar este dato?</p>}
-                    first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
-                    message={this.state.message}
-                    second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
-                  />
-                )} */}
                 </Fragment>
               ) : (
                 <CMS

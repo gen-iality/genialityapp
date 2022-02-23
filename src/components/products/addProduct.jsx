@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Row, Input, Form, message, Col, Modal } from 'antd';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { Actions, EventsApi } from '../../helpers/request';
@@ -220,7 +220,7 @@ function AddProduct(props) {
         <Col span={16}>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Nombre del producto <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -235,7 +235,7 @@ function AddProduct(props) {
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Por
               </label>
             }
@@ -250,7 +250,7 @@ function AddProduct(props) {
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Descripción <label style={{ color: 'red' }}>*</label>
               </label>
             }>
@@ -261,7 +261,7 @@ function AddProduct(props) {
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} >
                 Valor
               </label>
             }
@@ -274,7 +274,7 @@ function AddProduct(props) {
             />{' '}
           </Form.Item>
 
-          <label style={{ marginTop: '2%' }} className='label'>
+          <label style={{ marginTop: '2%' }} >
             Imagen <label style={{ color: 'red' }}>*</label>
           </label>
 
@@ -287,13 +287,14 @@ function AddProduct(props) {
             content={<img src={picture} alt={'Imagen Producto'} />}
             classDrop={'dropzone'}
             contentDrop={
-              <button
+              <Button
                 onClick={(e) => {
                   e.preventDefault();
                 }}
-                className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
+                type='primary'
+                >
                 Cambiar foto
-              </button>
+              </Button>
             }
             contentZone={
               <div className='has-text-grey has-text-weight-bold has-text-centered'>
@@ -320,7 +321,7 @@ function AddProduct(props) {
           />
           {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
 
-          <label style={{ marginTop: '2%' }} className='label'>
+          <label style={{ marginTop: '2%' }} >
             Imagen opcional
           </label>
 

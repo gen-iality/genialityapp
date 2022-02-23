@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Form, Input, Tooltip } from 'antd';
+import { Form, Input, Tooltip, Alert } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 class SearchComponent extends Component {
@@ -146,22 +146,25 @@ class SearchComponent extends Component {
             onInput={this.handleFilter}
             placeholder={`Buscar ${this.props.placeholder || ''}`}
             value={this.state.value}
-            suffix={
+            suffix={`Total: ${this.props.users && this.props.users.length
+              ? this.props.users.length
+              : this.props.data && this.props.data.length
+              ? this.props.data.length
+              : '-'}`}
+            prefix={
               <Tooltip>
                 <SearchOutlined />
               </Tooltip>
             }
           />
-          Total:{' '}
+          {/* Total:{' '}
           {this.props.users && this.props.users.length
             ? this.props.users.length
             : this.props.data && this.props.data.length
             ? this.props.data.length
-            : '-'}
+            : '-'} */}
           {this.state.showMessage && (
-            <p className='help is-danger'>
-              <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />
-            </p>
+            <Alert message={<FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />} type="warning" showIcon />
           )}
         </Form.Item>
       </div>

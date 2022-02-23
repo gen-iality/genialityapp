@@ -1,6 +1,6 @@
-import { Spin, Row, Col } from "antd";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
+import { Spin, Row, Col, Button, Typography } from "antd";
 
 let ImageInput = (props) => {
   //Esto es para detectar cuando despues de cargar una imagen, la imagen efectivamente cargo y quitar el loading
@@ -31,24 +31,29 @@ let ImageInput = (props) => {
   let contentDrop = props.contentDrop || (
     <Row gutter={[8, 8]} justify='center' wrap>
       <Col>
-        <button
+        <Button
+          type="primary"
           onClick={(e) => {
             e.preventDefault();
           }}
-          className={`button is-primary is-inverted is-outlined ${stillOldImage ? "is-loading" : ""}`}>
+          loading={stillOldImage}
+          size='large'
+          /* className={`is-primary is-inverted is-outlined ${stillOldImage ? "is-loading" : ""}`} */>
           Cambiar foto
-        </button>
+        </Button>
       </Col>
       <Col>
         {
           props.btnRemove ? (
             props.btnRemove
           ) : (
-            <button
+            <Button
+              type="danger"
+              size="large"
               onClick={async (e)=>{ e.stopPropagation(); setStillOldImage(true); await props.changeImg('', props.indexImage); setStillOldImage(false)}}
-              className={`button is-primary is-inverted is-outlined`}>
+              /* className={`button is-primary is-inverted is-outlined`} */>
               Eliminar Imagen
-            </button>
+            </Button>
           ) 
         }
       </Col>
@@ -82,8 +87,8 @@ let ImageInput = (props) => {
       ) : (
           <div>
             <Dropzone accept="image/*" onDrop={async (e)=>{ setStillOldImage(true); await props.changeImg(e,props.indexImage);setStillOldImage(false);}} style={style}>
-              {!stillOldImage && <div className="has-text-grey has-text-weight-bold has-text-centered">
-                <span>Subir foto ({props.indexImage})</span>
+              {!stillOldImage && <div style={{textAlign: 'center'}}>
+                <Typography.Text strong style={{fontSize: '16px'}}>Subir foto ({props.indexImage})</Typography.Text>
                 <br />
                 <small>(Tamaño recomendado: {widthText}px x {heighText}px)</small>
               </div>}

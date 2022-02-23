@@ -23,7 +23,6 @@ import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
 import Speakers from '../speakers';
 import MenuLanding from '../menuLanding';
-import CheckAgenda from '../agenda/checkIn';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
@@ -31,7 +30,7 @@ import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../Context/withContext';
-import { Layout, Space, Row, Col } from 'antd';
+import { Layout, Space, Row, Col, Button } from 'antd';
 import { AdminUsers } from 'components/AdminUsers/AdminUsers';
 import loadable from '@loadable/component';
 import NoMatchPage from '../notFoundPage/noMatchPage';
@@ -42,7 +41,7 @@ const { Sider, Content } = Layout;
 
 //Code Splitting
 const General = loadable(() => import('./general'));
-const Badge = loadable(() => import('../badge'));
+/* const Badge = loadable(() => import('../badge')); */
 const Informativesection = loadable(() => import('../events/informativeSections/adminInformativeSection'));
 
 //invitations
@@ -51,13 +50,13 @@ const InvitedUsers = loadable(() => import('../invitations'));
 //Messages
 const Messages = loadable(() => import('../messages'));
 
-const TicketInfo = loadable(() => import('../tickets'));
+/* const TicketInfo = loadable(() => import('../tickets/index_old')); */
 const Styles = loadable(() => import('../App/styles'));
 const DashboardEvent = loadable(() => import('../dashboard'));
 const OrdersEvent = loadable(() => import('../orders'));
 const ListCertificados = loadable(() => import('../certificados'));
-const ReporteCertificados = loadable(() => import('../certificados/reporte'));
-const ConfigurationApp = loadable(() => import('../App/configuration'));
+/* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
+/* const ConfigurationApp = loadable(() => import('../App/configuration')); */
 const NotificationsApp = loadable(() => import('../pushNotifications/index'));
 const Wall = loadable(() => import('../wall/index'));
 
@@ -176,17 +175,24 @@ class Event extends Component {
     if (timeout) return <LogOut />;
     return (
       <Layout className='columns'>
-        <Sider className={` menu event-aside is-hidden-touch ${!showMenu ? 'is-hidden' : ''}`}>
+        <Sider className={` menu event-aside `}>
           <Menu match={match} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
           <Row gutter={[16, 16]} wrap>
             <Col>
-              <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
-                <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                  Ir al evento{/* : (version antigua) */}
+              <Button
+                type='primary'
+                size='small'
+                target='_blank'
+                href={`${window.location.origin}/landing/${this.state.event._id}`}>
+                Ir al evento
+              </Button>
+              {/* <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
+                <h2 style={{ fontWeight: 'bold' }} className='name-event'>
+                  Ir al evento
                 </h2>
-              </a>
+              </a> */}
             </Col>
           </Row>
           <section className='section event-wrapper'>
@@ -290,23 +296,21 @@ class Event extends Component {
 
               <Protected
                 path={`${match.url}/checkin/:id`}
-                component={CheckAgenda}
+                component={ListEventUser}
                 event={this.state.event}
+                eventId={this.state.event._id}
                 url={match.url}
-              />
-              <Protected
-                path={`${match.url}/checkin-actividad`}
-                component={ReportList}
-                event={this.state.event}
-                url={match.url}
+                componentKey='checkin'
+                type='activity'
               />
 
               <Protected
-                path={`${match.url}/badge`}
-                component={Badge}
+                path={`${match.url}/checkin-actividad`}
+                component={ReportList}
                 eventId={this.state.event._id}
                 event={this.state.event}
                 url={match.url}
+                componentKey='checkin-actividad'
               />
 
               <Protected
@@ -342,12 +346,12 @@ class Event extends Component {
                 event={this.state.event}
                 componentKey='tipo-asistentes'
               />
-              <Protected
+              {/* <Protected
                 path={`${match.url}/ticket`}
                 component={TicketInfo}
                 event={this.state.event}
                 componentKey='ticket'
-              />
+              /> */}
               <Protected
                 path={`${match.url}/dashboard`}
                 component={DashboardEvent}
@@ -374,12 +378,12 @@ class Event extends Component {
                 event={this.state.event}
                 componentKey='espacios'
               />
-              <Protected
+              {/* <Protected
                 path={`${match.url}/reporte-certificados`}
                 component={ReporteCertificados}
                 event={this.state.event}
                 componentKey='reporte-certificados'
-              />
+              /> */}
               <Protected
                 path={`${match.url}/speakers`}
                 component={Speakers}
@@ -396,13 +400,13 @@ class Event extends Component {
                 componentKey='styles'
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
-              <Protected
+              {/* <Protected
                 path={`${match.url}/configurationApp`}
                 component={ConfigurationApp}
                 eventId={this.state.event._id}
                 event={this.state.event}
                 componentKey='configurationApp'
-              />
+              /> */}
               <Protected
                 path={`${match.url}/notificationsApp`}
                 component={NotificationsApp}

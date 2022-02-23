@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
-import EventModal from '../events/shared/eventModal';
 import { Modal, Form, Input, Select, Checkbox, Button } from 'antd';
 
 const { Option } = Select;
@@ -130,18 +129,6 @@ class AddUser extends Component {
             )
           }
         </>
-        /*<div key={'g' + key} className='field'>
-          {m.type !== 'boolean' && (
-            <label
-              style={{textTransform: 'capitalize'}}
-              className={`label has-text-grey-light ${mandatory ? 'required' : ''}`}
-              key={'l' + key}
-              htmlFor={key}>
-              {name}
-            </label>
-          )}
-          <div className='control'>{input}</div>
-        </div>*/
       );
     });
     return formUI;
@@ -228,42 +215,6 @@ class AddUser extends Component {
             )}
           </Form>
         </Modal>
-        {/* <EventModal modal={this.props.modal} title={'Agregar invitado'} closeModal={this.props.handleModal}>
-        <section className='modal-card-body'>
-          {Object.keys(this.state.user).length > 0 && this.renderForm()}
-          {tickets.length > 0 && (
-            <div className='field'>
-              <div className='control control-container'>
-                <label className='label'>Tiquete</label>
-                <div className='select'>
-                  <select onChange={this.onChange} name={'ticketid'}>
-                    <option value={''}>..Seleccione</option>
-                    {tickets.map((item, key) => {
-                      return (
-                        <option key={key} value={item._id}>
-                          {item.title}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
-        <footer className='modal-card-foot'>
-          {this.state.create ? (
-            <div>Creando...</div>
-          ) : (
-            <button className='button is-primary' onClick={this.handleSubmit} disabled={this.state.valid}>
-              {this.state.edit ? 'Guardar' : 'Crear'}
-            </button>
-          )}
-          <div className={'msg'}>
-            <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
-          </div>
-        </footer>
-      </EventModal> */}
       </>
     );
   }

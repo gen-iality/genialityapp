@@ -5,13 +5,13 @@ const BackTop = ( props ) => {
 
   return (
     <>
-      <BackTopAnt style={{marginRight: '-80px'}}>
+      <BackTopAnt style={{marginRight: '-90px', marginBottom: '-30px'}}>
         <Tooltip title='Subir para guardar cambios'>
           <Button 
             type='primary' 
             shape={'circle'} 
             icon={<UpOutlined />} 
-            className='animate__animated animate__pulse' 
+            /* className='animate__animated animate__pulse'  */
             size='large' 
           />{/* animate__infinite animate__slow */}
         </Tooltip>

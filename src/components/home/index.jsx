@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { EventsApi } from '../../helpers/request';
-import { Button, Row, Col } from 'antd';
+import { Button, Row, Col, Typography, Space } from 'antd';
 import loadable from '@loadable/component';
 
 Moment.locale('es');
@@ -93,11 +93,41 @@ class Home extends Component {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
 
     return (
-      <React.Fragment>
+      <div style={{padding: '20px'}}>
         <ModalFeedback />
-        <h2 className='is-size-2 bold-text'>Eventos</h2>
-        <section className='home'>
-          <div className='tabs'>
+        <Row gutter={[16, 16]} wrap>
+          <Col span={24}>
+            <Typography.Title level={1}>
+              Eventos
+            </Typography.Title>
+          </Col>
+          <Col span={24}>
+            <Space wrap>
+              <Button 
+                onClick={
+                  !loading
+                    ? () => this.setState({ pageSize: this.state.nelements }, async () => this.fetchEvent('next'))
+                    : null
+                }
+                type={typeEvent === 'next' ? 'primary' : 'text'}
+                size='large'
+                shape='round'
+                >Próximos</Button>
+              <Button 
+                onClick={
+                  !loading
+                    ? () => this.setState({ pageSize: this.state.nelements }, async () => this.fetchEvent('prev'))
+                    : null
+                }
+                type={typeEvent === 'prev' ? 'primary' : 'text'}
+                size='large'
+                shape='round'
+                >Pasados</Button>
+            </Space>
+          </Col>
+          <Col span={24}>
+            <section className='home'>
+          {/* <div className='tabs'>
             <ul>
               <li
                 onClick={
@@ -118,52 +148,59 @@ class Home extends Component {
                 <a>Pasados</a>
               </li>
             </ul>
-          </div>
+          </div> */}
           <div className='dynamic-content'>
             {loading ? (
               <LoadingEvent />
-            ) : (
-              <Row gutter={[16, 16]}>
-                {events.length <= 0 ? (
-                  <p className='sin-evento'>No hay eventos próximos</p>
                 ) : (
-                  events.map((event, key) => {
-                    return (
-                      <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <EventCard
-                          bordered={false}
-                          key={event._id}
-                          event={event}
-                          action={{ name: 'Ver', url: `event/${this.FriendLyUrl(event.name)}` }}
-                        />
-                      </Col>
-                    );
-                  })
+                  <Row gutter={[16, 16]}>
+                    {events.length <= 0 ? (
+                      <p className='sin-evento'>No hay eventos próximos</p>
+                    ) : (
+                      events.map((event, key) => {
+                        return (
+                          <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <EventCard
+                              bordered={false}
+                              key={event._id}
+                              event={event}
+                              action={{ name: 'Ver', url: `event/${this.FriendLyUrl(event.name)}` }}
+                            />
+                          </Col>
+                        );
+                      })
+                    )}
+                  </Row>
                 )}
-              </Row>
-            )}
-            {/*hasMore === true && typeEvent === 'prev'*/}
-            {hasMore === true && events.length > 20 ? (
-              <Button
-                className='button is-primary is-medium is-fullwidth is-outlined'
-                size='large'
-                block
-                loading={loading}
-                onClick={() => this.seeMore(this.state.pageSize, typeEvent)}>
-                {!loading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
-              </Button>
-            ) : typeEvent === 'next' ? (
-              loading && 'Buscando...'
-            ) : (
-              <Button disabled block>
-                {loading ? 'Buscando...' : 'No hay más eventos'}
-              </Button>
-            )}
-          </div>
-        </section>
+                {/*hasMore === true && typeEvent === 'prev'*/}
+                {hasMore === true && events.length > 20 ? (
+                  <Button
+                    size='large'
+                    block
+                    loading={loading}
+                    onClick={() => this.seeMore(this.state.pageSize, typeEvent)}>
+                    {!loading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
+                  </Button>
+                ) : typeEvent === 'next' ? (
+                  loading && 'Buscando...'
+                ) : (
+                  <Button disabled block>
+                    {loading ? 'Buscando...' : 'No hay más eventos'}
+                  </Button>
+                )}
+              </div>
+            </section>
+          </Col>
+        </Row>
+        
+
+        
+
+        {/* <h2 className='is-size-2 bold-text'>Eventos</h2> */}
+        
         {timeout && <LogOut />}
         {serverError && <ErrorServe errorData={errorData} />}
-      </React.Fragment>
+      </div>
     );
   }
 }

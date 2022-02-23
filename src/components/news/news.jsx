@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NewsFeed } from '../../helpers/request';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';

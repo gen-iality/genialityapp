@@ -1,18 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import EventContent from '../events/shared/content';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '../../helpers/utils';
 import { firestore } from '../../helpers/firebase';
-import Loading from '../loaders/loading';
 import { FormattedMessage } from 'react-intl';
-import CheckSpace from '../event-users/checkSpace';
+/* import CheckSpace from '../event-users/checkSpace_old'; */
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';
-import { Table as TableA, Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd';
+import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd';
 import {
   SearchOutlined,
-  UserAddOutlined,
   PlusCircleOutlined,
   DownloadOutlined,
   UploadOutlined,
@@ -161,7 +158,7 @@ class CheckAgenda extends Component {
       //NO SE ESTAN ELIMINANDO LOS USUARIOS BIEN HACK PARA QUITARLOS
       newList = newList?.filter((users) => users.user !== null);
       newList = await this.obtenerCheckinAttende(userRef, newList);
-      console.log('NEWLIST==>', newList);
+      //console.log('NEWLIST==>', newList);
 
       this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn, properties };
@@ -224,6 +221,7 @@ class CheckAgenda extends Component {
     columnsTable.push({
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
+      width: 120,
       ellipsis: true,
       width: 130,
       sorter: (a, b) => a.checkedin_at - b.checkedin_at,
@@ -262,8 +260,7 @@ class CheckAgenda extends Component {
     return usersData;
   }
   openEditModalUser = (item) => {
-    html.classList.add('is-clipped');
-    // console.log('ITEM EDITAR==>', item);
+    //console.log('ITEM EDITAR==>', item);
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
@@ -307,26 +304,23 @@ class CheckAgenda extends Component {
   };
 
   //FN Modal, abre y cierra
-  checkModal = () => {
-    html.classList.add('is-clipped');
+  //Falta actualizar este modulo
+  /* checkModal = () => {
     this.setState((prevState) => {
       return { qrModal: !prevState.qrModal };
     });
-  };
+  }; */
   addUser = () => {
-    html.classList.add('is-clipped');
     this.setState((prevState) => {
       return { editUser: !prevState.editUser, edit: false };
     });
   };
   closeQRModal = () => {
-    html.classList.remove('is-clipped');
     this.setState((prevState) => {
       return { qrModal: !prevState.qrModal };
     });
   };
   modalUser = () => {
-    html.classList.remove('is-clipped');
     this.setState((prevState) => {
       return { editUser: !prevState.editUser, edit: undefined };
     });
@@ -568,6 +562,7 @@ class CheckAgenda extends Component {
           titleTable={
             <Row gutter={[8, 8]} wrap justify='end'>
               {/* <Col>
+                Queda pendiente por actualizar
                 <Button onClick={this.checkModal} type='primary' icon={<QrcodeOutlined />}>
                   {'Leer Código QR'}
                 </Button>
@@ -600,7 +595,7 @@ class CheckAgenda extends Component {
             </Row>
           }
         />
-        {qrModal && (
+        {/* {qrModal && (
           <CheckSpace
             list={attendees}
             closeModal={this.closeQRModal}
@@ -608,7 +603,7 @@ class CheckAgenda extends Component {
             agendaID={agendaID}
             checkIn={this.checkIn}
           />
-        )}
+        )} */}
       </Fragment>
     );
   }

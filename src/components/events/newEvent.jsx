@@ -13,7 +13,6 @@ import { cNewEventContext } from '../../Context/newEventContext';
 import Service from '../../components/agenda/roomManager/service';
 import { firestore } from '../../helpers/firebase';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
-import Axios from 'axios';
 
 const { Step } = Steps;
 
@@ -95,11 +94,6 @@ class NewEvent extends Component {
   async saveEvent(fields) {
     let eventNewContext = this.context;
     this.setState({ loading: true });
-    //console.log(eventNewContext.valueInputs.name)
-    //console.log(eventNewContext.valueInputs.description)
-    //console.log(eventNewContext.selectedDateEvent);
-    //console.log(eventNewContext.selectOrganization)
-    //console.log(eventNewContext.imageEvents)
     if (eventNewContext.selectOrganization) {
       const data = {
         name: eventNewContext.valueInputs.name,
@@ -182,7 +176,7 @@ class NewEvent extends Component {
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
-          console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
+          //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
           let sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
             ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
             : newMenu;
@@ -229,15 +223,15 @@ class NewEvent extends Component {
               }
             }
           } else {
-            console.log('RESP API==>', result);
+            //console.log('RESP API==>', result);
             message.error('Error al crear el evento');
           }
         } else {
-          console.log('RESP API==>', result);
+          //console.log('RESP API==>', result);
           message.error('Error al crear el evento');
         }
       } catch (error) {
-        console.log(error);
+        //console.log(error);
         message.error('Error al crear el evento');
       }
     } else {

@@ -35,7 +35,7 @@ export default function Slider(props){
             {
                 props.images.map((image,key)=>{
                     return <div key={key}>
-                        <figure className="image is-3by2">
+                        <figure >
                             <img src={image} alt="Evius.co"/>
                         </figure>
                     </div>

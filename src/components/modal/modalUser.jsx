@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
 import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
-import Dialog from './twoAction';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import QRCode from 'qrcode.react';
 import { icon } from '../../helpers/constants';

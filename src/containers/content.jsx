@@ -24,20 +24,20 @@ import ModalNoRegister from 'components/authentication/ModalNoRegister';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../components/home'));
-const HomeProfile = loadable(() => import('../components/home/profile'));
+/* const HomeProfile = loadable(() => import('../components/home/profile_old')); */
 const Landing = loadable(() => import('../components/events/Landing/landing'));
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'));
-const Events = loadable(() => import('../components/events'));
+/* const Events = loadable(() => import('../components/events')); */
 const NewEvent = loadable(() => import('../components/events/newEvent'));
-const MyProfile = loadable(() => import('../components/profile'));
-const Purchase = loadable(() => import('../components/profile/purchase'));
-const EventEdit = loadable(() => import('../components/profile/events'));
+/* const MyProfile = loadable(() => import('../components/profile/index_old')); */
+/* const Purchase = loadable(() => import('../components/profile/purchase_old')); */
+/* const EventEdit = loadable(() => import('../components/profile/events_old')); */
 const Terms = loadable(() => import('../components/policies/termsService'));
 const Privacy = loadable(() => import('../components/policies/privacyPolicy'));
 const Policies = loadable(() => import('../components/policies/policies'));
 const About = loadable(() => import('../components/policies/about'));
 const Faqs = loadable(() => import('../components/faqs/index'));
-const Tickets = loadable(() => import('../components/tickets'));
+/* const Tickets = loadable(() => import('../components/tickets/index_old')); */
 const socialZone = loadable(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = loadable(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = loadable(() => import('../components/notFoundPage'));
@@ -57,6 +57,7 @@ const ContentContainer = () => {
 
         {/*Ruta para ver resumen */}
         <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
+
         {screens.xs ? (
           <Route exact path='/myprofile' render={() => <Redirect to='/myprofile/organization' />} />
         ) : (
@@ -74,8 +75,8 @@ const ContentContainer = () => {
 
         <Route path='/notfound' component={NotFoundPage} />
         {/* <WithFooter> */}
-        <Route path='/page/:id' component={HomeProfile} />
-        <PrivateRoute path='/my_events' component={Events} />
+        {/* <Route path='/page/:id' component={HomeProfile} /> */}
+
         <PrivateRoute path='/create-event/:user?'>
           <NewEventProvider>
             <NewEvent />
@@ -84,14 +85,14 @@ const ContentContainer = () => {
         <PrivateRoute path='/eventadmin/:event' component={Event} />
         <PrivateRoute path='/orgadmin/:event' component={Event} />
         <PrivateRoute path='/create-event' component={NewEvent} />
-        <PrivateRoute path='/profile/:id' component={MyProfile} />
+        {/* <PrivateRoute path='/profile/:id' component={MyProfile} /> */}
         <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
         <RouteContext exact path='/organization/:id' component={EventOrganization} />
         <PrivateRoute path='/admin/organization/:id' component={Organization} />
-        <PrivateRoute path='/purchase/:id' component={Purchase} />
-        <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
-        <PrivateRoute path='/tickets/:id' component={Tickets} />
-        <PrivateRoute path='/noaccesstocms/:id' component={NoMatchPage} />
+        {/* <PrivateRoute path='/purchase/:id' component={Purchase} /> */}
+        {/* <PrivateRoute path='/eventEdit/:id' component={EventEdit} /> */}
+        {/* <PrivateRoute path='/tickets/:id' component={Tickets} /> */}
+        <PrivateRoute path='/noaccesstocms/:id/:withoutPermissions' component={NoMatchPage} />
         <Route path='/terms' component={Terms} />
         <Route path='/privacy' component={Privacy} />
         <Route path='/policies' component={Policies} />

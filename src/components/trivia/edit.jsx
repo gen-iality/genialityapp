@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import EventContent from '../events/shared/content';
 import { selectOptions, surveyTimeOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';

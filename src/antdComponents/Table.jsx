@@ -274,7 +274,7 @@ const Table = (props) => {
   };
 
   return (
-    <Suspense fallback={<h1>cargando ...</h1>}>
+    <Suspense fallback={<h1>Cargando ...</h1>}>
       <TableAnt
         columns={header}
         dataSource={list}

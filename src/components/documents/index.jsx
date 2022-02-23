@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Documents from './documents';
 import Document from './Document';
-import DocumentsEdit from './edit';
-import DocumentsPermission from './filePermission';
+/* import DocumentsEdit from './edit_old'; */
+/* import DocumentsPermission from './filePermission_old'; */
 
 function DocumentsRoutes({ ...props }) {
   const { event, match } = props;
@@ -16,12 +16,12 @@ function DocumentsRoutes({ ...props }) {
           path={`${match.url}/document`}
           render={() => <Document event={event} matchUrl={match.url} {...props} />}
         />
-        <Route exact path={`${match.url}/upload`} render={() => <DocumentsEdit event={event} matchUrl={match.url} />} />
-        <Route
+        {/* <Route exact path={`${match.url}/upload`} render={() => <DocumentsEdit event={event} matchUrl={match.url} />} /> */}
+        {/* <Route
           exact
           path={`${match.url}/permission`}
           render={() => <DocumentsPermission event={event} matchUrl={match.url} />}
-        />
+        /> */}
       </Switch>
     </Fragment>
   );

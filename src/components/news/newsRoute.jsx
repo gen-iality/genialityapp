@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
  *  secciones del evento
  * ---------------------*/
 import News from './news';
-import AddNews from './addNews';
+/* import AddNews from './addNews_old'; */
 import NewCE from './newCE';
 
 const NewsSectionRoutes = (props) => {
@@ -20,9 +20,9 @@ const NewsSectionRoutes = (props) => {
       <Route path={`${path}/new`}>
         <NewCE {...props} />
       </Route>
-      <Route path={`${path}/addnoticia/:id?`}>
+     {/*  <Route path={`${path}/addnoticia/:id?`}>
         <AddNews {...props} />
-      </Route>
+      </Route> */}
     </Switch>
   );
 };

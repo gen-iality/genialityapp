@@ -6,11 +6,10 @@ import { HelperContext } from '../../../Context/HelperContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 
 function ValidateAccessRouteCms({ children }) {
-  // console.log('debug children', children.key);
   const { eventId } = children.props;
-  const [cEventUserRolId, setCEventUserRolId] = useState(null);
+  const [component, setComponent] = useState(null);
   const [thisComponentIsLoading, setThisComponentIsLoading] = useState(true);
-  const { theRoleExists } = useContext(HelperContext);
+  const { theRoleExists, getOrganizationUser } = useContext(HelperContext);
 
   let cEventUser = UseUserEvent();
 
@@ -21,8 +20,22 @@ function ValidateAccessRouteCms({ children }) {
 
   const showOrgCmsComponent = async () => {
     if (children?.key === 'cmsOrg') {
-      setCEventUserRolId(children);
-      setThisComponentIsLoading(false);
+      let organizationId = children.props.org._id;
+      let organizationUser = await getOrganizationUser(organizationId);
+      let userRol = organizationUser[0]?.rol_id;
+
+      let ifTheRoleExists = await theRoleExists(userRol);
+
+      /** Se valida si el rol es administrador, si es asi devuelve true */
+      const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, userRol);
+
+      if (canClaimWithRolAdmin) {
+        setComponent(children);
+        setThisComponentIsLoading(false);
+      } else {
+        setComponent(<Redirect to={`/noaccesstocms/withoutPermissions/true`} />);
+        setThisComponentIsLoading(false);
+      }
     }
   };
 
@@ -33,7 +46,7 @@ function ValidateAccessRouteCms({ children }) {
   }, [cEventUser.value, children]);
 
   /** No se permite acceso al cms si el usuario no tiene eventUser */
-  if (!cEventUser.value && cEventUser.status === 'LOADED') return <Redirect to={`/noaccesstocms/${eventId}`} />;
+  if (!cEventUser.value && cEventUser.status === 'LOADED') return <Redirect to={`/noaccesstocms/${eventId}/true`} />;
 
   const showEventCmsComponent = async (rol) => {
     /** obtenemos el listado de permisos para el rol del usuario actual */
@@ -42,23 +55,22 @@ function ValidateAccessRouteCms({ children }) {
     /** Se valida si el rol es administrador, si es asi devuelve true */
     const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, rol);
     if (children?.key === 'cms') {
-      // console.log('debug ', children?.key, canClaimWithRolAdmin);
       if (canClaimWithRolAdmin) {
-        setCEventUserRolId(children);
+        setComponent(children);
         setThisComponentIsLoading(false);
       } else {
-        setCEventUserRolId(<Redirect to={`/noaccesstocms/${eventId}`} />);
+        setComponent(<Redirect to={`/noaccesstocms/${eventId}/true`} />);
         setThisComponentIsLoading(false);
       }
     } else {
-      setCEventUserRolId(children);
+      setComponent(children);
       setThisComponentIsLoading(false);
     }
   };
 
   return (
     <Spin tip='Cargando...' size='large' spinning={thisComponentIsLoading}>
-      {cEventUserRolId}
+      {component}
     </Spin>
   );
 }

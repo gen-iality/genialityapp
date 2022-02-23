@@ -7,7 +7,7 @@ import Meta from 'antd/lib/card/Meta';
 import Modal from 'antd/lib/modal/Modal';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import  Parser  from 'html-react-parser';
 import ReactPlayer from 'react-player';
 class InformativeSection extends Component {

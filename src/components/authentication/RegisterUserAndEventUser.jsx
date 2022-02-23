@@ -239,8 +239,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     if (current == 0) {
       ValidateGeneralFields();
     }
-
-    console.log('dataEventUser', dataEventUser);
   }, [basicDataUser, dataEventUser, current]);
 
   return (

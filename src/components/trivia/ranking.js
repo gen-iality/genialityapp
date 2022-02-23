@@ -5,9 +5,6 @@ import XLSX from 'xlsx';
 
 import { getTriviaRanking } from './services';
 
-import EventContent from '../events/shared/content';
-
-import { Table as TableA, Divider, Button } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 
@@ -98,12 +95,6 @@ class Ranking extends Component {
         <Header title={'Ranking'} back />
 
         <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={`Ranking`} />
-
-        {/* <EventContent title={nameQuestion} closeAction={this.goBack}>
-          <Divider orientation='right'>Reporte</Divider>
-          <Button onClick={this.exportReport}>Exportar resultados </Button>
-          <TableA dataSource={listOfUserResponse} columns={columns} />;
-        </EventContent> */}
       </Fragment>
     );
   }

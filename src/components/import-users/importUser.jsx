@@ -155,35 +155,7 @@ class ImportUsers extends Component {
         </Steps>
         <br />
 
-        <div className='step-content'>{layout[this.state.step]}</div>
-
-        {/* {<div className={`event-datos modal-import-user`}>
-          <Link to={this.props.matchUrl}>
-            <h2 className='title-section'>Invitados</h2>
-          </Link>
-          <h4 className='subtitle-section'>Importación de usuarios - Excel</h4>
-          <div className='steps'>
-            <div className={`step-item is-completed`}>
-              <div className='step-marker'>1</div>
-              <div className='step-details'>
-                <p className='step-title'>Importar</p>
-              </div>
-            </div>
-            <div className={`step-item ${this.state.step >= 1 ? 'is-completed' : ''}`}>
-              <div className='step-marker'>2</div>
-              <div className='step-details'>
-                <p className='step-title'>Relacionar</p>
-              </div>
-            </div>
-            <div className={`step-item ${this.state.step >= 2 ? 'is-completed' : ''}`}>
-              <div className='step-marker'>3</div>
-              <div className='step-details'>
-                <p className='step-title'>Resultado</p>
-              </div>
-            </div>
-          </div>
-          <div className='step-content'>{layout[this.state.step]}</div>
-        </div>} */}
+        <div>{layout[this.state.step]}</div>
       </>
     );
   }

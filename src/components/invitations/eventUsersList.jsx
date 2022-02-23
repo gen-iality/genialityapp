@@ -235,16 +235,12 @@ class eventUsersList extends Component {
   };
 
   modalUser = () => {
-    const html = document.querySelector('html');
-    html.classList.add('is-clipped');
     this.setState((prevState) => {
       return { addUser: !prevState.addUser, edit: false };
     });
   };
 
   closeModal = () => {
-    const html = document.querySelector('html');
-    html.classList.remove('is-clipped');
     this.setState((prevState) => {
       return { addUser: !prevState.addUser, edit: undefined };
     });

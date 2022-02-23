@@ -1,41 +1,24 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
+import { Modal } from 'antd';
 
-class ErrorServe extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            modal:true
-        }
+const ErrorServe = (props) => {
+    let {errorData} = props;
+    const [modal, setModal] = useState(true);
+
+    const closeModal = () => {
+        setModal(false);
     }
 
-    componentDidMount() {
-        const html = document.querySelector("html");
-        html.classList.add('is-clipped');
-    }
-
-    closeModal = () => {
-        const html = document.querySelector("html");
-        html.classList.remove('is-clipped');
-        this.setState({modal:false})
-    };
-
-    render() {
-        const {errorData} = this.props;
-        return (
-            <div className={`modal ${this.state.modal?'is-active':''}`}>
-                <div className="modal-background"/>
-                <div className="modal-card">
-                    <header className="modal-card-head">
-                        <p className="modal-card-title">ERROR: {errorData.status}</p>
-                        <button className="delete" aria-label="close" onClick={this.closeModal}/>
-                    </header>
-                    <section className="modal-card-body">
-                        <p>{typeof errorData.message==="object"?JSON.stringify(errorData.message):errorData.message}</p>
-                    </section>
-                </div>
-            </div>
-        );
-    }
+    return (
+        <Modal 
+            title={`ERROR: ${errorData.status}`}
+            onCancel={() => closeModal()}
+            closable
+            visible={modal}
+        >
+            <p>{typeof errorData.message==="object"?JSON.stringify(errorData.message):errorData.message}</p>
+        </Modal>
+    )
 }
 
 export default ErrorServe;

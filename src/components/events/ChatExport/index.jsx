@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Tooltip, Tabs } from 'antd';
+import { Tag, Button, message, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
 import {
-  QuestionCircleOutlined,
   ExclamationCircleOutlined,
   DeleteOutlined,
   DownloadOutlined,
   ReloadOutlined,
-  StopOutlined,
 } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import moment from 'moment';
@@ -93,7 +91,7 @@ const ChatExport = ({ eventId, event }) => {
       sorter: (a, b) => a.email.localeCompare(b.email),
       ...getColumnSearchProps('email', columnsData),
     },
-    {
+    /* {
       title: 'Estatus',
       key: 'blocked',
       dataIndex: 'blocked',
@@ -104,7 +102,7 @@ const ChatExport = ({ eventId, event }) => {
           <p>Bloqueado</p>
         )
       }
-    },
+    }, */
   ];
 
   const exportFile = async (e) => {
@@ -119,6 +117,7 @@ const ChatExport = ({ eventId, event }) => {
 
   useEffect(() => {
     getChat();
+    getBlocketdUsers();
   }, []);
 
   function getChat() {
@@ -352,7 +351,7 @@ const ChatExport = ({ eventId, event }) => {
           setColumnsData={setColumnsData}
         />
       </TabPane>
-      <TabPane tab='Gestión de usuarios de bloqueados' key='2'>
+      <TabPane tab={<Badge count={listUsersBlocked.length} offset={[8, 0]}>Usuarios bloqueados</Badge>} key='2'>
         <Table
           header={columnsUserBlocked}
           list={listUsersBlocked}
