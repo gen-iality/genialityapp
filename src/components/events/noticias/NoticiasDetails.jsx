@@ -93,7 +93,7 @@ const NoticiasDetails = ({ setVirtualConference, match, setTopBanner }) => {
                     ))
                   }>
                   <Meta
-                    title={noticia && <div dangerouslySetInnerHTML={{ __html: noticia.description_short }}></div>}
+                    title={noticia && <div style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }}></div>}
                     description={
                       noticia && <div dangerouslySetInnerHTML={{ __html: noticia.description_complete }}></div>
                     }
