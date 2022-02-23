@@ -151,3 +151,34 @@ export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
       }
     });
 };
+
+
+
+
+export const useEventArkmed = (event_id) => {
+  let label = 'Contraseña';
+  let isArkmed = false;
+
+  if (ArkmedEvents.includes(event_id)) {
+    isArkmed = true;
+    label = 'Cedula';
+  }
+
+  return {
+    label,
+    isArkmed
+  }
+};
+
+
+
+let ArkmedEvents = [
+  "611c3dcf6fedd7455434a166",
+  "618d3a983a90686a9016b5d3",
+  "609d41a46bfe5402bd015c5c",
+  "61980b387a79b8207d6bd902",
+  "618c030cf96e0f01141788d2",
+  "611c285104f5d97d1b0f5ed2",
+  "613bd7340a46d371b765fd34",
+  "61364ebddb928f7a473eefe5"
+]

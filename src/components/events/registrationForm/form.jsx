@@ -607,7 +607,7 @@ const FormRegister = ({
               disabled={
                 /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
                 //como validar cuando es usuario y admin?
-                cUser.value.autorizaciontratamientodedatospersonales === true
+                cUser.value?.autorizaciontratamientodedatospersonales === true
                   ? true
                   : m.name == 'email' && initialValues?.email
                   ? true
