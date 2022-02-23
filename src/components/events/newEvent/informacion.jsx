@@ -68,16 +68,17 @@ const Informacion = (props) => {
   async function obtainOrganizations() {
     isLoadingOrganization(true);
     const organizations = await OrganizationApi.mine();
+    const organizationsFilter = organizations.filter((orgData) => orgData.id);
 
-    if (organizations.length === 0) {
+    if (organizationsFilter.length === 0) {
       const createOrganizations = await createOrganization();
 
       selectedOrganization(createOrganizations);
       setOrganizations([createOrganizations]);
       isLoadingOrganization(false);
     } else {
-      setOrganizations(organizations);
-      selectedOrganization(organizations && organizations[0]);
+      setOrganizations(organizationsFilter);
+      selectedOrganization(organizationsFilter && organizationsFilter[0]);
       isLoadingOrganization(false);
     }
   }
@@ -197,13 +198,19 @@ const Informacion = (props) => {
         <div>
           <Space direction='vertical'>
             {
-              <a
-                onClick={() => {
-                  newOrganization(false);
-                  changeOrganization(true);
-                }}>
-                Organización: {selectOrganization?.name}
-              </a>
+              <div style={{ marginBottom: '30px' }}>
+                <p>
+                  Este evento pertenecerá a la organización | <b>{selectOrganization?.name}</b>
+                </p>
+                <Button
+                  onClick={() => {
+                    newOrganization(false);
+                    changeOrganization(true);
+                  }}
+                  block>
+                  Cambiar de organización
+                </Button>
+              </div>
             }
             {organization && !isbyOrganization && (
               <Modal
