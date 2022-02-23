@@ -238,7 +238,7 @@ class AgendaEdit extends Component {
     for (let i = 0; i < documents.length; i += 1) {
       nameDocuments.push({
         ...documents[i],
-        value: documents[i].title,
+        value: documents[i]._id,
         label: documents[i].title,
       });
     }
@@ -483,7 +483,7 @@ class AgendaEdit extends Component {
           });
 
           for (let i = 0; i < selected_document?.length; i++) {
-            await DocumentsApi.editOne(data, selected_document[i]._id, event._id);
+            await DocumentsApi.editOne(data, selected_document[i], event._id);
           }
         } else {
           const agenda = await AgendaApi.create(event._id, info);
@@ -930,7 +930,7 @@ class AgendaEdit extends Component {
                   <Col span={20}>
                     <Form.Item
                       label={
-                        <label style={{ marginTop: '2%' }} className='label'>
+                        <label style={{ marginTop: '2%' }}>
                           Nombre <label style={{ color: 'red' }}>*</label>
                         </label>
                       }
@@ -947,7 +947,7 @@ class AgendaEdit extends Component {
                     </Form.Item>
                     <Form.Item
                       label={
-                        <label style={{ marginTop: '2%' }} className='label'>
+                        <label style={{ marginTop: '2%' }}>
                           Día <label style={{ color: 'red' }}>*</label>
                         </label>
                       }
@@ -964,7 +964,7 @@ class AgendaEdit extends Component {
                       <Col>
                         <Form.Item
                           label={
-                            <label style={{ marginTop: '2%' }} className='label'>
+                            <label style={{ marginTop: '2%' }}>
                               Hora Inicio <label style={{ color: 'red' }}>*</label>
                             </label>
                           }
@@ -981,7 +981,7 @@ class AgendaEdit extends Component {
                       <Col>
                         <Form.Item
                           label={
-                            <label style={{ marginTop: '2%' }} className='label'>
+                            <label style={{ marginTop: '2%' }}>
                               Hora Fin <label style={{ color: 'red' }}>*</label>
                             </label>
                           }
@@ -1251,7 +1251,7 @@ class AgendaEdit extends Component {
               <TabPane tab='Documentos' key='5'>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
-                    <Form.Item label={'Documentos'}>
+                    {/* <Form.Item label={'Documentos'}>
                       <Select
                         id={'nameDocuments'}
                         isClearable
@@ -1260,6 +1260,16 @@ class AgendaEdit extends Component {
                         onChange={this.selectDocuments}
                         options={nameDocuments}
                         value={selected_document}
+                      />
+                    </Form.Item> */}
+                    <Form.Item>
+                      <SelectAntd
+                        id={'nameDocuments'}
+                        showArrow
+                        mode='multiple'
+                        onChange={(e) => this.selectDocuments(e)}
+                        options={nameDocuments}
+                        defaultValue={selected_document}
                       />
                     </Form.Item>
                     <BackTop />
