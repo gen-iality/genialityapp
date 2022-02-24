@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
-import { Link } from 'react-router-dom';
+
 import { useIntl } from 'react-intl';
 const { useBreakpoint } = Grid;
 
@@ -29,6 +29,14 @@ const ModalPermission = (props) => {
         })
       : typeModal == 'update'
       ? intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })
+      : '';
+
+  const textoParagraph =
+    typeModal == 'registerForTheEvent'
+      ? intl.formatMessage({
+          id: 'modal.paragraph.registerevent',
+          defaultMessage: 'Por favor, confirme sus datos para registrarlos correctamente.',
+        })
       : '';
   return (
     <Modal
@@ -66,10 +74,13 @@ const ModalPermission = (props) => {
           {textoTitle}
         </Typography.Title>
       </div>
+      <div>
+        <Typography.Paragraph>{textoParagraph}</Typography.Paragraph>
+      </div>
       <div
         // className='asistente-list'
         style={{
-          height: '70vh',
+          // height: '70vh',
           overflowY: 'hidden',
           paddingLeft: '5px',
           paddingRight: '5px',

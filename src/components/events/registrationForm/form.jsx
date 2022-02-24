@@ -1036,6 +1036,7 @@ const FormRegister = ({
                   {!loadingregister && (
                     <Form.Item>
                       <Button
+                        size='large'
                         ref={buttonSubmit}
                         style={{
                           display: Object.keys(basicDataUser).length > 0 ? 'none' : 'block',
@@ -1044,13 +1045,14 @@ const FormRegister = ({
                         htmlType='submit'>
                         {(initialValues != null && cEventUser.value !== null) ||
                         (initialValues != null && Object.keys(initialValues).length > 0)
-                          ? intl.formatMessage({ id: 'modal.feedback.accept' })
+                          ? intl.formatMessage({ id: 'registration.button.create' })
                           : intl.formatMessage({ id: 'registration.button.create' })}
                       </Button>
                       {options &&
                         initialValues != null &&
                         options.map((option) => (
                           <Button
+                            key={'option-' + option.text}
                             icon={option.icon}
                             onClick={() => option.action(eventUser)}
                             type={option.type}

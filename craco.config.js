@@ -1,6 +1,5 @@
 // const CracoAntDesignPlugin = require("craco-antd");
 
-
 // module.exports = {
 //   plugins: [{ plugin: CracoAntDesignPlugin, options : {
 // 	javascriptEnabled: true,
@@ -19,18 +18,18 @@ module.exports = {
       options: {
         lessLoaderOptions: {
           lessOptions: {
-            modifyVars: { '@primary-color': '#333F44','@secondary-color':'#C44D17' },
+            modifyVars: { '@primary-color': '#333F44', '@secondary-color': '#C44D17' },
             javascriptEnabled: true,
           },
         },
       },
-
-    },{
-      plugin: CracoLessPlugin, 
-      eslint: {enable: false}
-    }
+    },
+    {
+      plugin: CracoLessPlugin,
+      eslint: { enable: false },
+    },
   ],
   eslint: {
-    enable: false
+    enable: false,
   },
 };
