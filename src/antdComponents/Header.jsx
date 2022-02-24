@@ -20,6 +20,7 @@ const Header = (props) => {
     form, //si viene, es para poder saber sí el botón de guardar colocarlo como "submit"
     extra, //código adicional de alguna acción fuera de la estructura en el header
     description,
+    loadingSave,
   } = props;
 
   return (
@@ -58,7 +59,10 @@ const Header = (props) => {
               type={'primary'}
               icon={<SaveOutlined />}
               size='middle'
-              htmlType={form ? 'submit' : 'button'}>
+              htmlType={form ? 'submit' : 'button'}
+              loading={loadingSave}
+              disabled={loadingSave}
+            >
               {saveName ? saveName : 'Guardar'}
             </Button>
           )}

@@ -519,8 +519,14 @@ class General extends Component {
         console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
+
         /* console.error('STATUS', status, status === 401); */
-        if (status === 401) this.setState({ timeout: true, loader: false });
+        if (status === 401)
+          message.open({
+            key: 'error',
+            type: 'error',
+            content: <>Error : {data?.message || status}</>,
+          });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
@@ -1149,7 +1155,6 @@ class General extends Component {
               </Row>
             </Tabs.TabPane>
           </Tabs>
-          {timeout && <LogOut />}
           {serverError && <ErrorServe errorData={errorData} />}
           {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
         </Form>

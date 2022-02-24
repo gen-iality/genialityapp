@@ -146,12 +146,12 @@ const Landing = (props) => {
             });
           });
 
-        if (cEventUser.status === 'LOADED' && cEventUser.value != null) {
+        if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
           useCheckinUser(cEventUser.value, cEventContext.value._id);
         }
       });
     }
-  }, [cEventContext.status, cEventUser.status]);
+  }, [cEventContext.status, cEventUser.status, cEventUser.value]);
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 
