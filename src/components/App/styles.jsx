@@ -4,7 +4,6 @@ import axios from 'axios/index';
 import { toast } from 'react-toastify';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
-import LogOut from '../shared/logOut';
 import { SketchPicker } from 'react-color';
 import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select, Spin } from 'antd';
 import ReactQuill from 'react-quill';
@@ -389,7 +388,11 @@ class Styles extends Component {
         /* console.error(error.response); */
         const { status, data } = error.response;
         /* console.error('STATUS', status, status === 401); */
-        if (status === 401) this.setState({ timeout: true, loader: false });
+        if (status === 401)
+          message.open({
+            type: 'error',
+            content: <>Error : {data?.message || status}</>,
+          });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
@@ -398,7 +401,6 @@ class Styles extends Component {
           /* console.error(error.request); */
           errorData = error.request;
         }
-
         this.setState({ serverError: true, loader: false, errorData });
         message.destroy(loadingSave.key);
         message.open({
@@ -477,8 +479,6 @@ class Styles extends Component {
   } */
 
   render() {
-    const { timeout } = this.state;
-
     return (
       <React.Fragment>
         <Form onFinish={this.submit} {...formLayout}>
@@ -529,7 +529,10 @@ class Styles extends Component {
                     </Modal>
                   )}
 
-                  <Form.Item label={item.title} help={item.description} onClick={() => this.handleClickSelectColor(key)}>
+                  <Form.Item
+                    label={item.title}
+                    help={item.description}
+                    onClick={() => this.handleClickSelectColor(key)}>
                     {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
                     <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                       {this.state.styles[item.fieldColorName]}
@@ -585,7 +588,7 @@ class Styles extends Component {
                     <Form.Item label={item.title} help={item.description}>
                       {/* <label className='label'>{item.title}</label> */}
                       {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
-                      
+
                       <Spin tip='Cargando...' spinning={this.state.isLoading}>
                         <ImageInput
                           picture={this.state.styles[item.imageFieldName]}
@@ -623,7 +626,6 @@ class Styles extends Component {
           </Row>
           <BackTop />
         </Form>
-        {timeout && <LogOut />}
       </React.Fragment>
     );
   }

@@ -174,8 +174,13 @@ class Event extends Component {
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
     if (timeout) return <LogOut />;
     return (
-      <Layout className='columns'>
-        <Sider className={` menu event-aside `}>
+      <Layout style={{ minHeight: '100vh' }} className='columns'>
+        <Sider
+          style={{
+            overflow: 'auto',
+            background: '#1B1E28',
+          }}
+          className={` menu event-aside `}>
           <Menu match={match} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
@@ -188,11 +193,6 @@ class Event extends Component {
                 href={`${window.location.origin}/landing/${this.state.event._id}`}>
                 Ir al evento
               </Button>
-              {/* <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
-                <h2 style={{ fontWeight: 'bold' }} className='name-event'>
-                  Ir al evento
-                </h2>
-              </a> */}
             </Col>
           </Row>
           <section className='section event-wrapper'>
@@ -202,7 +202,6 @@ class Event extends Component {
                 path={`${match.url}/`}
                 render={() => <Redirect to={`${match.url}${match.url.substr(-1) === '/' ? 'main' : '/main'}`} />}
               />
-              {/* <Protected exact path={`${match.url}/`} component={Redirect} componentKey='/' /> */}
               <Protected
                 path={`${match.url}/main`}
                 component={General}

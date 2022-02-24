@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ErrorServe from '../modal/serverError';
-import LogOut from '../shared/logOut';
 import { Row, Col, Button, Dropdown, Menu, message, Divider } from 'antd';
 import { UploadOutlined, ExclamationCircleOutlined, ReloadOutlined, DownOutlined } from '@ant-design/icons';
 
@@ -133,65 +132,68 @@ class Preview extends Component {
     };*/
 
   render() {
-    const { list, auxArr, timeout, serverError, errorData } = this.state;
+    const { list, auxArr, serverError, errorData } = this.state;
     const self = this;
     return (
       <React.Fragment>
-        <Button 
-          type='primary' 
-          icon={<UploadOutlined />} 
+        <Button
+          type='primary'
+          icon={<UploadOutlined />}
           disabled={auxArr.length > 0}
           onClick={() => {
             this.props.importUsers(list);
-          }}
-        >
+          }}>
           Importar
         </Button>
-        <br /><br />
-        {
-          this.state.loading ? (
-            <Row justify='center'>Parsing excel</Row>
+        <br />
+        <br />
+        {this.state.loading ? (
+          <Row justify='center'>Parsing excel</Row>
         ) : (
-          <Row wrap gutter={[16, 16]} >
-            <Col span={14} >
+          <Row wrap gutter={[16, 16]}>
+            <Col span={14}>
               <Row wrap gutter={[16, 16]}>
                 {list.map((item, index) => {
                   return (
                     <Col key={index}>
-                      <div style={{border: '1px solid gray', borderRadius: '3px', padding: '5px'/* , boxShadow: '5px 5px 5px gray' */}}>
-                        <div style={{textAlign: 'center'}}>
-                          {!item.used && auxArr.length > 0 && (
-                            <ReloadOutlined />
-                          )}
+                      <div
+                        style={{
+                          border: '1px solid gray',
+                          borderRadius: '3px',
+                          padding: '5px' /* , boxShadow: '5px 5px 5px gray' */,
+                        }}>
+                        <div style={{ textAlign: 'center' }}>
+                          {!item.used && auxArr.length > 0 && <ReloadOutlined />}
                           <span
                             className={`${
                               item.used
                                 ? 'has-text-success'
                                 : `${auxArr.length > 0 ? 'has-text-danger' : 'has-text-warning'}`
                             }`}
-                            style={{fontSize: '16px'}}
-                          >
+                            style={{ fontSize: '16px' }}>
                             Campo "{item.key}"
                           </span>
                           {/* <Divider style={{margin: '0 !important'}} /> */}
                           {!item.used && auxArr.length > 0 && (
-                            <Dropdown overlay={(
-                              <Menu>
-                                {auxArr.map((head, llave) => {
-                                  return (
-                                    <Menu.Item>
-                                      <a
-                                        key={llave}
-                                        onClick={() => {
-                                          self.sChange(head, index);
-                                        }}>
-                                        {head.tag}
-                                      </a>
-                                    </Menu.Item>
-                                  );
-                                })}
-                              </Menu>
-                            )} placement="bottomCenter">
+                            <Dropdown
+                              overlay={
+                                <Menu>
+                                  {auxArr.map((head, llave) => {
+                                    return (
+                                      <Menu.Item>
+                                        <a
+                                          key={llave}
+                                          onClick={() => {
+                                            self.sChange(head, index);
+                                          }}>
+                                          {head.tag}
+                                        </a>
+                                      </Menu.Item>
+                                    );
+                                  })}
+                                </Menu>
+                              }
+                              placement='bottomCenter'>
                               <Button type='text' icon={<DownOutlined />} />
                             </Dropdown>
                           )}
@@ -210,9 +212,11 @@ class Preview extends Component {
             <Col span={10}>
               {auxArr.length > 0 && (
                 <p className='has-text-grey-light'>
-                  <ExclamationCircleOutlined className='has-text-danger'/>
-                  <span>Los siguientes campos <strong className='has-text-danger'>Obligatorios</strong> no se han definido:{' '}</span>
-                  
+                  <ExclamationCircleOutlined className='has-text-danger' />
+                  <span>
+                    Los siguientes campos <strong className='has-text-danger'>Obligatorios</strong> no se han definido:{' '}
+                  </span>
+
                   <p>
                     {auxArr.map((item) => {
                       return <strong key={item.tag}>{item.tag} </strong>;
@@ -222,15 +226,16 @@ class Preview extends Component {
               )}
               {auxArr.length < 0 && (
                 <p className='has-text-grey-light'>
-                  <ExclamationCircleOutlined className='has-text-danger'/>
-                  <span>Tienes algunos campos <strong className='has-text-warning'>Opcionales</strong> sin definir.</span>
+                  <ExclamationCircleOutlined className='has-text-danger' />
+                  <span>
+                    Tienes algunos campos <strong className='has-text-warning'>Opcionales</strong> sin definir.
+                  </span>
                 </p>
               )}
             </Col>
           </Row>
         )}
-        
-        {timeout && <LogOut />}
+
         {serverError && <ErrorServe errorData={errorData} />}
       </React.Fragment>
     );

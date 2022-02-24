@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, withRouter, useHistory } from 'react-router-dom';
 import { app, firestore } from '../helpers/firebase';
-import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
@@ -30,7 +29,6 @@ const initialDataGeneral = {
   name: '',
   user: false,
   menuOpen: false,
-  timeout: false,
   modal: false,
   create: false,
   valid: true,
@@ -351,7 +349,6 @@ const Headers = (props) => {
         </div>
       )}
 
-      {dataGeneral.timeout && <LogOut />}
       {dataGeneral.serverError && <ErrorServe errorData={errorData} />}
     </React.Fragment>
   );
