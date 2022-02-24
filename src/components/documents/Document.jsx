@@ -198,12 +198,16 @@ const Document = ( props ) => {
 
   const succesUploadFile = async (uploadTaskRef) => {
     let file;
-    await uploadTaskRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-      file = downloadURL;
-      console.log(downloadURL);
-      setLoading(false);
-    });
-    setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'file', documentList: documentList});
+    try {
+      await uploadTaskRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        file = downloadURL;
+        console.log(downloadURL);
+        setLoading(false);
+      });
+      setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'file', documentList: documentList});
+    } catch(e) {
+      setLoading(true);
+    }
   }
 
   /* const createFolder = async () => {
