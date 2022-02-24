@@ -1,4 +1,11 @@
-import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  IdcardOutlined,
+  LoadingOutlined,
+  LockOutlined,
+  MailOutlined,
+} from '@ant-design/icons';
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -8,7 +15,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from 'Context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isHome } from 'helpers/helperEvent';
+import { isHome, useEventArkmed } from 'helpers/helperEvent';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { UseCurrentUser } from 'Context/userContext';
 
@@ -224,33 +231,63 @@ const ModalAuth = (props) => {
                   prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                 />
               </Form.Item>
-              <Form.Item
-                label={intl.formatMessage({
-                  id: 'modal.label.password',
-                  defaultMessage: 'Contraseña',
-                })}
-                name='password'
-                style={{ marginBottom: '15px', textAlign: 'left' }}
-                rules={[
-                  {
-                    required: true,
-                    message: intl.formatMessage({
-                      id: 'modal.rule.required.password',
-                      defaultMessage: 'Ingrese una contraseña',
-                    }),
-                  },
-                ]}>
-                <Input.Password
-                  disabled={loading}
-                  size='large'
-                  placeholder={intl.formatMessage({
+              {useEventArkmed(cEvent.value?._id).isArkmed ? (
+                <Form.Item
+                  label={intl.formatMessage({
+                    id: 'modal.label.cedula',
+                    defaultMessage: 'Cedula',
+                  })}
+                  name='password'
+                  style={{ marginBottom: '15px', textAlign: 'left' }}
+                  rules={[
+                    {
+                      required: true,
+                      message: intl.formatMessage({
+                        id: 'modal.rule.required.cedula',
+                        defaultMessage: 'Ingrese su numero de cedula',
+                      }),
+                    },
+                  ]}>
+                  <Input
+                    disabled={loading}
+                    size='large'
+                    placeholder={intl.formatMessage({
+                      id: 'modal.label.cedula',
+                      defaultMessage: 'Cedula',
+                    })}
+                    prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                    iconRender={<IdcardOutlined />}
+                  />
+                </Form.Item>
+              ) : (
+                <Form.Item
+                  label={intl.formatMessage({
                     id: 'modal.label.password',
                     defaultMessage: 'Contraseña',
                   })}
-                  prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                />
-              </Form.Item>
+                  name='password'
+                  style={{ marginBottom: '15px', textAlign: 'left' }}
+                  rules={[
+                    {
+                      required: true,
+                      message: intl.formatMessage({
+                        id: 'modal.rule.required.password',
+                        defaultMessage: 'Ingrese una contraseña',
+                      }),
+                    },
+                  ]}>
+                  <Input.Password
+                    disabled={loading}
+                    size='large'
+                    placeholder={intl.formatMessage({
+                      id: 'modal.label.password',
+                      defaultMessage: 'Contraseña',
+                    })}
+                    prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  />
+                </Form.Item>
+              )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Typography.Text
