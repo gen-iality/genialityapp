@@ -38,7 +38,12 @@ function ThisRouteCanBeDisplayed({ children }) {
       handleChangeTypeModal('registerForTheEvent');
   }, [cEvent, cEventUser.status]);
 
-  function showComponentForPublicEventWithRegistration(component) {
+  function renderTitleComponentForPublicEventWithRegistration(loading) {
+    if (loading) return <Typography.Title level={2}>Inicia sesión o regístrate para ver el contenido</Typography.Title>;
+    return <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title' })}</Typography.Title>;
+  }
+
+  function showComponentForPublicEventWithRegistration(component, loading) {
     switch (component.key) {
       case 'evento':
         return component;
@@ -51,17 +56,19 @@ function ThisRouteCanBeDisplayed({ children }) {
             style={{ backgroundColor: 'white', borderRadius: '15px' }}
             className='animate__animated animate__pulse'
             status='warning'
-            title={
-              <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title' })}</Typography.Title>
-            }
+            title={renderTitleComponentForPublicEventWithRegistration(loading)}
             extra={[
-              <Button
-                onClick={() => handleChangeTypeModal('registerForTheEvent')}
-                size='large'
-                type='primary'
-                key='goToEvent'>
-                {intl.formatMessage({ id: 'modal.feedback.accept' })}
-              </Button>,
+              loading ? (
+                ''
+              ) : (
+                <Button
+                  onClick={() => handleChangeTypeModal('registerForTheEvent')}
+                  size='large'
+                  type='primary'
+                  key='goToEvent'>
+                  {intl.formatMessage({ id: 'modal.feedback.accept' })}
+                </Button>
+              ),
             ]}
           />
         );
@@ -143,13 +150,11 @@ function ThisRouteCanBeDisplayed({ children }) {
   return (
     <>
       {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
-        (iAmRegisteredInThisEvent(cEventUser) === 'LOADING' ? (
-          <Loading />
-        ) : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' ? (
-          showComponentForPublicEventWithRegistration(children)
-        ) : (
-          iAmRegisteredInThisEvent(cEventUser) === 'REGISTERED' && children
-        ))}
+        (iAmRegisteredInThisEvent(cEventUser) === 'LOADING'
+          ? showComponentForPublicEventWithRegistration(children, 'LOADING')
+          : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED'
+          ? showComponentForPublicEventWithRegistration(children)
+          : iAmRegisteredInThisEvent(cEventUser) === 'REGISTERED' && children)}
 
       {recordTypeForThisEvent(cEvent) === 'UN_REGISTERED_PUBLIC_EVENT' &&
         showComponentunregisteredPublicEvent(children)}
