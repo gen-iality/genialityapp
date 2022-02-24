@@ -61,7 +61,7 @@ const Informacion = (props) => {
   } = useContextNewEvent();
 
   useEffect(() => {
-    if (props.currentUser && !props.orgId) {
+    if (props.currentUser) {
       obtainOrganizations();
     } // console.log("ISBYORGANIZATION==>",isbyOrganization)
   }, [props.orgId, props.currentUser]);
@@ -197,7 +197,7 @@ const Informacion = (props) => {
         </div>
         <div>
           <Space direction='vertical'>
-            {
+            {organizations.length > 0 && (
               <div style={{ marginBottom: '30px' }}>
                 <p>
                   Este evento pertenecerá a la organización | <b>{selectOrganization?.name}</b>
@@ -211,7 +211,7 @@ const Informacion = (props) => {
                   Cambiar de organización
                 </Button>
               </div>
-            }
+            )}
             {organization && !isbyOrganization && (
               <Modal
                 footer={
@@ -229,7 +229,7 @@ const Informacion = (props) => {
                 onOk={selectOrganizationOK}
                 okText='Seleccionar'
                 cancelText='Cerrar'
-                title='Organización'
+                title='Organizaciónes'
                 visible={organization && !isbyOrganization}
                 onCancel={() => changeOrganization(false)}>
                 {!createOrganizationF && (

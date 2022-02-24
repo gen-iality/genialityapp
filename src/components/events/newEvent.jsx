@@ -65,7 +65,7 @@ class NewEvent extends Component {
       if (organization) {
         organization = { ...organization, id: organization._id };
         eventNewContext.selectedOrganization(organization);
-        eventNewContext.eventByOrganization(true);
+        eventNewContext.eventByOrganization(false);
       }
     }
   }
