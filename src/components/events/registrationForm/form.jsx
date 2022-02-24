@@ -1043,10 +1043,10 @@ const FormRegister = ({
                         }}
                         type='primary'
                         htmlType='submit'>
-                        {(initialValues != null && cEventUser.value !== null) ||
-                        (initialValues != null && Object.keys(initialValues).length > 0)
+                        {(initialValues != null && cEventUser.value !== null && typeModal !== 'update') ||
+                        (initialValues != null && Object.keys(initialValues).length > 0 && typeModal !== 'update')
                           ? intl.formatMessage({ id: 'registration.button.create' })
-                          : intl.formatMessage({ id: 'registration.button.create' })}
+                          : intl.formatMessage({ id: 'registration.button.update' })}
                       </Button>
                       {options &&
                         initialValues != null &&
