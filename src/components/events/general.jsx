@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss';
 import ErrorServe from '../modal/serverError';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import LogOut from '../shared/logOut';
 import axios from 'axios/index';
 import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
@@ -33,7 +32,7 @@ import {
   Space,
   Grid,
   Divider,
-  Button
+  Button,
 } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
@@ -170,8 +169,12 @@ class General extends Component {
     } catch (error) {
       // Error
       if (error.response) {
-        const { status } = error.response;
-        if (status === 401) this.setState({ timeout: true, loader: false });
+        const { status, data } = error.response;
+        if (status === 401)
+          message.open({
+            type: 'error',
+            content: <>Error : {data?.message || status}</>,
+          });
         else this.setState({ serverError: true, loader: false });
       } else {
         this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } });
@@ -523,7 +526,6 @@ class General extends Component {
         /* console.error('STATUS', status, status === 401); */
         if (status === 401)
           message.open({
-            key: 'error',
             type: 'error',
             content: <>Error : {data?.message || status}</>,
           });
@@ -640,7 +642,6 @@ class General extends Component {
       selectedOrganizer,
       selectedType,
       valid,
-      timeout,
       errorData,
       serverError,
       specificDates,
@@ -656,7 +657,7 @@ class General extends Component {
                 <Col span={16}>
                   <Form.Item
                     label={
-                      <label style={{ marginTop: '2%' }} >
+                      <label style={{ marginTop: '2%' }}>
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
@@ -879,9 +880,7 @@ class General extends Component {
                   </Form.Item>
 
                   <div>
-                    <label style={{ marginTop: '2%' }} >
-                      Imagen General (para el listado)
-                    </label>
+                    <label style={{ marginTop: '2%' }}>Imagen General (para el listado)</label>
                     <ImageInput
                       picture={event.picture}
                       imageFile={this.state.imageFile}

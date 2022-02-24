@@ -4,13 +4,12 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { EventsApi } from '../../helpers/request';
-import { Button, Row, Col, Typography, Space } from 'antd';
+import { Button, Row, Col, Typography, Space, message } from 'antd';
 import loadable from '@loadable/component';
 
 Moment.locale('es');
 momentLocalizer();
 
-const LogOut = loadable(() => import('../shared/logOut'));
 const ErrorServe = loadable(() => import('../modal/serverError'));
 const ModalFeedback = loadable(() => import('components/authentication/ModalFeedback'));
 const LoadingEvent = loadable(() => import('../loaders/loadevent'));
@@ -27,7 +26,6 @@ class Home extends Component {
       tabEvtType: false,
       tabEvtCat: false,
       loadingState: false,
-      timeout: false,
       serverError: false,
       errorData: {},
       nelements: 20,
@@ -73,8 +71,12 @@ class Home extends Component {
       this.setState({ events, loading: false, current_page: resp.meta.current_page, total: resp.meta.total });
     } catch (error) {
       if (error.response) {
-        const { status } = error.response;
-        if (status === 401) this.setState({ timeout: true, loader: false });
+        const { status, data } = error.response;
+        if (status === 401)
+          message.open({
+            type: 'error',
+            content: <>Error : {data?.message || status}</>,
+          });
         else this.setState({ serverError: true, loader: false });
       } else {
         if (error.request) console.error(error.request);
@@ -90,20 +92,18 @@ class Home extends Component {
   };
 
   render() {
-    const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
+    const { typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
 
     return (
-      <div style={{padding: '20px'}}>
+      <div style={{ padding: '20px' }}>
         <ModalFeedback />
         <Row gutter={[16, 16]} wrap>
           <Col span={24}>
-            <Typography.Title level={1}>
-              Eventos
-            </Typography.Title>
+            <Typography.Title level={1}>Eventos</Typography.Title>
           </Col>
           <Col span={24}>
             <Space wrap>
-              <Button 
+              <Button
                 onClick={
                   !loading
                     ? () => this.setState({ pageSize: this.state.nelements }, async () => this.fetchEvent('next'))
@@ -111,9 +111,10 @@ class Home extends Component {
                 }
                 type={typeEvent === 'next' ? 'primary' : 'text'}
                 size='large'
-                shape='round'
-                >Próximos</Button>
-              <Button 
+                shape='round'>
+                Próximos
+              </Button>
+              <Button
                 onClick={
                   !loading
                     ? () => this.setState({ pageSize: this.state.nelements }, async () => this.fetchEvent('prev'))
@@ -121,13 +122,14 @@ class Home extends Component {
                 }
                 type={typeEvent === 'prev' ? 'primary' : 'text'}
                 size='large'
-                shape='round'
-                >Pasados</Button>
+                shape='round'>
+                Pasados
+              </Button>
             </Space>
           </Col>
           <Col span={24}>
             <section className='home'>
-          {/* <div className='tabs'>
+              {/* <div className='tabs'>
             <ul>
               <li
                 onClick={
@@ -149,9 +151,9 @@ class Home extends Component {
               </li>
             </ul>
           </div> */}
-          <div className='dynamic-content'>
-            {loading ? (
-              <LoadingEvent />
+              <div className='dynamic-content'>
+                {loading ? (
+                  <LoadingEvent />
                 ) : (
                   <Row gutter={[16, 16]}>
                     {events.length <= 0 ? (
@@ -192,13 +194,9 @@ class Home extends Component {
             </section>
           </Col>
         </Row>
-        
-
-        
 
         {/* <h2 className='is-size-2 bold-text'>Eventos</h2> */}
-        
-        {timeout && <LogOut />}
+
         {serverError && <ErrorServe errorData={errorData} />}
       </div>
     );

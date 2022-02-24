@@ -4,7 +4,6 @@ import Moment from 'moment';
 import 'moment/locale/es-us';
 import { Actions, EventsApi } from '../../helpers/request';
 import ImageInput from '../shared/imageInput';
-import LogOut from '../shared/logOut';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
@@ -55,7 +54,7 @@ class SendRsvp extends Component {
             ? this.props.event.styles.banner_footer
             : this.props.event.picture,
       },
-      selection: this.props.selection === undefined ? "Todos" : this.props.selection,
+      selection: this.props.selection === undefined ? 'Todos' : this.props.selection,
     });
   }
 
@@ -90,7 +89,7 @@ class SendRsvp extends Component {
   };
 
   uploadImg = (imageFieldName, imageStateName) => {
-    this.setState({ loading_image: true })
+    this.setState({ loading_image: true });
     let data = new FormData();
     const url = '/api/files/upload',
       self = this;
@@ -106,8 +105,20 @@ class SendRsvp extends Component {
           loading_image: false,
         });
       })
-      .catch(() => {
-        this.setState({ timeout: true, loader: false, loading_image: false });
+      .catch((error) => {
+        if (error.response) {
+          const { status, data } = error.response;
+          if (status === 401)
+            message.open({
+              type: 'error',
+              content: <>Error : {data?.message || status}</>,
+            });
+        } else {
+          message.open({
+            type: 'error',
+            content: <>Error Subiendo la imagen</>,
+          });
+        }
       });
   };
 
@@ -137,9 +148,9 @@ class SendRsvp extends Component {
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
     let users = [];
-    if (selection === "Todos"){
-      users = "all";
-    }else {
+    if (selection === 'Todos') {
+      users = 'all';
+    } else {
       selection.map((item) => {
         return users.push(item._id);
       });
@@ -174,7 +185,7 @@ class SendRsvp extends Component {
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
       message.destroy(loading.key);
-       message.open({
+      message.open({
         type: 'success',
         content: 'Las notificaciones se mandaron de manera satisfactoria',
       });
@@ -208,7 +219,7 @@ class SendRsvp extends Component {
   }
 
   render() {
-    const { timeout, disabled, include_date } = this.state;
+    const { disabled, include_date } = this.state;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <>
@@ -234,7 +245,9 @@ class SendRsvp extends Component {
               </Form.Item>
 
               <Form.Item>
-                <label >Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small></label>
+                <label>
+                  Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small>
+                </label>
 
                 <Spin tip='Cargando...' spinning={this.state.loading_image}>
                   <ImageInput
@@ -327,7 +340,9 @@ class SendRsvp extends Component {
                 </Col>
               </Row>
               <Form.Item>
-                <label >Sube una imagen <br /> <small>(Por defecto será la del evento)</small></label>
+                <label>
+                  Sube una imagen <br /> <small>(Por defecto será la del evento)</small>
+                </label>
 
                 <Row style={{ margin: 10 }}>
                   {!this.state.showimgDefault ? (
@@ -399,10 +414,12 @@ class SendRsvp extends Component {
               </Form.Item>
 
               <Form.Item>
-                <label >Sube una imagen <br />{' '}
+                <label>
+                  Sube una imagen <br />{' '}
                   <small>
                     (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
-                  </small></label>
+                  </small>
+                </label>
                 <Spin tip='Cargando...' spinning={this.state.loading_image}>
                   <ImageInput
                     picture={this.state.rsvp.image_footer}
@@ -441,35 +458,34 @@ class SendRsvp extends Component {
                 />
               </div> */}
 
-              <Card >
+              <Card>
                 <Row gutter={[8, 8]} wrap justify='center'>
                   <Col span={24}>
-                    <Typography.Paragraph >
-                      Seleccionados <span>{this.state.selection === "Todos" ? "Todos" : this.state.selection.length}</span>
+                    <Typography.Paragraph>
+                      Seleccionados{' '}
+                      <span>{this.state.selection === 'Todos' ? 'Todos' : this.state.selection.length}</span>
                     </Typography.Paragraph>
                   </Col>
                   <Typography.Paragraph>
-                    {
-                      this.state.selection === "Todos"
-                          ? null
-                          :this.state.selection?.map((el) => {
-                            return el.properties.email + ', ';
-                          })
-                    }
+                    {this.state.selection === 'Todos'
+                      ? null
+                      : this.state.selection?.map((el) => {
+                          return el.properties.email + ', ';
+                        })}
                   </Typography.Paragraph>
                 </Row>
                 <Row gutter={8} wrap>
-                  {
-                    this.state.selection === "Todos"
-                        ? (<p>{this.state.selection}</p>)
-                        :this.state.selection?.map((item, key) => {
-                          return (
-                              <p key={key} className='selection'>
-                                {item.email}
-                              </p>
-                          );
-                        })
-                  }
+                  {this.state.selection === 'Todos' ? (
+                    <p>{this.state.selection}</p>
+                  ) : (
+                    this.state.selection?.map((item, key) => {
+                      return (
+                        <p key={key} className='selection'>
+                          {item.email}
+                        </p>
+                      );
+                    })
+                  )}
                 </Row>
                 <Row justify='center' gutter={8} wrap>
                   <Link to={{ pathname: `${this.props.matchUrl}` }}>
@@ -489,7 +505,7 @@ class SendRsvp extends Component {
             cancelText={'Cancelar'}
             okText={'Envíar'}>
             <p>
-              Se van a enviar {this.state.selection === "Todos" ? "a todos las" : this.state.selection.length}{' '}
+              Se van a enviar {this.state.selection === 'Todos' ? 'a todos las' : this.state.selection.length}{' '}
               {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}
             </p>
           </Modal>
