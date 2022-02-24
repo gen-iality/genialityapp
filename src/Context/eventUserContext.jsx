@@ -29,6 +29,7 @@ export function CurrentUserEventProvider({ children }) {
         EventsApi.getStatusRegister(event_id, cUser.value.email).then((responseStatus) => {
           if (responseStatus.data.length > 0) {
             setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });
+            console.log('llena el event user', responseStatus.data[0]);
           } else {
             setuserEvent({ status: 'LOADED', value: null });
           }
