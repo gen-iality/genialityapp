@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Result, Typography } from 'antd';
 import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { UseEventContext } from '../../../../Context/eventContext';
@@ -30,6 +30,13 @@ function ThisRouteCanBeDisplayed({ children }) {
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
   let { handleChangeTypeModal } = useContext(HelperContext);
+
+  useEffect(() => {
+    /** Abrir modal de registro al evento automaticamente para eventos con registro obligatorio */
+    recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
+      iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' &&
+      handleChangeTypeModal('registerForTheEvent');
+  }, [cEvent, cEventUser.status]);
 
   function showComponentForPublicEventWithRegistration(component) {
     switch (component.key) {

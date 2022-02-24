@@ -2,20 +2,29 @@ import React, { useState } from 'react';
 import { Modal, Result, Button, Divider, Typography, Space } from 'antd';
 import withContext from '../../Context/withContext';
 import { useIntl } from 'react-intl';
-import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { recordTypeForThisEvent, iAmRegisteredInThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { UseEventContext } from '../../Context/eventContext';
+import { UseUserEvent } from '../../Context/eventUserContext';
 
 const ModalNoRegister = (props) => {
   let cEvent = UseEventContext();
+  const cEventUser = UseUserEvent();
   const intl = useIntl();
-  // Mensajes para evento privado y publico
 
-  const msgEventPublic = '';
+  // Mensajes para evento privado
   const msgEventPrivate = intl.formatMessage({
     id: 'modal.no_register.msg_private',
     defaultMessage:
       'Este evento es privado, solo se puede acceder por invitación,  contacte al administrador del evento.',
   });
+
+  function whenToOpenTheModal() {
+    return (
+      recordTypeForThisEvent(cEvent) === 'PRIVATE_EVENT' &&
+      iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' &&
+      props.cHelper.typeModal !== 'visitors'
+    );
+  }
 
   return (
     <Modal
@@ -33,60 +42,31 @@ const ModalNoRegister = (props) => {
             key='sign_off'
             type='text'
             size='large'>
-            {intl.formatMessage({
-              id: 'modal.no_register.gotoevius',
-              defaultMessage: 'Ver más eventos',
-            })}
-          </Button>
-          {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && (
-            <Button
-              onClick={() => props.cHelper.handleChangeTypeModal('registerForTheEvent')}
-              key='sign_up'
-              type='primary'
-              size='large'>
+            <b>
               {intl.formatMessage({
-                id: 'modal.feedback.accept',
-                defaultMessage: 'Aceptar',
+                id: 'modal.no_register.gotoevius',
+                defaultMessage: 'Ver más eventos',
               })}
-            </Button>
-          )}
+            </b>
+          </Button>
         </Space>,
       ]}
       zIndex={1000}
       closable={true}
-      visible={
-        ((props.cHelper.typeModal == 'preregisterMessage' || props.cHelper.typeModal == 'loginSuccessNotRegister') &&
-          props.cEvent?.value?.allow_register &&
-          props.cEvent?.value?.visibility == 'PUBLIC') ||
-        (!props.cEvent?.value?.allow_register &&
-          props.cEvent?.value?.visibility == 'PRIVATE' &&
-          props.cHelper.typeModal !== 'visitors' &&
-          props.cEventUser?.status == 'LOADED' &&
-          !props.cEventUser?.value)
-      }>
+      visible={whenToOpenTheModal()}>
       <Result
         status='warning'
         icon={null}
         title={
           props.cHelper.typeModal !== 'loginSuccessNotRegister' ? (
             <Typography.Title level={4}>
-              {intl.formatMessage({
-                id: 'modal.no_register.title',
-                defaultMessage:
-                  'Hola, tienes una cuenta activa con nosotros, pero esta actividad requiere otros detalles sobre ti.',
-              })}
+              {recordTypeForThisEvent(cEvent) === 'PRIVATE_EVENT' && msgEventPrivate}
             </Typography.Title>
           ) : (
             <Typography.Title level={4} style={{ textAlign: 'left' }}>
               Cuenta creada correctamente
             </Typography.Title>
           )
-        }
-        subTitle={
-          <Typography.Paragraph style={{ fontSize: '16px' }}>
-            {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && msgEventPublic}
-            {recordTypeForThisEvent(cEvent) === 'PRIVATE_EVENT' && msgEventPrivate}
-          </Typography.Paragraph>
         }
       />
     </Modal>

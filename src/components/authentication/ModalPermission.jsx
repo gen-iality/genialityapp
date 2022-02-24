@@ -1,5 +1,5 @@
 import { CloseCircleFilled } from '@ant-design/icons';
-import { Modal, PageHeader, Space, Grid, Typography } from 'antd';
+import { Modal, PageHeader, Space, Grid, Typography, Button } from 'antd';
 import React, { useContext } from 'react';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
@@ -41,14 +41,22 @@ const ModalPermission = (props) => {
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Link onClick={() => handleChangeTypeModal(null)} to={`/landing/${props.cEvent.value?._id}/`}>
+          // <Link onClick={() => handleChangeTypeModal(null)} to={`/landing/${props.cEvent.value?._id}/`}>
+          //   <Space>
+          //     <CloseCircleFilled style={{ color: '#6B7283', fontSize: '20px' }} />
+          //     <span style={{ fontSize: '16px', color: '#6B7283' }}>
+          //       {intl.formatMessage({ id: 'modal.permissio.close', defaultMessage: 'Cerrar' })}
+          //     </span>
+          //   </Space>
+          // </Link>
+          <Button type='text' onClick={() => handleChangeTypeModal(null)}>
             <Space>
               <CloseCircleFilled style={{ color: '#6B7283', fontSize: '20px' }} />
               <span style={{ fontSize: '16px', color: '#6B7283' }}>
                 {intl.formatMessage({ id: 'modal.permissio.close', defaultMessage: 'Cerrar' })}
               </span>
             </Space>
-          </Link>
+          </Button>
         }
         onBack={() => null}
         title=' ' // NO eliminar el espacio en blanco
