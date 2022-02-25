@@ -50,7 +50,7 @@ class eventLanding extends Component {
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Hay que aplicarle más condiciones este caso solo aplica si está a la izquierda sin nada*/}
-        {console.log(this.props.cEvent.value.description)}
+        {/* {console.log(this.props.cEvent.value.description)} */}
         {this.props.cEvent.value.description !== '<p><br></p>' && 
           <Card
             className='event-description'
