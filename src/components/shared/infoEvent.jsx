@@ -12,7 +12,6 @@ const InfoEvent = () => {
   let { handleChangeTypeModal } = useContext(HelperContext);
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
-  console.log('%c🆗 - Mensaje', 'color: #00A6ED;', cUser);
   const { Paragraph } = Typography;
   return (
     <PageHeader
