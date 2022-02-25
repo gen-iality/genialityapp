@@ -1085,3 +1085,7 @@ a {
 .ant-popover {
   z-index: 900 !important;
 }
+
+.hide-toolbar .ql-toolbar {
+  display: none;
+}
