@@ -33,7 +33,7 @@ const ItemStyle = {
   padding: 5,
   margin: 5,
 };
-const { confirm } = Modal;
+const { confirm, destroyAll } = Modal;
 
 const UserStatusAndMenu = (props) => {
   let { cEventUser } = props;
@@ -216,7 +216,9 @@ const UserStatusAndMenu = (props) => {
         defaultMessage: 'Cancelar',
       }),
       onOk() {
-        logout();
+        /* Sending a boolean to the backend to know if the logout is manual or not. */
+        logout(false);
+        destroyAll();
       },
       onCancel() {
         console.log('Cancel');
