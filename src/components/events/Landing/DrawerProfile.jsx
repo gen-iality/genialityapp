@@ -34,8 +34,6 @@ const DrawerProfile = (props) => {
   useEffect(() => {
     if (cEventUser.value !== null && cEventUser.status === 'LOADED') {
       let isContact = isMyContacts(cEventUser.value.properties, props.cHelper.contacts);
-      console.log('%c🆗 - usuario', 'color: #00A6ED;', cUser.value);
-      console.log('%c🆗 - perfil evento', 'color: #00A6ED;', cEventUser.value);
       setIsMe(cUser.value._id == cEventUser.value.user._id);
       setIsMyContact(isContact);
       setUserSelected(cEventUser.value.properties);

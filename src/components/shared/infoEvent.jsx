@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
-import { Affix, Divider, PageHeader, Space, Typography } from 'antd';
+import { Affix, Button, Divider, PageHeader, Space, Typography } from 'antd';
 import Moment from 'moment';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { HelperContext } from '../../Context/HelperContext';
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseCurrentUser } from '../../Context/userContext';
 
 const InfoEvent = () => {
   let cEvent = UseEventContext();
+  let { handleChangeTypeModal } = useContext(HelperContext);
+  const cEventUser = UseUserEvent();
+  const cUser = UseCurrentUser();
   const { Paragraph } = Typography;
   return (
     <PageHeader
@@ -19,6 +25,15 @@ const InfoEvent = () => {
         borderRadius: '20px',
         backgroundColor: 'white',
       }}
+      title={cEvent.value.name}
+      extra={
+        cUser?.value !== null &&
+        cEventUser?.value === null && (
+          <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
+            Inscribirme al evento
+          </Button>
+        )
+      }
       footer={
         <Space>
           <Space wrap>
@@ -43,11 +58,7 @@ const InfoEvent = () => {
             </Space>
           </Space>
         </Space>
-      }>
-      <Paragraph style={{ fontSize: '21px', fontWeight: 'bolder', marginBottom: '-10px' }}>
-        {cEvent.value.name}
-      </Paragraph>
-    </PageHeader>
+      }></PageHeader>
   );
 };
 

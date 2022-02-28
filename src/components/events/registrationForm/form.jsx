@@ -16,6 +16,8 @@ import {
   Upload,
   Select,
   Spin,
+  Comment,
+  Typography,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -538,6 +540,10 @@ const FormRegister = ({
           : initialValues
           ? initialValues[target]
           : '';
+        //VISIBILIDAD DE CAMPOS
+        let visible =
+          (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
+
         /* console.log(initialValues, 'initialValues', m) */
 
         //no entiendo b esto para que funciona
@@ -552,16 +558,6 @@ const FormRegister = ({
         }
         let input = (
           <Input
-            disabled={
-              /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
-              validateUrl() === true
-                ? m.name == 'email' && initialValues?.email
-                  ? true
-                  : cEvent.value?.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
-                  ? true
-                  : false
-                : false
-            }
             {...props}
             addonBefore={
               labelPosition === 'izquierda' && (
@@ -865,6 +861,8 @@ const FormRegister = ({
                   <Form.Item
                     // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                     // style={eventUserId && hideFields}
+                    noStyle={visible}
+                    hidden={visible}
                     valuePropName={type === 'boolean' ? 'checked' : 'value'}
                     label={
                       (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
@@ -959,7 +957,23 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              <div style={{ height: '50vh', overflowY: 'auto', paddingRight: '0px' }}>{renderForm()}</div>
+              {console.log('%c🆗 - initialValues', 'color: #00A6ED;', initialValues)}
+              <Row>
+                <Col span={24}></Col>
+                <Col span={24}>
+                  <Card style={{ borderRadius: '8px' }}>
+                    <Typography.Title level={4}>Datos del usuario</Typography.Title>
+                    <Comment
+                      author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
+                      content={initialValues?.email}
+                    />
+                  </Card>
+                </Col>
+              </Row>
+
+              <div style={{ height: 'auto', maxHeight: '50vh', overflowY: 'auto', paddingRight: '0px' }}>
+                {renderForm()}
+              </div>
 
               <Row gutter={[24, 24]} style={{ marginTop: '5px' }}>
                 {generalFormErrorMessageVisible && (

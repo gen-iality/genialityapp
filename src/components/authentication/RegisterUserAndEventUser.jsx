@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Steps, Button, message, Alert } from 'antd';
+import React, { useContext, useState } from 'react';
+import { Steps, Button, message, Alert, Comment } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -12,6 +12,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from 'Context/eventContext';
+import HelperContext from 'Context/HelperContext';
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
@@ -24,6 +25,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     password: '',
     picture: '',
   });
+  let { handleChangeTabModal } = useContext(HelperContext);
   const [dataEventUser, setdataEventUser] = useState({});
   const [buttonStatus, setbuttonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
@@ -108,6 +110,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             id: 'modal.feedback.title.error',
             defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
           }),
+          component: intl.formatMessage({ id: 'modal.feedback.title.errorlink', defaultMessage: 'iniciar sesión' }),
         });
       } else {
         setValidationGeneral({
@@ -286,7 +289,25 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       </div>
 
       {validationGeneral.status && (
-        <Alert style={{ marginTop: '5px' }} message={validationGeneral.textError} type='error' />
+        <Alert
+          style={{ marginTop: '5px' }}
+          message={
+            <>
+              {validationGeneral.textError}
+              {validationGeneral.component ? (
+                <Button
+                  style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
+                  onClick={() => handleChangeTabModal('1')}
+                  type='link'>
+                  {validationGeneral.component}
+                </Button>
+              ) : (
+                ''
+              )}
+            </>
+          }
+          type='error'
+        />
       )}
     </div>
   );
