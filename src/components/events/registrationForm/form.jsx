@@ -539,7 +539,8 @@ const FormRegister = ({
           ? initialValues[target]
           : '';
         //VISIBILIDAD DE CAMPOS
-        let visible = name == 'email' || name == 'names' ? true : false;
+        let visible =
+          (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
 
         /* console.log(initialValues, 'initialValues', m) */
 
