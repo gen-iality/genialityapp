@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown, notification } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
@@ -56,16 +56,33 @@ const Headers = (props) => {
   let history = useHistory();
   const conectionRef = firestore.collection(`connections`);
 
-  const logout = () => {
+  const openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: cUser.value?.names,
+      description: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
+      style: {
+        borderRadius: '10px',
+      },
+    });
+  };
+
+  /**
+   * @function logout - Close session in firebase and eliminate active session validator
+   * @param {boolean} showNotification If the value is true the remote logout notification is displayed
+   */
+  const logout = (showNotification) => {
     app
       .auth()
       .signOut()
       .then(async () => {
         await conectionRef.doc(cUser.value?._id).delete();
         const routeUrl = props.match?.url;
+        console.log('🚀 debug ~ .then ~ routeUrl', routeUrl);
         const weAreOnTheLanding = routeUrl.includes('landing');
+        if (showNotification) openNotificationWithIcon('info');
         if (weAreOnTheLanding) {
-          window.location.reload();
+          // window.location.reload();
+          history.push(routeUrl);
         } else {
           history.push('/');
         }
@@ -78,18 +95,22 @@ const Headers = (props) => {
   useEffect(() => {
     if (!cUser.value) return;
     //console.log('EJECUTADO EL SNAPSHOT ACAAA', cUser.value.email);
-    conectionRef.onSnapshot((snapshot) => {
+    const unsubscribe = conectionRef.onSnapshot((snapshot) => {
       const changes = snapshot.docChanges();
       //console.log('CHANGES ACA==>', changes);
       if (changes) {
         changes.forEach((change) => {
           if (change.type === 'removed' && change?.doc?.data()?.email == cUser.value?.email) {
             // console.log('ACÁ DEBO CERRAR LA SESIÓN', change.doc.data());
-            logout();
+            /* Sending a boolean to the backend to know if the logout is manual or not. */
+            logout(true);
           }
         });
       }
     });
+    return () => {
+      unsubscribe();
+    };
   }, [cUser.value]);
 
   const openMenu = () => {
@@ -304,7 +325,7 @@ const Headers = (props) => {
                 name={dataGeneral.name ? dataGeneral.name : ''}
                 userEvent={dataGeneral.userEvent}
                 eventId={dataGeneral.eventId}
-                logout={() => logout()}
+                logout={(calback) => logout(calback)}
                 openMenu={() => openMenu()}
                 loginInfo={loginInfo}
               />
@@ -318,7 +339,7 @@ const Headers = (props) => {
                   name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}
                   eventId={dataGeneral.eventId}
-                  logout={() => logout()}
+                  logout={(calback) => logout(calback)}
                   openMenu={() => console.log('openMenu')}
                   loginInfo={loginInfo}
                   anonimususer={true}

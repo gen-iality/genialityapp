@@ -28,6 +28,8 @@ export function recordTypeForThisEvent(cEvent) {
 function ThisRouteCanBeDisplayed({ children }) {
   const intl = useIntl();
   let cEventUser = UseUserEvent();
+  let eventUserId = cEventUser?.value?._id;
+  let eventUserStatus = cEventUser.status;
   let cEvent = UseEventContext();
   let { handleChangeTypeModal } = useContext(HelperContext);
 
@@ -36,7 +38,7 @@ function ThisRouteCanBeDisplayed({ children }) {
     recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
       iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' &&
       handleChangeTypeModal('registerForTheEvent');
-  }, [cEvent, cEventUser.status]);
+  }, [cEvent, eventUserId, eventUserStatus]);
 
   function renderTitleComponentForPublicEventWithRegistration(loading) {
     if (loading) return <Typography.Title level={2}>Inicia sesión o regístrate para ver el contenido</Typography.Title>;
