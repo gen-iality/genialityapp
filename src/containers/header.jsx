@@ -87,6 +87,7 @@ const Headers = (props) => {
       .auth()
       .signOut()
       .then(async () => {
+        cUser.setCurrentUser({ status: 'LOADED', value: null });
         await conectionRef.doc(cUser.value?._id).delete();
         const routeUrl = props.match?.url;
         const weAreOnTheLanding = routeUrl.includes('landing');

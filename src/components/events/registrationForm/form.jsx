@@ -94,6 +94,25 @@ function obtenerName(fileUrl) {
   }
 }
 
+function isVisibleButton(basicDataUser, extraFields) {
+  if (
+    Object.keys(basicDataUser).length > 0 ||
+    (fieldsAditional(extraFields) == 0 && Object.keys(basicDataUser).length == 0)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function fieldsAditional(extraFields) {
+  if (extraFields) {
+    const countFields = extraFields.filter((field) => field.name != 'names' && field.name != 'email');
+    console.log('extraFields', extraFields, countFields);
+    return countFields.length;
+  }
+  return 0;
+}
+
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
  */
@@ -957,23 +976,43 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              {console.log('%c🆗 - initialValues', 'color: #00A6ED;', initialValues)}
-              <Row>
-                <Col span={24}></Col>
+              <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
-                  <Card style={{ borderRadius: '8px' }}>
-                    <Typography.Title level={4}>Datos del usuario</Typography.Title>
+                  <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
+                    <Typography.Title level={5}>Datos del usuario</Typography.Title>
                     <Comment
                       author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
-                      content={initialValues?.email}
+                      content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
                     />
                   </Card>
                 </Col>
+                <Col span={24}>
+                  <Card
+                    bodyStyle={{ padding: '20px' }}
+                    style={{
+                      height: 'auto',
+                      maxHeight: '50vh',
+                      overflowY: 'auto',
+                      paddingRight: '0px',
+                      borderRadius: '8px',
+                    }}>
+                    {fieldsAditional(extraFields) > 0 && (
+                      <Typography.Title level={5}>
+                        {intl.formatMessage({
+                          id: 'modal.title.registerevent',
+                          defaultMessage: 'Información adicional para el evento',
+                        })}
+                      </Typography.Title>
+                    )}
+                    {renderForm()}
+                    {typeModal == 'update' && isVisibleButton(basicDataUser, extraFields) ? (
+                      <div style={{ textAlign: 'center', width: '100%' }}>
+                        No hay campos disponibles para actualizar en este evento
+                      </div>
+                    ) : null}
+                  </Card>
+                </Col>
               </Row>
-
-              <div style={{ height: 'auto', maxHeight: '50vh', overflowY: 'auto', paddingRight: '0px' }}>
-                {renderForm()}
-              </div>
 
               <Row gutter={[24, 24]} style={{ marginTop: '5px' }}>
                 {generalFormErrorMessageVisible && (
@@ -1045,7 +1084,7 @@ const FormRegister = ({
                     />
                   </Col>
                 )}
-
+                {console.log('BASIC DATA USER', Object.keys(basicDataUser).length)}
                 <Col span={24} align='center'>
                   {!loadingregister && (
                     <Form.Item>
@@ -1053,7 +1092,7 @@ const FormRegister = ({
                         size='large'
                         ref={buttonSubmit}
                         style={{
-                          display: Object.keys(basicDataUser).length > 0 ? 'none' : 'block',
+                          display: isVisibleButton(basicDataUser, extraFields) ? 'none' : 'block',
                         }}
                         type='primary'
                         htmlType='submit'>
@@ -1062,6 +1101,7 @@ const FormRegister = ({
                           ? intl.formatMessage({ id: 'registration.button.create' })
                           : intl.formatMessage({ id: 'registration.button.update' })}
                       </Button>
+
                       {options &&
                         initialValues != null &&
                         options.map((option) => (
