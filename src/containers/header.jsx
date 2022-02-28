@@ -67,7 +67,8 @@ const Headers = (props) => {
   };
 
   /**
-   * @param showNotification - If the boolean value is true the remote logout notification is displayed
+   * @function logout - Close session in firebase and eliminate active session validator
+   * @param {boolean} showNotification If the value is true the remote logout notification is displayed
    */
   const logout = (showNotification) => {
     app
@@ -76,12 +77,12 @@ const Headers = (props) => {
       .then(async () => {
         await conectionRef.doc(cUser.value?._id).delete();
         const routeUrl = props.match?.url;
+        console.log('🚀 debug ~ .then ~ routeUrl', routeUrl);
         const weAreOnTheLanding = routeUrl.includes('landing');
+        if (showNotification) openNotificationWithIcon('info');
         if (weAreOnTheLanding) {
           // window.location.reload();
-          if (showNotification) {
-            openNotificationWithIcon('info');
-          }
+          history.push(routeUrl);
         } else {
           history.push('/');
         }
