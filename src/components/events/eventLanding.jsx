@@ -49,9 +49,11 @@ class eventLanding extends Component {
   render() {
     return (
       <div /* style={{ marginBottom: 12 }} */>
-        {/* Hay que aplicarle más condiciones este caso solo aplica si está a la izquierda sin nada*/}
-        {/* {console.log(this.props.cEvent.value.description)} */}
-        {this.props.cEvent.value.description !== '<p><br></p>' && 
+        {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
+        {(this.props.cEvent.value.description !== '<p><br></p>'
+        && this.props.cEvent.value.description !== `<p class="ql-align-center"><br></p>` 
+        && this.props.cEvent.value.description !== `<p class="ql-align-right"><br></p>`
+        && this.props.cEvent.value.description !== `<p class="ql-align-justify"><br></p>`) && 
           <Card
             className='event-description'
             bodyStyle={{ padding: '25px 5px' }}

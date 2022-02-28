@@ -37,12 +37,12 @@ class Styles extends Component {
           editIsVisible: false,
         },
         {
-          title: 'Color de fondo para el menu',
+          title: 'Color de fondo para el menú',
           fieldColorName: 'toolbarDefaultBg',
           editIsVisible: false,
         },
         {
-          title: 'Color del texto para el menu',
+          title: 'Color del texto para el menú',
           fieldColorName: 'textMenu',
           editIsVisible: false,
         },
@@ -132,7 +132,7 @@ class Styles extends Component {
       },
       {
         label: 'Mostrar widget de videos grabados',
-        defaultValue: false,
+        defaultValue: true,
         name: 'show_video_widget',
         options: [
           {
@@ -266,7 +266,7 @@ class Styles extends Component {
           banner_footer_email: dataStyles.banner_footer_email || null,
           show_banner: dataStyles.show_banner || false,
           show_title: dataStyles?.show_title || false,
-          show_video_widget: dataStyles?.show_video_widget || false,
+          show_video_widget: dataStyles?.show_video_widget || true,
           show_card_banner: dataStyles.show_card_banner || true,
           show_inscription: info?.show_inscription || false,
           hideDatesAgenda: dataStyles.hideDatesAgenda || false,
