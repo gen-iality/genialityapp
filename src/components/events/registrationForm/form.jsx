@@ -538,6 +538,10 @@ const FormRegister = ({
           : initialValues
           ? initialValues[target]
           : '';
+        //VISIBILIDAD DE CAMPOS
+        let visible =
+          (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
+
         /* console.log(initialValues, 'initialValues', m) */
 
         //no entiendo b esto para que funciona
@@ -552,16 +556,6 @@ const FormRegister = ({
         }
         let input = (
           <Input
-            disabled={
-              /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
-              validateUrl() === true
-                ? m.name == 'email' && initialValues?.email
-                  ? true
-                  : cEvent.value?.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
-                  ? true
-                  : false
-                : false
-            }
             {...props}
             addonBefore={
               labelPosition === 'izquierda' && (
@@ -865,6 +859,8 @@ const FormRegister = ({
                   <Form.Item
                     // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                     // style={eventUserId && hideFields}
+                    noStyle={visible}
+                    hidden={visible}
                     valuePropName={type === 'boolean' ? 'checked' : 'value'}
                     label={
                       (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
