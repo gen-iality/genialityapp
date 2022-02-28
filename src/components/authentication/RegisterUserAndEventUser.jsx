@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Steps, Button, message, Alert } from 'antd';
+import { Steps, Button, message, Alert, Comment } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';

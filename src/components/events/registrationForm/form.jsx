@@ -16,6 +16,8 @@ import {
   Upload,
   Select,
   Spin,
+  Comment,
+  Typography,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -955,7 +957,23 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              <div style={{ height: '50vh', overflowY: 'auto', paddingRight: '0px' }}>{renderForm()}</div>
+              {console.log('%c🆗 - initialValues', 'color: #00A6ED;', initialValues)}
+              <Row>
+                <Col span={24}></Col>
+                <Col span={24}>
+                  <Card style={{ borderRadius: '8px' }}>
+                    <Typography.Title level={4}>Datos del usuario</Typography.Title>
+                    <Comment
+                      author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
+                      content={initialValues?.email}
+                    />
+                  </Card>
+                </Col>
+              </Row>
+
+              <div style={{ height: 'auto', maxHeight: '50vh', overflowY: 'auto', paddingRight: '0px' }}>
+                {renderForm()}
+              </div>
 
               <Row gutter={[24, 24]} style={{ marginTop: '5px' }}>
                 {generalFormErrorMessageVisible && (
