@@ -8,6 +8,7 @@ import { NewsFeed } from '../../../helpers/request';
 import { Card, Row, Spin, Col, Space, Tag, Grid, Image, Typography } from 'antd';
 import NoticiaList from './NoticiasList';
 import ReactPlayer from 'react-player';
+import ReactQuill from 'react-quill';
 
 const { useBreakpoint } = Grid;
 const { Meta } = Card;
@@ -93,9 +94,25 @@ const NoticiasDetails = (props) => {
                     ))
                   }>
                   <Meta
-                    title={noticia && <div style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }}></div>}
+                    title={noticia && 
+                      <div /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */>
+                        <ReactQuill 
+                          value={noticia.description_short}
+                          readOnly={true}
+                          className='hide-toolbar ql-toolbar'
+                          theme='bubble'
+                        />
+                      </div>}
                     description={
-                      noticia && <div dangerouslySetInnerHTML={{ __html: noticia.description_complete }}></div>
+                      noticia && 
+                        <div /* dangerouslySetInnerHTML={{ __html: noticia.description_complete }} */>
+                          <ReactQuill 
+                            value={noticia.description_complete}
+                            readOnly={true}
+                            className='hide-toolbar ql-toolbar'
+                            theme='bubble'
+                          />
+                        </div>
                     }
                   />
                 </Card>
