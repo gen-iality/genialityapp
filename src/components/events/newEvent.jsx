@@ -145,6 +145,7 @@ class NewEvent extends Component {
           hideBtnDetailAgenda: true,
           loader_page: 'no',
           data_loader_page: null,
+          show_title: true
         },
       };
       const newMenu = {

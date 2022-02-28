@@ -37,12 +37,12 @@ class Styles extends Component {
           editIsVisible: false,
         },
         {
-          title: 'Color de fondo para el menu',
+          title: 'Color de fondo para el menú',
           fieldColorName: 'toolbarDefaultBg',
           editIsVisible: false,
         },
         {
-          title: 'Color del texto para el menu',
+          title: 'Color del texto para el menú',
           fieldColorName: 'textMenu',
           editIsVisible: false,
         },
@@ -117,7 +117,7 @@ class Styles extends Component {
     this.selectsDrawer = [
       {
         label: 'Franja de titulo  y fecha',
-        defaultValue: false,
+        defaultValue: true,
         name: 'show_title',
         options: [
           {
@@ -265,7 +265,7 @@ class Styles extends Component {
           mobile_banner: dataStyles.mobile_banner || null,
           banner_footer_email: dataStyles.banner_footer_email || null,
           show_banner: dataStyles.show_banner || false,
-          show_title: dataStyles?.show_title || false,
+          show_title: dataStyles?.show_title || true,
           show_video_widget: dataStyles?.show_video_widget || false,
           show_card_banner: dataStyles.show_card_banner || true,
           show_inscription: info?.show_inscription || false,

@@ -68,7 +68,7 @@ function ThisRouteCanBeDisplayed({ children }) {
                   size='large'
                   type='primary'
                   key='goToEvent'>
-                  {intl.formatMessage({ id: 'modal.feedback.accept' })}
+                  {intl.formatMessage({ id: 'modal.feedback.enroll' })}
                 </Button>
               ),
             ]}
