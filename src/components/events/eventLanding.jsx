@@ -50,7 +50,9 @@ class eventLanding extends Component {
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
+        {console.log(this.props.cEvent.value)}
         {(this.props.cEvent.value.description !== '<p><br></p>'
+        && this.props.cEvent.value.description !== null
         && this.props.cEvent.value.description !== `<p class="ql-align-center"><br></p>` 
         && this.props.cEvent.value.description !== `<p class="ql-align-right"><br></p>`
         && this.props.cEvent.value.description !== `<p class="ql-align-justify"><br></p>`) && 
