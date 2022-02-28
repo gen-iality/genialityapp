@@ -28,32 +28,9 @@ const ModalPermission = (props) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={false}
+      closable={true}
+      onCancel={() => handleChangeTypeModal(null)}
       visible={typeModal == 'register' || typeModal == 'update' || typeModal === 'registerForTheEvent'}>
-      <PageHeader
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
-        backIcon={
-          // <Link onClick={() => handleChangeTypeModal(null)} to={`/landing/${props.cEvent.value?._id}/`}>
-          //   <Space>
-          //     <CloseCircleFilled style={{ color: '#6B7283', fontSize: '20px' }} />
-          //     <span style={{ fontSize: '16px', color: '#6B7283' }}>
-          //       {intl.formatMessage({ id: 'modal.permissio.close', defaultMessage: 'Cerrar' })}
-          //     </span>
-          //   </Space>
-          // </Link>
-          <Button type='text' onClick={() => handleChangeTypeModal(null)}>
-            <Space>
-              <CloseCircleFilled style={{ color: '#6B7283', fontSize: '20px' }} />
-              <span style={{ fontSize: '16px', color: '#6B7283' }}>
-                {intl.formatMessage({ id: 'modal.permissio.close', defaultMessage: 'Cerrar' })}
-              </span>
-            </Space>
-          </Button>
-        }
-        onBack={() => null}
-        title=' ' // NO eliminar el espacio en blanco
-      />
-
       <div
         // className='asistente-list'
         style={{
