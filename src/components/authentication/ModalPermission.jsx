@@ -21,23 +21,7 @@ const ModalPermission = (props) => {
   let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
   const screens = useBreakpoint();
   const intl = useIntl();
-  const textoTitle =
-    typeModal == 'registerForTheEvent'
-      ? intl.formatMessage({
-          id: 'modal.title.registerevent',
-          defaultMessage: 'Información adicional para el evento',
-        })
-      : typeModal == 'update'
-      ? intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })
-      : '';
 
-  const textoParagraph =
-    typeModal == 'registerForTheEvent'
-      ? intl.formatMessage({
-          id: 'modal.paragraph.registerevent',
-          defaultMessage: 'Por favor, confirme sus datos para registrarlos correctamente.',
-        })
-      : '';
   return (
     <Modal
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
@@ -69,14 +53,7 @@ const ModalPermission = (props) => {
         onBack={() => null}
         title=' ' // NO eliminar el espacio en blanco
       />
-      <div>
-        <Typography.Title level={4} type='secondary'>
-          {textoTitle}
-        </Typography.Title>
-      </div>
-      <div>
-        <Typography.Paragraph>{textoParagraph}</Typography.Paragraph>
-      </div>
+
       <div
         // className='asistente-list'
         style={{

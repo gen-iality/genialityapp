@@ -94,6 +94,25 @@ function obtenerName(fileUrl) {
   }
 }
 
+function isVisibleButton(basicDataUser, extraFields) {
+  if (
+    Object.keys(basicDataUser).length > 0 ||
+    (fieldsAditional(extraFields) == 0 && Object.keys(basicDataUser).length == 0)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function fieldsAditional(extraFields) {
+  if (extraFields) {
+    const countFields = extraFields.filter((field) => field.name != 'names' && field.name != 'email');
+    console.log('extraFields', extraFields, countFields);
+    return countFields.length;
+  }
+  return 0;
+}
+
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
  */
@@ -972,6 +991,14 @@ const FormRegister = ({
               </Row>
 
               <div style={{ height: 'auto', maxHeight: '50vh', overflowY: 'auto', paddingRight: '0px' }}>
+                {fieldsAditional(extraFields) > 0 && (
+                  <Typography.Title level={4}>
+                    {intl.formatMessage({
+                      id: 'modal.title.registerevent',
+                      defaultMessage: 'Información adicional para el evento',
+                    })}
+                  </Typography.Title>
+                )}
                 {renderForm()}
               </div>
 
@@ -1045,23 +1072,27 @@ const FormRegister = ({
                     />
                   </Col>
                 )}
-
+                {console.log('BASIC DATA USER', Object.keys(basicDataUser).length)}
                 <Col span={24} align='center'>
                   {!loadingregister && (
                     <Form.Item>
-                      <Button
-                        size='large'
-                        ref={buttonSubmit}
-                        style={{
-                          display: Object.keys(basicDataUser).length > 0 ? 'none' : 'block',
-                        }}
-                        type='primary'
-                        htmlType='submit'>
-                        {(initialValues != null && cEventUser.value !== null && typeModal !== 'update') ||
-                        (initialValues != null && Object.keys(initialValues).length > 0 && typeModal !== 'update')
-                          ? intl.formatMessage({ id: 'registration.button.create' })
-                          : intl.formatMessage({ id: 'registration.button.update' })}
-                      </Button>
+                      {!isVisibleButton(basicDataUser, extraFields) ? (
+                        <Button
+                          size='large'
+                          ref={buttonSubmit}
+                          style={{
+                            display: 'block',
+                          }}
+                          type='primary'
+                          htmlType='submit'>
+                          {(initialValues != null && cEventUser.value !== null && typeModal !== 'update') ||
+                          (initialValues != null && Object.keys(initialValues).length > 0 && typeModal !== 'update')
+                            ? intl.formatMessage({ id: 'registration.button.create' })
+                            : intl.formatMessage({ id: 'registration.button.update' })}
+                        </Button>
+                      ) : typeModal == 'update' ? (
+                        <div>No se actualiza</div>
+                      ) : null}
                       {options &&
                         initialValues != null &&
                         options.map((option) => (
