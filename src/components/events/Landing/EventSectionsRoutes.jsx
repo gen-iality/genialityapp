@@ -66,14 +66,15 @@ const EventSectionRoutes = (props) => {
       typeModal !== 'visitors'
     ) {
       handleChangeTypeModal('preregisterMessage');
-    } else if (
-      props.cEventUser?.value !== null &&
-      props.cEventUser?.status == 'LOADED' &&
-      typeModal !== 'update' &&
-      typeModal !== 'visitors'
-    ) {
-      handleChangeTypeModal(null);
     }
+    // else if (
+    //   props.cEventUser?.value !== null &&
+    //   props.cEventUser?.status == 'LOADED' &&
+    //   typeModal !== 'update' &&
+    //   typeModal !== 'visitors'
+    // ) {
+    //   handleChangeTypeModal(null);
+    // }
   }
 
   const obtenerFirstSection = () => {

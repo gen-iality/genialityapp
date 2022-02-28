@@ -14,6 +14,7 @@ import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
+import Logout from '@2fd/ant-design-icons/lib/Logout';
 
 const { useBreakpoint } = Grid;
 
@@ -44,8 +45,11 @@ const initialDataGeneral = {
   anonimususer: false,
 };
 
+let initialStateEvenUserContext = { status: 'LOADING', value: null };
+let initialStateUserContext = { status: 'LOADING', value: undefined };
+
 const Headers = (props) => {
-  const { cUser, showMenu, loginInfo, cHelper, cEvent } = props;
+  const { cUser, showMenu, loginInfo, cHelper, cEvent, cEventUser } = props;
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
   const [showButtons, setshowButtons] = useState({
@@ -58,7 +62,15 @@ const Headers = (props) => {
 
   const openNotificationWithIcon = (type) => {
     notification[type]({
-      message: cUser.value?.names,
+      icon: (
+        <Logout
+          className='animate__animated animate__heartBeat animate__infinite animate__slower'
+          style={{ color: '#FF4E50' }}
+        />
+      ),
+      message: (
+        <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{cUser.value?.names}</b>
+      ),
       description: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
       style: {
         borderRadius: '10px',
@@ -67,7 +79,7 @@ const Headers = (props) => {
   };
 
   /**
-   * @function logout - Close session in firebase and eliminate active session validator
+   * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
    * @param {boolean} showNotification If the value is true the remote logout notification is displayed
    */
   const logout = (showNotification) => {
@@ -77,8 +89,10 @@ const Headers = (props) => {
       .then(async () => {
         await conectionRef.doc(cUser.value?._id).delete();
         const routeUrl = props.match?.url;
-        console.log('🚀 debug ~ .then ~ routeUrl', routeUrl);
         const weAreOnTheLanding = routeUrl.includes('landing');
+        cHelper.handleChangeTypeModal(null);
+        cEventUser.setuserEvent(initialStateEvenUserContext);
+        cUser.setCurrentUser(initialStateUserContext);
         if (showNotification) openNotificationWithIcon('info');
         if (weAreOnTheLanding) {
           // window.location.reload();
@@ -102,7 +116,6 @@ const Headers = (props) => {
         changes.forEach((change) => {
           if (change.type === 'removed' && change?.doc?.data()?.email == cUser.value?.email) {
             // console.log('ACÁ DEBO CERRAR LA SESIÓN', change.doc.data());
-            /* Sending a boolean to the backend to know if the logout is manual or not. */
             logout(true);
           }
         });

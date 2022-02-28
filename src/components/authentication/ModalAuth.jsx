@@ -151,6 +151,7 @@ const ModalAuth = (props) => {
         if (response.user) {
           setLoading(false);
           HandleControllerLoginVisible({ visible: false });
+          form1.resetFields();
         }
       })
       .catch((error) => {

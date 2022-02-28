@@ -121,21 +121,15 @@ const ModalLoginHelpers = (props) => {
   const onFinishFailed = () => {
     console.log('FALIED FORM');
   };
+
   return (
     <Modal
       bodyStyle={{ textAlign: 'center' }}
       centered
       footer={null}
-      zIndex={1000}
+      zIndex={1005}
       closable={false}
-      visible={
-        typeModal !== null &&
-        typeModal != 'preregisterMessage' &&
-        typeModal != 'loginError' &&
-        typeModal !== 'loginSuccessNotRegister' &&
-        typeModal !== 'visitors' &&
-        typeModal !== 'loginSuccess'
-      }>
+      visible={typeModal === 'mail' || typeModal === 'recover'}>
       <PageHeader
         className={
           (sendRecovery != null || registerUser) &&
