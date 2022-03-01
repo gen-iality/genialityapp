@@ -279,9 +279,9 @@ export const EventsApi = {
     return await Actions.put(`/api/changeuserpassword`, { email: email, event_id: eventId });
   },
 
-  changePasswordUser: async (email) => {
+  changePasswordUser: async (email, hostname) => {
     //URL DE PRUEBAS
-    return await Actions.put(`/api/changeuserpassword`, { email: email });
+    return await Actions.put(`/api/changeuserpassword`, { email: email, hostName: hostname });
   },
   //ACCEDER POR LINK AL CORREO
   requestLinkEmail: async (eventId, email) => {
@@ -640,7 +640,7 @@ export const OrganizationApi = {
   },
   deleteUserProperties: async (org, fieldId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/organizations/${org}/userproperties/${fieldId}?token=${token}`);
+    return await Actions.delete(`/api/organizations/${org}/userproperties/${fieldId}?token=${token}`, '', true);
   },
   getTemplateOrganization: async (org) => {
     let token = await GetTokenUserFirebase();
