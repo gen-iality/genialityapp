@@ -29,15 +29,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
     },
   ];
 
-  const ruleCedula = [
-    { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
-    {
-      type: 'string',
-      min: 8,
-      max: 12,
-      message: 'La cedula debe tener entre 6 a 18 caracteres',
-    },
-  ];
+  const ruleCedula = [{ required: true, message: 'Ingrese una cedula para su cuenta en Evius' }];
   const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
 
   const [form] = Form.useForm();
