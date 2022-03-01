@@ -6,6 +6,7 @@ import { EventsApi } from '../../../helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
 import { ApartmentOutlined } from '@ant-design/icons';
+import EviusLogo from '././../../../eviuslogo.png';
 
 const { SubMenu } = Menu;
 
@@ -56,7 +57,7 @@ const MenuConfig = (props) => {
             style={{
               width: '50%',
             }}
-            src='https://evius.co/wp-content/uploads/2021/03/logo_1.png'
+            src={EviusLogo}
           />
           <Divider style={{ background: 'gray' }} />
         </Row>
