@@ -202,7 +202,6 @@ class Datos extends Component {
       });
       await this.fetchFields();
     } catch (e) {
-      console.log('🚀 debug ~ Datos ~ onHandlerRemove= ~ e', e);
       message.destroy(loading.key);
       message.open({
         type: 'error',

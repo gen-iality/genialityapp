@@ -16,9 +16,7 @@ const Agenda = (props) => {
       sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
       ...getColumnSearchProps('datetime_start', columnsData),
       render(record, key) {
-        return (
-          <div>{moment(record).format('DD/MM/YYYY')}</div>
-        )
+        return <div>{moment(record).format('DD/MM/YYYY')}</div>;
       },
     },
     {
@@ -28,9 +26,7 @@ const Agenda = (props) => {
       sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),
       ...getColumnSearchProps('datetime_end', columnsData),
       render(record, key) {
-        return (
-          <div>{moment(record).format('DD/MM/YYYY')}</div>
-        )
+        return <div>{moment(record).format('DD/MM/YYYY')}</div>;
       },
     },
     {
@@ -53,7 +49,7 @@ const Agenda = (props) => {
               </Tag>
             ))}
           </>
-        )
+        );
       },
     },
     {
@@ -65,7 +61,7 @@ const Agenda = (props) => {
           <>
             <p>{record?.name}</p>
           </>
-        )
+        );
       },
     },
     {
@@ -75,11 +71,11 @@ const Agenda = (props) => {
       render(record) {
         return (
           <>
-            {
-              record.map((item, key) => <Tag key={key}>{item.name}</Tag>)
-            }
+            {record.map((item, key) => (
+              <Tag key={key}>{item.name}</Tag>
+            ))}
           </>
-        )
+        );
       },
     },
   ];
@@ -95,13 +91,13 @@ const Agenda = (props) => {
         state: { new: true },
       }}
       columns={columns}
-      key='_id'
+      // key='_id'
       editPath={`${props.matchUrl}/actividad`}
       pagination={false}
       actions
       search
       setColumnsData={setColumnsData}
-      scroll={{x: 1200}}
+      scroll={{ x: 1200 }}
     />
   );
 };
