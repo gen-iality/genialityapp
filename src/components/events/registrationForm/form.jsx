@@ -94,10 +94,10 @@ function obtenerName(fileUrl) {
   }
 }
 
-function isVisibleButton(basicDataUser, extraFields) {
+function isVisibleButton(basicDataUser, extraFields, cEventUser) {
   if (
     Object.keys(basicDataUser).length > 0 ||
-    (fieldsAditional(extraFields) == 0 && Object.keys(basicDataUser).length == 0)
+    (fieldsAditional(extraFields) == 0 && Object.keys(basicDataUser).length == 0 && cEventUser.value !== null)
   ) {
     return true;
   }
@@ -107,7 +107,6 @@ function isVisibleButton(basicDataUser, extraFields) {
 function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter((field) => field.name != 'names' && field.name != 'email');
-    console.log('extraFields', extraFields, countFields);
     return countFields.length;
   }
   return 0;
@@ -979,7 +978,12 @@ const FormRegister = ({
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
                   <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
-                    <Typography.Title level={5}>Datos del usuario</Typography.Title>
+                    <Typography.Title level={5}>
+                      {intl.formatMessage({
+                        id: 'title.user_data',
+                        defaultMessage: 'Datos del usuario',
+                      })}
+                    </Typography.Title>
                     <Comment
                       author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
                       content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
@@ -1005,11 +1009,22 @@ const FormRegister = ({
                       </Typography.Title>
                     )}
                     {renderForm()}
-                    {typeModal == 'update' && isVisibleButton(basicDataUser, extraFields) ? (
+                    {typeModal == 'update' && isVisibleButton(basicDataUser, extraFields, cEventUser) ? (
                       <div style={{ textAlign: 'center', width: '100%' }}>
-                        No hay campos disponibles para actualizar en este evento
+                        {intl.formatMessage({
+                          id: 'msg.no_fields_update',
+                          defaultMessage: 'No hay campos disponibles para actualizar en este evento',
+                        })}
                       </div>
-                    ) : null}
+                    ) : (
+                      <div style={{ textAlign: 'center', width: '100%' }}>
+                        {fieldsAditional(extraFields) === 0 &&
+                          intl.formatMessage({
+                            id: 'msg.no_fields_create',
+                            defaultMessage: 'No hay campos adicionales en este evento',
+                          })}
+                      </div>
+                    )}
                   </Card>
                 </Col>
               </Row>
@@ -1084,7 +1099,7 @@ const FormRegister = ({
                     />
                   </Col>
                 )}
-                {console.log('BASIC DATA USER', Object.keys(basicDataUser).length)}
+
                 <Col span={24} align='center'>
                   {!loadingregister && (
                     <Form.Item>
@@ -1092,13 +1107,13 @@ const FormRegister = ({
                         size='large'
                         ref={buttonSubmit}
                         style={{
-                          display: isVisibleButton(basicDataUser, extraFields) ? 'none' : 'block',
+                          display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
                         type='primary'
                         htmlType='submit'>
                         {(initialValues != null && cEventUser.value !== null && typeModal !== 'update') ||
                         (initialValues != null && Object.keys(initialValues).length > 0 && typeModal !== 'update')
-                          ? intl.formatMessage({ id: 'registration.button.create' })
+                          ? intl.formatMessage({ id: 'Button.signup' })
                           : intl.formatMessage({ id: 'registration.button.update' })}
                       </Button>
 

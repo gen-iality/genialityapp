@@ -15,6 +15,7 @@ import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRo
 import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import Logout from '@2fd/ant-design-icons/lib/Logout';
+import { useIntl } from 'react-intl';
 
 const { useBreakpoint } = Grid;
 
@@ -59,6 +60,7 @@ const Headers = (props) => {
   const screens = useBreakpoint();
   let history = useHistory();
   const conectionRef = firestore.collection(`connections`);
+  const intl = useIntl();
 
   const openNotificationWithIcon = (type) => {
     notification[type]({
@@ -296,7 +298,10 @@ const Headers = (props) => {
 
                         cHelper.handleChangeTabModal('1');
                       }}>
-                      Iniciar sesión
+                      {intl.formatMessage({
+                        id: 'modal.title.login',
+                        defaultMessage: 'Iniciar sesión',
+                      })}
                     </Button>
                   ) : (
                     <Space>
@@ -322,7 +327,10 @@ const Headers = (props) => {
 
                         cHelper.handleChangeTabModal('2');
                       }}>
-                      Registrarme
+                      {intl.formatMessage({
+                        id: 'modal.title.register',
+                        defaultMessage: 'Registrarme',
+                      })}
                     </Button>
                   )}
                 </Space>
