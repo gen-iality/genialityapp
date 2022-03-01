@@ -279,9 +279,9 @@ export const EventsApi = {
     return await Actions.put(`/api/changeuserpassword`, { email: email, event_id: eventId });
   },
 
-  changePasswordUser: async (email) => {
+  changePasswordUser: async (email, hostname) => {
     //URL DE PRUEBAS
-    return await Actions.put(`/api/changeuserpassword`, { email: email });
+    return await Actions.put(`/api/changeuserpassword`, { email: email, hostName: hostname });
   },
   //ACCEDER POR LINK AL CORREO
   requestLinkEmail: async (eventId, email) => {

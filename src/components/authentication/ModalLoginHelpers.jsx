@@ -43,7 +43,7 @@ const ModalLoginHelpers = (props) => {
   const handleRecoveryPass = async ({ email }) => {
     try {
       let resp;
-      resp = await EventsApi.changePasswordUser(email);
+      resp = await EventsApi.changePasswordUser(email, window.location.href);
       if (resp) {
         setSendRecovery(
           `${intl.formatMessage({
