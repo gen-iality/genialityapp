@@ -22,6 +22,7 @@ const NoticiasDetails = (props) => {
   const [eventId, setEventId] = useState(props.cEvent.value._id);
   const [loading, setLoading] = useState(true);
   const [noticia, setNoticia] = useState();
+  console.log('PROPS ACA==>', props);
 
   const screens = useBreakpoint();
 
@@ -36,10 +37,10 @@ const NoticiasDetails = (props) => {
       setVirtualConference(true);
       setTopBanner(true);
     };
-  }, [location.state.id]);
+  }, [props.match?.params?.id]);
 
   const getOne = async () => {
-    const data = await NewsFeed.getOne(eventId, location.state.id);
+    const data = await NewsFeed.getOne(eventId, props?.match?.params?.id);
     if (data) {
       setNoticia(data);
       /* console.log(data, noticia, 'data-noticia', match.params.id) */
@@ -94,25 +95,30 @@ const NoticiasDetails = (props) => {
                     ))
                   }>
                   <Meta
-                    title={noticia && 
-                      <div /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */>
-                        <ReactQuill 
-                          value={noticia.description_short}
-                          readOnly={true}
-                          className='hide-toolbar ql-toolbar'
-                          theme='bubble'
-                        />
-                      </div>}
+                    title={
+                      noticia && (
+                        <div /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */
+                        >
+                          <ReactQuill
+                            value={noticia.description_short}
+                            readOnly={true}
+                            className='hide-toolbar ql-toolbar'
+                            theme='bubble'
+                          />
+                        </div>
+                      )
+                    }
                     description={
-                      noticia && 
+                      noticia && (
                         <div /* dangerouslySetInnerHTML={{ __html: noticia.description_complete }} */>
-                          <ReactQuill 
+                          <ReactQuill
                             value={noticia.description_complete}
                             readOnly={true}
                             className='hide-toolbar ql-toolbar'
                             theme='bubble'
                           />
                         </div>
+                      )
                     }
                   />
                 </Card>
