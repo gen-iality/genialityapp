@@ -176,7 +176,8 @@
     "register.button.next": "Next",
     "register.button.finalize": "Finalize",
     "register.button.previous": "Previous",
-    "notification.log_out": "Your session was closed because it was started on another device."
+    "notification.log_out": "Your session was closed because it was started on another device.",
+    "register.result.logging_in": "Signing in with your account!"
   },
   "es": {
     "header.help": "Ayuda",
@@ -356,7 +357,8 @@
     "register.button.next": "Siguiente",
     "register.button.finalize": "Finalizar",
     "register.button.previous": "Anterior",
-    "notification.log_out": "Tu sesión fue cerrada porque fue iniciada en otro dispositivo."
+    "notification.log_out": "Tu sesión fue cerrada porque fue iniciada en otro dispositivo.",
+    "register.result.logging_in": "Iniciando sesión con tu cuenta!"
   },
   "pt": {
     "live.join": "Entrar",
@@ -494,6 +496,7 @@
     "register.button.next": "Seguindo",
     "register.button.finalize": "Finalizar",
     "register.button.previous": "Anterior",
-    "notification.log_out": "Sua sessão foi encerrada porque foi iniciada em outro dispositivo."
+    "notification.log_out": "Sua sessão foi encerrada porque foi iniciada em outro dispositivo.",
+    "register.result.logging_in": "Entrando com sua conta!"
   }
 }
