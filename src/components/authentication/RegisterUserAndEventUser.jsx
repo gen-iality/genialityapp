@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Steps, Button, message, Alert, Comment } from 'antd';
+import { Steps, Button, Alert } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -7,7 +7,7 @@ import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfi
 import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
 import { useEffect } from 'react';
-import { EventsApi, SearchUserbyEmail, UsersApi } from 'helpers/request';
+import { SearchUserbyEmail, UsersApi } from 'helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
@@ -150,7 +150,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         setValidationGeneral({
           status: false,
           loading: false,
-          textError: 'Te has inscrito correctamente a este evento',
+          textError: intl.formatMessage({
+            id: 'text_error.successfully_registered',
+            defaultMessage: 'Te has inscrito correctamente a este evento',
+          }),
         });
         setbasicDataUser({});
         setdataEventUser({});
@@ -164,7 +167,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         setValidationGeneral({
           status: false,
           loading: false,
-          textError: 'Hubo un error al crear el usuario, intente nuevamente',
+          textError: intl.formatMessage({
+            id: 'text_error.error_creating_user',
+            defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+          }),
         });
       }
     });
@@ -261,7 +267,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             }}
             size='large'
             style={{ margin: '0 8px' }}>
-            Anterior
+            {intl.formatMessage({ id: 'register.button.previous', defaultMessage: 'Anterior' })}
           </Button>
         )}
 
@@ -279,7 +285,9 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                     onClick={() => {
                       next();
                     }}>
-                    {current > 0 ? 'Finalizar' : 'Siguiente'}
+                    {current > 0
+                      ? intl.formatMessage({ id: 'register.button.finalize', defaultMessage: 'Finalizar' })
+                      : intl.formatMessage({ id: 'register.button.next', defaultMessage: 'Siguiente' })}
                   </Button>
                 )}
               </>

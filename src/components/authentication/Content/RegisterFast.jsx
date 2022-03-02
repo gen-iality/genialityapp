@@ -3,7 +3,7 @@ import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined, IdcardOutlin
 import { Form, Input, Button, Space, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { useCheckinUser } from 'helpers/HelperAuth';
+
 import { UseEventContext } from 'Context/eventContext';
 import { useEventArkmed } from 'helpers/helperEvent';
 

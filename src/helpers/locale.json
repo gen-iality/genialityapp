@@ -170,7 +170,13 @@
     "register.rule.email.message2": "Enter an email for your Evius account",
     "register.rule.password.message": "Enter a password for your Evius account",
     "register.rule.password.message2": "Password must be between 6 to 18 characters",
-    "register.rule.name.message": "Enter your full name for your Evius account"
+    "register.rule.name.message": "Enter your full name for your Evius account",
+    "text_error.successfully_registered": "You have successfully registered for this event",
+    "text_error.error_creating_user": "There was an error creating the user, please try again",
+    "register.button.next": "Next",
+    "register.button.finalize": "Finalize",
+    "register.button.previous": "Previous",
+    "notification.log_out": "Your session was closed because it was started on another device."
   },
   "es": {
     "header.help": "Ayuda",
@@ -344,7 +350,13 @@
     "register.rule.email.message2": "Ingrese un email para su cuenta en Evius",
     "register.rule.password.message": "Ingrese una contraseña para su cuenta en Evius",
     "register.rule.password.message2": "La contraseña debe tener entre 6 a 18 caracteres",
-    "register.rule.name.message": "Ingrese su nombre completo para su cuenta en Evius"
+    "register.rule.name.message": "Ingrese su nombre completo para su cuenta en Evius",
+    "text_error.successfully_registered": "Te has inscrito correctamente a este evento",
+    "text_error.error_creating_user": "Hubo un error al crear el usuario, intente nuevamente",
+    "register.button.next": "Siguiente",
+    "register.button.finalize": "Finalizar",
+    "register.button.previous": "Anterior",
+    "notification.log_out": "Tu sesión fue cerrada porque fue iniciada en otro dispositivo."
   },
   "pt": {
     "live.join": "Entrar",
@@ -476,6 +488,12 @@
     "register.rule.email.message2": "Digite um e-mail para sua conta Evius",
     "register.rule.password.message": "Digite uma senha para sua conta Evius",
     "register.rule.password.message2": "A senha deve ter entre 6 e 18 caracteres",
-    "register.rule.name.message": "Digite seu nome completo para sua conta Evius"
+    "register.rule.name.message": "Digite seu nome completo para sua conta Evius",
+    "text_error.successfully_registered": "Você se registrou com sucesso para este evento",
+    "text_error.error_creating_user": "Ocorreu um erro ao criar o usuário, tente novamente",
+    "register.button.next": "Seguindo",
+    "register.button.finalize": "Finalizar",
+    "register.button.previous": "Anterior",
+    "notification.log_out": "Sua sessão foi encerrada porque foi iniciada em outro dispositivo."
   }
 }

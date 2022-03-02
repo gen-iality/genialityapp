@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';

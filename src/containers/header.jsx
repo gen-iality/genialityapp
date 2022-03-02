@@ -78,7 +78,10 @@ const Headers = (props) => {
       message: (
         <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{cUser.value?.names}</b>
       ),
-      description: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
+      description: intl.formatMessage({
+        id: 'notification.log_out',
+        defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
+      }),
       style: {
         borderRadius: '10px',
       },
