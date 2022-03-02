@@ -62,8 +62,13 @@ const Headers = (props) => {
   const conectionRef = firestore.collection(`connections`);
   const intl = useIntl();
 
-  const openNotificationWithIcon = (type) => {
+  /**
+   * @function remoteLogoutNotification - Show notification after logging out remotely the user is notified why their current session has been logged out
+   * @param {string} type Type of notification, success - info - warning - error
+   */
+  const remoteLogoutNotification = (type) => {
     notification[type]({
+      duration: 0,
       icon: (
         <Logout
           className='animate__animated animate__heartBeat animate__infinite animate__slower'
@@ -89,14 +94,13 @@ const Headers = (props) => {
       .auth()
       .signOut()
       .then(async () => {
-        cUser.setCurrentUser({ status: 'LOADED', value: null });
         await conectionRef.doc(cUser.value?._id).delete();
         const routeUrl = props.match?.url;
         const weAreOnTheLanding = routeUrl.includes('landing');
         cHelper.handleChangeTypeModal(null);
         cEventUser.setuserEvent(initialStateEvenUserContext);
         cUser.setCurrentUser(initialStateUserContext);
-        if (showNotification) openNotificationWithIcon('info');
+        if (showNotification) remoteLogoutNotification('info');
         if (weAreOnTheLanding) {
           // window.location.reload();
           history.push(routeUrl);

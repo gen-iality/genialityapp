@@ -30,8 +30,8 @@ const InfoEvent = () => {
       title={cEvent.value.name}
       extra={
         recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-        cUser?.value !== null &&
-        cEventUser?.value === null && (
+        cUser?.value &&
+        !cEventUser?.value && (
           <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
             {intl.formatMessage({
               id: 'Button.signup',
