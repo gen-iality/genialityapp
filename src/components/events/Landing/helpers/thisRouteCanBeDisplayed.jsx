@@ -41,7 +41,8 @@ function ThisRouteCanBeDisplayed({ children }) {
   }, [cEvent, eventUserId, eventUserStatus]);
 
   function renderTitleComponentForPublicEventWithRegistration(loading) {
-    if (loading) return <Typography.Title level={2}>Inicia sesión o regístrate para ver el contenido</Typography.Title>;
+    if (loading)
+      return <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title2' })}</Typography.Title>;
     return <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title' })}</Typography.Title>;
   }
 

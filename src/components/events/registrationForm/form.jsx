@@ -24,7 +24,7 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
-import { saveImageStorage } from '../../../helpers/helperSaveImage';
+
 import { areaCode } from '../../../helpers/constants';
 import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';

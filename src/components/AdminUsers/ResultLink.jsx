@@ -3,12 +3,14 @@ import { Spin, Result, Button, Typography, Grid } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import logo from '../../logo.svg';
 import { firestore } from 'helpers/firebase';
+import { useIntl } from 'react-intl';
 
 const { useBreakpoint } = Grid;
 
 const ResultLink = ({ status, data, event, verifyLink }) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
   // statust -> loading || error
   status = status ? status : 'loading';
   return (
@@ -53,10 +55,19 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
           title={
             <Typography.Title level={screens.xs ? 2 : 1}>
               {status === 'loading' && verifyLink
-                ? 'Iniciando la sesión...'
+                ? intl.formatMessage({
+                    id: 'result_link.title.logging_in',
+                    defaultMessage: 'Iniciando la sesión...',
+                  })
                 : status === 'loading' && !verifyLink
-                ? 'Verificando link'
-                : 'Ya has iniciado la sesión en otro dispositivo'}
+                ? intl.formatMessage({
+                    id: 'result_link.title.checking_link',
+                    defaultMessage: 'Verificando link',
+                  })
+                : intl.formatMessage({
+                    id: 'result_link.title.another_device',
+                    defaultMessage: 'Ya has iniciado la sesión en otro dispositivo',
+                  })}
             </Typography.Title>
           }
           subTitle={
@@ -67,8 +78,11 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
                   overflowWrap: 'anywhere',
                 }}>
-                Si quieres acceder a la plataforma en este dispositivo has clic en Continuar y cerraremos tu sesión en
-                el otro dispositivo que tienes vinculado, de lo contrario dar clic en Cancelar.
+                {intl.formatMessage({
+                  id: 'result_link.description',
+                  defaultMessage:
+                    'Si quieres acceder a la plataforma en este dispositivo has clic en Continuar y cerraremos tu sesión en el otro dispositivo que tienes vinculado, de lo contrario dar clic en Cancelar.',
+                })}
               </Typography.Paragraph>
             )
           }
@@ -84,7 +98,10 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     type='text'
                     disabled={loading}
                     key='goToEvius'>
-                    Cancelar
+                    {intl.formatMessage({
+                      id: 'header.confirm.cancelText',
+                      defaultMessage: 'Cancelar',
+                    })}
                   </Button>,
                   <Button
                     onClick={async () => {
@@ -103,7 +120,10 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     loading={loading}
                     type='primary'
                     key='goToEvius'>
-                    Continuar
+                    {intl.formatMessage({
+                      id: 'result_link.continue',
+                      defaultMessage: 'Continuar',
+                    })}
                   </Button>,
                 ]
           }

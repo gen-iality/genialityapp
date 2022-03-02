@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Result, Row, Space, Typography } from 'antd';
-import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
 import { app } from 'helpers/firebase';
 import { UseUserEvent } from 'Context/eventUserContext';
 import HelperContext from 'Context/HelperContext';
+import { useIntl } from 'react-intl';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
@@ -58,6 +58,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
 const RedirectUser = ({ basicDataUser }) => {
   const cEventUser = UseUserEvent();
   let { HandleControllerLoginVisible } = useContext(HelperContext);
+  const intl = useIntl();
 
   useEffect(() => {
     const loginFirebase = async () => {
@@ -88,7 +89,10 @@ const RedirectUser = ({ basicDataUser }) => {
       <Space>
         <LoadingOutlined style={{ fontSize: '28px' }} />
         <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
-          Iniciando sesión con tu cuenta!
+          {intl.formatMessage({
+            id: 'register.result.logging_in',
+            defaultMessage: 'Iniciando sesión con tu cuenta!',
+          })}
         </Typography.Text>
       </Space>
     </>
