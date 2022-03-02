@@ -159,7 +159,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           <Input.Password
             type='password'
             size='large'
-            placeholder={'Crea una contraseña'}
+            placeholder={intl.formatMessage({
+              id: 'modal.label.password',
+              defaultMessage: 'Contraseña',
+            })}
             prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
@@ -175,7 +178,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           <Input
             type='text'
             size='large'
-            placeholder={'¿Como te llamas?'}
+            placeholder={intl.formatMessage({
+              id: 'modal.label.name',
+              defaultMessage: 'Nombre',
+            })}
             prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
