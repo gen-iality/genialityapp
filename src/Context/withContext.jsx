@@ -3,6 +3,7 @@ import { CurrentUserContext } from './userContext';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';
 import HelperContext from './HelperContext';
+import { MessageController } from './MessageController';
 
 export default function WithEviusContext(Component) {
   return function WithEviusContextComponent(props) {
@@ -15,13 +16,18 @@ export default function WithEviusContext(Component) {
                 {(eventuser) => (
                   <HelperContext.Consumer>
                     {(helper) => (
-                      <Component
-                        cEvent={event}
-                        cUser={usercurrent}
-                        cEventUser={eventuser}
-                        {...props}
-                        cHelper={helper}
-                      />
+                      <MessageController.Consumer>
+                        {(controllerMessage) => (
+                          <Component
+                            cEvent={event}
+                            cUser={usercurrent}
+                            cEventUser={eventuser}
+                            controllerMessage={controllerMessage}
+                            {...props}
+                            cHelper={helper}
+                          />
+                        )}
+                      </MessageController.Consumer>
                     )}
                   </HelperContext.Consumer>
                 )}
