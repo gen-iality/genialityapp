@@ -14,21 +14,48 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const ruleEmail = [
     {
       type: 'email',
-      message: 'Ingrese un email valido',
+      message: intl.formatMessage({
+        id: 'register.rule.email.message',
+        defaultMessage: 'Ingrese un email valido',
+      }),
     },
-    { required: true, message: 'Ingrese un email para su cuenta en Evius' },
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.email.message2',
+        defaultMessage: 'Ingrese un email para su cuenta en Evius',
+      }),
+    },
   ];
 
   const rulePassword = [
-    { required: true, message: 'Ingrese una contraseña para su cuenta en Evius' },
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.password.message',
+        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+      }),
+    },
     {
       type: 'string',
       min: 6,
       max: 18,
-      message: 'La contraseña debe tener entre 6 a 18 caracteres',
+      message: intl.formatMessage({
+        id: 'register.rule.password.message2',
+        defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
+      }),
     },
   ];
-  const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
+
+  const ruleName = [
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.name.message',
+        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
+      }),
+    },
+  ];
 
   const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
