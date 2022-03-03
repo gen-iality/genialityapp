@@ -228,4 +228,5 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setUserAgenda,
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(WithEviusContext(Landing));
