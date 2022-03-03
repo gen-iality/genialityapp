@@ -1,11 +1,10 @@
 import React from 'react';
-import { Input } from 'antd';
+import { Input, message } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { concat, omit, pick } from 'ramda';
 import { Field } from 'formik';
 import ImageInput from '../../shared/imageInput';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import { Actions } from '../../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 
@@ -48,7 +47,7 @@ function ImageField(rawProps) {
       });
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       axios.all(uploaders).then(async () => {
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
       });
     }
   };

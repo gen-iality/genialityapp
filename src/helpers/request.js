@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { ApiDEVUrl, ApiUrl, ApiEviusZoomSurvey } from './constants';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+/* import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; */
 import { handleSelect } from './utils';
 import { firestore } from './firebase';
 import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
+import { message } from 'antd';
+
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
@@ -96,7 +98,7 @@ export const getCurrentUser = async () => {
           // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
-            toast.error('🔑 Tu token a caducado, redirigiendo al login!', {
+            message.error('🔑 Tu token a caducado, redirigiendo al login!', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,

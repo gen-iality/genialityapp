@@ -6,7 +6,7 @@ import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
 import { Layout, Spin, notification, Button } from 'antd';
-import 'react-toastify/dist/ReactToastify.css';
+/* import 'react-toastify/dist/ReactToastify.css'; */
 const { Content } = Layout;
 
 import { setUserAgenda } from '../../../redux/networking/actions';

@@ -4,8 +4,8 @@ import Moment from 'moment';
 import 'moment/locale/es-us';
 import { Actions, EventsApi } from '../../helpers/request';
 import ImageInput from '../shared/imageInput';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+/* import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; */
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';

@@ -1,12 +1,12 @@
 import { notification } from 'antd';
 import { isFunction, isNonEmptyArray } from 'ramda-adjunct';
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
 import { handleRequestError } from '../../../helpers/utils';
 import { fireStoreApi } from '../../../helpers/request';
 import CompanyStand from './exhibitor/Exhibitor';
 import { getEventCompanies } from '../../empresas/services';
 import './Exhibitors.css';
+import { message } from 'antd';
 
 class Company extends Component {
   constructor(props) {
@@ -62,12 +62,12 @@ class Company extends Component {
       fireStoreApi
         .createOrUpdate(eventId, companyItem.visitors_space_id, eventUser)
         .then(() => {
-          toast.success('Asistente agregado a actividad');
+          message.success('Asistente agregado a actividad');
           this.setState({ qrData: {} });
         })
         .catch((error) => {
           console.error('Error updating document: ', error);
-          toast.error(handleRequestError(error));
+          message.error(handleRequestError(error));
         });
     }
   };

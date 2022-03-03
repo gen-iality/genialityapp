@@ -4,8 +4,8 @@ import Moment from 'moment';
 import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+/* import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; */
 import 'react-widgets/lib/scss/react-widgets.scss';
 import ErrorServe from '../modal/serverError';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -39,6 +39,7 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
+import messages from 'components/messages';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -250,7 +251,7 @@ class General extends Component {
     if (valid) {
       this.setState({ valid: !valid, error });
     } else {
-      toast.error('Hubo un error, completa los datos Obligatorios');
+      message.error('Hubo un error, completa los datos Obligatorios');
     }
   };
   //Cambio descripción
@@ -319,7 +320,7 @@ class General extends Component {
           path,
         });
 
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -360,7 +361,7 @@ class General extends Component {
           banner_image,
         });
 
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -505,19 +506,19 @@ class General extends Component {
         const info = await EventsApi.editOne(data, event._id);
         this.props.updateEvent(info);
         self.setState({ loading: false });
-        toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+        messages.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
       } else {
         const result = await Actions.create('/api/events', data);
         this.setState({ loading: false });
         if (result._id) {
           window.location.replace(`${window.location.origin}/event/${result._id}`);
         } else {
-          toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+          messages.warning(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
           this.setState({ msg: 'Cant Create', create: false });
         }
       }
     } catch (error) {
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      messages.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
         console.log('ERROR ACA==>', error);
         /* console.error(error.response); */

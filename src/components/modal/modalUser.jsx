@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
 import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import QRCode from 'qrcode.react';
 import { icon } from '../../helpers/constants';
@@ -135,7 +134,7 @@ class UserModal extends Component {
             !self.props.byActivity &&
               (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, `${user._id}?token=${token}`));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
-            toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+            message.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
             self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
             self.props.byActivity && (await self.props.updateView());
@@ -152,7 +151,7 @@ class UserModal extends Component {
               .then(function() {
                 messages.class = 'msg_warning';
                 messages.content = 'USER DELETED';
-                toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+                message.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
                 //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
                 //substractSyncQuantity();

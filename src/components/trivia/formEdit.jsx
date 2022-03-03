@@ -1,7 +1,6 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
 import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message, Alert, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Actions } from '../../helpers/request';
@@ -229,7 +228,7 @@ const FormEdit = (
         closeModal({ questionIndex, data: exclude(dataValues) }, 'updated');
         message.success({ content: 'pregunta actualizada', key: 'updating' });
       })
-      .catch((err) => toast.error('No se pudo actualizar la pregunta: ', err));
+      .catch((err) => message.error('No se pudo actualizar la pregunta: ', err));
   };
 
   function handleRemoveImg() {
