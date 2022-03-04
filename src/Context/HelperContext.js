@@ -182,7 +182,7 @@ export const HelperContextProvider = ({ children }) => {
    * @param {boolean} showNotification If the value is true the remote logout notification is displayed
    */
   const logout = async (showNotification) => {
-    const user = app.auth().currentUser;
+    const user = app.auth()?.currentUser;
     const lastSignInTime = (await user.getIdTokenResult()).authTime;
 
     app
@@ -238,7 +238,8 @@ export const HelperContextProvider = ({ children }) => {
         changes.forEach((change) => {
           if (docChangesTypeAndEmailValidation(change)) {
             getlastSignInTime().then((userlastSignInTime) => {
-              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime) logout(true);
+              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime && change.type=='modified' ) logout(true);
+              if(change.type=='removed')logout(true)
             });
           }
         });
