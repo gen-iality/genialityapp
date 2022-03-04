@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ImageInput from '../shared/imageInput';
 import axios from 'axios/index';
-import { toast } from 'react-toastify';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import { SketchPicker } from 'react-color';
@@ -335,7 +334,7 @@ class Styles extends Component {
           fileMsg: 'Imagen subida con exito',
         });
 
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -367,23 +366,21 @@ class Styles extends Component {
 
       this.setState({ loading: false });
       if (info._id) {
-        /* toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />); */
         message.destroy(loadingSave.key);
         message.open({
           type: 'success',
-          content: <> Información guardada correctamente</>,
+          content: <FormattedMessage id='toast.success' defaultMessage='Información guardada correctamente!' />,
         });
       } else {
-        /* toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />); */
         this.setState({ msg: 'Cant Create', create: false });
         message.destroy(loadingSave.key);
         message.open({
           type: 'error',
-          content: <> Error al guardar</>,
+          content: <FormattedMessage id='toast.warning' defaultMessage='Error al guardar' />,
         });
       }
     } catch (error) {
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
         /* console.error(error.response); */
         const { status, data } = error.response;
@@ -441,9 +438,9 @@ class Styles extends Component {
     this.setState({ loading: false });
 
     if (info._id) {
-      toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+      message.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
     } else {
-      toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+      message.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
       this.setState({ msg: 'Cant Create', create: false });
     }
   }

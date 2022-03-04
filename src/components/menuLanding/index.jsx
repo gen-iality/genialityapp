@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Typography, Select, Card, Input, Button, Col, Row, message, Spin, Form, InputNumber } from 'antd';
 import { Actions, OrganizationApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
@@ -285,7 +284,7 @@ class menuLanding extends Component {
         /* console.log('MENU GUARDADDO==>', newMenu); */
       }
     }
-    toast.success('Información guardada');
+    message.success('Información guardada');
     message.destroy(loadingSave.key);
     message.open({
       type: 'success',

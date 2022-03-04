@@ -23,12 +23,12 @@ export const ProviderMessageController = ({ children }) => {
   const DispatchMessage = (type = '', msj = '') => {
     try {
       message.open({
-        content: <MessageSkeleton type={type} msj={msj} />,
+        content: TypeMessageAnswer(type, msj),
         className: 'custom-class',
         style: {
           ...styleMessage,
         },
-        icon: null,
+        icon: WhatIsEmoji(type),
         duration: 0,
       });
     } catch (e) {
@@ -45,26 +45,6 @@ export const ProviderMessageController = ({ children }) => {
     </MessageController.Provider>
   );
 };
-
-const MessageSkeleton = ({ type = '', msj = '' }) => (
-  <Card>
-    <Meta
-      title={WhatIsEmoji(type)}
-      description={
-        <>
-          <span
-            style={{
-              fontSize: '1.2rem',
-              fontWeight: 'bold',
-              color: '#001529',
-            }}>
-            {TypeMessageAnswer(type, msj)}
-          </span>
-        </>
-      }
-    />
-  </Card>
-);
 
 const WhatIsEmoji = (type) => {
   switch (type) {

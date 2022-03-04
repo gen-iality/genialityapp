@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { Component, Fragment } from 'react';/* 
+import 'react-toastify/dist/ReactToastify.css'; */
 import {
   Row,
   Button,

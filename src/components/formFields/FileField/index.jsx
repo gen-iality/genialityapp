@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
-import { Input } from 'antd';
+import { Input, message } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { concat, omit, pick } from 'ramda';
 import { Field } from 'formik';
 import FileInput from '../../shared/fileInput';
 import axios from 'axios/index';
-import { toast } from 'react-toastify';
 import { Actions } from '../../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 
@@ -53,7 +52,7 @@ function FileField(rawProps) {
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       axios.all(uploaders).then(async () => {
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
       });
     } else {
       //this.setState( { errImg: "Solo se permiten imágenes. Intentalo de nuevo" } );

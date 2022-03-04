@@ -47,7 +47,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
             cover={
               <ReactPlayer
                 style={{ paddingTop: '2px' }}
-                light={duration != 0 ? true : false}
+                /* light={duration !== 0 ? true : false} */
                 width={'160px'}
                 height={'100px'}
                 url={activity.video}
@@ -95,7 +95,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
             style={{ width: '100%', borderRadius: '8px' }}
             cover={
               <ReactPlayer
-                light={duration != 0 ? true : false}
+                /* light={duration !== 0 ? true : false} */
                 width={'100%'}
                 height={'150px'}
                 url={activity.video}

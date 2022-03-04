@@ -1,5 +1,5 @@
 import { firestore, fireStorage } from '../../helpers/firebase';
-import { toast } from 'react-toastify';
+import { message } from 'antd';
 
 export const saveFirebase = {
   async savePost(data, eventId) {
@@ -26,7 +26,7 @@ export const saveFirebase = {
 
       return post;
     } catch (e) {
-      toast.warning('Los datos necesarios no se han registrado, por favor intenta de nuevo');
+      message.warning('Los datos necesarios no se han registrado, por favor intenta de nuevo');
     }
   },
 
@@ -139,7 +139,7 @@ export const saveFirebase = {
       }
       return true;
     } catch (e) {
-      toast.warning('La información aun no ha sido eliminada, por favor intenta de nuevo');
+      message.warning('La información aun no ha sido eliminada, por favor intenta de nuevo');
     }
 
     return true;
