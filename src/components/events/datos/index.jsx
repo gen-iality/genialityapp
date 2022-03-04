@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import DatosModal from './modal';
 import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
@@ -259,7 +259,7 @@ class Datos extends Component {
   };
 
   showError = (error) => {
-    toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+    // toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     if (error.response) {
       const { status, data } = error.response;
       if (status === 401) this.setState({ timeout: true, loader: false });

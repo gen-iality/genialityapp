@@ -189,12 +189,11 @@ export const HelperContextProvider = ({ children }) => {
         await conectionRef.doc(cUser.value?.uid).delete();
         const routeUrl = window.location.href;
         const weAreOnTheLanding = routeUrl.includes('landing');
-        handleChangeTypeModal(null);
+        // handleChangeTypeModal(null);
         cEventuser.setuserEvent(initialStateEvenUserContext);
         cUser.setCurrentUser(initialStateUserContext);
         if (showNotification) remoteLogoutNotification('info');
         if (!weAreOnTheLanding) {
-          // window.location.reload();
           history.push('/');
         }
       })
@@ -213,6 +212,17 @@ export const HelperContextProvider = ({ children }) => {
     return lastSignInTime;
   }
 
+  /**
+   * *If the change type is not an add and the email in the change is diferent as the current user's
+   * email, return true.*
+   * @param {object} change - The change object.
+   * @returns a boolean value.
+   */
+  function docChangesTypeAndEmailValidation(change) {
+    if (change.type !== 'added' && change?.doc?.data()?.email == cUser.value?.email) return true;
+    return false;
+  }
+
   useEffect(() => {
     if (!cUser.value) return;
 
@@ -220,12 +230,7 @@ export const HelperContextProvider = ({ children }) => {
       const changes = snapshot.docChanges();
       if (changes) {
         changes.forEach((change) => {
-          if (change.type === 'removed' && change?.doc?.data()?.email == cUser.value?.email) {
-            getlastSignInTime().then((userlastSignInTime) => {
-              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime) logout(true);
-            });
-          }
-          if (change.type == 'modified' && change?.doc?.data()?.email == cUser.value?.email) {
+          if (docChangesTypeAndEmailValidation(change)) {
             getlastSignInTime().then((userlastSignInTime) => {
               if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime) logout(true);
             });

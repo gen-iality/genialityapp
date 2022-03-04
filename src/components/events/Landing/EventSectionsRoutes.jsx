@@ -58,15 +58,15 @@ const EventSectionRoutes = (props) => {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
     }
-    if (
-      props.cEventUser?.value == null &&
-      props.cEventUser?.status == 'LOADED' &&
-      typeModal !== 'registerForTheEvent' &&
-      typeModal !== 'loginSuccess' &&
-      typeModal !== 'visitors'
-    ) {
-      handleChangeTypeModal('preregisterMessage');
-    }
+    // if (
+    //   props.cEventUser?.value == null &&
+    //   props.cEventUser?.status == 'LOADED' &&
+    //   typeModal !== 'registerForTheEvent' &&
+    //   typeModal !== 'loginSuccess' &&
+    //   typeModal !== 'visitors'
+    // ) {
+    //   handleChangeTypeModal('preregisterMessage');
+    // }
     // else if (
     //   props.cEventUser?.value !== null &&
     //   props.cEventUser?.status == 'LOADED' &&
