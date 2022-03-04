@@ -181,15 +181,21 @@ export const HelperContextProvider = ({ children }) => {
    * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
    * @param {boolean} showNotification If the value is true the remote logout notification is displayed
    */
-  const logout = (showNotification) => {
+  const logout = async (showNotification) => {
+    const user = app.auth().currentUser;
+    const lastSignInTime = (await user.getIdTokenResult()).authTime;
+
     app
       .auth()
       .signOut()
       .then(async () => {
-        await conectionRef.doc(cUser.value?.uid).delete();
+        const currentUserConnect = await conectionRef.doc(cUser.value?.uid).get();
+
+        if (currentUserConnect?.data()?.lastSignInTime === lastSignInTime)
+          await conectionRef.doc(cUser.value?.uid).delete();
         const routeUrl = window.location.href;
         const weAreOnTheLanding = routeUrl.includes('landing');
-        // handleChangeTypeModal(null);
+        handleChangeTypeModal(null);
         cEventuser.setuserEvent(initialStateEvenUserContext);
         cUser.setCurrentUser(initialStateUserContext);
         if (showNotification) remoteLogoutNotification('info');

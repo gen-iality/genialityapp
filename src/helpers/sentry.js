@@ -3,7 +3,7 @@ import { BrowserTracing } from '@sentry/tracing';
 
 function sentry() {
   const dns = process.env.REACT_APP_SENTRY;
-  console.log('🚀 debug ~ sentry ~ dns', dns);
+
   Sentry.init({
     dsn: dns,
     ignoreErrors: ['ResizeObserver loop limit exceeded'],

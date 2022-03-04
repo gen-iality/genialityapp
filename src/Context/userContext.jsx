@@ -23,10 +23,8 @@ export function CurrentUserProvider({ children }) {
                 .then(async (response) => {
                   if (response.data) {
                     conectionRef.doc(user.uid).set({
-                      status: true,
                       id: user?.uid,
                       email: user?.email,
-                      date: new Date().getTime(),
                       lastSignInTime: lastSignInTime,
                     });
                     setCurrentUser({ status: 'LOADED', value: response.data });
