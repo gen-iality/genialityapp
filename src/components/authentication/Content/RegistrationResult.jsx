@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Result, Row, Space, Typography } from 'antd';
+import { Result, Row, Space, Typography, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
 import { app } from 'helpers/firebase';
@@ -18,21 +18,26 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
 
   useEffect(() => {
     //mientras el user espera se le dan frases motivadoras
-    async function FraseInpiradora() {
-      if (validationGeneral.loading) {
-        let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
-        setfraseLoading(FrasesInspiradoras[ramdon]);
-        console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
+    try {
+      async function FraseInpiradora() {
+        if (validationGeneral.loading) {
+          let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
+          setfraseLoading(FrasesInspiradoras[ramdon]);
+          console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
+        }
       }
+
+      let intervalFrase = setTimeout(() => {
+        FraseInpiradora();
+      }, 8000);
+
+      return () => {
+        clearInterval(intervalFrase);
+      };
+    } catch(err) {
+      console.log(err);
+      message.error('Ha ocurrido un error')
     }
-
-    let intervalFrase = setTimeout(() => {
-      FraseInpiradora();
-    }, 8000);
-
-    return () => {
-      clearInterval(intervalFrase);
-    };
   });
 
   return (
@@ -61,27 +66,33 @@ const RedirectUser = ({ basicDataUser }) => {
   const intl = useIntl();
 
   useEffect(() => {
-    const loginFirebase = async () => {
-      app
-        .auth()
-        .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
-        .then((response) => {
-          if (response.user) {
-            cEventUser.setUpdateUser(true);
-            HandleControllerLoginVisible({
-              visible: false,
-            });
-          }
-        });
-    };
+    try {
+      const loginFirebase = async () => {
+        app
+          .auth()
+          .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
+          .then((response) => {
+            if (response.user) {
+              cEventUser.setUpdateUser(true);
+              HandleControllerLoginVisible({
+                visible: false,
+              });
+            }
+          });
+      };
 
-    let loginInterval = setTimeout(() => {
-      loginFirebase();
-    }, 5000);
+      let loginInterval = setTimeout(() => {
+        loginFirebase();
+      }, 5000);
 
-    return () => {
-      clearInterval(loginInterval);
-    };
+      return () => {
+        clearInterval(loginInterval);
+      };
+    } catch (err) {
+      console.log(err);
+      message.error('Ha ocurrido un error');
+    }
+    
   }, []);
 
   return (
