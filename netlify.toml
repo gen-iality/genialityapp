@@ -1,10 +1,10 @@
 [build.environment]
   NODE_VERSION = "16.14"
-  YARN_VERSION = "1.23"
+  YARN_VERSION = "1.22"
   NPM_VERSION = "8"
 
 [build]
-  command = "yarn build"
+  command = "CI= yarn build"
   publish = "build"
   build = "build"
 
