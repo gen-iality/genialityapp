@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/main.scss';
-import 'react-toastify/dist/ReactToastify.css';
+/* import 'react-toastify/dist/ReactToastify.css'; */
 import App from './App/App';
 import { unregister as unregisterServiceWorker } from './registerServiceWorker';
 import { IntlProvider } from 'react-intl';

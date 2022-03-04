@@ -5,7 +5,7 @@ import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
-import 'react-toastify/dist/ReactToastify.css';
+/* import 'react-toastify/dist/ReactToastify.css'; */
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
 import {
