@@ -16,6 +16,7 @@ const messages = localeData[languageWithoutRegionCode] || localeData[language] |
 
 Sentry.init({
   dsn: 'https://d22c22662dfe45ab806c3bea19c1017b@o1156387.ingest.sentry.io/6237649',
+  ignoreErrors: ['ResizeObserver loop limit exceeded'],
   beforeSend(event, hint) {
     // Check if it is an exception, and if so, show the report dialog
     if (event.exception) {

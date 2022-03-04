@@ -17,16 +17,17 @@ export function CurrentUserProvider({ children }) {
         app.auth().onAuthStateChanged((user) => {
           if (!user?.isAnonymous && user) {
             user.getIdToken().then(async function(idToken) {
+              const lastSignInTime = (await user.getIdTokenResult()).authTime;
               privateInstance
                 .get(`/auth/currentUser?evius_token=${idToken}`)
                 .then(async (response) => {
                   if (response.data) {
-                    conectionRef.doc(response?.data?._id).set({
+                    conectionRef.doc(user.uid).set({
                       status: true,
-                      id: response?.data?._id,
-                      email: response?.data?.email,
-                      name: response?.data?.names,
+                      id: user?.uid,
+                      email: user?.email,
                       date: new Date().getTime(),
+                      lastSignInTime: lastSignInTime,
                     });
                     setCurrentUser({ status: 'LOADED', value: response.data });
                   } else {

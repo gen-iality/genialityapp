@@ -1,6 +1,6 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
-import { firestore, fireRealtime } from '../helpers/firebase';
+import { firestore, fireRealtime, app } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
@@ -11,6 +11,9 @@ import moment from 'moment';
 import { createChatInitalPrivate, createChatRoom } from '../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
 import { maleIcons, femaleicons } from '../helpers/constants';
+import Logout from '@2fd/ant-design-icons/lib/Logout';
+import { useHistory } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 
 export const HelperContext = createContext();
 
@@ -24,10 +27,16 @@ const initialStateNotification = {
   type: 'none',
 };
 
+let initialStateEvenUserContext = { status: 'LOADING', value: null };
+let initialStateUserContext = { status: 'LOADING', value: undefined };
+
 export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventuser = UseUserEvent();
+  let history = useHistory();
+  const intl = useIntl();
+
   const [containtNetworking, setcontaintNetworking] = useState(false);
   const [infoAgenda, setinfoAgenda] = useState(null);
   const [isNotification, setisNotification] = useState(initialStateNotification);
@@ -138,6 +147,96 @@ export const HelperContextProvider = ({ children }) => {
 
     return data;
   }
+
+  /**
+   * @function remoteLogoutNotification - Show notification after logging out remotely the user is notified why their current session has been logged out
+   * @param {string} type Type of notification, success - info - warning - error
+   */
+  const remoteLogoutNotification = (type) => {
+    notification[type]({
+      duration: 0,
+      icon: (
+        <Logout
+          className='animate__animated animate__heartBeat animate__infinite animate__slower'
+          style={{ color: '#FF4E50' }}
+        />
+      ),
+      message: (
+        <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{cUser.value?.names}</b>
+      ),
+      description: intl.formatMessage({
+        id: 'notification.log_out',
+        defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
+      }),
+      style: {
+        borderRadius: '10px',
+      },
+    });
+  };
+
+  /* Creating a reference to the connection object. */
+  const conectionRef = firestore.collection(`connections`);
+
+  /**
+   * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
+   * @param {boolean} showNotification If the value is true the remote logout notification is displayed
+   */
+  const logout = (showNotification) => {
+    app
+      .auth()
+      .signOut()
+      .then(async () => {
+        await conectionRef.doc(cUser.value?.uid).delete();
+        const routeUrl = window.location.href;
+        const weAreOnTheLanding = routeUrl.includes('landing');
+        handleChangeTypeModal(null);
+        cEventuser.setuserEvent(initialStateEvenUserContext);
+        cUser.setCurrentUser(initialStateUserContext);
+        if (showNotification) remoteLogoutNotification('info');
+        if (!weAreOnTheLanding) {
+          // window.location.reload();
+          history.push('/');
+        }
+      })
+      .catch(function(error) {
+        console.log('🚀 error', error);
+      });
+  };
+
+  /**
+   * It gets the last sign in time of the user.
+   * @returns The last sign user time.
+   */
+  async function getlastSignInTime() {
+    const user = app.auth().currentUser;
+    const lastSignInTime = (await user.getIdTokenResult()).authTime;
+    return lastSignInTime;
+  }
+
+  useEffect(() => {
+    if (!cUser.value) return;
+
+    const unsubscribe = conectionRef.onSnapshot((snapshot) => {
+      const changes = snapshot.docChanges();
+      if (changes) {
+        changes.forEach((change) => {
+          if (change.type === 'removed' && change?.doc?.data()?.email == cUser.value?.email) {
+            getlastSignInTime().then((userlastSignInTime) => {
+              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime) logout(true);
+            });
+          }
+          if (change.type == 'modified' && change?.doc?.data()?.email == cUser.value?.email) {
+            getlastSignInTime().then((userlastSignInTime) => {
+              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime) logout(true);
+            });
+          }
+        });
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [cUser.value]);
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -688,6 +787,7 @@ export const HelperContextProvider = ({ children }) => {
         theRoleExists,
         setcurrenActivity,
         getOrganizationUser,
+        logout,
       }}>
       {children}
     </HelperContext.Provider>

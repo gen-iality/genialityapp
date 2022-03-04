@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { app, firestore } from '../helpers/firebase';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -7,14 +7,13 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown, notification } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import withContext from '../Context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
-import Logout from '@2fd/ant-design-icons/lib/Logout';
 import { useIntl } from 'react-intl';
 
 const { useBreakpoint } = Grid;
@@ -46,11 +45,9 @@ const initialDataGeneral = {
   anonimususer: false,
 };
 
-let initialStateEvenUserContext = { status: 'LOADING', value: null };
-let initialStateUserContext = { status: 'LOADING', value: undefined };
-
 const Headers = (props) => {
   const { cUser, showMenu, loginInfo, cHelper, cEvent, cEventUser } = props;
+  const { logout } = cHelper;
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
   const [showButtons, setshowButtons] = useState({
@@ -58,84 +55,7 @@ const Headers = (props) => {
     buttonlogin: true,
   });
   const screens = useBreakpoint();
-  let history = useHistory();
-  const conectionRef = firestore.collection(`connections`);
   const intl = useIntl();
-
-  /**
-   * @function remoteLogoutNotification - Show notification after logging out remotely the user is notified why their current session has been logged out
-   * @param {string} type Type of notification, success - info - warning - error
-   */
-  const remoteLogoutNotification = (type) => {
-    notification[type]({
-      duration: 0,
-      icon: (
-        <Logout
-          className='animate__animated animate__heartBeat animate__infinite animate__slower'
-          style={{ color: '#FF4E50' }}
-        />
-      ),
-      message: (
-        <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{cUser.value?.names}</b>
-      ),
-      description: intl.formatMessage({
-        id: 'notification.log_out',
-        defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
-      }),
-      style: {
-        borderRadius: '10px',
-      },
-    });
-  };
-
-  /**
-   * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
-   * @param {boolean} showNotification If the value is true the remote logout notification is displayed
-   */
-  const logout = (showNotification) => {
-    app
-      .auth()
-      .signOut()
-      .then(async () => {
-        await conectionRef.doc(cUser.value?._id).delete();
-        const routeUrl = props.match?.url;
-        const weAreOnTheLanding = routeUrl.includes('landing');
-        cHelper.handleChangeTypeModal(null);
-        cEventUser.setuserEvent(initialStateEvenUserContext);
-        cUser.setCurrentUser(initialStateUserContext);
-        if (showNotification) remoteLogoutNotification('info');
-        if (weAreOnTheLanding) {
-          // window.location.reload();
-          history.push(routeUrl);
-        } else {
-          history.push('/');
-        }
-      })
-      .catch(function(error) {
-        console.log('error', error);
-      });
-  };
-
-  useEffect(() => {
-    if (!cUser.value) return;
-    //console.log('EJECUTADO EL SNAPSHOT ACAAA', cUser.value.email);
-    const unsubscribe = conectionRef.onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges();
-      //console.log('CHANGES ACA==>', changes);
-      if (changes) {
-        changes.forEach((change) => {
-          if (change.type === 'removed' && change?.doc?.data()?.email == cUser.value?.email) {
-            // console.log('ACÁ DEBO CERRAR LA SESIÓN', change.doc.data());
-            logout(true);
-          }
-        });
-      }
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, [cUser.value]);
-
   const openMenu = () => {
     setdataGeneral({ ...dataGeneral, menuOpen: !dataGeneral.menuOpen, filterOpen: false });
   };
