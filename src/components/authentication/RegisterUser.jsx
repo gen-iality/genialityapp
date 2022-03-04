@@ -88,29 +88,34 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       setOpenOrCloseTheModalFeedback,
     };
 
-    let resp = await createNewUser(newValues);
+    try {
+      let resp = await createNewUser(newValues);
 
-    if (resp) {
-      // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
-      app
-        .auth()
-        .signInWithEmailAndPassword(newValues.email, newValues.password)
-        .then((login) => {
-          if (login) {
-            //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
-            if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
-              handleChangeTypeModal('loginSuccess');
-            } else {
-              handleChangeTypeModal('loginSuccess');
+      if (resp) {
+        // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
+        app
+          .auth()
+          .signInWithEmailAndPassword(newValues.email, newValues.password)
+          .then((login) => {
+            if (login) {
+              //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
+              if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
+                handleChangeTypeModal('loginSuccess');
+              } else {
+                handleChangeTypeModal('loginSuccess');
+              }
             }
-          }
-        })
-        .catch((err) => {
-          handleChangeTypeModal('loginError');
-        });
-    } else {
-      handleChangeTypeModal('loginError');
-    }
+          })
+          .catch((err) => {
+            handleChangeTypeModal('loginError');
+          });
+      } else {
+        handleChangeTypeModal('loginError');
+      }
+    } catch(err) {
+      console.log(err);
+      message.error('Ha ocurrido un error');
+    }   
     message.destroy(loading.key);
   };
   return (
