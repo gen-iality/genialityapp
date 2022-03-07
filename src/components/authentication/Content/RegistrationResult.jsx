@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Result, Row, Space, Typography, message } from 'antd';
+import { Result, Row, Space, Typography, message, Alert, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
 import { app } from 'helpers/firebase';
@@ -8,7 +8,7 @@ import HelperContext from 'Context/HelperContext';
 import { useIntl } from 'react-intl';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
+const RegistrationResult = ({ validationGeneral, basicDataUser, setCurrent }) => {
   const [fraseLoading, setfraseLoading] = useState('');
 
   useEffect(() => {
@@ -25,9 +25,9 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
           setfraseLoading(FrasesInspiradoras[ramdon]);
           console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
         }
-      } catch(err) {
+      } catch (err) {
         console.log(err);
-        message.error('Ha ocurrido un error')
+        message.error('Ha ocurrido un error');
       }
     }
 
@@ -53,56 +53,78 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
       ) : (
         <>
           <Result status='success' title='¡Registro exitoso!' />
-          <RedirectUser basicDataUser={basicDataUser} />
+          <RedirectUser basicDataUser={basicDataUser} setCurrent={setCurrent} />
         </>
       )}
     </>
   );
 };
 
-const RedirectUser = ({ basicDataUser }) => {
+const RedirectUser = ({ basicDataUser, setCurrent }) => {
   const cEventUser = UseUserEvent();
-  let { HandleControllerLoginVisible } = useContext(HelperContext);
+  let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
   const intl = useIntl();
+  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
 
   useEffect(() => {
     const loginFirebase = async () => {
-      try {
-        app
-          .auth()
-          .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
-          .then((response) => {
-            if (response.user) {
-              cEventUser.setUpdateUser(true);
-              HandleControllerLoginVisible({
-                visible: false,
-              });
-            }
-          });
-        } catch (err) {
+      app
+        .auth()
+        .signInWithEmailAndPassword('basicDataUser.email', basicDataUser.password)
+        .then((response) => {
+          if (response.user) {
+            cEventUser.setUpdateUser(true);
+            HandleControllerLoginVisible({
+              visible: false,
+            });
+          }
+        })
+        .catch((err) => {
           console.log(err);
-          message.error('Ha ocurrido un error');
-        }
-      };
+          setSignInWithEmailAndPasswordError(true);
+        });
+    };
 
-      let loginInterval = setTimeout(() => {
-        loginFirebase();
-      }, 5000);
+    let loginInterval = setTimeout(() => {
+      loginFirebase();
+    }, 5000);
 
-      return () => {
-        clearInterval(loginInterval);
-      };
+    return () => {
+      clearInterval(loginInterval);
+    };
   }, []);
 
   return (
     <>
       <Space>
-        <LoadingOutlined style={{ fontSize: '28px' }} />
         <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
-          {intl.formatMessage({
-            id: 'register.result.logging_in',
-            defaultMessage: 'Iniciando sesión con tu cuenta!',
-          })}
+          {signInWithEmailAndPasswordError ? (
+            <Alert
+              style={{ marginTop: '5px' }}
+              message={
+                <>
+                  {intl.formatMessage({ id: 'modal.feedback.errorAutomaticSession', defaultMessage: 'Ha fallado el inicio de sesión automático, por favor'})}
+                  <Button
+                    style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
+                    onClick={() => {
+                      handleChangeTabModal('1'), setCurrent(0), setSignInWithEmailAndPasswordError(false)
+                    }}
+                    type='link'>
+                    {intl.formatMessage({ id: 'modal.feedback.title.errorlink', defaultMessage: 'iniciar sesión' })}
+                  </Button>
+                </>
+              }
+              type='error'
+            />
+          ) : (
+            <>
+              <LoadingOutlined style={{ fontSize: '28px' }} />
+              {intl.formatMessage({
+                id: 'register.result.logging_in',
+                defaultMessage: 'Iniciando sesión con tu cuenta!',
+              })}
+            </>
+          )}
         </Typography.Text>
       </Space>
     </>

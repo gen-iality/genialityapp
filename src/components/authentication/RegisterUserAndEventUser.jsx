@@ -94,14 +94,31 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     },
     {
       title: 'Last',
-      content: <RegistrationResult validationGeneral={validationGeneral} basicDataUser={basicDataUser} />,
+      content: (
+        <RegistrationResult
+          validationGeneral={validationGeneral}
+          basicDataUser={basicDataUser}
+          setCurrent={setCurrent}
+        />
+      ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
   ];
 
-  const handleValidateAccountEvius = () => {
-    SearchUserbyEmail(basicDataUser.email).then((resp) => {
-      if (resp.length > 0) {
+  const handleValidateAccountEvius = async () => {
+    try {
+      const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email });
+      console.log(validateEmail, 'validateEmail');
+      if (validateEmail?.message === 'Email valid') {
+        setValidationGeneral({
+          loading: false,
+          status: false,
+          textError: '',
+        });
+        setCurrent(current + 1);
+      }
+    } catch (err) {
+      if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
         setValidationGeneral({
           loading: false,
           status: true,
@@ -111,22 +128,33 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           }),
           component: intl.formatMessage({ id: 'modal.feedback.title.errorlink', defaultMessage: 'iniciar sesión' }),
         });
+      } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
+        setValidationGeneral({
+          loading: false,
+          status: true,
+          textError: intl.formatMessage({
+            id: 'modal.feedback.errorDNSNotFound',
+            defaultMessage: 'No hemos encontrado el dominio asignado a este correo.',
+          }),
+        });
       } else {
         setValidationGeneral({
           loading: false,
-          status: false,
-          textError: '',
+          status: true,
+          textError: intl.formatMessage({
+            id: 'modal.feedback.errorGeneralInternal',
+            defaultMessage: 'Se ha presentado un error interno. Por favor intenta de nuevo',
+          }),
         });
-        setCurrent(current + 1);
       }
-    });
+    }
   };
 
   const handleSubmit = () => {
     setCurrent(current + 1);
     let SaveUserEvius = new Promise((resolve, reject) => {
       async function CreateAccount() {
-        let resp = await createNewUser();
+        let resp = await createNewUser(basicDataUser);
         resolve(resp);
       }
 
@@ -145,7 +173,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
       let propertiesuser = { properties: { ...datauser } };
       try {
-
         let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
         if (respUser && respUser._id) {
           setValidationGeneral({
@@ -160,8 +187,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           setdataEventUser({});
         }
       } catch (err) {
-        console.log(err, 'eeerrrroooorrr');
-        message.error('Ha ocurrido un error')
+        message.error('Ha ocurrido un error');
       }
     }
 

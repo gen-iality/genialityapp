@@ -351,6 +351,10 @@ export const UsersApi = {
     return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`, true);
   },
 
+  validateEmail: async (email) => {
+    return await Actions.post(`api/validateEmail`, email, true);
+  },
+
   mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`);
   },

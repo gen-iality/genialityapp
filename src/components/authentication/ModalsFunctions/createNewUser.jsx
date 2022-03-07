@@ -10,7 +10,7 @@ const createNewUser = async (props) => {
     resetFields();
   }
   const uploadLogo = async () => {
-    const selectedLogo = picture !== null && picture != '' ? picture[0].thumbUrl : null;
+    const selectedLogo = picture && picture !== '' ? picture[0].thumbUrl : null;
 
     if (selectedLogo) {
       const urlOfTheUploadedImage = await saveImageStorage(selectedLogo);
