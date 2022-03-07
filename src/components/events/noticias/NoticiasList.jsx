@@ -26,28 +26,34 @@ const NoticiasList = (props) => {
 
   useEffect(() => {
     setVirtualConference(false);
-    NewsFeed.byEvent(eventId).then((resp) => {
-      if (resp && resp.length > 0) {
-        let noticeList = resp.sort((a, b) => moment(b.created_at) - moment(a.created_at));
-        setNoticiasAll(noticeList);
-        if (size) {
-          noticeList = noticeList.slice(0, size);
-        }
-        if (newId) {
-          setNoticias(
-            noticeList.filter((value) => {
-              return value._id != newId;
-            })
-          );
+    NewsFeed.byEvent(eventId)
+      .then((resp) => {
+        if (resp && resp.length > 0) {
+          let noticeList = resp.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+          setNoticiasAll(noticeList);
+          if (size) {
+            noticeList = noticeList.slice(0, size);
+          }
+          if (newId) {
+            setNoticias(
+              noticeList.filter((value) => {
+                return value._id != newId;
+              })
+            );
+          } else {
+            setNoticias(noticeList);
+          }
+          setLoading(false);
         } else {
-          setNoticias(noticeList);
+          setNoticias([]);
+          setLoading(false);
         }
-        setLoading(false);
-      } else {
+      })
+      .catch((e) => {
+        //OCURRE UNA EXCEPCION===> unauthenticated user
         setNoticias([]);
         setLoading(false);
-      }
-    });
+      });
 
     return () => {
       setVirtualConference(true);
@@ -89,7 +95,12 @@ const NoticiasList = (props) => {
                         />
                       }
                       actions={[
-                        <Link to={{pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`, state: {id: news._id}}} key={'viewMore'}>
+                        <Link
+                          to={{
+                            pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
+                            state: { id: news._id },
+                          }}
+                          key={'viewMore'}>
                           Ver más
                         </Link>,
                       ]}>
@@ -126,7 +137,12 @@ const NoticiasList = (props) => {
                       />
                     }
                     actions={[
-                      <Link to={{pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`, state: {id: news._id}}} key={'viewMore'}>
+                      <Link
+                        to={{
+                          pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
+                          state: { id: news._id },
+                        }}
+                        key={'viewMore'}>
                         Ver más
                       </Link>,
                     ]}>
