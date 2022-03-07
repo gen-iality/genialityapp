@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Steps, Button, Alert } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
@@ -6,7 +6,6 @@ import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
-import { useEffect } from 'react';
 import { SearchUserbyEmail, UsersApi } from 'helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
@@ -18,8 +17,8 @@ const { Step } = Steps;
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
-  const [current, setCurrent] = React.useState(0);
-  const [basicDataUser, setbasicDataUser] = React.useState({
+  const [current, setCurrent] = useState(0);
+  const [basicDataUser, setbasicDataUser] = useState({
     names: '',
     email: '',
     password: '',
@@ -127,7 +126,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     setCurrent(current + 1);
     let SaveUserEvius = new Promise((resolve, reject) => {
       async function CreateAccount() {
-        let resp = await createNewUser(basicDataUser);
+        let resp = await createNewUser();
         resolve(resp);
       }
 
@@ -145,18 +144,24 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       };
 
       let propertiesuser = { properties: { ...datauser } };
-      let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
-      if (respUser && respUser._id) {
-        setValidationGeneral({
-          status: false,
-          loading: false,
-          textError: intl.formatMessage({
-            id: 'text_error.successfully_registered',
-            defaultMessage: 'Te has inscrito correctamente a este evento',
-          }),
-        });
-        setbasicDataUser({});
-        setdataEventUser({});
+      try {
+
+        let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
+        if (respUser && respUser._id) {
+          setValidationGeneral({
+            status: false,
+            loading: false,
+            textError: intl.formatMessage({
+              id: 'text_error.successfully_registered',
+              defaultMessage: 'Te has inscrito correctamente a este evento',
+            }),
+          });
+          setbasicDataUser({});
+          setdataEventUser({});
+        }
+      } catch (err) {
+        console.log(err, 'eeerrrroooorrr');
+        message.error('Ha ocurrido un error')
       }
     }
 

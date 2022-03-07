@@ -18,26 +18,26 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
 
   useEffect(() => {
     //mientras el user espera se le dan frases motivadoras
-    try {
-      async function FraseInpiradora() {
+    async function FraseInpiradora() {
+      try {
         if (validationGeneral.loading) {
           let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
           setfraseLoading(FrasesInspiradoras[ramdon]);
           console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
         }
+      } catch(err) {
+        console.log(err);
+        message.error('Ha ocurrido un error')
       }
-
-      let intervalFrase = setTimeout(() => {
-        FraseInpiradora();
-      }, 8000);
-
-      return () => {
-        clearInterval(intervalFrase);
-      };
-    } catch(err) {
-      console.log(err);
-      message.error('Ha ocurrido un error')
     }
+
+    let intervalFrase = setTimeout(() => {
+      FraseInpiradora();
+    }, 8000);
+
+    return () => {
+      clearInterval(intervalFrase);
+    };
   });
 
   return (
@@ -66,8 +66,8 @@ const RedirectUser = ({ basicDataUser }) => {
   const intl = useIntl();
 
   useEffect(() => {
-    try {
-      const loginFirebase = async () => {
+    const loginFirebase = async () => {
+      try {
         app
           .auth()
           .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
@@ -79,6 +79,10 @@ const RedirectUser = ({ basicDataUser }) => {
               });
             }
           });
+        } catch (err) {
+          console.log(err);
+          message.error('Ha ocurrido un error');
+        }
       };
 
       let loginInterval = setTimeout(() => {
@@ -88,11 +92,6 @@ const RedirectUser = ({ basicDataUser }) => {
       return () => {
         clearInterval(loginInterval);
       };
-    } catch (err) {
-      console.log(err);
-      message.error('Ha ocurrido un error');
-    }
-    
   }, []);
 
   return (
