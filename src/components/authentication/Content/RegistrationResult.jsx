@@ -70,7 +70,7 @@ const RedirectUser = ({ basicDataUser, setCurrent }) => {
     const loginFirebase = async () => {
       app
         .auth()
-        .signInWithEmailAndPassword('basicDataUser.email', basicDataUser.password)
+        .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
         .then((response) => {
           if (response.user) {
             cEventUser.setUpdateUser(true);
@@ -103,11 +103,14 @@ const RedirectUser = ({ basicDataUser, setCurrent }) => {
               style={{ marginTop: '5px' }}
               message={
                 <>
-                  {intl.formatMessage({ id: 'modal.feedback.errorAutomaticSession', defaultMessage: 'Ha fallado el inicio de sesión automático, por favor'})}
+                  {intl.formatMessage({
+                    id: 'modal.feedback.errorAutomaticSession',
+                    defaultMessage: 'Ha fallado el inicio de sesión automático, por favor',
+                  })}
                   <Button
                     style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                     onClick={() => {
-                      handleChangeTabModal('1'), setCurrent(0), setSignInWithEmailAndPasswordError(false)
+                      handleChangeTabModal('1'), setCurrent(0), setSignInWithEmailAndPasswordError(false);
                     }}
                     type='link'>
                     {intl.formatMessage({ id: 'modal.feedback.title.errorlink', defaultMessage: 'iniciar sesión' })}
