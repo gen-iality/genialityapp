@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ImageInput from '../shared/imageInput';
 import axios from 'axios/index';
 import { Actions, OrganizationApi } from '../../helpers/request';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { SketchPicker } from 'react-color';
 import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select, Spin } from 'antd';
 import ReactQuill from 'react-quill';
@@ -334,7 +334,7 @@ class Styles extends Component {
           fileMsg: 'Imagen subida con exito',
         });
 
-        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }));
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -369,18 +369,21 @@ class Styles extends Component {
         message.destroy(loadingSave.key);
         message.open({
           type: 'success',
-          content: <FormattedMessage id='toast.success' defaultMessage='Información guardada correctamente!' />,
+          content: this.props.intl.formatMessage({
+            id: 'toast.success',
+            defaultMessage: 'Información guardada correctamente!',
+          }),
         });
       } else {
         this.setState({ msg: 'Cant Create', create: false });
         message.destroy(loadingSave.key);
         message.open({
           type: 'error',
-          content: <FormattedMessage id='toast.warning' defaultMessage='Error al guardar' />,
+          content: this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Error al guardar' }),
         });
       }
     } catch (error) {
-      message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      message.error(this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }));
       if (error.response) {
         /* console.error(error.response); */
         const { status, data } = error.response;
@@ -438,9 +441,9 @@ class Styles extends Component {
     this.setState({ loading: false });
 
     if (info._id) {
-      message.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+      message.success(this.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }));
     } else {
-      message.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+      message.warn(this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }));
       this.setState({ msg: 'Cant Create', create: false });
     }
   }
@@ -628,4 +631,4 @@ class Styles extends Component {
   }
 }
 
-export default Styles;
+export default injectIntl(Styles);

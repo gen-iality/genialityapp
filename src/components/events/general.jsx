@@ -8,7 +8,7 @@ import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '..
 import 'react-toastify/dist/ReactToastify.css'; */
 import 'react-widgets/lib/scss/react-widgets.scss';
 import ErrorServe from '../modal/serverError';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
 import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
@@ -39,7 +39,6 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
-import messages from 'components/messages';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -320,7 +319,7 @@ class General extends Component {
           path,
         });
 
-        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }));
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -361,7 +360,7 @@ class General extends Component {
           banner_image,
         });
 
-        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.success(this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }));
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -440,6 +439,7 @@ class General extends Component {
 
   //Envío de datos
   async submit() {
+    const { intl } = this.props;
     /* e.preventDefault();
     e.stopPropagation(); */
 
@@ -506,20 +506,20 @@ class General extends Component {
         const info = await EventsApi.editOne(data, event._id);
         this.props.updateEvent(info);
         self.setState({ loading: false });
-        messages.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+        message.success(intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }));
       } else {
         const result = await Actions.create('/api/events', data);
         this.setState({ loading: false });
         if (result._id) {
           window.location.replace(`${window.location.origin}/event/${result._id}`);
         } else {
-          messages.warning(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+          message.warning(intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }));
           this.setState({ msg: 'Cant Create', create: false });
         }
       }
     } catch (error) {
-      messages.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-      if (error.response) {
+      message.error(intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }));
+      if (error?.response) {
         console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
@@ -622,13 +622,13 @@ class General extends Component {
     this.setState({ typeEvent: value });
     if (value === 0) {
       //Evento Público con Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } }, this.valid);
+      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } });
     } else if (value === 1) {
       //Evento Público sin Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } }, this.valid);
+      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } });
     } else {
       //Evento Privado con Invitación
-      this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } }, this.valid);
+      this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } });
     }
   };
 
