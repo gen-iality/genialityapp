@@ -14,7 +14,7 @@ const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
 
 /* A helper function that will send errors to Sentry.io. */
-sentry();
+// sentry();
 
 ReactDOM.render(
   <>

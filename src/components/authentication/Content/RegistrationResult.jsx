@@ -8,7 +8,7 @@ import HelperContext from 'Context/HelperContext';
 import { useIntl } from 'react-intl';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-const RegistrationResult = ({ validationGeneral, basicDataUser, setCurrent }) => {
+const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
   const [fraseLoading, setfraseLoading] = useState('');
 
   useEffect(() => {
@@ -53,20 +53,21 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, setCurrent }) =>
       ) : (
         <>
           <Result status='success' title='¡Registro exitoso!' />
-          <RedirectUser basicDataUser={basicDataUser} setCurrent={setCurrent} />
+          <RedirectUser basicDataUser={basicDataUser} />
         </>
       )}
     </>
   );
 };
 
-const RedirectUser = ({ basicDataUser, setCurrent }) => {
+const RedirectUser = ({ basicDataUser }) => {
   const cEventUser = UseUserEvent();
-  let { HandleControllerLoginVisible, handleChangeTabModal } = useContext(HelperContext);
+  let { HandleControllerLoginVisible, authModalDispatch } = useContext(HelperContext);
   const intl = useIntl();
   const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
 
   useEffect(() => {
+    setSignInWithEmailAndPasswordError(false);
     const loginFirebase = async () => {
       app
         .auth()
@@ -110,7 +111,7 @@ const RedirectUser = ({ basicDataUser, setCurrent }) => {
                   <Button
                     style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                     onClick={() => {
-                      handleChangeTabModal('1'), setCurrent(0), setSignInWithEmailAndPasswordError(false);
+                      authModalDispatch({ type: 'showLogin' });
                     }}
                     type='link'>
                     {intl.formatMessage({ id: 'modal.feedback.title.errorlink', defaultMessage: 'iniciar sesión' })}

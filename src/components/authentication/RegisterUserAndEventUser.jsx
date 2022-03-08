@@ -24,7 +24,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     password: '',
     picture: '',
   });
-  let { handleChangeTabModal } = useContext(HelperContext);
+  let { authModalDispatch, authModalState } = useContext(HelperContext);
   const [dataEventUser, setdataEventUser] = useState({});
   const [buttonStatus, setbuttonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
@@ -94,13 +94,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     },
     {
       title: 'Last',
-      content: (
-        <RegistrationResult
-          validationGeneral={validationGeneral}
-          basicDataUser={basicDataUser}
-          setCurrent={setCurrent}
-        />
-      ),
+      content: <RegistrationResult validationGeneral={validationGeneral} basicDataUser={basicDataUser} />,
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
   ];
@@ -134,7 +128,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorDNSNotFound',
-            defaultMessage: 'No hemos encontrado el dominio asignado a este correo.',
+            defaultMessage: 'El correo ingresado no es valido.',
           }),
         });
       } else {
@@ -281,6 +275,14 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     }
   }, [basicDataUser, dataEventUser, current]);
 
+  useEffect(() => {
+    if (authModalState.currentAuthScreen === 'login') setCurrent(0);
+
+    return () => {
+      setCurrent(0);
+    };
+  }, [authModalState.currentAuthScreen]);
+
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
       <Steps current={current}>
@@ -336,7 +338,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               {validationGeneral.component ? (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
-                  onClick={() => handleChangeTabModal('1')}
+                  onClick={() => authModalDispatch({ type: 'showLogin' })}
                   type='link'>
                   {validationGeneral.component}
                 </Button>

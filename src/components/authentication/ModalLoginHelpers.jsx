@@ -20,7 +20,7 @@ const stylePaddingMobile = {
 };
 
 const ModalLoginHelpers = (props) => {
-  let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, authModalDispatch } = useContext(HelperContext);
   let cEvent = UseEventContext();
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
@@ -206,7 +206,7 @@ const ModalLoginHelpers = (props) => {
                   size='middle'
                   type='primary'
                   onClick={() => {
-                    handleChangeTabModal('2');
+                    authModalDispatch({ type: 'showRegister' });
                     handleChangeTypeModal(null);
                     setSendRecovery(null);
                     setRegisterUser(false);
@@ -242,7 +242,7 @@ const ModalLoginHelpers = (props) => {
                 size='middle'
                 type='primary'
                 onClick={() => {
-                  handleChangeTabModal('2');
+                  authModalDispatch({ type: 'showRegister' });
                   handleChangeTypeModal(null);
                   setSendRecovery(null);
                   setRegisterUser(false);

@@ -42,10 +42,10 @@ const ModalAuth = (props) => {
   let {
     handleChangeTypeModal,
     typeModal,
-    handleChangeTabModal,
-    tabLogin,
     controllerLoginVisible,
     HandleControllerLoginVisible,
+    authModalDispatch,
+    authModalState,
   } = useContext(HelperContext);
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
@@ -72,13 +72,13 @@ const ModalAuth = (props) => {
         case 'PRIVATE_EVENT':
           setmodalVisible(true);
           HandleControllerLoginVisible({ visible: true });
-          handleChangeTabModal('1');
+          authModalDispatch({ type: 'showLogin' });
           break;
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
           setmodalVisible(true);
           HandleControllerLoginVisible({ visible: true });
-          handleChangeTabModal('2');
+          authModalDispatch({ type: 'showRegister' });
           break;
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
@@ -110,7 +110,7 @@ const ModalAuth = (props) => {
     form1.resetFields();
     setErrorRegisterUSer(false);
     setErrorLogin(false);
-  }, [typeModal, tabLogin]);
+  }, [typeModal, authModalState]);
 
   const DetecError = (code) => {
     switch (code) {
@@ -133,7 +133,18 @@ const ModalAuth = (props) => {
 
   const callback = (key) => {
     form1.resetFields();
-    handleChangeTabModal(key);
+    switch (key) {
+      case 'login':
+        authModalDispatch({ type: 'showLogin' });
+        break;
+
+      case 'register':
+        authModalDispatch({ type: 'showRegister' });
+        break;
+
+      default:
+        return key;
+    }
   };
 
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
@@ -180,13 +191,13 @@ const ModalAuth = (props) => {
         zIndex={1000}
         visible={controllerLoginVisible.visible}
         closable={controllerLoginVisible.organization !== 'organization' ? true : false}>
-        <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
+        <Tabs onChange={callback} centered size='large' activeKey={authModalState.currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
               defaultMessage: 'Iniciar sesión',
             })}
-            key='1'>
+            key='login'>
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
@@ -362,7 +373,9 @@ const ModalAuth = (props) => {
             )}
           </TabPane>
           {isVisibleRegister() && (
-            <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
+            <TabPane
+              tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
+              key='register'>
               <div
                 style={{
                   height: 'auto',

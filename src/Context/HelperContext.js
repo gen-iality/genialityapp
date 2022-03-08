@@ -1,4 +1,4 @@
-import React, { createContext, useEffect } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 import { useState } from 'react';
 import { firestore, fireRealtime, app } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../helpers/request';
@@ -65,7 +65,6 @@ export const HelperContextProvider = ({ children }) => {
   const imageforDefaultProfile = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
-  const [tabLogin, setTabLogin] = useState('2');
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
   const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
   const [gameData, setGameData] = useState('');
@@ -83,6 +82,34 @@ export const HelperContextProvider = ({ children }) => {
     organization: '',
     logo: '',
   });
+
+  const initialState = {
+    currentAuthScreen: 'login',
+  };
+
+  /**
+   * The authModalReducer function takes in a state and an action.
+   * It then checks the action type and returns a new modalAuth state depending on the action type
+   * @param {object} state - The current state of the reducer.
+   * @param {string} state.currentAuthScreen - login or register.
+   * @param {object} action - The action object that was dispatched.
+   * @param {String} action.type - showLogin or showRegister.
+   * @returns The state of the authModalReducer.
+   */
+  const authModalReducer = (state, action) => {
+    switch (action.type) {
+      case 'showLogin':
+        return { ...state, currentAuthScreen: 'login' };
+
+      case 'showRegister':
+        return { ...state, currentAuthScreen: 'register' };
+
+      default:
+        return state;
+    }
+  };
+
+  const [authModalState, authModalDispatch] = useReducer(authModalReducer, initialState);
 
   const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
     setcontrollerLoginVisible({
@@ -107,9 +134,6 @@ export const HelperContextProvider = ({ children }) => {
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
-  }
-  function handleChangeTabModal(tab) {
-    setTabLogin(tab);
   }
 
   /**
@@ -238,8 +262,8 @@ export const HelperContextProvider = ({ children }) => {
         changes.forEach((change) => {
           if (docChangesTypeAndEmailValidation(change)) {
             getlastSignInTime().then((userlastSignInTime) => {
-              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime && change.type=='modified' ) logout(true);
-              if(change.type=='removed')logout(true)
+              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime && change.type == 'modified') logout(true);
+              if (change.type == 'removed') logout(true);
             });
           }
         });
@@ -768,8 +792,8 @@ export const HelperContextProvider = ({ children }) => {
         obtenerContactos,
         typeModal,
         handleChangeTypeModal,
-        handleChangeTabModal,
-        tabLogin,
+        authModalState,
+        authModalDispatch,
         visibleLoginEvents,
         visibilityLoginEvents,
         reloadTemplatesCms,

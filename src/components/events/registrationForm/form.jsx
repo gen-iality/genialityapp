@@ -155,7 +155,9 @@ const FormRegister = ({
   const cEvent = UseEventContext();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
-  const { tabLogin, typeModal, eventPrivate, handleChangeTypeModal, setRegister } = useContext(HelperContext);
+  const { authModalState, typeModal, eventPrivate, handleChangeTypeModal, setRegister, authModalDispatch } = useContext(
+    HelperContext
+  );
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -247,7 +249,7 @@ const FormRegister = ({
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
-  }, [tabLogin, typeModal]);
+  }, [authModalState.currentAuthScreen, typeModal]);
 
   const showGeneralMessage = (values, error, date) => {
     setvalidateEventUser({
@@ -1068,7 +1070,7 @@ const FormRegister = ({
                           size='middle'
                           type='primary'
                           onClick={() => {
-                            handleChangeTabModal('1');
+                            authModalDispatch({ type: 'showLogin' });
                             setNotLoggedAndRegister(false);
                           }}>
                           {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
