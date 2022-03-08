@@ -22,7 +22,7 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import loadable from '@loadable/component';
 import { useCheckinUser } from 'helpers/HelperAuth';
 import WithEviusContext from 'Context/withContext';
-import { app, firestore } from 'helpers/firebase';
+import { DispatchMessageService } from '../../../Context/MessageService.tsx';
 
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
@@ -73,6 +73,10 @@ const Landing = (props) => {
   // console.log('🚀 ~ file: landing.jsx ~ line 72 ~ Landing ~ props', props);
 
   useEffect(() => {
+    // DispatchMessageService({
+    //   type: 'error',
+    //   msj: 'hola',
+    // });
     // props?.controllerMessage?.DispatchMessage('error', 'el usuario no se encuentra registrado');
   }, []);
 

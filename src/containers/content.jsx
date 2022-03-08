@@ -8,7 +8,6 @@ import WithFooter from '../components/withFooter';
 import { CurrentUserEventProvider } from '../Context/eventUserContext';
 import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
 import { CurrentUserProvider } from '../Context/userContext';
-import { ProviderMessageController } from '../Context/MessageService';
 import { SurveysProvider } from '../Context/surveysContext';
 
 import { HelperContextProvider } from '../Context/HelperContext';
@@ -139,16 +138,14 @@ const RouteContext = ({ component: Component, ...rest }) => (
             <AgendaContextProvider>
               <HelperContextProvider>
                 <SurveysProvider>
-                  <ProviderMessageController>
-                    <Layout>
-                      <Space direction='vertical' size={65}>
-                        <Header />
-                        <Component {...props} />
-                        <ModalAuth />
-                        <ModalNoRegister />
-                      </Space>
-                    </Layout>
-                  </ProviderMessageController>
+                  <Layout>
+                    <Space direction='vertical' size={65}>
+                      <Header />
+                      <Component {...props} />
+                      <ModalAuth />
+                      <ModalNoRegister />
+                    </Space>
+                  </Layout>
                 </SurveysProvider>
               </HelperContextProvider>
             </AgendaContextProvider>
@@ -171,23 +168,21 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
               <HelperContextProvider>
                 <SurveysProvider>
                   <AgendaContextProvider>
-                    <ProviderMessageController>
-                      <Layout>
-                        <Space direction='vertical' size={65}>
-                          <Header />
-                          {cUser.value ? (
-                            <Component {...props} />
-                          ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                            <>
-                              <ModalAuth />
-                              <ForbiddenPage />
-                            </>
-                          ) : (
-                            <Spin />
-                          )}
-                        </Space>
-                      </Layout>
-                    </ProviderMessageController>
+                    <Layout>
+                      <Space direction='vertical' size={65}>
+                        <Header />
+                        {cUser.value ? (
+                          <Component {...props} />
+                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                          <>
+                            <ModalAuth />
+                            <ForbiddenPage />
+                          </>
+                        ) : (
+                          <Spin />
+                        )}
+                      </Space>
+                    </Layout>
                   </AgendaContextProvider>
                 </SurveysProvider>
               </HelperContextProvider>
