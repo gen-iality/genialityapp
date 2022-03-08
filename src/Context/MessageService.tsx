@@ -6,26 +6,37 @@ const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho
 const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry'];
 
 interface PropsOptions {
-  type: 'success' | 'error' | 'warning' | 'info' | 'loading' | string;
+  type: 'success' | 'error' | 'warning' | 'info' | 'loading';
   msj: string;
   duration?: number;
+  action?: 'show' | 'hide' | 'destroy';
+  key?: string;
 }
 
 //TIPOS DE MENSAJES
 //success, error, warning, info, loading
 //api doc=> https://ant.design/components/message/
 
-export const DispatchMessageService = ({ type, msj, duration }: PropsOptions) => {
+export const DispatchMessageService = ({ type, msj, duration, action, key }: PropsOptions) => {
+
   try {
-    message.open({
-      content: MessageReducer({ type, msj }),
-      duration: duration || 3,
-      type: null as any,
-    });
+    switch (action) {
+      case 'show':
+        message.open({
+          content: MessageReducer({ type, msj }),
+          duration: duration || 3,
+          type: null as any,
+        });
+        break;
+
+      case 'destroy':
+        message.destroy(key);
+        break;
+    }
   } catch (error) {
     console.log(error);
   }
-};
+}
 
 const MessageReducer = ({ type, msj }: PropsOptions) => {
 
