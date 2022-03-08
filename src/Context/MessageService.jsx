@@ -3,6 +3,7 @@ import { createContext } from 'react';
 export const MessageController = createContext({});
 import { Card, message } from 'antd';
 import Meta from 'antd/lib/card/Meta';
+
 const styleMessage = {
   marginTop: '0px',
   marginBottom: '0px',
@@ -29,7 +30,7 @@ export const ProviderMessageController = ({ children }) => {
           ...styleMessage,
         },
         icon: WhatIsEmoji(type),
-        duration: 0,
+        /* duration: 3, //Por defecto viene en 3s */
       });
     } catch (e) {
       new Error(e);
@@ -65,9 +66,11 @@ const WhatIsEmoji = (type) => {
 
 const TypeMessageAnswer = (type, msj) => {
   let ramdon = Math.floor(Math.random() * PositiveAnswer.length);
+  let ramdonN = Math.floor(Math.random() * NegativeAnswer.length);
+
   if (type === 'success') {
     return PositiveAnswer[ramdon] + ', ' + msj;
   } else {
-    return NegativeAnswer[ramdon] + ', ' + msj;
+    return NegativeAnswer[ramdonN] + ', ' + msj;
   }
 };
