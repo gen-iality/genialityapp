@@ -17,7 +17,7 @@ class AddUser extends Component {
       user: {},
       emailError: false,
       valid: true,
-      tickets: []
+      tickets: [],
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -36,7 +36,7 @@ class AddUser extends Component {
     e.preventDefault();
     e.stopPropagation();
     const snap = {
-      properties: this.state.user
+      properties: this.state.user,
     };
 
     let message = {};
@@ -79,20 +79,20 @@ class AddUser extends Component {
           name={name}
           value={value}
           onChange={(e) => {
-            this.onChange(e, type);
+            this.onChange(e, type, name);
           }}
         />
       );
       if (type === 'boolean') {
         input = (
           <React.Fragment>
-            <Form.Item label={name} htmlFor={name} style={{textTransform: 'capitalize'}}>
+            <Form.Item label={name} htmlFor={name} style={{ textTransform: 'capitalize' }}>
               <Checkbox
                 name={name}
                 id={name}
                 checked={value}
                 onChange={(e) => {
-                  this.onChange(e, type);
+                  this.onChange(e, type, name);
                 }}
               />
             </Form.Item>
@@ -112,22 +112,20 @@ class AddUser extends Component {
             name={name}
             value={value}
             onChange={(e) => {
-              this.onChange(e, type);
+              this.onChange(e, type, name);
             }}>
-              <Option value={''}>Seleccione...</Option>
+            <Option value={''}>Seleccione...</Option>
             {input}
           </Select>
         );
       }
       return (
         <>
-          {
-            m.type !== 'boolean' && (
-              <Form.Item label={name} htmlFor={key} key={'l' + key} style={{textTransform: 'capitalize'}}>
-                {input}
-              </Form.Item>
-            )
-          }
+          {m.type !== 'boolean' && (
+            <Form.Item label={name} htmlFor={key} key={'l' + key} style={{ textTransform: 'capitalize' }}>
+              {input}
+            </Form.Item>
+          )}
         </>
       );
     });
@@ -135,8 +133,8 @@ class AddUser extends Component {
   };
 
   onChange = (e, type, nameS) => {
-    const { value } = type !== 'select' ? e.target : e;
-    const { name } = type !== 'select' ? e.target : nameS;
+    const value = type === 'select' || type === 'list' ? e : e.target.value;
+    const name = type !== 'select' || type !== 'list' ? nameS : e.target.name;
     type === 'boolean'
       ? this.setState((prevState) => {
           return { user: { ...this.state.user, [name]: !prevState.user[name] } };
@@ -176,9 +174,10 @@ class AddUser extends Component {
 
   render() {
     const { tickets } = this.state;
+
     return (
       <>
-        <Modal 
+        <Modal
           title={'Agregar invitado'}
           onCancel={this.props.handleModal}
           visible={this.props.modal}
@@ -194,9 +193,8 @@ class AddUser extends Component {
               <div className={'msg'}>
                 <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
               </div>
-            </>
-          ]}
-        >
+            </>,
+          ]}>
           <Form {...formLayout}>
             {Object.keys(this.state.user).length > 0 && this.renderForm()}
             {tickets.length > 0 && (
