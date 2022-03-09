@@ -10,6 +10,7 @@ import { toolbarEditor } from '../../helpers/constants';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -333,8 +334,11 @@ class Styles extends Component {
         self.setState({
           fileMsg: 'Imagen subida con exito',
         });
-
-        message.success(this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }));
+        DispatchMessageService({
+          type: 'success',
+          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -345,10 +349,11 @@ class Styles extends Component {
 
   //Se realiza una funcion asincrona submit para enviar los datos a la api
   async submit() {
-    const loadingSave = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere..</>,
+      key: 'loading',
+      msj: 'Por favor espere...',
+      action: 'show',
     });
     let info;
     const { eventId } = this.state;
@@ -366,34 +371,55 @@ class Styles extends Component {
 
       this.setState({ loading: false });
       if (info._id) {
-        message.destroy(loadingSave.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: this.props.intl.formatMessage({
+          msj: this.props.intl.formatMessage({
             id: 'toast.success',
             defaultMessage: 'Información guardada correctamente!',
           }),
+          action: 'show',
         });
       } else {
         this.setState({ msg: 'Cant Create', create: false });
-        message.destroy(loadingSave.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Error al guardar' }),
+          msj: this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Error al guardar' }),
+          action: 'show',
         });
       }
     } catch (error) {
-      message.error(this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }));
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+        action: 'show',
+      });
       if (error.response) {
         /* console.error(error.response); */
         const { status, data } = error.response;
         /* console.error('STATUS', status, status === 401); */
-        if (status === 401)
-          message.open({
-            type: 'error',
-            content: <>Error : {data?.message || status}</>,
+        if (status === 401) {
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
           });
-        else this.setState({ serverError: true, loader: false, errorData: data });
+          DispatchMessageService({
+            type: 'error',
+            msj: `Error: ${data?.message || status}`,
+            action: 'show',
+          });
+        } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
         /* console.error('Error', error.message); */
@@ -402,10 +428,14 @@ class Styles extends Component {
           errorData = error.request;
         }
         this.setState({ serverError: true, loader: false, errorData });
-        message.destroy(loadingSave.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: <> Error al guardar</>,
+          msj: 'Error al guardar.',
+          action: 'show',
         });
       }
     }
@@ -441,9 +471,17 @@ class Styles extends Component {
     this.setState({ loading: false });
 
     if (info._id) {
-      message.success(this.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }));
+      DispatchMessageService({
+        type: 'success',
+        msj: this.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+        action: 'show',
+      });
     } else {
-      message.warn(this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }));
+      DispatchMessageService({
+        type: 'warning',
+        msj: this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }),
+        action: 'show',
+      });
       this.setState({ msg: 'Cant Create', create: false });
     }
   }
@@ -511,7 +549,12 @@ class Styles extends Component {
                             code
                             copyable={{
                               text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
-                              onCopy: () => message.success('Color hexadecimal copiado'),
+                              onCopy: () =>
+                                DispatchMessageService({
+                                  type: 'success',
+                                  msj: 'Color hexadecimal copiado',
+                                  action: 'show',
+                                }),
                             }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
                           <Text
                             style={{ fontSize: '20px' }}
@@ -520,7 +563,12 @@ class Styles extends Component {
                               text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
                                 this.hexToRgb(this.state.styles[item.fieldColorName])?.g
                               },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
-                              onCopy: () => message.success('Color rgb copiado'),
+                              onCopy: () =>
+                                DispatchMessageService({
+                                  type: 'success',
+                                  msj: 'Color rgb copiado',
+                                  action: 'show',
+                                }),
                             }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
                             this.hexToRgb(this.state.styles[item.fieldColorName])?.g
                           },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>

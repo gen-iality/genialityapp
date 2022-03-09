@@ -532,7 +532,7 @@ class General extends Component {
 
     try {
       if (event._id) {
-        const info = await EventsApi.editOne('data, event._id');
+        const info = await EventsApi.editOne(data, event._id);
         this.props.updateEvent(info);
         self.setState({ loading: false });
         DispatchMessageService({
@@ -608,18 +608,24 @@ class General extends Component {
           try {
             await EventsApi.deleteOne(self.state.event._id);
             DispatchMessageService({
-              type: 'success',
               key: 'loading',
-              msj: 'Se eliminó la información correctamente!',
               action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
             window.location.replace(`${window.location.origin}/myprofile`);
           } catch (e) {
             DispatchMessageService({
-              type: 'error',
               key: 'loading',
-              msj: handleRequestError(e).message,
               action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };

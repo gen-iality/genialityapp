@@ -464,20 +464,26 @@ class AgendaEdit extends Component {
         }
       );
       DispatchMessageService({
-        type: 'success',
         key: 'loading',
-        msj: 'Información guardada correctamente!',
         action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Información guardada correctamente!',
+        action: 'show',
       });
     } catch (e) {
       this.setState((prevState) => ({
         isLoading: { ...prevState.isLoading, [name]: false },
       }));
       DispatchMessageService({
-        type: 'error',
         key: 'loading',
-        msj: handleRequestError(e).message,
         action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: handleRequestError(e).message,
+        action: 'show',
       });
     }
   };
@@ -500,17 +506,23 @@ class AgendaEdit extends Component {
         });
       }
       DispatchMessageService({
-        type: 'success',
         key: 'loading',
-        msj: 'Imagen cargada correctamente!',
         action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Imagen cargada correctamente!',
+        action: 'show',
       });
     } catch (e) {
       DispatchMessageService({
-        type: 'error',
         key: 'loading',
-        msj: handleRequestError(e).message,
         action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: handleRequestError(e).message,
+        action: 'show',
       });
     }
   };
@@ -573,9 +585,7 @@ class AgendaEdit extends Component {
         this.setState({ pendingChangesSave: false });
 
         DispatchMessageService({
-          type: 'success',
           key: 'loading',
-          msj: 'Información guardada correctamente!',
           action: 'destroy',
         });
 
@@ -585,12 +595,20 @@ class AgendaEdit extends Component {
         } else {
           this.props.history.push(`/eventadmin/${event._id}/agenda`);
         }
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Información guardada correctamente!',
+          action: 'show',
+        });
       } catch (e) {
         DispatchMessageService({
-          type: 'error',
           key: 'loading',
-          msj: handleRequestError(e).message,
           action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     }
@@ -784,19 +802,25 @@ class AgendaEdit extends Component {
             try {
               await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
               DispatchMessageService({
-                type: 'success',
                 key: 'loading',
-                msj: 'Se eliminó la información correctamente!',
                 action: 'destroy',
+              });
+              DispatchMessageService({
+                type: 'success',
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               self.setState({ redirect: true });
               self.props.history.push(`${self.props.matchUrl}`);
             } catch (e) {
               DispatchMessageService({
-                type: 'error',
                 key: 'loading',
-                msj: handleRequestError(e).message,
                 action: 'destroy',
+              });
+              DispatchMessageService({
+                type: 'error',
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };
