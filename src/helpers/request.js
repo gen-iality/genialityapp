@@ -803,7 +803,8 @@ export const FaqsApi = {
 
 export const RolAttApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/rolesattendees`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event}/rolesattendees?token=${token}`, true);
   },
   byEventRolsGeneral: async () => {
     let token = await GetTokenUserFirebase();
