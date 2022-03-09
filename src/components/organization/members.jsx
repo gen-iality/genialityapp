@@ -8,7 +8,7 @@ import { UserAddOutlined, DownloadOutlined, LoadingOutlined, PlusCircleOutlined 
 import { columns } from './tableColums/membersTableColumns';
 import ModalMembers from '../modal/modalMembers';
 import moment from 'moment';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import XLSX from 'xlsx';
 import Header from '../../antdComponents/Header';
 import ExportExcel from '../newComponent/ExportExcel';

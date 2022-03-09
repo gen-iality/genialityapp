@@ -1,7 +1,7 @@
 import { Button, Col, message, Modal, Row, Spin } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import HelperContext from '../../../Context/HelperContext';
+import HelperContext from '../../../context/HelperContext';
 import { useIntl } from 'react-intl';
 import {
   ArrowLeftOutlined,
@@ -11,14 +11,14 @@ import {
   ExclamationCircleOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import WithEviusContext from '../../../Context/withContext';
+import WithEviusContext from '../../../context/withContext';
 import EnVivo from '../../../EnVivo.svg';
 import Moment from 'moment-timezone';
-import { UseEventContext } from 'Context/eventContext';
+import { UseEventContext } from 'context/eventContext';
 import HumanGreetingIcon from '@2fd/ant-design-icons/lib/HumanGreeting';
 import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
-import AgendaContext from 'Context/AgendaContext';
-import { CurrentEventUserContext } from 'Context/eventUserContext';
+import AgendaContext from 'context/AgendaContext';
+import { CurrentEventUserContext } from 'context/eventUserContext';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useContext(HelperContext);

@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import { useIntl } from 'react-intl';
 import { Row, Card, Alert } from 'antd';
-import WithEviusContext from '../../../Context/withContext';
+import WithEviusContext from '../../../context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '../../../helpers/request';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import HelperContext from '../../../Context/HelperContext';
-import { UseSurveysContext } from '../../../Context/surveysContext';
+import HelperContext from '../../../context/HelperContext';
+import { UseSurveysContext } from '../../../context/surveysContext';
 import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
@@ -17,7 +17,7 @@ import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import { useCheckinUser } from 'helpers/HelperAuth';
-import { UseUserEvent } from 'Context/eventUserContext';
+import { UseUserEvent } from 'context/eventUserContext';
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {

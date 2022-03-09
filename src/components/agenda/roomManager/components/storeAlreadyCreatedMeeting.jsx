@@ -2,7 +2,7 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 import { getLiveStream } from 'adaptors/wowzaStreamingAPI';
 import { Form, Input, Button, Alert, message } from 'antd';
 import { useState, useContext } from 'react';
-import AgendaContext from 'Context/AgendaContext';
+import AgendaContext from 'context/AgendaContext';
 export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id }) {
   const [meetingValue, setMeetingValue] = useState();
   const { platform } = useContext(AgendaContext);

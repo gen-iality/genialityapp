@@ -2,7 +2,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import { Result, Grid } from 'antd';
 import React, { useContext } from 'react';
 import ReactPlayer from 'react-player';
-import HelperContext from '../../../Context/HelperContext';
+import HelperContext from '../../../context/HelperContext';
 
 const { useBreakpoint } = Grid;
 

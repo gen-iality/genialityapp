@@ -4,7 +4,7 @@ import MyAgenda from './myAgenda';
 import { userRequest } from './services';
 import { Spin } from 'antd';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 
 class AgendaIndepent extends Component {
   constructor(props) {

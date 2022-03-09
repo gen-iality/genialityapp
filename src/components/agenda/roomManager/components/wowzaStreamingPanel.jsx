@@ -29,11 +29,11 @@ import {
   ResetLiveStream,
 } from 'adaptors/wowzaStreamingAPI';
 import { realTimeviuschat } from '../../../../helpers/firebase';
-import { UseCurrentUser } from '../../../../Context/userContext';
-import AgendaContext from 'Context/AgendaContext';
+import { UseCurrentUser } from '../../../../context/userContext';
+import AgendaContext from 'context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';
 import Loading from '../../../profile/loading';
-import { CurrentEventContext } from 'Context/eventContext';
+import { CurrentEventContext } from 'context/eventContext';
 
 const WowzaStreamingPanel = ({
   meeting_id,
@@ -213,9 +213,7 @@ const WowzaStreamingPanel = ({
                   </Menu.Item>
                 </Menu>
               }>
-                <Button>
-                  Avanzado
-                </Button>
+              <Button>Avanzado</Button>
             </Dropdown>
           </Space>
         </Spin>

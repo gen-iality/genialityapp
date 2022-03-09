@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setTopBanner } from '../../../redux/topBanner/actions';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { useLocation, withRouter } from 'react-router-dom';
 import { NewsFeed } from '../../../helpers/request';
 import { Card, Row, Spin, Col, Space, Tag, Grid, Image, Typography } from 'antd';
@@ -94,25 +94,30 @@ const NoticiasDetails = (props) => {
                     ))
                   }>
                   <Meta
-                    title={noticia && 
-                      <div /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */>
-                        <ReactQuill 
-                          value={noticia.description_short}
-                          readOnly={true}
-                          className='hide-toolbar ql-toolbar'
-                          theme='bubble'
-                        />
-                      </div>}
+                    title={
+                      noticia && (
+                        <div /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */
+                        >
+                          <ReactQuill
+                            value={noticia.description_short}
+                            readOnly={true}
+                            className='hide-toolbar ql-toolbar'
+                            theme='bubble'
+                          />
+                        </div>
+                      )
+                    }
                     description={
-                      noticia && 
+                      noticia && (
                         <div /* dangerouslySetInnerHTML={{ __html: noticia.description_complete }} */>
-                          <ReactQuill 
+                          <ReactQuill
                             value={noticia.description_complete}
                             readOnly={true}
                             className='hide-toolbar ql-toolbar'
                             theme='bubble'
                           />
                         </div>
+                      )
                     }
                   />
                 </Card>

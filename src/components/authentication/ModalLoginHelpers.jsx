@@ -2,11 +2,11 @@ import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/i
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row, Spin } from 'antd';
 import React, { useState, useContext, useEffect } from 'react';
 import { EventsApi, UsersApi } from '../../helpers/request';
-import withContext from '../../Context/withContext';
-import { HelperContext } from '../../Context/HelperContext';
+import withContext from '../../context/withContext';
+import { HelperContext } from '../../context/HelperContext';
 import { useIntl } from 'react-intl';
 import { auth } from '../../helpers/firebase';
-import { UseEventContext } from 'Context/eventContext';
+import { UseEventContext } from 'context/eventContext';
 
 const { useBreakpoint } = Grid;
 

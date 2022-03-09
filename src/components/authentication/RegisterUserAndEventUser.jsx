@@ -10,8 +10,8 @@ import { SearchUserbyEmail, UsersApi } from 'helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from 'Context/eventContext';
-import HelperContext from 'Context/HelperContext';
+import { UseEventContext } from 'context/eventContext';
+import HelperContext from 'context/HelperContext';
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {

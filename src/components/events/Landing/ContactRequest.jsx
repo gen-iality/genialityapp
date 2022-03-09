@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Space, Tooltip } from 'antd';
 import { VideoCameraAddOutlined, UsergroupAddOutlined, CommentOutlined } from '@ant-design/icons';
-import { UseCurrentUser } from '../../../Context/userContext';
+import { UseCurrentUser } from '../../../context/userContext';
 
 const ContactRequest = (props) => {
   let cUser = UseCurrentUser();

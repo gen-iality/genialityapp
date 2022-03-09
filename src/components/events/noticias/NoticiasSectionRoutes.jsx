@@ -3,24 +3,24 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
- import NoticiasList from './NoticiasList';
+import NoticiasList from './NoticiasList';
 
- import {UseEventContext} from '../../../Context/eventContext'
+import { UseEventContext } from '../../../context/eventContext';
 import NoticiasDetailsConnect from './NoticiasDetails';
 
 const NoticiasSectionRoutes = () => {
-  let { path } = useRouteMatch();  
+  let { path } = useRouteMatch();
   let cEvent = UseEventContext();
-  
+
   if (!cEvent.value) return <h1>Cargando...</h1>;
   return (
     <Switch>
       <Route exact path={`${path}`}>
-        <NoticiasList/>
+        <NoticiasList />
       </Route>
       <Route path={`${path}/:id/detailsNoticia`}>
-       <NoticiasDetailsConnect />
-      </Route>      
+        <NoticiasDetailsConnect />
+      </Route>
     </Switch>
   );
 };

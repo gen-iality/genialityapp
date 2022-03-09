@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import WithEviusContext from '../../../Context/withContext';
-import { HelperContext } from '../../../Context/HelperContext';
+import WithEviusContext from '../../../context/withContext';
+import { HelperContext } from '../../../context/HelperContext';
 import { Result } from 'antd';
 
 const ImageComponent = (props) => {

@@ -17,9 +17,14 @@
     }
   },
   "rules": {
-    "react/prop-types": "on",
+    "react/prop-types": "off",
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "no-unused-vars": "on",
     "no-console": "on"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }

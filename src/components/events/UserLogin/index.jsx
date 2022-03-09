@@ -4,7 +4,7 @@ import UserLoginWithEmailPass from '../UserLoginWithEmailPass';
 
 import UserLoginRecoveryPass from '../UserLoginRecoveryPass';
 import UserOneTimeLoginLink from '../UserOneTimeLoginLink';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { SmileOutlined } from '@ant-design/icons';
 
 //import UserLoginRecoveryPass from "../UserLoginRecoveryPass"
@@ -53,13 +53,13 @@ class UserLogin extends Component {
     } = this.props;
 
     const { enabledOneTimeLoginLink, enabledWithEmailPass } = this.state;
-   
+
     return (
       <>
         {loading && <Spin />}
         {enabledWithEmailPass && (
           <>
-            {enabledFormLoginWithEmailPass && this.props.cEventUser.value==null && (
+            {enabledFormLoginWithEmailPass && this.props.cEventUser.value == null && (
               <UserLoginWithEmailPass
                 eventId={eventId}
                 FormTags={FormTags}
@@ -70,8 +70,12 @@ class UserLogin extends Component {
                 handleOpenRecoveryPass={handleOpenRecoveryPass}
               />
             )}
-            {!enabledFormRecoveryPass &&  this.props.cEventUser.value!==null  && <Result icon={<SmileOutlined />} title="Bienvenido..!" subTitle="Desde ahora puedes disfrutar de nuestro evento">
-              </Result>}
+            {!enabledFormRecoveryPass && this.props.cEventUser.value !== null && (
+              <Result
+                icon={<SmileOutlined />}
+                title='Bienvenido..!'
+                subTitle='Desde ahora puedes disfrutar de nuestro evento'></Result>
+            )}
 
             {enabledFormRecoveryPass && (
               <UserLoginRecoveryPass

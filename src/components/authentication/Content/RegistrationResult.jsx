@@ -3,8 +3,8 @@ import { Result, Row, Space, Typography, message, Alert, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
 import { app } from 'helpers/firebase';
-import { UseUserEvent } from 'Context/eventUserContext';
-import HelperContext from 'Context/HelperContext';
+import { UseUserEvent } from 'context/eventUserContext';
+import HelperContext from 'context/HelperContext';
 import { useIntl } from 'react-intl';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 

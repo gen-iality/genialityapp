@@ -5,7 +5,7 @@ import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpe
 import Moment from 'moment';
 import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 
 const { Meta } = Card;
 const { Paragraph, Text, Title } = Typography;

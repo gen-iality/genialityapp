@@ -12,7 +12,7 @@ import { getEventCompany } from '../../empresas/services.js';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import Feedback from './feedback.jsx';
-import { UseEventContext } from '../../../Context/eventContext';
+import { UseEventContext } from '../../../context/eventContext';
 
 const FeriasDetail = (props) => {
   const [companyDetail, setCompanyDetail] = useState();
@@ -30,7 +30,8 @@ const FeriasDetail = (props) => {
     colorFondo.replace('#', '') +
     '/' +
     colorTexto.replace('#', '') +
-    '?text='+cEvent.value.name;
+    '?text=' +
+    cEvent.value.name;
 
   const logoPlaceHolder =
     'https://via.placeholder.com/200/' + colorFondo.replace('#', '') + '/' + colorTexto.replace('#', '') + '?text=Logo';
@@ -174,31 +175,33 @@ const FeriasDetail = (props) => {
                 )}
               </div>
             </TabPane>
-          )}         
-          {visibleTab && <TabPane tab='Galería' key='4'>
-            <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
-              <Row gutter={[16, 16]}>
-                {companyDetail && companyDetail.gallery.length > 0 ? (
-                  companyDetail.gallery.map((imagen, index) => (
-                    <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} key={'gallery-' + index}>
-                      <Card
-                        bodyStyle={{ padding: '0px', margin: '0px' }}
-                        bordered={false}
-                        cover={
-                          <Image
-                            alt={'Imagen' + index + '-Galeria-' + companyDetail.name.replace(/\s+/g, '-')}
-                            src={imagen.image}
-                          />
-                        }
-                        style={{ width: '100%', height: '100%' }}></Card>
-                    </Col>
-                  ))
-                ) : (
-                  <Feedback message='No hay imágenes' />
-                )}
-              </Row>
-            </div>
-          </TabPane>}
+          )}
+          {visibleTab && (
+            <TabPane tab='Galería' key='4'>
+              <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
+                <Row gutter={[16, 16]}>
+                  {companyDetail && companyDetail.gallery.length > 0 ? (
+                    companyDetail.gallery.map((imagen, index) => (
+                      <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} key={'gallery-' + index}>
+                        <Card
+                          bodyStyle={{ padding: '0px', margin: '0px' }}
+                          bordered={false}
+                          cover={
+                            <Image
+                              alt={'Imagen' + index + '-Galeria-' + companyDetail.name.replace(/\s+/g, '-')}
+                              src={imagen.image}
+                            />
+                          }
+                          style={{ width: '100%', height: '100%' }}></Card>
+                      </Col>
+                    ))
+                  ) : (
+                    <Feedback message='No hay imágenes' />
+                  )}
+                </Row>
+              </div>
+            </TabPane>
+          )}
         </Tabs>
 
         {/* componente  de Productos */}

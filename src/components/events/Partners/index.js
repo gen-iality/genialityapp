@@ -3,13 +3,12 @@ import { Card } from 'antd';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import PartnersList from '../PartnersList';
 import PartnersDetail from '../PartnersDetail';
-import {UseEventContext} from '../../../Context/eventContext';
+import { UseEventContext } from '../../../context/eventContext';
 
 export default function Partners() {
-
   let cEvent = UseEventContext();
 
-  const [companies, loadingCompanies] = useGetEventCompanies(cEvent.value&&cEvent.value._id || null);
+  const [companies, loadingCompanies] = useGetEventCompanies((cEvent.value && cEvent.value._id) || null);
   const [viewPartnerDetail, setViewPartnerDetail] = useState(false);
   const [partnerDetailSelected, setPartnerDetailSelected] = useState({});
 
@@ -29,7 +28,8 @@ export default function Partners() {
   }, []);
 
   return (
-    <Card title={'Patrocinadores'}>{/* Partners */}
+    <Card title={'Patrocinadores'}>
+      {/* Partners */}
       {viewPartnerDetail ? (
         <PartnersDetail company={partnerDetailSelected} handleClosePartnerDetail={handleClosePartnerDetail} />
       ) : (

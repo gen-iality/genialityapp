@@ -6,7 +6,7 @@ import App from './App/App';
 import { unregister as unregisterServiceWorker } from './registerServiceWorker';
 import { IntlProvider } from 'react-intl';
 import localeData from './helpers/locale.json';
-import { CurrentUserProvider } from 'Context/userContext';
+import { CurrentUserProvider } from 'context/userContext';
 import sentry from './helpers/sentry';
 
 const language = (navigator.languages && navigator.languages[0]) || navigator.language;

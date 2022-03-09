@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Badge, Drawer, Space } from 'antd';
 import { MessageOutlined, PieChartOutlined } from '@ant-design/icons';
 import SocialZone from '../../../socialZone/socialZone';
-import { UseEventContext } from '../../../../Context/eventContext';
+import { UseEventContext } from '../../../../context/eventContext';
 import { connect } from 'react-redux';
 
 const MenuTabletsSocialZone = (props) => {

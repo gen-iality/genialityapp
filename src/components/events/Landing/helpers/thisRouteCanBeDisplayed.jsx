@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { Button, Result, Typography } from 'antd';
-import { UseUserEvent } from '../../../../Context/eventUserContext';
-import { UseEventContext } from '../../../../Context/eventContext';
-import HelperContext from '../../../../Context/HelperContext';
+import { UseUserEvent } from '../../../../context/eventUserContext';
+import { UseEventContext } from '../../../../context/eventContext';
+import HelperContext from '../../../../context/HelperContext';
 import Loading from '../../../profile/loading';
 import { useIntl } from 'react-intl';
 

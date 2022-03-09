@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { Button, Typography, Space, Row, Col, Card, Tabs } from 'antd';
-import AgendaContext from 'Context/AgendaContext';
-// import { CurrentEventContext } from 'Context/eventContext';
-import { UseCurrentUser } from '../../../../Context/userContext';
+import AgendaContext from 'context/AgendaContext';
+// import { CurrentEventContext } from 'context/eventContext';
+import { UseCurrentUser } from '../../../../context/userContext';
 
 const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
   const vimeoUrl = 'https://vimeo.com/';

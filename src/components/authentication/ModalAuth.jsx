@@ -7,17 +7,17 @@ import {
   MailOutlined,
 } from '@ant-design/icons';
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
-import withContext from '../../Context/withContext';
-import { HelperContext } from '../../Context/HelperContext';
+import withContext from '../../context/withContext';
+import { HelperContext } from '../../context/HelperContext';
 import { app } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
-import { UseEventContext } from 'Context/eventContext';
+import { UseEventContext } from 'context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
 import { isHome, useEventArkmed } from 'helpers/helperEvent';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
-import { UseCurrentUser } from 'Context/userContext';
+import { UseCurrentUser } from 'context/userContext';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;

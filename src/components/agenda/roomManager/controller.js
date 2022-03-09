@@ -3,7 +3,7 @@ import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert, Select, F
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { getColumnSearchProps } from '../../speakers/getColumnSearch';
 import { firestore } from '../../../helpers/firebase';
-import AgendaContext from '../../../Context/AgendaContext';
+import AgendaContext from '../../../context/AgendaContext';
 import { Suspense } from 'react';
 
 const Header = lazy(() => import('../../../antdComponents/Header'));
@@ -13,15 +13,15 @@ export default function RoomController(props) {
   const { games, avalibleGames } = useContext(AgendaContext);
   const { handleTabsController, handleGamesSelected } = props;
 
-  const [ listOfGames, setListOfGames ] = useState([]);
-  const [ updateMensaje, setUpdatedMensaje ] = useState(false);
-  let [ columnsData, setColumnsData ] = useState({});
-  const [ showavailableGames, setShowavailableGames ] = useState(false);
-  const [ isLoading, setIsLoading ] = useState(true);
+  const [listOfGames, setListOfGames] = useState([]);
+  const [updateMensaje, setUpdatedMensaje] = useState(false);
+  let [columnsData, setColumnsData] = useState({});
+  const [showavailableGames, setShowavailableGames] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setShowavailableGames(games)
-  }, [ games ]);
+    setShowavailableGames(games);
+  }, [games]);
 
   async function getGamesData() {
     let gamesData = [];
@@ -47,7 +47,7 @@ export default function RoomController(props) {
 
   useEffect(() => {
     getGamesData();
-  }, [ avalibleGames ]);
+  }, [avalibleGames]);
 
   const columns = [
     {
@@ -106,7 +106,6 @@ export default function RoomController(props) {
       <Card>
         <Row style={{ padding: '8px 0px' }}>
           <Col span={24}>
-
             <Form.Item label={'Habilitar Juegos'}>
               <Switch
                 checked={games}
@@ -115,7 +114,6 @@ export default function RoomController(props) {
                 }}
               />
             </Form.Item>
-
           </Col>
         </Row>
 
@@ -140,7 +138,6 @@ export default function RoomController(props) {
                 }}
               />
             )}
-
 
             <Suspense fallback={<div>Cargando...</div>}>
               <Header

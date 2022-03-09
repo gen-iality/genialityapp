@@ -1,7 +1,7 @@
 import { Card, Space, Col, Row, Result, PageHeader } from 'antd';
 import React, { Fragment, useContext } from 'react';
-import { UseEventContext } from '../../../Context/eventContext';
-import { HelperContext } from '../../../Context/HelperContext';
+import { UseEventContext } from '../../../context/eventContext';
+import { HelperContext } from '../../../context/HelperContext';
 import { useState } from 'react';
 import VideoCard from '../../shared/videoCard';
 import Feedback from '../ferias/feedback';
@@ -11,7 +11,6 @@ const Videos = () => {
   let { activitiesEvent } = useContext(HelperContext);
   const [existActivity, setexistActivity] = useState(0);
 
-  
   function ExistvideoInActivity() {
     activitiesEvent &&
       activitiesEvent.map((activity) => {

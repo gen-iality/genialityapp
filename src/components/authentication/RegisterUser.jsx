@@ -5,7 +5,7 @@ import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { app } from 'helpers/firebase';
 import { useContext } from 'react';
-import HelperContext from 'Context/HelperContext';
+import HelperContext from 'context/HelperContext';
 import { useIntl } from 'react-intl';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
@@ -112,10 +112,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       } else {
         handleChangeTypeModal('loginError');
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err);
       message.error('Ha ocurrido un error');
-    }   
+    }
     message.destroy(loading.key);
   };
   return (

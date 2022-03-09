@@ -3,7 +3,7 @@ import { Card, Space, Typography, Badge } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import './videoCard.css';
-import { UseEventContext } from '../../Context/eventContext';
+import { UseEventContext } from '../../context/eventContext';
 
 import ReactPlayer from 'react-player';
 import EventImage from '../../eventimage.png';

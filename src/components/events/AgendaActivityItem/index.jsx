@@ -13,7 +13,7 @@ import AccessPoint from '@2fd/ant-design-icons/lib/AccessPoint';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
-import { UseEventContext } from 'Context/eventContext';
+import { UseEventContext } from 'context/eventContext';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import WithEviusContext from '../../../Context/withContext';
+import WithEviusContext from '../../../context/withContext';
 import ImageComponentwithContext from './ImageComponent';
-import { HelperContext } from '../../../Context/HelperContext';
+import { HelperContext } from '../../../context/HelperContext';
 import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
-import AgendaContext from 'Context/AgendaContext';
+import AgendaContext from 'context/AgendaContext';
 
 const RenderComponent = (props) => {
   let tabsdefault = {

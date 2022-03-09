@@ -3,8 +3,8 @@ import { Badge, Col, Menu, Row } from 'antd';
 import { useRouteMatch, Link } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
-import { UseEventContext } from '../../../../Context/eventContext';
-import { HelperContext } from '../../../../Context/HelperContext';
+import { UseEventContext } from '../../../../context/eventContext';
+import { HelperContext } from '../../../../context/HelperContext';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 
@@ -22,7 +22,9 @@ const MenuEvent = ({ isMobile }) => {
             !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
               //icono personalizado
-              if (!event.itemsMenu[key].name || !event.itemsMenu[key].section){return <></>}
+              if (!event.itemsMenu[key].name || !event.itemsMenu[key].section) {
+                return <></>;
+              }
 
               let IconoComponente = iconComponents[event.itemsMenu[key].icon];
 
@@ -73,8 +75,10 @@ const MenuEvent = ({ isMobile }) => {
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
                 let IconoComponente = iconComponents[event.itemsMenu[key].icon];
-                if (!event.itemsMenu[key].name || !event.itemsMenu[key].section){return <></>}
-                
+                if (!event.itemsMenu[key].name || !event.itemsMenu[key].section) {
+                  return <></>;
+                }
+
                 return (
                   <Menu.Item
                     style={{ position: 'relative', color: event.styles.textMenu }}

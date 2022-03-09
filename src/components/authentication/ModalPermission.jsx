@@ -2,8 +2,8 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Grid, Typography, Button } from 'antd';
 import React, { useContext } from 'react';
 import FormComponent from '../events/registrationForm/form';
-import withContext from '../../Context/withContext';
-import { HelperContext } from '../../Context/HelperContext';
+import withContext from '../../context/withContext';
+import { HelperContext } from '../../context/HelperContext';
 
 import { useIntl } from 'react-intl';
 const { useBreakpoint } = Grid;

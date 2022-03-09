@@ -4,7 +4,7 @@ import CreatePost from './createPost';
 import ListWall from './listWall';
 
 import { saveFirebase } from './helpers';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
 
@@ -13,21 +13,20 @@ class Wall extends Component {
     super(props);
     this.state = {
       dataPost: undefined,
-      user: undefined
+      user: undefined,
     };
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     this.props.setVirtualConference(false);
     if (this.props.cEventUser.value) {
       this.setState({ user: this.props.cEventUser.value });
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.setVirtualConference(true);
   }
- 
 
   // addPosts = (post) => {
   //   this.setState({ dataPost: [post, ...this.state.dataPost] });
@@ -46,10 +45,10 @@ class Wall extends Component {
     return true;
   };
 
-  increaseLikes = async (postId,  userId) => {
+  increaseLikes = async (postId, userId) => {
     var updatedPost = await saveFirebase.increaseLikes(postId, this.props.cEvent.value._id, userId);
     //se actualiza local
-   /* updatedPost = this.state.dataPost.map(function(value) {
+    /* updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;
     });
    // this.setState({ dataPost: updatedPost });
@@ -72,7 +71,7 @@ class Wall extends Component {
   };
 
   render() {
-    const { currentCommet} = this.state;
+    const { currentCommet } = this.state;
     return (
       <div>
         {/*Crear un nuevo post*/}
@@ -82,14 +81,13 @@ class Wall extends Component {
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                marginBottom: '20px'
+                marginBottom: '20px',
               }}>
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-              <CreatePost event={event} addPosts={this.addPosts}  />
+                <CreatePost event={event} addPosts={this.addPosts} />
                 <ListWall
                   createComment={this.createComment}
                   key={this.state.keyList}
-                
                   deletePost={this.deletePost}
                   increaseLikes={this.increaseLikes}
                 />
@@ -100,13 +98,11 @@ class Wall extends Component {
       </div>
     );
   }
-
-  
 }
 
 const mapDispatchToProps = {
-  setVirtualConference  
+  setVirtualConference,
 };
 
-let WallWithContext = withContext(Wall)
-export default  connect(null,mapDispatchToProps) (WallWithContext);
+let WallWithContext = withContext(Wall);
+export default connect(null, mapDispatchToProps)(WallWithContext);

@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Tag, Button, message, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
-import {
-  ExclamationCircleOutlined,
-  DeleteOutlined,
-  DownloadOutlined,
-  ReloadOutlined,
-} from '@ant-design/icons';
+import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import moment from 'moment';
 import { getColumnSearchProps } from 'components/speakers/getColumnSearch';
@@ -13,7 +8,7 @@ import Header from 'antdComponents/Header';
 import Table from 'antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
 import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
-import { UseEventContext } from '../../../Context/eventContext';
+import { UseEventContext } from '../../../context/eventContext';
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
 import Account from '@2fd/ant-design-icons/lib/Account';
 
@@ -147,26 +142,25 @@ const ChatExport = ({ eventId, event }) => {
   function getBlocketdUsers() {
     let list = [];
     let path = cEvent.value._id + '_event_attendees/';
-    
+
     setLoading(true);
     firestore
-    .collection(path)
-    .where('blocked', '==', true)
-    .get()
-    .then((res) => {
-      res.forEach((user) => {
-        let newUser = {
-          name: user.data().user.names,
-          email: user.data().user.email,
-          idparticipant: user.data()._id,
-          blocked: user.data().blocked,
-        }
-        list.push(newUser)
-      });
-      setlistUsersBlocked(list)
-      setLoading(false);
-    })
-    .catch;
+      .collection(path)
+      .where('blocked', '==', true)
+      .get()
+      .then((res) => {
+        res.forEach((user) => {
+          let newUser = {
+            name: user.data().user.names,
+            email: user.data().user.email,
+            idparticipant: user.data()._id,
+            blocked: user.data().blocked,
+          };
+          list.push(newUser);
+        });
+        setlistUsersBlocked(list);
+        setLoading(false);
+      }).catch;
   }
 
   function deleteAllChat() {
@@ -254,15 +248,15 @@ const ChatExport = ({ eventId, event }) => {
 
   function blockUser(item) {
     let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
-    
-    let searchDataUser = new Promise ((resolve, reject) => {
+
+    let searchDataUser = new Promise((resolve, reject) => {
       firestore
-      .doc(path)
-      .get()
-      .then((res) => {
-        resolve({status: 200, data: res.data().blocked})
-      });
-    })
+        .doc(path)
+        .get()
+        .then((res) => {
+          resolve({ status: 200, data: res.data().blocked });
+        });
+    });
 
     searchDataUser.then((res) => {
       let userBlocked = res.data;
@@ -306,11 +300,11 @@ const ChatExport = ({ eventId, event }) => {
           onHandlerBlock();
         },
       });
-    })
+    });
   }
 
   return (
-    <Tabs defaultActiveKey='1' onChange={getChat, getBlocketdUsers}>
+    <Tabs defaultActiveKey='1' onChange={(getChat, getBlocketdUsers)}>
       <TabPane tab='Gestión de chats del evento' key='1'>
         {/* <Header title={'Gestión de chats del evento'} /> */}
 
@@ -351,7 +345,13 @@ const ChatExport = ({ eventId, event }) => {
           setColumnsData={setColumnsData}
         />
       </TabPane>
-      <TabPane tab={<Badge count={listUsersBlocked.length} offset={[8, 0]}>Usuarios bloqueados</Badge>} key='2'>
+      <TabPane
+        tab={
+          <Badge count={listUsersBlocked.length} offset={[8, 0]}>
+            Usuarios bloqueados
+          </Badge>
+        }
+        key='2'>
         <Table
           header={columnsUserBlocked}
           list={listUsersBlocked}

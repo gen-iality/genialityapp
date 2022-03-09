@@ -9,7 +9,7 @@ import { Actions } from '../../helpers/request';
 import Moment from 'moment';
 import FormComponent from '../events/registrationForm/form';
 import { message, Modal } from 'antd';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -132,7 +132,10 @@ class UserModal extends Component {
           try {
             let token = await GetTokenUserFirebase();
             !self.props.byActivity &&
-              (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, `${user._id}?token=${token}`));
+              (await Actions.delete(
+                `/api/events/${self.props.cEvent.value?._id}/eventusers`,
+                `${user._id}?token=${token}`
+              ));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
             message.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
@@ -318,7 +321,7 @@ class UserModal extends Component {
       this.props.handleModal();
     } else {
       message.error('Error al guardar el usuario');
-      console.log(resp)
+      console.log(resp);
     }
 
     this.setState({ loadingregister: false });

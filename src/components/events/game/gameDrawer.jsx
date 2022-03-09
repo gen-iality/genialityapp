@@ -4,7 +4,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import Game from '../game';
 import GameRanking from '../../events/game/gameRanking';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 
 function GameDrawer(props) {
   const { cHelper, cEvent } = props;

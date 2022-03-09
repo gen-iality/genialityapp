@@ -4,7 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal, message } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
-import HelperContext from '../../Context/HelperContext';
+import HelperContext from '../../context/HelperContext';
 
 const { confirm } = Modal;
 

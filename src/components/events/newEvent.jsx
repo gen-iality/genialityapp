@@ -9,7 +9,7 @@ import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import Tranmitir from './newEvent/transmitir';
 /*vista de resultado de la creacion de un evento */
-import { cNewEventContext } from '../../Context/newEventContext';
+import { cNewEventContext } from '../../context/newEventContext';
 import Service from '../../components/agenda/roomManager/service';
 import { firestore } from '../../helpers/firebase';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
@@ -145,7 +145,7 @@ class NewEvent extends Component {
           hideBtnDetailAgenda: true,
           loader_page: 'no',
           data_loader_page: null,
-          show_title: true
+          show_title: true,
         },
       };
       const newMenu = {

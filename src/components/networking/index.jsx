@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';/* 
+import React, { Component, Fragment } from 'react'; /* 
 import 'react-toastify/dist/ReactToastify.css'; */
 import {
   Row,
@@ -28,7 +28,7 @@ import { formatDataToString } from '../../helpers/utils';
 import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../helpers/netWorkingFunctions';
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -569,9 +569,7 @@ class ListEventUser extends Component {
                           bordered={true}>
                           <Meta
                             avatar={
-                              <Avatar
-                                size={65}
-                                src={users.properties['picture'] ? users.properties['picture'] : ''}>
+                              <Avatar size={65} src={users.properties['picture'] ? users.properties['picture'] : ''}>
                                 {!users.properties['picture'] && users.properties.names
                                   ? users.properties.names.charAt(0).toUpperCase()
                                   : users.properties.names}
@@ -678,8 +676,7 @@ class ListEventUser extends Component {
                                                   );
                                                   notification['success']({
                                                     message: 'Correcto!',
-                                                    description:
-                                                      'Se ha enviado la solicitud de amistad correctamente',
+                                                    description: 'Se ha enviado la solicitud de amistad correctamente',
                                                   });
 
                                                   for (let i = 0; i < this.state.users.length; i++) {
@@ -730,17 +727,14 @@ class ListEventUser extends Component {
                   </Row>
 
                   {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                  {!this.state.loading &&
-                    users.length > 0 &&
-                    pageOfItems.length > 0 &&
-                    this.props.cEventUser.value && (
-                      <Pagination
-                        updatetable={this.state.updatetable}
-                        items={users}
-                        change={this.state.changeItem}
-                        onChangePage={this.onChangePage}
-                      />
-                    )}
+                  {!this.state.loading && users.length > 0 && pageOfItems.length > 0 && this.props.cEventUser.value && (
+                    <Pagination
+                      updatetable={this.state.updatetable}
+                      items={users}
+                      change={this.state.changeItem}
+                      onChangePage={this.onChangePage}
+                    />
+                  )}
                   {!this.state.loading && users.length == 0 && this.props.cEventUser.value && (
                     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
                       <Card style={{ textAlign: 'center' }}>{'No existen usuarios'}</Card>

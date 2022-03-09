@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { UseEventContext } from '../../Context/eventContext';
+import { UseEventContext } from '../../context/eventContext';
 import { Button, Divider, PageHeader, Space, Typography } from 'antd';
 import Moment from 'moment';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import { HelperContext } from '../../Context/HelperContext';
-import { UseUserEvent } from '../../Context/eventUserContext';
-import { UseCurrentUser } from '../../Context/userContext';
+import { HelperContext } from '../../context/HelperContext';
+import { UseUserEvent } from '../../context/eventUserContext';
+import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useIntl } from 'react-intl';
 

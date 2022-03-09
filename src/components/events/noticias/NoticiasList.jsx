@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { withRouter } from 'react-router-dom';
 import { useState } from 'react';
 import { NewsFeed } from '../../../helpers/request';
@@ -89,7 +89,12 @@ const NoticiasList = (props) => {
                         />
                       }
                       actions={[
-                        <Link to={{pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`, state: {id: news._id}}} key={'viewMore'}>
+                        <Link
+                          to={{
+                            pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
+                            state: { id: news._id },
+                          }}
+                          key={'viewMore'}>
                           Ver más
                         </Link>,
                       ]}>
@@ -126,7 +131,12 @@ const NoticiasList = (props) => {
                       />
                     }
                     actions={[
-                      <Link to={{pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`, state: {id: news._id}}} key={'viewMore'}>
+                      <Link
+                        to={{
+                          pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
+                          state: { id: news._id },
+                        }}
+                        key={'viewMore'}>
                         Ver más
                       </Link>,
                     ]}>

@@ -51,7 +51,7 @@ import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
-import AgendaContext from '../../Context/AgendaContext';
+import AgendaContext from '../../context/AgendaContext';
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 const { Text } = Typography;

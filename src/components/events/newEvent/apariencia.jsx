@@ -3,7 +3,7 @@ import ImgInput from '../../shared/imageInput';
 import { Row, Col, Switch, message } from 'antd';
 import { Actions } from '../../../helpers/request';
 import Axios from 'axios';
-import { useContextNewEvent } from '../../../Context/newEventContext';
+import { useContextNewEvent } from '../../../context/newEventContext';
 
 function Apariencia(props) {
   const { saveImageEvent, imageEvents, onChangeCheck, valueInputs } = useContextNewEvent();
@@ -22,7 +22,7 @@ function Apariencia(props) {
   };
   //Cambio en el input de imagen
   const changeImg = async (files, indexImage) => {
-    if(files) {
+    if (files) {
       const file = files[0];
       const url = '/api/files/upload',
         path = [],
@@ -35,11 +35,11 @@ function Apariencia(props) {
             if (image) path.push(image);
           });
         });
-  
+
         // eslint-disable-next-line no-unused-vars
         await Axios.all(uploaders).then((data) => {
           saveImageEvent(path[0], indexImage);
-  
+
           message.success('Imagen cargada correctamente...');
         });
       } else {

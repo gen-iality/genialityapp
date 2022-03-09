@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
-import { HelperContext } from '../../../Context/HelperContext';
-import { UseCurrentUser } from '../../../Context/userContext';
+import { HelperContext } from '../../../context/HelperContext';
+import { UseCurrentUser } from '../../../context/userContext';
 import UsersCard from '../../shared/usersCard';
 
 const AttendeList = function(props) {
