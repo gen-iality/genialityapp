@@ -8,7 +8,6 @@ import Creatable from 'react-select';
 import Loading from '../profile/loading';
 import {
   Tabs,
-  message,
   Row,
   Col,
   Checkbox,
@@ -52,6 +51,8 @@ import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
 import AgendaContext from '../../context/AgendaContext';
+import { DispatchMessageService } from '../../context/MessageService';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 const { Text } = Typography;
@@ -368,10 +369,11 @@ class AgendaEdit extends Component {
   };
   //FN para los select que permiten crear opción
   handleCreate = async (value, name) => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras guarda la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras guarda la información...',
+      action: 'show',
     });
     try {
       this.setState({ isLoading: { ...this.isLoading, [name]: true } });
@@ -396,28 +398,31 @@ class AgendaEdit extends Component {
             }));
         }
       );
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
         type: 'success',
-        content: <> Información guardada correctamente!</>,
+        key: 'loading',
+        msj: 'Información guardada correctamente!',
+        action: 'destroy',
       });
     } catch (e) {
       this.setState((prevState) => ({
         isLoading: { ...prevState.isLoading, [name]: false },
       }));
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
         type: 'error',
-        content: handleRequestError(e).message,
+        key: 'loading',
+        msj: handleRequestError(e).message,
+        action: 'destroy',
       });
     }
   };
   //FN manejo de imagen input, la carga al sistema y la guarda en base64
   changeImg = async (files) => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras carga la imagen..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras carga la imagen...',
+      action: 'show',
     });
     try {
       const file = files[0];
@@ -429,16 +434,18 @@ class AgendaEdit extends Component {
           errImg: 'Only images files allowed. Please try again :)',
         });
       }
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
         type: 'success',
-        content: <> Imagen cargada correctamente!</>,
+        key: 'loading',
+        msj: 'Imagen cargada correctamente!',
+        action: 'destroy',
       });
     } catch (e) {
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
         type: 'error',
-        content: handleRequestError(e).message,
+        key: 'loading',
+        msj: handleRequestError(e).message,
+        action: 'destroy',
       });
     }
   };
@@ -453,10 +460,11 @@ class AgendaEdit extends Component {
   //Envío de información
 
   submit = async () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se guarda la información...',
+      action: 'show',
     });
     const validation = this.validForm();
     if (validation) {
@@ -498,17 +506,19 @@ class AgendaEdit extends Component {
         //Se cambia el estado a pendingChangesSave encargado de detectar cambios pendientes en la fecha/hora sin guardar
         this.setState({ pendingChangesSave: false });
 
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente!</>,
+          key: 'loading',
+          msj: 'Información guardada correctamente!',
+          action: 'destroy',
         });
         this.props.history.push(`/eventadmin/${event._id}/agenda`);
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          key: 'loading',
+          msj: handleRequestError(e).message,
+          action: 'destroy',
         });
       }
     }
@@ -683,10 +693,11 @@ class AgendaEdit extends Component {
   //FN para eliminar la actividad
   remove = async () => {
     let self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras borra la información...',
+      action: 'show',
     });
     if (self.state.activity_id) {
       confirm({
@@ -700,18 +711,20 @@ class AgendaEdit extends Component {
           const onHandlerRemove = async () => {
             try {
               await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                key: 'loading',
+                msj: 'Se eliminó la información correctamente!',
+                action: 'destroy',
               });
               self.setState({ redirect: true });
               self.props.history.push(`${self.props.matchUrl}`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                key: 'loading',
+                msj: handleRequestError(e).message,
+                action: 'destroy',
               });
             }
           };
@@ -744,7 +757,11 @@ class AgendaEdit extends Component {
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
       title.map((item) => {
-        message.warning(item);
+        DispatchMessageService({
+          type: 'warning',
+          msj: item,
+          action: 'show',
+        });
       });
     } else return true;
   };
@@ -815,10 +832,20 @@ class AgendaEdit extends Component {
     const activity_id = this.context.activityEdit;
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
-      if (result) message.success(result.message);
+      if (result) {
+        DispatchMessageService({
+          type: 'success',
+          msj: result.message,
+          action: 'show',
+        });
+      }
       return result;
     } catch (err) {
-      message.error('Error Config', err);
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error en la configuración!',
+        action: 'show',
+      });
     }
   };
 
@@ -908,6 +935,8 @@ class AgendaEdit extends Component {
             save
             form
             remove={this.remove}
+            saveName={this.props.location.state.edit ? '' : 'Crear'}
+            saveNameIcon
             edit={this.props.location.state.edit}
             extra={
               <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>

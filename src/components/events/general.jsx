@@ -19,7 +19,6 @@ import {
   Card,
   Row,
   Col,
-  message,
   Tabs,
   Checkbox,
   Typography,
@@ -39,6 +38,7 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
+import { DispatchMessageService } from '../../context/MessageService';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -170,12 +170,13 @@ class General extends Component {
       // Error
       if (error.response) {
         const { status, data } = error.response;
-        if (status === 401)
-          message.open({
+        if (status === 401) {
+          DispatchMessageService({
             type: 'error',
-            content: <>Error : {data?.message || status}</>,
+            msj: `Error: ${data?.message || status}`,
+            action: 'show',
           });
-        else this.setState({ serverError: true, loader: false });
+        } else this.setState({ serverError: true, loader: false });
       } else {
         this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } });
       }
@@ -250,7 +251,11 @@ class General extends Component {
     if (valid) {
       this.setState({ valid: !valid, error });
     } else {
-      message.error('Hubo un error, completa los datos Obligatorios');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Hubo un error, por favor completa los datos obligatorios',
+        action: 'show',
+      });
     }
   };
   //Cambio descripción
@@ -318,8 +323,11 @@ class General extends Component {
           imageFile: null,
           path,
         });
-
-        message.success(this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }));
+        DispatchMessageService({
+          type: 'success',
+          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -359,8 +367,11 @@ class General extends Component {
           imageFileBannerImage: null,
           banner_image,
         });
-
-        message.success(this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }));
+        DispatchMessageService({
+          type: 'success',
+          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -406,7 +417,11 @@ class General extends Component {
           .update(updateData)
           .then(() => {
             const msg = 'Tabs de la zona social actualizados';
-            message.success(msg);
+            DispatchMessageService({
+              type: 'success',
+              msj: msg,
+              action: 'show',
+            });
             resolve({
               error: '',
               message: msg,
@@ -414,6 +429,11 @@ class General extends Component {
           })
           .catch((err) => {
             console.error(err);
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ha ocurrido un error actualizando las tabs de la zona social',
+              action: 'show',
+            });
           });
       } else {
         firestore
@@ -422,7 +442,11 @@ class General extends Component {
           .set({ tabs: { ...tabs } })
           .then(() => {
             const msg = 'Tabs de la zona social inicializados';
-            message.success(msg);
+            DispatchMessageService({
+              type: 'success',
+              msj: msg,
+              action: 'show',
+            });
             resolve({
               error: '',
               message: msg,
@@ -430,6 +454,11 @@ class General extends Component {
           })
           .catch((err) => {
             console.error(err);
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ha ocurrido un error actualizando las tabs de la zona social',
+              action: 'show',
+            });
           });
       }
     });
@@ -503,34 +532,47 @@ class General extends Component {
 
     try {
       if (event._id) {
-        const info = await EventsApi.editOne(data, event._id);
+        const info = await EventsApi.editOne('data, event._id');
         this.props.updateEvent(info);
         self.setState({ loading: false });
-        message.success(intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }));
+        DispatchMessageService({
+          type: 'success',
+          msj: intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       } else {
         const result = await Actions.create('/api/events', data);
         this.setState({ loading: false });
         if (result._id) {
           window.location.replace(`${window.location.origin}/event/${result._id}`);
         } else {
-          message.warning(intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }));
+          DispatchMessageService({
+            type: 'warning',
+            msj: intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }),
+            action: 'show',
+          });
           this.setState({ msg: 'Cant Create', create: false });
         }
       }
     } catch (error) {
-      message.error(intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }));
+      DispatchMessageService({
+        type: 'error',
+        msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+        action: 'show',
+      });
       if (error?.response) {
         console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
 
         /* console.error('STATUS', status, status === 401); */
-        if (status === 401)
-          message.open({
+        if (status === 401) {
+          DispatchMessageService({
             type: 'error',
-            content: <>Error : {data?.message || status}</>,
+            msj: `Error : ${data?.message || status}`,
+            action: 'show',
           });
-        else this.setState({ serverError: true, loader: false, errorData: data });
+        } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
         console.log('ERROR DATA===>', errorData);
@@ -548,10 +590,11 @@ class General extends Component {
   //Delete event
   async deleteEvent() {
     const self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+      action: 'show',
     });
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -564,17 +607,19 @@ class General extends Component {
         const onHandlerRemove = async () => {
           try {
             await EventsApi.deleteOne(self.state.event._id);
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              key: 'loading',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'destroy',
             });
             window.location.replace(`${window.location.origin}/myprofile`);
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              key: 'loading',
+              msj: handleRequestError(e).message,
+              action: 'destroy',
             });
           }
         };

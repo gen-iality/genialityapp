@@ -125,7 +125,6 @@ const CMS = (props) => {
         addFn={addFn}
         description={description}
         form={form}
-        back={back}
         save={save}
         saveMethod={saveMethod}
       />

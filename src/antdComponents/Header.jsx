@@ -21,6 +21,7 @@ const Header = (props) => {
     extra, //código adicional de alguna acción fuera de la estructura en el header
     description,
     loadingSave,
+    saveNameIcon,
   } = props;
 
   return (
@@ -57,12 +58,11 @@ const Header = (props) => {
             <Button
               onClick={saveMethod}
               type={'primary'}
-              icon={<SaveOutlined />}
+              icon={saveNameIcon && !edit ? <PlusCircleOutlined /> : <SaveOutlined />} //Condición momentanea hasta que se le coloque otra funcionalidad ó texto ó sea necesario otro icono
               size='middle'
               htmlType={form ? 'submit' : 'button'}
               loading={loadingSave}
-              disabled={loadingSave}
-            >
+              disabled={loadingSave}>
               {saveName ? saveName : 'Guardar'}
             </Button>
           )}
