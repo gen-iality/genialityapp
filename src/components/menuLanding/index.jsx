@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { Typography, Select, Card, Input, Button, Col, Row, message, Spin, Form, InputNumber } from 'antd';
+import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber } from 'antd';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -253,10 +254,11 @@ class menuLanding extends Component {
   }
 
   async submit() {
-    const loadingSave = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere..</>,
+      key: 'loading',
+      msj: 'Por favor espere...',
+      action: 'show',
     });
     const { itemsMenu } = this.state;
     let menu = this.orderItemsMenu(itemsMenu);
@@ -284,11 +286,14 @@ class menuLanding extends Component {
         /* console.log('MENU GUARDADDO==>', newMenu); */
       }
     }
-    message.success('Información guardada');
-    message.destroy(loadingSave.key);
-    message.open({
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
+    DispatchMessageService({
       type: 'success',
-      content: <> Información guardada correctamente</>,
+      msj: 'Información guardada correctamente',
+      action: 'show',
     });
   }
 

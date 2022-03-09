@@ -4,7 +4,7 @@ import axios from 'axios/index';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import { injectIntl } from 'react-intl';
 import { SketchPicker } from 'react-color';
-import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select, Spin } from 'antd';
+import { Button, Card, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select, Spin } from 'antd';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import Header from '../../antdComponents/Header';
