@@ -136,6 +136,9 @@ class AgendaEdit extends Component {
       host_name: null,
       habilitar_ingreso: '',
       showAditionalTabs: false,
+      idNewlyCreatedActivity: null,
+      activityEdit: false,
+      reloadActivity: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -330,63 +333,64 @@ class AgendaEdit extends Component {
       location: { state },
     } = this.props;
 
-    /** Validacion necesaria para poder renderizar de nuevo el componente y mostrar los tabs Transmision, Juegos, Encuestas y Documentos */
-    if (prevProps.location?.state?.edit !== state?.edit) {
-      if (state?.edit) {
-        this.setState({
-          showAditionalTabs: true,
-        });
-        let spaces = await SpacesApi.byEvent(this.props.event._id);
-        let hosts = await SpeakersApi.byEvent(this.props.event._id);
+    /** Se renderiza de nuevo el componente para mostrar los tabs Transmision, Juegos, Encuestas y Documentos */
+    const idNewlyCreatedActivity = this.state.idNewlyCreatedActivity;
+    const reloadActivity = this.state.reloadActivity;
+    if (reloadActivity) {
+      this.setState({
+        reloadActivity: false,
+      });
+      let spaces = await SpacesApi.byEvent(this.props.event._id);
+      let hosts = await SpeakersApi.byEvent(this.props.event._id);
 
-        let roles = await RolAttApi.byEvent(this.props.event._id);
-        let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
-        let types = await TypesAgendaApi.byEvent(this.props.event._id);
+      let roles = await RolAttApi.byEvent(this.props.event._id);
+      let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
+      let types = await TypesAgendaApi.byEvent(this.props.event._id);
 
-        //La información se neceista de tipo [{label,value}] para los select
-        spaces = handleSelect(spaces);
-        hosts = handleSelect(hosts);
-        roles = handleSelect(roles);
-        categories = handleSelect(categories);
-        types = handleSelect(types);
+      //La información se neceista de tipo [{label,value}] para los select
+      spaces = handleSelect(spaces);
+      hosts = handleSelect(hosts);
+      roles = handleSelect(roles);
+      categories = handleSelect(categories);
+      types = handleSelect(types);
 
-        this.context.setActivityEdit(state.edit);
-        const info = await AgendaApi.getOne(state.edit, event._id);
-        this.setState({
-          selected_document: info.selected_document,
-          start_url: info.start_url,
-          join_url: info.join_url,
-          platform: info.platform /*  || event.event_platform */,
-          info: info,
-          space_id: info.space_id || '',
-          video: info.video,
-          name_host: info.name_host,
-          date_start_zoom: info.date_start_zoom,
-          date_end_zoom: info.date_end_zoom,
-          requires_registration: info.requires_registration || false,
-        });
+      this.context.setActivityEdit(idNewlyCreatedActivity);
+      const info = await AgendaApi.getOne(idNewlyCreatedActivity, event._id);
+      this.setState({
+        selected_document: info.selected_document,
+        start_url: info.start_url,
+        join_url: info.join_url,
+        platform: info.platform /*  || event.event_platform */,
+        info: info,
+        space_id: info.space_id || '',
+        video: info.video,
+        name_host: info.name_host,
+        date_start_zoom: info.date_start_zoom,
+        date_end_zoom: info.date_end_zoom,
+        requires_registration: info.requires_registration || false,
+      });
 
-        Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
-        /* console.log(
+      Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
+      /* console.log(
           Object.keys(this.state).map((key) => info[key]),
           'ObjectKey'
         ); */
-        const { date, hour_start, hour_end } = handleDate(info);
+      const { date, hour_start, hour_end } = handleDate(info);
 
-        // let currentUser = await getCurrentUser();
-        this.setState({
-          activity_id: state.edit,
-          date,
-          hour_start,
-          hour_end,
-          selectedHosts: fieldsSelect(info.host_ids, hosts),
-          selectedTickets: info.selectedTicket ? info.selectedTicket : [],
-          selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
-          selectedType: fieldsSelect(info.type_id, types),
-          selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
-          // currentUser: currentUser,
-        });
-      }
+      // let currentUser = await getCurrentUser();
+      this.setState({
+        activity_id: idNewlyCreatedActivity,
+        date,
+        hour_start,
+        hour_end,
+        selectedHosts: fieldsSelect(info.host_ids, hosts),
+        selectedTickets: info.selectedTicket ? info.selectedTicket : [],
+        selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
+        selectedType: fieldsSelect(info.type_id, types),
+        selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
+        // currentUser: currentUser,
+        showAditionalTabs: true,
+      });
     }
   }
 
@@ -556,11 +560,12 @@ class AgendaEdit extends Component {
         this.setState({ isLoading: true });
         let agenda;
         let result;
-        if (state.edit) {
+        if (state.edit || this.state.activityEdit) {
           const data = {
-            activity_id: state.edit,
+            activity_id: state.edit || this.state.idNewlyCreatedActivity,
           };
-          result = await AgendaApi.editOne(info, state.edit, event._id);
+          let edit = state.edit || this.state.idNewlyCreatedActivity;
+          result = await AgendaApi.editOne(info, edit, event._id);
 
           //Se actualizan los estados date_start_zoom y date_end_zoom para que componente de administracion actualice el valor pasado por props
           this.setState({
@@ -591,7 +596,7 @@ class AgendaEdit extends Component {
 
         if (agenda?._id) {
           /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
-          this.props.history.push(`/eventadmin/${event._id}/agenda/actividad`, { edit: agenda._id });
+          this.setState({ idNewlyCreatedActivity: agenda._id, activityEdit: true, reloadActivity: true });
         } else {
           this.props.history.push(`/eventadmin/${event._id}/agenda`);
         }
@@ -1032,9 +1037,9 @@ class AgendaEdit extends Component {
             save
             form
             remove={this.remove}
-            saveName={this.props.location.state.edit ? '' : 'Crear'}
+            saveName={this.props.location.state.edit || this.state.activityEdit ? '' : 'Crear'}
             saveNameIcon
-            edit={this.props.location.state.edit}
+            edit={this.props.location.state.edit || this.state.activityEdit}
             extra={
               <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
                 <Switch
