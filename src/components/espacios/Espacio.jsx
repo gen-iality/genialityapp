@@ -5,12 +5,13 @@ import { handleRequestError } from '../../helpers/utils';
 import { Row, Col, Form, Input, message, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 const Espacio = (props) => {
@@ -18,63 +19,76 @@ const Espacio = (props) => {
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
   const [espacio, setEspacio] = useState({});
-  
+
   useEffect(() => {
-    if(locationState.edit) {
+    if (locationState.edit) {
       getOne();
     }
   }, []);
 
   const getOne = async () => {
     const response = await SpacesApi.getOne(locationState.edit, eventID);
-    let data = response.data.find(espacios => espacios._id === locationState.edit);
+    let data = response.data.find((espacios) => espacios._id === locationState.edit);
     setEspacio(data);
-  }
+  };
 
   const onSubmit = async () => {
-    if(espacio.name) {
-      const loading = message.open({
-        key: 'loading',
+    if (espacio.name) {
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras se guarda la información..</>,
+        key: 'loading',
+        msj: 'Por favor espere miestras se guarda la información...',
+        action: 'show',
       });
-  
+
       try {
-        if(locationState.edit) {
+        if (locationState.edit) {
           await SpacesApi.editOne(espacio, locationState.edit, eventID);
         } else {
           await SpacesApi.create(espacio, eventID);
-        }     
-      
-        message.destroy(loading.key);
-        message.open({
+        }
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente!</>,
+          msj: 'Información guardada correctamente!',
+          action: 'show',
         });
         history.push(`${props.matchUrl}/espacios`);
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     } else {
-      message.error('El nombre es requerido');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El nombre es requerido',
+        action: 'show',
+      });
     }
-  }
+  };
 
   const handleChange = (e) => {
-    setEspacio({...espacio, name: e.target.value});
+    setEspacio({ ...espacio, name: e.target.value });
   };
 
   const onRemoveId = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se borra la información...',
+      action: 'show',
     });
-    if(locationState.edit) {
+    if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -86,51 +100,48 @@ const Espacio = (props) => {
           const onHandlerRemove = async () => {
             try {
               await SpacesApi.deleteOne(locationState.edit, eventID);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               history.push(`${props.matchUrl}/espacios`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
-  }
+  };
 
   return (
-    <Form
-      onFinish={onSubmit}
-      {...formLayout}
-    >
-      <Header 
-        title={'Espacio'}
-        back
-        save
-        form
-        remove={onRemoveId}
-        edit={locationState.edit}
-      />
-      
+    <Form onFinish={onSubmit} {...formLayout}>
+      <Header title={'Espacio'} back save form remove={onRemoveId} edit={locationState.edit} />
+
       <Row justify='center' wrap gutter={12}>
         <Col span={12}>
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}
-          >
-            <Input 
+            rules={[{ required: true, message: 'El nombre es requerido' }]}>
+            <Input
               value={espacio.name}
               name={'name'}
               placeholder={'Nombre del espacio'}
@@ -140,7 +151,7 @@ const Espacio = (props) => {
         </Col>
       </Row>
     </Form>
-  )
-}
+  );
+};
 
 export default Espacio;

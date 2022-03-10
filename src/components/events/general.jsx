@@ -214,9 +214,9 @@ class General extends Component {
   //Cambio en los input
   handleChange = (e, name) => {
     // console.log(e.target);
-    if (e.target != null || e.target != undefined || e.target != '') {
+    if (e.target !== null || e.target !== undefined || e.target !== '') {
       let value = e;
-      if (e.target.value != null || e.target.value != undefined || e.target.value != '') {
+      if (e.target.value !== null || e.target.value !== undefined || e.target.value !== '') {
         value = e.target.value;
       }
 
@@ -241,13 +241,12 @@ class General extends Component {
   valid = () => {
     const error = {};
     const { event, selectedOrganizer, selectedType, selectedCategories } = this.state;
-    const valid =
-      event.name !== null &&
-      event.name.length > 0 &&
-      !!selectedOrganizer &&
+    const valid = event.name !== null && event.name !== '' && event.name.length > 0 && !!selectedOrganizer;
+    /* 
+      &&
       !!selectedType &&
       selectedCategories &&
-      selectedCategories.length > 0;
+      selectedCategories.length > 0 */
     if (valid) {
       this.setState({ valid: !valid, error });
     } else {
@@ -1005,7 +1004,7 @@ class General extends Component {
                       selectedOptions={selectedCategories}
                       selectOption={this.selectCategory}
                       options={categories}
-                      required={true}
+                      /* required={true} */
                     />
                   </Form.Item>
 
@@ -1016,7 +1015,7 @@ class General extends Component {
                       selectedOptions={selectedType}
                       selectOption={this.selectType}
                       options={types}
-                      required={true}
+                      /* required={true} */
                     />
                   </Form.Item>
 

@@ -12,6 +12,7 @@ import { handleRequestError } from '../../helpers/utils';
 import { firestore } from '../../helpers/firebase';
 import { SketchPicker } from 'react-color';
 import Header from '../../antdComponents/Header';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -118,7 +119,12 @@ const Stands = (props) => {
   }
 
   async function saveConfiguration() {
-    message.loading('Por favor espere...');
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere miestras se guarda la información...',
+      action: 'show',
+    });
     await firestore
       .collection('event_companies')
       .doc(props.event._id)
@@ -128,22 +134,40 @@ const Stands = (props) => {
         },
         { merge: true }
       );
-    message.success('Configuración guardada correctamente');
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
+    DispatchMessageService({
+      type: 'success',
+      msj: 'Configuración guardada correctamente!',
+      action: 'show',
+    });
   }
 
   const editStand = async () => {
-    if (nameStand != '' && nameStand !== null) {
+    if (nameStand !== '' && nameStand !== null) {
       let list = standsList;
       let selectedStandEdit =
-        selectedStand != null
+        selectedStand !== null
           ? { ...selectedStand, label: nameStand, value: nameStand, color: colorStand }
           : { label: nameStand, value: nameStand, id: standsList.length, color: colorStand };
-      selectedStand != null ? (list[selectedStand.id] = selectedStandEdit) : list.push(selectedStandEdit);
+      selectedStand !== null ? (list[selectedStand.id] = selectedStandEdit) : list.push(selectedStandEdit);
       let modifyObject = { ...documentEmpresa, stand_types: list };
       await actualizarData(modifyObject);
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Información guardada correctamente!',
+        action: 'show',
+      });
 
       handleCancel();
     } else {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Información inválida!',
+        action: 'show',
+      });
       setNoValid(true);
     }
   };
@@ -161,10 +185,11 @@ const Stands = (props) => {
   };
 
   async function deleteStand(id) {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -180,16 +205,24 @@ const Stands = (props) => {
             list = list.filter((stand) => stand.id !== id);
             let modifyObject = { ...documentEmpresa, stand_types: list };
             await actualizarData(modifyObject);
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };
@@ -314,7 +347,7 @@ const Stands = (props) => {
                       onClick={() => null}
                       onChange={null}
                     />
-                    <Button > {!selectedStand ? 'Seleccionar' : 'Escoger'}</Button>
+                    <Button> {!selectedStand ? 'Seleccionar' : 'Escoger'}</Button>
                   </div>
                   {viewModalColor && (
                     <div
@@ -333,7 +366,7 @@ const Stands = (props) => {
                             setColorStand(color.hex);
                           }}
                         />
-                        <Button style={{ marginTop: 20 }} onClick={() => setViewModalColor(false)} >
+                        <Button style={{ marginTop: 20 }} onClick={() => setViewModalColor(false)}>
                           {' '}
                           Aceptar
                         </Button>
