@@ -30,7 +30,7 @@ const createNewUser = async (props) => {
       password: password,
     };
     try {
-      let response = await UsersApi.createUser(body);
+      let response = await UsersApi.createUser(body);      
       if (response._id){
         /* setModalInfo({
           status: 'success',
@@ -39,13 +39,16 @@ const createNewUser = async (props) => {
         });
       setOpenOrCloseTheModalFeedback(true);
       sendDataFinished();*/
-        return true;
+        return 1;
       }
     } catch (e) {
-      // console.log(e.response);
+     //PERMITE VALIDAR CUANDO EL EMAIL ES INCORRECTO
+      if(e.response.status==422){
+        return 2;
+      }
       const registeredEmail = e.response.data.errors.email[0];
       if (registeredEmail === 'email ya ha sido registrado.') {
-        return false;
+        return 0;
       }
     }
   };
