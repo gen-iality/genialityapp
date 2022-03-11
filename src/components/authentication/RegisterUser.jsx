@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useContext(HelperContext);
-  const [ errorEmail, setErrorEmail ] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
   const ruleEmail = [
     {
       type: 'email',
@@ -76,7 +76,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   }
 
   const onFinishCreateNewUser = async (values) => {
-    
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -92,7 +91,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
 
     try {
       let resp = await createNewUser(newValues);
-      if (resp==1) {
+      if (resp == 1) {
         // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
         app
           .auth()
@@ -110,10 +109,11 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           .catch((err) => {
             handleChangeTypeModal('loginError');
           });
-      } else if(resp==0) {
+      } else if (resp == 0) {
         handleChangeTypeModal('loginError');
-      }else{
-        setErrorEmail(true)
+        setErrorEmail(false);
+      } else {
+        setErrorEmail(true);
       }
     } catch (err) {
       console.log(err);
@@ -233,24 +233,29 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             })}
           </Button>
         </Form.Item>
-        {errorEmail && <Alert
-                  showIcon
-                  onClose={() => setErrorEmail(false)}
-                  closable
-                  className='animate__animated animate__bounceIn'
-                  style={{
-                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                    backgroundColor: '#FFFFFF',
-                    color: '#000000',
-                    borderLeft: '5px solid #FF4E50',
-                    fontSize: '14px',
-                    textAlign: 'start',
-                    borderRadius: '5px',
-                    marginBottom: '15px',
-                  }}
-                  type='error'
-                  message={"El correo ingresado no es válido"}
-                />}
+        {errorEmail && (
+          <Alert
+            showIcon
+            onClose={() => setErrorEmail(false)}
+            closable
+            className='animate__animated animate__bounceIn'
+            style={{
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              backgroundColor: '#FFFFFF',
+              color: '#000000',
+              borderLeft: '5px solid #FF4E50',
+              fontSize: '14px',
+              textAlign: 'start',
+              borderRadius: '5px',
+              marginBottom: '15px',
+            }}
+            type='error'
+            message={intl.formatMessage({
+              id: 'modal.feedback.errorDNSNotFound',
+              defaultMessage: 'El correo ingresado no es válido.',
+            })}
+          />
+        )}
       </Form>
     </>
   );

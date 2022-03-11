@@ -30,8 +30,8 @@ const createNewUser = async (props) => {
       password: password,
     };
     try {
-      let response = await UsersApi.createUser(body);      
-      if (response._id){
+      let response = await UsersApi.createUser(body);
+      if (response._id) {
         /* setModalInfo({
           status: 'success',
           title: `Bienvenido ${response.names}`,
@@ -42,8 +42,8 @@ const createNewUser = async (props) => {
         return 1;
       }
     } catch (e) {
-     //PERMITE VALIDAR CUANDO EL EMAIL ES INCORRECTO
-      if(e.response.status==422){
+      //PERMITE VALIDAR CUANDO EL EMAIL ES INCORRECTO
+      if (e.response.status == 422 && e.response.data.errors.email[0] !== 'email ya ha sido registrado.') {
         return 2;
       }
       const registeredEmail = e.response.data.errors.email[0];
