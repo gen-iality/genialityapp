@@ -6,7 +6,7 @@ import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './se
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
-import { Button, Row, Col, Table, Modal, Input, Switch, message, Select, Tag, InputNumber, Form, Tooltip } from 'antd';
+import { Button, Row, Col, Table, Modal, Input, Switch, Select, Tag, InputNumber, Form, Tooltip } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -18,6 +18,7 @@ import FormQuestionEdit from './formEdit';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import Loading from '../profile/loading';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -171,10 +172,11 @@ class triviaEdit extends Component {
   //Funcion para guardar los datos a actualizar
   async submit() {
     if (this.state.survey) {
-      const loading = message.open({
-        key: 'loading',
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras guarda la información...</>,
+        key: 'loading',
+        msj: 'Por favor espere miestras se guarda la información...',
+        action: 'show',
       });
       //Se recogen los datos a actualizar
       const data = {
@@ -233,20 +235,32 @@ class triviaEdit extends Component {
         );
 
         await this.setState({ idSurvey });
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> La encuesta se guardo correctamente!</>,
+          msj: 'La encuesta se guardo correctamente!',
+          action: 'show',
         });
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     } else {
-      message.error('El nombre es requerido');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El nombre es requerido',
+        action: 'show',
+      });
     }
   }
 
@@ -254,9 +268,11 @@ class triviaEdit extends Component {
     //Se recogen los datos a actualizar
 
     if (this.state.publish === 'true' && this.state.question.length === 0)
-      return message.error({
-        content: 'Esta encuesta no cuenta con respuestas posibles',
-        key: 'updating',
+      return DispatchMessageService({
+        type: 'error',
+        /* key: 'updating', */
+        msj: 'Esta encuesta no cuenta con respuestas posibles',
+        action: 'show',
       });
 
     let isValid = true;
@@ -282,7 +298,12 @@ class triviaEdit extends Component {
     }
 
     if (isValid && isValidInitial) {
-      message.loading({ content: 'Actualizando información', key: 'updating' });
+      DispatchMessageService({
+        type: 'loading',
+        key: 'updating',
+        msj: 'Actualizando información',
+        action: 'show',
+      });
 
       const data = {
         graphyType: this.state.graphyType,
@@ -343,22 +364,46 @@ class triviaEdit extends Component {
             { eventId: this.props.event._id, name: data.survey, category: 'none' }
           );
           this.goBack();
-          message.success({ content: setDataInFire.message, key: 'updating' });
+          DispatchMessageService({
+            key: 'updating',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            key: 'updating',
+            msj: setDataInFire.message,
+            action: 'show',
+          });
         })
         .catch((err) => {
-          console.error('Hubo un error', err);
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Ha ocurrido un inconveniente',
+            action: 'show',
+          });
+          /* console.error('Hubo un error', err); */
         });
     } else {
       if (!isValid) {
-        message.error({
-          content: 'Esta encuesta es calificable, hay preguntas sin respuesta correcta asignada',
+        DispatchMessageService({
           key: 'updating',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Esta encuesta es calificable, hay preguntas sin respuesta correcta asignada',
+          action: 'show',
         });
       }
       if (!isValidInitial) {
-        message.error({
-          content: 'Esta encuesta es calificable, debe asignar un mensaje inicial',
-          key: 'isValidInitial',
+        DispatchMessageService({
+          key: 'updating',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Esta encuesta es calificable, debe asignar un mensaje inicial',
+          action: 'show',
         });
       }
     }
@@ -387,10 +432,11 @@ class triviaEdit extends Component {
   // Borrar pregunta
   deleteOneQuestion = async (questionId) => {
     let self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     let { question, _id } = self.state;
     const { event } = self.props;
@@ -411,19 +457,25 @@ class triviaEdit extends Component {
               let newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
 
               self.setState({ question: newListQuestion });
-              message.success({ content: response, key: 'updating' });
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: response,
-                key: 'updating',
+                msj: response,
+                action: 'show',
               });
             });
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };
@@ -558,10 +610,11 @@ class triviaEdit extends Component {
 
   remove = () => {
     let self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -575,17 +628,25 @@ class triviaEdit extends Component {
           try {
             await SurveysApi.deleteOne(self.state.idSurvey, self.props.event._id);
             await deleteSurvey(self.state.idSurvey);
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
             self.goBack();
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };
