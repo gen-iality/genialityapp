@@ -128,7 +128,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorDNSNotFound',
-            defaultMessage: 'El correo ingresado no es valido.',
+            defaultMessage: 'El correo ingresado no es válido.',
           }),
         });
       } else {
@@ -331,7 +331,19 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
       {validationGeneral.status && (
         <Alert
-          style={{ marginTop: '5px' }}
+          showIcon
+          /* style={{ marginTop: '5px' }} */
+          style={{
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            backgroundColor: '#FFFFFF',
+            color: '#000000',
+            borderLeft: '5px solid #FF4E50',
+            fontSize: '14px',
+            textAlign: 'start',
+            borderRadius: '5px',
+            marginBottom: '15px',
+          }}
+          /* closable */
           message={
             <>
               {validationGeneral.textError}

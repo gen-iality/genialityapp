@@ -328,7 +328,7 @@
     "modal.feedback.enroll": "Inscribirme",
     "modal.feedback.errorAutomaticSession": "Ha fallado el inicio de sesión automático, por favor",
     "modal.feedback.errorGeneralInternal": "Se ha presentado un error interno. Por favor intenta de nuevo",
-    "modal.feedback.errorDNSNotFound": "El correo ingresado no es valido.",
+    "modal.feedback.errorDNSNotFound": "El correo ingresado no es válido.",
     "modal.no_register.title": "Para acceder a esta sección, debes estar inscrito en el evento.",
     "modal.no_register.title2": "Inicia sesión o regístrate para ver el contenido",
     "modal.no_register.gotoevius": "Ver más eventos",
