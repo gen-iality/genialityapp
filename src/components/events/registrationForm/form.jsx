@@ -488,32 +488,34 @@ const FormRegister = ({
   };
 
   const updateFieldsVisibility = (conditionals, allFields) => {
-    let newExtraFields = [...extraFieldsOriginal];
+    if (extraFieldsOriginal.length > 0) {
+      let newExtraFields = [...extraFieldsOriginal];
 
-    newExtraFields = newExtraFields.filter((field) => {
-      let fieldShouldBeDisplayed = false;
-      let fieldHasCondition = false;
+      newExtraFields = newExtraFields?.filter((field) => {
+        let fieldShouldBeDisplayed = false;
+        let fieldHasCondition = false;
 
-      //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
+        //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
 
-      conditionals.map((conditional) => {
-        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
+        conditionals.map((conditional) => {
+          let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
 
-        if (!fieldExistInThisCondition) return;
-        fieldHasCondition = true;
-        //Revisamos si las condiciones del campo tienen los valores adecuados para que se muestre
-        let fulfillConditional = false;
+          if (!fieldExistInThisCondition) return;
+          fieldHasCondition = true;
+          //Revisamos si las condiciones del campo tienen los valores adecuados para que se muestre
+          let fulfillConditional = false;
 
-        //valor actual del condicional en el formulario
-        let valueToValidate = allFields[conditional.fieldToValidate];
-        fulfillConditional = conditional.value === valueToValidate;
-        if (fulfillConditional) {
-          fieldShouldBeDisplayed = true;
-        }
+          //valor actual del condicional en el formulario
+          let valueToValidate = allFields[conditional.fieldToValidate];
+          fulfillConditional = conditional.value === valueToValidate;
+          if (fulfillConditional) {
+            fieldShouldBeDisplayed = true;
+          }
+        });
+        return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition;
       });
-      return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition;
-    });
-    setExtraFields(newExtraFields);
+      setExtraFields(newExtraFields);
+    }
   };
 
   const hideConditionalFieldsToDefault = (conditionals, eventUser) => {

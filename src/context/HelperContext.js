@@ -228,7 +228,7 @@ export const HelperContextProvider = ({ children }) => {
         }
       })
       .catch(function(error) {
-        console.log('🚀 error', error);
+        console.log('error : ', error);
       });
   };
 

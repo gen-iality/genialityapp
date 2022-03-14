@@ -70,17 +70,6 @@ const IconRender = (type) => {
 };
 
 const Landing = (props) => {
-  // console.log('🚀 ~ file: landing.jsx ~ line 72 ~ Landing ~ props', props);
-
-  useEffect(() => {
-    DispatchMessageService({
-      type: 'loading',
-      msj: 'esto esta cargando',
-      action: 'show',
-    });
-    console.log('🚀 first');
-  }, []);
-
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
