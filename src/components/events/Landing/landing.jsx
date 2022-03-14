@@ -75,7 +75,7 @@ const Landing = (props) => {
   useEffect(() => {
     DispatchMessageService({
       type: 'loading',
-      msj: 'esto esta cargando',
+      msj: 'Estamos configurando la mejor experiencia para tí!',
       action: 'show',
     });
     console.log('🚀 first');

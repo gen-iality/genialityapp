@@ -7,6 +7,7 @@ import { firestore } from './firebase';
 import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
 import { message } from 'antd';
+import { DispatchMessageService } from '../context/MessageService';
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -98,7 +99,12 @@ export const getCurrentUser = async () => {
           // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
-            message.error('🔑 Tu token a caducado, redirigiendo al login!', {
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Tu token a caducado, redirigiendo al login!',
+              action: 'show',
+            });
+            /* message.error('🔑 Tu token a caducado, redirigiendo al login!', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -106,7 +112,7 @@ export const getCurrentUser = async () => {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-            });
+            }); */
             // YA NO DE REDIRIGIR EL TOKEN CADUCADO
             /* alert('RELOAD ACA');
             setTimeout(() => {
@@ -115,15 +121,30 @@ export const getCurrentUser = async () => {
             //this.setState({ timeout: true, loader: false })
           } else {
             //this.setState({ serverError: true, loader: false, errorData: data })
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ocurrió un error distinto al token!',
+              action: 'show',
+            });
           }
         } else {
           let errorData = {};
           console.error('Error', error.message);
           if (error.message) {
             errorData.message = error.message;
+            DispatchMessageService({
+              type: 'error',
+              msj: errorData.message,
+              action: 'show',
+            });
           } else if (error.request) {
             console.error(error.request);
             errorData.message = JSON.stringify(error.request);
+            DispatchMessageService({
+              type: 'error',
+              msj: errorData.message,
+              action: 'show',
+            });
           }
           errorData.status = 708;
           //this.setState({ serverError: true, loader: false, errorData });
