@@ -16,23 +16,25 @@ import {
   Upload,
   Select,
   Spin,
+  Comment,
+  Typography,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
-import { saveImageStorage } from '../../../helpers/helperSaveImage';
+
 import { areaCode } from '../../../helpers/constants';
 import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 import { useContext } from 'react';
-import HelperContext from '../../../Context/HelperContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
-import { UseEventContext } from '../../../Context/eventContext';
-import { UseCurrentUser } from '../../../Context/userContext';
+import HelperContext from '../../../context/HelperContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
+import { UseEventContext } from '../../../context/eventContext';
+import { UseCurrentUser } from '../../../context/userContext';
 import { app } from 'helpers/firebase';
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -92,6 +94,24 @@ function obtenerName(fileUrl) {
   }
 }
 
+function isVisibleButton(basicDataUser, extraFields, cEventUser) {
+  if (
+    Object.keys(basicDataUser).length > 0 ||
+    (fieldsAditional(extraFields) == 0 && Object.keys(basicDataUser).length == 0 && cEventUser.value !== null)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function fieldsAditional(extraFields) {
+  if (extraFields) {
+    const countFields = extraFields.filter((field) => field.name != 'names' && field.name != 'email');
+    return countFields.length;
+  }
+  return 0;
+}
+
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
  */
@@ -135,7 +155,9 @@ const FormRegister = ({
   const cEvent = UseEventContext();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
-  const { tabLogin, typeModal, eventPrivate, handleChangeTypeModal, setRegister } = useContext(HelperContext);
+  const { authModalState, typeModal, eventPrivate, handleChangeTypeModal, setRegister, authModalDispatch } = useContext(
+    HelperContext
+  );
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -227,7 +249,7 @@ const FormRegister = ({
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
-  }, [tabLogin, typeModal]);
+  }, [authModalState.currentAuthScreen, typeModal]);
 
   const showGeneralMessage = (values, error, date) => {
     setvalidateEventUser({
@@ -538,6 +560,10 @@ const FormRegister = ({
           : initialValues
           ? initialValues[target]
           : '';
+        //VISIBILIDAD DE CAMPOS
+        let visible =
+          (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
+
         /* console.log(initialValues, 'initialValues', m) */
 
         //no entiendo b esto para que funciona
@@ -552,16 +578,6 @@ const FormRegister = ({
         }
         let input = (
           <Input
-            disabled={
-              /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
-              validateUrl() === true
-                ? m.name == 'email' && initialValues?.email
-                  ? true
-                  : cEvent.value?.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
-                  ? true
-                  : false
-                : false
-            }
             {...props}
             addonBefore={
               labelPosition === 'izquierda' && (
@@ -865,6 +881,8 @@ const FormRegister = ({
                   <Form.Item
                     // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                     // style={eventUserId && hideFields}
+                    noStyle={visible}
+                    hidden={visible}
                     valuePropName={type === 'boolean' ? 'checked' : 'value'}
                     label={
                       (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
@@ -959,7 +977,59 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              <div style={{ height: '50vh', overflowY: 'auto', paddingRight: '0px' }}>{renderForm()}</div>
+              <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
+                <Col span={24}>
+                  <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
+                    <Typography.Title level={5}>
+                      {intl.formatMessage({
+                        id: 'title.user_data',
+                        defaultMessage: 'Datos del usuario',
+                      })}
+                    </Typography.Title>
+                    <Comment
+                      author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
+                      content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
+                    />
+                  </Card>
+                </Col>
+                <Col span={24}>
+                  <Card
+                    bodyStyle={{ padding: '20px' }}
+                    style={{
+                      height: 'auto',
+                      maxHeight: '50vh',
+                      overflowY: 'auto',
+                      paddingRight: '0px',
+                      borderRadius: '8px',
+                    }}>
+                    {fieldsAditional(extraFields) > 0 && (
+                      <Typography.Title level={5}>
+                        {intl.formatMessage({
+                          id: 'modal.title.registerevent',
+                          defaultMessage: 'Información adicional para el evento',
+                        })}
+                      </Typography.Title>
+                    )}
+                    {renderForm()}
+                    {typeModal == 'update' && isVisibleButton(basicDataUser, extraFields, cEventUser) ? (
+                      <div style={{ textAlign: 'center', width: '100%' }}>
+                        {intl.formatMessage({
+                          id: 'msg.no_fields_update',
+                          defaultMessage: 'No hay campos disponibles para actualizar en este evento',
+                        })}
+                      </div>
+                    ) : (
+                      <div style={{ textAlign: 'center', width: '100%' }}>
+                        {fieldsAditional(extraFields) === 0 &&
+                          intl.formatMessage({
+                            id: 'msg.no_fields_create',
+                            defaultMessage: 'No hay campos adicionales en este evento',
+                          })}
+                      </div>
+                    )}
+                  </Card>
+                </Col>
+              </Row>
 
               <Row gutter={[24, 24]} style={{ marginTop: '5px' }}>
                 {generalFormErrorMessageVisible && (
@@ -1000,7 +1070,7 @@ const FormRegister = ({
                           size='middle'
                           type='primary'
                           onClick={() => {
-                            handleChangeTabModal('1');
+                            authModalDispatch({ type: 'showLogin' });
                             setNotLoggedAndRegister(false);
                           }}>
                           {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
@@ -1039,15 +1109,16 @@ const FormRegister = ({
                         size='large'
                         ref={buttonSubmit}
                         style={{
-                          display: Object.keys(basicDataUser).length > 0 ? 'none' : 'block',
+                          display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
                         type='primary'
                         htmlType='submit'>
                         {(initialValues != null && cEventUser.value !== null && typeModal !== 'update') ||
                         (initialValues != null && Object.keys(initialValues).length > 0 && typeModal !== 'update')
-                          ? intl.formatMessage({ id: 'registration.button.create' })
+                          ? intl.formatMessage({ id: 'Button.signup' })
                           : intl.formatMessage({ id: 'registration.button.update' })}
                       </Button>
+
                       {options &&
                         initialValues != null &&
                         options.map((option) => (

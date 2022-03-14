@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { ApiDEVUrl, ApiUrl, ApiEviusZoomSurvey } from './constants';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+/* import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; */
 import { handleSelect } from './utils';
 import { firestore } from './firebase';
 import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
+import { message } from 'antd';
+
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
@@ -96,7 +98,7 @@ export const getCurrentUser = async () => {
           // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
-            toast.error('🔑 Tu token a caducado, redirigiendo al login!', {
+            message.error('🔑 Tu token a caducado, redirigiendo al login!', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -279,9 +281,9 @@ export const EventsApi = {
     return await Actions.put(`/api/changeuserpassword`, { email: email, event_id: eventId });
   },
 
-  changePasswordUser: async (email) => {
+  changePasswordUser: async (email, hostname) => {
     //URL DE PRUEBAS
-    return await Actions.put(`/api/changeuserpassword`, { email: email });
+    return await Actions.put(`/api/changeuserpassword`, { email: email, hostName: hostname });
   },
   //ACCEDER POR LINK AL CORREO
   requestLinkEmail: async (eventId, email) => {
@@ -347,6 +349,10 @@ export const UsersApi = {
   findByEmail: async (email) => {
     let token = await GetTokenUserFirebase();
     return await Actions.getOne(`api/users/findByEmail/${email}?token=${token}`, true);
+  },
+
+  validateEmail: async (email) => {
+    return await Actions.post(`api/validateEmail`, email, true);
   },
 
   mineOrdes: async (id) => {
@@ -640,7 +646,7 @@ export const OrganizationApi = {
   },
   deleteUserProperties: async (org, fieldId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/organizations/${org}/userproperties/${fieldId}?token=${token}`);
+    return await Actions.delete(`/api/organizations/${org}/userproperties/${fieldId}?token=${token}`, '', true);
   },
   getTemplateOrganization: async (org) => {
     let token = await GetTokenUserFirebase();
@@ -799,7 +805,8 @@ export const FaqsApi = {
 
 export const RolAttApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/rolesattendees`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event}/rolesattendees?token=${token}`, true);
   },
   byEventRolsGeneral: async () => {
     let token = await GetTokenUserFirebase();

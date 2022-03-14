@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Alert, Button, Card, Col, Input, Row, Space, Typography } from 'antd';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { EventsApi } from '../../../helpers/request';
 import { SettingOutlined, WarningOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
@@ -8,7 +8,7 @@ import Modal from 'antd/lib/modal/Modal';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { withRouter } from 'react-router-dom';
-import  Parser  from 'html-react-parser';
+import Parser from 'html-react-parser';
 import ReactPlayer from 'react-player';
 class InformativeSection extends Component {
   constructor(props) {
@@ -134,27 +134,31 @@ class InformativeSection extends Component {
               title={informativeSection.name || 'clasificación'}
               bordered={false}
               style={{ width: 1000, margin: 'auto' }}>
-           
-              {this.props.cEvent.value._id !=='611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
-             
+              {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
+
               {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
-              <>
-                <h2 style={{ fontWeight: 700, fontSize: '20px', borderBottom: '1px solid #C0BAB9', marginTop: '15px',margin:'auto' }}>
-                Proyecto Casos Clínicos de Obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
-                </h2>
-                <br></br>
-                <ReactPlayer
-                  style={{ width: '560px', height: '445px', margin: 'auto' }}
-                  url='https://vimeo.com/589393733' 
-                  controls
-                />
-              </>
-            )}
+                <>
+                  <h2
+                    style={{
+                      fontWeight: 700,
+                      fontSize: '20px',
+                      borderBottom: '1px solid #C0BAB9',
+                      marginTop: '15px',
+                      margin: 'auto',
+                    }}>
+                    Proyecto Casos Clínicos de Obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
+                  </h2>
+                  <br></br>
+                  <ReactPlayer
+                    style={{ width: '560px', height: '445px', margin: 'auto' }}
+                    url='https://vimeo.com/589393733'
+                    controls
+                  />
+                </>
+              )}
             </Card>
-                     
           </div>
         )}
-         
       </Fragment>
     );
   }

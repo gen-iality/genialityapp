@@ -6,9 +6,9 @@ import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import MenuRigth from './Menus/MenuRigth';
 import { connect } from 'react-redux';
 const { Sider } = Layout;
-import { UseEventContext } from '../../../Context/eventContext';
+import { UseEventContext } from '../../../context/eventContext';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
-import { HelperContext } from '../../../Context/HelperContext';
+import { HelperContext } from '../../../context/HelperContext';
 import DrawerProfile from './DrawerProfile';
 
 const EventSectionMenuRigth = (props) => {

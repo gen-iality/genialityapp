@@ -13,7 +13,7 @@ import AccessPoint from '@2fd/ant-design-icons/lib/AccessPoint';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
-import { UseEventContext } from 'Context/eventContext';
+import { UseEventContext } from 'context/eventContext';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -476,8 +476,21 @@ function AgendaActivityItem(props) {
                     </Space>
                   </Col>
                   <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
-                    {meetingState == 'ended_meeting_room' && item.video ? (
-                      <ReactPlayer light={true} width={'100%'} height={'100%'} url={item !== null && item.video} />
+                    {/* {console.log(meetingState, 'meetingState', item.video)} */}
+                    {/* Aplicada la condición ya que no mostraba el video */}
+                    {(meetingState === 'ended_meeting_room' ||
+                      meetingState === '' ||
+                      meetingState === null ||
+                      meetingState === 'null') &&
+                    item.video ? (
+                      <div className='mediaplayer'>
+                        <ReactPlayer
+                          /* light={true} */
+                          width={'100%'}
+                          height={'100%'}
+                          url={item && item.video}
+                        />
+                      </div>
                     ) : (
                       <img
                         className='agenda-imagen'

@@ -5,18 +5,18 @@ import Event from '../components/events/event';
 import { ApiUrl } from '../helpers/constants';
 import WithFooter from '../components/withFooter';
 
-import { CurrentUserEventProvider } from '../Context/eventUserContext';
-import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
-import { CurrentUserProvider } from '../Context/userContext';
-import { SurveysProvider } from '../Context/surveysContext';
+import { CurrentUserEventProvider } from '../context/eventUserContext';
+import { CurrentEventProvider, CurrentEventContext } from '../context/eventContext';
+import { CurrentUserProvider } from '../context/userContext';
+import { SurveysProvider } from '../context/surveysContext';
 
-import { HelperContextProvider } from '../Context/HelperContext';
+import { HelperContextProvider } from '../context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
 import Organization from '../components/organization';
-import { NewEventProvider } from '../Context/newEventContext';
+import { NewEventProvider } from '../context/newEventContext';
 import MainProfile from '../components/profile/main';
-import { AgendaContextProvider } from '../Context/AgendaContext';
-import { UseCurrentUser } from 'Context/userContext';
+import { AgendaContextProvider } from '../context/AgendaContext';
+import { UseCurrentUser } from 'context/userContext';
 import loadable from '@loadable/component';
 import ModalAuth from 'components/authentication/ModalAuth';
 import ModalNoRegister from 'components/authentication/ModalNoRegister';

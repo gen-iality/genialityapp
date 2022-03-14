@@ -29,7 +29,7 @@ import {
 import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { EventsApi, TicketsApi, OrganizationApi } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';

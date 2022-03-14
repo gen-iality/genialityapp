@@ -3,7 +3,7 @@ import { Card, Space, Typography, Badge } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import './videoCard.css';
-import { UseEventContext } from '../../Context/eventContext';
+import { UseEventContext } from '../../context/eventContext';
 
 import ReactPlayer from 'react-player';
 import EventImage from '../../eventimage.png';
@@ -38,7 +38,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
   return (
     <Link to={`/landing/${activity.event_id}/activity/${activity._id}`}>
       {forma === 'horizontal' ? (
-        <div className='animate__animated animate__fadeIn' style={{}}>
+        <div className='animate__animated animate__fadeIn'>
           <Card
             className={'horizontal'}
             bordered={bordered}
@@ -78,7 +78,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
                         borderRadius: '2px',
                         fontSize: '12px',
                       }}>
-                      {videoDuration(duration)}
+                      {videoDuration(parseInt(duration))}
                     </span>
                   </Space>
                 </div>
@@ -87,7 +87,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
           </Card>
         </div>
       ) : (
-        <Badge.Ribbon text={videoDuration(duration)}>
+        <Badge.Ribbon text={videoDuration(parseInt(duration))}>
           <Card
             bordered={true}
             hoverable={true}

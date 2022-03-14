@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Alert, Form, Select, Input, Button, Radio, Space, List, Typography, Image } from 'antd';
-import AgendaContext from 'Context/AgendaContext';
+import AgendaContext from 'context/AgendaContext';
 import WowzaStreamingPanel from './components/wowzaStreamingPanel';
 import VimeoStreamingPanel from './components/vimeoStreamingPanel';
 
@@ -103,7 +103,16 @@ export default function RoomConfig(props) {
           <Row gutter={24}>
             <Col span={8}>
               {/**Selección plataforma de la conferencia */}
-              <Form.Item label={'Proveedor de transmisión'} tooltip={'Proveedor de transmisión'}>
+              <Form.Item label={'Proveedor de transmisión'} 
+                tooltip={{
+                  /* placement: 'bottomLeft', */
+                  title: (
+                    <Typography.Text style={{ color: '#fff' }}>
+                      Canal o red social basada en videos, permite compartir y almacenar videos digitales para que los usuarios comenten en la página de cada uno de ellos. Los usuarios deben estar registrados para subir videos, crear su perfil y realizar otras configuraciones.
+                    </Typography.Text>
+                  ),
+                }}
+              >
                 <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
                   {/* <Option value={''}>Seleccionar...</Option> */}
                   <Option value='wowza'>
@@ -118,7 +127,18 @@ export default function RoomConfig(props) {
                 </Select>
               </Form.Item>
 
-              <Form.Item label={'Origen de transmisión'} tooltip={'Origen de transmisión'}>
+              <Form.Item
+                label={'Origen de transmisión'}
+                tooltip={{
+                  /* placement: 'bottomLeft', */
+                  title: (
+                    <Typography.Text style={{ color: '#fff' }}>
+                      Herramienta de transmisión en directo (en vivo) que emite en los canales o red social de tu
+                      preferencia que transporta el contenido audiovisual como datos entre codificador y una
+                      plataforma de streaming.
+                    </Typography.Text>
+                  ),
+                }}>
                 <List itemLayout='horizontal' bordered={false}>
                   <List.Item
                     style={{

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
 import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import QRCode from 'qrcode.react';
 import { icon } from '../../helpers/constants';
@@ -10,7 +9,7 @@ import { Actions } from '../../helpers/request';
 import Moment from 'moment';
 import FormComponent from '../events/registrationForm/form';
 import { message, Modal } from 'antd';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -133,9 +132,12 @@ class UserModal extends Component {
           try {
             let token = await GetTokenUserFirebase();
             !self.props.byActivity &&
-              (await Actions.delete(`/api/events/${self.props.cEvent.value?._id}/eventusers`, `${user._id}?token=${token}`));
+              (await Actions.delete(
+                `/api/events/${self.props.cEvent.value?._id}/eventusers`,
+                `${user._id}?token=${token}`
+              ));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
-            toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+            message.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
             self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
             self.props.byActivity && (await self.props.updateView());
@@ -152,7 +154,7 @@ class UserModal extends Component {
               .then(function() {
                 messages.class = 'msg_warning';
                 messages.content = 'USER DELETED';
-                toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+                message.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
                 //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
                 //substractSyncQuantity();
@@ -319,7 +321,7 @@ class UserModal extends Component {
       this.props.handleModal();
     } else {
       message.error('Error al guardar el usuario');
-      console.log(resp)
+      console.log(resp);
     }
 
     this.setState({ loadingregister: false });

@@ -21,7 +21,7 @@ import {
 import { CalendarOutlined, CheckCircleFilled, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { useContextNewEvent } from '../../../Context/newEventContext';
+import { useContextNewEvent } from '../../../context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
 
 const { Text, Link, Title, Paragraph } = Typography;

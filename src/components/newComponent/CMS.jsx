@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { handleRequestError } from '../../helpers/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal, message } from 'antd';
+import { Modal } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
-import HelperContext from '../../Context/HelperContext';
+import HelperContext from '../../context/HelperContext';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
@@ -86,26 +87,35 @@ const CMS = (props) => {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        const loading = message.open({
-          key: 'loading',
+        DispatchMessageService({
           type: 'loading',
-          content: <> Por favor espere miestras borra la información..</>,
+          key: 'loading',
+          msj: 'Por favor espere miestras se borra la información...',
+          action: 'show',
         });
         const onHandlerRemove = async () => {
           try {
             if (deleteCallback) await deleteCallback(id);
             await API.deleteOne(id, eventId);
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
             getList();
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };
@@ -125,7 +135,6 @@ const CMS = (props) => {
         addFn={addFn}
         description={description}
         form={form}
-        back={back}
         save={save}
         saveMethod={saveMethod}
       />

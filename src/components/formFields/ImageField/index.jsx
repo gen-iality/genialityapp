@@ -5,15 +5,16 @@ import { concat, omit, pick } from 'ramda';
 import { Field } from 'formik';
 import ImageInput from '../../shared/imageInput';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import { Actions } from '../../../helpers/request';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const FORMIK_PROPS_KEYS = ['form', 'field', 'meta'];
 const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
 const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS);
 
 function ImageField(rawProps) {
+  const intl = useIntl();
   let ancho = '200';
   let alto = '200';
   let errorMsg = '';
@@ -48,7 +49,11 @@ function ImageField(rawProps) {
       });
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       axios.all(uploaders).then(async () => {
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        DispatchMessageService({
+          type: 'success',
+          msj: intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       });
     }
   };
@@ -73,10 +78,10 @@ function ImageField(rawProps) {
               }}
               errImg={errorMsg}
               {...props}
-              btnRemove={(<></>)}
+              btnRemove={<></>}
             />
           </div>
-        /* <FormItem
+          /* <FormItem
             label={formItemProps.label}
             required={formItemProps.required}
             help={fieldError}

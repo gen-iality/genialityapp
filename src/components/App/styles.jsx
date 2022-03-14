@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import ImageInput from '../shared/imageInput';
 import axios from 'axios/index';
-import { toast } from 'react-toastify';
 import { Actions, OrganizationApi } from '../../helpers/request';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { SketchPicker } from 'react-color';
-import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select, Spin } from 'antd';
+import { Button, Card, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select, Spin } from 'antd';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -37,12 +37,12 @@ class Styles extends Component {
           editIsVisible: false,
         },
         {
-          title: 'Color de fondo para el menu',
+          title: 'Color de fondo para el menú',
           fieldColorName: 'toolbarDefaultBg',
           editIsVisible: false,
         },
         {
-          title: 'Color del texto para el menu',
+          title: 'Color del texto para el menú',
           fieldColorName: 'textMenu',
           editIsVisible: false,
         },
@@ -117,7 +117,7 @@ class Styles extends Component {
     this.selectsDrawer = [
       {
         label: 'Franja de titulo  y fecha',
-        defaultValue: false,
+        defaultValue: true,
         name: 'show_title',
         options: [
           {
@@ -265,7 +265,7 @@ class Styles extends Component {
           mobile_banner: dataStyles.mobile_banner || null,
           banner_footer_email: dataStyles.banner_footer_email || null,
           show_banner: dataStyles.show_banner || false,
-          show_title: dataStyles?.show_title || false,
+          show_title: dataStyles?.show_title || true,
           show_video_widget: dataStyles?.show_video_widget || false,
           show_card_banner: dataStyles.show_card_banner || true,
           show_inscription: info?.show_inscription || false,
@@ -334,8 +334,11 @@ class Styles extends Component {
         self.setState({
           fileMsg: 'Imagen subida con exito',
         });
-
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        DispatchMessageService({
+          type: 'success',
+          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -346,10 +349,11 @@ class Styles extends Component {
 
   //Se realiza una funcion asincrona submit para enviar los datos a la api
   async submit() {
-    const loadingSave = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere..</>,
+      key: 'loading',
+      msj: 'Por favor espere...',
+      action: 'show',
     });
     let info;
     const { eventId } = this.state;
@@ -367,33 +371,55 @@ class Styles extends Component {
 
       this.setState({ loading: false });
       if (info._id) {
-        /* toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />); */
-        message.destroy(loadingSave.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente</>,
+          msj: this.props.intl.formatMessage({
+            id: 'toast.success',
+            defaultMessage: 'Información guardada correctamente!',
+          }),
+          action: 'show',
         });
       } else {
-        /* toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />); */
         this.setState({ msg: 'Cant Create', create: false });
-        message.destroy(loadingSave.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: <> Error al guardar</>,
+          msj: this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Error al guardar' }),
+          action: 'show',
         });
       }
     } catch (error) {
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+        action: 'show',
+      });
       if (error.response) {
         /* console.error(error.response); */
         const { status, data } = error.response;
         /* console.error('STATUS', status, status === 401); */
-        if (status === 401)
-          message.open({
-            type: 'error',
-            content: <>Error : {data?.message || status}</>,
+        if (status === 401) {
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
           });
-        else this.setState({ serverError: true, loader: false, errorData: data });
+          DispatchMessageService({
+            type: 'error',
+            msj: `Error: ${data?.message || status}`,
+            action: 'show',
+          });
+        } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
         /* console.error('Error', error.message); */
@@ -402,10 +428,14 @@ class Styles extends Component {
           errorData = error.request;
         }
         this.setState({ serverError: true, loader: false, errorData });
-        message.destroy(loadingSave.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: <> Error al guardar</>,
+          msj: 'Error al guardar.',
+          action: 'show',
         });
       }
     }
@@ -441,9 +471,17 @@ class Styles extends Component {
     this.setState({ loading: false });
 
     if (info._id) {
-      toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+      DispatchMessageService({
+        type: 'success',
+        msj: this.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+        action: 'show',
+      });
     } else {
-      toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+      DispatchMessageService({
+        type: 'warning',
+        msj: this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }),
+        action: 'show',
+      });
       this.setState({ msg: 'Cant Create', create: false });
     }
   }
@@ -511,7 +549,12 @@ class Styles extends Component {
                             code
                             copyable={{
                               text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
-                              onCopy: () => message.success('Color hexadecimal copiado'),
+                              onCopy: () =>
+                                DispatchMessageService({
+                                  type: 'success',
+                                  msj: 'Color hexadecimal copiado',
+                                  action: 'show',
+                                }),
                             }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
                           <Text
                             style={{ fontSize: '20px' }}
@@ -520,7 +563,12 @@ class Styles extends Component {
                               text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
                                 this.hexToRgb(this.state.styles[item.fieldColorName])?.g
                               },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
-                              onCopy: () => message.success('Color rgb copiado'),
+                              onCopy: () =>
+                                DispatchMessageService({
+                                  type: 'success',
+                                  msj: 'Color rgb copiado',
+                                  action: 'show',
+                                }),
                             }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
                             this.hexToRgb(this.state.styles[item.fieldColorName])?.g
                           },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
@@ -631,4 +679,4 @@ class Styles extends Component {
   }
 }
 
-export default Styles;
+export default injectIntl(Styles);

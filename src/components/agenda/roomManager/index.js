@@ -3,7 +3,7 @@ import { message as Message, message, Modal } from 'antd';
 import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
-import AgendaContext from '../../../Context/AgendaContext';
+import AgendaContext from '../../../context/AgendaContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { stopLiveStream, deleteLiveStream, getLiveStreamStatus } from 'adaptors/wowzaStreamingAPI';

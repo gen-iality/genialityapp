@@ -8,20 +8,23 @@ import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 
-const Editor = ({ onSubmit, submitting, value, loadingsave,errimage,errNote,refText}) => (
-
-    <Form ref={refText} onFinish={onSubmit}>
-    <Form.Item name="post">
-      <TextArea  placeholder='¿Qué está pasando?' rows={4} />
+const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, refText }) => (
+  <Form ref={refText} onFinish={onSubmit}>
+    <Form.Item name='post'>
+      <TextArea placeholder='¿Qué está pasando?' rows={4} />
     </Form.Item>
     {errimage && (
-      <div style={{marginBottom:30}}>
+      <div style={{ marginBottom: 30 }}>
         <Alert type='error' message='Formato de archivo incorrecto!' />
       </div>
     )}
-    {errNote &&   <div  style={{marginBottom:30}} ><Alert type='error' message="Ingrese una texto válido o una imagen!" /></div>}
+    {errNote && (
+      <div style={{ marginBottom: 30 }}>
+        <Alert type='error' message='Ingrese una texto válido o una imagen!' />
+      </div>
+    )}
 
     <Form.Item>
       {!loadingsave && (
@@ -29,20 +32,19 @@ const Editor = ({ onSubmit, submitting, value, loadingsave,errimage,errNote,refT
           id='submitPost'
           style={{ background: loadingsave ? 'white' : '#333F44' }}
           htmlType='submit'
-          loading={submitting}         
+          loading={submitting}
           type='primary'>
           Enviar
         </Button>
       )}
-      
+
       {loadingsave && (
         <>
           <Spin /> <span style={{ color: '#333F44' }}>Por Favor espere...</span>
         </>
       )}
     </Form.Item>
-    </Form>
-
+  </Form>
 );
 
 class CreatePost extends Component {
@@ -66,7 +68,7 @@ class CreatePost extends Component {
       image: '',
       errimage: false,
       loadingsave: false,
-      errNote:false
+      errNote: false,
     };
     this.savePost = this.savePost.bind(this);
     this.previewImage = this.previewImage.bind(this);
@@ -75,60 +77,66 @@ class CreatePost extends Component {
     this.formRef = createRef();
   }
 
-  componentDidMount(){
-  
-  }
+  componentDidMount() {}
 
-  cleanValue(){
-    this.setState({value:''})
+  cleanValue() {
+    this.setState({ value: '' });
   }
 
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost(values) {
-    
-    if(values.post || this.state.image){
-    this.setState({
-      loadingsave: true,
-    });
-    let data = {
-      urlImage: this.state.image,
-      post: values.post || '',
-      author: this.props.cUser.value._id,
-      datePost: new Date(),
-      likes: 0,
-      usersLikes: [],
-      authorName: this.props.cUser.value.names
-        ? this.props.cUser.value.names
-        : this.props.cUser.value.name
-        ? this.props.cUser.value.name
-        : this.props.cUser.value.email,
-      authorImage:this.props.cUser.value.picture || null
-    };
+    if (values.post || this.state.image) {
+      this.setState({
+        loadingsave: true,
+      });
+      let data = {
+        urlImage: this.state.image,
+        post: values.post || '',
+        author: this.props.cUser.value._id,
+        datePost: new Date(),
+        likes: 0,
+        usersLikes: [],
+        authorName: this.props.cUser.value.names
+          ? this.props.cUser.value.names
+          : this.props.cUser.value.name
+          ? this.props.cUser.value.name
+          : this.props.cUser.value.email,
+        authorImage: this.props.cUser.value.picture || null,
+      };
 
-    //savepost se realiza para publicar el post  
-    var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);   
-    if(newPost){
-      this.setState({ value: '', image: ''},()=>this.setState({ showInfo: true, loadingsave: false,errNote:false, showInfo: false, visible: false, keyList: Date.now() }));
-    //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
-   //RESET FORMULARIO
-   this.formRef.current.resetFields();
-    message.success('Mensaje Publicado');
-    }else{
-      message.error('Error al guardar');
+      //savepost se realiza para publicar el post
+      var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
+      if (newPost) {
+        this.setState({ value: '', image: '' }, () =>
+          this.setState({
+            showInfo: true,
+            loadingsave: false,
+            errNote: false,
+            showInfo: false,
+            visible: false,
+            keyList: Date.now(),
+          })
+        );
+        //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
+        //RESET FORMULARIO
+        this.formRef.current.resetFields();
+        message.success('Mensaje Publicado');
+      } else {
+        message.error('Error al guardar');
+      }
+
+      //this.props.addPosts(newPost);
+    } else {
+      this.setState({ errNote: true });
     }
-    
-    //this.props.addPosts(newPost);
-  }else{
-    this.setState({errNote:true})
-  }
   }
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
   previewImage(event) {
-    console.log(event)
+    console.log(event);
     const permitFile = ['png', 'jpg', 'jpeg', 'gif'];
     //event.preventDefault();
-    let file = event.fileList[0];    
+    let file = event.fileList[0];
     let extension = file.name.split('.').pop();
     /* if (permitFile.indexOf(extension) > -1) {
       let reader = new FileReader();
@@ -139,7 +147,7 @@ class CreatePost extends Component {
     } else {
       this.setState({ errimage: true });
     } */
-    if(file) {
+    if (file) {
       let reader = new FileReader();
       reader.readAsDataURL(file.originFileObj);
       reader.onloadend = () => {
@@ -228,9 +236,14 @@ class CreatePost extends Component {
               <Col style={{ textAlign: 'center' }} xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
-                  <Upload type='file' accept='image/*' multiple={false} showUploadList={false} onChange={(e) => this.previewImage(e)}>
+                  <Upload
+                    type='file'
+                    accept='image/*'
+                    multiple={false}
+                    showUploadList={false}
+                    onChange={(e) => this.previewImage(e)}>
                     <Button type='primary' icon={<CloudUploadOutlined />}>
-                    Subir Foto
+                      Subir Foto
                     </Button>
                   </Upload>
                   {/* <Space className='file-label ant-btn ant-btn-primary'>
@@ -307,7 +320,7 @@ class CreatePost extends Component {
                   onChange={this.handleChange}
                   onSubmit={this.savePost}
                   submitting={submitting}
-                  value={value}                  
+                  value={value}
                   errNote={this.state.errNote}
                   errimage={this.state.errimage}
                   loadingsave={this.state.loadingsave}

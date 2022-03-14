@@ -2,11 +2,11 @@ import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/i
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row, Spin } from 'antd';
 import React, { useState, useContext, useEffect } from 'react';
 import { EventsApi, UsersApi } from '../../helpers/request';
-import withContext from '../../Context/withContext';
-import { HelperContext } from '../../Context/HelperContext';
+import withContext from '../../context/withContext';
+import { HelperContext } from '../../context/HelperContext';
 import { useIntl } from 'react-intl';
 import { auth } from '../../helpers/firebase';
-import { UseEventContext } from 'Context/eventContext';
+import { UseEventContext } from 'context/eventContext';
 
 const { useBreakpoint } = Grid;
 
@@ -20,7 +20,7 @@ const stylePaddingMobile = {
 };
 
 const ModalLoginHelpers = (props) => {
-  let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, authModalDispatch } = useContext(HelperContext);
   let cEvent = UseEventContext();
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
@@ -43,7 +43,7 @@ const ModalLoginHelpers = (props) => {
   const handleRecoveryPass = async ({ email }) => {
     try {
       let resp;
-      resp = await EventsApi.changePasswordUser(email);
+      resp = await EventsApi.changePasswordUser(email, window.location.href);
       if (resp) {
         setSendRecovery(
           `${intl.formatMessage({
@@ -121,21 +121,15 @@ const ModalLoginHelpers = (props) => {
   const onFinishFailed = () => {
     console.log('FALIED FORM');
   };
+
   return (
     <Modal
       bodyStyle={{ textAlign: 'center' }}
       centered
       footer={null}
-      zIndex={1000}
+      zIndex={1005}
       closable={false}
-      visible={
-        typeModal !== null &&
-        typeModal != 'preregisterMessage' &&
-        typeModal != 'loginError' &&
-        typeModal !== 'loginSuccessNotRegister' &&
-        typeModal !== 'visitors' &&
-        typeModal !== 'loginSuccess'
-      }>
+      visible={typeModal === 'mail' || typeModal === 'recover'}>
       <PageHeader
         className={
           (sendRecovery != null || registerUser) &&
@@ -212,7 +206,7 @@ const ModalLoginHelpers = (props) => {
                   size='middle'
                   type='primary'
                   onClick={() => {
-                    handleChangeTabModal('2');
+                    authModalDispatch({ type: 'showRegister' });
                     handleChangeTypeModal(null);
                     setSendRecovery(null);
                     setRegisterUser(false);
@@ -248,7 +242,7 @@ const ModalLoginHelpers = (props) => {
                 size='middle'
                 type='primary'
                 onClick={() => {
-                  handleChangeTabModal('2');
+                  authModalDispatch({ type: 'showRegister' });
                   handleChangeTypeModal(null);
                   setSendRecovery(null);
                   setRegisterUser(false);

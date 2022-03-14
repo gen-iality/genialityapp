@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseUserEvent } from '../../context/eventUserContext';
 import { isHost } from '../../helpers/helperEventUser';
-import { UseEventContext } from '../../Context/eventContext';
+import { UseEventContext } from '../../context/eventContext';
 import {
   getLiveStreamConfig,
   getLiveStreamStatus,

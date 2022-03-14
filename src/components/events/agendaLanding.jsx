@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment-timezone';
 import { connect } from 'react-redux';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import {
   AgendaApi,
   SpacesApi,

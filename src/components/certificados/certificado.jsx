@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import { useHistory } from 'react-router-dom';
 import { handleRequestError } from '../../helpers/utils';
-import { Row, Col, Form, Input, message, Modal, Select, Button, Upload, Image } from 'antd';
+import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -13,6 +13,7 @@ import moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 import Dropzone from 'react-dropzone';
 import { withRouter } from 'react-router-dom';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -72,11 +73,13 @@ const Certificado = (props) => {
   };
 
   const onSubmit = async () => {
-    if (certificado.name) { // && certificado.rol
-      const loading = message.open({
-        key: 'loading',
+    if (certificado.name) {
+      // && certificado.rol
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras se guarda la información..</>,
+        key: 'loading',
+        msj: 'Por favor espere miestras se guarda la información...',
+        action: 'show',
       });
 
       try {
@@ -102,30 +105,43 @@ const Certificado = (props) => {
           };
           await CertsApi.create(data);
         }
-
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente!</>,
+          msj: 'Información guardada correctamente!',
+          action: 'show',
         });
         history.push(`${props.matchUrl}`);
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     } else {
-      message.error('El nombre es requerido');//y el rol son
+      //y el rol son
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El nombre es requerido',
+        action: 'show',
+      });
     }
   };
 
   const onRemoveId = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     if (locationState.edit) {
       confirm({
@@ -139,17 +155,25 @@ const Certificado = (props) => {
           const onHandlerRemove = async () => {
             try {
               await CertsApi.deleteOne(locationState.edit);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               history.push(`${props.matchUrl}`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };
@@ -201,9 +225,10 @@ const Certificado = (props) => {
         setCertificado({ ...certificado, imageData: imageData, imageFile: imageData, image: imageData });
       };
     } else {
-      message.open({
+      DispatchMessageService({
         type: 'error',
-        content: 'Solo se permiten imágenes. Intentalo de nuevo',
+        msj: 'Solo se permiten imágenes. Intentalo de nuevo',
+        action: 'show',
       });
     }
   };
@@ -331,7 +356,8 @@ const Certificado = (props) => {
                     Rol <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El rol es requerido' }]} */>
+                rules={[{ required: true, message: 'El rol es requerido' }]} */
+              >
                 <Select
                   name={'rol'}
                   onChange={(e) => {
@@ -387,11 +413,7 @@ const Certificado = (props) => {
           </Row>
 
           <Form.Item label={'Certificado'}>
-            <EviusReactQuill
-              name='content'
-              data={certificado.content}
-              handleChange={chgTxt}
-            />
+            <EviusReactQuill name='content' data={certificado.content} handleChange={chgTxt} />
             {/* <div className='editor-certificado'>
               <div style={{ border: '1px solid', width: '800px', position: 'relative', margin: 'auto' }}>
                 <div className='texto-certificado'>

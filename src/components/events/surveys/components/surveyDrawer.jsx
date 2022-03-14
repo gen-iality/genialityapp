@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Drawer, Space } from 'antd';
 import { FileDoneOutlined, PieChartOutlined, CloseOutlined } from '@ant-design/icons';
-import { UseSurveysContext } from '../../../../Context/surveysContext';
-import { UseCurrentUser } from '../../../../Context/userContext';
+import { UseSurveysContext } from '../../../../context/surveysContext';
+import { UseCurrentUser } from '../../../../context/userContext';
 import SurveyDetailPage from '../SurveyDetailPage';
 import RankingTrivia from '../rankingTrivia';
 import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed';
@@ -119,7 +119,7 @@ function SurveyDrawer(props) {
             <Col hidden={rankingVisible} xl={8} xxl={8}>
               <div style={{ width: '100%' }}>
                 <div style={{ justifyContent: 'center', display: 'grid' }}>
-                  {cSurveys.shouldDisplayRanking() && <RankingTrivia noWidth/>}
+                  {cSurveys.shouldDisplayRanking() && <RankingTrivia noWidth />}
                 </div>
               </div>
             </Col>

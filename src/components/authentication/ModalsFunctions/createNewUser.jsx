@@ -10,7 +10,7 @@ const createNewUser = async (props) => {
     resetFields();
   }
   const uploadLogo = async () => {
-    const selectedLogo = picture !== null && picture != '' ? picture[0].thumbUrl : null;
+    const selectedLogo = picture && picture !== '' ? picture[0].thumbUrl : null;
 
     if (selectedLogo) {
       const urlOfTheUploadedImage = await saveImageStorage(selectedLogo);
@@ -31,7 +31,7 @@ const createNewUser = async (props) => {
     };
     try {
       let response = await UsersApi.createUser(body);
-      if (response._id){
+      if (response._id) {
         /* setModalInfo({
           status: 'success',
           title: `Bienvenido ${response.names}`,
@@ -39,13 +39,16 @@ const createNewUser = async (props) => {
         });
       setOpenOrCloseTheModalFeedback(true);
       sendDataFinished();*/
-        return true;
+        return 1;
       }
     } catch (e) {
-      // console.log(e.response);
+      //PERMITE VALIDAR CUANDO EL EMAIL ES INCORRECTO
+      if (e.response.status == 422 && e.response.data.errors.email[0] !== 'email ya ha sido registrado.') {
+        return 2;
+      }
       const registeredEmail = e.response.data.errors.email[0];
       if (registeredEmail === 'email ya ha sido registrado.') {
-        return false;
+        return 0;
       }
     }
   };

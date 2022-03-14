@@ -5,9 +5,9 @@ import { stylesMenuItems } from '../helpers/csshelpers';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../../../Context/withContext';
-import { HelperContext } from '../../../../Context/HelperContext';
-import { UseEventContext } from 'Context/eventContext';
+import withContext from '../../../../context/withContext';
+import { HelperContext } from '../../../../context/HelperContext';
+import { UseEventContext } from 'context/eventContext';
 import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed';
 
 const MenuRigth = (props) => {

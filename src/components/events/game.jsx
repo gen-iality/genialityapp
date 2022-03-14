@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { Grid } from 'antd';
 
 const { useBreakpoint } = Grid;

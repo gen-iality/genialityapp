@@ -1,8 +1,8 @@
 import { Card, Space, Col, Row } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import VideoCard from './videoCard';
-import { UseEventContext } from '../../Context/eventContext';
-import { HelperContext } from '../../Context/HelperContext';
+import { UseEventContext } from '../../context/eventContext';
+import { HelperContext } from '../../context/HelperContext';
 import { useState } from 'react';
 const ListVideoCard = () => {
   let cEvent = UseEventContext();

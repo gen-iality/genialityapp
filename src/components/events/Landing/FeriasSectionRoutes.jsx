@@ -3,24 +3,24 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
- import FeriasDetail from '../../events/ferias/FeriasDetail';
- import FeriasList from '../../events/ferias/FeriasList';
- import FeriasStand from '../../events/ferias/FeriasStand';
- import {UseEventContext} from '../../../Context/eventContext'
+import FeriasDetail from '../../events/ferias/FeriasDetail';
+import FeriasList from '../../events/ferias/FeriasList';
+import FeriasStand from '../../events/ferias/FeriasStand';
+import { UseEventContext } from '../../../context/eventContext';
 
 const FeriasSectionRoutes = () => {
-  let { path } = useRouteMatch();  
+  let { path } = useRouteMatch();
   let cEvent = UseEventContext();
-  
+
   if (!cEvent.value) return <h1>Cargando...</h1>;
   return (
     <Switch>
       <Route exact path={`${path}`}>
-         <FeriasList event_id={cEvent.value._id} />
+        <FeriasList event_id={cEvent.value._id} />
       </Route>
       <Route path={`${path}/:id/detailsCompany`}>
-        <FeriasDetail  eventId={cEvent.value._id}/>
-      </Route>      
+        <FeriasDetail eventId={cEvent.value._id} />
+      </Route>
     </Switch>
   );
 };

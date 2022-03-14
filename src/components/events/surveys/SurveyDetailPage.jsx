@@ -6,8 +6,8 @@ import { Card, Result, Divider } from 'antd';
 import ClosedSurvey from './components/closedSurvey';
 
 /** Context´s */
-import { UseCurrentUser } from '../../../Context/userContext';
-import { UseSurveysContext } from '../../../Context/surveysContext';
+import { UseCurrentUser } from '../../../context/userContext';
+import { UseSurveysContext } from '../../../context/surveysContext';
 
 function SurveyDetailPage(props) {
   let cSurveys = UseSurveysContext();

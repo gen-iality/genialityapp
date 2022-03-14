@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { List, Badge, Tabs } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
-import { UseEventContext } from '../../../Context/eventContext';
-import { UseCurrentUser } from '../../../Context/userContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
+import { UseEventContext } from '../../../context/eventContext';
+import { UseCurrentUser } from '../../../context/userContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { HelperContext } from '../../../Context/HelperContext';
+import { HelperContext } from '../../../context/HelperContext';
 import UsersCard from '../../shared/usersCard';
 
 import ThisRouteCanBeDisplayed, {

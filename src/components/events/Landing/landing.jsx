@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { connect } from 'react-redux';
-import { UseEventContext } from '../../../Context/eventContext';
-import { UseCurrentUser } from '../../../Context/userContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
-import { HelperContext } from '../../../Context/HelperContext';
+import { UseEventContext } from '../../../context/eventContext';
+import { UseCurrentUser } from '../../../context/userContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
+import { HelperContext } from '../../../context/HelperContext';
 /** ant design */
 import { Layout, Spin, notification, Button } from 'antd';
-import 'react-toastify/dist/ReactToastify.css';
+/* import 'react-toastify/dist/ReactToastify.css'; */
 const { Content } = Layout;
 
 import { setUserAgenda } from '../../../redux/networking/actions';
@@ -21,6 +21,8 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 
 import loadable from '@loadable/component';
 import { useCheckinUser } from 'helpers/HelperAuth';
+import WithEviusContext from 'context/withContext';
+import { DispatchMessageService } from '../../../context/MessageService.tsx';
 
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
@@ -68,6 +70,17 @@ const IconRender = (type) => {
 };
 
 const Landing = (props) => {
+  // console.log('🚀 ~ file: landing.jsx ~ line 72 ~ Landing ~ props', props);
+
+  useEffect(() => {
+    DispatchMessageService({
+      type: 'loading',
+      msj: 'esto esta cargando',
+      action: 'show',
+    });
+    console.log('🚀 first');
+  }, []);
+
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
@@ -221,4 +234,5 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setUserAgenda,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Landing);
+
+export default connect(mapStateToProps, mapDispatchToProps)(WithEviusContext(Landing));

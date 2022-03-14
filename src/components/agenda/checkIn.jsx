@@ -5,9 +5,8 @@ import { firestore } from '../../helpers/firebase';
 import { FormattedMessage } from 'react-intl';
 /* import CheckSpace from '../event-users/checkSpace_old'; */
 import XLSX from 'xlsx';
-import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';
-import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd';
+import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag, message } from 'antd';
 import {
   SearchOutlined,
   PlusCircleOutlined,
@@ -350,14 +349,14 @@ class CheckAgenda extends Component {
         checked_at: new Date(),
       })
       .then(() => {
-        toast.success('Usuario Chequeado');
+        message.success('Usuario Chequeado');
         if (edit) {
           this.updateAttendeesList(id, user);
         }
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
-        toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+        message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       });
   };
 

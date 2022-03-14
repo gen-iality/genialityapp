@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
@@ -47,31 +48,57 @@ function Empresas({ event, match }) {
   const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
   const orderCompany = async (updateList) => {
-    message.loading('Por favor espere..');
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere mientras se guarda el orden...',
+      action: 'destroy',
+    });
     let companies = updateList ? updateList : companyList;
-    for (let i = 0; i < companies.length; i++) {
-      companies[i].index = i + 1;
-      var { id, ...company } = companies[i];
-      await firestore
-        .collection('event_companies')
-        .doc(event._id)
-        .collection('companies')
-        .doc(companies[i].id)
-        .set(
-          {
-            ...company,
-          },
-          { merge: true }
-        );
+    try {
+      for (let i = 0; i < companies.length; i++) {
+        companies[i].index = i + 1;
+        var { id, ...company } = companies[i];
+        await firestore
+          .collection('event_companies')
+          .doc(event._id)
+          .collection('companies')
+          .doc(companies[i].id)
+          .set(
+            {
+              ...company,
+            },
+            { merge: true }
+          );
+      }
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Orden guardado correctamente!',
+        action: 'show',
+      });
+    } catch (e) {
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'Error',
+        msj: 'Ha ocurrido un problema al ordenar!',
+        action: 'show',
+      });
     }
-    message.success('Orden guardado correctamente..');
   };
 
   function deleteCompany(id) {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -94,16 +121,24 @@ function Empresas({ event, match }) {
                 setCompanyList(updateList);
                 orderCompany(updateList).then((r) => {});
               });
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
-              type: 'error',
-              content: handleRequestError(e).message,
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'Error',
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };

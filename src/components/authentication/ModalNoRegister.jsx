@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Result, Button, Divider, Typography, Space } from 'antd';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { useIntl } from 'react-intl';
 import { recordTypeForThisEvent, iAmRegisteredInThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
-import { UseEventContext } from '../../Context/eventContext';
-import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../context/eventContext';
+import { UseUserEvent } from '../../context/eventUserContext';
 
 const ModalNoRegister = (props) => {
   let cEvent = UseEventContext();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { EventsApi } from '../../../helpers/request';
-import { UseEventContext } from '../../../Context/eventContext';
+import { UseEventContext } from '../../../context/eventContext';
 import { Form, message, Button, Row, Col } from 'antd';
 import Header from '../../../antdComponents/Header';
 

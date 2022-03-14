@@ -3,9 +3,9 @@ import { Form, Button, Row, Col, Input, Typography } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { app } from 'helpers/firebase';
 import { FormattedMessage } from 'react-intl';
-import { UseCurrentUser } from '../../../Context/userContext';
-import { UseEventContext } from '../../../Context/eventContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
+import { UseCurrentUser } from '../../../context/userContext';
+import { UseEventContext } from '../../../context/eventContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
 import { AttendeeApi } from '../../../helpers/request';
 
 const layout = {

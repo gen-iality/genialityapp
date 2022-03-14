@@ -3,7 +3,7 @@ import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message
 import React from 'react';
 import { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { useEffect } from 'react';
 
 const { Title, Text } = Typography;

@@ -7,7 +7,7 @@ import UserGamification from './services/userGamificationService';
 import getCurrentEvenUser from './services/getCurrentEventUserService';
 import setUserPointsPerSurvey from './services/setUserPointsPerSurveyService';
 import Graphics from './graphics';
-import { UseEventContext } from '../../../Context/eventContext';
+import { UseEventContext } from '../../../context/eventContext';
 import * as Survey from 'survey-react';
 import InternarlSurveyStyles from './components/internarlSurveyStyles';
 import LoadSelectedSurvey from './functions/loadSelectedSurvey';

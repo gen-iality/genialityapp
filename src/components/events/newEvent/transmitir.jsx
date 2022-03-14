@@ -1,6 +1,6 @@
 import { Button, Col, Modal, Row, List, Typography, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useContextNewEvent } from '../../../Context/newEventContext';
+import { useContextNewEvent } from '../../../context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
 import OptTranmitir from './optTransmitir';
 
@@ -12,42 +12,40 @@ function Transmitir(props) {
     organization,
     selectOrganization,
     selectedOrganization,
-    isbyOrganization,   
-    isLoadingOrganization
+    isbyOrganization,
+    isLoadingOrganization,
   } = useContextNewEvent();
   const [organizations, setOrganizations] = useState([]);
 
   useEffect(() => {
     if (props.currentUser) {
-      
       obtainOrganizations();
     }
-   // console.log("ISBYORGANIZATION==>",isbyOrganization)
+    // console.log("ISBYORGANIZATION==>",isbyOrganization)
 
     async function obtainOrganizations() {
-      
-      if(!selectOrganization){
-        isLoadingOrganization(true)
-      let organizations = await OrganizationApi.mine();
-      if(organization.length==0){
-        await createOrganization();
-        organizations = await OrganizationApi.mine();
+      if (!selectOrganization) {
+        isLoadingOrganization(true);
+        let organizations = await OrganizationApi.mine();
+        if (organization.length == 0) {
+          await createOrganization();
+          organizations = await OrganizationApi.mine();
+        }
+
+        setOrganizations(organizations);
+        selectedOrganization(organizations && organizations[0]);
+        isLoadingOrganization(false);
       }
-      
-      setOrganizations(organizations);
-      selectedOrganization(organizations && organizations[0])
-      isLoadingOrganization(false)
     }
-  }
   }, [props.currentUser]);
 
   const createOrganization = async () => {
     let newOrganization = {
-      name: props.currentUser?.names ||  props.currentUser?.name,
+      name: props.currentUser?.names || props.currentUser?.name,
     };
     //CREAR ORGANIZACION------------------------------
     let create = await OrganizationApi.createOrganization(newOrganization);
-    console.log("CREATE==>",create)
+    console.log('CREATE==>', create);
     if (create) {
       return create;
     }
@@ -98,7 +96,7 @@ function Transmitir(props) {
               okText='Seleccionar'
               cancelText='Cerrar'
               title='Organización'
-              visible={organization &&  !isbyOrganization }
+              visible={organization && !isbyOrganization}
               onCancel={() => changeOrganization(false)}>
               <List
                 style={{ height: 400, overflowY: 'auto' }}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import { Collapse, Col, Row } from 'antd';
-import withContext from '../../Context/withContext'
+import withContext from '../../context/withContext';
 const { Panel } = Collapse;
 
 const center = {
@@ -53,10 +53,15 @@ class Faqs extends Component {
             }} */
             defaultActiveKey={['3']}>
             {faqsData.map((faqs, key) => (
-              <Panel key={key} 
-                header={<span /* style={{ color: this.props.cEvent.value.styles.textMenu }} */>
-                  <b>{'Pregunta: '}</b><br />{faqs.title}
-                </span>}>
+              <Panel
+                key={key}
+                header={
+                  <span /* style={{ color: this.props.cEvent.value.styles.textMenu }} */>
+                    <b>{'Pregunta: '}</b>
+                    <br />
+                    {faqs.title}
+                  </span>
+                }>
                 <b>Respuesta:</b> <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
               </Panel>
             ))}
@@ -67,5 +72,5 @@ class Faqs extends Component {
   }
 }
 
-let FaqsWithContext = withContext(Faqs)
-export default FaqsWithContext ;
+let FaqsWithContext = withContext(Faqs);
+export default FaqsWithContext;

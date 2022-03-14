@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Modal, Form, Input, Button, Typography, message, Spin } from 'antd';
 import { DefaultProperties } from './propertiesdefault';
 import { OrganizationPlantillaApi } from '../../helpers/request';
-import HelperContext from '../../Context/HelperContext';
+import HelperContext from '../../context/HelperContext';
 
 const ModalCreateTemplate = (props) => {
   const [loading, setloading] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { app, firestore } from '../helpers/firebase';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -7,13 +7,14 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown, notification } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
-import withContext from '../Context/withContext';
+import withContext from '../context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
+import { useIntl } from 'react-intl';
 
 const { useBreakpoint } = Grid;
 
@@ -45,7 +46,8 @@ const initialDataGeneral = {
 };
 
 const Headers = (props) => {
-  const { cUser, showMenu, loginInfo, cHelper, cEvent } = props;
+  const { cUser, showMenu, loginInfo, cHelper, cEvent, cEventUser } = props;
+  const { logout } = cHelper;
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
   const [showButtons, setshowButtons] = useState({
@@ -53,65 +55,7 @@ const Headers = (props) => {
     buttonlogin: true,
   });
   const screens = useBreakpoint();
-  let history = useHistory();
-  const conectionRef = firestore.collection(`connections`);
-
-  const openNotificationWithIcon = (type) => {
-    notification[type]({
-      message: cUser.value?.names,
-      description: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
-      style: {
-        borderRadius: '10px',
-      },
-    });
-  };
-
-  /**
-   * @param showNotification - If the boolean value is true the remote logout notification is displayed
-   */
-  const logout = (showNotification) => {
-    app
-      .auth()
-      .signOut()
-      .then(async () => {
-        await conectionRef.doc(cUser.value?._id).delete();
-        const routeUrl = props.match?.url;
-        const weAreOnTheLanding = routeUrl.includes('landing');
-        if (weAreOnTheLanding) {
-          // window.location.reload();
-          if (showNotification) {
-            openNotificationWithIcon('info');
-          }
-        } else {
-          history.push('/');
-        }
-      })
-      .catch(function(error) {
-        console.log('error', error);
-      });
-  };
-
-  useEffect(() => {
-    if (!cUser.value) return;
-    //console.log('EJECUTADO EL SNAPSHOT ACAAA', cUser.value.email);
-    const unsubscribe = conectionRef.onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges();
-      //console.log('CHANGES ACA==>', changes);
-      if (changes) {
-        changes.forEach((change) => {
-          if (change.type === 'removed' && change?.doc?.data()?.email == cUser.value?.email) {
-            // console.log('ACÁ DEBO CERRAR LA SESIÓN', change.doc.data());
-            /* Sending a boolean to the backend to know if the logout is manual or not. */
-            logout(true);
-          }
-        });
-      }
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, [cUser.value]);
-
+  const intl = useIntl();
   const openMenu = () => {
     setdataGeneral({ ...dataGeneral, menuOpen: !dataGeneral.menuOpen, filterOpen: false });
   };
@@ -165,7 +109,7 @@ const Headers = (props) => {
             organization: WhereHerePath(),
           });
 
-          cHelper.handleChangeTabModal('1');
+          cHelper.authModalDispatch({ type: 'showLogin' });
         }}>
         <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
       </Menu.Item>
@@ -178,7 +122,7 @@ const Headers = (props) => {
             organization: WhereHerePath(),
           });
 
-          cHelper.handleChangeTabModal('2');
+          cHelper.authModalDispatch({ type: 'showRegister' });
         }}>
         <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
       </Menu.Item>
@@ -279,9 +223,12 @@ const Headers = (props) => {
                           organization: WhereHerePath(),
                         });
 
-                        cHelper.handleChangeTabModal('1');
+                        cHelper.authModalDispatch({ type: 'showLogin' });
                       }}>
-                      Iniciar sesión
+                      {intl.formatMessage({
+                        id: 'modal.title.login',
+                        defaultMessage: 'Iniciar sesión',
+                      })}
                     </Button>
                   ) : (
                     <Space>
@@ -305,9 +252,12 @@ const Headers = (props) => {
                           organization: WhereHerePath(),
                         });
 
-                        cHelper.handleChangeTabModal('2');
+                        cHelper.authModalDispatch({ type: 'showRegister' });
                       }}>
-                      Registrarme
+                      {intl.formatMessage({
+                        id: 'modal.title.register',
+                        defaultMessage: 'Registrarme',
+                      })}
                     </Button>
                   )}
                 </Space>

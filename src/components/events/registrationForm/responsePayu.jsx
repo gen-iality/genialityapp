@@ -1,7 +1,7 @@
 import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import { Button, Card, Modal, Result, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { Actions } from '../../../helpers/request';
 
 const ResponsePayu = (props) => {
@@ -26,39 +26,41 @@ const ResponsePayu = (props) => {
       lapTransactionState,
       message,
     });
-    if(lapTransactionState=="APPROVED" && polTransactionState==4 && polResponseCode ==1){
-      updateRolUser()
+    if (lapTransactionState == 'APPROVED' && polTransactionState == 4 && polResponseCode == 1) {
+      updateRolUser();
     }
-     async function updateRolUser(){      
-        let updateRol=await Actions.put(
-          `/api/events/${props.cEvent.value?._id}/eventusers/${reference}/updaterol`,
-          {
-            rol_id:"60e8a8b7f6817c280300dc23"
-          }        
-        );        
-      }
-      //lapResponseCode,polTransactionState,polResponseCode,lapTransactionState=DECLINED&message=DECLINED
-    if (reference) setReferenceCode(reference);    
+    async function updateRolUser() {
+      let updateRol = await Actions.put(`/api/events/${props.cEvent.value?._id}/eventusers/${reference}/updaterol`, {
+        rol_id: '60e8a8b7f6817c280300dc23',
+      });
+    }
+    //lapResponseCode,polTransactionState,polResponseCode,lapTransactionState=DECLINED&message=DECLINED
+    if (reference) setReferenceCode(reference);
   }, []);
-  const isDeclined=()=>{
-   return response?.lapTransactionState == 'DECLINED' ||
-            response?.lapTransactionState == 'ERROR' ||
-            response?.lapTransactionState == 'EXPIRED'?true:false
-  }
+  const isDeclined = () => {
+    return response?.lapTransactionState == 'DECLINED' ||
+      response?.lapTransactionState == 'ERROR' ||
+      response?.lapTransactionState == 'EXPIRED'
+      ? true
+      : false;
+  };
   return (
     <Modal
-      bodyStyle={{ textAlign: 'center', borderTop: `10px solid ${response &&
-        (response?.lapTransactionState == 'DECLINED' ||
-          response?.lapTransactionState == 'ERROR' ||
-          response?.lapTransactionState == 'EXPIRED') ? (
-         '#FF3830'
-        ) : response?.lapTransactionState == 'APPROVED' ? (
-          '#52C41A'
-        ) : response?.lapTransactionState == 'PENDING' ? (
-          '#518BFB'
-        ) : (
-          ''
-        )}` }}
+      bodyStyle={{
+        textAlign: 'center',
+        borderTop: `10px solid ${
+          response &&
+          (response?.lapTransactionState == 'DECLINED' ||
+            response?.lapTransactionState == 'ERROR' ||
+            response?.lapTransactionState == 'EXPIRED')
+            ? '#FF3830'
+            : response?.lapTransactionState == 'APPROVED'
+            ? '#52C41A'
+            : response?.lapTransactionState == 'PENDING'
+            ? '#518BFB'
+            : ''
+        }`,
+      }}
       closable={false}
       visible={visible}
       footer={null}>
@@ -68,14 +70,12 @@ const ResponsePayu = (props) => {
           (response?.lapTransactionState == 'DECLINED' ||
             response?.lapTransactionState == 'ERROR' ||
             response?.lapTransactionState == 'EXPIRED') ? (
-            <CloseCircleFilled style={{color:'#FF3830'}} />
+            <CloseCircleFilled style={{ color: '#FF3830' }} />
           ) : response?.lapTransactionState == 'APPROVED' ? (
-            <CheckCircleFilled style={{color:'#52C41A'}} />
+            <CheckCircleFilled style={{ color: '#52C41A' }} />
           ) : response?.lapTransactionState == 'PENDING' ? (
-            <InfoCircleFilled style={{color:'#518BFB'}} />
-          ) : (
-            null
-          )
+            <InfoCircleFilled style={{ color: '#518BFB' }} />
+          ) : null
         }
         title={
           response &&
@@ -113,8 +113,9 @@ const ResponsePayu = (props) => {
             size='large'
             onClick={() => {
               setVisible(false);
-              !isDeclined()?
-              window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/evento`: window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/tickets`;
+              !isDeclined()
+                ? (window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/evento`)
+                : (window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/tickets`);
             }}>
             Aceptar
           </Button>,

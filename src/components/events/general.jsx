@@ -4,11 +4,11 @@ import Moment from 'moment';
 import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+/* import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; */
 import 'react-widgets/lib/scss/react-widgets.scss';
 import ErrorServe from '../modal/serverError';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
 import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
@@ -19,7 +19,6 @@ import {
   Card,
   Row,
   Col,
-  message,
   Tabs,
   Checkbox,
   Typography,
@@ -39,6 +38,7 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
+import { DispatchMessageService } from '../../context/MessageService';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -170,12 +170,13 @@ class General extends Component {
       // Error
       if (error.response) {
         const { status, data } = error.response;
-        if (status === 401)
-          message.open({
+        if (status === 401) {
+          DispatchMessageService({
             type: 'error',
-            content: <>Error : {data?.message || status}</>,
+            msj: `Error: ${data?.message || status}`,
+            action: 'show',
           });
-        else this.setState({ serverError: true, loader: false });
+        } else this.setState({ serverError: true, loader: false });
       } else {
         this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } });
       }
@@ -213,9 +214,9 @@ class General extends Component {
   //Cambio en los input
   handleChange = (e, name) => {
     // console.log(e.target);
-    if (e.target != null || e.target != undefined || e.target != '') {
+    if (e.target !== null || e.target !== undefined || e.target !== '') {
       let value = e;
-      if (e.target.value != null || e.target.value != undefined || e.target.value != '') {
+      if (e.target.value !== null || e.target.value !== undefined || e.target.value !== '') {
         value = e.target.value;
       }
 
@@ -240,17 +241,20 @@ class General extends Component {
   valid = () => {
     const error = {};
     const { event, selectedOrganizer, selectedType, selectedCategories } = this.state;
-    const valid =
-      event.name !== null &&
-      event.name.length > 0 &&
-      !!selectedOrganizer &&
+    const valid = event.name !== null && event.name !== '' && event.name.length > 0 && !!selectedOrganizer;
+    /* 
+      &&
       !!selectedType &&
       selectedCategories &&
-      selectedCategories.length > 0;
+      selectedCategories.length > 0 */
     if (valid) {
       this.setState({ valid: !valid, error });
     } else {
-      toast.error('Hubo un error, completa los datos Obligatorios');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Hubo un error, por favor completa los datos obligatorios',
+        action: 'show',
+      });
     }
   };
   //Cambio descripción
@@ -318,8 +322,11 @@ class General extends Component {
           imageFile: null,
           path,
         });
-
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        DispatchMessageService({
+          type: 'success',
+          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -359,8 +366,11 @@ class General extends Component {
           imageFileBannerImage: null,
           banner_image,
         });
-
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        DispatchMessageService({
+          type: 'success',
+          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       });
     } else {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
@@ -406,7 +416,11 @@ class General extends Component {
           .update(updateData)
           .then(() => {
             const msg = 'Tabs de la zona social actualizados';
-            message.success(msg);
+            DispatchMessageService({
+              type: 'success',
+              msj: msg,
+              action: 'show',
+            });
             resolve({
               error: '',
               message: msg,
@@ -414,6 +428,11 @@ class General extends Component {
           })
           .catch((err) => {
             console.error(err);
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ha ocurrido un error actualizando las tabs de la zona social',
+              action: 'show',
+            });
           });
       } else {
         firestore
@@ -422,7 +441,11 @@ class General extends Component {
           .set({ tabs: { ...tabs } })
           .then(() => {
             const msg = 'Tabs de la zona social inicializados';
-            message.success(msg);
+            DispatchMessageService({
+              type: 'success',
+              msj: msg,
+              action: 'show',
+            });
             resolve({
               error: '',
               message: msg,
@@ -430,6 +453,11 @@ class General extends Component {
           })
           .catch((err) => {
             console.error(err);
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ha ocurrido un error actualizando las tabs de la zona social',
+              action: 'show',
+            });
           });
       }
     });
@@ -439,6 +467,7 @@ class General extends Component {
 
   //Envío de datos
   async submit() {
+    const { intl } = this.props;
     /* e.preventDefault();
     e.stopPropagation(); */
 
@@ -505,31 +534,44 @@ class General extends Component {
         const info = await EventsApi.editOne(data, event._id);
         this.props.updateEvent(info);
         self.setState({ loading: false });
-        toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+        DispatchMessageService({
+          type: 'success',
+          msj: intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+          action: 'show',
+        });
       } else {
         const result = await Actions.create('/api/events', data);
         this.setState({ loading: false });
         if (result._id) {
           window.location.replace(`${window.location.origin}/event/${result._id}`);
         } else {
-          toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+          DispatchMessageService({
+            type: 'warning',
+            msj: intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }),
+            action: 'show',
+          });
           this.setState({ msg: 'Cant Create', create: false });
         }
       }
     } catch (error) {
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-      if (error.response) {
+      DispatchMessageService({
+        type: 'error',
+        msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+        action: 'show',
+      });
+      if (error?.response) {
         console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
 
         /* console.error('STATUS', status, status === 401); */
-        if (status === 401)
-          message.open({
+        if (status === 401) {
+          DispatchMessageService({
             type: 'error',
-            content: <>Error : {data?.message || status}</>,
+            msj: `Error : ${data?.message || status}`,
+            action: 'show',
           });
-        else this.setState({ serverError: true, loader: false, errorData: data });
+        } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
         console.log('ERROR DATA===>', errorData);
@@ -547,10 +589,11 @@ class General extends Component {
   //Delete event
   async deleteEvent() {
     const self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+      action: 'show',
     });
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -563,17 +606,25 @@ class General extends Component {
         const onHandlerRemove = async () => {
           try {
             await EventsApi.deleteOne(self.state.event._id);
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
             window.location.replace(`${window.location.origin}/myprofile`);
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };
@@ -621,13 +672,13 @@ class General extends Component {
     this.setState({ typeEvent: value });
     if (value === 0) {
       //Evento Público con Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } }, this.valid);
+      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } });
     } else if (value === 1) {
       //Evento Público sin Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } }, this.valid);
+      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } });
     } else {
       //Evento Privado con Invitación
-      this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } }, this.valid);
+      this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } });
     }
   };
 
@@ -953,7 +1004,7 @@ class General extends Component {
                       selectedOptions={selectedCategories}
                       selectOption={this.selectCategory}
                       options={categories}
-                      required={true}
+                      /* required={true} */
                     />
                   </Form.Item>
 
@@ -964,7 +1015,7 @@ class General extends Component {
                       selectedOptions={selectedType}
                       selectOption={this.selectType}
                       options={types}
-                      required={true}
+                      /* required={true} */
                     />
                   </Form.Item>
 

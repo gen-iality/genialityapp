@@ -2,7 +2,7 @@ import { Provider } from 'react-redux';
 import './App.less';
 import store from '../redux/store';
 import MainRouter from '../containers/router';
-import withContext from '../Context/withContext';
+import withContext from 'context/withContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Spin, Alert } from 'antd';
 

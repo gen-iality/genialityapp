@@ -5,6 +5,7 @@ import { SpeakersApi } from '../../helpers/request';
 import { Button, Row, Col, Avatar, Tooltip, Popover, Image, Empty, Switch } from 'antd';
 import { DeleteOutlined, EditOutlined, UserOutlined, DragOutlined } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
+import { DispatchMessageService } from '../../context/MessageService';
 
 export const columns = (columnsData) => [
   {
@@ -80,8 +81,23 @@ export const columns = (columnsData) => [
       const [publish, setPublish] = useState(item.published);
       const update = async (checked) => {
         item.published = checked;
-        const res = await SpeakersApi.editOne(item, item._id, item.event_id);
-        if (res) setPublish(res.published);
+        try {
+          const res = await SpeakersApi.editOne(item, item._id, item.event_id);
+          if (res) {
+            setPublish(res.published);
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se actualizó la publicación!',
+              action: 'show',
+            });
+          }
+        } catch (err) {
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Ha ocurrido un problema actualizando la publicación!',
+            action: 'show',
+          });
+        }
       };
       return (
         <Switch

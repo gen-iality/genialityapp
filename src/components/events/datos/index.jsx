@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
-import { toast } from 'react-toastify';
+/* import { toast } from 'react-toastify'; */
 import { FormattedMessage } from 'react-intl';
 import DatosModal from './modal';
 import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
@@ -157,7 +157,7 @@ class Datos extends Component {
       await this.fetchFields();
       this.setState({ modal: false, edit: false, newField: false });
     } catch (e) {
-      this.showError(e);
+      this.showError(e.response.data.message || e.response.status);
     }
   };
 
@@ -166,8 +166,8 @@ class Datos extends Component {
     const organizationId = this?.organization?._id;
     if (organizationId && !this.eventId) {
       await this.props.orderFields(this.state.properties);
-    } else if (this.eventId && !organizationId) // && this.props.byEvent condición que no esta llegando
-    {
+    } else if (this.eventId && !organizationId) {
+      // && this.props.byEvent condición que no esta llegando
       let token = await GetTokenUserFirebase();
       await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
     } else {
@@ -202,11 +202,10 @@ class Datos extends Component {
       });
       await this.fetchFields();
     } catch (e) {
-      console.log('EXCEPTION==>', e);
       message.destroy(loading.key);
       message.open({
         type: 'error',
-        content: { e },
+        content: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
       });
     }
   };
@@ -260,7 +259,7 @@ class Datos extends Component {
   };
 
   showError = (error) => {
-    toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+    message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     if (error.response) {
       const { status, data } = error.response;
       if (status === 401) this.setState({ timeout: true, loader: false });

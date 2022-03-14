@@ -2,15 +2,15 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Card, Col, Row, Spin, Result, Button } from 'antd';
 import TicketsForm from '../../tickets/formTicket';
 import { connect } from 'react-redux';
-import { UseUserEvent } from '../../../Context/eventUserContext';
-import { UseEventContext } from '../../../Context/eventContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
+import { UseEventContext } from '../../../context/eventContext';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { Redirect } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';
 import ProductCard from '../producto/productCard';
 import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { HelperContext } from '../../../Context/HelperContext';
+import { HelperContext } from '../../../context/HelperContext';
 import UserLoginContainer from '../UserLoginContainer';
 
 const PageNotPermissions = (props) => {
@@ -98,8 +98,9 @@ const PageNotPermissions = (props) => {
                   <h1 style={{ fontSize: '22px', fontWeight: 'bold' }}>
                     {props.sectionPermissions.section ? (
                       <>
-                        Para poder ver la sección <a style={{ fontWeight:'bold' }}>{props.sectionPermissions.section}</a>{' '}
-                        tienes que estar registrado en este evento
+                        Para poder ver la sección{' '}
+                        <a style={{ fontWeight: 'bold' }}>{props.sectionPermissions.section}</a> tienes que estar
+                        registrado en este evento
                       </>
                     ) : (
                       <>Para poder ver esta sección tienes que estar registrado en este evento</>
@@ -109,7 +110,9 @@ const PageNotPermissions = (props) => {
               )}
             </Col>
           )}
-          {!props.sectionPermissions.ticketview && !loading && <TicketsForm setVirtualConference={props.setVirtualConference} />}
+          {!props.sectionPermissions.ticketview && !loading && (
+            <TicketsForm setVirtualConference={props.setVirtualConference} />
+          )}
         </>
       )}
     </>

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, notification, Row, Input, message, Modal, Switch, Spin } from 'antd';
+import { Button, Col, Form, Row, Input, Modal, Switch, Spin } from 'antd';
 import { Field, FieldArray, Formik } from 'formik';
 import { apply, keys } from 'ramda';
 import { Link } from 'react-router-dom';
@@ -20,10 +20,11 @@ import { createEventCompany, updateEventCompany } from './services';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 const { confirm } = Modal;
@@ -139,7 +140,7 @@ export const defaultInitialValues = {
 };
 export const companyFormKeys = keys(defaultInitialValues);
 
-function CrearEditarEmpresa( props ) {
+function CrearEditarEmpresa(props) {
   const { event, match, history } = props;
   const { companyId } = match.params;
   /* const locationState = props.location.state; */
@@ -161,8 +162,14 @@ function CrearEditarEmpresa( props ) {
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
-      console.log(values, 'vals')
-      if(values.stand_image && values.list_image) {
+      /* console.log(values, 'vals') */
+      DispatchMessageService({
+        type: 'loading',
+        key: 'loading',
+        msj: 'Espere mientras se guarda la información',
+        action: 'show',
+      });
+      if (values.stand_image && values.list_image) {
         const isNewRecord = !props.location.state.edit;
         const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
         const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, props.location.state.edit, values];
@@ -172,26 +179,54 @@ function CrearEditarEmpresa( props ) {
         };
         setSubmitting(true);
         apply(createOrEdit, paramsArray)
-          .then(() => history.push(`/eventadmin/${event._id}/empresas`))
+          .then(() => {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Empresa creada correctamente!',
+              action: 'show',
+            });
+            history.push(`/eventadmin/${event._id}/empresas`);
+          })
           .catch((error) => {
-            notification.error(errorObject);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: errorObject,
+              action: 'show',
+            });
+            /* notification.error(errorObject); */
             setSubmitting(false);
           });
       } else {
-        message.error('Favor de llenar los campos requeridos');
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Favor de llenar los campos requeridos',
+          action: 'show',
+        });
       }
-      
     },
     [history, event._id, props.location.state.edit, tamanio]
   );
 
   const remove = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras borra la información...',
+      action: 'show',
     });
-    if(props.location.state.edit) {
+    if (props.location.state.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -205,50 +240,55 @@ function CrearEditarEmpresa( props ) {
               firestore
                 .collection('event_companies')
                 .doc(event._id)
-                .collection('companies').doc(props.location.state.edit).delete();
-              message.destroy(loading.key);
-              message.open({
+                .collection('companies')
+                .doc(props.location.state.edit)
+                .delete();
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               history.push(`/eventadmin/${event._id}/empresas`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
-  }
-  
+  };
+
   if (loadingStandTypes || loadingSocialNetworks || loadingInitialValues) {
     return <Loading />;
   }
 
   return (
-    <Formik
-    enableReinitialize
-    initialValues={initialValues}
-    validationSchema={validationSchema}
-    onSubmit={onSubmit}>
+    <Formik enableReinitialize initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
       {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
         /* console.error(errors); */
         return (
           <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
-            <Header 
+            <Header
               title={'Empresa'}
               form
               back
               save
-              form
               remove={remove}
               edit={props.location.state.edit}
-              extra={(<Field name='visible' component={SwitchField} label='Visible' labelCol/>)}
+              extra={<Field name='visible' component={SwitchField} label='Visible' labelCol />}
             />
             <Row justify='center'>
               <Col span={20}>
@@ -315,7 +355,7 @@ function CrearEditarEmpresa( props ) {
                         {values.services.map((_service, serviceIndex) => (
                           <div key={`service-item-${serviceIndex}`}>
                             <Field
-                            required
+                              required
                               name={`services[${serviceIndex}].nombre`}
                               component={InputField}
                               label={`Nombre servicio ${serviceIndex + 1}`}
@@ -324,7 +364,7 @@ function CrearEditarEmpresa( props ) {
                             />
 
                             <Field
-                            required
+                              required
                               name={`services[${serviceIndex}].category`}
                               component={SelectField}
                               label={`Categoría servicio ${serviceIndex + 1}`}
@@ -336,14 +376,14 @@ function CrearEditarEmpresa( props ) {
                             />
 
                             <RichTextComponentField
-                            required
+                              required
                               name={`services[${serviceIndex}].description`}
                               label={`Descripción servicio ${serviceIndex + 1}`}
                               maxLength={SERVICE_DESCRIPTION_MAX_LENGTH}
                             />
 
                             <Field
-                            required
+                              required
                               name={`services[${serviceIndex}].web_url`}
                               component={InputField}
                               label={`Web url ${serviceIndex + 1}`}
@@ -351,7 +391,7 @@ function CrearEditarEmpresa( props ) {
                             />
 
                             <ImageField
-                            required
+                              required
                               name={`services[${serviceIndex}].image`}
                               label={`Imagen servicio ${serviceIndex + 1}`}
                               placeholder='Url imagen'
@@ -472,42 +512,42 @@ function CrearEditarEmpresa( props ) {
                         {values.advisor.map((_sn, advisorIndex) => (
                           <div key={`advisor-item-${advisorIndex}`}>
                             <Field
-                            required
+                              required
                               name={`advisor[${advisorIndex}].name`}
                               component={InputField}
                               label={`Nombre del contacto advisor ${advisorIndex + 1}`}
                               placeholder='Nombre del contacto advisor'
                             />
                             <Field
-                            required
+                              required
                               name={`advisor[${advisorIndex}].cargo`}
                               component={InputField}
                               label={`Cargo del advisor ${advisorIndex + 1}`}
                               placeholder='Cargo advisor'
                             />
                             <Field
-                            required
+                              required
                               name={`advisor[${advisorIndex}].codPais`}
                               component={InputField}
                               label={`Codigo del pais advisor ${advisorIndex + 1}`}
                               placeholder='Ingrese el codigo internacional de su pais sin agregar (+)'
                             />
                             <Field
-                            required
+                              required
                               name={`advisor[${advisorIndex}].number`}
                               component={InputField}
                               label={`Número de contacto advisor ${advisorIndex + 1}`}
                               placeholder='Número de contacto advisor'
                             />
                             <Field
-                            required
+                              required
                               name={`advisor[${advisorIndex}].email`}
                               component={InputField}
                               label={`Email de contacto advisor ${advisorIndex + 1}`}
                               placeholder='Email de contacto advisor'
                             />
                             <ImageField
-                            required
+                              required
                               name={`advisor[${advisorIndex}].image`}
                               label={`Imagen del contacto advisor ${advisorIndex + 1}`}
                               placeholder='Url imagen'
@@ -621,7 +661,6 @@ function CrearEditarEmpresa( props ) {
                     );
                   }}
                 />
-
 
                 {/* <Form.Item {...buttonsLayout}>
                   <Link to={`/event/${event._id}/empresas`}>

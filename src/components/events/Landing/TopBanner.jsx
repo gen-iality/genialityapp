@@ -1,7 +1,7 @@
 import React from 'react';
 import BannerEvent from '../bannerEvent';
 import { Link } from 'react-router-dom';
-import { UseEventContext } from '../../../Context/eventContext';
+import { UseEventContext } from '../../../context/eventContext';
 
 const TopBanner = ({ currentActivity }) => {
   let cEvent = UseEventContext();
@@ -16,7 +16,6 @@ const TopBanner = ({ currentActivity }) => {
     <>
       {/* <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1> */}
       {(styles.show_banner === undefined || styles.show_banner === 'true') && currentActivity === null && (
-       
         <BannerEvent
           bgImage={bgImage}
           mobileBanner={styles.mobile_banner}
@@ -43,8 +42,6 @@ const TopBanner = ({ currentActivity }) => {
           dates={event.dates}
           type_event={event.type_event}
         />
-       
-        
       )}
     </>
   );

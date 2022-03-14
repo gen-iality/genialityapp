@@ -3,17 +3,17 @@ import Avatar from 'antd/lib/avatar/avatar';
 
 import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
 import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
-import { UseCurrentUser } from '../../../Context/userContext';
+import { UseCurrentUser } from '../../../context/userContext';
 import { formatDataToString } from '../../../helpers/utils';
 
-import { HelperContext } from '../../../Context/HelperContext';
+import { HelperContext } from '../../../context/HelperContext';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
-import { UseEventContext } from '../../../Context/eventContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
+import { UseEventContext } from '../../../context/eventContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
@@ -34,8 +34,6 @@ const DrawerProfile = (props) => {
   useEffect(() => {
     if (cEventUser.value !== null && cEventUser.status === 'LOADED') {
       let isContact = isMyContacts(cEventUser.value.properties, props.cHelper.contacts);
-      console.log('%c🆗 - usuario', 'color: #00A6ED;', cUser.value);
-      console.log('%c🆗 - perfil evento', 'color: #00A6ED;', cEventUser.value);
       setIsMe(cUser.value._id == cEventUser.value.user._id);
       setIsMyContact(isContact);
       setUserSelected(cEventUser.value.properties);

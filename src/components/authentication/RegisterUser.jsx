@@ -1,34 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, message } from 'antd';
+import { Form, Input, Button, Space, Upload, message, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { app } from 'helpers/firebase';
 import { useContext } from 'react';
-import HelperContext from 'Context/HelperContext';
+import HelperContext from 'context/HelperContext';
 import { useIntl } from 'react-intl';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useContext(HelperContext);
+  const [errorEmail, setErrorEmail] = useState(false);
   const ruleEmail = [
     {
       type: 'email',
-      message: 'Ingrese un email valido',
+      message: intl.formatMessage({
+        id: 'register.rule.email.message',
+        defaultMessage: 'Ingrese un email valido',
+      }),
     },
-    { required: true, message: 'Ingrese un email para su cuenta en Evius' },
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.email.message2',
+        defaultMessage: 'Ingrese un email para su cuenta en Evius',
+      }),
+    },
   ];
 
   const rulePassword = [
-    { required: true, message: 'Ingrese una contraseña para su cuenta en Evius' },
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.password.message',
+        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+      }),
+    },
     {
       type: 'string',
       min: 6,
       max: 18,
-      message: 'La contraseña debe tener entre 6 a 18 caracteres',
+      message: intl.formatMessage({
+        id: 'register.rule.password.message2',
+        defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
+      }),
     },
   ];
-  const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
+
+  const ruleName = [
+    {
+      required: true,
+      message: intl.formatMessage({
+        id: 'register.rule.name.message',
+        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
+      }),
+    },
+  ];
 
   const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
@@ -61,28 +89,35 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       setOpenOrCloseTheModalFeedback,
     };
 
-    let resp = await createNewUser(newValues);
-
-    if (resp) {
-      // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
-      app
-        .auth()
-        .signInWithEmailAndPassword(newValues.email, newValues.password)
-        .then((login) => {
-          if (login) {
-            //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
-            if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
-              handleChangeTypeModal('loginSuccess');
-            } else {
-              handleChangeTypeModal('loginSuccess');
+    try {
+      let resp = await createNewUser(newValues);
+      if (resp == 1) {
+        // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
+        app
+          .auth()
+          .signInWithEmailAndPassword(newValues.email, newValues.password)
+          .then((login) => {
+            if (login) {
+              //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
+              if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
+                handleChangeTypeModal('loginSuccess');
+              } else {
+                handleChangeTypeModal('loginSuccess');
+              }
             }
-          }
-        })
-        .catch((err) => {
-          handleChangeTypeModal('loginError');
-        });
-    } else {
-      handleChangeTypeModal('loginError');
+          })
+          .catch((err) => {
+            handleChangeTypeModal('loginError');
+          });
+      } else if (resp == 0) {
+        handleChangeTypeModal('loginError');
+        setErrorEmail(false);
+      } else {
+        setErrorEmail(true);
+      }
+    } catch (err) {
+      console.log(err);
+      message.error('Ha ocurrido un error');
     }
     message.destroy(loading.key);
   };
@@ -159,7 +194,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           <Input.Password
             type='password'
             size='large'
-            placeholder={'Crea una contraseña'}
+            placeholder={intl.formatMessage({
+              id: 'modal.label.password',
+              defaultMessage: 'Contraseña',
+            })}
             prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
@@ -175,7 +213,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           <Input
             type='text'
             size='large'
-            placeholder={'¿Como te llamas?'}
+            placeholder={intl.formatMessage({
+              id: 'modal.label.name',
+              defaultMessage: 'Nombre',
+            })}
             prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
@@ -192,6 +233,29 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             })}
           </Button>
         </Form.Item>
+        {errorEmail && (
+          <Alert
+            showIcon
+            onClose={() => setErrorEmail(false)}
+            closable
+            className='animate__animated animate__bounceIn'
+            style={{
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              backgroundColor: '#FFFFFF',
+              color: '#000000',
+              borderLeft: '5px solid #FF4E50',
+              fontSize: '14px',
+              textAlign: 'start',
+              borderRadius: '5px',
+              marginBottom: '15px',
+            }}
+            type='error'
+            message={intl.formatMessage({
+              id: 'modal.feedback.errorDNSNotFound',
+              defaultMessage: 'El correo ingresado no es válido.',
+            })}
+          />
+        )}
       </Form>
     </>
   );

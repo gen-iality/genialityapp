@@ -45,7 +45,8 @@ export function CurrentUserEventProvider({ children }) {
   }, [cEvent.value, cUser.value, updateUser]);
 
   return (
-    <CurrentEventUserContext.Provider value={{ ...userEvent, setUpdateUser: setUpdateUser }}>
+    <CurrentEventUserContext.Provider
+      value={{ ...userEvent, setuserEvent: setuserEvent, setUpdateUser: setUpdateUser }}>
       {children}
     </CurrentEventUserContext.Provider>
   );

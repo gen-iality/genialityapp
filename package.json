@@ -12,6 +12,8 @@
     "@kapost/react-component-slider": "^1.0.5",
     "@loadable/component": "^5.15.2",
     "@seatsio/seatsio-react": "^6.0.0",
+    "@sentry/react": "^6.18.1",
+    "@sentry/tracing": "^6.18.1",
     "animate.css": "^4.1.0",
     "antd": "^4",
     "antd-img-crop": "^3.14.2",
@@ -23,6 +25,7 @@
     "classnames": "^2.2.6",
     "core-js": "^2.6.11",
     "craco-antd": "^1.19",
+    "eslint-import-resolver-typescript": "^2.5.0",
     "firebase": "^7.7.0",
     "firebase-admin": "^8.10.0",
     "formik": "^2.1.5",
@@ -91,7 +94,6 @@
     "react-tabs": "^3.1.0",
     "react-timestamp": "^5.1.0",
     "react-to-print": "^2.12.6",
-    "react-toastify": "^4.4.0",
     "react-widgets": "^4.4.6",
     "react-widgets-moment": "^4.0.19",
     "react-window": "^1.8.5",
@@ -116,7 +118,8 @@
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "react-styleguidist": "^7.3.0"
+    "react-styleguidist": "^7.3.0",
+    "typescript": "^4.6.2"
   },
   "browserslist": [
     ">0.2%",

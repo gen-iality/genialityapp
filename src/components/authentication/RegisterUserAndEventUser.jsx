@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
-import { Steps, Button, message, Alert } from 'antd';
+import React, { useContext, useState, useEffect } from 'react';
+import { Steps, Button, Alert } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
-import { useEffect } from 'react';
-import { EventsApi, SearchUserbyEmail, UsersApi } from 'helpers/request';
+import { SearchUserbyEmail, UsersApi } from 'helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from 'Context/eventContext';
+import { UseEventContext } from 'context/eventContext';
+import HelperContext from 'context/HelperContext';
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
-  const [current, setCurrent] = React.useState(0);
-  const [basicDataUser, setbasicDataUser] = React.useState({
+  const [current, setCurrent] = useState(0);
+  const [basicDataUser, setbasicDataUser] = useState({
     names: '',
     email: '',
     password: '',
     picture: '',
   });
+  let { authModalDispatch, authModalState } = useContext(HelperContext);
   const [dataEventUser, setdataEventUser] = useState({});
   const [buttonStatus, setbuttonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
@@ -98,18 +99,11 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     },
   ];
 
-  const handleValidateAccountEvius = () => {
-    SearchUserbyEmail(basicDataUser.email).then((resp) => {
-      if (resp.length > 0) {
-        setValidationGeneral({
-          loading: false,
-          status: true,
-          textError: intl.formatMessage({
-            id: 'modal.feedback.title.error',
-            defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
-          }),
-        });
-      } else {
+  const handleValidateAccountEvius = async () => {
+    try {
+      const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email });
+      console.log(validateEmail, 'validateEmail');
+      if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
           loading: false,
           status: false,
@@ -117,7 +111,37 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         });
         setCurrent(current + 1);
       }
-    });
+    } catch (err) {
+      if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
+        setValidationGeneral({
+          loading: false,
+          status: true,
+          textError: intl.formatMessage({
+            id: 'modal.feedback.title.error',
+            defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
+          }),
+          component: intl.formatMessage({ id: 'modal.feedback.title.errorlink', defaultMessage: 'iniciar sesión' }),
+        });
+      } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
+        setValidationGeneral({
+          loading: false,
+          status: true,
+          textError: intl.formatMessage({
+            id: 'modal.feedback.errorDNSNotFound',
+            defaultMessage: 'El correo ingresado no es válido.',
+          }),
+        });
+      } else {
+        setValidationGeneral({
+          loading: false,
+          status: true,
+          textError: intl.formatMessage({
+            id: 'modal.feedback.errorGeneralInternal',
+            defaultMessage: 'Se ha presentado un error interno. Por favor intenta de nuevo',
+          }),
+        });
+      }
+    }
   };
 
   const handleSubmit = () => {
@@ -142,15 +166,22 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       };
 
       let propertiesuser = { properties: { ...datauser } };
-      let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
-      if (respUser && respUser._id) {
-        setValidationGeneral({
-          status: false,
-          loading: false,
-          textError: 'Te has inscrito correctamente a este evento',
-        });
-        setbasicDataUser({});
-        setdataEventUser({});
+      try {
+        let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
+        if (respUser && respUser._id) {
+          setValidationGeneral({
+            status: false,
+            loading: false,
+            textError: intl.formatMessage({
+              id: 'text_error.successfully_registered',
+              defaultMessage: 'Te has inscrito correctamente a este evento',
+            }),
+          });
+          setbasicDataUser({});
+          setdataEventUser({});
+        }
+      } catch (err) {
+        message.error('Ha ocurrido un error');
       }
     }
 
@@ -161,7 +192,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         setValidationGeneral({
           status: false,
           loading: false,
-          textError: 'Hubo un error al crear el usuario, intente nuevamente',
+          textError: intl.formatMessage({
+            id: 'text_error.error_creating_user',
+            defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+          }),
         });
       }
     });
@@ -241,6 +275,14 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     }
   }, [basicDataUser, dataEventUser, current]);
 
+  useEffect(() => {
+    if (authModalState.currentAuthScreen === 'login') setCurrent(0);
+
+    return () => {
+      setCurrent(0);
+    };
+  }, [authModalState.currentAuthScreen]);
+
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
       <Steps current={current}>
@@ -258,7 +300,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             }}
             size='large'
             style={{ margin: '0 8px' }}>
-            Anterior
+            {intl.formatMessage({ id: 'register.button.previous', defaultMessage: 'Anterior' })}
           </Button>
         )}
 
@@ -276,7 +318,9 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                     onClick={() => {
                       next();
                     }}>
-                    {current > 0 ? 'Finalizar' : 'Siguiente'}
+                    {current > 0
+                      ? intl.formatMessage({ id: 'register.button.finalize', defaultMessage: 'Finalizar' })
+                      : intl.formatMessage({ id: 'register.button.next', defaultMessage: 'Siguiente' })}
                   </Button>
                 )}
               </>
@@ -286,7 +330,37 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       </div>
 
       {validationGeneral.status && (
-        <Alert style={{ marginTop: '5px' }} message={validationGeneral.textError} type='error' />
+        <Alert
+          showIcon
+          /* style={{ marginTop: '5px' }} */
+          style={{
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            backgroundColor: '#FFFFFF',
+            color: '#000000',
+            borderLeft: '5px solid #FF4E50',
+            fontSize: '14px',
+            textAlign: 'start',
+            borderRadius: '5px',
+            marginBottom: '15px',
+          }}
+          /* closable */
+          message={
+            <>
+              {validationGeneral.textError}
+              {validationGeneral.component ? (
+                <Button
+                  style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
+                  onClick={() => authModalDispatch({ type: 'showLogin' })}
+                  type='link'>
+                  {validationGeneral.component}
+                </Button>
+              ) : (
+                ''
+              )}
+            </>
+          }
+          type='error'
+        />
       )}
     </div>
   );

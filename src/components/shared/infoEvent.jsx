@@ -1,12 +1,20 @@
-import React from 'react';
-import { UseEventContext } from '../../Context/eventContext';
-import { Affix, Divider, PageHeader, Space, Typography } from 'antd';
+import React, { useContext } from 'react';
+import { UseEventContext } from '../../context/eventContext';
+import { Button, Divider, PageHeader, Space, Typography } from 'antd';
 import Moment from 'moment';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { HelperContext } from '../../context/HelperContext';
+import { UseUserEvent } from '../../context/eventUserContext';
+import { UseCurrentUser } from '../../context/userContext';
+import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { useIntl } from 'react-intl';
 
 const InfoEvent = () => {
   let cEvent = UseEventContext();
-  const { Paragraph } = Typography;
+  let { handleChangeTypeModal } = useContext(HelperContext);
+  const cEventUser = UseUserEvent();
+  const cUser = UseCurrentUser();
+  const intl = useIntl();
   return (
     <PageHeader
       style={{
@@ -19,6 +27,19 @@ const InfoEvent = () => {
         borderRadius: '20px',
         backgroundColor: 'white',
       }}
+      title={cEvent.value.name}
+      extra={
+        recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
+        cUser?.value &&
+        !cEventUser?.value && (
+          <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
+            {intl.formatMessage({
+              id: 'Button.signup',
+              defaultMessage: 'Inscribirme al evento',
+            })}
+          </Button>
+        )
+      }
       footer={
         <Space>
           <Space wrap>
@@ -43,11 +64,7 @@ const InfoEvent = () => {
             </Space>
           </Space>
         </Space>
-      }>
-      <Paragraph style={{ fontSize: '21px', fontWeight: 'bolder', marginBottom: '-10px' }}>
-        {cEvent.value.name}
-      </Paragraph>
-    </PageHeader>
+      }></PageHeader>
   );
 };
 

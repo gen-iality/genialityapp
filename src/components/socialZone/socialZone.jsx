@@ -11,11 +11,11 @@ import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import GameList from '../events/game/gameList';
 import { useRef } from 'react';
-import { UseEventContext } from '../../Context/eventContext';
-import { UseCurrentUser } from '../../Context/userContext';
+import { UseEventContext } from '../../context/eventContext';
+import { UseCurrentUser } from '../../context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { HelperContext } from '../../Context/HelperContext';
+import { HelperContext } from '../../context/HelperContext';
 import ThisRouteCanBeDisplayed from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
 

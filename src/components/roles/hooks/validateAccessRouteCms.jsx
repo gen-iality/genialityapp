@@ -2,8 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import useHasRole from './userhasRole';
 import { Spin } from 'antd';
-import { HelperContext } from '../../../Context/HelperContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
+import { HelperContext } from '../../../context/HelperContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
 
 function ValidateAccessRouteCms({ children }) {
   const { eventId } = children.props;

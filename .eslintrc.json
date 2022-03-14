@@ -18,8 +18,13 @@
   },
   "rules": {
     "react/prop-types": "off",
-    //"no-console": ["error", { "allow": ["warn", "error"] }],
-    "no-unused-vars": "off",
-    "no-console": "off"
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-unused-vars": "on",
+    "no-console": "on"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }

@@ -5,22 +5,7 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
-import {
-  Button,
-  Typography,
-  Row,
-  Col,
-  Form,
-  Input,
-  Image,
-  Empty,
-  Card,
-  Switch,
-  Modal,
-  message,
-  Tooltip,
-  Select,
-} from 'antd';
+import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, Tooltip, Select } from 'antd';
 import {
   LeftOutlined,
   UserOutlined,
@@ -33,6 +18,7 @@ import {
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { areaCode } from '../../helpers/constants';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -150,11 +136,12 @@ function Speaker(props) {
   }
 
   async function submit(values) {
-    if(values.name) {
-      const loading = message.open({
-        key: 'loading',
+    if (values.name) {
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras guarda la información..</>,
+        key: 'loading',
+        msj: 'Por favor espere miestras guarda la información...',
+        action: 'show',
       });
       const { name, profession, description, image, order, published } = values;
 
@@ -172,30 +159,42 @@ function Speaker(props) {
       try {
         if (state.edit) await SpeakersApi.editOne(body, state.edit, eventID);
         else await SpeakersApi.create(eventID, body);
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Conferencista guardado correctamente!</>,
+          msj: 'Conferencista guardado correctamente!',
+          action: 'show',
         });
         history.push(`/${match}/${eventID}/speakers`);
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     } else {
-      message.error('El nombre es requerido')
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El nombre es requerido',
+        action: 'show',
+      });
     }
-    
   }
 
   function remove() {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     if (state.edit) {
       confirm({
@@ -210,16 +209,24 @@ function Speaker(props) {
             try {
               await SpeakersApi.deleteOne(state.edit, eventID);
               setRedirect(true);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó al conferencista correctamente!</>,
+                msj: 'Se eliminó al conferencista correctamente!',
+                action: 'show',
               });
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };
@@ -290,14 +297,13 @@ function Speaker(props) {
 
       <Row justify='center' wrap gutter={12}>
         <Col span={12}>
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}
-          >
+            rules={[{ required: true, message: 'El nombre es requerido' }]}>
             <Input
               value={data.name}
               placeholder='Nombre del conferencista'

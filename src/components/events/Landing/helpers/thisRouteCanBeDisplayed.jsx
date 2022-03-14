@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { Button, Result, Typography } from 'antd';
-import { UseUserEvent } from '../../../../Context/eventUserContext';
-import { UseEventContext } from '../../../../Context/eventContext';
-import HelperContext from '../../../../Context/HelperContext';
+import { UseUserEvent } from '../../../../context/eventUserContext';
+import { UseEventContext } from '../../../../context/eventContext';
+import HelperContext from '../../../../context/HelperContext';
 import Loading from '../../../profile/loading';
 import { useIntl } from 'react-intl';
 
@@ -41,7 +41,8 @@ function ThisRouteCanBeDisplayed({ children }) {
   }, [cEvent, eventUserId, eventUserStatus]);
 
   function renderTitleComponentForPublicEventWithRegistration(loading) {
-    if (loading) return <Typography.Title level={2}>Inicia sesión o regístrate para ver el contenido</Typography.Title>;
+    if (loading)
+      return <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title2' })}</Typography.Title>;
     return <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title' })}</Typography.Title>;
   }
 
@@ -68,7 +69,7 @@ function ThisRouteCanBeDisplayed({ children }) {
                   size='large'
                   type='primary'
                   key='goToEvent'>
-                  {intl.formatMessage({ id: 'modal.feedback.accept' })}
+                  {intl.formatMessage({ id: 'modal.feedback.enroll' })}
                 </Button>
               ),
             ]}

@@ -6,10 +6,10 @@ import CommentEditor from './commentEditor';
 import Comments from './comments';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import Moment from 'moment';
 import { firestore } from '../../helpers/firebase';
-import { WallContextProvider } from '../../Context/WallContext';
+import { WallContextProvider } from '../../context/WallContext';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
@@ -36,23 +36,27 @@ class WallList extends Component {
       user: undefined,
       commenting: null,
       displayedComments: {},
-      event: this.props.cEvent.value || {},     
+      event: this.props.cEvent.value || {},
     };
-    
   }
 
   innerCreateComment = async (post, comment) => {
     await this.setState({ commenting: post.id });
     await this.setState({ commenting: null });
-    message.success('Comentario creado.');    
-    const dataPost = await saveFirebase.createComment(post.id, this.props.cEvent.value._id, comment, this.props.cUser.value);
-   // this.setState({ dataPost });
+    message.success('Comentario creado.');
+    const dataPost = await saveFirebase.createComment(
+      post.id,
+      this.props.cEvent.value._id,
+      comment,
+      this.props.cUser.value
+    );
+    // this.setState({ dataPost });
     this.innershowComments(post.id, post.comments + 1);
-  }; 
+  };
 
   innershowComments = async (postId, commentsCount) => {
     let newdisplayedComments = { ...this.state.displayedComments };
-    this.state.displayedComments[postId]
+    this.state.displayedComments[postId];
     //Mostramos los comentarios
     if (!this.state.displayedComments[postId]) {
       let content = (
@@ -84,46 +88,50 @@ class WallList extends Component {
   componentDidMount() {
     this.getPosts();
   }
-  async getDataUser(iduser){     
-    let user=await firestore.collection(`${this.props.cEvent.value._id}_event_attendees`).where("account_id","==",iduser).get();  
-    if(user.docs.length>0 && this.props.cEvent.value.user_properties){
-      let fieldAvatar=this.props.cEvent.value?.user_properties.filter((field)=>field.type=="avatar")
-      if(fieldAvatar.length>0){        
+  async getDataUser(iduser) {
+    let user = await firestore
+      .collection(`${this.props.cEvent.value._id}_event_attendees`)
+      .where('account_id', '==', iduser)
+      .get();
+    if (user.docs.length > 0 && this.props.cEvent.value.user_properties) {
+      let fieldAvatar = this.props.cEvent.value?.user_properties.filter((field) => field.type == 'avatar');
+      if (fieldAvatar.length > 0) {
         return user.docs[0].data().user?.picture;
-      }     
+      }
     }
     return undefined;
   }
 
   //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
   getPosts() {
-
     try {
       let adminPostRef = firestore
         .collection('adminPost')
         .doc(this.props.cEvent.value._id)
         .collection('posts')
         .orderBy('datePost', 'desc');
-      adminPostRef.onSnapshot(async(snapshot) => {
+      adminPostRef.onSnapshot(async (snapshot) => {
         let dataPost = [];
 
         if (snapshot.empty) {
           this.setState({ dataPost: dataPost });
         }
-   
-       dataPost= await Promise.all(snapshot.docs.map(async(doc) => {
-          var data = doc.data();                     
-            let picture= await this.getDataUser(doc.data().author)
-            return {...doc.data(), id: doc.id ,picture:picture };      
-        }));
-        
+
+        dataPost = await Promise.all(
+          snapshot.docs.map(async (doc) => {
+            var data = doc.data();
+            let picture = await this.getDataUser(doc.data().author);
+            return { ...doc.data(), id: doc.id, picture: picture };
+          })
+        );
+
         this.setState({ dataPost: dataPost });
       });
     } catch (e) {
       console.log(e);
     }
   }
-  componentDidUpdate(prevProps,prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.dataPost !== this.state.dataPost) {
       this.setState({ dataPost: this.state.dataPost });
     }
@@ -133,7 +141,7 @@ class WallList extends Component {
     this.setState({ currentCommet: null });
   }
 
-  render(){
+  render() {
     const { dataPost } = this.state;
     return (
       <Fragment>
@@ -150,7 +158,7 @@ class WallList extends Component {
           )}
 
           {dataPost && dataPost.length > 0 && (
-            <WallContextProvider>          
+            <WallContextProvider>
               <List
                 itemLayout='vertical'
                 size='small'
@@ -162,39 +170,42 @@ class WallList extends Component {
                   <Card
                     style={{ marginBottom: '20px' }}
                     actions={[
-                     this.props.cEventUser.value!==null && <CommentEditor
-                        key={`comment-${item.id}`}
-                        item={item}                        
-                        onSubmit={(comment) => {                                               
-                          this.innerCreateComment(item, comment);
-                         
-                        }}
-                        user={this.props.cUser}
-                      />
+                      this.props.cEventUser.value !== null && (
+                        <CommentEditor
+                          key={`comment-${item.id}`}
+                          item={item}
+                          onSubmit={(comment) => {
+                            this.innerCreateComment(item, comment);
+                          }}
+                          user={this.props.cUser}
+                        />
+                      ),
                     ]}>
                     <List.Item
                       key={item.id}
                       style={{ padding: '5px' }}
                       actions={[
                         <Space key='opciones' wrap>
-                         { this.props.cUser.value!==null && <IconText
-                            icon={
-                              item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
-                                ? LikeFilled
-                                : LikeOutlined
-                            }
-                            text={(item.likes || 0) + ' Me gusta'}
-                            key='list-vertical-like-o'
-                            color={
-                              item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
-                                ? '#518BFB'
-                                : 'gray'
-                            }
-                            megusta='1'
-                            onSubmit={() => {
-                              this.props.increaseLikes(item.id, this.props.cUser.value._id);
-                            }}
-                          />}
+                          {this.props.cUser.value !== null && (
+                            <IconText
+                              icon={
+                                item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
+                                  ? LikeFilled
+                                  : LikeOutlined
+                              }
+                              text={(item.likes || 0) + ' Me gusta'}
+                              key='list-vertical-like-o'
+                              color={
+                                item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
+                                  ? '#518BFB'
+                                  : 'gray'
+                              }
+                              megusta='1'
+                              onSubmit={() => {
+                                this.props.increaseLikes(item.id, this.props.cUser.value._id);
+                              }}
+                            />
+                          )}
                           <IconText
                             icon={MessageOutlined}
                             text={(item.comments || 0) + (item.comments === 1 ? ' Comentario' : ' Comentarios')}
@@ -229,7 +240,7 @@ class WallList extends Component {
                       <List.Item.Meta
                         avatar={
                           item.authorImage ? (
-                            <Avatar src={item.picture?item.picture:null} size={50} />
+                            <Avatar src={item.picture ? item.picture : null} size={50} />
                           ) : (
                             <Avatar size={50}>
                               {item.authorName &&
@@ -237,14 +248,13 @@ class WallList extends Component {
                             </Avatar>
                           )
                         }
-                        title={<span >{item.authorName}</span>}
+                        title={<span>{item.authorName}</span>}
                         description={
-                          <div style={{marginTop:'-10px'}}>
-                          <Tooltip
-                            title={Moment(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                            {/* <TimeStamp date={item.datePost.seconds} /> */}
-                            <span>{Moment(Moment(new Date(item.datePost.toMillis()))).from(Moment(new Date()))}</span>
-                          </Tooltip>
+                          <div style={{ marginTop: '-10px' }}>
+                            <Tooltip title={Moment(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
+                              {/* <TimeStamp date={item.datePost.seconds} /> */}
+                              <span>{Moment(Moment(new Date(item.datePost.toMillis()))).from(Moment(new Date()))}</span>
+                            </Tooltip>
                           </div>
                         }
                       />

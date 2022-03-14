@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import 'moment/locale/es';
 import { Actions } from '../../helpers/request';
-import { toast } from 'react-toastify';
 import UserRegistration from '../events/userRegistration';
-import withContext from '../../Context/withContext';
+import withContext from '../../context/withContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import { message } from 'antd';
 
 class TicketsForm extends Component {
   constructor(props) {
@@ -213,7 +213,7 @@ class TicketsForm extends Component {
           data.seats = list;
           this.request(data);
         } else {
-          toast.info(`Te quedan ${quantity - list.length} puestos por seleccionar`);
+          message.info(`Te quedan ${quantity - list.length} puestos por seleccionar`);
         }
       });
     } else this.request(data);
@@ -233,10 +233,10 @@ class TicketsForm extends Component {
       } else {
         //Muestro error parseado
         this.setState({ loading: false });
-        toast.error(JSON.stringify(resp));
+        message.error(JSON.stringify(resp));
       }
     } catch (err) {
-      toast.error(JSON.stringify(err));
+      message.error(JSON.stringify(err));
       console.error(err);
       this.setState({ loading: false });
     }

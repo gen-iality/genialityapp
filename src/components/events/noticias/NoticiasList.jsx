@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import { withRouter } from 'react-router-dom';
 import { useState } from 'react';
 import { NewsFeed } from '../../../helpers/request';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Divider, List } from 'antd';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import UsersCard from '../../shared/usersCard';
 
 function RankingList(props) {

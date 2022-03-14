@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import XLSX from 'xlsx';
-import { toast } from 'react-toastify';
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
-import 'react-toastify/dist/ReactToastify.css';
+/* import 'react-toastify/dist/ReactToastify.css'; */
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
 import {
@@ -484,9 +483,9 @@ class ListEventUser extends Component {
     qrData.another = true;
     /*  try {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
-      //toast.success('Usuario Chequeado');
+      //message.success('Usuario Chequeado');
     } catch (e) {
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     } */
     //return;
     let eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
@@ -511,7 +510,7 @@ class ListEventUser extends Component {
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
-        toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+        message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       });
   };
 

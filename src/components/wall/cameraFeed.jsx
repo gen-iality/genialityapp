@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
 //custom
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 
 const imageWidh = 1280;
@@ -63,7 +62,7 @@ class CameraFeed extends Component {
     this.canvas.toBlob(sendFile);
     let image = this.canvas.toDataURL();
     this.setState({ image, hidden: false, hiddeVideo: true });
-    toast.success('Imagen Salvada');
+    message.success('Imagen Salvada');
 
     //Detiene el stream del video
     this.videoPlayer.srcObject = null;
@@ -74,7 +73,7 @@ class CameraFeed extends Component {
   async clearImage() {
     await this.setState({ hidden: true, image: '' });
 
-    toast.error('Imagen Eliminada');
+    message.error('Imagen Eliminada');
   }
 
   async renderingCode() {

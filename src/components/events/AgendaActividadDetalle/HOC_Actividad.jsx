@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { HelperContext } from '../../../Context/HelperContext';
+import { HelperContext } from '../../../context/HelperContext';
 import ImageComponentwithContext from './ImageComponent';
 import RenderComponent from './RenderComponent';
 

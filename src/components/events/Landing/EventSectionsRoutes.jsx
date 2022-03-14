@@ -25,13 +25,13 @@ import NetworkingForm from '../../networking';
 import InformativeSection2 from '../informativeSections/informativeSection2';
 import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 import Productos from '../producto/index';
 import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import ListVideoCard from '../../shared/listVideoCard';
 import initUserPresence from '../../../containers/userPresenceInEvent';
-import { HelperContext } from '../../../Context/HelperContext';
+import { HelperContext } from '../../../context/HelperContext';
 import Videos from '../videos';
 import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
@@ -40,7 +40,7 @@ import { useParams } from 'react-router-dom';
 import AgendaActividadDetalle from '../../events/AgendaActividadDetalle/index';
 import MySection from '../newSection';
 import ThisRouteCanBeDisplayed from './helpers/thisRouteCanBeDisplayed';
-import { UseUserEvent } from 'Context/eventUserContext';
+import { UseUserEvent } from 'context/eventUserContext';
 import { useCheckinUser } from 'helpers/HelperAuth';
 
 const EventSectionRoutes = (props) => {
@@ -58,22 +58,23 @@ const EventSectionRoutes = (props) => {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
     }
-    if (
-      props.cEventUser?.value == null &&
-      props.cEventUser?.status == 'LOADED' &&
-      typeModal !== 'registerForTheEvent' &&
-      typeModal !== 'loginSuccess' &&
-      typeModal !== 'visitors'
-    ) {
-      handleChangeTypeModal('preregisterMessage');
-    } else if (
-      props.cEventUser?.value !== null &&
-      props.cEventUser?.status == 'LOADED' &&
-      typeModal !== 'update' &&
-      typeModal !== 'visitors'
-    ) {
-      handleChangeTypeModal(null);
-    }
+    // if (
+    //   props.cEventUser?.value == null &&
+    //   props.cEventUser?.status == 'LOADED' &&
+    //   typeModal !== 'registerForTheEvent' &&
+    //   typeModal !== 'loginSuccess' &&
+    //   typeModal !== 'visitors'
+    // ) {
+    //   handleChangeTypeModal('preregisterMessage');
+    // }
+    // else if (
+    //   props.cEventUser?.value !== null &&
+    //   props.cEventUser?.status == 'LOADED' &&
+    //   typeModal !== 'update' &&
+    //   typeModal !== 'visitors'
+    // ) {
+    //   handleChangeTypeModal(null);
+    // }
   }
 
   const obtenerFirstSection = () => {

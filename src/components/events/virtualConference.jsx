@@ -6,8 +6,8 @@ import Moment from 'moment-timezone';
 import { FieldTimeOutlined, SettingOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import ENVIVO from '../../EnVivo.svg';
-import { UseEventContext } from '../../Context/eventContext';
-import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../context/eventContext';
+import { UseUserEvent } from '../../context/eventUserContext';
 import { Link } from 'react-router-dom';
 import * as StageActions from '../../redux/stage/actions';
 import { truncate } from 'lodash-es';
@@ -134,7 +134,7 @@ const VirtualConference = () => {
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           <>
                             <img src={ENVIVO} style={{ height: '30px' }} />
-                            <span className='ultrasmall-mobile' style={{ textAlign: 'center'}}>
+                            <span className='ultrasmall-mobile' style={{ textAlign: 'center' }}>
                               {<FormattedMessage id='live' defaultMessage='En vivo' />}
                             </span>
                           </>
@@ -153,7 +153,6 @@ const VirtualConference = () => {
 
                     <Col xs={18} sm={18} md={12} lg={12} xl={12} xxl={12}>
                       <div style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}>
-                        
                         <Text strong={truncate} ellipsis={{ rows: 1, expandable: true }}>
                           <a>{item.name}</a>
                         </Text>
@@ -172,9 +171,8 @@ const VirtualConference = () => {
                               .tz(Moment.tz.guess())
                               .format(' (Z)')}
                           </span>
-                          <a>{item.habilitar_ingreso == 'open_meeting_room'?' Ingresar':' Ver' }</a>
+                          <a>{item.habilitar_ingreso == 'open_meeting_room' ? ' Ingresar' : ' Ver'}</a>
                         </Text>
-                        
                       </div>
                       {/* <div>
                         <MeetingConferenceButton

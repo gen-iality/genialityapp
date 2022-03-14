@@ -1,6 +1,6 @@
 import { ShopOutlined } from '@ant-design/icons';
 import { Card, Result, Row } from 'antd';
-import withContext from '../../../Context/withContext';
+import withContext from '../../../context/withContext';
 
 import React, { useEffect, useState } from 'react';
 import { OrderFunctions } from '../../../helpers/request';

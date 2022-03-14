@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { Layout, Spin, Row, Image } from 'antd';
 import MenuEvent from './Menus/MenuEvent';
 import { EyeOutlined } from '@ant-design/icons';
-import { UseEventContext } from '../../../Context/eventContext';
-import { HelperContext } from '../../../Context/HelperContext';
+import { UseEventContext } from '../../../context/eventContext';
+import { HelperContext } from '../../../context/HelperContext';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = () => {

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import HelperContext from '../../../Context/HelperContext';
+import HelperContext from '../../../context/HelperContext';
 import { useIntl } from 'react-intl';
 import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row } from 'antd';
-import WithEviusContext from '../../../Context/withContext';
+import WithEviusContext from '../../../context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
 import ModalSpeaker from '../modalSpeakers';
@@ -30,7 +30,7 @@ const AditionalInformation = (props) => {
   }
 
   return (
-    <Card bordered={false} bodyStyle={{margin: '20px'}}>
+    <Card bordered={false} bodyStyle={{ margin: '20px' }}>
       <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
         {
           <TabPane
@@ -117,7 +117,7 @@ const AditionalInformation = (props) => {
             }
             key='docs'>
             <div>
-              <div style={{ marginTop: '5%', marginBottom: '5%' }} >
+              <div style={{ marginTop: '5%', marginBottom: '5%' }}>
                 <b>Documentos:</b> &nbsp;
                 <div>
                   <DocumentsList data={currentActivity !== null && currentActivity.selected_document} />

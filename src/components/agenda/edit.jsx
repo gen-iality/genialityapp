@@ -8,7 +8,6 @@ import Creatable from 'react-select';
 import Loading from '../profile/loading';
 import {
   Tabs,
-  message,
   Row,
   Col,
   Checkbox,
@@ -51,7 +50,9 @@ import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
-import AgendaContext from '../../Context/AgendaContext';
+import AgendaContext from '../../context/AgendaContext';
+import { DispatchMessageService } from '../../context/MessageService';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 const { Text } = Typography;
@@ -134,6 +135,10 @@ class AgendaEdit extends Component {
       host_id: null,
       host_name: null,
       habilitar_ingreso: '',
+      showAditionalTabs: false,
+      idNewlyCreatedActivity: null,
+      activityEdit: false,
+      reloadActivity: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -259,6 +264,9 @@ class AgendaEdit extends Component {
     types = handleSelect(types);
 
     if (state?.edit) {
+      this.setState({
+        showAditionalTabs: true,
+      });
       this.context.setActivityEdit(state.edit);
       const info = await AgendaApi.getOne(state.edit, event._id);
       this.setState({
@@ -320,7 +328,69 @@ class AgendaEdit extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if (prevProps) {
+    const {
+      event,
+      location: { state },
+    } = this.props;
+
+    /** Se renderiza de nuevo el componente para mostrar los tabs Transmision, Juegos, Encuestas y Documentos */
+    const idNewlyCreatedActivity = this.state.idNewlyCreatedActivity;
+    const reloadActivity = this.state.reloadActivity;
+    if (reloadActivity) {
+      this.setState({
+        reloadActivity: false,
+      });
+      let spaces = await SpacesApi.byEvent(this.props.event._id);
+      let hosts = await SpeakersApi.byEvent(this.props.event._id);
+
+      let roles = await RolAttApi.byEvent(this.props.event._id);
+      let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
+      let types = await TypesAgendaApi.byEvent(this.props.event._id);
+
+      //La información se neceista de tipo [{label,value}] para los select
+      spaces = handleSelect(spaces);
+      hosts = handleSelect(hosts);
+      roles = handleSelect(roles);
+      categories = handleSelect(categories);
+      types = handleSelect(types);
+
+      this.context.setActivityEdit(idNewlyCreatedActivity);
+      const info = await AgendaApi.getOne(idNewlyCreatedActivity, event._id);
+      this.setState({
+        selected_document: info.selected_document,
+        start_url: info.start_url,
+        join_url: info.join_url,
+        platform: info.platform /*  || event.event_platform */,
+        info: info,
+        space_id: info.space_id || '',
+        video: info.video,
+        name_host: info.name_host,
+        date_start_zoom: info.date_start_zoom,
+        date_end_zoom: info.date_end_zoom,
+        requires_registration: info.requires_registration || false,
+      });
+
+      Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
+      /* console.log(
+          Object.keys(this.state).map((key) => info[key]),
+          'ObjectKey'
+        ); */
+      const { date, hour_start, hour_end } = handleDate(info);
+
+      // let currentUser = await getCurrentUser();
+      this.setState({
+        activity_id: idNewlyCreatedActivity,
+        date,
+        hour_start,
+        hour_end,
+        selectedHosts: fieldsSelect(info.host_ids, hosts),
+        selectedTickets: info.selectedTicket ? info.selectedTicket : [],
+        selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
+        selectedType: fieldsSelect(info.type_id, types),
+        selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
+        // currentUser: currentUser,
+        showAditionalTabs: true,
+      });
     }
   }
 
@@ -368,10 +438,11 @@ class AgendaEdit extends Component {
   };
   //FN para los select que permiten crear opción
   handleCreate = async (value, name) => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras guarda la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras guarda la información...',
+      action: 'show',
     });
     try {
       this.setState({ isLoading: { ...this.isLoading, [name]: true } });
@@ -396,28 +467,37 @@ class AgendaEdit extends Component {
             }));
         }
       );
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'success',
-        content: <> Información guardada correctamente!</>,
+        msj: 'Información guardada correctamente!',
+        action: 'show',
       });
     } catch (e) {
       this.setState((prevState) => ({
         isLoading: { ...prevState.isLoading, [name]: false },
       }));
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'error',
-        content: handleRequestError(e).message,
+        msj: handleRequestError(e).message,
+        action: 'show',
       });
     }
   };
   //FN manejo de imagen input, la carga al sistema y la guarda en base64
   changeImg = async (files) => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras carga la imagen..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras carga la imagen...',
+      action: 'show',
     });
     try {
       const file = files[0];
@@ -429,16 +509,24 @@ class AgendaEdit extends Component {
           errImg: 'Only images files allowed. Please try again :)',
         });
       }
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'success',
-        content: <> Imagen cargada correctamente!</>,
+        msj: 'Imagen cargada correctamente!',
+        action: 'show',
       });
     } catch (e) {
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'error',
-        content: handleRequestError(e).message,
+        msj: handleRequestError(e).message,
+        action: 'show',
       });
     }
   };
@@ -453,10 +541,11 @@ class AgendaEdit extends Component {
   //Envío de información
 
   submit = async () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras se guarda la información...',
+      action: 'show',
     });
     const validation = this.validForm();
     if (validation) {
@@ -469,12 +558,14 @@ class AgendaEdit extends Component {
         } = this.props;
         const { selected_document } = this.state;
         this.setState({ isLoading: true });
-
-        if (state.edit) {
+        let agenda;
+        let result;
+        if (state.edit || this.state.activityEdit) {
           const data = {
-            activity_id: state.edit,
+            activity_id: state.edit || this.state.idNewlyCreatedActivity,
           };
-          const result = await AgendaApi.editOne(info, state.edit, event._id);
+          let edit = state.edit || this.state.idNewlyCreatedActivity;
+          result = await AgendaApi.editOne(info, edit, event._id);
 
           //Se actualizan los estados date_start_zoom y date_end_zoom para que componente de administracion actualice el valor pasado por props
           this.setState({
@@ -486,7 +577,7 @@ class AgendaEdit extends Component {
             await DocumentsApi.editOne(data, selected_document[i], event._id);
           }
         } else {
-          const agenda = await AgendaApi.create(event._id, info);
+          agenda = await AgendaApi.create(event._id, info);
           // Al crear una actividad de la agenda se inicializa el id de la actividad y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
           this.setState({
             activity_id: agenda._id,
@@ -498,17 +589,31 @@ class AgendaEdit extends Component {
         //Se cambia el estado a pendingChangesSave encargado de detectar cambios pendientes en la fecha/hora sin guardar
         this.setState({ pendingChangesSave: false });
 
-        message.destroy(loading.key);
-        message.open({
-          type: 'success',
-          content: <> Información guardada correctamente!</>,
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
         });
-        this.props.history.push(`/eventadmin/${event._id}/agenda`);
+
+        if (agenda?._id) {
+          /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
+          this.setState({ idNewlyCreatedActivity: agenda._id, activityEdit: true, reloadActivity: true });
+        } else {
+          this.props.history.push(`/eventadmin/${event._id}/agenda`);
+        }
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Información guardada correctamente!',
+          action: 'show',
+        });
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     }
@@ -683,10 +788,11 @@ class AgendaEdit extends Component {
   //FN para eliminar la actividad
   remove = async () => {
     let self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: 'Por favor espere miestras borra la información...',
+      action: 'show',
     });
     if (self.state.activity_id) {
       confirm({
@@ -700,18 +806,26 @@ class AgendaEdit extends Component {
           const onHandlerRemove = async () => {
             try {
               await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               self.setState({ redirect: true });
               self.props.history.push(`${self.props.matchUrl}`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };
@@ -744,7 +858,11 @@ class AgendaEdit extends Component {
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
       title.map((item) => {
-        message.warning(item);
+        DispatchMessageService({
+          type: 'warning',
+          msj: item,
+          action: 'show',
+        });
       });
     } else return true;
   };
@@ -815,10 +933,20 @@ class AgendaEdit extends Component {
     const activity_id = this.context.activityEdit;
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
-      if (result) message.success(result.message);
+      if (result) {
+        DispatchMessageService({
+          type: 'success',
+          msj: result.message,
+          action: 'show',
+        });
+      }
       return result;
     } catch (err) {
-      message.error('Error Config', err);
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error en la configuración!',
+        action: 'show',
+      });
     }
   };
 
@@ -896,6 +1024,7 @@ class AgendaEdit extends Component {
       // isPublished,
       latitude,
       loading,
+      showAditionalTabs,
     } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -908,7 +1037,9 @@ class AgendaEdit extends Component {
             save
             form
             remove={this.remove}
-            edit={this.props.location.state.edit}
+            saveName={this.props.location.state.edit || this.state.activityEdit ? '' : 'Crear'}
+            saveNameIcon
+            edit={this.props.location.state.edit || this.state.activityEdit}
             extra={
               <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
                 <Switch
@@ -1202,56 +1333,58 @@ class AgendaEdit extends Component {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab='Transmisión' key='2'>
-                <Row /* justify='center' */ wrap gutter={12}>
-                  <Col span={24}>
-                    <RoomManager
-                      event_id={this.props.event._id}
-                      activity_id={this.state.activity_id}
-                      activity_name={this.state.name}
-                      firestore={firestore}
-                      date_start_zoom={date_start_zoom}
-                      date_end_zoom={date_end_zoom}
-                      date_activity={this.state.date}
-                      pendingChangesSave={this.state.pendingChangesSave}
-                      updateRoomManager={this.updateRoomManager}
-                    />
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab='Juegos' key='3'>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
-                    <RoomController
-                      handleGamesSelected={this.handleGamesSelected}
-                      handleTabsController={this.handleTabsController}
-                    />
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab='Encuestas' key='4'>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
-                    <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
-                    {this.state.isExternal && (
-                      <SurveyExternal
-                        isExternal={this.state.isExternal}
-                        meeting_id={this.state.externalSurveyID}
-                        event_id={this.props.event._id}
-                        activity_id={this.state.activity_id}
-                        roomStatus={this.state.roomStatus}
-                      />
-                    )}
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab='Documentos' key='5'>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
-                    {/* <Form.Item label={'Documentos'}>
+              {showAditionalTabs && (
+                <>
+                  <TabPane tab='Transmisión' key='2'>
+                    <Row /* justify='center' */ wrap gutter={12}>
+                      <Col span={24}>
+                        <RoomManager
+                          event_id={this.props.event._id}
+                          activity_id={this.state.activity_id}
+                          activity_name={this.state.name}
+                          firestore={firestore}
+                          date_start_zoom={date_start_zoom}
+                          date_end_zoom={date_end_zoom}
+                          date_activity={this.state.date}
+                          pendingChangesSave={this.state.pendingChangesSave}
+                          updateRoomManager={this.updateRoomManager}
+                        />
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Juegos' key='3'>
+                    <Row justify='center' wrap gutter={12}>
+                      <Col span={20}>
+                        <RoomController
+                          handleGamesSelected={this.handleGamesSelected}
+                          handleTabsController={this.handleTabsController}
+                        />
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Encuestas' key='4'>
+                    <Row justify='center' wrap gutter={12}>
+                      <Col span={20}>
+                        <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+                        {this.state.isExternal && (
+                          <SurveyExternal
+                            isExternal={this.state.isExternal}
+                            meeting_id={this.state.externalSurveyID}
+                            event_id={this.props.event._id}
+                            activity_id={this.state.activity_id}
+                            roomStatus={this.state.roomStatus}
+                          />
+                        )}
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Documentos' key='5'>
+                    <Row justify='center' wrap gutter={12}>
+                      <Col span={20}>
+                        {/* <Form.Item label={'Documentos'}>
                       <Select
                         id={'nameDocuments'}
                         isClearable
@@ -1262,20 +1395,22 @@ class AgendaEdit extends Component {
                         value={selected_document}
                       />
                     </Form.Item> */}
-                    <Form.Item>
-                      <SelectAntd
-                        id={'nameDocuments'}
-                        showArrow
-                        mode='multiple'
-                        onChange={(e) => this.selectDocuments(e)}
-                        options={nameDocuments}
-                        defaultValue={selected_document}
-                      />
-                    </Form.Item>
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
+                        <Form.Item>
+                          <SelectAntd
+                            id={'nameDocuments'}
+                            showArrow
+                            mode='multiple'
+                            onChange={(e) => this.selectDocuments(e)}
+                            options={nameDocuments}
+                            defaultValue={selected_document}
+                          />
+                        </Form.Item>
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                </>
+              )}
             </Tabs>
           )}
         </Form>
