@@ -3,9 +3,5 @@
   YARN_VERSION = "1.22.17"
   NPM_VERSION = "8.5.3"
 
-[build]
-  command = "yarn build"
-  publish = "build"
-  build = "build"
 
    

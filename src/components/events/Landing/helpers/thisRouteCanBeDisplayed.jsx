@@ -104,6 +104,8 @@ function ThisRouteCanBeDisplayed({ children }) {
         return component;
       case 'VirtualConference':
         return component;
+      case 'informativeSection1':
+        return component;
 
       default:
         return (

@@ -762,12 +762,14 @@ export const CertsApi = {
 
 export const NewsFeed = {
   byEvent: async (eventId) => {
-    let token = await GetTokenUserFirebase();
-    return await Actions.getAll(`api/events/${eventId}/newsfeed?token=${token}`).then(({ data }) => data);
+    //let token = await GetTokenUserFirebase();
+    //ESTE ENDPOINT ES PÚBLICO
+    return await Actions.getAll(`api/events/${eventId}/newsfeed`).then(({ data }) => data);
   },
   getOne: async (eventId, idnew) => {
-    let token = await GetTokenUserFirebase();
-    return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}?token=${token}`);
+    //let token = await GetTokenUserFirebase();
+    //ESTE ENDPOINT ES PÚBLICO
+    return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
   },
   editOne: async (data, id, eventId) => {
     let token = await GetTokenUserFirebase();
