@@ -8,7 +8,7 @@ import DocumentsList from '../documentsList';
 import { DocumentsApi } from '../../../helpers/request';
 import { Tabs } from 'antd';
 import withContext from '../../../context/withContext';
-import XLSX from 'xlsx';
+// import * as XLSX from '../../xlsx/xlsx.mjs'
 const { TabPane } = Tabs;
 
 class documentsDetail extends Component {
@@ -26,11 +26,11 @@ class documentsDetail extends Component {
 
   exportFile = async (e) => {
     e.preventDefault();
-    const data = this.props.cEventUser?.value?.properties?.documents_user;
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'CARTONES BINGO');
-    XLSX.writeFile(wb, `CARTONES BINGO_${this.props.cEventUser?.value?.properties?.displayName}.xls`);
+    // const data = this.props.cEventUser?.value?.properties?.documents_user;
+    // const ws = XLSX.utils.json_to_sheet(data);
+    // const wb = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(wb, ws, 'CARTONES BINGO');
+    // XLSX.writeFile(wb, `CARTONES BINGO_${this.props.cEventUser?.value?.properties?.displayName}.xls`);
   };
 
   async componentDidMount() {

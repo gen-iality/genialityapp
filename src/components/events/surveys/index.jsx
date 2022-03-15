@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Actions, TicketsApi } from '../../../helpers/request';
-import { firestore } from '../../../helpers/firebase';
-import SurveyList from './surveyList';
-import SurveyDetailPage from './SurveyDetailPage';
-import { Card } from 'antd';
-import * as SurveyActions from '../../../redux/survey/actions';
-import withContext from '../../../context/withContext';
-import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Actions, TicketsApi } from "../../../helpers/request";
+import { firestore } from "../../../helpers/firebase";
+import SurveyList from "./surveyList";
+import SurveyDetailPage from "./SurveyDetailPage";
+import { Card } from "antd";
+import * as SurveyActions from "../../../redux/survey/actions";
+import withContext from "../../../context/withContext";
+import { GetTokenUserFirebase } from "../../../helpers/HelperAuth";
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -25,11 +25,11 @@ class SurveyForm extends Component {
       forceCheckVoted: false,
       surveyLabel: {},
       defaultSurveyLabel: {
-        name: 'Encuestas',
-        section: 'survey',
-        icon: 'FileUnknownOutlined',
+        name: "Encuestas",
+        section: "survey",
+        icon: "FileUnknownOutlined",
         checked: false,
-        permissions: 'public',
+        permissions: "public",
       },
 
       // luego de cargar el componente este estado permanece escuchando todas las encuestas del evento
@@ -54,11 +54,11 @@ class SurveyForm extends Component {
     const { activity } = this.props;
 
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-    let $query = firestore.collection('surveys');
+    let $query = firestore.collection("surveys");
 
     //Le agregamos el filtro por evento
     if (this.props.cEvent.value && this.props.cEvent.value._id) {
-      $query = $query.where('eventId', '==', this.props.cEvent.value._id);
+      $query = $query.where("eventId", "==", this.props.cEvent.value._id);
     }
 
     $query.onSnapshot(async (surveySnapShot) => {
@@ -68,7 +68,11 @@ class SurveyForm extends Component {
       let publishedSurveys = [];
 
       if (surveySnapShot.size === 0) {
-        this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
+        this.setState({
+          selectedSurvey: {},
+          surveyVisible: false,
+          publishedSurveys: [],
+        });
         return;
       }
 
@@ -79,12 +83,17 @@ class SurveyForm extends Component {
       // Listado de encuestas publicadas del evento
       publishedSurveys = eventSurveys.filter(
         (survey) =>
-          (survey.isPublished === 'true' || survey.isPublished === true) &&
-          ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
+          (survey.isPublished === "true" || survey.isPublished === true) &&
+          ((activity && survey.activity_id === activity._id) ||
+            survey.isGlobal === "true")
       );
 
       this.setState(
-        { publishedSurveys, surveyVisible: publishedSurveys && publishedSurveys.length, loading: true },
+        {
+          publishedSurveys,
+          surveyVisible: publishedSurveys && publishedSurveys.length,
+          loading: true,
+        },
         this.callback
       );
     });
@@ -110,7 +119,10 @@ class SurveyForm extends Component {
 
     //No es la manera ideal pero aqui forzamos una revisión en la base de datos para asber si el usuario ya voto
     //mejor tener esto en forma de contexto o algo similar
-    if (prevState.forceCheckVoted !== this.state.forceCheckVoted && this.state.forceCheckVoted === true) {
+    if (
+      prevState.forceCheckVoted !== this.state.forceCheckVoted &&
+      this.state.forceCheckVoted === true
+    ) {
       await this.callback();
     }
   }
@@ -120,9 +132,9 @@ class SurveyForm extends Component {
     let counterDocuments = 0;
     return new Promise((resolve) => {
       firestore
-        .collectionGroup('responses')
-        .where('id_survey', '==', survey._id)
-        .where('id_user', '==', this.props.cUser.value._id)
+        .collectionGroup("responses")
+        .where("id_survey", "==", survey._id)
+        .where("id_user", "==", this.props.cUser.value._id)
         .get()
         .then((result) => {
           result.forEach(function(doc) {
@@ -161,7 +173,11 @@ class SurveyForm extends Component {
 
     let stateSurveys = await checkMyResponses;
 
-    this.setState({ publishedSurveys: stateSurveys, forceCheckVoted: false, loading: false });
+    this.setState({
+      publishedSurveys: stateSurveys,
+      forceCheckVoted: false,
+      loading: false,
+    });
   };
 
   userVote = () => {
@@ -178,13 +194,18 @@ class SurveyForm extends Component {
   getCurrentEvenUser = async (eventId) => {
     let evius_token = await GetTokenUserFirebase();
     if (!evius_token) return null;
-    let response = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
+    let response = await TicketsApi.getByEvent(
+      this.props.cEvent.value._id,
+      evius_token
+    );
     return response && response.data.length ? response.data[0] : null;
   };
 
   getItemsMenu = async () => {
     let { defaultSurveyLabel } = this.state;
-    const response = await Actions.getAll(`/api/events/${this.props.cEvent.value._id}`);
+    const response = await Actions.getAll(
+      `/api/events/${this.props.cEvent.value._id}`
+    );
     let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
     this.setState({ surveyLabel });
   };
@@ -193,10 +214,14 @@ class SurveyForm extends Component {
   // eslint-disable-next-line no-unused-vars
   toggleSurvey = async (data, reload) => {
     this.setState({ selectedSurvey: data, surveyVisible: true });
-    if (typeof data === 'boolean' || data === undefined) {
-      this.setState({ selectedSurvey: {}, forceCheckVoted: true, loading: true });
+    if (typeof data === "boolean" || data === undefined) {
+      this.setState({
+        selectedSurvey: {},
+        forceCheckVoted: true,
+        loading: true,
+      });
       // if (data === true) this.listenSurveysData();
-    } else if (Object.prototype.hasOwnProperty.call(data, '_id')) {
+    } else if (Object.prototype.hasOwnProperty.call(data, "_id")) {
       let selectedSurvey = data;
       this.setState({ selectedSurvey });
     }
@@ -287,4 +312,7 @@ const mapDispatchToProps = {
 };
 
 let SurveyFormWithContext = withContext(SurveyForm);
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyFormWithContext);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SurveyFormWithContext);

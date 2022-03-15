@@ -1,10 +1,7 @@
-import { ControlOutlined } from '@ant-design/icons';
-import { Spin, Result, Button, Typography } from 'antd';
-import { app, firestore } from 'helpers/firebase';
-import { EventsApi } from 'helpers/request';
-import { fieldNameEmailFirst } from 'helpers/utils';
-import React, { useEffect, useState } from 'react';
-import ResultLink from './ResultLink';
+import { app, firestore } from "./..helpers/firebase";
+import { EventsApi } from "../../helpers/request";
+import React, { useEffect, useState } from "react";
+import ResultLink from "./ResultLink";
 
 const WithCode = () => {
   const [email, setEmail] = useState();
@@ -18,24 +15,27 @@ const WithCode = () => {
 
     const querystring = window.location.search;
     const params = new URLSearchParams(querystring);
-    let email = params.get('email');
-    const event = params.get('event_id');
+    let email = params.get("email");
+    const event = params.get("event_id");
     if (email) {
       setEmail(email);
       setEvent(event);
-      email = email.replace('%40', '@');
+      email = email.replace("%40", "@");
       conectionRef
-        .where('email', '==', email)
+        .where("email", "==", email)
         .get()
         .then(async (resp) => {
           if (
-            (resp.docs.length == 0 && app.auth()?.currentUser?.email != email) ||
+            (resp.docs.length == 0 &&
+              app.auth()?.currentUser?.email != email) ||
             (app.auth().currentUser?.email == email && resp.docs.length > 0) ||
             (resp.docs.length == 0 && !app.auth()?.currentUser)
           ) {
             if (app.auth().currentUser) {
               await app.auth().signOut();
-              const docRef = await conectionRef.where('email', '==', email).get();
+              const docRef = await conectionRef
+                .where("email", "==", email)
+                .get();
               if (docRef.docs.length > 0) {
                 await conectionRef.doc(docRef.docs[0].id).delete();
               }
@@ -71,7 +71,10 @@ const WithCode = () => {
         .catch(async (error) => {
           let refreshLink;
           if (event) {
-            refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event);
+            refreshLink = await EventsApi.refreshLinkEmailUserEvent(
+              email,
+              event
+            );
           } else {
             refreshLink = await EventsApi.refreshLinkEmailUser(email);
           }
@@ -87,7 +90,7 @@ const WithCode = () => {
               }
             });*/
           } else {
-            console.log('NOT REQUEST');
+            console.log("NOT REQUEST");
           }
         });
     }
@@ -95,11 +98,11 @@ const WithCode = () => {
   return (
     <>
       {loading ? (
-        <ResultLink status='loading' verifyLink={verifyLink} data={email} />
+        <ResultLink status="loading" verifyLink={verifyLink} data={email} />
       ) : error ? (
-        <ResultLink status='error' data={email} event={event} />
+        <ResultLink status="error" data={email} event={event} />
       ) : (
-        ''
+        ""
       )}
     </>
   );

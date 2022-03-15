@@ -12,7 +12,7 @@ import {
   CrownOutlined,
 } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
-import ExportExcel from '../components/newComponent/ExportExcel';
+// import ExportExcel from '../components/newComponent/ExportExcel';
 import moment from 'moment';
 import { Suspense } from 'react';
 
@@ -20,7 +20,7 @@ const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = (props) => {
-  const {
+  let {
     header,
     list,
     key,

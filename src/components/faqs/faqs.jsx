@@ -1,46 +1,45 @@
-import { at } from 'core-js/core/string';
-import { useState } from 'react';
-import { FaqsApi } from '../../helpers/request';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
+import { useState } from "react";
+import { FaqsApi } from "../../helpers/request";
+import CMS from "../newComponent/CMS";
+import { getColumnSearchProps } from "../speakers/getColumnSearch";
 
 const Faqs = (props) => {
   let [columnsData, setColumnsData] = useState({});
 
   const columns = [
     {
-      title: 'Título',
-      dataIndex: 'title',
+      title: "Título",
+      dataIndex: "title",
       ellipsis: true,
       sorter: (a, b) => a.title.localeCompare(b.title),
-      ...getColumnSearchProps('title', columnsData)
+      ...getColumnSearchProps("title", columnsData),
     },
     {
-      title: 'Contenido',
-      dataIndex: 'content',
+      title: "Contenido",
+      dataIndex: "content",
       ellipsis: true,
       sorter: (a, b) => a.content.localeCompare(b.content),
-      ...getColumnSearchProps('content', columnsData),
+      ...getColumnSearchProps("content", columnsData),
       render(val, item) {
-        return (
-          <div dangerouslySetInnerHTML={{ __html: item.content }} />
-        )
+        return <div dangerouslySetInnerHTML={{ __html: item.content }} />;
       },
-    }
+    },
   ];
 
   return (
-    <CMS 
+    <CMS
       API={FaqsApi}
       eventId={props.event._id}
-      title={'Preguntas Frecuentes'}
-      titleTooltip={'Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación'}
+      title={"Preguntas Frecuentes"}
+      titleTooltip={
+        "Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación"
+      }
       addUrl={{
         pathname: `${props.matchUrl}/faq`,
         state: { new: true },
       }}
       columns={columns}
-      key='_id'
+      key="_id"
       editPath={`${props.matchUrl}/faq`}
       pagination={false}
       actions
@@ -48,6 +47,6 @@ const Faqs = (props) => {
       setColumnsData={setColumnsData}
     />
   );
-}
+};
 
 export default Faqs;

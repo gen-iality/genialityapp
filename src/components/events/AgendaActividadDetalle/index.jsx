@@ -1,35 +1,42 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import Moment from 'moment-timezone';
-import { useIntl } from 'react-intl';
-import { Row, Card, Alert } from 'antd';
-import WithEviusContext from '../../../context/withContext';
-import { setTopBanner } from '../../../redux/topBanner/actions';
-import { AgendaApi } from '../../../helpers/request';
-import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import HelperContext from '../../../context/HelperContext';
-import { UseSurveysContext } from '../../../context/surveysContext';
-import { isMobile } from 'react-device-detect';
-import * as SurveyActions from '../../../redux/survey/actions';
-import SurveyDrawer from '../surveys/components/surveyDrawer';
-import HCOActividad from './HOC_Actividad';
-import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
-import AditionalInformation from './AditionalInformation';
-import { useCheckinUser } from 'helpers/HelperAuth';
-import { UseUserEvent } from 'context/eventUserContext';
+import React, { useState, useEffect, useContext } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import Moment from "moment-timezone";
+import { useIntl } from "react-intl";
+import { Row, Card, Alert } from "antd";
+import WithEviusContext from "../../../context/withContext";
+import { setTopBanner } from "../../../redux/topBanner/actions";
+import { AgendaApi } from "../../../helpers/request";
+import { setVirtualConference } from "../../../redux/virtualconference/actions";
+import HelperContext from "../../../context/HelperContext";
+import { UseSurveysContext } from "../../../context/surveysContext";
+import { isMobile } from "react-device-detect";
+import * as SurveyActions from "../../../redux/survey/actions";
+import SurveyDrawer from "../surveys/components/surveyDrawer";
+import HCOActividad from "./HOC_Actividad";
+import {
+  activitiesCode,
+  cityValid,
+  codeActivity,
+} from "../../../helpers/constants";
+import AditionalInformation from "./AditionalInformation";
+import { useCheckinUser } from "../../../helpers/HelperAuth";
+import { UseUserEvent } from "../../../context/eventUserContext";
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
-  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, handleChangeCurrentActivity } = useContext(
-    HelperContext
-  );
+  let {
+    chatAttendeChats,
+    HandleOpenCloseMenuRigth,
+    currentActivity,
+    handleChangeCurrentActivity,
+  } = useContext(HelperContext);
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);
-  const [activity, setactivity] = useState('');
+  const [activity, setactivity] = useState("");
   let cEventUser = UseUserEvent();
 
   const intl = useIntl();
@@ -39,7 +46,10 @@ const AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     async function getActividad() {
-      return await AgendaApi.getOne(props.match.params.activity_id, props.cEvent.value._id);
+      return await AgendaApi.getOne(
+        props.match.params.activity_id,
+        props.cEvent.value._id
+      );
     }
 
     function orderHost(hosts) {
@@ -60,7 +70,11 @@ const AgendaActividadDetalle = (props) => {
     props.setVirtualConference(false);
 
     HandleOpenCloseMenuRigth(false);
-    if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
+    if (
+      props.socialzonetabs?.publicChat ||
+      props.socialzonetabs?.privateChat ||
+      props.socialzonetabs?.attendees
+    ) {
       HandleOpenCloseMenuRigth(false);
     } else {
       HandleOpenCloseMenuRigth(true);
@@ -76,53 +90,59 @@ const AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
-    if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
+    if (cEventUser.status == "LOADED" && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
-      useCheckinUser(cEventUser.value, props.match.params.activity_id, 'activity');
+      useCheckinUser(
+        cEventUser.value,
+        props.match.params.activity_id,
+        "activity"
+      );
     }
   }, [currentActivity, cEventUser.status]);
 
   useEffect(() => {
-    if (chatAttendeChats === '4') {
+    if (chatAttendeChats === "4") {
       const sharedProperties = {
-        position: 'fixed',
-        right: '0',
-        width: '170px',
+        position: "fixed",
+        right: "0",
+        width: "170px",
       };
 
-      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
+      const verticalVideo = isMobile ? { top: "5%" } : { bottom: "0" };
 
       setVideoStyles({
         ...sharedProperties,
         ...verticalVideo,
-        zIndex: '100',
-        transition: '300ms',
+        zIndex: "100",
+        transition: "300ms",
       });
 
-      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+      const verticalVideoButton = isMobile ? { top: "9%" } : { bottom: "27px" };
 
       setVideoButtonStyles({
         ...sharedProperties,
         ...verticalVideoButton,
-        zIndex: '101',
-        cursor: 'pointer',
-        display: 'block',
-        height: '96px',
+        zIndex: "101",
+        cursor: "pointer",
+        display: "block",
+        height: "96px",
       });
     } else {
-      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
-      setVideoButtonStyles({ display: 'none' });
+      setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
+      setVideoButtonStyles({ display: "none" });
     }
   }, [chatAttendeChats, isMobile]);
 
   // VALIDAR ACTIVIDADES POR CODIGO
   useEffect(() => {
     if (props.cEvent.value && props.cUser) {
-      if (props.cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
+      if (props.cEvent.value?._id == "61200dfb2c0e5301fa5e9d86") {
         if (activitiesCode.includes(props.match.params.activity_id)) {
           if (props.cEventUser.value) {
             if (
-              codeActivity.includes(props.cEventUser.value?.properties.codigo) ||
+              codeActivity.includes(
+                props.cEventUser.value?.properties.codigo
+              ) ||
               cityValid.includes(props.cEventUser.value?.properties.ciudad)
             ) {
               setblockActivity(false);
@@ -139,22 +159,32 @@ const AgendaActividadDetalle = (props) => {
 
   return (
     <div>
-      <div className=' container_agenda-information container-calendar2'>
-        <Card style={{ padding: '1 !important' }} className='agenda_information'>
+      <div className=" container_agenda-information container-calendar2">
+        <Card
+          style={{ padding: "1 !important" }}
+          className="agenda_information"
+        >
           {/* <HeaderColumnswithContext isVisible={true} /> */}
           {!blockActivity ? (
             <>
-              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-              props.cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+              {props.match.params.activity_id === "61992d5f020bde260e068402" &&
+              props.cEventUser.value.user.rol_id !==
+                "619d0c9161162b7bd16fcb82" ? (
                 <Alert
                   showIcon
-                  style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}
+                  style={{
+                    width: "100%",
+                    marginTop: 40,
+                    marginBottom: 40,
+                    textAlign: "center",
+                    fontSize: "19px",
+                  }}
                   message={
                     <>
                       {`Hola ${props.cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
                     </>
                   }
-                  type='warning'
+                  type="warning"
                 />
               ) : (
                 <HCOActividad />
@@ -166,16 +196,26 @@ const AgendaActividadDetalle = (props) => {
                 {/* <ImageComponentwithContext /> */}
                 <Alert
                   showIcon
-                  style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}
+                  style={{
+                    width: "100%",
+                    marginTop: 40,
+                    marginBottom: 40,
+                    textAlign: "center",
+                    fontSize: "19px",
+                  }}
                   message={
                     <>
-                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
+                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{" "}
+                      <a
+                        style={{ color: "#3273dc" }}
+                        target="_blank"
+                        href="https://iberofest.co/producto/edc/"
+                      >
                         https://iberofest.co/producto/edc/
-                      </a>{' '}
+                      </a>{" "}
                     </>
                   }
-                  type='warning'
+                  type="warning"
                 />
               </Row>
             </>
@@ -211,5 +251,10 @@ const mapDispatchToProps = {
   setHasOpenSurveys,
 };
 
-let AgendaActividadDetalleWithContext = WithEviusContext(AgendaActividadDetalle);
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalleWithContext));
+let AgendaActividadDetalleWithContext = WithEviusContext(
+  AgendaActividadDetalle
+);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(AgendaActividadDetalleWithContext));

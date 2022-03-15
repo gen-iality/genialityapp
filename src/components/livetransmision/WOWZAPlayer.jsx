@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { getLiveStream } from 'adaptors/wowzaStreamingAPI';
+import { getLiveStream } from '../../adaptors/wowzaStreamingAPI';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button } from 'antd';
 

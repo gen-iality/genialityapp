@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Result, Row, Space, Typography, message, Alert, Button } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
-import { FrasesInspiradoras } from '../ModalsFunctions/utils';
-import { app } from 'helpers/firebase';
-import { UseUserEvent } from 'context/eventUserContext';
-import HelperContext from 'context/HelperContext';
-import { useIntl } from 'react-intl';
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+import React, { useContext, useEffect, useState } from "react";
+import { Result, Row, Space, Typography, message, Alert, Button } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { FrasesInspiradoras } from "../ModalsFunctions/utils";
+import { app } from "../../../helpers/firebase";
+import { UseUserEvent } from "../../../context/eventUserContext";
+import HelperContext from "../../../context/HelperContext";
+import { useIntl } from "react-intl";
 
 const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
-  const [fraseLoading, setfraseLoading] = useState('');
+  const [fraseLoading, setfraseLoading] = useState("");
 
   useEffect(() => {
     let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
@@ -23,11 +22,11 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
         if (validationGeneral.loading) {
           let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
           setfraseLoading(FrasesInspiradoras[ramdon]);
-          console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
+          console.log("FrasesInspiradoras[ramdon]", FrasesInspiradoras[ramdon]);
         }
       } catch (err) {
         console.log(err);
-        message.error('Ha ocurrido un error');
+        message.error("Ha ocurrido un error");
       }
     }
 
@@ -45,14 +44,14 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
       {validationGeneral.loading ? (
         <>
           <Row>
-            <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+            <Typography.Text type="secondary" style={{ fontSize: "18px" }}>
               {fraseLoading}
             </Typography.Text>
           </Row>
         </>
       ) : (
         <>
-          <Result status='success' title='¡Registro exitoso!' />
+          <Result status="success" title="¡Registro exitoso!" />
           <RedirectUser basicDataUser={basicDataUser} />
         </>
       )}
@@ -62,9 +61,14 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
 
 const RedirectUser = ({ basicDataUser }) => {
   const cEventUser = UseUserEvent();
-  let { HandleControllerLoginVisible, authModalDispatch } = useContext(HelperContext);
+  let { HandleControllerLoginVisible, authModalDispatch } = useContext(
+    HelperContext
+  );
   const intl = useIntl();
-  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
+  const [
+    signInWithEmailAndPasswordError,
+    setSignInWithEmailAndPasswordError,
+  ] = useState(false);
 
   useEffect(() => {
     setSignInWithEmailAndPasswordError(false);
@@ -98,34 +102,39 @@ const RedirectUser = ({ basicDataUser }) => {
   return (
     <>
       <Space>
-        <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+        <Typography.Text type="secondary" style={{ fontSize: "18px" }}>
           {signInWithEmailAndPasswordError ? (
             <Alert
-              style={{ marginTop: '5px' }}
+              style={{ marginTop: "5px" }}
               message={
                 <>
                   {intl.formatMessage({
-                    id: 'modal.feedback.errorAutomaticSession',
-                    defaultMessage: 'Ha fallado el inicio de sesión automático, por favor',
+                    id: "modal.feedback.errorAutomaticSession",
+                    defaultMessage:
+                      "Ha fallado el inicio de sesión automático, por favor",
                   })}
                   <Button
-                    style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
+                    style={{ padding: 4, color: "#333F44", fontWeight: "bold" }}
                     onClick={() => {
-                      authModalDispatch({ type: 'showLogin' });
+                      authModalDispatch({ type: "showLogin" });
                     }}
-                    type='link'>
-                    {intl.formatMessage({ id: 'modal.feedback.title.errorlink', defaultMessage: 'iniciar sesión' })}
+                    type="link"
+                  >
+                    {intl.formatMessage({
+                      id: "modal.feedback.title.errorlink",
+                      defaultMessage: "iniciar sesión",
+                    })}
                   </Button>
                 </>
               }
-              type='error'
+              type="error"
             />
           ) : (
             <>
-              <LoadingOutlined style={{ fontSize: '28px' }} />
+              <LoadingOutlined style={{ fontSize: "28px" }} />
               {intl.formatMessage({
-                id: 'register.result.logging_in',
-                defaultMessage: 'Iniciando sesión con tu cuenta!',
+                id: "register.result.logging_in",
+                defaultMessage: "Iniciando sesión con tu cuenta!",
               })}
             </>
           )}

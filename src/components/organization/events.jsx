@@ -7,7 +7,7 @@ import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
 import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
-import ExportExcel from '../newComponent/ExportExcel';
+// import ExportExcel from '../newComponent/ExportExcel';
 
 function OrgEvents(props) {
   const [eventData, setEventData] = useState([]);

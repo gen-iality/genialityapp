@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
-import XLSX from 'xlsx';
+// import * as XLSX from '../../xlsx/xlsx.mjs'
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
@@ -443,13 +443,13 @@ class ListEventUser extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
+    // const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
 
-    const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
+    // const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
+    // const ws = XLSX.utils.json_to_sheet(data);
+    // const wb = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
+    // XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
   };
 
   addUser = () => {

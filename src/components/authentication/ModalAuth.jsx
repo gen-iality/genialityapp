@@ -13,11 +13,11 @@ import { app } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
 import React, { useContext, useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
-import { UseEventContext } from 'context/eventContext';
+import { UseEventContext } from '../../context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isHome, useEventArkmed } from 'helpers/helperEvent';
-import { recordTypeForThisEvent } from 'components/events/Landing/helpers/thisRouteCanBeDisplayed';
-import { UseCurrentUser } from 'context/userContext';
+import { isHome, useEventArkmed } from '../../helpers/helperEvent';
+import { UseCurrentUser } from '../../context/userContext';
+import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;

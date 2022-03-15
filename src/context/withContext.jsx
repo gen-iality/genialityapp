@@ -1,4 +1,3 @@
-import React from 'react';
 import { CurrentUserContext } from './userContext';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';

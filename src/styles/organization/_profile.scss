@@ -1,6 +1,6 @@
 .profile {
   padding: 3em 0 3em 3em;
-  .org-profile{
+  .org-profile {
     max-width: 100%;
     width: 100%;
     .profile-info {
@@ -62,7 +62,7 @@
       .userData {
         padding: 80px;
         background-color: #f9f9f9;
-        .title { 
+        .title {
           padding: 0 0 0 10px;
         }
         .label {
@@ -70,7 +70,7 @@
           margin-bottom: -5px;
         }
         .column {
-          padding: 5px;  
+          padding: 5px;
         }
         input {
           width: 80%;
@@ -132,25 +132,22 @@
     width: 80%;
   }
 
-
   .button.is-primary {
     background-color: lightgray;
-    &:hover { 
-    background-color: #00f0be;
+    &:hover {
+      background-color: #00f0be;
     }
   }
-  svg{
+  svg {
     fill: grey;
-    &:hover { 
+    &:hover {
       fill: #00f0be;
     }
   }
 }
 
-
-
 .org-data {
-  background-color: $gray-lighter;
+  background-color: "gray";
 }
 .document-zone {
   background-color: white;

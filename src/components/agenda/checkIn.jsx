@@ -4,7 +4,7 @@ import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '../../
 import { firestore } from '../../helpers/firebase';
 import { FormattedMessage } from 'react-intl';
 /* import CheckSpace from '../event-users/checkSpace_old'; */
-import XLSX from 'xlsx';
+// import * as XLSX from '../../xlsx/xlsx.mjs'
 import { Activity, RolAttApi } from '../../helpers/request';
 import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag, message } from 'antd';
 import {
@@ -287,19 +287,19 @@ class CheckAgenda extends Component {
     e.preventDefault();
     e.stopPropagation();
     //Se trae el listado total y se ordenan por fecha de creación
-    let attendessFilter = this.state.attendees;
-    attendessFilter = attendessFilter.filter((attendes) => attendes.user !== null);
-    const attendees = [...attendessFilter].sort((a, b) => b.created_at - a.created_at);
-    const data = await parseData2Excel(attendees, this.state.eventFields, this.state.rolesList);
-    const ws = await XLSX.utils.json_to_sheet(data);
-    const wb = await XLSX.utils.book_new();
-    await XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    await XLSX.writeFile(
-      wb,
-      `asistentes_actividad_${
-        this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name
-      }.xls`
-    );
+    // let attendessFilter = this.state.attendees;
+    // attendessFilter = attendessFilter.filter((attendes) => attendes.user !== null);
+    // const attendees = [...attendessFilter].sort((a, b) => b.created_at - a.created_at);
+    // const data = await parseData2Excel(attendees, this.state.eventFields, this.state.rolesList);
+    // const ws = await XLSX.utils.json_to_sheet(data);
+    // const wb = await XLSX.utils.book_new();
+    // await XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
+    // await XLSX.writeFile(
+    //   wb,
+    //   `asistentes_actividad_${
+    //     this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name
+    //   }.xls`
+    // );
   };
 
   //FN Modal, abre y cierra

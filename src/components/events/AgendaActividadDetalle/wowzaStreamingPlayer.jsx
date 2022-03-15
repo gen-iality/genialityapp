@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import WOWZAPlayer from '../../livetransmision/WOWZAPlayer';
-import { getLiveStreamStatus, getLiveStreamStats } from 'adaptors/wowzaStreamingAPI';
-import { CurrentUserContext } from 'context/userContext';
+import { getLiveStreamStatus, getLiveStreamStats } from '../../../adaptors/wowzaStreamingAPI';
+import { CurrentUserContext } from '../../../context/userContext';
 import { Grid } from 'antd';
-import AgendaContext from 'context/AgendaContext';
-import { CurrentEventUserContext } from 'context/eventUserContext';
+import AgendaContext from '../../../context/AgendaContext';
+import { CurrentEventUserContext } from '../../../context/eventUserContext';
 
 const { useBreakpoint } = Grid;
 

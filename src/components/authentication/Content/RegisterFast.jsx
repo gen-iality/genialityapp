@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined, IdcardOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import { useIntl } from 'react-intl';
-import { UseEventContext } from 'context/eventContext';
-import { useEventArkmed } from 'helpers/helperEvent';
+import React, { useState } from "react";
+import {
+  PictureOutlined,
+  MailOutlined,
+  LockOutlined,
+  UserOutlined,
+  IdcardOutlined,
+} from "@ant-design/icons";
+import { Form, Input, Button, Space, Upload } from "antd";
+import ImgCrop from "antd-img-crop";
+import { useIntl } from "react-intl";
+import { useEventArkmed } from "../../../helpers/helperEvent";
+import { UseEventContext } from "../../../context/eventContext";
 
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
@@ -12,17 +18,17 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
 
   const ruleEmail = [
     {
-      type: 'email',
+      type: "email",
       message: intl.formatMessage({
-        id: 'register.rule.email.message',
-        defaultMessage: 'Ingrese un email valido',
+        id: "register.rule.email.message",
+        defaultMessage: "Ingrese un email valido",
       }),
     },
     {
       required: true,
       message: intl.formatMessage({
-        id: 'register.rule.email.message2',
-        defaultMessage: 'Ingrese un email para su cuenta en Evius',
+        id: "register.rule.email.message2",
+        defaultMessage: "Ingrese un email para su cuenta en Evius",
       }),
     },
   ];
@@ -31,36 +37,36 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
     {
       required: true,
       message: intl.formatMessage({
-        id: 'register.rule.password.message',
-        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+        id: "register.rule.password.message",
+        defaultMessage: "Ingrese una contraseña para su cuenta en Evius",
       }),
     },
     {
-      type: 'string',
+      type: "string",
       min: 6,
       max: 18,
       message: intl.formatMessage({
-        id: 'register.rule.password.message2',
-        defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
+        id: "register.rule.password.message2",
+        defaultMessage: "La contraseña debe tener entre 6 a 18 caracteres",
       }),
     },
   ];
 
   const ruleCedula = [
-    { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
+    { required: true, message: "Ingrese una cedula para su cuenta en Evius" },
     {
-      type: 'string',
+      type: "string",
       min: 8,
       max: 12,
-      message: 'La cedula debe tener entre 6 a 18 caracteres',
+      message: "La cedula debe tener entre 6 a 18 caracteres",
     },
   ];
   const ruleName = [
     {
       required: true,
       message: intl.formatMessage({
-        id: 'register.rule.name.message',
-        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
+        id: "register.rule.name.message",
+        defaultMessage: "Ingrese su nombre completo para su cuenta en Evius",
       }),
     },
   ];
@@ -71,12 +77,12 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   /** request para no mostrar el error que genera el component upload de antd */
   const dummyRequest = ({ file, onSuccess }) => {
     setTimeout(() => {
-      onSuccess('ok');
+      onSuccess("ok");
     }, 0);
   };
 
   function onFinish(values) {
-    console.log('values', values);
+    console.log("values", values);
     handleNext(values);
   }
 
@@ -89,36 +95,44 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           password: basicDataUser.password,
         }}
         form={form}
-        autoComplete='on'
-        layout='vertical'
-        onFinish={onFinish}>
+        autoComplete="on"
+        layout="vertical"
+        onFinish={onFinish}
+      >
         <Form.Item>
-          <ImgCrop rotate shape='round'>
+          <ImgCrop rotate shape="round">
             <Upload
-              accept='image/png,image/jpeg'
+              accept="image/png,image/jpeg"
               onChange={(file) => {
                 if (file.fileList.length > 0) {
                   setImageAvatar(file.fileList);
-                  HandleHookForm(null, 'picture', file.fileList);
+                  HandleHookForm(null, "picture", file.fileList);
                 } else {
                   setImageAvatar(null);
                 }
               }}
               customRequest={dummyRequest}
               multiple={false}
-              listType='picture'
+              listType="picture"
               maxCount={1}
-              fileList={basicDataUser.picture ? basicDataUser.picture : imageAvatar}>
+              fileList={
+                basicDataUser.picture ? basicDataUser.picture : imageAvatar
+              }
+            >
               {
                 <Button
-                  type='primary'
-                  shape='circle'
-                  style={{ height: !imageAvatar ? '150px' : '95px', width: !imageAvatar ? '150px' : '95px' }}>
-                  <Space direction='vertical'>
-                    <PictureOutlined style={{ fontSize: '40px' }} />
+                  type="primary"
+                  shape="circle"
+                  style={{
+                    height: !imageAvatar ? "150px" : "95px",
+                    width: !imageAvatar ? "150px" : "95px",
+                  }}
+                >
+                  <Space direction="vertical">
+                    <PictureOutlined style={{ fontSize: "40px" }} />
                     {intl.formatMessage({
-                      id: 'modal.label.photo',
-                      defaultMessage: 'Subir foto',
+                      id: "modal.label.photo",
+                      defaultMessage: "Subir foto",
                     })}
                   </Space>
                 </Button>
@@ -128,79 +142,93 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         </Form.Item>
         <Form.Item
           label={intl.formatMessage({
-            id: 'modal.label.email',
-            defaultMessage: 'Correo electrónico',
+            id: "modal.label.email",
+            defaultMessage: "Correo electrónico",
           })}
-          name='email'
+          name="email"
           hasFeedback
-          style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}>
+          style={{ marginBottom: "10px", textAlign: "left" }}
+          rules={ruleEmail}
+        >
           <Input
-            onChange={(e) => HandleHookForm(e, 'email')}
-            type='email'
-            size='large'
-            placeholder={'micorreo@ejemplo.com'}
-            prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            onChange={(e) => HandleHookForm(e, "email")}
+            type="email"
+            size="large"
+            placeholder={"micorreo@ejemplo.com"}
+            prefix={
+              <MailOutlined style={{ fontSize: "24px", color: "#c4c4c4" }} />
+            }
           />
         </Form.Item>
         {useEventArkmed(cEvent.value?._id).isArkmed ? (
           <Form.Item
             label={intl.formatMessage({
-              id: 'modal.label.cedula',
-              defaultMessage: 'Cedula',
+              id: "modal.label.cedula",
+              defaultMessage: "Cedula",
             })}
-            name='password'
+            name="password"
             hasFeedback
-            style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={ruleCedula}>
+            style={{ marginBottom: "10px", textAlign: "left" }}
+            rules={ruleCedula}
+          >
             <Input
-              onChange={(e) => HandleHookForm(e, 'password')}
-              type='number'
-              size='large'
-              placeholder={'Cedula del medico ó especialista'}
-              prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+              onChange={(e) => HandleHookForm(e, "password")}
+              type="number"
+              size="large"
+              placeholder={"Cedula del medico ó especialista"}
+              prefix={
+                <IdcardOutlined
+                  style={{ fontSize: "24px", color: "#c4c4c4" }}
+                />
+              }
             />
           </Form.Item>
         ) : (
           <Form.Item
             label={intl.formatMessage({
-              id: 'modal.label.password',
-              defaultMessage: 'Contraseña',
+              id: "modal.label.password",
+              defaultMessage: "Contraseña",
             })}
-            name='password'
+            name="password"
             hasFeedback
-            style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={rulePassword}>
+            style={{ marginBottom: "10px", textAlign: "left" }}
+            rules={rulePassword}
+          >
             <Input.Password
-              onChange={(e) => HandleHookForm(e, 'password')}
-              type='password'
-              size='large'
+              onChange={(e) => HandleHookForm(e, "password")}
+              type="password"
+              size="large"
               placeholder={intl.formatMessage({
-                id: 'modal.label.password',
-                defaultMessage: 'Contraseña',
+                id: "modal.label.password",
+                defaultMessage: "Contraseña",
               })}
-              prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+              prefix={
+                <LockOutlined style={{ fontSize: "24px", color: "#c4c4c4" }} />
+              }
             />
           </Form.Item>
         )}
         <Form.Item
           label={intl.formatMessage({
-            id: 'modal.label.name',
-            defaultMessage: 'Nombre',
+            id: "modal.label.name",
+            defaultMessage: "Nombre",
           })}
-          name='names'
+          name="names"
           hasFeedback
-          style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}>
+          style={{ marginBottom: "10px", textAlign: "left" }}
+          rules={ruleName}
+        >
           <Input
-            onChange={(e) => HandleHookForm(e, 'names')}
-            type='text'
-            size='large'
+            onChange={(e) => HandleHookForm(e, "names")}
+            type="text"
+            size="large"
             placeholder={intl.formatMessage({
-              id: 'modal.label.name',
-              defaultMessage: 'Nombre',
+              id: "modal.label.name",
+              defaultMessage: "Nombre",
             })}
-            prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            prefix={
+              <UserOutlined style={{ fontSize: "24px", color: "#c4c4c4" }} />
+            }
           />
         </Form.Item>
       </Form>

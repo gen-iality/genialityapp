@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Col, Modal, Row, Transfer, Typography, Grid } from 'antd';
-import { FastForwardOutlined } from '@ant-design/icons';
-import AgendaContext from 'context/AgendaContext';
+import React, { useContext, useEffect, useState } from "react";
+import { Col, Modal, Row, Transfer, Typography, Grid } from "antd";
+import AgendaContext from "../../../../context/AgendaContext";
 
 const { useBreakpoint } = Grid;
 
@@ -14,17 +13,22 @@ for (let i = 0; i < 5; i++) {
   });
 }
 
-const initialTargetKeys = mockData.filter((item) => +item.key > 10).map((item) => item.key);
 
-const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => {
+const ModalListRequestsParticipate = ({
+  handleModal,
+  visible,
+  refActivity,
+}) => {
   const screens = useBreakpoint();
   const [targetKeys, setTargetKeys] = useState([]);
   const [dataRequest, setDataRequest] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const { requestList, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
+  const { requestList, removeRequest, approvedOrRejectedRequest } = useContext(
+    AgendaContext
+  );
   const onChange = async (nextTargetKeys, direction, moveKeys) => {
     //ELIMINAMOS LA SOLICITUD
-    if (direction === 'left') {
+    if (direction === "left") {
       await Promise.all(
         moveKeys?.map(async (key) => {
           await removeRequest(`${refActivity}`, key);
@@ -32,7 +36,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
       );
     }
     //APPROBAMOS LA SOLICITUD
-    if (direction === 'right') {
+    if (direction === "right") {
       await Promise.all(
         moveKeys?.map(async (key) => {
           await approvedOrRejectedRequest(`${refActivity}`, key, true);
@@ -43,18 +47,20 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   };
 
   const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-    console.log('sourceSelectedKeys:', sourceSelectedKeys);
-    console.log('targetSelectedKeys:', targetSelectedKeys);
+    console.log("sourceSelectedKeys:", sourceSelectedKeys);
+    console.log("targetSelectedKeys:", targetSelectedKeys);
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
   const onScroll = (direction, e) => {
-    console.log('direction:', direction);
-    console.log('target:', e.target);
+    console.log("direction:", direction);
+    console.log("target:", e.target);
   };
   useEffect(() => {
     if (requestList) {
-      let approvedRequest = requestList.filter((request) => request.active).map((item) => item.key);
+      let approvedRequest = requestList
+        .filter((request) => request.active)
+        .map((item) => item.key);
       setDataRequest(requestList);
       setTargetKeys(approvedRequest);
     }
@@ -66,10 +72,13 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
       closable={true}
       onCancel={() => handleModal(false)}
       visible={visible}
-      footer={null}>
+      footer={null}
+    >
       <Row gutter={[8, 8]}>
         <Col>
-          <Typography.Title level={4}>Solicitudes para participar en la transmisión</Typography.Title>
+          <Typography.Title level={4}>
+            Solicitudes para participar en la transmisión
+          </Typography.Title>
         </Col>
         <Col>
           <Transfer
@@ -77,12 +86,12 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
             showSelectAll={false}
             oneWay
             listStyle={{
-              borderRadius: '5px',
+              borderRadius: "5px",
               width: screens.xs ? 135 : 300,
               height: screens.xs ? 225 : 300,
             }}
             dataSource={dataRequest}
-            titles={['Solicitudes', 'Aprobadas']}
+            titles={["Solicitudes", "Aprobadas"]}
             selectedKeys={selectedKeys}
             targetKeys={targetKeys}
             onChange={onChange}
@@ -92,9 +101,10 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
           />
         </Col>
         <Col>
-          <Typography.Paragraph type='secondary'>
-            Recuerde que al aprobar una solicitud, usted está dando acceso a esa persona a participar dentro de la
-            transmisión. Puede eliminar el acceso en cualquier momento.
+          <Typography.Paragraph type="secondary">
+            Recuerde que al aprobar una solicitud, usted está dando acceso a esa
+            persona a participar dentro de la transmisión. Puede eliminar el
+            acceso en cualquier momento.
           </Typography.Paragraph>
         </Col>
       </Row>

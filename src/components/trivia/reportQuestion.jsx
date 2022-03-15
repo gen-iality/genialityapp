@@ -1,11 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import Moment from 'moment';
-import XLSX from 'xlsx';
-
+// import * as XLSX from '../../xlsx/xlsx.mjs'
 import { getAnswersByQuestion } from './services';
-
-import { Table as TableA, Divider, Button } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 
@@ -64,13 +61,13 @@ class ReportQuestion extends Component {
         data[i].response = data[i].response.toString();
       }
     }
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    const sheetName = nameQuestion.replace(/[.*+¿?^${}()|[\]\\]/g, '');
-    XLSX.utils.book_append_sheet(wb, ws, `${sheetName}`);
-    const name = `${match.params.id}`;
+    // const ws = XLSX.utils.json_to_sheet(data);
+    // const wb = XLSX.utils.book_new();
+    // const sheetName = nameQuestion.replace(/[.*+¿?^${}()|[\]\\]/g, '');
+    // XLSX.utils.book_append_sheet(wb, ws, `${sheetName}`);
+    // const name = `${match.params.id}`;
 
-    XLSX.writeFile(wb, `${sheetName}-${name}${Moment().format('DDMMYY')}.xls`);
+    // XLSX.writeFile(wb, `${sheetName}-${name}${Moment().format('DDMMYY')}.xls`);
   };
 
   goBack = () => this.props.history.goBack();

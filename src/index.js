@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/main.scss';
-/* import 'react-toastify/dist/ReactToastify.css'; */
 import App from './App/App';
 import { unregister as unregisterServiceWorker } from './registerServiceWorker';
 import { IntlProvider } from 'react-intl';
@@ -17,13 +16,11 @@ const messages = localeData[languageWithoutRegionCode] || localeData[language] |
 sentry();
 
 ReactDOM.render(
-  <>
-    <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale='es'>
-      <CurrentUserProvider>
-        <App />
-      </CurrentUserProvider>
-    </IntlProvider>
-  </>,
+  <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale='es'>
+    <CurrentUserProvider>
+      <App />
+    </CurrentUserProvider>
+  </IntlProvider>,
   document.getElementById('root')
 );
 

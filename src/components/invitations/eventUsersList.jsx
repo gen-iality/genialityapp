@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
-import { Table, Input, Button, Space, Menu, Dropdown, Row, Col, Tag } from 'antd';
+import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd';
 import {
   SearchOutlined,
-  DownOutlined,
   UserOutlined,
   DownloadOutlined,
   UploadOutlined,
@@ -12,10 +11,9 @@ import {
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
-import XLSX from 'xlsx';
+// import * as XLSX from '../../xlsx/xlsx.mjs'
 import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
-import { formatDataToString } from '../../helpers/utils';
 import Header from '../../antdComponents/Header';
 
 class eventUsersList extends Component {
@@ -226,12 +224,12 @@ class eventUsersList extends Component {
     const columnsKey = this.props.event.user_properties;
     const { attendees } = this.state;
 
-    const data = await parseData2Excel(attendees, columnsKey);
+    // const data = await parseData2Excel(attendees, columnsKey);
 
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
+    // const ws = XLSX.utils.json_to_sheet(data);
+    // const wb = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
+    // XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
   };
 
   modalUser = () => {

@@ -1,7 +1,6 @@
-import { EventsApi } from '../../helpers/request';
-import moment from 'moment';
-import API from '../../helpers/request';
-import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import { EventsApi } from "../../helpers/request";
+import moment from "moment";
+import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
 
 //METRICAS QUE SE PUEDEN OBTENER
 /*let startDate = '7daysAgo'
@@ -19,13 +18,15 @@ import { GetTokenUserFirebase } from 'helpers/HelperAuth';
       'ga:avgSessionDuration', //The average duration (in seconds) of users' sessions.    
     ]*/
 //CONSTANTES COLORES DE GRAFICAS
-const backgroud = 'rgba(80, 211, 201, 0.7)';
-const lineBackground = 'rgba(80, 211, 201, 1)';
+const backgroud = "rgba(80, 211, 201, 0.7)";
+const lineBackground = "rgba(80, 211, 201, 1)";
 
 export const totalsMetricasMail = async (eventId) => {
   let token = await GetTokenUserFirebase();
   return new Promise((resolve, reject) => {
-    fetch(`https://devapi.evius.co/api/events/${eventId}/messages/?token=${token}`)
+    fetch(
+      `https://devapi.evius.co/api/events/${eventId}/messages/?token=${token}`
+    )
       .then((response) => response.json())
       .then(({ data }) => {
         resolve(data);
@@ -38,7 +39,9 @@ export const totalsMetricasMail = async (eventId) => {
 
 export const totalsMetricasMailDetails = async (eventId, idBell) => {
   return new Promise((resolve, reject) => {
-    fetch(`https://devapi.evius.co/api/events/${eventId}/message/${idBell}/messageUser`)
+    fetch(
+      `https://devapi.evius.co/api/events/${eventId}/message/${idBell}/messageUser`
+    )
       .then((response) => response.json())
       .then(({ data }) => {
         resolve(data);
@@ -61,10 +64,15 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 
 export const metricasRegisterByDate = async (eventId) => {
   let listmetric = [];
-  let fechaActual = moment().format('YYYY-MM-DD');
-  let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at', '2016-01-01', fechaActual);
+  let fechaActual = moment().format("YYYY-MM-DD");
+  let metrics = await EventsApi.metricsRegisterBydate(
+    eventId,
+    "created_at",
+    "2016-01-01",
+    fechaActual
+  );
   metrics.map((metric) => {
-    metric = { ...metric, date: moment(metric.date).format('YYYY/MM/DD') };
+    metric = { ...metric, date: moment(metric.date).format("YYYY/MM/DD") };
     listmetric.push(metric);
   });
 
@@ -72,32 +80,36 @@ export const metricasRegisterByDate = async (eventId) => {
 };
 
 export const metricasCheckedByDate = async (eventId) => {
-  const metrics = await EventsApi.metricsRegisterBydate(eventId, 'checkedin_at');
+  const metrics = await EventsApi.metricsRegisterBydate(
+    eventId,
+    "checkedin_at"
+  );
   return metrics;
 };
 
 //Esta funcion realiza la consulta de los datos a la API de analytics
 export const queryReportGnal = async (eventID) => {
-  const devEvius = 'https://api.evius.co/api/googleanalytics';
-  let fechaActual = moment().format('YYYY-MM-DD');
+  const devEvius = "https://api.evius.co/api/googleanalytics";
+  let fechaActual = moment().format("YYYY-MM-DD");
   const data = {
-    startDate: '2021-06-01',
+    startDate: "2021-06-01",
     endDate: fechaActual,
     filtersExpression: `ga:pagePath=@/landing/${eventID};ga:pagePath!@token;ga:pagePath!@fbclid`,
-    metrics: 'ga:pageviews, ga:users, ga:sessions, ga:sessionDuration, ga:avgTimeOnPage',
-    dimensions: 'ga:pagePath',
-    fieldName: 'ga:pagePath',
-    sortOrder: 'ASCENDING',
+    metrics:
+      "ga:pageviews, ga:users, ga:sessions, ga:sessionDuration, ga:avgTimeOnPage",
+    dimensions: "ga:pagePath",
+    fieldName: "ga:pagePath",
+    sortOrder: "ASCENDING",
   };
   //paveview=impresiones
   //Usuarios totales del evento ga:sessions
   let resp = await fetch(devEvius, {
     headers: {
-      'content-type': 'application/json',
-      Accept: 'application/json',
+      "content-type": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify(data),
-    method: 'POST',
+    method: "POST",
   });
   let respjson = await resp.json();
   const dataEvents = respjson.rows;
@@ -111,38 +123,41 @@ export const queryReportGnal = async (eventID) => {
       };
       metrics.push(objeto);
     });
-    let totalAvg = parseFloat(totalMetrics['ga:sessionDuration'] / totalMetrics['ga:users']);
+    let totalAvg = parseFloat(
+      totalMetrics["ga:sessionDuration"] / totalMetrics["ga:users"]
+    );
     return { metrics, totalAvg, totalMetrics };
   }
 };
 
 //Esta funcion trae datos por fecha
 export const queryReportGnalByMoth = async (eventID) => {
-  const devEvius = 'https://api.evius.co/api/googleanalytics';
-  let fechaActual = moment().format('YYYY-MM-DD');
+  const devEvius = "https://api.evius.co/api/googleanalytics";
+  let fechaActual = moment().format("YYYY-MM-DD");
   const data = {
-    startDate: '2019-01-01',
+    startDate: "2019-01-01",
     endDate: fechaActual,
     filtersExpression: `ga:pagePath=@/landing/${eventID};ga:pagePath!@token`,
-    metrics: 'ga:pageviews, ga:sessions,ga:avgTimeOnPage, ga:pageviewsPerSession,ga:users,ga:sessionDuration',
-    dimensions: 'ga:date',
-    fieldName: 'ga:date',
-    sortOrder: 'ASCENDING',
+    metrics:
+      "ga:pageviews, ga:sessions,ga:avgTimeOnPage, ga:pageviewsPerSession,ga:users,ga:sessionDuration",
+    dimensions: "ga:date",
+    fieldName: "ga:date",
+    sortOrder: "ASCENDING",
   };
   let resp = await fetch(devEvius, {
     headers: {
-      'content-type': 'application/json',
-      Accept: 'application/json',
+      "content-type": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify(data),
-    method: 'POST',
+    method: "POST",
   });
   let respjson = await resp.json();
   let datos = respjson.rows;
   let totalMetrics = [];
   datos.map((dat) => {
     let metric = {
-      month: moment(dat[0]).format('YYYY/MM/DD'),
+      month: moment(dat[0]).format("YYYY/MM/DD"),
       view: dat[2],
       time: dat[1] ? parseInt(dat[1]) : 0,
     };
@@ -178,22 +193,25 @@ export const obtenerMetricasByView = (view, metricsGnal) => {
 export const exportDataReport = (datos, type) => {
   let data = [];
   if (datos.length > 0) {
-    if (type == 'register') {
+    if (type == "register") {
       data = datos.map((item) => {
         return { fecha: item.date, cantidadregistros: item.quantity };
       });
     }
-    if (type == 'views') {
+    if (type == "views") {
       data = datos.map((item) => {
-        return { fecha: moment(item.month).format('YYYY-MM-DD'), 'Número de usuarios': item.view };
+        return {
+          fecha: moment(item.month).format("YYYY-MM-DD"),
+          "Número de usuarios": item.view,
+        };
       });
     }
 
-    if (type == 'time') {
+    if (type == "time") {
       data = datos.map((item) => {
         return {
-          fecha: moment(item.month).format('YYYY-MM-DD'),
-          'Número de visitas': parseFloat(item.time).toFixed(0),
+          fecha: moment(item.month).format("YYYY-MM-DD"),
+          "Número de visitas": parseFloat(item.time).toFixed(0),
         };
       });
     }
@@ -206,12 +224,17 @@ export const updateMetricasActivity = (data, eventId, metricsGActivity) => {
   if (data.length > 0) {
     let metricsActivity = [];
     data.map((activity) => {
-      let metricsView = obtenerMetricasByView('/landing/' + eventId + '/activity/' + activity._id, metricsGActivity);
+      let metricsView = obtenerMetricasByView(
+        "/landing/" + eventId + "/activity/" + activity._id,
+        metricsGActivity
+      );
       let metricaActivity = {
         name: activity.name,
         view: metricsView ? metricsView.metrics[1] : 0,
         prints: metricsView ? metricsView.metrics[0] : 0,
-        time: metricsView ? (metricsView.metrics[4] / 60).toFixed(2) + ' min' : '0 min',
+        time: metricsView
+          ? (metricsView.metrics[4] / 60).toFixed(2) + " min"
+          : "0 min",
       };
       metricsActivity.push(metricaActivity);
     });

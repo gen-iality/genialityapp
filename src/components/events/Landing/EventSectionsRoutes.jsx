@@ -1,94 +1,88 @@
-import React, { useEffect, useContext } from 'react';
-import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { useEffect, useContext } from "react";
+import {
+  Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
+  withRouter,
+} from "react-router-dom";
+import { connect } from "react-redux";
 
 /** --------------------
  *  secciones del evento
+ * COLOCAR ESTO CON LAZY LOAD
  * ---------------------*/
-import DocumentsForm from '../../documents/front/documentsLanding';
-import SpeakersForm from '../speakers';
-import SurveyForm from '../surveys';
-import FaqsForm from '../../faqsLanding';
-import Partners from '../Partners';
-import Agenda from '../agendaLanding';
-import EventHome from '../eventHome';
-/* import TicketsForm from '../../tickets/formTicket'; */
-import WallForm from '../../wall/index';
-import Ferias from '../ferias/index';
-import VirtualConferenceBig from '../virtualConferenceBig';
-import CertificadoLanding from '../../certificados/cerLanding';
-
-import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import { setSpaceNetworking } from '../../../redux/networking/actions';
-import MyAgendaIndepend from '../../networking/myAgendaIndepend';
-import NetworkingForm from '../../networking';
-import InformativeSection2 from '../informativeSections/informativeSection2';
-import InformativeSection from '../informativeSections/informativeSection';
-import Noticias from '../noticias';
-import withContext from '../../../context/withContext';
-import Productos from '../producto/index';
-import MessageRegister from '../registrationForm/messageRegister';
-import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
-import ListVideoCard from '../../shared/listVideoCard';
-import initUserPresence from '../../../containers/userPresenceInEvent';
-import { HelperContext } from '../../../context/HelperContext';
-import Videos from '../videos';
-import UserLoginContainer from '../UserLoginContainer';
-import InfoEvent from '../../shared/infoEvent';
-import ResponsePayu from '../registrationForm/responsePayu';
-import { useParams } from 'react-router-dom';
-import AgendaActividadDetalle from '../../events/AgendaActividadDetalle/index';
-import MySection from '../newSection';
-import ThisRouteCanBeDisplayed from './helpers/thisRouteCanBeDisplayed';
-import { UseUserEvent } from 'context/eventUserContext';
-import { useCheckinUser } from 'helpers/HelperAuth';
+import DocumentsForm from "../../documents/front/documentsLanding";
+import SpeakersForm from "../speakers";
+import SurveyForm from "../surveys";
+import FaqsForm from "../../faqsLanding";
+import Partners from "../Partners";
+import Agenda from "../agendaLanding";
+import EventHome from "../eventHome";
+import WallForm from "../../wall/index";
+import Ferias from "../ferias/index";
+import VirtualConferenceBig from "../virtualConferenceBig";
+import CertificadoLanding from "../../certificados/cerLanding";
+import { setVirtualConference } from "../../../redux/virtualconference/actions";
+import { setSpaceNetworking } from "../../../redux/networking/actions";
+import MyAgendaIndepend from "../../networking/myAgendaIndepend";
+import NetworkingForm from "../../networking";
+import InformativeSection2 from "../informativeSections/informativeSection2";
+import InformativeSection from "../informativeSections/informativeSection";
+import Noticias from "../noticias";
+import withContext from "../../../context/withContext";
+import Productos from "../producto/index";
+import MessageRegister from "../registrationForm/messageRegister";
+import { setSectionPermissions } from "../../../redux/sectionPermissions/actions";
+import ListVideoCard from "../../shared/listVideoCard";
+import initUserPresence from "../../../containers/userPresenceInEvent";
+import { HelperContext } from "../../../context/HelperContext";
+import Videos from "../videos";
+import InfoEvent from "../../shared/infoEvent";
+import ResponsePayu from "../registrationForm/responsePayu";
+import { useParams } from "react-router-dom";
+import AgendaActividadDetalle from "../../events/AgendaActividadDetalle/index";
+import MySection from "../newSection";
+import ThisRouteCanBeDisplayed from "./helpers/thisRouteCanBeDisplayed";
+import { UseUserEvent } from "../../../context/eventUserContext";
+import { useCheckinUser } from "../../../helpers/HelperAuth";
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
-  let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal, typeModal } = useContext(HelperContext);
+  let { GetPermissionsEvent } = useContext(HelperContext);
   let cEventUser = UseUserEvent();
 
   //redirigir a evento Cancilleria
-  if (event_id === '610976f24e10472fb738d65b') {
-    window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
+  if (event_id === "610976f24e10472fb738d65b") {
+    window.location.replace(
+      "https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento"
+    );
   }
   function ValidateViewPermissions(route, nombresection) {
     if (props.cEvent.value !== null) {
       let routePermissions =
-        props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
+        props.cEvent.value &&
+        Object.values(props.cEvent.value?.itemsMenu).filter(
+          (item) => item.section === route
+        );
     }
-    // if (
-    //   props.cEventUser?.value == null &&
-    //   props.cEventUser?.status == 'LOADED' &&
-    //   typeModal !== 'registerForTheEvent' &&
-    //   typeModal !== 'loginSuccess' &&
-    //   typeModal !== 'visitors'
-    // ) {
-    //   handleChangeTypeModal('preregisterMessage');
-    // }
-    // else if (
-    //   props.cEventUser?.value !== null &&
-    //   props.cEventUser?.status == 'LOADED' &&
-    //   typeModal !== 'update' &&
-    //   typeModal !== 'visitors'
-    // ) {
-    //   handleChangeTypeModal(null);
-    // }
   }
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return;
-    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter((item) => item !== 'tickets');
-    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section !== 'tickets');
-    /* firstroute.filter(item => item !== 'tickets')
-    firstrouteValues.filter(item => item.section !== 'tickets') */
-    /* console.log(firstroute, firstrouteValues, '------------') */
+    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(
+      (item) => item !== "tickets"
+    );
+    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(
+      (item) => item.section !== "tickets"
+    );
+   
     let index = -1;
     if (firstroute && firstrouteValues) {
       if (firstroute.length > 0 && firstrouteValues.length > 0) {
         for (let i = 0; i < firstrouteValues.length; i++) {
-          if (firstrouteValues[i]?.position == '1') {
+          if (firstrouteValues[i]?.position == "1") {
             index = i;
             break;
           }
@@ -109,8 +103,10 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     GetPermissionsEvent();
 
-    if (window.location.pathname.includes('/event/Gorilla-Logic/evento')) {
-      window.location.replace('https://app.evius.co/landing/618c502f8ceb9e109464f1c4');
+    if (window.location.pathname.includes("/event/Gorilla-Logic/evento")) {
+      window.location.replace(
+        "https://app.evius.co/landing/618c502f8ceb9e109464f1c4"
+      );
     }
   }, []);
 
@@ -136,13 +132,14 @@ const EventSectionRoutes = (props) => {
       {props.viewVirtualconference && (
         <>
           {props.cEvent.value?.styles?.show_title &&
-            (props.cEvent.value?.styles.show_title === true || props.cEvent.value?.styles?.show_title === 'true') && (
+            (props.cEvent.value?.styles.show_title === true ||
+              props.cEvent.value?.styles?.show_title === "true") && (
               <InfoEvent />
             )}
           <VirtualConferenceBig />
           {props.cEvent.value?.styles?.show_video_widget &&
             (props.cEvent.value?.styles?.show_video_widget === true ||
-              props.cEvent.value?.styles?.show_video_widget === 'true') && (
+              props.cEvent.value?.styles?.show_video_widget === "true") && (
               <ListVideoCard idevent={props.cEvent.value} />
             )}
         </>
@@ -155,13 +152,13 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/documents`}>
           {() =>
-            ValidateViewPermissions('documents', 'Documentos') ? (
+            ValidateViewPermissions("documents", "Documentos") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <DocumentsForm key='documents' />
+                <DocumentsForm key="documents" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -169,13 +166,13 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/interviews`}>
           {() =>
-            ValidateViewPermissions('interviews', 'interviews') ? (
+            ValidateViewPermissions("interviews", "interviews") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <MyAgendaIndepend key='interviews' />
+                <MyAgendaIndepend key="interviews" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -183,13 +180,13 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/networking`}>
           {() =>
-            ValidateViewPermissions('networking', 'Networking') ? (
+            ValidateViewPermissions("networking", "Networking") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <NetworkingForm key='networking' />
+                <NetworkingForm key="networking" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -197,32 +194,33 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/informativeSection1`}>
           {() =>
-            ValidateViewPermissions('informativeSection1', 'informativeSection1') ? (
+            ValidateViewPermissions(
+              "informativeSection1",
+              "informativeSection1"
+            ) ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <InformativeSection2 key='informativeSection1' />
+                <InformativeSection2 key="informativeSection1" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
 
-        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
-        {/* <Route path={`${path}/login`}>
-          <UserLoginContainer eventId={props.cEvent.value._id} />
-        </Route> */}
-
         <Route path={`${path}/informativeSection`}>
           {() =>
-            ValidateViewPermissions('informativeSection', 'informativeSection') ? (
+            ValidateViewPermissions(
+              "informativeSection",
+              "informativeSection"
+            ) ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <InformativeSection key='informativeSection' />
+                <InformativeSection key="informativeSection" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -230,13 +228,18 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/my_section`}>
           {() =>
-            ValidateViewPermissions('informativeSection', 'informativeSection') ? (
+            ValidateViewPermissions(
+              "informativeSection",
+              "informativeSection"
+            ) ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect
+                  to={`/landing/${props.cEvent.value._id}/permissions`}
+                />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <MySection key='my_section' />
+                <MySection key="my_section" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -244,7 +247,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/activity/:activity_id`}>
           {() =>
-            ValidateViewPermissions('agenda', 'Agenda') ? (
+            ValidateViewPermissions("agenda", "Agenda") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
@@ -254,7 +257,7 @@ const EventSectionRoutes = (props) => {
                   socialzonetabs={{
                     ...props?.generaltabs,
                   }}
-                  key='activity'
+                  key="activity"
                 />
               </ThisRouteCanBeDisplayed>
             )
@@ -263,52 +266,52 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/speakers`}>
           {() =>
-            ValidateViewPermissions('speakers', 'Conferencistas') ? (
+            ValidateViewPermissions("speakers", "Conferencistas") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <SpeakersForm key='speakers' />
+                <SpeakersForm key="speakers" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/survey`}>
           {() =>
-            ValidateViewPermissions('surveys', 'Encuestas') ? (
+            ValidateViewPermissions("surveys", "Encuestas") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <SurveyForm key='survey' />
+                <SurveyForm key="survey" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/partners`}>
           {() =>
-            ValidateViewPermissions('partners', 'partners') ? (
+            ValidateViewPermissions("partners", "partners") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Partners key='partners' />
+                <Partners key="partners" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/faqs`}>
           {() =>
-            ValidateViewPermissions('faqs', 'faqs') ? (
+            ValidateViewPermissions("faqs", "faqs") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <FaqsForm key='faqs' />
+                <FaqsForm key="faqs" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -316,13 +319,13 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           {() =>
-            ValidateViewPermissions('evento', 'Evento') ? (
+            ValidateViewPermissions("evento", "Evento") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <EventHome key='evento' />
+                <EventHome key="evento" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -330,26 +333,26 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/wall`}>
           {() =>
-            ValidateViewPermissions('wall', 'Muro') ? (
+            ValidateViewPermissions("wall", "Muro") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <WallForm key='wall' />
+                <WallForm key="wall" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/videos`}>
           {() =>
-            ValidateViewPermissions('videos', 'Videos') ? (
+            ValidateViewPermissions("videos", "Videos") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Videos key='videos' />
+                <Videos key="videos" />
               </ThisRouteCanBeDisplayed>
             )
           }
@@ -357,80 +360,65 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/ferias`}>
           {() =>
-            ValidateViewPermissions('ferias', 'Ferias') ? (
+            ValidateViewPermissions("ferias", "Ferias") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Ferias key='ferias' />
+                <Ferias key="ferias" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/noticias`}>
           {() =>
-            ValidateViewPermissions('noticias', 'Noticias') ? (
+            ValidateViewPermissions("noticias", "Noticias") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Noticias key='noticias' />
+                <Noticias key="noticias" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
 
-        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
-        {/* <Route path={`${path}/tickets`}>
-          {() =>
-            ValidateViewPermissions('tickets', 'Registro') ? (
-              <>
-                <Redirect to={redirectToPermissions} />
-              </>
-            ) : (
-              <div className='columns is-centered'>
-                <TicketsForm setVirtualConference={props.setVirtualConference} />
-              </div>
-            )
-          }
-        </Route> */}
-
         <Route path={`${path}/certs`}>
           {() =>
-            ValidateViewPermissions('certs', 'certs') ? (
+            ValidateViewPermissions("certs", "certs") ? (
               <>
                 <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
-                <CertificadoLanding key='certs' />
+                <CertificadoLanding key="certs" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/producto`}>
           {() =>
-            ValidateViewPermissions('producto', 'Galería') ? (
+            ValidateViewPermissions("producto", "Galería") ? (
               <Redirect to={redirectToPermissions} />
             ) : (
               <ThisRouteCanBeDisplayed>
-                <Productos key='producto' />
+                <Productos key="producto" />
               </ThisRouteCanBeDisplayed>
             )
           }
         </Route>
         <Route path={`${path}/agenda`}>
           {() =>
-            ValidateViewPermissions('agenda', 'Agenda') ? (
+            ValidateViewPermissions("agenda", "Agenda") ? (
               <>
                 <Redirect to={`/landing/${props.cEvent.value._id}/agenda`} />
               </>
             ) : (
               <ThisRouteCanBeDisplayed>
                 <Agenda
-                  key='agenda'
+                  key="agenda"
                   activity={props.currentActivity}
                   generalTabs={props.generalTabs}
                   setVirtualConference={props.setVirtualConference}
@@ -439,12 +427,6 @@ const EventSectionRoutes = (props) => {
             )
           }
         </Route>
-
-        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
-        {/* <Route path={`${path}/permissions`}>
-          <PageNotPermissions setVirtualConference={props.setVirtualConference} />
-        </Route> */}
-
         <Route path={`${path}/success/:type?`}>
           <MessageRegister />
         </Route>
@@ -469,4 +451,7 @@ const mapDispatchToProps = {
 };
 
 let eventSectionsContext = withRouter(withContext(EventSectionRoutes));
-export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(eventSectionsContext);
