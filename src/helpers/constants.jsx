@@ -496,3 +496,13 @@ export const maleIcons = [
   "https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F043-man-22.png?alt=media&token=bfb07e21-cf2f-4724-84ef-c3397c87530c",
   "https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F044-man-23.png?alt=media&token=44016456-1872-468a-8290-eb64bbb9aa07",
 ];
+export const configEventsTemplate = {
+  BackgroundImage:
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2FBackgroud.jpg?alt=media&token=cae37ed9-9817-4300-87e9-e9cac7106b05',
+  banner_footer:
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Ffooter.png?alt=media&token=363b3aab-b149-43f1-9173-622d0b8128f9',
+  event_image:
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Flogo.jpg?alt=media&token=861af09c-f6d0-4934-b56e-ddb83c3cb7a1',
+  banner_image:
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Fbanner.jpg?alt=media&token=8642d0ed-61e2-4fed-97fa-1cdd5687aeaf',
+};

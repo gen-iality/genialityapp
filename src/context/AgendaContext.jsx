@@ -27,10 +27,10 @@ export const AgendaContextProvider = ({ children }) => {
   const [platform, setPlatform] = useState("wowza");
   const [vimeo_id, setVimeoId] = useState("");
   const [name_host, setNameHost] = useState("");
-  const [avalibleGames, setAvailableGames] = useState();
-  const [isPublished, setIsPublished] = useState();
+  const [avalibleGames, setAvailableGames] = useState([]);
+  const [isPublished, setIsPublished] = useState(true);
   const [meeting_id, setMeetingId] = useState(null);
-  const [roomStatus, setRoomStatus] = useState("");
+  const [roomStatus, setRoomStatus] = useState(null);
   const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventUserContext);
   const [transmition, setTransmition] = useState("EviusMeet"); //EviusMeet Para cuando se tenga terminada
@@ -69,6 +69,7 @@ export const AgendaContextProvider = ({ children }) => {
       setMeetingId(null);
     }
     async function obtenerDetalleActivity() {
+      alert("SE EJECUTA ESTO DE LA ACTIVIDAD==>")
       //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
       const service = new Service(firestore);
       const hasVideoconference = await service.validateHasVideoconference(
@@ -130,9 +131,29 @@ export const AgendaContextProvider = ({ children }) => {
             ? configuration.select_host_manual
             : false
         );
+      }else{
+        initializeState()
       }
     }
   }, [activityEdit]);
+
+  //FUNCION QUE PERMITE REINICIALIZAR LOS ESTADOS YA QUE AL AGREGAR O EDITAR OTRA ACTIVIDAD ESTOS TOMAN VALORES ANTERIORES
+  const initializeState = () => {
+    setIsPublished(true);
+    setPlatform('wowza');
+    setMeetingId(null);
+    setRoomStatus(null);
+    setTransmition('EviusMeet');
+    setAvailableGames([]);
+    setChat(false);
+    setSurveys(false);
+    setGames(false);
+    setAttendees(false);
+    setHostId(null);
+    setHostName(null);
+    setHabilitarIngreso('');
+    setSelect_host_manual(false);
+  };
 
   const getRequestByActivity = (refActivity) => {
     fireRealtime

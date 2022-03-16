@@ -30,7 +30,7 @@ const Transition = loadable(() =>
   import("../components/shared/Animate_Img/index")
 );
 /* const Events = loadable(() => import('../components/events')); */
-const NewEvent = loadable(() => import("../components/events/newEvent"));
+const NewEvent = loadable(() => import("../components/events/createEvent/index"));
 /* const MyProfile = loadable(() => import('../components/profile/index_old')); */
 /* const Purchase = loadable(() => import('../components/profile/purchase_old')); */
 /* const EventEdit = loadable(() => import('../components/profile/events_old')); */

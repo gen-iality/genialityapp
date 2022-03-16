@@ -306,7 +306,7 @@ class AgendaEdit extends Component {
     } else {
       this.setState({ days });
       //SE SETEA EN EL CONTEXTO LA ACTIVIDAD PARA QUE NO QUEDE CON UN ID ANTERIOR
-      this.context.setActivityEdit(null);
+      //this.context.setActivityEdit(null);
     }
 
     const isLoading = { types: false, categories: false };
@@ -546,8 +546,9 @@ class AgendaEdit extends Component {
       key: 'loading',
       msj: 'Por favor espere miestras se guarda la información...',
       action: 'show',
-    });
-    const validation = this.validForm();
+    });  
+    const validation = this.validForm();  
+
     if (validation) {
       try {
         const info = this.buildInfo();
@@ -560,7 +561,7 @@ class AgendaEdit extends Component {
         this.setState({ isLoading: true });
         let agenda;
         let result;
-        if (state.edit || this.state.activityEdit) {
+        if (state.edit || this.state.activityEdit) {       
           const data = {
             activity_id: state.edit || this.state.idNewlyCreatedActivity,
           };
@@ -576,8 +577,10 @@ class AgendaEdit extends Component {
           for (let i = 0; i < selected_document?.length; i++) {
             await DocumentsApi.editOne(data, selected_document[i], event._id);
           }
-        } else {
+        } else {         
           agenda = await AgendaApi.create(event._id, info);
+          alert("INGRESO ACA"+agenda._id)
+         
           // Al crear una actividad de la agenda se inicializa el id de la actividad y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
           this.setState({
             activity_id: agenda._id,
@@ -597,7 +600,8 @@ class AgendaEdit extends Component {
         if (agenda?._id) {
           /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
           this.setState({ idNewlyCreatedActivity: agenda._id, activityEdit: true, reloadActivity: true });
-        } else {
+        } else {         
+          this.context.setActivityEdit(agenda._id);
           this.props.history.push(`/eventadmin/${event._id}/agenda`);
         }
         DispatchMessageService({
@@ -909,8 +913,9 @@ class AgendaEdit extends Component {
       host_name,
       avalibleGames,
       transmition,
+      isPublished 
     } = this.context;
-    const { isPublished } = this.state;
+   // const { isPublished } = this.state;
 
     const roomInfo = {
       platform,
@@ -999,6 +1004,10 @@ class AgendaEdit extends Component {
     this.setState({ roomStatus: e }, async () => await this.saveConfig());
   };
 
+  async componentWillUnmount() {
+    this.context.setActivityEdit(null);
+  }
+
   render() {
     const {
       name,
@@ -1041,7 +1050,7 @@ class AgendaEdit extends Component {
             saveNameIcon
             edit={this.props.location.state.edit || this.state.activityEdit}
             extra={
-              <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
+              showAditionalTabs && <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
                 <Switch
                   checkedChildren='Sí'
                   unCheckedChildren='No'

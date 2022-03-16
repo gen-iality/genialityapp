@@ -1,9 +1,9 @@
 import React from 'react';
-import ImgInput from '../../shared/imageInput';
+import ImgInput from '../../../shared/imageInput';
 import { Row, Col, Switch, message } from 'antd';
-import { Actions } from '../../../helpers/request';
+import { Actions } from '../../../../helpers/request';
 import Axios from 'axios';
-import { useContextNewEvent } from '../../../context/newEventContext';
+import { useContextNewEvent } from '../../../../context/newEventContext';
 
 function Apariencia(props) {
   const { saveImageEvent, imageEvents, onChangeCheck, valueInputs } = useContextNewEvent();

@@ -1,8 +1,61 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { message } from 'antd';
+import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/request';
+import { GetTokenUserFirebase } from '../helpers/HelperAuth';
+import { configEventsTemplate } from '../helpers/constants';
 
 export const cNewEventContext = createContext();
+//INITIAL STATE
+const initialState = {
+  loading: false,
+  organizations: [],
+  selectOrganization: null,
+  tab: 'list',
+  visible: false,
+  allow_register: true,
+  visibility: 'PUBLIC',
+  type: 0,
+};
+//REDUCERS
+function reducer(state, action) {
+  const organizationSelect = action.payload?.organization || null;
+  const organizationIdURL = action.payload?.orgId || null;
+  let organizationSelected;
+  switch (action.type) {
+    case 'LOADING':
+      return { ...state, loading: true };
+    case 'COMPLETE':
+      return { ...state, loading: false };
+    case 'SELECT_ORGANIZATION':
+      if (organizationIdURL)
+        organizationSelected = state.organizations
+          ? state.organizations.filter((org) => org.id == organizationIdURL)[0]
+          : state.organizations[0];
+      else if (organizationSelect) organizationSelected = organizationSelect;
+      else organizationSelected = state.organizations[0];
+
+      return { ...state, selectOrganization: organizationSelected };
+    case 'ORGANIZATIONS':
+      return { ...state, organizations: action.payload.organizationList };
+    case 'SELECT_TAB':
+      return { ...state, tab: action.payload.tab };
+    case 'VISIBLE_MODAL':
+      return { ...state, visible: action.payload.visible, tab: 'list' };
+    case 'TYPE_EVENT':
+      switch (action.payload.type) {
+        case 0:
+          return { ...state, type: action.payload.type, allow_register: true, visibility: 'PUBLIC' };
+        case 1:
+          return { ...state, type: action.payload.type, allow_register: false, visibility: 'PUBLIC' };
+        case 2:
+          return { ...state, type: action.payload.type, allow_register: false, visibility: 'PRIVATE' };
+      }
+      break;
+    default:
+      throw new Error();
+  }
+}
 
 export const NewEventProvider = ({ children }) => {
   const [addDescription, setAddDescription] = useState(false);
@@ -16,37 +69,56 @@ export const NewEventProvider = ({ children }) => {
   const [selectedDateEvent, setSelectedDateEvent] = useState();
   const [valueInputs, setValueInputs] = useState({});
   const [errorInputs, setErrorInputs] = useState([]);
-  const [imageEvents,setImageEvents]=useState({});
+  const [imageEvents, setImageEvents] = useState({});
   const [optTransmitir, setOptTransmitir] = useState(false);
   const [organization, setOrganization] = useState(false);
   const [selectOrganization, setSelectOrganization] = useState();
   const [isbyOrganization, setIsbyOrganization] = useState(false);
   const [loadingOrganization, setLoadingOrganization] = useState(false);
-  const [createOrganizationF,setCreateOrganization]=useState(false);
-  const [templateId, setTemplateId]=useState()
+  const [createOrganizationF, setCreateOrganization] = useState(false);
+  const [templateId, setTemplateId] = useState();
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  async function OrganizationsList() {
+    dispatch({ type: 'LOADING' });
+    const organizations = await OrganizationApi.mine();
+    const organizationsFilter = organizations.filter((orgData) => orgData.id);
+    dispatch({ type: 'ORGANIZATIONS', payload: { organizationList: organizationsFilter } });
+    dispatch({ type: 'COMPLETE' });
+    return organizationsFilter;
+  }
+
+  const createOrganization = async (data) => {
+    //CREAR ORGANIZACION------------------------------
+    let create = await OrganizationApi.createOrganization(data);
+    if (create) {
+      return create;
+    }
+    return null;
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
   };
   const visibilityDescription = (value) => {
     setAddDescription(value);
-    setValueInputs({...valueInputs,['description']:''})
+    setValueInputs({ ...valueInputs, ['description']: '' });
   };
 
-  const saveImageEvent=(image,index)=>{      
-    setImageEvents({...imageEvents,[index]:image})
-  }
+  const saveImageEvent = (image, index) => {
+    setImageEvents({ ...imageEvents, [index]: image });
+  };
 
-  const newOrganization=(value)=>{      
-    setCreateOrganization(value)
-  }
+  const newOrganization = (value) => {
+    setCreateOrganization(value);
+  };
 
-  const eventByOrganization=(value)=>{      
-    setIsbyOrganization(value)
-  }
-  const isLoadingOrganization=(value)=>{      
-    setLoadingOrganization(value)
-  }
+  const eventByOrganization = (value) => {
+    setIsbyOrganization(value);
+  };
+  const isLoadingOrganization = (value) => {
+    setLoadingOrganization(value);
+  };
 
   const changeSelectDay = (day) => {
     setSelectedDay(day);
@@ -58,7 +130,7 @@ export const NewEventProvider = ({ children }) => {
   const changetypeTransmision = (type) => {
     setTypeTransmission(type);
   };
-  const handleOk = () => {
+  const handleOk = (organization) => {
     /* let title = [];
     if (selectedDay <= new Date())
     title.push('La fecha no puede ser menor a la fecha actual');
@@ -74,27 +146,27 @@ export const NewEventProvider = ({ children }) => {
         message.warning(item);
       });
     } else {*/
-      setIsModalVisible(false);
-      setSelectedDateEvent({
-        from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
-        at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
-      });
+    setIsModalVisible(false);
+    setSelectedDateEvent({
+      from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
+      at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
+    });
     //};
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  const changeTransmision=(value)=>{
+  const changeTransmision = (value) => {
     setOptTransmitir(value);
-  }
-  const changeOrganization=(value)=>{
+  };
+  const changeOrganization = (value) => {
     setOrganization(value);
-  }
+  };
 
-  const selectedOrganization=(value)=>{
+  const selectedOrganization = (value) => {
     setSelectOrganization(value);
-  }
+  };
 
   const handleDayClick = (day) => {
     setSelectedDay(day);
@@ -147,19 +219,158 @@ export const NewEventProvider = ({ children }) => {
     }
     return false;
   };
- const onChangeCheck=(check)=>{    
-    setValueInputs({...valueInputs,["temaDark"]:check});   
-  }
-  const selectTemplate=(idTemplate)=>{    
-    setTemplateId(idTemplate)
-  }
+  const onChangeCheck = (check) => {
+    setValueInputs({ ...valueInputs, ['temaDark']: check });
+  };
+  const selectTemplate = useCallback((idTemplate) => {
+    setTemplateId(idTemplate);
+  }, []);
 
   useEffect(() => {
+    if (!selectedDay || !selectedHours) return;
     setSelectedDateEvent({
       from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
       at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
     });
-  }, []);
+  }, [selectedDay, selectedHours]);
+  const saveEvent = async () => {
+    dispatch({ type: 'LOADING' });
+    if (state.selectOrganization) {
+      const data = {
+        name: valueInputs.name,
+        address: '',
+        type_event: 'onlineEvent',
+        datetime_from: selectedDateEvent?.from + ':00',
+        datetime_to: selectedDateEvent?.at + ':00',
+        picture: null,
+        venue: '',
+        location: '',
+        visibility: state.visibility,
+        description: '',
+        category_ids: [],
+        organizer_id: state.selectOrganization.id || state.selectOrganization._id,
+        event_type_id: '5bf47203754e2317e4300b68',
+        user_properties: [],
+        allow_register: state.allow_register,
+        styles: {
+          buttonColor: '#FFF',
+          banner_color: '#FFF',
+          menu_color: '#FFF',
+          event_image: configEventsTemplate.event_image,
+          banner_image: configEventsTemplate.banner_image,
+          menu_image: null,
+          brandPrimary: '#FFFFFF',
+          brandSuccess: '#FFFFFF',
+          brandInfo: '#FFFFFF',
+          brandDanger: '#FFFFFF',
+          containerBgColor: '#ffffff',
+          brandWarning: '#FFFFFF',
+          toolbarDefaultBg: '#FFFFFF',
+          brandDark: '#FFFFFF',
+          brandLight: '#FFFFFF',
+          textMenu: '#555352',
+          activeText: '#FFFFFF',
+          bgButtonsEvent: '#FFFFFF',
+          banner_image_email: null,
+          BackgroundImage: configEventsTemplate.BackgroundImage,
+          FooterImage: null,
+          banner_footer: configEventsTemplate.banner_footer,
+          mobile_banner: null,
+          banner_footer_email: null,
+          show_banner: 'true',
+          show_card_banner: false,
+          show_inscription: false,
+          hideDatesAgenda: true,
+          hideDatesAgendaItem: false,
+          hideHoursAgenda: false,
+          hideBtnDetailAgenda: true,
+          loader_page: 'no',
+          data_loader_page: null,
+          show_title: true,
+        },
+      };
+      const newMenu = {
+        itemsMenu: {
+          evento: {
+            name: 'evento',
+            position: 1,
+            section: 'evento',
+            icon: 'CalendarOutlined',
+            checked: true,
+            permissions: 'public',
+          },
+          agenda: {
+            name: 'Mi agenda',
+            position: null,
+            section: 'agenda',
+            icon: 'ReadOutlined',
+            checked: true,
+            permissions: 'public',
+          },
+        },
+      };
+      console.log('DATA A VERIFICAR===>', state.selectOrganization?.itemsMenu, templateId, data);
+      //CREAR EVENTO
+      try {
+        let token = await GetTokenUserFirebase();
+
+        const result = await Actions.create(`/api/events?token=${token}`, data);
+        result._id = result._id ? result._id : result.data?._id;
+        if (result._id) {
+          //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
+          let sectionsDefault = state.selectOrganization?.itemsMenu
+            ? { itemsMenu: state.selectOrganization?.itemsMenu }
+            : newMenu;
+          //HABILTAR SECCIONES POR DEFECTO
+          const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
+          sections._id = sections._id ? sections._id : sections.data?._id;
+          if (sections?._id) {
+            //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
+            const activity = {
+              name: valueInputs.name,
+              subtitle: null,
+              image: null,
+              description: null,
+              capacity: 100,
+              event_id: result._id,
+              datetime_end: selectedDateEvent?.at + ':00',
+              datetime_start: selectedDateEvent?.from + ':00',
+            };
+            const agenda = await AgendaApi.create(result._id, activity);
+            //console.log("RESPUESTA AGENDA==>",agenda)
+            if (agenda._id) {
+              //CREAR TEMPLATE PARA EL EVENTO
+              let template = !templateId && true;
+              if (templateId) {
+                template = await EventsApi.createTemplateEvent(result._id, templateId);
+              }
+              if (template) {
+                // console.log("RESPUESTA TEMPLATE==>",template)
+                message.success('Evento creado correctamente..');
+                window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
+              } else {
+                message.error('Error al crear evento con su template');
+              }
+            }
+          } else {
+            //console.log('RESP API==>', result);
+            message.error('Error al crear el evento');
+            dispatch({ type: 'COMPLETE' });
+          }
+        } else {
+          //console.log('RESP API==>', result);
+          message.error('Error al crear el evento');
+          dispatch({ type: 'COMPLETE' });
+        }
+      } catch (error) {
+        console.log('CATCH==>', error);
+        message.error('Error al crear el evento catch');
+        dispatch({ type: 'COMPLETE' });
+      }
+    } else {
+      message.error('Seleccione una organización');
+    }
+  };
 
   useEffect(() => {
     if (selectedDateEvent) {
@@ -205,7 +416,12 @@ export const NewEventProvider = ({ children }) => {
         createOrganizationF,
         newOrganization,
         templateId,
-        selectTemplate        
+        selectTemplate,
+        state,
+        OrganizationsList,
+        dispatch,
+        createOrganization,
+        saveEvent,
       }}>
       {children}
     </cNewEventContext.Provider>
