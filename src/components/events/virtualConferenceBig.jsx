@@ -5,7 +5,7 @@ import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
 import { CaretRightOutlined, FieldTimeOutlined, PlayCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import ENVIVO from '../../EnVivo.svg';
+import ENVIVO from '../../Assets/img/EnVivo.svg';
 import { UseEventContext } from '../../context/eventContext';
 import { UseUserEvent } from '../../context/eventUserContext';
 import { Link } from 'react-router-dom';
