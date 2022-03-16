@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import EventImage from '../../eventimage.png';
+import EventImage from '../../Assets/img/eventimage.png';
 import { Badge, Card, Space } from 'antd';
 
 class EventCard extends Component {

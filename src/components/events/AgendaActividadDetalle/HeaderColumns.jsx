@@ -12,7 +12,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import WithEviusContext from "../../../context/withContext";
-import EnVivo from "../../../EnVivo.svg";
+import EnVivo from "../../../Assets/img/EnVivo.svg";
 import Moment from "moment-timezone";
 import { UseEventContext } from "../../../context/eventContext";
 import HumanGreetingIcon from "@2fd/ant-design-icons/lib/HumanGreeting";

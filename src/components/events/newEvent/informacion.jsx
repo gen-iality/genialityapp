@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
 import { DateTimePicker } from 'react-widgets';
-import EventImage from '../../../eventimage.png';
+import EventImage from '../../../Assets/img/eventimage.png';
 import {
   Badge,
   Card,
