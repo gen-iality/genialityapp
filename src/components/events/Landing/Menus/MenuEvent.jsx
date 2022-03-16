@@ -51,7 +51,8 @@ const MenuEvent = ({ isMobile }) => {
                       <Row key={event.itemsMenu[key].section}>
                         <Link
                           className="menuEvent_section-text"
-                          style={{ color: event.styles.textMenu }}
+                          style={{ color: event.styles.textMenu, alignItems: "center",
+                          justifyContent: "center", }}
                           to={`${url}/${event.itemsMenu[key].section}`}
                         >
                           {` ${event.itemsMenu[key].name}`}
@@ -77,6 +78,7 @@ const MenuEvent = ({ isMobile }) => {
                         }}
                       />
                       <Link
+                        className="menuEvent_section-text"
                         style={{ color: event.styles.textMenu }}
                         to={`${url}/${event.itemsMenu[key].section}`}
                       >
