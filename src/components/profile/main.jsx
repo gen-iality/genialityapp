@@ -38,7 +38,7 @@ import Loading from './loading';
 import { useIntl } from 'react-intl';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
-import logo from '../../logo.svg';
+import logo from '../../Assets/img/logo.svg';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import EventImage from '../../eventimage.png';
+import EventImage from '../../Assets/img/eventimage.png';
 import { Card, Row, Col, Skeleton } from 'antd';
 
 class LoadingEvent extends Component {

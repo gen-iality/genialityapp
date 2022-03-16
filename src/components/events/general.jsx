@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
-
 import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
-/* import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; */
-import 'react-widgets/lib/scss/react-widgets.scss';
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';

@@ -36,9 +36,9 @@ import {
 } from "./serviceAnalytics";
 import "chartjs-plugin-datalabels";
 import { Bar, Line } from "react-chartjs-2";
-// import * as XLSX from '../../xlsx/xlsx.mjs'
 import ReactToPrint from "react-to-print";
 import Moment from "moment";
+import XLSX from "xlsx";
 import API from "../../helpers/request";
 import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
 
@@ -149,13 +149,13 @@ class DashboardEvent extends Component {
   exportReport = async (datos, name, type, namesheet) => {
     let data = await exportDataReport(datos, type);
     if (data) {
-      // const ws = XLSX.utils.json_to_sheet(data);
-      // const wb = XLSX.utils.book_new();
-      // XLSX.utils.book_append_sheet(wb, ws, `${namesheet}`);
-      // XLSX.writeFile(
-      //   wb,
-      //   `${name}_${this.props.eventId}_${Moment().format("DDMMYY")}.xls`
-      // );
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, `${namesheet}`);
+      XLSX.writeFile(
+        wb,
+        `${name}_${this.props.eventId}_${Moment().format("DDMMYY")}.xls`
+      );
     } else {
       message.error("No existen datos que exportar");
     }

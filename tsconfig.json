@@ -20,11 +20,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "src",
+    "baseUrl": ".",
   },
   "include": [
-    "src"
+    "./*.ts",
   ],
+  "exclude": ["node_modules"],
   "references": [
     {
       "path": "./tsconfig.node.json"
