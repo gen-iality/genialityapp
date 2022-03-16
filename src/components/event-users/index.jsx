@@ -4,7 +4,7 @@ import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
-import XLSX from 'xlsx';
+import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
 import {
@@ -445,10 +445,10 @@ class ListEventUser extends Component {
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
 
     const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
+    const ws = utils.json_to_sheet(data);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Asistentes');
+    writeFileXLSX(wb, `asistentes_${this.props.event.name}.xls`);
   };
 
   addUser = () => {

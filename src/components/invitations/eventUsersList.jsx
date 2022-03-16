@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
-import XLSX from 'xlsx';
+import { utils, writeFileXLSX } from 'xlsx';
 import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
 import Header from '../../antdComponents/Header';
@@ -226,10 +226,10 @@ class eventUsersList extends Component {
 
     const data = await parseData2Excel(attendees, columnsKey);
 
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
+    const ws = utils.json_to_sheet(data);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Asistentes');
+    writeFileXLSX(wb, `asistentes_${this.props.event.name}.xls`);
   };
 
   modalUser = () => {

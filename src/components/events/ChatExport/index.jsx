@@ -16,7 +16,7 @@ import {
   DownloadOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
-import XLSX from 'xlsx';
+import { utils, writeFileXLSX } from 'xlsx';
 import moment from "moment";
 import { getColumnSearchProps } from "../../../components/speakers/getColumnSearch";
 import Table from "../../../antdComponents/Table";
@@ -122,10 +122,10 @@ const ChatExport = ({ eventId, event }) => {
     datamsjevent = datamsjevent.filter(
       (item) => item.text.toLowerCase().indexOf("spam") === -1
     );
-    const ws = XLSX.utils.json_to_sheet(datamsjevent);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Chat");
-    XLSX.writeFile(wb, `chatEVENTO ${event.name}.xls`);
+    const ws = utils.json_to_sheet(datamsjevent);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Chat");
+    writeFileXLSX(wb, `chatEVENTO ${event.name}.xls`);
   };
 
   useEffect(() => {
