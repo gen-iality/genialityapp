@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill';
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
 import { Actions } from '../../helpers/request';
 import { Input } from 'antd';
+import 'react-quill/dist/quill.snow.css';
 
 const { Quill } = ReactQuill;
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);

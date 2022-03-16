@@ -28,6 +28,7 @@ import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined, UserOutline
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import RoomController from '../agenda/roomManager/controller';
+import { RouterPrompt } from '../../antdComponents/RoutePrompt';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
 
@@ -83,6 +84,7 @@ class AgendaEdit extends Component {
       hour_end: new Date(),
       key: new Date(),
       image: '',
+      video: '',
       locale: 'en',
       capacity: 0,
       type_id: '',
@@ -90,13 +92,13 @@ class AgendaEdit extends Component {
       access_restriction_type: 'OPEN',
       selectedCategories: [],
       selectedHosts: [],
-      selectedType: '',
+      selectedType: null,
       selectedRol: [],
       days: [],
       spaces: [],
       categories: [],
-      start_url: '',
-      join_url: '',
+      start_url: null,
+      join_url: null,
       meeting_id: '',
       documents: [],
       types: [],
@@ -123,7 +125,7 @@ class AgendaEdit extends Component {
 
       //Estado para determinar si una actividad requiere registro para ser accedida
       requires_registration: false,
-      isPublished: false,
+      isPublished: this.context?.isPublished,
       avalibleGames: [],
       roomStatus: null,
       /* platform,
@@ -139,6 +141,8 @@ class AgendaEdit extends Component {
       idNewlyCreatedActivity: null,
       activityEdit: false,
       reloadActivity: false,
+      initialActivityStates: null,
+      showPendingChangesModal: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -276,7 +280,7 @@ class AgendaEdit extends Component {
         platform: info.platform /*  || event.event_platform */,
         info: info,
         space_id: info.space_id || '',
-        video: info.video,
+        video: info.video || '',
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
@@ -323,11 +327,81 @@ class AgendaEdit extends Component {
 
     this.name?.current?.focus();
     this.validateRoom();
-
-    /* console.log('isPublished=>>', this.state.isPublished); */
   }
 
   async componentDidUpdate(prevProps) {
+    /** a copy of the initial states is captured to be able to validate after any change */
+    if (!this.state.initialActivityStates && this.state.isPublished !== undefined) {
+      const {
+        name,
+        subtitle,
+        bigmaker_meeting_id,
+        has_date,
+        hour_start,
+        hour_end,
+        date,
+        space_id,
+        capacity,
+        access_restriction_type,
+        selectedCategories,
+        selectedType,
+        selectedRol,
+        description,
+        registration_message,
+        selected_document,
+        image,
+        meeting_id,
+        video,
+        selectedTicket,
+        vimeo_id,
+        platform,
+        start_url,
+        join_url,
+        name_host,
+        requires_registration,
+        isPublished,
+        length,
+        latitude,
+        selectedHosts,
+      } = this.state;
+
+      const initialActivityStates = {
+        name,
+        subtitle,
+        bigmaker_meeting_id,
+        has_date,
+        hour_start: hour_start.toTimeString(),
+        hour_end: hour_end.toTimeString(),
+        date,
+        space_id,
+        capacity,
+        access_restriction_type,
+        selectedCategories,
+        selectedType,
+        selectedRol,
+        description,
+        registration_message,
+        selected_document,
+        image,
+        meeting_id,
+        video,
+        selectedTicket,
+        vimeo_id,
+        platform,
+        start_url,
+        join_url,
+        name_host,
+        requires_registration,
+        isPublished,
+        length,
+        latitude,
+        selectedHosts,
+      };
+      this.setState({
+        initialActivityStates,
+      });
+    }
+
     const {
       event,
       location: { state },
@@ -363,7 +437,7 @@ class AgendaEdit extends Component {
         platform: info.platform /*  || event.event_platform */,
         info: info,
         space_id: info.space_id || '',
-        video: info.video,
+        video: info.video || '',
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
@@ -394,9 +468,115 @@ class AgendaEdit extends Component {
     }
   }
 
+  /** we validate if the passed parameter is an object */
+  isObject = (object) => {
+    return object != null && typeof object === 'object';
+  };
+
+  /** we validate if the keys of the objects are the same as well as their internal data*/
+  deepStateEqualityValidation = (object1, object2) => {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = this.isObject(val1) && this.isObject(val2);
+      if ((areObjects && !this.deepStateEqualityValidation(val1, val2)) || (!areObjects && val1 !== val2)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  /** we validate if any parameter in the data of the activity changed */
+  valideChangesInActivityData = () => {
+    let initialActivityStates = this.state.initialActivityStates;
+    if (!initialActivityStates) return;
+    const {
+      name,
+      subtitle,
+      bigmaker_meeting_id,
+      has_date,
+      hour_start,
+      hour_end,
+      date,
+      space_id,
+      capacity,
+      access_restriction_type,
+      selectedCategories,
+      selectedType,
+      selectedRol,
+      description,
+      registration_message,
+      selected_document,
+      image,
+      meeting_id,
+      video,
+      selectedTicket,
+      vimeo_id,
+      platform,
+      start_url,
+      join_url,
+      name_host,
+      requires_registration,
+      isPublished,
+      length,
+      latitude,
+      selectedHosts,
+    } = this.state;
+    let actualActivityStates = {
+      name,
+      subtitle,
+      bigmaker_meeting_id,
+      has_date,
+      hour_start: hour_start.toTimeString(),
+      hour_end: hour_end.toTimeString(),
+      date,
+      space_id,
+      capacity,
+      access_restriction_type,
+      selectedCategories,
+      selectedType,
+      selectedRol,
+      description,
+      registration_message,
+      selected_document,
+      image,
+      meeting_id,
+      video,
+      selectedTicket,
+      vimeo_id,
+      platform,
+      start_url,
+      join_url,
+      name_host,
+      requires_registration,
+      isPublished,
+      length,
+      latitude,
+      selectedHosts,
+    };
+
+    let equalityValidation = this.deepStateEqualityValidation(initialActivityStates, actualActivityStates);
+
+    if (equalityValidation) {
+      this.setState({
+        showPendingChangesModal: false,
+      });
+    } else {
+      this.setState({
+        showPendingChangesModal: true,
+      });
+    }
+  };
+
   handlePhysical = () => {
     let isPhysical = this.state.isPhysical;
-    this.setState({ isPhysical: !isPhysical });
+    this.setState({ isPhysical: !isPhysical }, async () => this.valideChangesInActivityData());
   };
 
   //FN general para cambio en input
@@ -408,33 +588,32 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
-      this.context.setIsPublished(value);
       this.setState({ isPublished: value }, async () => await this.saveConfig());
     } else {
-      this.setState({ [name]: value });
+      this.setState({ [name]: value }, async () => this.valideChangesInActivityData());
     }
   };
 
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
-    this.setState({ [name]: value, pendingChangesSave: true });
+    this.setState({ [name]: value, pendingChangesSave: true }, async () => this.valideChangesInActivityData());
   };
   //Cada select tiene su propia función para evitar errores y asegurar la información correcta
   selectType = (value) => {
-    this.setState({ selectedType: value });
+    this.setState({ selectedType: value }, async () => this.valideChangesInActivityData());
   };
   selectCategory = (selectedCategories) => {
-    this.setState({ selectedCategories });
+    this.setState({ selectedCategories }, async () => this.valideChangesInActivityData());
   };
   selectHost = (selectedHosts) => {
-    this.setState({ selectedHosts });
+    this.setState({ selectedHosts }, async () => this.valideChangesInActivityData());
   };
   selectRol = (selectedRol) => {
-    this.setState({ selectedRol });
+    this.setState({ selectedRol }, async () => this.valideChangesInActivityData());
   };
 
   selectDocuments = (selected_document) => {
-    this.setState({ selected_document });
+    this.setState({ selected_document }, async () => this.valideChangesInActivityData());
   };
   //FN para los select que permiten crear opción
   handleCreate = async (value, name) => {
@@ -445,7 +624,7 @@ class AgendaEdit extends Component {
       action: 'show',
     });
     try {
-      this.setState({ isLoading: { ...this.isLoading, [name]: true } });
+      this.setState({ isLoading: { ...this.isLoading, [name]: true } }, async () => this.valideChangesInActivityData());
       //Se revisa a que ruta apuntar
       const item =
         name === 'types'
@@ -455,16 +634,25 @@ class AgendaEdit extends Component {
             });
       const newOption = { label: value, value: item._id, item };
       this.setState(
-        (prevState) => ({
-          isLoading: { ...prevState.isLoading, [name]: false },
-          [name]: [...prevState[name], newOption],
-        }),
+        (prevState) => (
+          {
+            isLoading: { ...prevState.isLoading, [name]: false },
+            [name]: [...prevState[name], newOption],
+          },
+          async () => this.valideChangesInActivityData()
+        ),
         () => {
-          if (name === 'types') this.setState({ selectedType: newOption });
+          if (name === 'types')
+            this.setState({ selectedType: newOption }, async () => this.valideChangesInActivityData());
           else
-            this.setState((state) => ({
-              selectedCategories: [...state.selectedCategories, newOption],
-            }));
+            this.setState(
+              (state) => (
+                {
+                  selectedCategories: [...state.selectedCategories, newOption],
+                },
+                async () => this.valideChangesInActivityData()
+              )
+            );
         }
       );
       DispatchMessageService({
@@ -477,9 +665,14 @@ class AgendaEdit extends Component {
         action: 'show',
       });
     } catch (e) {
-      this.setState((prevState) => ({
-        isLoading: { ...prevState.isLoading, [name]: false },
-      }));
+      this.setState(
+        (prevState) => (
+          {
+            isLoading: { ...prevState.isLoading, [name]: false },
+          },
+          async () => this.valideChangesInActivityData()
+        )
+      );
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
@@ -503,11 +696,14 @@ class AgendaEdit extends Component {
       const file = files[0];
       if (file) {
         const image = await uploadImage(file);
-        this.setState({ image });
+        this.setState({ image }, async () => this.valideChangesInActivityData());
       } else {
-        this.setState({
-          errImg: 'Only images files allowed. Please try again :)',
-        });
+        this.setState(
+          {
+            errImg: 'Only images files allowed. Please try again :)',
+          },
+          async () => this.valideChangesInActivityData()
+        );
       }
       DispatchMessageService({
         key: 'loading',
@@ -532,15 +728,10 @@ class AgendaEdit extends Component {
   };
 
   //FN para el editor enriquecido
-  chgTxt = (content) => this.setState({ description: content });
-
-  // registrationMessage = (content) => {
-  //   this.setState({ registration_message: content })
-  // }
+  chgTxt = (content) => this.setState({ description: content }, async () => this.valideChangesInActivityData());
 
   //Envío de información
-
-  submit = async () => {
+  submit = async (changePathWithoutSaving) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -585,6 +776,10 @@ class AgendaEdit extends Component {
             date_end_zoom: agenda.date_end_zoom,
           });
         }
+        if (changePathWithoutSaving)
+          this.setState({
+            showPendingChangesModal: false,
+          });
 
         //Se cambia el estado a pendingChangesSave encargado de detectar cambios pendientes en la fecha/hora sin guardar
         this.setState({ pendingChangesSave: false });
@@ -596,9 +791,16 @@ class AgendaEdit extends Component {
 
         if (agenda?._id) {
           /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
-          this.setState({ idNewlyCreatedActivity: agenda._id, activityEdit: true, reloadActivity: true });
+
+          this.setState({
+            idNewlyCreatedActivity: agenda._id,
+            activityEdit: true,
+            reloadActivity: true,
+            isPublished: false,
+          });
+          this.saveConfig();
         } else {
-          this.props.history.push(`/eventadmin/${event._id}/agenda`);
+          if (changePathWithoutSaving) this.props.history.push(`/eventadmin/${event._id}/agenda`);
         }
         DispatchMessageService({
           type: 'success',
@@ -749,7 +951,7 @@ class AgendaEdit extends Component {
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
     const host_ids = selectedHosts >= 0 ? [] : selectedHosts?.filter((host) => host != null).map(({ value }) => value);
-    const type_id = selectedType === undefined ? '' : selectedType.value;
+    const type_id = selectedType ? '' : selectedType?.value;
     return {
       name,
       subtitle,
@@ -881,14 +1083,14 @@ class AgendaEdit extends Component {
   goBack = () => this.setState({ redirect: true });
 
   selectTickets(tickets) {
-    this.setState({ selectedTicket: tickets });
+    this.setState({ selectedTicket: tickets }, async () => this.valideChangesInActivityData());
   }
 
   handleChangeReactQuill = (e, label) => {
     if (label === 'description') {
-      this.setState({ description: e });
+      this.setState({ description: e }, async () => this.valideChangesInActivityData());
     } else if (label === 'registration_message') {
-      this.setState({ registration_message: e });
+      this.setState({ registration_message: e }, async () => this.valideChangesInActivityData());
     }
   };
 
@@ -915,7 +1117,7 @@ class AgendaEdit extends Component {
     const roomInfo = {
       platform,
       meeting_id,
-      isPublished,
+      isPublished: isPublished ? isPublished : false,
       host_id,
       host_name,
       avalibleGames,
@@ -930,7 +1132,8 @@ class AgendaEdit extends Component {
   saveConfig = async () => {
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
-    const activity_id = this.context.activityEdit;
+    const activity_id = this.context.activityEdit || this.state.idNewlyCreatedActivity;
+
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
       if (result) {
@@ -1021,16 +1224,30 @@ class AgendaEdit extends Component {
       date_start_zoom,
       date_end_zoom,
       length,
-      // isPublished,
+      isPublished,
       latitude,
       loading,
       showAditionalTabs,
+      showPendingChangesModal,
     } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
       <>
-        <Form onFinish={this.submit} {...formLayout}>
+        <Form onFinish={() => this.submit(true)} {...formLayout}>
+          <RouterPrompt
+            when={showPendingChangesModal}
+            title=' Tienes cambios sin guardar'
+            description='En realidad quieres irte?'
+            okText='Salir sin guardar'
+            okSaveText='Salir y guardar'
+            cancelText='cerrar'
+            onOK={() => true}
+            onOKSave={this.submit}
+            onCancel={() => false}
+            save
+          />
+
           <Header
             title={`Actividad - ${this.state.name}`}
             back
@@ -1046,7 +1263,7 @@ class AgendaEdit extends Component {
                   checkedChildren='Sí'
                   unCheckedChildren='No'
                   name={'isPublished'}
-                  checked={this.context.isPublished}
+                  checked={isPublished}
                   onChange={(e) => this.handleChange(e, 'isPublished')}
                 />
               </Form.Item>

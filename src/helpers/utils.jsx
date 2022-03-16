@@ -16,8 +16,13 @@ export function uniqueID() {
 }
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
 export function fieldsSelect(options, list) {
-  if (Array.isArray(options)) return options.map((option) => list.find(({ value }) => value === option));
-  else return list.find(({ value }) => value === options);
+  if (Array.isArray(options)) {
+    const newOptions = options.map((option) => list.find(({ value }) => value === option));
+    return newOptions[0] ? newOptions : [];
+  } else {
+    const newOptions = list.find(({ value }) => value === options);
+    return newOptions ? newOptions : null;
+  }
 }
 
 export function handleSelect(data) {
