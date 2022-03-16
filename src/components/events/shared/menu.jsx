@@ -6,7 +6,7 @@ import { EventsApi } from '../../../helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
 import { ApartmentOutlined } from '@ant-design/icons';
-import EviusLogo from '././../../../eviuslogo.png';
+import EviusLogo from '././../../../Assets/img/eviuslogo.png';
 
 const { SubMenu } = Menu;
 

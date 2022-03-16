@@ -16,7 +16,7 @@
     <!-- <meta name="google" content="notranslate"> -->
     <meta http-equiv="Expires" content="0" />
     <link rel="manifest" href="./manifest.json" />
-    <link rel="shortcut icon" href="./Favicon-Evius.png" />
+    <link rel="shortcut icon" href="./public/favicon.ico" />
     <title>Eventos - EVIUS</title>
     <meta name="description" content="Eventos" />
     <!-- preconnect & prefetch -->
@@ -31,12 +31,13 @@
     <link rel="preconnect" href="https://player.wowza.com" crossorigin />
     <link rel="dns-prefetch" href="https://player.wowza.com" />
 
-    <script>
+    <script type="module">
       // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
       document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
     </script>
     <script
-      async
+      type="module"
+      defer
       src="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth__es.js"
     ></script>
 
@@ -65,7 +66,7 @@
 
     <script>
       window.less = {
-        async: true,
+        defer: true,
         env: "development",
         javascriptEnabled: true,
       };
@@ -73,15 +74,13 @@
 
     <!-- WOWZA -->
     <script
-      async
-      type="text/javascript"
+      defer
+      type="module"
       src="//player.wowza.com/player/latest/wowzaplayer.min.js"
     ></script>
+    <script type="module" defer src="//cdn.jsdelivr.net/npm/less"></script>
 
-    <script async src="//cdn.jsdelivr.net/npm/less"></script>
-    <link rel="stylesheet" href="./public/globalcss.css" />
-
-   
+    <link rel="stylesheet" href="./public/Assets/css/globalcss.css" />
   </head>
 
   <body id="evius-body">
@@ -92,10 +91,11 @@
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script
-      async
+      type="module"
+      defer
       src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"
     ></script>
-    <script>
+    <script type="module">
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
@@ -124,18 +124,19 @@
     <!-- Google Analytics ( for Event) -->
 
     <!-- Google maps callback init -->
-    <script>
+    <script type="module">
       function initMap() {
         return true;
       }
     </script>
     <script
-      async
+      type="module"
+      defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"
     ></script>
 
     <!-- Facebook Pixel Code -->
-    <script>
+    <script type="module">
       !(function(f, b, e, v, n, t, s) {
         if (f.fbq) return;
         n = f.fbq = function() {
@@ -149,7 +150,7 @@
         n.version = "2.0";
         n.queue = [];
         t = b.createElement(e);
-        t.async = !0;
+        t.defer = !0;
         t.src = v;
         s = b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t, s);
@@ -170,7 +171,7 @@
         src="https://www.facebook.com/tr?id=1224063924627255&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
-    <script async src="https://my.afrus.app/template/index.js"></script>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" defer src="https://my.afrus.app/template/index.js"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

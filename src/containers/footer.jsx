@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { AuthUrl } from '../helpers/constants';
 import { Link } from 'react-router-dom';
 import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd';
-import Logo from '../logo.svg';
+import Logo from '../Assets/img/logo.svg';
 import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons';
 
 const Footer = (props) => {

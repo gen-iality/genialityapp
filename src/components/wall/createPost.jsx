@@ -109,7 +109,6 @@ class CreatePost extends Component {
       if (newPost) {
         this.setState({ value: '', image: '' }, () =>
           this.setState({
-            showInfo: true,
             loadingsave: false,
             errNote: false,
             showInfo: false,

@@ -23,8 +23,7 @@ class Faqs extends Component {
   async getFaqs() {
     let eventId = this.props.cEvent.value?._id;
     const faqsData = await FaqsApi.byEvent(eventId);
-    // const info = await Actions.getAll(`/api/events/${eventId}`);
-    if (this.props.cEvent.value.styles !== {}) {
+    if (this.props.cEvent.value.styles) {
       this.setState({
         styles: {
           textAlign: 'left',
