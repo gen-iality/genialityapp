@@ -52,6 +52,9 @@ import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
 import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
+import InitialView from './typeActivity/InitialView';
+import ModalStepByStep from './typeActivity/ModalStepByStep';
+import ManagerView from './typeActivity/ManagerView';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -1335,9 +1338,12 @@ class AgendaEdit extends Component {
               </TabPane>
               {showAditionalTabs && (
                 <>
-                  <TabPane tab='Transmisión' key='2'>
+                  <TabPane tab='Tipo de actividad' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
+                        {/* <InitialView />   */}
+                        {/* <ModalStepByStep />  */}
+                        {/* <ManagerView /> */}
                         <RoomManager
                           event_id={this.props.event._id}
                           activity_id={this.state.activity_id}
