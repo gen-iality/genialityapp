@@ -69,7 +69,6 @@ export const AgendaContextProvider = ({ children }) => {
       setMeetingId(null);
     }
     async function obtenerDetalleActivity() {
-      alert("SE EJECUTA ESTO DE LA ACTIVIDAD==>")
       //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
       const service = new Service(firestore);
       const hasVideoconference = await service.validateHasVideoconference(

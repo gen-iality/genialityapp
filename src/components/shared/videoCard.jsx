@@ -6,7 +6,7 @@ import './videoCard.css';
 import { UseEventContext } from '../../context/eventContext';
 
 import ReactPlayer from 'react-player';
-import EventImage from '../../eventimage.png';
+import EventImage from '../../Assets/img/eventimage.png';
 import { CalendarOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 

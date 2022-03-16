@@ -579,7 +579,6 @@ class AgendaEdit extends Component {
           }
         } else {         
           agenda = await AgendaApi.create(event._id, info);
-          alert("INGRESO ACA"+agenda._id)
          
           // Al crear una actividad de la agenda se inicializa el id de la actividad y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
           this.setState({

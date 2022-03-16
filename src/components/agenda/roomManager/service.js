@@ -27,15 +27,15 @@ class Service {
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
-    //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
+    //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD    
     if (activity_id) {
       console.log(event_id, activity_id, roomInfo, tabs, 'service');
       const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
       const { roomState, habilitar_ingreso, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
       // eslint-disable-next-line no-unused-vars
-      console.log("ROOM INFO==>",roomInfo)
+   
       return new Promise((resolve, reject) => {
-        this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
+        this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {          
           if (existActivity) {
             // console.log('avalibleGames', avalibleGames);
             this.firestore
@@ -65,7 +65,7 @@ class Service {
                 habilitar_ingreso,
                 platform,
                 meeting_id,
-                isPublished: isPublished || true,
+                isPublished: isPublished || false ,
                 host_id,
                 host_name,
                 tabs: tabsSchema,
