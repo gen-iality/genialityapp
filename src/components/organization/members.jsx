@@ -9,7 +9,7 @@ import { columns } from "./tableColums/membersTableColumns";
 import ModalMembers from "../modal/modalMembers";
 import moment from "moment";
 import withContext from "../../context/withContext";
-// import * as XLSX from '../../xlsx/xlsx.mjs'
+import { utils, writeFileXLSX } from 'xlsx';
 import Header from "../../antdComponents/Header";
 
 
@@ -73,10 +73,10 @@ function OrgMembers(props) {
     e.preventDefault();
     e.stopPropagation();
 
-    // const ws = XLSX.utils.json_to_sheet(membersData);
-    // const wb = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(wb, ws, "Members");
-    // XLSX.writeFile(wb, `Miembros_${moment().format("l")}.xlsx`);
+    const ws = utils.json_to_sheet(membersData);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Members");
+    writeFileXLSX(wb, `Miembros_${moment().format("l")}.xlsx`);
   }
 
   function closeOrOpenModalMembers() {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import * as XLSX from '../../xlsx/xlsx.mjs'
+import { utils, writeFileXLSX } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
@@ -95,13 +95,13 @@ class Importacion extends Component {
     // data[0]['tiquete'] = '';
     /** Se agrega campo requerido que no viene en la consulta de la base de datos */
     data[0]['rol'] = '';
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
+    const ws = utils.json_to_sheet(data);
+    const wb = utils.book_new();
     let name = this.props.organization ? 'usersorganization_template' : 'attendees_template';
     name = this.props.event ? name + '_' + this.props.event.name : name;
 
-    XLSX.utils.book_append_sheet(wb, ws, 'Template');
-    XLSX.writeFile(wb, `${name}${Moment().format('DDMMYY')}.xls`);
+    utils.book_append_sheet(wb, ws, 'Template');
+    writeFileXLSX(wb, `${name}${Moment().format('DDMMYY')}.xls`);
   };
 
   /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */

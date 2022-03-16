@@ -38,7 +38,7 @@ import "chartjs-plugin-datalabels";
 import { Bar, Line } from "react-chartjs-2";
 import ReactToPrint from "react-to-print";
 import Moment from "moment";
-import XLSX from "xlsx";
+import { utils, writeFileXLSX } from 'xlsx';
 import API from "../../helpers/request";
 import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
 
@@ -149,10 +149,10 @@ class DashboardEvent extends Component {
   exportReport = async (datos, name, type, namesheet) => {
     let data = await exportDataReport(datos, type);
     if (data) {
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, `${namesheet}`);
-      XLSX.writeFile(
+      const ws = utils.json_to_sheet(data);
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, ws, `${namesheet}`);
+      writeFileXLSX(
         wb,
         `${name}_${this.props.eventId}_${Moment().format("DDMMYY")}.xls`
       );

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import Moment from 'moment';
-// import * as XLSX from '../../xlsx/xlsx.mjs'
+import { utils, writeFileXLSX } from 'xlsx';
 
 import { getTriviaRanking } from './services';
 
@@ -77,12 +77,12 @@ class Ranking extends Component {
         data[i].response = data[i].response.toString();
       }
     }
-    // const ws = XLSX.utils.json_to_sheet(data);
-    // const wb = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(wb, ws, `${'ranking'}`);
-    // const name = `${this.props.match.params.id}`;
+    const ws = utils.json_to_sheet(data);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, `${'ranking'}`);
+    const name = `${this.props.match.params.id}`;
 
-    // XLSX.writeFile(wb, `ranking_${name}_${Moment().format('DDMMYY')}.xls`);
+    writeFileXLSX(wb, `ranking_${name}_${Moment().format('DDMMYY')}.xls`);
   };
 
   goBack = () => this.props.history.goBack();

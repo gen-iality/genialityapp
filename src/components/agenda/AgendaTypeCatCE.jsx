@@ -9,24 +9,27 @@ import Header from '../../antdComponents/Header';
 
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 const { confirm } = Modal;
 
-const AgendaTypeCatCE = ( props ) => {
+const AgendaTypeCatCE = (props) => {
   const matchUrl = props.match.url;
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const subject = matchUrl.split('/').slice(-1)[0]; 
-  const apiURL = subject === 'categoria' ? CategoriesAgendaApi : TypesAgendaApi;
+  const subject = matchUrl.split('/').slice(-1)[0];
+  const apiURL =
+    subject === 'addcategorias' || subject === 'editcategorias'
+      ? CategoriesAgendaApi
+      : TypesAgendaApi;
   const history = useHistory();
-  let [ categoryValues, setCategoryValues ] = useState({});
-  const [ name, setName ] = useState('');
-  const [ color, setColor ] = useState('#000000');
-  
+  let [categoryValues, setCategoryValues] = useState({});
+  const [name, setName] = useState('');
+  const [color, setColor] = useState('#000000');
+
   useEffect(() => {
-    if(locationState.edit) {
+    if (locationState.edit) {
       getOne();
     }
   }, []);
@@ -35,10 +38,10 @@ const AgendaTypeCatCE = ( props ) => {
     const response = await apiURL.getOne(locationState.edit, eventID);
     setCategoryValues(response);
     setName(response.name);
-    if(subject === 'categoria' && response.color) {
+    if (subject === 'addcategorias' || (subject === 'editcategorias' && response.color)) {
       setColor(response.color);
     }
-  }
+  };
 
   const onSubmit = async () => {
     const loading = message.open({
@@ -47,25 +50,31 @@ const AgendaTypeCatCE = ( props ) => {
       content: <> Por favor espere miestras se guarda la información..</>,
     });
 
-    if(subject === 'categoria') {
-      setCategoryValues({name:name, color:color ? color : '#000000'});
+    if (subject === 'addcategorias' || subject === 'editcategorias') {
+      setCategoryValues({ name: name, color: color ? color : '#000000' });
     } else {
-      setCategoryValues({name:name});
+      setCategoryValues({ name: name });
     }
     try {
-      if(Object.keys(categoryValues).length) {
-        if(locationState.edit) {
+      if (Object.keys(categoryValues).length) {
+        if (locationState.edit) {
           await apiURL.editOne(categoryValues, locationState.edit, eventID);
         } else {
           await apiURL.create(eventID, categoryValues);
-        }     
-      
+        }
+
         message.destroy(loading.key);
         message.open({
           type: 'success',
           content: <> Información guardada correctamente!</>,
         });
-        history.push(`${props.matchUrl}/categorias`);
+        history.push(
+          `${props.matchUrl}/${
+            subject === 'addcategorias' || subject === 'editcategorias'
+              ? 'categorias'
+              : 'tipos'
+          }`
+        );
       }
     } catch (e) {
       message.destroy(loading.key);
@@ -74,7 +83,7 @@ const AgendaTypeCatCE = ( props ) => {
         content: handleRequestError(e).message,
       });
     }
-  }
+  };
 
   const handleChangeComplete = (color) => {
     setColor(color.hex);
@@ -90,7 +99,7 @@ const AgendaTypeCatCE = ( props ) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    if(locationState.edit) {
+    if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la categoría?`,
         icon: <ExclamationCircleOutlined />,
@@ -107,7 +116,13 @@ const AgendaTypeCatCE = ( props ) => {
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              history.push(`${props.matchUrl}/categorias`);
+              history.push(
+                `${props.matchUrl}/${
+                  subject === 'addcategorias' || subject === 'editcategorias'
+                    ? 'categorias'
+                    : 'tipos'
+                }`
+              );
             } catch (e) {
               message.destroy(loading.key);
               message.open({
@@ -115,20 +130,21 @@ const AgendaTypeCatCE = ( props ) => {
                 content: handleRequestError(e).message,
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
-  }
+  };
 
   return (
-    <Form
-      onFinish={onSubmit}
-      {...formLayout}
-    >
-      <Header 
-        title={`${subject === 'categoria' ? 'Categoría' : 'Tipo'}`}
+    <Form onFinish={onSubmit} {...formLayout}>
+      <Header
+        title={`${
+          subject === 'addcategorias' || subject === 'editcategorias'
+            ? 'Categoría'
+            : 'Tipo'
+        }`}
         back
         save
         saveMethod={onSubmit}
@@ -136,31 +152,30 @@ const AgendaTypeCatCE = ( props ) => {
         remove={onRemoveId}
         edit={locationState.edit}
       />
-      
-      <Row justify='center' wrap gutter={12}>
-        <Col >
-          <Form.Item label={'Nombre'} >
-            <Input 
+
+      <Row justify="center" wrap gutter={12}>
+        <Col>
+          <Form.Item label={'Nombre'}>
+            <Input
               name={'name'}
-              placeholder={`Nombre ${subject === 'categoria' ? 'de la categoría' : 'del tipo'}`}
+              placeholder={`Nombre ${
+                subject === 'addcategorias' || subject === 'editcategorias'
+                  ? 'de la categoría'
+                  : 'del tipo'
+              }`}
               value={name}
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
-          {
-            subject === 'categoria' && (
-              <Form.Item label={'Color'}>
-                <ChromePicker 
-                  color={color} 
-                  onChange={handleChangeComplete}
-                />
-              </Form.Item>
-            )
-          }
+          {subject === 'addcategorias' || subject === 'editcategorias' ? (
+            <Form.Item label={'Color'}>
+              <ChromePicker color={color} onChange={handleChangeComplete} />
+            </Form.Item>
+          ) : null}
         </Col>
       </Row>
     </Form>
-  )
-}
+  );
+};
 
 export default withRouter(AgendaTypeCatCE);

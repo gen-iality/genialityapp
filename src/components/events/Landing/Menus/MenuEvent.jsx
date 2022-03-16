@@ -77,6 +77,7 @@ const MenuEvent = ({ isMobile }) => {
                         }}
                       />
                       <Link
+                        className="menuEvent_section-text"
                         style={{ color: event.styles.textMenu }}
                         to={`${url}/${event.itemsMenu[key].section}`}
                       >
