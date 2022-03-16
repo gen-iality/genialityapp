@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import * as XLSX from '../../xlsx/xlsx.mjs'
+import XLSX from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
