@@ -204,7 +204,8 @@ export const EventsApi = {
     return await Actions.getOne(`/api/events/${id}/`, 'invitations');
   },
   sendMeetingRequest: async (eventId, data) => {
-    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify?token=${token}`, data);
   },
 
   sendInvitation: async (eventId, data) => {

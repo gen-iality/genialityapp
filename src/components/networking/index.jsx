@@ -366,6 +366,8 @@ class ListEventUser extends Component {
                 targetEventUserId={this.state.eventUserIdToMakeAppointment}
                 targetEventUser={this.state.eventUserToMakeAppointment}
                 closeModal={this.closeAppointmentModal}
+                cEvent={this.props.cEvent}
+                cEventUser={this.props.cEventUser}
               />
             }
 
