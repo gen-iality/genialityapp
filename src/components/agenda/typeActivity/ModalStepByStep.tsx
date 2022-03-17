@@ -7,22 +7,24 @@ import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity'
 import ContentSource from '../typeActivity/components/layout/ContentSource';
 import ContentInformative from '../typeActivity/components/layout/ContentInformative';
 import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons'; //Este icono para el addonBefore
+import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
 
-const initialOptions = {
-  title: 'Titulo principal',
-  options: [
-    {
-      title: 'Titulo del card',
-      description: 'Descripción del card',
-      image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
-    },
-    {
-      title: 'Titulo del card 2',
-      description: 'Descripción del card 2',
-      image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
-    },
-  ],
-};
+// const initialOptions = {
+//   options: [
+//     {
+//       MainTitle: 'Escoge el proveedor de transmision',
+//       title: 'Titulo del card',
+//       description: 'Descripción del card',
+//       image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
+//     },
+//     {
+//       MainTitle: 'Escoge el origen de transmision',
+//       title: 'Titulo del card 2',
+//       description: 'Descripción del card 2',
+//       image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
+//     },
+//   ],
+// };
 
 const newContentSource = {
   title: 'Titulo principal',
@@ -33,8 +35,9 @@ const newContentSource = {
 };
 
 const ModalStepByStep = () => {
+  const { openModal, closeModal } = useTypeActivity();
   return (
-    <Modal centered visible width={1000} footer={null}>
+    <Modal visible={openModal} onCancel={closeModal} centered width={1000} footer={null}>
       <LayoutTypeActivity title={newContentSource.title}>
         {/* <ContentTypeActivity options={initialOptions.options} /> */}
         {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
