@@ -366,6 +366,10 @@ section.landing {
     padding-top: 10% !important;
     height: 65px !important;
     padding-left: 15px !important;
+    text-align: center;
+    .ant-menu-title-content {
+      overflow: initial !important;
+    }
   }
   .menuEvent_section-text {
     margin: -3px auto !important;
@@ -374,6 +378,7 @@ section.landing {
     text-align: center !important;
     font-size: 10px !important;
     margin-bottom: 15px !important;
+    width: 100%;
   }
   @media only screen and (max-width: $breakpoint-mobile) {
     display: none;
@@ -418,7 +423,7 @@ section.landing {
   }
   .ql-size-huge {
     font-size: 2.5em !important;
-}
+  }
   .ql-video {
     display: block;
     max-width: 100%;
@@ -526,10 +531,10 @@ section.landing {
   position: relative;
   img {
     width: 100%;
-    max-height: 460px ;
+    max-height: 460px;
     object-fit: cover;
     @media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-tablet) {
-      max-height: 300px ;
+      max-height: 300px;
     }
   }
   .banner-user-text-container {
