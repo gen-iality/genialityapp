@@ -180,7 +180,11 @@
     "register.button.finalize": "Finalize",
     "register.button.previous": "Previous",
     "notification.log_out": "Your session was closed because it was started on another device.",
-    "register.result.logging_in": "Signing in with your account!"
+    "register.result.logging_in": "Signing in with your account!",
+    "message.error.complete.requerid.data": "There was an error, please complete the required information!",
+    "message.success.updated.tabs": "Updated social zone tabs!",
+    "message.error.updated.tabs": "An error has occurred updating the tabs of the social zone",
+    "message.success.initialized.tabs": "Initialized social area tabs"
   },
   "es": {
     "header.help": "Ayuda",
@@ -364,7 +368,11 @@
     "register.button.finalize": "Finalizar",
     "register.button.previous": "Anterior",
     "notification.log_out": "Tu sesión fue cerrada porque fue iniciada en otro dispositivo.",
-    "register.result.logging_in": "Iniciando sesión con tu cuenta!"
+    "register.result.logging_in": "Iniciando sesión con tu cuenta!",
+    "message.error.complete.requerid.data": "Hubo un error, por favor completa los datos obligatorios!",
+    "message.success.updated.tabs": "Tabs de la zona social actualizados!",
+    "message.error.updated.tabs": "Ha ocurrido un error actualizando las tabs de la zona social",
+    "message.success.initialized.tabs": "Tabs de la zona social inicializados"
   },
   "pt": {
     "live.join": "Entrar",
@@ -506,6 +514,10 @@
     "register.button.finalize": "Finalizar",
     "register.button.previous": "Anterior",
     "notification.log_out": "Sua sessão foi encerrada porque foi iniciada em outro dispositivo.",
-    "register.result.logging_in": "Entrando com sua conta!"
+    "register.result.logging_in": "Entrando com sua conta!",
+    "message.error.complete.requerid.data": "Ocorreu um erro, preencha as informações necessárias!",
+    "message.success.updated.tabs": "Abas da zona social atualizadas!",
+    "message.error.updated.tabs": "Ocorreu um erro ao atualizar as guias da zona social",
+    "message.success.initialized.tabs": "Abas da área social inicializadas"
   }
 }

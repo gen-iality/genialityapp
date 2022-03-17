@@ -202,7 +202,7 @@ const Headers = (props) => {
 
   useEffect(() => {
     const onScroll = (e) => {
-      const showHeaderFixed = window.scrollY > 100;
+      const showHeaderFixed = window.scrollY > 64;
       fixed != showHeaderFixed && setFixed(showHeaderFixed);
     };
     document.addEventListener('scroll', onScroll);
@@ -213,7 +213,7 @@ const Headers = (props) => {
       <Header
         style={{
           position: fixed ? 'fixed' : 'relative',
-          zIndex: 1060,
+          zIndex: 1,
           width: '100%',
           left: 0,
           top: 0,
