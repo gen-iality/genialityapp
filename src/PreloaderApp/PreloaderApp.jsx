@@ -1,9 +1,9 @@
-import './preloader.css'
+// import './preloader.css';
 export const PreloaderApp = () => {
-    return (
-        <div className="preloaderBg" id="preloader" >
-            <div className="preloader"></div>
-            <div className="preloader2"></div>
-        </div>
-    )
-}
+  return (
+    <div className='preloaderBg' id='preloader'>
+      <div className='preloaderIcon animate__animated animate__flip'></div>
+      <div className='preloader2'></div>
+    </div>
+  );
+};
