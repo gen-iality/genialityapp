@@ -202,7 +202,7 @@ const Headers = (props) => {
 
   useEffect(() => {
     const onScroll = (e) => {
-      const showHeaderFixed = window.scrollY > 100;
+      const showHeaderFixed = window.scrollY > 64;
       fixed != showHeaderFixed && setFixed(showHeaderFixed);
     };
     document.addEventListener('scroll', onScroll);
