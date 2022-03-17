@@ -213,7 +213,7 @@ const Headers = (props) => {
       <Header
         style={{
           position: fixed ? 'fixed' : 'relative',
-          zIndex: 1060,
+          zIndex: 1,
           width: '100%',
           left: 0,
           top: 0,
