@@ -395,7 +395,8 @@ export const UsersApi = {
     return await Actions.getAll(`/api/events/${id}/eventusers?token=${token}&${query}`);
   },
   getOne: async (event_id, user_id) => {
-    return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}?token=${token}`);
   },
   mineTickets: async () => {
     return await Actions.getAll('/api/me/eventUsers/');
@@ -1285,10 +1286,13 @@ export const Activity = {
 
 export const Networking = {
   getInvitationsReceived: async (eventId, userId) => {
-    return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}`);
+    let token = await GetTokenUserFirebase();
+    console.log("OBTENINENDO INVITACIONES===>")
+    return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}?token=${token}`);
   },
   getInvitationsSent: async (eventId, userId) => {
-    return await Actions.get(`api/events/${eventId}/indexinvitations/${userId}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/events/${eventId}/indexinvitations/${userId}?token=${token}`);
   },
   acceptOrDeclineInvitation: async (eventId, userId, data) => {
     return await Actions.put(`/api/events/${eventId}/acceptordecline/${userId}`, data);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
@@ -6,6 +6,7 @@ import { Networking, UsersApi } from '../../helpers/request';
 import { getCurrentUser } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { CurrentEventUserContext } from '../../context/eventUserContext';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -110,6 +111,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const eventUserCtx=useContext(CurrentEventUserContext)
 
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
@@ -117,10 +119,8 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
     setLoading(true);
     let evius_token = await GetTokenUserFirebase();
     if (evius_token) {
-      getCurrentUser(evius_token).then(async (user) => {
         // Servicio que obtiene el eventUserId del usuario actual
-        let eventUser = currentUser;
-
+        let eventUser = eventUserCtx.value;
         // Servicio que trae las invitaciones / solicitudes recibidas
         Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
           setCurrentUserId(eventUser._id);
@@ -144,7 +144,6 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
             setLoading(false);
           }
         });
-      });
     } else {
       setLoading(false);
     }
@@ -165,7 +164,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
           created_at: requestListReceived[i].created_at,
           eventId: requestListReceived[i].event_id,
           id_user_requested: requestListReceived[i].id_user_requested,
-          user_name_requested: dataUser.properties.names,
+          user_name_requested: dataUser.properties?.names || dataUser.properties?.name,
           id_user_requesting: requestListReceived[i].id_user_requesting,
           state: requestListReceived[i].state,
           updated_at: requestListReceived[i].updated_at,
@@ -219,9 +218,9 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       </Col>
     ) : (
       <div>
-        <Divider>Solicitudes recibidas</Divider>
+        <Divider>Solicitudes de contacto recibidas</Divider>
         <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
-        <Divider>Solicitudes enviadas</Divider>
+        <Divider>Solicitudes de contacto enviadas</Divider>
         <InvitacionListSent list={requestListSent} />
       </div>
     );

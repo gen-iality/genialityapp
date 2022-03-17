@@ -31,11 +31,14 @@ const PopoverInfoUser = (props) => {
   } = useContext(HelperContext);
 
   useEffect(() => {
-    let user = { _id: props.item.iduser, properties: props.item.properties, eventUserId: props.item._id, send: 0 };
+    let user = { _id: props.item.iduser, properties: props.item.properties, eventUserId: props.item._id, send: 0 };   
     setUserSelected(user);
     obtainContacts();
     async function obtainContacts() {
       await obtenerContactos();
+    }
+    return ()=>{
+      setUserSelected(null);
     }
   }, [props.item.iduser]);
 

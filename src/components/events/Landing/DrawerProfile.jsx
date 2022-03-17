@@ -31,7 +31,7 @@ const DrawerProfile = (props) => {
   const [userPropertiesProfile, setUserPropertiesProfile] = useState();
   const intl = useIntl();
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (cEventUser.value !== null && cEventUser.status === 'LOADED') {
       let isContact = isMyContacts(cEventUser.value.properties, props.cHelper.contacts);
       setIsMe(cUser.value._id == cEventUser.value.user._id);
@@ -39,7 +39,17 @@ const DrawerProfile = (props) => {
       setUserSelected(cEventUser.value.properties);
       setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
     }
-  }, [cEventUser.value]);
+  }, [cEventUser.value]);*/
+
+  useEffect(() => {
+    if (props.profileuser) {  
+      let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
+      setIsMe(cUser.value._id == props.profileuser._id);
+      setIsMyContact(isContact);
+      setUserSelected(props.profileuser);
+      setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
+    }
+  }, [props.profileuser]);
   const haveRequestUser = (user) => {
     //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
@@ -69,7 +79,7 @@ const DrawerProfile = (props) => {
         zIndex={5000}
         visible={props.viewPerfil}
         closable={true}
-        onClose={() => props.setViewPerfil({ view: !props.viewPerfil, perfil: null })}
+        onClose={() =>props.setViewPerfil({ view: false, perfil: null })}
         width={'52vh'}
         bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
         <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '10px' }}>
@@ -84,7 +94,7 @@ const DrawerProfile = (props) => {
             <Col span={24}>
               <Button
                 onClick={() => {
-                  props.setViewPerfil({ view: !props.viewPerfil, perfil: userSelected });
+                  props.setViewPerfil({ view: false, perfil: userSelected });
                   handleChangeTypeModal('update');
                 }}
                 type='text'
@@ -98,7 +108,7 @@ const DrawerProfile = (props) => {
             </Col>
           )}
 
-          {/* <Col span={24}>
+         {/* <Col span={24}>
             <Row justify='center' style={{ marginTop: '20px' }}>
               <Space size='middle'>
                 <Tooltip title={haveRequestUser(userSelected) ? 'Solicitud pendiente' : 'Solicitar contacto'}>
@@ -206,9 +216,8 @@ const DrawerProfile = (props) => {
                 dataSource={userPropertiesProfile && userPropertiesProfile}
                 renderItem={(item) =>
                   ((item?.visibleByContacts && isMycontact && !item?.sensibility) ||
-                    !item.sensibility ||
-                    userSelected?._id == cUser.value._id) &&
-                  userSelected[item?.name] &&
+                    !item.sensibility) &&
+                  userSelected.properties[item?.name] &&
                   item?.name !== 'picture' &&
                   item?.name !== 'imagendeperfil' &&
                   item?.type !== 'password' &&
@@ -218,11 +227,11 @@ const DrawerProfile = (props) => {
                         title={item?.label}
                         description={formatDataToString(
                           item?.type !== 'codearea'
-                            ? cEventUser.value.properties[item?.name]
+                            ? userSelected.properties[item?.name]
                             : '(+' +
-                                cEventUser.value.properties['code'] +
+                                userSelected.properties['code'] +
                                 ')' +
-                                cEventUser.value.properties[item?.name],
+                                userSelected.properties[item?.name],
                           item
                         )}
                       />
