@@ -29,27 +29,28 @@ const DrawerProfile = (props) => {
   const [isMe, setIsMe] = useState(false);
   const [send, setSend] = useState(false);
   const [userPropertiesProfile, setUserPropertiesProfile] = useState();
-  const intl = useIntl();
-
-  /*useEffect(() => {
-    if (cEventUser.value !== null && cEventUser.status === 'LOADED') {
-      let isContact = isMyContacts(cEventUser.value.properties, props.cHelper.contacts);
-      setIsMe(cUser.value._id == cEventUser.value.user._id);
-      setIsMyContact(isContact);
-      setUserSelected(cEventUser.value.properties);
-      setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
-    }
-  }, [cEventUser.value]);*/
+  const intl = useIntl(); 
 
   useEffect(() => {
     if (props.profileuser) {  
+      console.log(props.profileuser._id,cEventUser.value,props.profileuser)
+      if(props.profileuser._id!==cEventUser.value?.account_id){
       let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
       setIsMe(cUser.value._id == props.profileuser._id);
       setIsMyContact(isContact);
       setUserSelected(props.profileuser);
       setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
+      }else{
+        //Si es mi usuario, no estaba mostrando el perfil de los demás usuarios
+        if(cEventUser.value==null) return;        
+        let isContact = isMyContacts(cEventUser.value, props.cHelper.contacts);
+        setIsMe(cUser.value._id == cEventUser.value.user._id);
+        setIsMyContact(isContact);
+        setUserSelected(cEventUser.value);
+        setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
+      }
     }
-  }, [props.profileuser]);
+  }, [props.profileuser,cEventUser.value]);
   const haveRequestUser = (user) => {
     //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
