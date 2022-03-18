@@ -1052,6 +1052,11 @@ export const MessageApi = {
       true
     );
   },
+  updateOne:async (eventId,id) => {
+    /* return await Actions.get(`api/events/${eventId}/messages/`, id); */
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${eventId}/updateStatusMessageUser/${id}?token=${token}`, true);
+  },
   /* editOne: async (data, id, eventId) => {
     return await Actions.edit(`/api/events/${eventId}/messages`, data, id);
   },

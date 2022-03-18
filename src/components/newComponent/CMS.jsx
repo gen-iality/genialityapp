@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { handleRequestError } from '../../helpers/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
+import { message, Modal } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 import HelperContext from '../../context/HelperContext';
@@ -50,6 +50,8 @@ const CMS = (props) => {
     scroll,
     widthAction,
     deleteCallback,
+    extraPathUpdate,
+   extraPathUpdateTitle,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
@@ -124,6 +126,14 @@ const CMS = (props) => {
     });
   };
 
+  const updateMails=async(idMessage)=>{    
+    setLoading(true)
+    const updateMails=await API.updateOne(eventId,idMessage);
+    await getList();
+    message.success(updateMails?.message)
+    setLoading(false)
+  }
+
   return (
     <div>
       <Header
@@ -170,6 +180,9 @@ const CMS = (props) => {
         extraPathStateName={extraPathStateName}
         scroll={scroll}
         widthAction={widthAction}
+        extraPathUpdate={extraPathUpdate}
+        extraPathUpdateTitle={extraPathUpdateTitle}
+        updateMails={updateMails}
       />
     </div>
   );
