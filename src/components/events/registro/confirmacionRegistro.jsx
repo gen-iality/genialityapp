@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { message, Button, Row, Col, Checkbox, Form } from 'antd';
+import { Row, Col, Checkbox, Form } from 'antd';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { EventsApi } from '../../../helpers/request';
 import Header from '../../../antdComponents/Header';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -31,12 +32,38 @@ function ConfirmacionRegistro(props) {
 
   //funcion para guardar la inormación
   const saveData = async () => {
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda el contenido...',
+      action: 'show',
+    });
     let data = {
       registration_message: registrationMessage,
       validateEmail: validateEmail,
     };
-    await EventsApi.editOne(data, props.event._id);
-    message.success('Contenido guardado');
+    try{
+      await EventsApi.editOne(data, props.event._id);
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Contenido guardada correctamente!',
+        action: 'show',
+      });
+    } catch(e){
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: e,
+        action: 'show',
+      });
+    }
   };
 
   return (

@@ -20,6 +20,7 @@ import { firestore } from '../../../helpers/firebase';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 import Header from '../../../antdComponents/Header';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -122,6 +123,12 @@ class Datos extends Component {
   //Guardar campo en el evento
   saveField = async (field) => {
     /* console.log('FIELD==>', field); */
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la información...',
+      action: 'show',
+    });
     try {
       let totaluser = {};
       const organizationId = this?.organization?._id;
@@ -156,29 +163,68 @@ class Datos extends Component {
       }
       await this.fetchFields();
       this.setState({ modal: false, edit: false, newField: false });
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Información guardada correctamente!',
+        action: 'show',
+      });
     } catch (e) {
       this.showError(e.response.data.message || e.response.status);
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: e.response.data.message || e.response.status,
+        action: 'show',
+      });
     }
   };
 
   //Funcion para guardar el orden de los datos
   async submitOrder() {
-    const organizationId = this?.organization?._id;
-    if (organizationId && !this.eventId) {
-      await this.props.orderFields(this.state.properties);
-    } else if (this.eventId && !organizationId) {
-      // && this.props.byEvent condición que no esta llegando
-      let token = await GetTokenUserFirebase();
-      await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
-    } else {
-      await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
-    }
-
-    notification.open({
-      message: 'Información salvada',
-      description: 'El orden de la recopilacion de datos se ha guardado',
-      onClick: () => {},
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la información...',
+      action: 'show',
     });
+    const organizationId = this?.organization?._id;
+    try{
+      if (organizationId && !this.eventId) {
+        await this.props.orderFields(this.state.properties);
+      } else if (this.eventId && !organizationId) {
+        // && this.props.byEvent condición que no esta llegando
+        let token = await GetTokenUserFirebase();
+        await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
+      } else {
+        await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
+      }
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'El orden de la recopilación de datos se ha guardado',
+        action: 'show',
+      });
+    } catch (e) {
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: e,
+        action: 'show',
+      });
+    }
     this.fetchFields();
   }
 
@@ -187,7 +233,7 @@ class Datos extends Component {
     this.setState({ info, modal: true, edit: true });
   };
 
-  onHandlerRemove = async (loading, item) => {
+  /* onHandlerRemove = async (loading, item) => {
     try {
       const organizationId = this.organization?._id;
       if (organizationId) {
@@ -195,20 +241,28 @@ class Datos extends Component {
       } else {
         await EventFieldsApi.deleteOne(item, this.eventId);
       }
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'success',
-        content: <> Se eliminó la información correctamente!</>,
+        msj: 'Se eliminó la información correctamente!',
+        action: 'show',
       });
       await this.fetchFields();
     } catch (e) {
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'error',
-        content: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
+        msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
+        action: 'show',
       });
     }
-  };
+  }; */
 
   closeModal2 = () => {
     this.setState({ info: {}, modal: false, edit: false });
@@ -216,10 +270,11 @@ class Datos extends Component {
   //Borrar dato de la lista
   removeField = async (item) => {
     let self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -229,7 +284,38 @@ class Datos extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        self.onHandlerRemove(loading, item);
+        const onHandlerRemove = async () => {
+          try {
+            const organizationId = self.organization?._id;
+            if (organizationId) {
+              await self.props.deleteField(item, self.state.isEditTemplate, self.updateTable);
+            } else {
+              await EventFieldsApi.deleteOne(item, self.eventId);
+            }
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
+            await self.fetchFields();
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
+              action: 'show',
+            });
+          }
+        }
+        //self.onHandlerRemove(loading, item);
+        onHandlerRemove();
       },
     });
     /* try {
@@ -275,9 +361,11 @@ class Datos extends Component {
   };
   //Funcion para cambiar el valor de los checkboxes
   async changeCheckBox(field, key, key2 = null) {
-    notification.open({
-      message: 'Espere..',
-      description: 'Por favor espere mientras se guarda la configuración',
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la información...',
+      action: 'show',
     });
     try {
       this.setState({ edit: true }, () => {
@@ -287,16 +375,26 @@ class Datos extends Component {
         }
 
         this.saveField(field).then((resp) => {
-          notification.open({
-            message: 'Correcto!',
-            description: 'Se ha editado correctamente el campo..!',
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Se ha editado correctamente el campo!',
+            action: 'show',
           });
         });
       });
     } catch (e) {
-      notification.open({
-        message: 'No se ha actualizado el campo',
-        description: 'El Campo no ha sido posible actualizarlo, intenta mas tarde',
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El Campo no ha sido posible actualizarlo, intenta mas tarde',
+        action: 'show',
       });
     }
   }
