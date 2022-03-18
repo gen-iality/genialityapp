@@ -15,8 +15,7 @@ const ContentTypeActivity = ({ options }: propsOptions) => {
           <Col key={'key-' + option.title}>
             <CardOption title={option.title} description={option?.description} image={option?.image} />
           </Col>
-        ))
-      }
+        ))}
     </Row>
   );
 };

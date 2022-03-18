@@ -10,7 +10,21 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   const [typeActivityState, typeActivityDispatch] = useReducer(typeActivityReducer, initialState);
 
   const selectActivitySteps = (id: string) => {
-    typeActivityDispatch({ type: 'toggleType', payload: { id } });
+    switch (id) {
+      case 'type':
+        typeActivityDispatch({ type: 'toggleType', payload: { id } });
+        break;
+      case 'provider':
+        typeActivityDispatch({ type: 'toggleProvider', payload: { id } });
+        break;
+      case 'origin':
+        typeActivityDispatch({ type: 'toggleOrigin', payload: { id } });
+        break;
+
+      default:
+        typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
+        break;
+    }
   };
   const closeModal = () => {
     typeActivityDispatch({ type: 'toggleCloseModal', payload: false });

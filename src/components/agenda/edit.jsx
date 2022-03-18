@@ -1556,12 +1556,12 @@ class AgendaEdit extends Component {
                   <TabPane tab='Tipo de actividad' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
-                        <TipeOfActivity
+                        {/* <TipeOfActivity
                           eventId={this.props.event._id}
                           activityId={this.state.activity_id}
                           activityName={this.state.name}
-                        />
-                        {/* <RoomManager
+                        /> */}
+                        <RoomManager
                           event_id={this.props.event._id}
                           activity_id={this.state.activity_id}
                           activity_name={this.state.name}
@@ -1571,7 +1571,7 @@ class AgendaEdit extends Component {
                           date_activity={this.state.date}
                           pendingChangesSave={this.state.pendingChangesSave}
                           updateRoomManager={this.updateRoomManager}
-                        /> */}
+                        />
                         <BackTop />
                       </Col>
                     </Row>

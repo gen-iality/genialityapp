@@ -45,7 +45,7 @@ const MenuConfig = (props) => {
     <Fragment>
       <Menu
         defaultSelectedKeys={['datos-evento']}
-        defaultOpenKeys={['main']}
+        // defaultOpenKeys={['main']}
         theme='dark'
         style={{
           overflow: 'auto',

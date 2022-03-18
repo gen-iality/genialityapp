@@ -9,23 +9,6 @@ import ContentInformative from '../typeActivity/components/layout/ContentInforma
 import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons'; //Este icono para el addonBefore
 import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
 
-// const initialOptions = {
-//   options: [
-//     {
-//       MainTitle: 'Escoge el proveedor de transmision',
-//       title: 'Titulo del card',
-//       description: 'Descripción del card',
-//       image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
-//     },
-//     {
-//       MainTitle: 'Escoge el origen de transmision',
-//       title: 'Titulo del card 2',
-//       description: 'Descripción del card 2',
-//       image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
-//     },
-//   ],
-// };
-
 const newContentSource = {
   title: 'Titulo principal',
   addonBefore: <LinkOutlined />, // o la url que se encuentra en el componente
@@ -35,19 +18,21 @@ const newContentSource = {
 };
 
 const ModalStepByStep = () => {
-  const { openModal, closeModal } = useTypeActivity();
+  const { openModal, closeModal, activityOptions, selectActivitySteps } = useTypeActivity();
+  console.log('🚀 debug ~ =================>', activityOptions, openModal);
+
   return (
     <Modal visible={openModal} onCancel={closeModal} centered width={1000} footer={null}>
-      <LayoutTypeActivity title={newContentSource.title}>
-        {/* <ContentTypeActivity options={initialOptions.options} /> */}
+      <LayoutTypeActivity title={activityOptions?.MainTitle}>
+        <ContentTypeActivity options={activityOptions.typeOptions} />
         {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
         {/* <LoadingTypeActivity /> */}
         {/* <ContentSource addonBefore={newContentSource.addonBefore} placeholder={newContentSource.placeholder} icon={newContentSource.icon} subtitle={newContentSource.subtitle} /> */}
-        <ContentInformative
+        {/* <ContentInformative
           title={'Buenas tardes'}
           description={'Quiero hamburguesas'}
           image={'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg'}
-        />
+        /> */}
       </LayoutTypeActivity>
     </Modal>
   );

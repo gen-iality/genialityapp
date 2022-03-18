@@ -7,8 +7,7 @@ import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActi
 /* import InitialSVG from './components/svg/InitialSVG'; */
 
 const InitialView = (props: any) => {
-  const { activityOptions, selectActivitySteps } = useTypeActivity();
-  console.log('🚀 debug ~ InitialView ~ activityOptions', activityOptions);
+  const { selectActivitySteps } = useTypeActivity();
 
   return (
     <>

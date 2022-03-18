@@ -1,4 +1,4 @@
-import { TypeActivity, typeActivityState } from '../interfaces/interfaces';
+import { TypeActivity, TypeActivityState } from '../interfaces/interfaces';
 
 export type TypeActivityAction =
   | { type: 'type'; payload: TypeActivity }
@@ -8,7 +8,7 @@ export type TypeActivityAction =
   | { type: 'toggleCloseModal'; payload: boolean };
 
 export type TypeActivityContextProps = {
-  typeActivityState: typeActivityState;
+  typeActivityState: TypeActivityState;
   selectActivitySteps: (id: string) => void;
   closeModal: () => void;
 };

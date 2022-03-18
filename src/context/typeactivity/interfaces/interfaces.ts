@@ -1,13 +1,30 @@
-export interface TypeActivity {
-  id: string;
-  MainTitle: string;
+export interface ProviderOptions {
+  key: string;
   title: string;
   description: string;
   image: string;
-  nextView: string;
+}
+export interface TypeOptions {
+  key: string;
+  title: string;
+  description: string;
+  image: string;
+  providerOptions?: ProviderOptions[];
 }
 
-export interface typeActivityState {
-  openModal: boolean;
-  activityOptions: TypeActivity[];
+export interface TypeActivity {
+  id: string;
+  nextView: string;
+  prevView: string;
+  MainTitle: string;
+  typeOptions: TypeOptions[];
 }
+
+export interface TypeActivityState {
+  openModal: boolean;
+  activityOptions: TypeActivity | any;
+}
+
+// export interface TypeActivityData {
+//   [key: string]: TypeActivity;
+// }

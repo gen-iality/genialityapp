@@ -1,39 +1,16 @@
 import React from 'react';
-import { typeActivityState } from './interfaces/interfaces';
+import { typeActivityData } from './constants/constants';
+import { TypeActivityState } from './interfaces/interfaces';
 import { TypeActivityAction } from './types/types';
 
-export const initialState: typeActivityState = {
+export const initialState: TypeActivityState = {
   openModal: false,
-  activityOptions: [
-    {
-      id: 'type',
-      MainTitle: 'Escoge el proveedor de transmision',
-      title: 'Titulo del card',
-      description: 'Descripción del card',
-      image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
-      nextView: 'toggleProvider',
-    },
-    {
-      id: 'provider',
-      MainTitle: 'Escoge el proveedor de transmision',
-      title: 'Titulo del card',
-      description: 'Descripción del card',
-      image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
-      nextView: 'toggleOrigin',
-    },
-    {
-      id: 'origin',
-      MainTitle: 'Escoge el origen de transmision',
-      title: 'Titulo del card 2',
-      description: 'Descripción del card 2',
-      image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
-      nextView: 'undefined',
-    },
-  ],
+  activityOptions: typeActivityData,
 };
 
-export const typeActivityReducer = (state: typeActivityState, action: TypeActivityAction): typeActivityState => {
-  console.log('🚀 debug ~ typeActivityReducer ~ action', action);
+export const typeActivityReducer = (state: TypeActivityState, action: TypeActivityAction): TypeActivityState => {
+  // console.log('🚀 debug ~ typeActivityReducer ~ action', action);
+  console.log('🚀 debug ~ TYPE++++++++++++++', action.type);
   console.log('🚀 debug ~ typeActivityReducer ~ state', state);
   switch (action.type) {
     // case 'type':
@@ -45,21 +22,20 @@ export const typeActivityReducer = (state: typeActivityState, action: TypeActivi
       return {
         ...state,
         openModal: true,
-        activityOptions: state.activityOptions.filter(({ ...typeActivity }) => {
-          return typeActivity.id === action.payload.id;
-        }),
+        activityOptions: initialState.activityOptions,
       };
     case 'toggleProvider':
-      console.log('🚀 debug ~ toggleProvider');
-      return;
+      return {
+        ...state,
+        openModal: true,
+        activityOptions: initialState.activityOptions[action.payload.id],
+      };
 
     case 'toggleOrigin':
       return {
         ...state,
-        activityOptions: state.activityOptions.map(({ ...typeActivity }) => {
-          console.log('🚀 debug ~ activityOptions:state.activityOptions.map ~ todo', typeActivity);
-          return typeActivity;
-        }),
+        openModal: true,
+        activityOptions: initialState.activityOptions[action.payload.id],
       };
     case 'toggleCloseModal':
       return {
