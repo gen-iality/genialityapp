@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
 import { DocumentsApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { Form, Row, Col, message, Input, Modal, Upload, Button, Checkbox, Spin } from 'antd';
+import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
 import firebase from 'firebase';
 import Header from '../../antdComponents/Header';
 import moment from 'moment';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
@@ -48,14 +49,23 @@ const Document = ( props ) => {
     }
 
     if(!document.title) {
-      message.error('El título es requerido');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El título es requerido',
+        action: 'show',
+      });
     } else if(!files && document.type !== 'folder') {
-      message.error('El archivo es requerido');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El archivo es requerido',
+        action: 'show',
+      });
     } else {
-      const loading = message.open({
-        key: 'loading',
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras se guarda la información..</>,
+        key: 'loading',
+        msj: ' Por favor espere miestras se guarda la información...',
+        action: 'show',
       });
   
       try {
@@ -65,28 +75,37 @@ const Document = ( props ) => {
           await DocumentsApi.create(!folder ? document : {title: document.title, type: 'folder', folder}, props.event._id);
         }     
       
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente!</>,
+          msj: 'Información guardada correctamente!',
+          action: 'show',
         });
         history.push(`${props.matchUrl}`);
         setLoading(false);
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     }
   }
 
   const remove = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     if(locationState.edit) {
       confirm({
@@ -118,17 +137,25 @@ const Document = ( props ) => {
                 });
               } */
               await DocumentsApi.deleteOne(locationState.edit, props.event._id);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               history.push(`${props.matchUrl}`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           }

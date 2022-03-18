@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row, Col } from 'antd';
+import { Table, Tooltip, Space, Button, Image, Modal,  Typography, Row, Col } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -15,6 +15,7 @@ import { EventsApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { withRouter } from 'react-router-dom';
 import Header from '../../antdComponents/Header';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Column } = Table;
 const { confirm } = Modal;
@@ -80,24 +81,41 @@ class Product extends Component {
   };
 
   savePosition = async () => {
-    const loadingSave = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras se guarda la configuración..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la configuración...',
+      action: 'show',
     });
-    if (this.state.list) {
-      await Promise.all(
-        this.state.list.map(async (product, index) => {
-          let productChange = { ...product, position: product.index + 1 };
-          await EventsApi.editProduct(productChange, this.props.eventId, product._id);
-        })
-      );
+    try {
+      if (this.state.list) {
+        await Promise.all(
+          this.state.list.map(async (product, index) => {
+            let productChange = { ...product, position: product.index + 1 };
+            await EventsApi.editProduct(productChange, this.props.eventId, product._id);
+          })
+        );
+      }
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Configuración guardada correctamente!',
+        action: 'show',
+      });
+    } catch (e) {
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Ha ocurrido un error',
+        action: 'show',
+      });
     }
-    message.destroy(loadingSave.key);
-    message.open({
-      type: 'success',
-      content: <> Configuración guardada correctamente!</>,
-    });
   };
 
   editProduct = (cert) => {
@@ -105,10 +123,11 @@ class Product extends Component {
   };
 
   removeProduct = (data) => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras se borra la configuración..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la configuración...',
+      action: 'show',
     });
     let self = this;
     confirm({
@@ -123,16 +142,37 @@ class Product extends Component {
           EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
             self.fetchItem();
             if (res === 1) {
-              message.destroy(loading.key);
-              message.success('Producto eliminado correctamente');
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
+                type: 'success',
+                msj: 'Producto eliminado correctamente',
+                action: 'show',
+              });
               resolve(true);
             } else {
-              message.destroy(loading.key);
-              message.error('Lo sentimos el producto no pudo ser eliminado intente nuevamente');
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
+                type: 'error',
+                msj: 'Lo sentimos el producto no pudo ser eliminado intente nuevamente',
+                action: 'show',
+              });
               reject(false);
             }
           });
-        }).catch(() => message.error('Lo sentimos no hay respuesta del servidor'));
+        }).catch(() => {
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Lo sentimos no hay respuesta del servidor',
+              action: 'show',
+            });
+          }
+        );
       },
       onCancel() {},
     });

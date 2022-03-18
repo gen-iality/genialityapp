@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Actions, NewsFeed } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { toolbarEditor } from '../../helpers/constants';
-import { Col, Row, Input, Form, DatePicker, Modal, Card, message, Button } from 'antd';
+import { Col, Row, Input, Form, DatePicker, Modal, Card, Button } from 'antd';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
@@ -13,6 +13,7 @@ import BackTop from '../../antdComponents/BackTop';
 import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import EviusReactQuill from '../shared/eviusReactQuill';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
@@ -84,15 +85,17 @@ const NewCE = (props) => {
           picture: path[0],
         });
 
-        message.open({
+        DispatchMessageService({
           type: 'success',
-          content: <> Se anexo la imagen correctamente</>,
+          msj: 'Se anexo la imagen correctamente',
+          action: 'show',
         });
       });
     } else {
-      message.open({
+      DispatchMessageService({
         type: 'error',
-        content: handleRequestError(e).message,
+        msj: handleRequestError(e).message,
+        action: 'show',
       });
     }
   };
@@ -104,31 +107,51 @@ const NewCE = (props) => {
   const onSubmit = async () => {
     let values = {};
     if (notice.title === '' || !notice.title) {
-      message.error('El título es requerido');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El título es requerido',
+        action: 'show',
+      });
       values.title = false;
     } else {
       values.title = true;
     }
     if (notice.description_complete === '' || notice.description_complete === '<p><br></p>' || !notice.description_complete) {
-      message.error('La noticia es requerida');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'La noticia es requerida',
+        action: 'show',
+      });
       values.description_complete = false;
     } else {
       values.description_complete = true;
     }
     if (notice.description_short === '' || notice.description_short === '<p><br></p>' || !notice.description_short) {
-      message.error('El subtítulo es requerido');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El subtítulo es requerido',
+        action: 'show',
+      });
       values.description_short = false;
     } else {
       values.description_short = true;
     }
     if (notice.picture === null || !notice.picture) {
-      message.error('La imagen es requerida');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'La imagen es requerida',
+        action: 'show',
+      });
       values.picture = false;
     } else {
       values.picture = true;
     }
     if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
-      message.error('La fecha es requerida');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'La fecha es requerida',
+        action: 'show',
+      });
       values.fecha = false;
     } else {
       values.fecha = true;
@@ -138,13 +161,15 @@ const NewCE = (props) => {
       values.description_complete &&
       values.description_short &&
       values.picture &&
-      values.fecha) {
-      const loading = message.open({
-        key: 'loading',
+      values.fecha) 
+    {
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras se guarda la información..</>,
+        key: 'loading',
+        msj: ' Por favor espere miestras se guarda la información...',
+        action: 'show',
       });
-
+      
       try {
         if (locationState.edit) {
           await NewsFeed.editOne(notice, locationState.edit, props.eventId);
@@ -152,27 +177,36 @@ const NewCE = (props) => {
           await NewsFeed.create(notice, props.eventId);
         }
 
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente!</>,
+          msj: 'Información guardada correctamente!',
+          action: 'show',
         });
         history.push(`${props.match.url}`);
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     }
   };
 
   const remove = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     if (locationState.edit) {
       confirm({
@@ -186,17 +220,25 @@ const NewCE = (props) => {
           const onHandlerRemove = async () => {
             try {
               await NewsFeed.deleteOne(locationState.edit, props.eventId);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               history.push(`${props.match.url}`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };
