@@ -21,6 +21,7 @@ import {
   Card,
   Image,
   Modal,
+  TimePicker,
 } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
@@ -1463,9 +1464,10 @@ class AgendaEdit extends Component {
                         }
                       />
                     </Form.Item>
-                    <Row wrap justify='space-between' gutter={[8, 8]}>
-                      <Col>
+                    <Row wrap justify='center' gutter={[8, 8]}>
+                      <Col span={12}>
                         <Form.Item
+                          style={{ width: '100%' }}
                           label={
                             <label style={{ marginTop: '2%' }}>
                               Hora Inicio{' '}
@@ -1479,7 +1481,7 @@ class AgendaEdit extends Component {
                             },
                           ]}
                         >
-                          <DateTimePicker
+                          {/* <DateTimePicker
                             value={hour_start}
                             dropUp
                             step={15}
@@ -1487,11 +1489,22 @@ class AgendaEdit extends Component {
                             onChange={(value) =>
                               this.handleChangeDate(value, 'hour_start')
                             }
+                          /> */}
+                          <TimePicker
+                            style={{ width: '100%' }}
+                            allowClear={false}
+                            value={Moment(hour_start)}
+                            use12Hours
+                            format='h:mm a'
+                            onChange={(value) =>
+                              this.handleChangeDate(value, 'hour_start')
+                            }
                           />
                         </Form.Item>
                       </Col>
-                      <Col>
+                      <Col span={12}>
                         <Form.Item
+                          style={{ width: '100%' }}
                           label={
                             <label style={{ marginTop: '2%' }}>
                               Hora Fin <label style={{ color: 'red' }}>*</label>
@@ -1504,11 +1517,21 @@ class AgendaEdit extends Component {
                             },
                           ]}
                         >
-                          <DateTimePicker
+                          {/* <DateTimePicker
                             value={hour_end}
                             dropUp
                             step={15}
                             date={false}
+                            onChange={(value) =>
+                              this.handleChangeDate(value, 'hour_end')
+                            }
+                          /> */}
+                          <TimePicker
+                            style={{ width: '100%' }}
+                            allowClear={false}
+                            value={Moment(hour_end)}
+                            use12Hours
+                            format='h:mm a'
                             onChange={(value) =>
                               this.handleChangeDate(value, 'hour_end')
                             }

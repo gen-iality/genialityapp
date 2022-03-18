@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import Moment from 'moment';
 import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
+import {
+  Actions,
+  CategoriesApi,
+  EventsApi,
+  OrganizationApi,
+  TypesApi,
+} from '../../helpers/request';
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
@@ -28,11 +34,16 @@ import {
   Grid,
   Divider,
   Button,
+  TimePicker,
+  DatePicker,
 } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
-import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  CheckCircleFilled,
+} from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 
@@ -142,12 +153,11 @@ class General extends Component {
       organizers = organizers.map((item) => {
         return { value: item.id, label: item.name };
       });
-      const { selectedCategories, selectedOrganizer, selectedType } = handleFields(
-        organizers,
-        types,
-        categories,
-        event
-      );
+      const {
+        selectedCategories,
+        selectedOrganizer,
+        selectedType,
+      } = handleFields(organizers, types, categories, event);
       this.setState({
         categories,
         organizers,
@@ -174,15 +184,25 @@ class General extends Component {
           });
         } else this.setState({ serverError: true, loader: false });
       } else {
-        this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } });
+        this.setState({
+          serverError: true,
+          loader: false,
+          errorData: { status: 400, message: JSON.stringify(error) },
+        });
       }
     }
 
     //Esto es para la configuración de autenticación. Nuevo flujo de Login
-    if (this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register) {
+    if (
+      this.state.event.visibility === 'PUBLIC' &&
+      this.state.event.allow_register
+    ) {
       //Evento Público con Registro
       this.setState({ typeEvent: 0 });
-    } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
+    } else if (
+      this.state.event.visibility === 'PUBLIC' &&
+      !this.state.event.allow_register
+    ) {
       //Evento Público sin Registro
       this.setState({ typeEvent: 1 });
     } else {
@@ -212,7 +232,11 @@ class General extends Component {
     // console.log(e.target);
     if (e.target !== null || e.target !== undefined || e.target !== '') {
       let value = e;
-      if (e.target.value !== null || e.target.value !== undefined || e.target.value !== '') {
+      if (
+        e.target.value !== null ||
+        e.target.value !== undefined ||
+        e.target.value !== ''
+      ) {
         value = e.target.value;
       }
 
@@ -222,7 +246,10 @@ class General extends Component {
         value = e.target.checked;
       }
 
-      this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
+      this.setState(
+        { event: { ...this.state.event, [name]: value } },
+        this.valid
+      );
     }
     // if (e.target != null) {
     //   // value = e.target;
@@ -236,8 +263,17 @@ class General extends Component {
   //Validación
   valid = () => {
     const error = {};
-    const { event, selectedOrganizer, selectedType, selectedCategories } = this.state;
-    const valid = event.name !== null && event.name !== '' && event.name.length > 0 && !!selectedOrganizer;
+    const {
+      event,
+      selectedOrganizer,
+      selectedType,
+      selectedCategories,
+    } = this.state;
+    const valid =
+      event.name !== null &&
+      event.name !== '' &&
+      event.name.length > 0 &&
+      !!selectedOrganizer;
     /* 
       &&
       !!selectedType &&
@@ -248,7 +284,11 @@ class General extends Component {
     } else {
       DispatchMessageService({
         type: 'error',
-        msj: this.props.intl.formatMessage({ id: 'message.error.complete.requerid.data', defaultMessage: 'Hubo un error, por favor completa los datos obligatorios!'}),
+        msj: this.props.intl.formatMessage({
+          id: 'message.error.complete.requerid.data',
+          defaultMessage:
+            'Hubo un error, por favor completa los datos obligatorios!',
+        }),
         action: 'show',
       });
     }
@@ -281,7 +321,10 @@ class General extends Component {
         date_end = Moment(date_end)
           .add(diff, 'days')
           .toDate();
-      this.setState({ minDate: value, event: { ...this.state.event, date_end: date_end, date_start: value } });
+      this.setState({
+        minDate: value,
+        event: { ...this.state.event, date_end: date_end, date_start: value },
+      });
     } else this.setState({ event: { ...this.state.event, [name]: value } });
   };
   //Cambio en el input de imagen
@@ -320,12 +363,17 @@ class General extends Component {
         });
         DispatchMessageService({
           type: 'success',
-          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          msj: this.props.intl.formatMessage({
+            id: 'toast.img',
+            defaultMessage: 'Ok!',
+          }),
           action: 'show',
         });
       });
     } else {
-      this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
+      this.setState({
+        errImg: 'Solo se permiten imágenes. Intentalo de nuevo',
+      });
     }
   };
 
@@ -364,12 +412,17 @@ class General extends Component {
         });
         DispatchMessageService({
           type: 'success',
-          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          msj: this.props.intl.formatMessage({
+            id: 'toast.img',
+            defaultMessage: 'Ok!',
+          }),
           action: 'show',
         });
       });
     } else {
-      this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
+      this.setState({
+        errImg: 'Solo se permiten imágenes. Intentalo de nuevo',
+      });
     }
   };
 
@@ -411,7 +464,10 @@ class General extends Component {
           .doc(event._id)
           .update(updateData)
           .then(() => {
-            const msg = intl.formatMessage({ id: 'message.success.updated.tabs', defaultMessage: 'Tabs de la zona social actualizados!'});
+            const msg = intl.formatMessage({
+              id: 'message.success.updated.tabs',
+              defaultMessage: 'Tabs de la zona social actualizados!',
+            });
             DispatchMessageService({
               type: 'success',
               msj: msg,
@@ -426,7 +482,11 @@ class General extends Component {
             console.error(err);
             DispatchMessageService({
               type: 'error',
-              msj: intl.formatMessage({id: 'message.error.updated.tabs', defaultMessage: 'Ha ocurrido un error actualizando las tabs de la zona social'}),
+              msj: intl.formatMessage({
+                id: 'message.error.updated.tabs',
+                defaultMessage:
+                  'Ha ocurrido un error actualizando las tabs de la zona social',
+              }),
               action: 'show',
             });
           });
@@ -436,7 +496,10 @@ class General extends Component {
           .doc(event._id)
           .set({ tabs: { ...tabs } })
           .then(() => {
-            const msg = intl.formatMessage({id: 'message.success.initialized.tabs', defaultMessage: 'Tabs de la zona social inicializados'});
+            const msg = intl.formatMessage({
+              id: 'message.success.initialized.tabs',
+              defaultMessage: 'Tabs de la zona social inicializados',
+            });
             DispatchMessageService({
               type: 'success',
               msj: msg,
@@ -451,7 +514,11 @@ class General extends Component {
             console.error(err);
             DispatchMessageService({
               type: 'error',
-              msj: intl.formatMessage({id: 'message.error.updated.tabs', defaultMessage: 'Ha ocurrido un error actualizando las tabs de la zona social'}),
+              msj: intl.formatMessage({
+                id: 'message.error.updated.tabs',
+                defaultMessage:
+                  'Ha ocurrido un error actualizando las tabs de la zona social',
+              }),
               action: 'show',
             });
           });
@@ -477,7 +544,10 @@ class General extends Component {
     const date_start = Moment(event.date_start).format('YYYY-MM-DD');
     const hour_end = Moment(event.hour_end).format('HH:mm');
     const date_end = Moment(event.date_end).format('YYYY-MM-DD');
-    const datetime_from = Moment(date_start + ' ' + hour_start, 'YYYY-MM-DD HH:mm');
+    const datetime_from = Moment(
+      date_start + ' ' + hour_start,
+      'YYYY-MM-DD HH:mm'
+    );
     const datetime_to = Moment(date_end + ' ' + hour_end, 'YYYY-MM-DD HH:mm');
     const categories = this.state.selectedCategories.map((item) => {
       return item.value;
@@ -491,21 +561,33 @@ class General extends Component {
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
       picture: path.length > 1 ? path : event.picture,
       video: event.video || null,
-      video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
+      video_position:
+        event.video_position === 'true' || event.video_position === true
+          ? 'true'
+          : 'false',
       venue: event.venue,
       analytics: event.analytics,
       address: event.address,
-      has_date: event.has_date === 'true' || event.has_date === true ? true : false,
+      has_date:
+        event.has_date === 'true' || event.has_date === true ? true : false,
       allow_register: event.allow_register,
       allow_detail_calendar:
-        event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
-      enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
+        event.allow_detail_calendar === 'true' ||
+        event.allow_detail_calendar === true
+          ? true
+          : false,
+      enable_language:
+        event.enable_language === 'true' || event.enable_language === true
+          ? true
+          : false,
       homeSelectedScreen: event.homeSelectedScreen,
       visibility: event.visibility ? event.visibility : 'PRIVATE',
       description: event.description,
       category_ids: categories,
       organizer_id:
-        this.state.selectedOrganizer && this.state.selectedOrganizer.value ? this.state.selectedOrganizer.value : null,
+        this.state.selectedOrganizer && this.state.selectedOrganizer.value
+          ? this.state.selectedOrganizer.value
+          : null,
       event_type_id: this.state.selectedType?.value,
       app_configuration: this.state.info.app_configuration,
       banner_image: this.state.banner_image,
@@ -532,18 +614,26 @@ class General extends Component {
         self.setState({ loading: false });
         DispatchMessageService({
           type: 'success',
-          msj: intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+          msj: intl.formatMessage({
+            id: 'toast.success',
+            defaultMessage: 'Ok!',
+          }),
           action: 'show',
         });
       } else {
         const result = await Actions.create('/api/events', data);
         this.setState({ loading: false });
         if (result._id) {
-          window.location.replace(`${window.location.origin}/event/${result._id}`);
+          window.location.replace(
+            `${window.location.origin}/event/${result._id}`
+          );
         } else {
           DispatchMessageService({
             type: 'warning',
-            msj: intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }),
+            msj: intl.formatMessage({
+              id: 'toast.warning',
+              defaultMessage: 'Idk',
+            }),
             action: 'show',
           });
           this.setState({ msg: 'Cant Create', create: false });
@@ -552,7 +642,10 @@ class General extends Component {
     } catch (error) {
       DispatchMessageService({
         type: 'error',
-        msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+        msj: intl.formatMessage({
+          id: 'toast.error',
+          defaultMessage: 'Sry :(',
+        }),
         action: 'show',
       });
       if (error?.response) {
@@ -567,7 +660,8 @@ class General extends Component {
             msj: `Error : ${data?.message || status}`,
             action: 'show',
           });
-        } else this.setState({ serverError: true, loader: false, errorData: data });
+        } else
+          this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
         console.log('ERROR DATA===>', errorData);
@@ -668,13 +762,31 @@ class General extends Component {
     this.setState({ typeEvent: value });
     if (value === 0) {
       //Evento Público con Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } });
+      this.setState({
+        event: {
+          ...this.state.event,
+          visibility: 'PUBLIC',
+          allow_register: true,
+        },
+      });
     } else if (value === 1) {
       //Evento Público sin Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } });
+      this.setState({
+        event: {
+          ...this.state.event,
+          visibility: 'PUBLIC',
+          allow_register: false,
+        },
+      });
     } else {
       //Evento Privado con Invitación
-      this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } });
+      this.setState({
+        event: {
+          ...this.state.event,
+          visibility: 'PRIVATE',
+          allow_register: false,
+        },
+      });
     }
   };
 
@@ -697,7 +809,13 @@ class General extends Component {
     return (
       <React.Fragment>
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
+          <Header
+            title={'Datos del evento'}
+            save
+            form
+            remove={this.deleteEvent}
+            edit={this.state.event._id}
+          />
           <Tabs defaultActiveKey='1'>
             <Tabs.TabPane tab='General' key='1'>
               <Row justify='center' wrap gutter={[8, 8]}>
@@ -708,7 +826,10 @@ class General extends Component {
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                    rules={[
+                      { required: true, message: 'El nombre es requerido' },
+                    ]}
+                  >
                     <Input
                       name={'name'}
                       placeholder={'Nombre del evento'}
@@ -718,30 +839,46 @@ class General extends Component {
                   </Form.Item>
 
                   {event.app_configuration && (
-                    <Form.Item label={'¿Qué módulo desea observar en el inicio?'}>
+                    <Form.Item
+                      label={'¿Qué módulo desea observar en el inicio?'}
+                    >
                       <Select
                         name={'homeSelectedScreen'}
                         value={event.homeSelectedScreen}
-                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}>
+                        onChange={(e) =>
+                          this.handleChange(e, 'homeSelectedScreen')
+                        }
+                      >
                         <Option value={null}>Banner de inicio</Option>
                         <Option
                           value={
-                            event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''
-                          }>
+                            event.app_configuration.ProfileScreen
+                              ? event.app_configuration.ProfileScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.ProfileScreen
                             ? event.app_configuration.ProfileScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={
-                            event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''
-                          }>
+                            event.app_configuration.CalendarScreen
+                              ? event.app_configuration.CalendarScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.CalendarScreen
                             ? event.app_configuration.CalendarScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>
+                          value={
+                            event.app_configuration.NewsScreen
+                              ? event.app_configuration.NewsScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.NewsScreen
                             ? event.app_configuration.NewsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -751,46 +888,74 @@ class General extends Component {
                             event.app_configuration.EventPlaceScreen
                               ? event.app_configuration.EventPlaceScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.EventPlaceScreen
                             ? event.app_configuration.EventPlaceScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={
-                            event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''
-                          }>
+                            event.app_configuration.SpeakerScreen
+                              ? event.app_configuration.SpeakerScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.SpeakerScreen
                             ? event.app_configuration.SpeakerScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>
+                          value={
+                            event.app_configuration.SurveyScreen
+                              ? event.app_configuration.SurveyScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.SurveyScreen
                             ? event.app_configuration.SurveyScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
                           value={
-                            event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''
-                          }>
+                            event.app_configuration.DocumentsScreen
+                              ? event.app_configuration.DocumentsScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.DocumentsScreen
                             ? event.app_configuration.DocumentsScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>
+                          value={
+                            event.app_configuration.WallScreen
+                              ? event.app_configuration.WallScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.WallScreen
                             ? event.app_configuration.WallScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
-                        <Option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>
+                        <Option
+                          value={
+                            event.app_configuration.WebScreen
+                              ? event.app_configuration.WebScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.WebScreen
                             ? event.app_configuration.WebScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>
+                          value={
+                            event.app_configuration.FaqsScreen
+                              ? event.app_configuration.FaqsScreen.name
+                              : ''
+                          }
+                        >
                           {event.app_configuration.FaqsScreen
                             ? event.app_configuration.FaqsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -803,7 +968,8 @@ class General extends Component {
                     <Select
                       value={event.type_event}
                       name={'type_event'}
-                      onChange={(e) => this.handleChange(e, 'type_event')}>
+                      onChange={(e) => this.handleChange(e, 'type_event')}
+                    >
                       <Option value=''>Seleccionar...</Option>
                       <Option value='physicalEvent'>Evento físico</Option>
                       <Option value='onlineEvent'>Evento virtual</Option>
@@ -848,7 +1014,11 @@ class General extends Component {
                   )}
 
                   <Form.Item label={'Especificar fechas'}>
-                    <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                    <Switch
+                      defaultChecked
+                      onChange={this.specificDates}
+                      checked={specificDates}
+                    />
                   </Form.Item>
 
                   {specificDates === false ? (
@@ -856,51 +1026,100 @@ class General extends Component {
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
                           <Form.Item label={'Fecha Inicio'}>
-                            <DateTimePicker
+                            <DatePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.date_start)}
+                              format={'DD/MM/YYYY'}
+                              onChange={(value) =>
+                                this.changeDate(value, 'date_start')
+                              }
+                            />
+                            {/* <DateTimePicker
                               value={event.date_start}
                               format={'DD/MM/YYYY'}
                               time={false}
-                              onChange={(value) => this.changeDate(value, 'date_start')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'date_start')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                         <Col span={12}>
                           <Form.Item label={'Hora Inicio'}>
-                            <DateTimePicker
+                            <TimePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.hour_start)}
+                              use12Hours
+                              format='h:mm a'
+                              onChange={(value) =>
+                                this.changeDate(value, 'hour_start')
+                              }
+                            />
+                            {/* <DateTimePicker
                               value={event.hour_start}
                               step={60}
                               date={false}
-                              onChange={(value) => this.changeDate(value, 'hour_start')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'hour_start')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                       </Row>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
                           <Form.Item label={'Fecha Fin'}>
-                            <DateTimePicker
+                            <DatePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.date_end)}
+                              format={'DD/MM/YYYY'}
+                              onChange={(value) =>
+                                this.changeDate(value, 'date_end')
+                              }
+                            />
+                            {/* <DateTimePicker
                               value={event.date_end}
                               min={this.minDate}
                               format={'DD/MM/YYYY'}
                               time={false}
-                              onChange={(value) => this.changeDate(value, 'date_end')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'date_end')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                         <Col span={12}>
                           <Form.Item label={'Hora Fin'}>
-                            <DateTimePicker
+                            <TimePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.hour_end)}
+                              use12Hours
+                              format='h:mm a'
+                              onChange={(value) =>
+                                this.changeDate(value, 'hour_end')
+                              }
+                            />
+                            {/* <DateTimePicker
                               value={event.hour_end}
                               step={60}
                               date={false}
-                              onChange={(value) => this.changeDate(value, 'hour_end')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'hour_end')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                       </Row>
                     </div>
                   ) : (
-                    <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
+                    <DateEvent
+                      eventId={this.props.event._id}
+                      updateEvent={this.props.updateEvent}
+                    />
                   )}
 
                   {/* <Form.Item label={'Idioma del evento'}>
@@ -912,7 +1131,11 @@ class General extends Component {
                   </Form.Item> */}
 
                   <Form.Item label={'Descripción'}>
-                    <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
+                    <EviusReactQuill
+                      name={'description'}
+                      data={event.description}
+                      handleChange={this.chgTxt}
+                    />
                   </Form.Item>
 
                   <Form.Item>
@@ -927,12 +1150,16 @@ class General extends Component {
                   </Form.Item>
 
                   <div>
-                    <label style={{ marginTop: '2%' }}>Imagen General (para el listado)</label>
+                    <label style={{ marginTop: '2%' }}>
+                      Imagen General (para el listado)
+                    </label>
                     <ImageInput
                       picture={event.picture}
                       imageFile={this.state.imageFile}
                       divClass={'drop-img'}
-                      content={<img src={event.picture} alt={'Imagen Perfil'} />}
+                      content={
+                        <img src={event.picture} alt={'Imagen Perfil'} />
+                      }
                       classDrop={'dropzone'}
                       contentDrop={
                         <Button
@@ -968,7 +1195,9 @@ class General extends Component {
                         borderRadius: 10,
                       }}
                     />
-                    {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
+                    {this.state.fileMsg && (
+                      <p className='help is-success'>{this.state.fileMsg}</p>
+                    )}
                   </div>
 
                   <Form.Item label={'Vídeo'}>
@@ -983,11 +1212,19 @@ class General extends Component {
                   <Form.Item label={'Posición del video'}>
                     <Switch
                       name={'video_position'}
-                      checked={event.video_position === true || event.video_position === 'true'}
+                      checked={
+                        event.video_position === true ||
+                        event.video_position === 'true'
+                      }
                       checkedChildren='Arriba'
                       unCheckedChildren='Abajo'
                       onChange={(checked) =>
-                        this.setState({ event: { ...this.state.event, video_position: checked ? 'true' : 'false' } })
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            video_position: checked ? 'true' : 'false',
+                          },
+                        })
                       }
                     />
                   </Form.Item>
@@ -1050,7 +1287,12 @@ class General extends Component {
                           checked={this.state?.tabs?.publicChat}
                           onChange={(checked) =>
                             this.setState(
-                              { tabs: { ...this.state.tabs, publicChat: checked } },
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  publicChat: checked,
+                                },
+                              },
                               async () => await this.upsertTabs()
                             )
                           }
@@ -1064,7 +1306,12 @@ class General extends Component {
                           checked={this.state?.tabs?.privateChat}
                           onChange={(checked) =>
                             this.setState(
-                              { tabs: { ...this.state.tabs, privateChat: checked } },
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  privateChat: checked,
+                                },
+                              },
                               async () => await this.upsertTabs()
                             )
                           }
@@ -1078,7 +1325,12 @@ class General extends Component {
                           checked={this.state?.tabs?.attendees}
                           onChange={(checked) =>
                             this.setState(
-                              { tabs: { ...this.state.tabs, attendees: checked } },
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  attendees: checked,
+                                },
+                              },
                               async () => await this.upsertTabs()
                             )
                           }
@@ -1099,11 +1351,14 @@ class General extends Component {
                         <Badge
                           count={
                             this.state.typeEvent === 0 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
+                              <CheckCircleFilled
+                                style={{ fontSize: '25px', color: '#3CC4B9' }}
+                              />
                             ) : (
                               ''
                             )
-                          }>
+                          }
+                        >
                           <div
                             onClick={() => this.changetypeEvent(0)}
                             style={{
@@ -1112,7 +1367,8 @@ class General extends Component {
                               padding: '10px',
                               cursor: 'pointer',
                               minHeight: '170px',
-                            }}>
+                            }}
+                          >
                             <Space direction='vertical'>
                               <Text strong>Evento Público con Registro</Text>
                               <Divider />
@@ -1131,11 +1387,14 @@ class General extends Component {
                         <Badge
                           count={
                             this.state.typeEvent === 1 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
+                              <CheckCircleFilled
+                                style={{ fontSize: '25px', color: '#3CC4B9' }}
+                              />
                             ) : (
                               ''
                             )
-                          }>
+                          }
+                        >
                           <div
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(1)}
@@ -1145,7 +1404,8 @@ class General extends Component {
                               padding: '10px',
                               cursor: 'pointer',
                               minHeight: '170px',
-                            }}>
+                            }}
+                          >
                             <Space direction='vertical'>
                               <Text strong>Evento Público sin Registro</Text>
                               <Divider />
@@ -1154,7 +1414,9 @@ class General extends Component {
                                 <ul>
                                   <li>Quedará como anónimo.</li>
                                   <br />
-                                  <li>No tendrá inicio de sesión ni registro.</li>
+                                  <li>
+                                    No tendrá inicio de sesión ni registro.
+                                  </li>
                                 </ul>
                               </Text>
                             </Space>
@@ -1165,11 +1427,14 @@ class General extends Component {
                         <Badge
                           count={
                             this.state.typeEvent === 2 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
+                              <CheckCircleFilled
+                                style={{ fontSize: '25px', color: '#3CC4B9' }}
+                              />
                             ) : (
                               ''
                             )
-                          }>
+                          }
+                        >
                           <div
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(2)}
@@ -1179,7 +1444,8 @@ class General extends Component {
                               padding: '10px',
                               cursor: 'pointer',
                               minHeight: '170px',
-                            }}>
+                            }}
+                          >
                             <Space direction='vertical'>
                               <Text strong>Evento Privado por invitación</Text>
                               <Divider />
@@ -1202,7 +1468,9 @@ class General extends Component {
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}
-          {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
+          {this.state.fileMsgBanner && (
+            <p className='help is-success'>{this.state.fileMsgBanner}</p>
+          )}
         </Form>
       </React.Fragment>
     );
