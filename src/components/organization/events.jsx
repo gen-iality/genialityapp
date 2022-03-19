@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import Loading from '../loaders/loading';
 import { useHistory } from 'react-router-dom';
-import { getCurrentUser, OrganizationApi } from '../../helpers/request';
+import { OrganizationApi } from '../../helpers/request';
 import { Table, Button, Row, Col } from 'antd';
-import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
 import withContext from '../../context/withContext';
 import Header from '../../antdComponents/Header';
@@ -47,9 +46,7 @@ function OrgEvents(props) {
         pagination={false}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
-            <Col>
-              <ExportExcel columns={columns(goToEvent)} list={eventData} fileName={'eventReport'} />
-            </Col>
+            <Col>{/* <ExportExcel columns={columns(goToEvent)} list={eventData} fileName={'eventReport'} /> */}</Col>
             <Col>
               <Button
                 type='primary'
