@@ -13,7 +13,7 @@ const ContentTypeActivity = ({ options }: propsOptions) => {
         options.length > 0 &&
         options.map((option) => (
           <Col key={'key-' + option.title}>
-            <CardOption title={option.title} description={option?.description} image={option?.image} />
+            <CardOption id={option.key} title={option.title} description={option?.description} image={option?.image} />
           </Col>
         ))}
     </Row>

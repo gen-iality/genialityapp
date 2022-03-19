@@ -1,30 +1,44 @@
+export interface OriginOptions {
+  key: string;
+  title?: string;
+  description?: string;
+  image?: string;
+  addonBefore?: string;
+  subtitle?: string;
+  placeholder?: string;
+}
 export interface ProviderOptions {
   key: string;
-  title: string;
-  description: string;
-  image: string;
+  title?: string;
+  MainTitle?: string;
+  description?: string;
+  image?: string;
+  typeOptions?: OriginOptions[];
+  addonBefore?: string;
+  subtitle?: string;
+  placeholder?: string;
 }
 export interface TypeOptions {
   key: string;
+  MainTitle: string;
   title: string;
   description: string;
   image: string;
-  providerOptions?: ProviderOptions[];
+  typeOptions?: ProviderOptions[] | string;
 }
 
 export interface TypeActivity {
-  id: string;
-  nextView: string;
-  prevView: string;
+  key: string;
   MainTitle: string;
   typeOptions: TypeOptions[];
 }
 
 export interface TypeActivityState {
   openModal: boolean;
-  activityOptions: TypeActivity | any;
+  disableNextButton: boolean;
+  typeOptions: TypeActivity | any;
+  selectedKey: string;
+  previewKey: string;
+  buttonsTextNextOrCreate: string;
+  buttonTextPreviousOrCancel: string;
 }
-
-// export interface TypeActivityData {
-//   [key: string]: TypeActivity;
-// }

@@ -11,28 +11,52 @@ import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActi
 
 const newContentSource = {
   title: 'Titulo principal',
-  addonBefore: <LinkOutlined />, // o la url que se encuentra en el componente
+  addonBefore: '🔗', // o la url que se encuentra en el componente
   subtitle: 'Descripción del contenido',
   placeholder: 'llene el campo',
   icon: <YoutubeOutlined />,
 };
+interface mapContentSource {
+  key: string;
+  addonBefore: string;
+  placeholder: string;
+  subtitle: string;
+}
 
 const ModalStepByStep = () => {
-  const { openModal, closeModal, activityOptions, selectActivitySteps } = useTypeActivity();
-  console.log('🚀 debug ~ =================>', activityOptions, openModal);
+  const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
+  console.log('🚀 TYPE OPTIONS ......', typeOptions);
 
   return (
     <Modal visible={openModal} onCancel={closeModal} centered width={1000} footer={null}>
-      <LayoutTypeActivity title={activityOptions?.MainTitle}>
-        <ContentTypeActivity options={activityOptions.typeOptions} />
+      <LayoutTypeActivity title={typeOptions?.MainTitle}>
+        {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' ? (
+          <ContentTypeActivity options={typeOptions.typeOptions} />
+        ) : null}
         {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
         {/* <LoadingTypeActivity /> */}
-        {/* <ContentSource addonBefore={newContentSource.addonBefore} placeholder={newContentSource.placeholder} icon={newContentSource.icon} subtitle={newContentSource.subtitle} /> */}
-        {/* <ContentInformative
-          title={'Buenas tardes'}
-          description={'Quiero hamburguesas'}
-          image={'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg'}
-        /> */}
+        {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube'
+          ? typeOptions.typeOptions.map((options: mapContentSource) => {
+              if (options.key === typeOptions.key) {
+                return (
+                  <ContentSource
+                    addonBefore={options.addonBefore}
+                    placeholder={options.placeholder}
+                    icon={options.key}
+                    subtitle={options.subtitle}
+                  />
+                );
+              }
+            })
+          : null}
+
+        {typeOptions.key === 'meeting' && (
+          <ContentInformative
+            title={'Buenas tardes'}
+            description={'Quiero hamburguesas'}
+            image={'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg'}
+          />
+        )}
       </LayoutTypeActivity>
     </Modal>
   );

@@ -7,7 +7,7 @@ import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActi
 /* import InitialSVG from './components/svg/InitialSVG'; */
 
 const InitialView = (props: any) => {
-  const { selectActivitySteps } = useTypeActivity();
+  const { toggleActivitySteps } = useTypeActivity();
 
   return (
     <>
@@ -19,7 +19,7 @@ const InitialView = (props: any) => {
           status='info'
           title='Todavía no has definido el tipo de actividad'
           extra={
-            <Button onClick={() => selectActivitySteps('type')} type='primary'>
+            <Button onClick={() => toggleActivitySteps('type')} type='primary'>
               Escoge un tipo de actividad
             </Button>
           }

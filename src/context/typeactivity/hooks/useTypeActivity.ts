@@ -2,12 +2,28 @@ import { useContext } from 'react';
 import { TypeActivityContext } from '../typeActivityContext';
 
 export const useTypeActivity = () => {
-  const { typeActivityState, selectActivitySteps, closeModal } = useContext(TypeActivityContext);
-  const { activityOptions, openModal } = typeActivityState;
+  const { typeActivityState, toggleActivitySteps, selectOption, closeModal } = useContext(TypeActivityContext);
+
+  const {
+    openModal,
+    disableNextButton,
+    typeOptions,
+    selectedKey,
+    previewKey,
+    buttonsTextNextOrCreate,
+    buttonTextPreviousOrCancel,
+  } = typeActivityState;
+  console.log('🚀 debug HOOK =================>', typeActivityState, '<=================');
   return {
     openModal,
+    disableNextButton,
+    typeOptions,
+    toggleActivitySteps,
+    selectOption,
     closeModal,
-    activityOptions,
-    selectActivitySteps,
+    selectedKey,
+    previewKey,
+    buttonsTextNextOrCreate,
+    buttonTextPreviousOrCancel,
   };
 };

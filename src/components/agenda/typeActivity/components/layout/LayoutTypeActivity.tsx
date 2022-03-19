@@ -6,40 +6,36 @@ const { Header, Content, Footer } = Layout;
 
 interface propsOptions {
   title?: string;
-  children: React.ReactChild;
+  children: JSX.Element | JSX.Element[];
 }
 
 const LayoutTypeActivity = ({ title, children }: propsOptions) => {
-  const { closeModal, activityOptions, selectActivitySteps } = useTypeActivity();
-  console.log('🚀 debug ~ LayoutTypeActivity ~ activityOptions', activityOptions);
+  const {
+    closeModal,
+    selectedKey,
+    previewKey,
+    typeOptions,
+    toggleActivitySteps,
+    buttonsTextNextOrCreate,
+    buttonTextPreviousOrCancel,
+    disableNextButton,
+  } = useTypeActivity();
+  console.log('🚀 NEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx', disableNextButton);
+  console.log('🚀 SELECCIONE ESTE kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk', { selectedKey, typeOptions });
 
   const previousOrCancel = () => {
-    if (activityOptions.prevView !== 'initial') {
-      selectActivitySteps(activityOptions.prevView);
-      return;
-    }
-
-    closeModal();
+    console.log('🚀 PREVIEW KEY ', previewKey, '----------------', typeOptions.key);
+    if (previewKey === 'close' || typeOptions.key === 'type') closeModal();
+    if (previewKey === 'type' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
+    if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
   };
 
   const nextOrCreate = () => {
-    if (activityOptions.nextView !== 'create') {
-      selectActivitySteps(activityOptions.nextView);
+    if (selectedKey !== 'initial') {
+      toggleActivitySteps(selectedKey);
       return;
     }
-    console.log('🚀 ***CREAR TRANSMISION***');
-
     closeModal();
-  };
-
-  const buttonsTextRenderValidation = (validate: string) => {
-    if (validate === 'previousOrCancel') {
-      if (activityOptions.prevView === 'initial') return 'Cancelar';
-      if (activityOptions.prevView !== 'initial') return 'Anterior';
-    }
-
-    if (activityOptions.nextView !== 'create') return 'Siguiente';
-    else return 'Crear';
   };
 
   return (
@@ -51,11 +47,11 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
         <Row justify='end' gutter={[8, 8]} /* style={{ backgroundColor: 'red' }} */>
           <Col>
-            <Button onClick={previousOrCancel}>{buttonsTextRenderValidation('previousOrCancel')}</Button>
+            <Button onClick={previousOrCancel}>{buttonTextPreviousOrCancel}</Button>
           </Col>
           <Col>
-            <Button onClick={nextOrCreate} type='primary'>
-              {buttonsTextRenderValidation('nextOrCreate')}
+            <Button disabled={disableNextButton} onClick={nextOrCreate} type='primary'>
+              {buttonsTextNextOrCreate}
             </Button>
           </Col>
         </Row>
