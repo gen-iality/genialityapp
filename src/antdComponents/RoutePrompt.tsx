@@ -120,18 +120,6 @@ export function RouterPrompt({
       closable={true}
       centered
       footer={[
-        <Button key='cancel' onClick={handleCancel} disabled={loadingAndDisablingButtons}>
-          {cancelText ? cancelText : ''}
-        </Button>,
-        <Button
-          key='goBack'
-          type='primary'
-          onClick={() => handleOK(false)}
-          icon={<Logout />}
-          disabled={loadingAndDisablingButtons}>
-          {okText ? okText : ''}
-        </Button>,
-
         save && (
           <Button
             key='link'
@@ -141,10 +129,20 @@ export function RouterPrompt({
             icon={<ContentSave />}
             loading={loadingAndDisablingButtons}
             disabled={loadingAndDisablingButtons}
-            style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}>
+            >
             {okSaveText ? okSaveText : ''}
           </Button>
-        ),
+        ),        
+        <Button
+          key='goBack'
+          onClick={() => handleOK(false)}
+          icon={<Logout />}
+          disabled={loadingAndDisablingButtons}>
+          {okText ? okText : ''}
+        </Button>,
+        <Button key='cancel' onClick={handleCancel} disabled={loadingAndDisablingButtons}>
+          {cancelText ? cancelText : ''}
+        </Button>,
       ]}>
       <Space direction='vertical'>
         {title ? (
