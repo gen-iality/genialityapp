@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Layout, Spin, Row, Image } from 'antd';
 import MenuEvent from './Menus/MenuEvent';
 import { EyeOutlined } from '@ant-design/icons';

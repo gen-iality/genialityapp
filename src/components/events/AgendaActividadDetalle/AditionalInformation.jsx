@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import HelperContext from '../../../context/HelperContext';
 import { useIntl } from 'react-intl';
 import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row } from 'antd';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row, Col } from 'antd';
 import {
   EditOutlined,
@@ -201,7 +201,13 @@ class Product extends Component {
                 return <DragHandle />;
               }}
             />
-            <Column title='Posición' align='center' dataIndex='index' width='80px' render={(data, index) => <div>{data + 1}</div>} />
+            <Column
+              title='Posición'
+              align='center'
+              dataIndex='index'
+              width='80px'
+              render={(data, index) => <div>{data + 1}</div>}
+            />
             <Column
               key='_id'
               title='Imagen'

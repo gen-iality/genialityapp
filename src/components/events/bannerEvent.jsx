@@ -1,4 +1,3 @@
-import React from 'react';
 import Moment from 'moment-timezone';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
@@ -19,26 +18,24 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
         </Col>
       )}
       {styles && styles.show_card_banner && styles.show_card_banner === 'true' && (
-        <HeaderEventInfo title={title} {...props} />       
+        <HeaderEventInfo title={title} {...props} />
       )}
     </div>
   );
 };
 
-function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, type_event}) {
-  
+function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, type_event }) {
   return (
     <div
       className='banner-user-text-container'
       style={{
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        borderRadius:'10px'
+        borderRadius: '10px',
       }}>
       <TweenOne className='banner-user-text'>
         {/* Fecha del evento */}
         <div>
-        
           {dates && dates.length > 0 ? (
             <>
               {dates.map((item, key) => (
@@ -47,16 +44,13 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
             </>
           ) : (
             <>
-           
-              {Moment(dateStart).format('YYYY-MM-DD')==Moment(dateEnd).format('YYYY-MM-DD') ? (
+              {Moment(dateStart).format('YYYY-MM-DD') == Moment(dateEnd).format('YYYY-MM-DD') ? (
                 <span>
                   {Moment(dateStart).format('DD')}
                   {' de '} {Moment(dateEnd).format('MMMM YYYY')}
                 </span>
               ) : (
-                
                 <div>
-                     
                   {Moment(dateStart).format('MMMM') === Moment(dateEnd).format('MMMM') ? (
                     <>
                       <span>Del {Moment(dateStart).format('DD')}</span>

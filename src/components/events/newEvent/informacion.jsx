@@ -1,24 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
+import { useEffect, useState } from 'react';
 import { DateTimePicker } from 'react-widgets';
-import EventImage from '../../../Assets/img/eventimage.png';
-import {
-  Badge,
-  Card,
-  Col,
-  Input,
-  Row,
-  Space,
-  Tooltip,
-  Typography,
-  Form,
-  Modal,
-  List,
-  Button,
-  Spin,
-  Select,
-} from 'antd';
-import { CalendarOutlined, CheckCircleFilled, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Card, Col, Input, Row, Space, Tooltip, Typography, Form, Modal, List, Button, Spin, Select } from 'antd';
+import { CalendarOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../context/newEventContext';

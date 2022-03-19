@@ -1,4 +1,3 @@
-import React from 'react';
 import { List, Col, Spin } from 'antd';
 import { formatDataToString } from '../../../helpers/utils';
 

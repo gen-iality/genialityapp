@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { Avatar, List, Card, Spin, Row, Comment, Tooltip, Typography, Divider } from 'antd';
 import Moment from 'moment';

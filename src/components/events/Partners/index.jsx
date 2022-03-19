@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from 'antd';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import PartnersList from '../PartnersList';

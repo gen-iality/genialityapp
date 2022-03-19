@@ -1,4 +1,3 @@
-import React from 'react';
 import { List, Button, Card, Tag, Result, Row, Col, Typography } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import ClipboardTextOff from '@2fd/ant-design-icons/lib/ClipboardTextOff';

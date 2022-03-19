@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
 import { injectIntl } from 'react-intl';
 
@@ -14,7 +14,7 @@ class UserLoginWithEmailPass extends Component {
     const { handleLoginEmailPassword, onFinishFailed, errorLogin, loading, handleOpenRecoveryPass, intl } = this.props;
     return (
       <Card title={intl.formatMessage({ id: 'login.title' })}>
-        <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout="vertical">
+        <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout='vertical'>
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
@@ -37,7 +37,7 @@ class UserLoginWithEmailPass extends Component {
                 name='password'
                 rules={[
                   {
-                    required:true,
+                    required: true,
                     message: intl.formatMessage({ id: 'form.field.required' }),
                   },
                 ]}>

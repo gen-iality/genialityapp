@@ -1,4 +1,3 @@
-import React from 'react';
 import ImgInput from '../../shared/imageInput';
 import { Row, Col, Switch, message } from 'antd';
 import { Actions } from '../../../helpers/request';

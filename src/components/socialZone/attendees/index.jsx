@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { HelperContext } from '../../../context/HelperContext';

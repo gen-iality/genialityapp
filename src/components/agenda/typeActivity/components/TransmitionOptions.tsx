@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Card, Button, Space, Typography } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
 

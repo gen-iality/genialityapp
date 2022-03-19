@@ -1,4 +1,3 @@
-import React from 'react';
 import BannerEvent from '../bannerEvent';
 import { Link } from 'react-router-dom';
 import { UseEventContext } from '../../../context/eventContext';

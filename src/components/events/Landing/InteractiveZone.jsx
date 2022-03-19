@@ -1,4 +1,3 @@
-import React from 'react';
 import { Layout, Drawer, Button, Col, Row, Badge, notification, message } from 'antd';
 import { MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons';
 import SocialZone from '../../socialZone/socialZone';

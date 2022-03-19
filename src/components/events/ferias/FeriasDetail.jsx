@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Tabs, Row, Col, Card, Image, Typography, Space } from 'antd';
 import FeriasBanner from './feriaBanner.jsx';
 import Information from './information.jsx';

@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Modal } from 'antd';
 import LayoutTypeActivity from './components/layout/LayoutTypeActivity';
 import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity';
@@ -37,17 +37,17 @@ const ModalStepByStep = () => {
         {/* <LoadingTypeActivity /> */}
         {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
-              if (options.key === typeOptions.key) {
-                return (
-                  <ContentSource
-                    addonBefore={options.addonBefore}
-                    placeholder={options.placeholder}
-                    icon={options.key}
-                    subtitle={options.subtitle}
-                  />
-                );
-              }
-            })
+            if (options.key === typeOptions.key) {
+              return (
+                <ContentSource
+                  addonBefore={options.addonBefore}
+                  placeholder={options.placeholder}
+                  icon={options.key}
+                  subtitle={options.subtitle}
+                />
+              );
+            }
+          })
           : null}
 
         {typeOptions.key === 'meeting' && (

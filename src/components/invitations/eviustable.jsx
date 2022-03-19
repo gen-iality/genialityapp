@@ -1,49 +1,42 @@
-import React from 'react';
-import { useTable } from 'react-table'
-
+import { useTable } from 'react-table';
 
 export default function EviusTable({ columns, data }) {
-// Use the useTable Hook to send the columns and data to build the table
-const {
+  // Use the useTable Hook to send the columns and data to build the table
+  const {
     headerGroups, // headerGroups if your table have groupings
     rows, // rows for the table based on the data passed
-    prepareRow,     
+    prepareRow,
   } = useTable({
     columns,
-    data
+    data,
   });
 
-
   return (
-    <table >
-    <thead className="ant-table-thead">
-      {headerGroups.map(headerGroup => (
-        <tr {...headerGroup.getHeaderGroupProps()}>
-          {headerGroup.headers.map(column => (
-            <th className="ant-table-header-column">{column.render('Header')}</th>
-          ))}
-        </tr>
-      ))}
-    </thead>
-    <tbody className="ant-table-tbody">
-      {rows.map(row => {
-        prepareRow(row)
-        return (
-          <tr className="ant-table-row nt-table-row-level-0">
-            {row.cells.map(cell => {
-              return <td>{cell.render('Cell')}</td>
-            })}
+    <table>
+      <thead className='ant-table-thead'>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th className='ant-table-header-column'>{column.render('Header')}</th>
+            ))}
           </tr>
-        )
-      })}
-    </tbody>
-  </table>
+        ))}
+      </thead>
+      <tbody className='ant-table-tbody'>
+        {rows.map((row) => {
+          prepareRow(row);
+          return (
+            <tr className='ant-table-row nt-table-row-level-0'>
+              {row.cells.map((cell) => {
+                return <td>{cell.render('Cell')}</td>;
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
-
-
-    }
-
-
+}
 
 /*  Inicio de metodo para cargar millones de datos trabajo en proceso
 

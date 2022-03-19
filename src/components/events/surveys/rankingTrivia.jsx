@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';

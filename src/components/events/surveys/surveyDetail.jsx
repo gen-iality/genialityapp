@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import { Card, Button } from 'antd';
 import { unsetCurrentSurvey } from '../../../redux/survey/actions';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
@@ -20,7 +19,7 @@ const NewsSectionRoutes = (props) => {
       <Route path={`${path}/new`}>
         <NewCE {...props} />
       </Route>
-     {/*  <Route path={`${path}/addnoticia/:id?`}>
+      {/*  <Route path={`${path}/addnoticia/:id?`}>
         <AddNews {...props} />
       </Route> */}
     </Switch>

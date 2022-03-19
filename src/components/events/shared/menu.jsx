@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Divider, Menu, Row } from 'antd';
@@ -6,7 +6,7 @@ import { EventsApi } from '../../../helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
 import { ApartmentOutlined } from '@ant-design/icons';
-import EviusLogo from '././../../../Assets/img/eviuslogo.png';
+import { imageUtils } from '../../../Utilities/ImageUtils';
 
 const { SubMenu } = Menu;
 
@@ -57,7 +57,7 @@ const MenuConfig = (props) => {
             style={{
               width: '50%',
             }}
-            src={EviusLogo}
+            src={`${imageUtils.LOGOEVIUS}`}
           />
           <Divider style={{ background: 'gray' }} />
         </Row>

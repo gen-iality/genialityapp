@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loading from '../loaders/loading';
 import { useHistory } from 'react-router-dom';
 import { getCurrentUser, OrganizationApi } from '../../helpers/request';

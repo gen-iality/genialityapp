@@ -1,4 +1,3 @@
-import React from 'react';
 import { typeActivityData } from './constants/constants';
 import { TypeActivityState } from './interfaces/interfaces';
 import { TypeActivityAction } from './types/types';

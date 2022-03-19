@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Form, Divider, Button, Table, Input, Space } from 'antd';
 import { EventsApi } from '../../../helpers/request';
 import Highlighter from 'react-highlight-words';

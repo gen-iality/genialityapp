@@ -1,6 +1,5 @@
 import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message, Alert, Spin } from 'antd';
-import React from 'react';
 import { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
 import withContext from '../../../context/withContext';

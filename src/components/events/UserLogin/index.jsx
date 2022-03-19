@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Result, Spin } from 'antd';
 import UserLoginWithEmailPass from '../UserLoginWithEmailPass';
 

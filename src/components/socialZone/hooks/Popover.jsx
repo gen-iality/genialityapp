@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Tooltip, Skeleton, Card, Avatar, notification, Spin } from 'antd';
 import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';

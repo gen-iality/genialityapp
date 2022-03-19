@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Avatar, Card, Space, Timeline, Comment } from 'antd';
 
@@ -23,9 +23,9 @@ const EnVivoSvg = () => (
 const { gotoActivity } = StageActions;
 
 function AgendaActivityItem(props) {
-  const [ isRegistered, setIsRegistered ] = useState(false);
-  const [ related_meetings, setRelatedMeetings ] = useState();
-  const [ meetingState, setMeetingState ] = useState(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [related_meetings, setRelatedMeetings] = useState();
+  const [meetingState, setMeetingState] = useState(null);
   const intl = useIntl();
   const EnvivoIcon = (props) => <Icon component={EnVivoSvg} {...props} />;
   const timeZone = Moment.tz.guess();
@@ -47,7 +47,7 @@ function AgendaActivityItem(props) {
     };
 
     listeningStateMeetingRoom();
-  }, [ registerStatus, item ]);
+  }, [registerStatus, item]);
 
   useEffect(() => {
     console.log('DATE HAS');
@@ -88,18 +88,18 @@ function AgendaActivityItem(props) {
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
             {/* card de agenda en mobile */}
             <Card hoverable className='card-agenda-mobile agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
-              <Row gutter={[ 8, 8 ]}>
+              <Row gutter={[8, 8]}>
                 <Col span={4}>
                   {!props.hasDate && (
                     <div className='agenda-hora'>
                       {item.datetime_start
                         ? Moment.tz(
-                          item.datetime_start,
-                          'YYYY-MM-DD HH:mm',
-                          props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                        )
-                          .tz(timeZone)
-                          .format('hh:mm a')
+                            item.datetime_start,
+                            'YYYY-MM-DD HH:mm',
+                            props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                          )
+                            .tz(timeZone)
+                            .format('hh:mm a')
                         : ''}
                       {item.datetime_start && (
                         <p className='ultrasmall-mobile'>
@@ -133,25 +133,25 @@ function AgendaActivityItem(props) {
                         {meetingState == 'open_meeting_room'
                           ? 'En vivo'
                           : meetingState == 'ended_meeting_room' && item.video
-                            ? 'Grabado'
-                            : meetingState == 'ended_meeting_room'
-                              ? 'Finalizado'
-                              : meetingState == 'closed_meeting_room'
-                                ? 'Por iniciar'
-                                : '     '}
+                          ? 'Grabado'
+                          : meetingState == 'ended_meeting_room'
+                          ? 'Finalizado'
+                          : meetingState == 'closed_meeting_room'
+                          ? 'Por iniciar'
+                          : '     '}
                       </span>
                     </div>
                   )}
                 </Col>
                 <Col span={20} style={{ textAlign: 'left' }}>
                   <Space direction='vertical'>
-                    <Row gutter={[ 10, 10 ]} style={{ textAlign: 'left' }}>
+                    <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
                       <Col span={24}>
                         <div className='tituloM'>{item.name}.</div>
                         <span className='lugarM'>{item && item.space && item.space.name}</span>
                       </Col>
                     </Row>
-                    <Row gutter={[ 4, 4 ]}>
+                    <Row gutter={[4, 4]}>
                       {item.hosts.length > 0 &&
                         (item.hosts.length < 4 ? (
                           <>
@@ -198,7 +198,7 @@ function AgendaActivityItem(props) {
           <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
             {/* card de la genda en desktop */}
             <Card hoverable className='card-agenda-desktop agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
-              <Row gutter={[ 8, 8 ]}>
+              <Row gutter={[8, 8]}>
                 <Col md={4} lg={4} xl={4}>
                   <div className='agenda-hora'>
                     {!props.hasDate && item.datetime_end && (
@@ -206,12 +206,12 @@ function AgendaActivityItem(props) {
                         <Timeline.Item color='#1cdcb7'>
                           {!props.hasDate && item.datetime_start
                             ? Moment.tz(
-                              item.datetime_start,
-                              'YYYY-MM-DD h:mm',
-                              props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                            )
-                              .tz(timeZone)
-                              .format('h:mm a')
+                                item.datetime_start,
+                                'YYYY-MM-DD h:mm',
+                                props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                              )
+                                .tz(timeZone)
+                                .format('h:mm a')
                             : ''}
                           {!props.hasDate && item.datetime_start && (
                             <p className='ultrasmall'>
@@ -246,12 +246,12 @@ function AgendaActivityItem(props) {
                                 {meetingState == 'open_meeting_room'
                                   ? intl.formatMessage({ id: 'live' })
                                   : meetingState == 'ended_meeting_room' && item.video
-                                    ? intl.formatMessage({ id: 'live.ended.video' })
-                                    : meetingState == 'ended_meeting_room'
-                                      ? intl.formatMessage({ id: 'live.ended' })
-                                      : meetingState == 'closed_meeting_room'
-                                        ? intl.formatMessage({ id: 'live.by_start' })
-                                        : '     '}
+                                  ? intl.formatMessage({ id: 'live.ended.video' })
+                                  : meetingState == 'ended_meeting_room'
+                                  ? intl.formatMessage({ id: 'live.ended' })
+                                  : meetingState == 'closed_meeting_room'
+                                  ? intl.formatMessage({ id: 'live.by_start' })
+                                  : '     '}
                               </p>
                             </div>
                           )}
@@ -287,7 +287,7 @@ function AgendaActivityItem(props) {
                 </Col>
                 <Col md={12} lg={15} xl={15} className='agenda-contenido'>
                   <Space direction='vertical'>
-                    <Row gutter={[ 10, 10 ]}>
+                    <Row gutter={[10, 10]}>
                       <Col span={24} style={{ paddingLeft: '0px' }}>
                         <div className='titulo'>{item.name}.</div>
                         <span className='lugar'>{item && item.space && item.space.name}</span>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Importacion from './importacion';
 import Preview from './preview';
@@ -36,7 +36,6 @@ class ImportUsers extends Component {
     });
 
     try {
-
       /* Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde */
       users = users.map((column) => {
         if (column.key === 'ticket_id') {
@@ -44,9 +43,9 @@ class ImportUsers extends Component {
         }
         return column;
       });
-  
+
       /* console.log('USERS COLUMNS==>', users); */
-  
+
       //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos
       //al componente result que realiza la importación uno a uno usando el api
       Async.waterfall(
@@ -97,7 +96,6 @@ class ImportUsers extends Component {
         content: <>Error cargando la información</>,
       });
     }
-
   };
 
   closeModal = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Card, Col, message, Row, Spin, Switch } from 'antd';
 import { withRouter } from 'react-router';
@@ -18,62 +18,59 @@ const Configuration = (props) => {
       obtenerConfig();
     }
     async function obtenerConfig() {
-    
       let resp = await firestore
         .collection('config')
         .doc(props.eventId)
         .get();
       if (resp.exists) {
-          console.log("respuesta firebase=>",resp.data())
-        let data = resp.data();       
+        console.log('respuesta firebase=>', resp.data());
+        let data = resp.data();
         setCheckSubasta(data.data.habilitar_subasta);
         setMessage(data.data.message);
       }
-      setLoadingData(false)
+      setLoadingData(false);
     }
   }, []);
 
   const goBack = () => props.history.goBack();
-  function onChange(checked) {   
+  function onChange(checked) {
     setCheckSubasta(checked);
   }
   const changeMessage = (e) => {
     setMessage(e);
   };
 
-  const saveConfiguration = async() => { 
-      setLoading(true)     
-      let data={
-        habilitar_subasta:checkSubasta,
-        message:messageF
-      }
-      let resp = await firestore
-      .collection('config')
-      .doc(props.eventId).set({data});
-      setLoading(false)        
-      message.success('Configuración guardada correctamente!');        
+  const saveConfiguration = async () => {
+    setLoading(true);
+    let data = {
+      habilitar_subasta: checkSubasta,
+      message: messageF,
     };
-  
+    let resp = await firestore
+      .collection('config')
+      .doc(props.eventId)
+      .set({ data });
+    setLoading(false);
+    message.success('Configuración guardada correctamente!');
+  };
 
-  return (
-    !loadingData ? <>
-    <Header 
-      title={'Configuración'}
-      back
-      save
-      saveMethod={saveConfiguration}
-    />
-    <Row justify='center' wrap gutter={12}>
-      <Col span={16}>
-        <p>Habilitar puja</p>
-        <Switch checked={checkSubasta} onChange={onChange} />
-        <br /> <br />
-        <p>Mensaje a mostrar al deshabilitar</p>
-        <ReactQuill id={'messageF'} value={messageF} modules={toolbarEditor} onChange={changeMessage} />
-      </Col>
-    </Row>
-     
-    </>:<div style={{textAlign:'center'}}><Spin/></div>
+  return !loadingData ? (
+    <>
+      <Header title={'Configuración'} back save saveMethod={saveConfiguration} />
+      <Row justify='center' wrap gutter={12}>
+        <Col span={16}>
+          <p>Habilitar puja</p>
+          <Switch checked={checkSubasta} onChange={onChange} />
+          <br /> <br />
+          <p>Mensaje a mostrar al deshabilitar</p>
+          <ReactQuill id={'messageF'} value={messageF} modules={toolbarEditor} onChange={changeMessage} />
+        </Col>
+      </Row>
+    </>
+  ) : (
+    <div style={{ textAlign: 'center' }}>
+      <Spin />
+    </div>
   );
 };
 

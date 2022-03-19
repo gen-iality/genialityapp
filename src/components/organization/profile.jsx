@@ -1,5 +1,5 @@
 /*global google*/
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { OrganizationApi, TypesApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { Form, Input, Button, Row, Col, message, Select } from 'antd';

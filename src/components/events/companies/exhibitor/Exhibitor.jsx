@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import htmlParser from 'html-react-parser';
 import { pathOr } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import './Exhibitor.css';

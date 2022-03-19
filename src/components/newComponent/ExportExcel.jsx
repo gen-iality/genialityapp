@@ -1,4 +1,4 @@
-// import React from 'react';
+// ;
 // import ReactExport from 'react-data-export';
 // import { Button } from 'antd';
 // import { DownloadOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@
 
 // const ExportExcel = ( props ) => {
 //   const { columns, list, fileName } = props;
-  
+
 //   return (
 //     <ExcelFile element={<Button type='primary' icon={<DownloadOutlined />}>Exportar</Button>}>
 //       <ExcelSheet data={list} name={fileName} >
@@ -25,12 +25,6 @@
 
 // export default ExportExcel;
 
-import React from 'react'
-
 export const ExportExcel = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  return <div></div>;
+};

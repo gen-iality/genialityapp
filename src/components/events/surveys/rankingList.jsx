@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Divider, List } from 'antd';
 import withContext from '../../../context/withContext';
 import UsersCard from '../../shared/usersCard';

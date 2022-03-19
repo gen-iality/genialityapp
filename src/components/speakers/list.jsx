@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
@@ -49,7 +49,7 @@ function SpeakersList(props) {
       type: 'loading',
       key: 'loading',
       msj: 'Por favor espere...',
-      action: 'show'
+      action: 'show',
     });
     const eventId = props.eventID;
     confirm({
@@ -72,7 +72,7 @@ function SpeakersList(props) {
               msj: 'Se eliminó correctamente al conferencista!',
               action: 'show',
             });
-          } catch(e) {
+          } catch (e) {
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
@@ -153,7 +153,7 @@ function SpeakersList(props) {
           DispatchMessageService({
             type: 'error',
             msj: `Hubo un error intentando borrar el conferencista ${queryData.speakerData.name}, Error tipo: ${err.response.statusText}`,
-            action: 'show'
+            action: 'show',
           });
         }
       },
@@ -164,7 +164,7 @@ function SpeakersList(props) {
           DispatchMessageService({
             type: 'success',
             msj: <>La Posición de los conferencistas ha sido actualizada correctamente!</>,
-            action: 'show'
+            action: 'show',
           });
         } else {
           // queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
@@ -177,7 +177,7 @@ function SpeakersList(props) {
           DispatchMessageService({
             type: 'success',
             msj: `El conferencista  ${queryData.speakerData.name} ha sido eliminado satisfactoriamente`,
-            action: 'show'
+            action: 'show',
           });
           sortAndIndexSpeakers();
         }

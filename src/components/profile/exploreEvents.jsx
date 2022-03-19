@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Card, message, Result, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 

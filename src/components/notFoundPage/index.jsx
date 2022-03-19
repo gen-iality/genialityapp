@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Result, Button } from 'antd';
 

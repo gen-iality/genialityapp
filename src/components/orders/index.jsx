@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { ApiUrl } from "../../helpers/constants";
-import IFrame from "../shared/iFrame";
-import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
+import { Component } from 'react';
+import { ApiUrl } from '../../helpers/constants';
+import IFrame from '../shared/iFrame';
+import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 
 class OrdersEvent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      iframeUrl: "",
+      iframeUrl: '',
     };
   }
 
@@ -27,15 +27,7 @@ class OrdersEvent extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.state.loading ? (
-          <p>Loading...</p>
-        ) : (
-          <IFrame iframeUrl={this.state.iframeUrl} />
-        )}
-      </div>
-    );
+    return <div>{this.state.loading ? <p>Loading...</p> : <IFrame iframeUrl={this.state.iframeUrl} />}</div>;
   }
 }
 

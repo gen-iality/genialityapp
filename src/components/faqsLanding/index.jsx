@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import { Collapse, Col, Row } from 'antd';
 import withContext from '../../context/withContext';

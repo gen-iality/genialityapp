@@ -1,4 +1,3 @@
-import React from 'react';
 import Loading from '../loaders/loading';
 import Datos from '../events/datos';
 import { OrganizationApi } from '../../helpers/request';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom';
 import Loading from '../loaders/loading';
 import { OrganizationApi } from '../../helpers/request';

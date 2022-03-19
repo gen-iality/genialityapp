@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Moment from 'moment';
 import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -248,7 +248,10 @@ class General extends Component {
     } else {
       DispatchMessageService({
         type: 'error',
-        msj: this.props.intl.formatMessage({ id: 'message.error.complete.requerid.data', defaultMessage: 'Hubo un error, por favor completa los datos obligatorios!'}),
+        msj: this.props.intl.formatMessage({
+          id: 'message.error.complete.requerid.data',
+          defaultMessage: 'Hubo un error, por favor completa los datos obligatorios!',
+        }),
         action: 'show',
       });
     }
@@ -411,7 +414,10 @@ class General extends Component {
           .doc(event._id)
           .update(updateData)
           .then(() => {
-            const msg = intl.formatMessage({ id: 'message.success.updated.tabs', defaultMessage: 'Tabs de la zona social actualizados!'});
+            const msg = intl.formatMessage({
+              id: 'message.success.updated.tabs',
+              defaultMessage: 'Tabs de la zona social actualizados!',
+            });
             DispatchMessageService({
               type: 'success',
               msj: msg,
@@ -426,7 +432,10 @@ class General extends Component {
             console.error(err);
             DispatchMessageService({
               type: 'error',
-              msj: intl.formatMessage({id: 'message.error.updated.tabs', defaultMessage: 'Ha ocurrido un error actualizando las tabs de la zona social'}),
+              msj: intl.formatMessage({
+                id: 'message.error.updated.tabs',
+                defaultMessage: 'Ha ocurrido un error actualizando las tabs de la zona social',
+              }),
               action: 'show',
             });
           });
@@ -436,7 +445,10 @@ class General extends Component {
           .doc(event._id)
           .set({ tabs: { ...tabs } })
           .then(() => {
-            const msg = intl.formatMessage({id: 'message.success.initialized.tabs', defaultMessage: 'Tabs de la zona social inicializados'});
+            const msg = intl.formatMessage({
+              id: 'message.success.initialized.tabs',
+              defaultMessage: 'Tabs de la zona social inicializados',
+            });
             DispatchMessageService({
               type: 'success',
               msj: msg,
@@ -451,7 +463,10 @@ class General extends Component {
             console.error(err);
             DispatchMessageService({
               type: 'error',
-              msj: intl.formatMessage({id: 'message.error.updated.tabs', defaultMessage: 'Ha ocurrido un error actualizando las tabs de la zona social'}),
+              msj: intl.formatMessage({
+                id: 'message.error.updated.tabs',
+                defaultMessage: 'Ha ocurrido un error actualizando las tabs de la zona social',
+              }),
               action: 'show',
             });
           });

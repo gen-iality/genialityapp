@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Space, Tooltip } from 'antd';
 import { VideoCameraAddOutlined, UsergroupAddOutlined, CommentOutlined } from '@ant-design/icons';
 import { UseCurrentUser } from '../../../context/userContext';

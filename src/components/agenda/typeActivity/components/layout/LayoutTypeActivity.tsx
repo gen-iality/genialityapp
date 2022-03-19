@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Typography, Layout, Row, Col, Button } from 'antd';
 import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
 

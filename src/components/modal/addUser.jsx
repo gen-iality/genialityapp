@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
 import { Modal, Form, Input, Select, Checkbox, Button } from 'antd';
 

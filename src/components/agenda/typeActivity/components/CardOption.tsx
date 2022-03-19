@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Card, Badge } from 'antd';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 
@@ -14,17 +14,17 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
   const borderStyles: {} =
     id === selectedKey
       ? {
-          borderColor: '#1dddb7ad',
-          borderStyle: 'solid',
-          borderWidth: '4px',
-          borderRadius: '6px',
-        }
+        borderColor: '#1dddb7ad',
+        borderStyle: 'solid',
+        borderWidth: '4px',
+        borderRadius: '6px',
+      }
       : {};
   const badgeStyle: {} =
     id !== selectedKey
       ? {
-          display: 'none',
-        }
+        display: 'none',
+      }
       : {};
 
   return (

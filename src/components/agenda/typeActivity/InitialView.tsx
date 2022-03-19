@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Card, Result, Button } from 'antd';
 import ModalStepByStep from './ModalStepByStep';
 import ManagerView from './ManagerView';

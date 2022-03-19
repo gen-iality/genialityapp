@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Badge, Drawer, Space } from 'antd';
 import { MessageOutlined, PieChartOutlined } from '@ant-design/icons';
 import SocialZone from '../../../socialZone/socialZone';

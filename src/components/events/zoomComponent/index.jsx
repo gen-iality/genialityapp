@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Result, Spin, Row } from 'antd';
 import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';

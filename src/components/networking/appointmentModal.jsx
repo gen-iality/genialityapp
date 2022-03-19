@@ -2,7 +2,7 @@ import { Button, Col, Input, List, Modal, notification, Row, Select, Spin } from
 import moment from 'moment';
 import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
 

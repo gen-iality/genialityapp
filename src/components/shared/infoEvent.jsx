@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { UseEventContext } from '../../context/eventContext';
 import { Button, Divider, PageHeader, Space, Typography } from 'antd';
 import Moment from 'moment';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Row, Typography, Badge, Skeleton, Spin, Space, Divider, Image } from 'antd';
 import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 

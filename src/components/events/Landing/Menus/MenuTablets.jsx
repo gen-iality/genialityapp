@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Drawer, Row, Avatar, Image } from 'antd';
 import { EyeOutlined, MenuOutlined } from '@ant-design/icons';
 import { drawerButton, imageCenter } from '../helpers/csshelpers';

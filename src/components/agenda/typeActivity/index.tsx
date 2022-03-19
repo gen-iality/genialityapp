@@ -1,4 +1,4 @@
-import React from 'react';
+;
 // import withContext from '../../../context/withContext';
 import { TypeActivityProvider } from '../../../context/typeactivity/typeActivityProvider';
 

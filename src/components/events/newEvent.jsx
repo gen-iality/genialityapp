@@ -1,24 +1,18 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import {
-  Actions,
-  OrganizationFuction,
-  UsersApi,
-  AgendaApi,
-  EventsApi,
-} from "../../helpers/request";
-import { host_list } from "../../helpers/constants";
-import { Steps, Button, message, Card, Row, Spin } from "antd";
-import { PictureOutlined, ScheduleOutlined } from "@ant-design/icons";
+import { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '../../helpers/request';
+import { host_list } from '../../helpers/constants';
+import { Steps, Button, message, Card, Row, Spin } from 'antd';
+import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */
-import Informacion from "./newEvent/informacion";
-import Apariencia from "./newEvent/apariencia";
-import Tranmitir from "./newEvent/transmitir";
+import Informacion from './newEvent/informacion';
+import Apariencia from './newEvent/apariencia';
+import Tranmitir from './newEvent/transmitir';
 /*vista de resultado de la creacion de un evento */
-import { cNewEventContext } from "../../context/newEventContext";
-import Service from "../../components/agenda/roomManager/service";
-import { firestore } from "../../helpers/firebase";
-import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
+import { cNewEventContext } from '../../context/newEventContext';
+import Service from '../../components/agenda/roomManager/service';
+import { firestore } from '../../helpers/firebase';
+import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 
 const { Step } = Steps;
 
@@ -31,7 +25,7 @@ class NewEvent extends Component {
     let urlParams = new URLSearchParams(valores);
 
     this.state = {
-      orgId: urlParams.get("orgId"),
+      orgId: urlParams.get('orgId'),
       stepsValid: {
         info: false,
         fields: false,
@@ -40,11 +34,11 @@ class NewEvent extends Component {
       currentUser: null,
       steps: [
         {
-          title: "Información",
+          title: 'Información',
           icon: <ScheduleOutlined />,
         },
         {
-          title: "Apariencia",
+          title: 'Apariencia',
           icon: <PictureOutlined />,
         },
         /* {
@@ -64,12 +58,10 @@ class NewEvent extends Component {
     }
     const valores = window.location.search;
     const urlParams = new URLSearchParams(valores);
-    var orgId = urlParams.get("orgId");
+    var orgId = urlParams.get('orgId');
     if (orgId) {
       let eventNewContext = this.context;
-      let organization = await OrganizationFuction.obtenerDatosOrganizacion(
-        orgId
-      );
+      let organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
       if (organization) {
         organization = { ...organization, id: organization._id };
         eventNewContext.selectedOrganization(organization);
@@ -79,16 +71,11 @@ class NewEvent extends Component {
   }
   obtainContent = (step) => {
     switch (step.title) {
-      case "Información":
-        return (
-          <Informacion
-            orgId={this.state.orgId}
-            currentUser={this.state.currentUser}
-          />
-        );
-      case "Apariencia":
+      case 'Información':
+        return <Informacion orgId={this.state.orgId} currentUser={this.state.currentUser} />;
+      case 'Apariencia':
         return <Apariencia currentUser={this.state.currentUser} />;
-      case "Transmisión":
+      case 'Transmisión':
         return <Tranmitir currentUser={this.state.currentUser} />;
     }
   };
@@ -110,55 +97,53 @@ class NewEvent extends Component {
     if (eventNewContext.selectOrganization) {
       const data = {
         name: eventNewContext.valueInputs.name,
-        address: "",
-        type_event: "onlineEvent",
-        datetime_from: eventNewContext.selectedDateEvent?.from + ":00",
-        datetime_to: eventNewContext.selectedDateEvent?.at + ":00",
+        address: '',
+        type_event: 'onlineEvent',
+        datetime_from: eventNewContext.selectedDateEvent?.from + ':00',
+        datetime_to: eventNewContext.selectedDateEvent?.at + ':00',
         picture: null,
-        venue: "",
-        location: "",
-        visibility: "PUBLIC",
-        description: eventNewContext.valueInputs?.description || "",
+        venue: '',
+        location: '',
+        visibility: 'PUBLIC',
+        description: eventNewContext.valueInputs?.description || '',
         category_ids: [],
-        organizer_id:
-          eventNewContext.selectOrganization.id ||
-          eventNewContext.selectOrganization._id,
-        event_type_id: "5bf47203754e2317e4300b68",
+        organizer_id: eventNewContext.selectOrganization.id || eventNewContext.selectOrganization._id,
+        event_type_id: '5bf47203754e2317e4300b68',
         user_properties: [],
         allow_register: true,
         styles: {
-          buttonColor: "#FFF",
-          banner_color: "#FFF",
-          menu_color: "#FFF",
+          buttonColor: '#FFF',
+          banner_color: '#FFF',
+          menu_color: '#FFF',
           event_image: eventNewContext.imageEvents?.logo || null,
           banner_image: eventNewContext.imageEvents?.portada || null,
           menu_image: null,
-          brandPrimary: "#FFFFFF",
-          brandSuccess: "#FFFFFF",
-          brandInfo: "#FFFFFF",
-          brandDanger: "#FFFFFF",
-          containerBgColor: "#ffffff",
-          brandWarning: "#FFFFFF",
-          toolbarDefaultBg: "#FFFFFF",
-          brandDark: "#FFFFFF",
-          brandLight: "#FFFFFF",
-          textMenu: "#555352",
-          activeText: "#FFFFFF",
-          bgButtonsEvent: "#FFFFFF",
+          brandPrimary: '#FFFFFF',
+          brandSuccess: '#FFFFFF',
+          brandInfo: '#FFFFFF',
+          brandDanger: '#FFFFFF',
+          containerBgColor: '#ffffff',
+          brandWarning: '#FFFFFF',
+          toolbarDefaultBg: '#FFFFFF',
+          brandDark: '#FFFFFF',
+          brandLight: '#FFFFFF',
+          textMenu: '#555352',
+          activeText: '#FFFFFF',
+          bgButtonsEvent: '#FFFFFF',
           banner_image_email: null,
           BackgroundImage: eventNewContext.imageEvents?.imgfondo || null,
           FooterImage: null,
           banner_footer: eventNewContext.imageEvents?.piepagina || null,
           mobile_banner: null,
           banner_footer_email: null,
-          show_banner: "true",
+          show_banner: 'true',
           show_card_banner: false,
           show_inscription: false,
           hideDatesAgenda: true,
           hideDatesAgendaItem: false,
           hideHoursAgenda: false,
           hideBtnDetailAgenda: true,
-          loader_page: "no",
+          loader_page: 'no',
           data_loader_page: null,
           show_title: true,
         },
@@ -166,20 +151,20 @@ class NewEvent extends Component {
       const newMenu = {
         itemsMenu: {
           evento: {
-            name: "evento",
+            name: 'evento',
             position: 1,
-            section: "evento",
-            icon: "CalendarOutlined",
+            section: 'evento',
+            icon: 'CalendarOutlined',
             checked: true,
-            permissions: "public",
+            permissions: 'public',
           },
           agenda: {
-            name: "Mi agenda",
+            name: 'Mi agenda',
             position: null,
-            section: "agenda",
-            icon: "ReadOutlined",
+            section: 'agenda',
+            icon: 'ReadOutlined',
             checked: true,
-            permissions: "public",
+            permissions: 'public',
           },
         },
       };
@@ -197,10 +182,7 @@ class NewEvent extends Component {
             ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
             : newMenu;
           //HABILTAR SECCIONES POR DEFECTO
-          const sections = await Actions.put(
-            `api/events/${result._id}?token=${token}`,
-            sectionsDefault
-          );
+          const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
             //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
@@ -211,8 +193,8 @@ class NewEvent extends Component {
               description: null,
               capacity: 100,
               event_id: result._id,
-              datetime_end: eventNewContext.selectedDateEvent?.at + ":00",
-              datetime_start: eventNewContext.selectedDateEvent?.from + ":00",
+              datetime_end: eventNewContext.selectedDateEvent?.at + ':00',
+              datetime_start: eventNewContext.selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
             //console.log("RESPUESTA AGENDA==>",agenda)
@@ -220,48 +202,41 @@ class NewEvent extends Component {
               if (eventNewContext.typeTransmission == 1) {
                 let sala = await this.createZoomRoom(agenda, result._id);
                 if (sala) {
-                  message.success("Evento creado correctamente..");
-                  alert("ACA");
-                  window.location.replace(
-                    `${window.location.origin}/eventadmin/${result._id}`
-                  );
+                  message.success('Evento creado correctamente..');
+                  alert('ACA');
+                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
-                  message.error("Error al crear sala");
+                  message.error('Error al crear sala');
                 }
               } else {
                 //CREAR TEMPLATE PARA EL EVENTO
                 let template = !eventNewContext.templateId && true;
                 if (eventNewContext.templateId) {
-                  template = await EventsApi.createTemplateEvent(
-                    result._id,
-                    eventNewContext.templateId
-                  );
+                  template = await EventsApi.createTemplateEvent(result._id, eventNewContext.templateId);
                 }
                 if (template) {
                   // console.log("RESPUESTA TEMPLATE==>",template)
-                  message.success("Evento creado correctamente..");
-                  window.location.replace(
-                    `${window.location.origin}/eventadmin/${result._id}`
-                  );
+                  message.success('Evento creado correctamente..');
+                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
-                  message.error("Error al crear evento con su template");
+                  message.error('Error al crear evento con su template');
                 }
               }
             }
           } else {
             //console.log('RESP API==>', result);
-            message.error("Error al crear el evento");
+            message.error('Error al crear el evento');
           }
         } else {
           //console.log('RESP API==>', result);
-          message.error("Error al crear el evento");
+          message.error('Error al crear el evento');
         }
       } catch (error) {
         //console.log(error);
-        message.error("Error al crear el evento");
+        message.error('Error al crear el evento');
       }
     } else {
-      message.error("Seleccione una organización");
+      message.error('Seleccione una organización');
     }
   }
 
@@ -271,7 +246,7 @@ class NewEvent extends Component {
     // Se valida si es el host se selecciona de manera manual o automáticamente
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
     // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
-    const host_field = "host_ids";
+    const host_field = 'host_ids';
     let host_ids = host_list.map((host) => host.host_id);
     const host_value = host_ids;
 
@@ -290,14 +265,14 @@ class NewEvent extends Component {
 
     if (
       Object.keys(response).length > 0 &&
-      typeof response.meeting_id !== "undefined" &&
-      typeof response.zoom_host_id !== "undefined" &&
-      typeof response.zoom_host_name !== "undefined"
+      typeof response.meeting_id !== 'undefined' &&
+      typeof response.zoom_host_id !== 'undefined' &&
+      typeof response.zoom_host_name !== 'undefined'
     ) {
       // const configuration = await service.getConfiguration(event_id, activity._id);
 
       const isPublished = true;
-      const platform = "zoom";
+      const platform = 'zoom';
       const meeting_id = response.meeting_id;
       const roomStatus = true;
       const chat = true;
@@ -317,12 +292,7 @@ class NewEvent extends Component {
       };
       const tabs = { chat, surveys, games, attendees };
 
-      const result = await service.createOrUpdateActivity(
-        event_id,
-        activity._id,
-        roomInfo,
-        tabs
-      );
+      const result = await service.createOrUpdateActivity(event_id, activity._id, roomInfo, tabs);
       if (result) {
         return true;
       } else {
@@ -352,15 +322,15 @@ class NewEvent extends Component {
       case 0:
         if (
           eventNewContext.validateField([
-            { name: "name", required: true, length: 4 },
+            { name: 'name', required: true, length: 4 },
             {
-              name: "description",
+              name: 'description',
               required: eventNewContext.addDescription,
               length: 9,
             },
           ])
         ) {
-          message.error("Error en los campos..");
+          message.error('Error en los campos..');
         } else {
           this.nextPage();
         }
@@ -394,59 +364,42 @@ class NewEvent extends Component {
     const { current } = this.state;
     let context = this.context;
     return (
-      <Row justify="center" className="newEvent">
+      <Row justify='center' className='newEvent'>
         {/* Items del paso a paso */}
-        <div className="itemStep">
+        <div className='itemStep'>
           <Steps current={current} responsive>
             {this.state.steps.map((item) => (
               <Step key={item.title} title={item.title} icon={item.icon} />
             ))}
           </Steps>
         </div>
-        <Card
-          className="card-container"
-          bodyStyle={{ borderTop: "25px solid #50D3C9", borderRadius: "5px" }}
-        >
+        <Card className='card-container' bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
           {/* Contenido de cada item del paso a paso */}
-          <Row justify="center" style={{ marginBottom: "8px" }}>
+          <Row justify='center' style={{ marginBottom: '8px' }}>
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           {!this.state.loading && !context.loadingOrganization && (
-            <div className="button-container">
+            <div className='button-container'>
               {current > 0 && (
-                <Button
-                  className="button"
-                  size="large"
-                  onClick={() => this.prev()}
-                >
+                <Button className='button' size='large' onClick={() => this.prev()}>
                   Anterior
                 </Button>
               )}
               {current < this.state.steps.length - 1 && (
-                <Button
-                  className="button"
-                  type="primary"
-                  size="large"
-                  onClick={() => this.next()}
-                >
+                <Button className='button' type='primary' size='large' onClick={() => this.next()}>
                   Siguiente
                 </Button>
               )}
               {current === this.state.steps.length - 1 && (
-                <Button
-                  className="button"
-                  type="primary"
-                  size="large"
-                  onClick={() => this.saveEvent()}
-                >
+                <Button className='button' type='primary' size='large' onClick={() => this.saveEvent()}>
                   Crear evento
                 </Button>
               )}
             </div>
           )}
           {(this.state.loading || context.loadingOrganization) && (
-            <Row justify="center">
+            <Row justify='center'>
               Espere.. <Spin />
             </Row>
           )}
