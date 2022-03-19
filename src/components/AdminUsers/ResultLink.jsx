@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Result, Button, Typography, Grid } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import logo from '../../logo.svg';
 import { firestore } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
+import { imageUtils } from '../../Utilities/ImageUtils';
 
 const { useBreakpoint } = Grid;
 
@@ -46,7 +46,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
             bottom: `${screens.xs ? '4%' : '6%'}`,
             // right: `${screens.xs ? '10%' : '22%'}`,
           }}
-          src={logo}
+          src={imageUtils.LogoSvg}
           alt='logo'
         />
         <Result
