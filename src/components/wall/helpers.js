@@ -1,5 +1,5 @@
 import { firestore, fireStorage } from '../../helpers/firebase';
-import { message } from 'antd';
+import { DispatchMessageService } from '../../context/MessageService';
 
 export const saveFirebase = {
   async savePost(data, eventId) {
@@ -26,7 +26,11 @@ export const saveFirebase = {
 
       return post;
     } catch (e) {
-      message.warning('Los datos necesarios no se han registrado, por favor intenta de nuevo');
+      DispatchMessageService({
+        type: 'warning',
+        msj: 'Los datos necesarios no se han registrado, por favor intenta de nuevo',
+        action: 'show',
+      });
     }
   },
 
@@ -139,7 +143,11 @@ export const saveFirebase = {
       }
       return true;
     } catch (e) {
-      message.warning('La información aun no ha sido eliminada, por favor intenta de nuevo');
+      DispatchMessageService({
+        type: 'warning',
+        msj: 'La información aun no ha sido eliminada, por favor intenta de nuevo',
+        action: 'show',
+      });
     }
 
     return true;

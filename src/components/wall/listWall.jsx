@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react';
-import { Avatar, Button, message, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image, Tooltip } from 'antd';
+import { Avatar, Button, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image, Tooltip } from 'antd';
 import TimeStamp from 'react-timestamp';
 import { MessageOutlined, LikeOutlined, DeleteOutlined, LikeFilled } from '@ant-design/icons';
 import CommentEditor from './commentEditor';
@@ -10,6 +10,7 @@ import withContext from '../../context/withContext';
 import Moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 import { WallContextProvider } from '../../context/WallContext';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
@@ -43,7 +44,11 @@ class WallList extends Component {
   innerCreateComment = async (post, comment) => {
     await this.setState({ commenting: post.id });
     await this.setState({ commenting: null });
-    message.success('Comentario creado.');
+    DispatchMessageService({
+      type: 'success',
+      msj: 'Comentario creado.',
+      action: 'show',
+    });
     const dataPost = await saveFirebase.createComment(
       post.id,
       this.props.cEvent.value._id,
@@ -80,7 +85,11 @@ class WallList extends Component {
     const dataPostOld = this.state.dataPost;
     await saveFirebase.deletePost(postId, eventId);
     await this.setState({ deleting: null });
-    message.success('Publicación eliminada.');
+    DispatchMessageService({
+      type: 'success',
+      msj: 'Publicación eliminada.',
+      action: 'show',
+    });
     const dataPost = dataPostOld.filter((item) => item.id !== postId); //crea un nuevo array de objetos sin el post eliminado
     this.setState({ dataPost }); // asigan el nuevo array al estado para que se actualice el componente
   };

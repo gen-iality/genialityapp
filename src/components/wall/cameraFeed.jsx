@@ -1,7 +1,8 @@
 import { Component } from 'react';
 //custom
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const imageWidh = 1280;
 const imageheigh = 960;
@@ -62,7 +63,11 @@ class CameraFeed extends Component {
     this.canvas.toBlob(sendFile);
     let image = this.canvas.toDataURL();
     this.setState({ image, hidden: false, hiddeVideo: true });
-    message.success('Imagen Salvada');
+    DispatchMessageService({
+      type: 'success',
+      msj: 'Imagen Salvada',
+      action: 'show',
+    });
 
     //Detiene el stream del video
     this.videoPlayer.srcObject = null;
@@ -73,7 +78,11 @@ class CameraFeed extends Component {
   async clearImage() {
     await this.setState({ hidden: true, image: '' });
 
-    message.error('Imagen Eliminada');
+    DispatchMessageService({
+      type: 'error',
+      msj: 'Imagen Eliminada',
+      action: 'show',
+    });
   }
 
   async renderingCode() {
