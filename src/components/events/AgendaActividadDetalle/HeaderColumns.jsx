@@ -1,4 +1,4 @@
-import { Button, Col, message, Modal, Row, Spin } from 'antd';
+import { Button, Col, Modal, Row, Spin } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import HelperContext from '../../../context/HelperContext';
@@ -20,6 +20,7 @@ import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventUserContext } from '../../../context/eventUserContext';
 import { imageUtils } from '../../../Utilities/ImageUtils';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useContext(HelperContext);
@@ -94,7 +95,11 @@ const HeaderColumns = (props) => {
       //REMOVER O CANCELAR REQUEST
       await removeRequest(refActivity, cEventUSer.value?._id);
     } else {
-      message.error('Error al enviar solicitud');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error al enviar solicitud',
+        action: 'show',
+      });
     }
     setLoading(false);
   };

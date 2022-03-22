@@ -3,9 +3,10 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { ChromePicker } from 'react-color';
 import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { Row, Col, Form, Input, message, Modal } from 'antd';
+import { Row, Col, Form, Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -44,10 +45,11 @@ const AgendaTypeCatCE = (props) => {
   };
 
   const onSubmit = async () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras se guarda la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la información..',
+      action: 'show'
     });
 
     if (subject === 'addcategorias' || subject === 'editcategorias') {
@@ -63,10 +65,14 @@ const AgendaTypeCatCE = (props) => {
           await apiURL.create(eventID, categoryValues);
         }
 
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente!</>,
+          msj: 'Información guardada correctamente!',
+          action: 'show',
         });
         history.push(
           `${props.matchUrl}/${
@@ -77,10 +83,14 @@ const AgendaTypeCatCE = (props) => {
         );
       }
     } catch (e) {
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'error',
-        content: handleRequestError(e).message,
+        msj: handleRequestError(e).message,
+        action: 'show',
       });
     }
   };
@@ -94,10 +104,11 @@ const AgendaTypeCatCE = (props) => {
   };
 
   const onRemoveId = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     if (locationState.edit) {
       confirm({
@@ -111,10 +122,14 @@ const AgendaTypeCatCE = (props) => {
           const onHandlerRemove = async () => {
             try {
               await apiURL.deleteOne(locationState.edit, eventID);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               history.push(
                 `${props.matchUrl}/${
@@ -124,10 +139,14 @@ const AgendaTypeCatCE = (props) => {
                 }`
               );
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };

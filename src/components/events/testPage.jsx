@@ -4,6 +4,7 @@ import API from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import { FormattedMessage } from 'react-intl';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 class Test extends Component {
   constructor(props) {
@@ -30,7 +31,11 @@ class Test extends Component {
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {
-          message.error('Usuario no inscrito a este evento, contacte al administrador');
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Usuario no inscrito a este evento, contacte al administrador',
+            action: 'show',
+          });
 
           this.setState({ currentUser: false });
           return;
@@ -49,13 +54,20 @@ class Test extends Component {
             })
             .then(() => {
               // Disminuye el contador si la actualizacion en la base de datos se realiza
-
-              message.success('Usuario Chequeado');
+              DispatchMessageService({
+                type: 'success',
+                msj: 'Usuario Chequeado',
+                action: 'show',
+              });
               this.setState({ usuarioRegistrado: true });
             })
             .catch((error) => {
               console.error('Error updating document: ', error);
-              message.error(<FormattedMessage id='toast.error' defaultMessage='Error :(' />);
+              DispatchMessageService({
+                type: 'error',
+                msj: <FormattedMessage id='toast.error' defaultMessage='Error :(' />,
+                action: 'show',
+              });
             });
         });
       })

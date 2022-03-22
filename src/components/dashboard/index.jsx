@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { ApiUrl } from '../../helpers/constants';
-import { Tooltip, Button, Card, Col, message, Row, Statistic, Table, Spin, Typography } from 'antd';
+import { Tooltip, Button, Card, Col, Row, Statistic, Table, Spin, Typography } from 'antd';
 import {
   EyeOutlined,
   FieldTimeOutlined,
@@ -30,6 +30,7 @@ import Moment from 'moment';
 import { utils, writeFileXLSX } from 'xlsx';
 import API from '../../helpers/request';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 // const [google, setGoogle] = useState(null)
 
@@ -143,7 +144,11 @@ class DashboardEvent extends Component {
       utils.book_append_sheet(wb, ws, `${namesheet}`);
       writeFileXLSX(wb, `${name}_${this.props.eventId}_${Moment().format('DDMMYY')}.xls`);
     } else {
-      message.error('No existen datos que exportar');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'No existen datos que exportar',
+        action: 'show',
+      });
     }
   };
   async fetchDataMails() {
