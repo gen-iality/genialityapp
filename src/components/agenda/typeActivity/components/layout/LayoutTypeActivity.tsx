@@ -1,4 +1,3 @@
-;
 import { Typography, Layout, Row, Col, Button } from 'antd';
 import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
 
@@ -20,8 +19,6 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
     buttonTextPreviousOrCancel,
     disableNextButton,
   } = useTypeActivity();
-  console.log('🚀 NEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx', disableNextButton);
-  console.log('🚀 SELECCIONE ESTE kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk', { selectedKey, typeOptions });
 
   const previousOrCancel = () => {
     console.log('🚀 PREVIEW KEY ', previewKey, '----------------', typeOptions.key);

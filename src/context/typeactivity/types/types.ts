@@ -6,13 +6,18 @@ export type TypeActivityAction =
   | { type: 'toggleLiveBroadcast'; payload: { id: string } }
   | { type: 'toggleMeeting'; payload: { id: string } }
   | { type: 'toggleVideo'; payload: { id: string } }
+  | { type: 'toggleCargarvideo'; payload: { id: string } }
+  | { type: 'toggleUrl'; payload: { id: string } }
   | { type: 'toggleEviusStreaming'; payload: { id: string } }
   | { type: 'toggleVimeo'; payload: { id: string } }
   | { type: 'toggleYouTube'; payload: { id: string } }
+  | { type: 'toggleFinish'; payload: { id: string } }
   | { type: 'toggleCloseModal'; payload: boolean }
   | { type: 'selectLiveBroadcast'; payload: { id: string } }
   | { type: 'selectMeeting'; payload: { id: string } }
   | { type: 'selectVideo'; payload: { id: string } }
+  | { type: 'selectCargarVideo'; payload: { id: string } }
+  | { type: 'selectUrl'; payload: { id: string } }
   | { type: 'selectEviusStreaming'; payload: { id: string } }
   | { type: 'selectVimeo'; payload: { id: string } }
   | { type: 'selectYouTube'; payload: { id: string } }

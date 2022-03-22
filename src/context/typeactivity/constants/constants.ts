@@ -1,10 +1,21 @@
 import { OriginOptions, ProviderOptions, TypeActivity } from '../interfaces/interfaces';
 
 /** data para mostrar en vimeo y youtube */
+const urlVideoTypeOptions: OriginOptions[] = [
+  {
+    key: 'url',
+    title: 'url Icon',
+    image: '',
+    addonBefore: '🔗',
+    subtitle: 'Descripción del contenido',
+    placeholder: 'llene el campo',
+  },
+];
+/** data para mostrar en vimeo y youtube */
 const vimeoAndYotubeType: OriginOptions[] = [
   {
     key: 'vimeo',
-    title: '',
+    title: 'Vimeo Icon',
     image: '',
     addonBefore: '🔗',
     subtitle: 'Descripción del contenido',
@@ -12,7 +23,7 @@ const vimeoAndYotubeType: OriginOptions[] = [
   },
   {
     key: 'youTube',
-    title: '',
+    title: 'youTube Icon',
     image: '',
     addonBefore: '🔗',
     subtitle: 'Descripción del contenido',
@@ -69,6 +80,7 @@ const videoActivity: ProviderOptions[] = [
     key: 'url',
     title: 'Url',
     image: 'https://cdn-icons-png.flaticon.com/512/455/455691.png',
+    typeOptions: urlVideoTypeOptions,
   },
   {
     key: 'cargarvideo',

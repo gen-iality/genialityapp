@@ -36,10 +36,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       // console.log('🚀 STATE', state);
       // console.log('🚀 ACTION', action);
       // console.log('🚀 INITIAL', initialState.typeOptions);
-
-      console.log('🚀 KEY', state.typeOptions.key);
       const selectedToggleLiveBroadcastData = state.typeOptions.typeOptions.find((item: { key: string }) => {
-        console.log('🚀 ITEM', item);
         if (item.key === action.payload.id) return item;
       });
 
@@ -60,9 +57,9 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           openModal: true,
           disableNextButton: true,
           previewKey: state.previewKey,
-          selectedKey: action.payload.id,
+          selectedKey: '',
           buttonsTextNextOrCreate: 'Siguiente',
-          buttonTextPreviousOrCancel: 'Anterior',
+          buttonTextPreviousOrCancel: 'Cancelar',
           typeOptions: initialState.typeOptions,
         };
       } else {
@@ -74,9 +71,9 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           openModal: true,
           disableNextButton: true,
           previewKey: state.previewKey,
-          selectedKey: action.payload.id,
+          selectedKey: '',
           buttonsTextNextOrCreate: 'Siguiente',
-          buttonTextPreviousOrCancel: 'Anterior',
+          buttonTextPreviousOrCancel: 'Cancelar',
           typeOptions: selectedToggleLiveBroadcastData,
         };
       }
@@ -98,7 +95,55 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'toggleVideo':
-      const selectedtoggleVideoData = state.typeOptions.typeOptions.find((item: { key: string }) => {
+      const preValidateState = state.typeOptions?.typeOptions ? state.typeOptions.typeOptions : [];
+      const selectedToggleVideoData = preValidateState.find((item: { key: string }) => {
+        if (item.key === action.payload.id) return item;
+      });
+      console.log(
+        '🚀 debug ~ selectedToggleVideoData ~ selectedToggleVideoData',
+        selectedToggleVideoData,
+        state.typeOptions.key
+      );
+
+      if ((state.typeOptions.key === 'cargarvideo' || state.typeOptions.key === 'url') && !selectedToggleVideoData) {
+        return {
+          ...state,
+          openModal: true,
+          disableNextButton: true,
+          previewKey: state.previewKey,
+          selectedKey: '',
+          buttonsTextNextOrCreate: 'Siguiente',
+          buttonTextPreviousOrCancel: 'Anterior',
+          typeOptions: initialState.typeOptions.typeOptions[2],
+        };
+      }
+
+      if (selectedToggleVideoData) {
+        return {
+          ...state,
+          openModal: true,
+          disableNextButton: true,
+          previewKey: state.previewKey,
+          selectedKey: action.payload.id,
+          buttonsTextNextOrCreate: 'Siguiente',
+          buttonTextPreviousOrCancel: 'Anterior',
+          typeOptions: selectedToggleVideoData,
+        };
+      } else {
+        return {
+          ...state,
+          openModal: true,
+          disableNextButton: true,
+          previewKey: state.previewKey,
+          selectedKey: '',
+          buttonsTextNextOrCreate: 'Siguiente',
+          buttonTextPreviousOrCancel: 'Cancelar',
+          typeOptions: initialState.typeOptions,
+        };
+      }
+
+    case 'toggleCargarvideo':
+      const selectedtToggleCargarvideo = state.typeOptions.typeOptions.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
       });
 
@@ -107,10 +152,27 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         openModal: true,
         disableNextButton: true,
         previewKey: state.previewKey,
-        selectedKey: action.payload.id,
-        buttonsTextNextOrCreate: 'Siguiente',
+        selectedKey: '',
+        buttonsTextNextOrCreate: 'Crear',
         buttonTextPreviousOrCancel: 'Anterior',
-        typeOptions: selectedtoggleVideoData,
+        typeOptions: selectedtToggleCargarvideo,
+      };
+
+    case 'toggleUrl':
+      console.log('🚀 KEYYYYYYYYYYYYYYYYY ', state, state.previewKey);
+      const selectedToggleUrl = state.typeOptions.typeOptions.find((item: { key: string }) => {
+        if (item.key === action.payload.id) return item;
+      });
+
+      return {
+        ...state,
+        openModal: true,
+        disableNextButton: true,
+        previewKey: state.previewKey,
+        selectedKey: '',
+        buttonsTextNextOrCreate: 'Crear',
+        buttonTextPreviousOrCancel: 'Anterior',
+        typeOptions: selectedToggleUrl,
       };
 
     case 'toggleEviusStreaming':
@@ -139,9 +201,9 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           ...state,
           openModal: true,
           disableNextButton: true,
-
           previewKey: 'type',
-          selectedKey: 'liveBroadcast',
+          // selectedKey: 'liveBroadcast',
+          selectedKey: '',
           buttonsTextNextOrCreate: 'Siguiente',
           buttonTextPreviousOrCancel: 'Anterior',
           typeOptions: selectToggleEviusStreaming,
@@ -163,6 +225,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         buttonTextPreviousOrCancel: 'Anterior',
         typeOptions: selectToggleVimeo,
       };
+
     case 'toggleYouTube':
       const selectToggleYouTube = state.typeOptions.typeOptions.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
@@ -178,6 +241,25 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         buttonTextPreviousOrCancel: 'Anterior',
         typeOptions: selectToggleYouTube,
       };
+
+    // case 'toggleFinish':
+    //   console.log('🚀 STATE', state);
+    //   console.log('🚀 ACTION', action);
+    //   console.log('🚀 INITIAL', initialState.typeOptions);
+    //   const selectToggleFinish = state.typeOptions.typeOptions.find((item: { key: string }) => {
+    //     if (item.key === action.payload.id) return item;
+    //   });
+
+    //   return {
+    //     ...state,
+    //     openModal: true,
+    //     disableNextButton: true,
+    //     previewKey: state.previewKey,
+    //     selectedKey: action.payload.id,
+    //     buttonsTextNextOrCreate: 'Crear',
+    //     buttonTextPreviousOrCancel: 'Anterior',
+    //     typeOptions: selectToggleFinish,
+    //   };
 
     case 'toggleCloseModal':
       return {
@@ -215,6 +297,29 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         previewKey: state.typeOptions.key,
         selectedKey: action.payload.id,
         typeOptions: initialState.typeOptions,
+      };
+
+    case 'selectCargarVideo':
+      return {
+        ...state,
+        openModal: true,
+        disableNextButton: false,
+        previewKey: state.typeOptions.key,
+        selectedKey: action.payload.id,
+        typeOptions: state.typeOptions,
+      };
+
+    case 'selectUrl':
+      console.log('🚀 STATE', state);
+      console.log('🚀 ACTION', action);
+      console.log('🚀 INITIAL', initialState.typeOptions);
+      return {
+        ...state,
+        openModal: true,
+        disableNextButton: false,
+        previewKey: state.typeOptions.key,
+        selectedKey: action.payload.id,
+        typeOptions: state.typeOptions,
       };
 
     case 'selectEviusStreaming':

@@ -1,4 +1,3 @@
-;
 import { Modal } from 'antd';
 import LayoutTypeActivity from './components/layout/LayoutTypeActivity';
 import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity';
@@ -20,34 +19,36 @@ interface mapContentSource {
   key: string;
   addonBefore: string;
   placeholder: string;
+  title: string;
   subtitle: string;
 }
 
 const ModalStepByStep = () => {
   const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
-  console.log('🚀 TYPE OPTIONS ......', typeOptions);
+  console.log('🚀 TYPE OPTIONS ......', typeOptions.key);
 
   return (
     <Modal visible={openModal} onCancel={closeModal} centered width={1000} footer={null}>
       <LayoutTypeActivity title={typeOptions?.MainTitle}>
-        {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' ? (
+        {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' && typeOptions.key !== 'url' ? (
           <ContentTypeActivity options={typeOptions.typeOptions} />
         ) : null}
         {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
         {/* <LoadingTypeActivity /> */}
-        {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube'
+        {typeOptions.key === 'cargarvideo' ? <h1>CARGAR VIDEO</h1> : null}
+        {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
-            if (options.key === typeOptions.key) {
-              return (
-                <ContentSource
-                  addonBefore={options.addonBefore}
-                  placeholder={options.placeholder}
-                  icon={options.key}
-                  subtitle={options.subtitle}
-                />
-              );
-            }
-          })
+              if (options.key === typeOptions.key) {
+                return (
+                  <ContentSource
+                    addonBefore={options.addonBefore}
+                    placeholder={options.placeholder}
+                    icon={options.title}
+                    subtitle={options.subtitle}
+                  />
+                );
+              }
+            })
           : null}
 
         {typeOptions.key === 'meeting' && (

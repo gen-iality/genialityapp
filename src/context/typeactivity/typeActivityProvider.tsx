@@ -24,6 +24,12 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'video':
         typeActivityDispatch({ type: 'toggleVideo', payload: { id } });
         break;
+      case 'url':
+        typeActivityDispatch({ type: 'toggleUrl', payload: { id } });
+        break;
+      case 'cargarvideo':
+        typeActivityDispatch({ type: 'toggleCargarvideo', payload: { id } });
+        break;
       case 'eviusStreaming':
         typeActivityDispatch({ type: 'toggleEviusStreaming', payload: { id } });
         break;
@@ -50,6 +56,12 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
       case 'video':
         typeActivityDispatch({ type: 'selectVideo', payload: { id } });
+        break;
+      case 'url':
+        typeActivityDispatch({ type: 'selectUrl', payload: { id } });
+        break;
+      case 'cargarvideo':
+        typeActivityDispatch({ type: 'selectCargarVideo', payload: { id } });
         break;
       case 'eviusStreaming':
         typeActivityDispatch({ type: 'selectEviusStreaming', payload: { id } });

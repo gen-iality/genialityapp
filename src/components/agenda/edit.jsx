@@ -1571,11 +1571,11 @@ class AgendaEdit extends Component {
                   <TabPane tab='Tipo de actividad' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
-                        {/* <TipeOfActivity
+                        <TipeOfActivity
                           eventId={this.props.event._id}
                           activityId={this.state.activity_id}
                           activityName={this.state.name}
-                        /> */}
+                        />
                         <RoomManager
                           event_id={this.props.event._id}
                           activity_id={this.state.activity_id}
