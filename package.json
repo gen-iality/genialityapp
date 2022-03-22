@@ -7,7 +7,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "vite:start": "vite",
-    "vite:build": "vite build"
+    "vite:build": "vite build",
+    "buildStaging": "vite build --mode dev"
   },
   "dependencies": {
     "@2fd/ant-design-icons": "^2.4.1",
