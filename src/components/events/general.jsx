@@ -6,7 +6,6 @@ import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '..
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
-import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';

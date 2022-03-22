@@ -2,7 +2,6 @@ import { Component, Fragment } from 'react';
 import { Redirect, withRouter, Link } from 'react-router-dom';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { DateTimePicker } from 'react-widgets';
 import Select from 'react-select';
 import Creatable from 'react-select';
 import Loading from '../profile/loading';
