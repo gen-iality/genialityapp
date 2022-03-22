@@ -24,7 +24,7 @@ export default defineConfig({
         NODE_ENV: 'development',
         DEBUG: 'true',
       },
-      { loadEnvFiles: false }
+      { loadEnvFiles: true }
     ),
     EnvironmentPlugin(
       {
@@ -41,7 +41,7 @@ export default defineConfig({
         NODE_ENV: 'staging',
         DEBUG: 'true',
       },
-      { loadEnvFiles: false }
+      { loadEnvFiles: true }
     ),
   ],
   css: {
