@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 import { CertsApi, RolAttApi } from '../../helpers/request';

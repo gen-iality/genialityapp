@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
 import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';

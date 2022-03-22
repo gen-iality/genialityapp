@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 class Terms extends Component {
   constructor(props) {
@@ -12,45 +12,46 @@ class Terms extends Component {
         {/* <h1 className=&quot;title&quot;>Términos y Condiciones</h1> */}
         <h1 className='title'> EVIUS - PRIVACY POLICY</h1>
         <p>
-          This is the privacy policy (&quot;Privacy Policy&quot;) that governs how we, Evius Inc. (&quot;Evius,&quot; &quot;we,&quot; &quot;our&quot; or
-          &quot;us&quot;), use Personal Information (as defined below) that we collect, receive and store about individuals and/or
-          companies in connection with the use of: (i) the Evius event management service (&quot;Evius Service&quot;), (ii) the
-          website http://www.Evius.co, and any other website that we operate (each, together with its sub-domains,
-          content and services, a &quot;Site&quot;); and (iii) the Evius web and mobile service application (&quot;App&quot;); and
-          any other services we provide (each individually, and collectively, the &quot;Service&quot;) – all, as we will provide,
-          develop and enhance from time to time. The Evius Service, Sites, App and any additional Services are
-          individually and collectively referred to herein as the &quot;Services.&quot; Please read this policy carefully. By
-          clicking &quot;I Agree&quot; or &quot;Next&quot;, you confirm that you have read, understood and agree to this
-          policy. The use of your personal information under this policy is an integral part of the Services. You are
-          not required by law to provide us your personal information, and therefore providing your information is
-          entirely up to you. However, if you do not provide us the necessary information, we will not be able to
-          provide you with our services. Therefore, if you do not agree to this Privacy Policy, please do not access or
-          otherwise use the Services. We may change this Privacy Policy from time to time, to adapt it to changes in our
-          Services, to the way Evius operates, and to regulatory and technological requirements. We will provide a
-          notice about the updated policy within reasonable time in advance to allow you to review the changes and
-          decide whether you wish to continue using the Service. Our notices will be posted, as applicable, on the Site,
-          and we will also send it to you with an email message. Introduction. We have implemented this Privacy Policy
-          because your privacy, and the privacy of other users, is important to us. This Privacy Policy explains our
-          online information practices and the choices you can make about the way we collect and use your Personal
-          Information in connection with the Services. &quot;Personal Information&quot; means any information that will be used,
+          This is the privacy policy (&quot;Privacy Policy&quot;) that governs how we, Evius Inc. (&quot;Evius,&quot;
+          &quot;we,&quot; &quot;our&quot; or &quot;us&quot;), use Personal Information (as defined below) that we
+          collect, receive and store about individuals and/or companies in connection with the use of: (i) the Evius
+          event management service (&quot;Evius Service&quot;), (ii) the website http://www.Evius.co, and any other
+          website that we operate (each, together with its sub-domains, content and services, a &quot;Site&quot;); and
+          (iii) the Evius web and mobile service application (&quot;App&quot;); and any other services we provide (each
+          individually, and collectively, the &quot;Service&quot;) – all, as we will provide, develop and enhance from
+          time to time. The Evius Service, Sites, App and any additional Services are individually and collectively
+          referred to herein as the &quot;Services.&quot; Please read this policy carefully. By clicking &quot;I
+          Agree&quot; or &quot;Next&quot;, you confirm that you have read, understood and agree to this policy. The use
+          of your personal information under this policy is an integral part of the Services. You are not required by
+          law to provide us your personal information, and therefore providing your information is entirely up to you.
+          However, if you do not provide us the necessary information, we will not be able to provide you with our
+          services. Therefore, if you do not agree to this Privacy Policy, please do not access or otherwise use the
+          Services. We may change this Privacy Policy from time to time, to adapt it to changes in our Services, to the
+          way Evius operates, and to regulatory and technological requirements. We will provide a notice about the
+          updated policy within reasonable time in advance to allow you to review the changes and decide whether you
+          wish to continue using the Service. Our notices will be posted, as applicable, on the Site, and we will also
+          send it to you with an email message. Introduction. We have implemented this Privacy Policy because your
+          privacy, and the privacy of other users, is important to us. This Privacy Policy explains our online
+          information practices and the choices you can make about the way we collect and use your Personal Information
+          in connection with the Services. &quot;Personal Information&quot; means any information that will be used,
           either alone or in combination with other information, to personally identify an individual, including, but
           not limited to, a first and last name, a personal profile, an email address, a home or other physical address,
           or other contact information. Terms of Use. This Privacy Policy forms part of our Evius End User Terms of
           Service and Organizer Terms which can be viewed on the Site and which you accepted prior to using the Service
-          for the first time (collectively, &quot;Terms&quot;). Any capitalized but undefined term in this Privacy Policy will
-          have the meaning given to it in the Terms. What Personal Information We Collect and How We Collect It. We do
-          not currently require you to provide Personal Information in order to have access to general information
-          available on the Services. But, we do receive and/or collect Personal Information from you in the following
-          ways: 3.1. Account.
+          for the first time (collectively, &quot;Terms&quot;). Any capitalized but undefined term in this Privacy
+          Policy will have the meaning given to it in the Terms. What Personal Information We Collect and How We Collect
+          It. We do not currently require you to provide Personal Information in order to have access to general
+          information available on the Services. But, we do receive and/or collect Personal Information from you in the
+          following ways: 3.1. Account.
           <br></br>
-          To use certain Services, you will be required to create an account (&quot;Account&quot;). We offer different options to
-          create an Account, including: Online Registration Form: You may choose to complete and submit an online
-          registration form. You will be asked to provide us with certain mandatory information such as your name and
-          email address, that you will use for your Account. You may choose to provide optional information, as may be
-          available in the online registration form. Third Party Accounts: You may choose to create an Account by
+          To use certain Services, you will be required to create an account (&quot;Account&quot;). We offer different
+          options to create an Account, including: Online Registration Form: You may choose to complete and submit an
+          online registration form. You will be asked to provide us with certain mandatory information such as your name
+          and email address, that you will use for your Account. You may choose to provide optional information, as may
+          be available in the online registration form. Third Party Accounts: You may choose to create an Account by
           clicking on a &quot;connect&quot; or &quot;sign-in&quot; button that we display on the Service for a
-          designated third party website or service (each a &quot;Third Party Account&quot;), including but not limited to,
-          LinkedIn, Facebook or Twitter. Doing so will enable you to link your Service Account and your Third Party
+          designated third party website or service (each a &quot;Third Party Account&quot;), including but not limited
+          to, LinkedIn, Facebook or Twitter. Doing so will enable you to link your Service Account and your Third Party
           Account. If you choose this option, then you will be required to approve the connection as well as the types
           of information (which may include Personal Information) that we will obtain from your Third Party Account and
           the types of activities that we perform in connection with your Third Party Account. Please note that in order
@@ -70,95 +71,96 @@ class Terms extends Component {
           SEXUAL ORIENTATION AND CRIMINAL RECORDS. Evius DISCLAIMS ALL LIABILITY TO ANY USE, MISUSE, UNLAWFUL USE OR
           UNAUTHORIZED USE OF SUCH DATA. Regardless of which method you choose to register your Account, we will send an
           email message to the email address that you have provided to instruct you how to confirm your registration.
-          3.2. &quot;Contact Us&quot; Information If you send us a &quot;Contact Us&quot; request, whether by submitting an online
-          form that we make available or by sending an email to an email address that we display, you will be required
-          to provide us with certain information, such as your name and email address in order to send the message to
-          us. If you wish to contact Evius by regular mail, the updated Evius physical addresses are available
-          at:https://www.Evius.co/contact. 3.3. Share with Friends Service The Services enable you to invite your
-          friends to use our Services by sending them an invitation email message or a text message. You may do so by:
-          (i) using the Services to send or post an invitation message via your Third Party Account; and/or (ii) using
-          the Services to send an invitation email to your friend’s external email address. If you send or post an
+          3.2. &quot;Contact Us&quot; Information If you send us a &quot;Contact Us&quot; request, whether by submitting
+          an online form that we make available or by sending an email to an email address that we display, you will be
+          required to provide us with certain information, such as your name and email address in order to send the
+          message to us. If you wish to contact Evius by regular mail, the updated Evius physical addresses are
+          available at:https://www.Evius.co/contact. 3.3. Share with Friends Service The Services enable you to invite
+          your friends to use our Services by sending them an invitation email message or a text message. You may do so
+          by: (i) using the Services to send or post an invitation message via your Third Party Account; and/or (ii)
+          using the Services to send an invitation email to your friend’s external email address. If you send or post an
           invitation message, we will store Personal Information about the recipient such as their email address or
           their third party website account user name and ID. 3.4. Location Data We provide certain location-based
-          services (&quot;Location Services&quot;) in connection with the Services that are dependent on data related to the
-          geographic location of your mobile device used for the Service (&quot;Location Data&quot;). If you choose to participate
-          in these Location Services, you agree that we will collect or obtain your Location Data. You may use the
-          settings on your mobile device to turn off location-sharing features.
+          services (&quot;Location Services&quot;) in connection with the Services that are dependent on data related to
+          the geographic location of your mobile device used for the Service (&quot;Location Data&quot;). If you choose
+          to participate in these Location Services, you agree that we will collect or obtain your Location Data. You
+          may use the settings on your mobile device to turn off location-sharing features.
         </p>
         {''}
         <br></br>
         <p>
           3.5. Profile Some parts of the Services enable you to build a public profile in connection with your Account
-          (&quot;Public Profile&quot;). Your Public Profile will include your name and other information that you choose to
-          include in your Public Profile, such as your gender and a profile picture, and you can control which such
+          (&quot;Public Profile&quot;). Your Public Profile will include your name and other information that you choose
+          to include in your Public Profile, such as your gender and a profile picture, and you can control which such
           information will appear on your Public Profile. In some cases, even if you do not create a Public Profile, the
           applicable Event Organizer may create a public profile for you, based on the information you provided while
           registering for the Services or event, and publish such public profile amongst the profiles of other attendees
-          of such event (the &quot;Event Community&quot;). If you do not want the Event Organizer to create such a public profile
-          for you and publish it automatically within the Event Community, opt out by visiting your Account settings.
-          PLEASE USE CAUTION WHEN UPLOADING CONTENT TO YOUR PUBLIC PROFILE. THE DATA THAT YOU UPLOAD WILL BE AVAILABLE
-          TO OTHERS. 3.6. Purchases. Our Services include the option to purchase certain products or services from us or
-          from Event Organizers or other third parties products and services. If you choose to make a purchase, we will
-          require sufficient information from you to complete the transaction. Such information includes a credit card
-          number and related account and billing information, invoice-related information, and other data required to
-          process the order. We will use the tools and services of third-party service providers to process transactions
-          on our behalf, in which case you acknowledge and agree to our disclosure and transmission of information
-          required to process the transactions and you agree to review and be bound by the terms of use and privacy
-          policy of said third-party service providers. NOTE: WE DO NOT HOLD, USE OR PROCESS YOUR CREDIT CARD DETAILS.
-          THESE DETAILS ARE PROCESSED BY OUR ACCREDITED THIRD-PARTY SERVICES WHO HOLD APPROPRIATE CERTIFICATIONS
-          (PCI-DSS) TO PROCESS THESE DETAILS LAWFULLY. 3.7. Log Files. We will make use of log files. Log files are
-          files automatically generated by our information systems and record system. The information inside the log
-          files includes internet protocol (IP) addresses, type of browser, Internet Service Provider (ISP), date/time
-          stamp, referring/exit pages, clicked pages and any other information your browser may send to us. We use such
-          information to analyze trends, administer the Services, track users&lsquo; movements in connection with their
-          use of the Services, and gather demographic information. 3.8. Cookies and Other Tracking Technologies. Our
-          Services utilize &quot;cookies&quot; -- anonymous identifiers and other tracking technologies -- in order for us to
-          provide our Services and present you with information that is customized for you. A &quot;cookie&quot; is a small text
-          file that may be used, for example, to collect information about activity on the Services. Certain cookies and
-          other technologies serve to recall Personal Information, such as an IP address, previously indicated by a
-          user. Most browsers allow you to control cookies, including whether or not to accept them and how to remove
-          them. You may set most browsers to notify you if you receive a cookie, or you may choose to block cookies with
-          your browser. NOTE THAT DISABLING COOKIES ON YOUR BROWSER MAY AFFECT YOUR USER EXPERIENCE WITH THE SERVICES.
-          3.9. Mobile Device Data. We collect limited information from your mobile device in order to provide the Evius
-          Service. Such information includes your mobile device type, mobile device ID, and date and time stamps of
-          Services use. In addition, we deploy analytics technologies within the Service to help us gather aggregate
-          statistics. Publicly Available Information. Publicly Available Information. Your Public Profile and any
-          publicly available content that you post on or via the Services (&quot;User Submissions&quot;) will be publicly
-          available to other users of the Services and will also be accessed and used by people off the Services. For
-          instance, if you view another user’s profile or &quot;like&quot; a certain event within the Services, such
-          information can be viewed by others. The notices and tools that we provide on the Services should help inform
-          you which information will be made publicly available. If you publish your contact information in any User
-          Submissions or as part of your Public Profile, you may receive unsolicited messages from other users of the
-          Services or the public. WE ENCOURAGE YOU TO ONLY POST INFORMATION THAT YOU ARE SURE YOU WANT TO BE ACCESSIBLE
-          TO ANYONE. The Way We Use and Share Personal Information If you submit, or we collect, Personal Information
-          through the Services, then we will use such Personal Information in the following ways: 5.1. We will use your
-          Personal Information to provide you with support and assistance in using the Services, and to identify and
-          authenticate your access to the parts of the Services that you are authorized to access. 5.2. We will use your
-          designated email address to respond to a &quot;Contact Us&quot; or administrative request (for example, to change your
-          password). 5.3. If you choose to send your friend an invitation email or message we will use the contact
-          information that you provide, or make available, to automatically send your friend an invitation email or
-          message. Your name and email address may be included in the invitation email or message. 5.4. We will share
-          your Personal Information, and other statistical and analytical information with Event Organizers, for the
-          purpose of providing you with the Services. Event Organizers will use your designated email address to send
-          you updates or news regarding the events you are attending. 5.5. We will transfer your Personal Information to
-          our subsidiaries or affiliated companies for the purpose of storing or processing such information on our
-          behalf. We require that these parties agree to process such information in compliance with our Privacy Policy.
-          5.6. We will share statistical and analytical information with our third-party service providers and partners
-          such as our data hosting providers (&quot;Third-Party Services&quot;) to improve our Services. We also use
-          standard analytics tools of Google Analytics and we will use additional or other analytics tools, from time to
-          time. The privacy practices of these tools are subject to their own privacy policies. The Google Analytics
-          Privacy Policy is available at:http://www.google.co/analytics/learn/privacy.html. 5.7. We will disclose your
-          Personal Information or any information you submitted via the Services if we have a good faith belief that
-          disclosure of such information is helpful or reasonably necessary to: (i) comply with any applicable law,
-          regulation, legal process or governmental request; (ii) enforce our Terms, including investigations of
-          potential violations thereof; (iii) detect, prevent, or otherwise address fraud or security issues; or (iv)
-          protect against harm to the rights, property, or safety of Evius, our users, yourself or the public. 5.8. We
-          will use your Personal Information to provide you with features of the Service related to content and
-          interactions and details about other events, in addition to the event that you have registered to. Choice and
-          Opting Out You may choose not to receive future promotional, advertising or other Services-related emails from
-          us by selecting an unsubscribe link at the bottom of each email that we send. Please note that even if you opt
-          out of receiving the foregoing emails, we will still send you a response to any &quot;Contact Us&quot; request as well
-          as administrative emails (for example, in connection with a password reset request) that are necessary to
+          of such event (the &quot;Event Community&quot;). If you do not want the Event Organizer to create such a
+          public profile for you and publish it automatically within the Event Community, opt out by visiting your
+          Account settings. PLEASE USE CAUTION WHEN UPLOADING CONTENT TO YOUR PUBLIC PROFILE. THE DATA THAT YOU UPLOAD
+          WILL BE AVAILABLE TO OTHERS. 3.6. Purchases. Our Services include the option to purchase certain products or
+          services from us or from Event Organizers or other third parties products and services. If you choose to make
+          a purchase, we will require sufficient information from you to complete the transaction. Such information
+          includes a credit card number and related account and billing information, invoice-related information, and
+          other data required to process the order. We will use the tools and services of third-party service providers
+          to process transactions on our behalf, in which case you acknowledge and agree to our disclosure and
+          transmission of information required to process the transactions and you agree to review and be bound by the
+          terms of use and privacy policy of said third-party service providers. NOTE: WE DO NOT HOLD, USE OR PROCESS
+          YOUR CREDIT CARD DETAILS. THESE DETAILS ARE PROCESSED BY OUR ACCREDITED THIRD-PARTY SERVICES WHO HOLD
+          APPROPRIATE CERTIFICATIONS (PCI-DSS) TO PROCESS THESE DETAILS LAWFULLY. 3.7. Log Files. We will make use of
+          log files. Log files are files automatically generated by our information systems and record system. The
+          information inside the log files includes internet protocol (IP) addresses, type of browser, Internet Service
+          Provider (ISP), date/time stamp, referring/exit pages, clicked pages and any other information your browser
+          may send to us. We use such information to analyze trends, administer the Services, track users&lsquo;
+          movements in connection with their use of the Services, and gather demographic information. 3.8. Cookies and
+          Other Tracking Technologies. Our Services utilize &quot;cookies&quot; -- anonymous identifiers and other
+          tracking technologies -- in order for us to provide our Services and present you with information that is
+          customized for you. A &quot;cookie&quot; is a small text file that may be used, for example, to collect
+          information about activity on the Services. Certain cookies and other technologies serve to recall Personal
+          Information, such as an IP address, previously indicated by a user. Most browsers allow you to control
+          cookies, including whether or not to accept them and how to remove them. You may set most browsers to notify
+          you if you receive a cookie, or you may choose to block cookies with your browser. NOTE THAT DISABLING COOKIES
+          ON YOUR BROWSER MAY AFFECT YOUR USER EXPERIENCE WITH THE SERVICES. 3.9. Mobile Device Data. We collect limited
+          information from your mobile device in order to provide the Evius Service. Such information includes your
+          mobile device type, mobile device ID, and date and time stamps of Services use. In addition, we deploy
+          analytics technologies within the Service to help us gather aggregate statistics. Publicly Available
+          Information. Publicly Available Information. Your Public Profile and any publicly available content that you
+          post on or via the Services (&quot;User Submissions&quot;) will be publicly available to other users of the
+          Services and will also be accessed and used by people off the Services. For instance, if you view another
+          user’s profile or &quot;like&quot; a certain event within the Services, such information can be viewed by
+          others. The notices and tools that we provide on the Services should help inform you which information will be
+          made publicly available. If you publish your contact information in any User Submissions or as part of your
+          Public Profile, you may receive unsolicited messages from other users of the Services or the public. WE
+          ENCOURAGE YOU TO ONLY POST INFORMATION THAT YOU ARE SURE YOU WANT TO BE ACCESSIBLE TO ANYONE. The Way We Use
+          and Share Personal Information If you submit, or we collect, Personal Information through the Services, then
+          we will use such Personal Information in the following ways: 5.1. We will use your Personal Information to
+          provide you with support and assistance in using the Services, and to identify and authenticate your access to
+          the parts of the Services that you are authorized to access. 5.2. We will use your designated email address to
+          respond to a &quot;Contact Us&quot; or administrative request (for example, to change your password). 5.3. If
+          you choose to send your friend an invitation email or message we will use the contact information that you
+          provide, or make available, to automatically send your friend an invitation email or message. Your name and
+          email address may be included in the invitation email or message. 5.4. We will share your Personal
+          Information, and other statistical and analytical information with Event Organizers, for the purpose of
+          providing you with the Services. Event Organizers will use your designated email address to send you updates
+          or news regarding the events you are attending. 5.5. We will transfer your Personal Information to our
+          subsidiaries or affiliated companies for the purpose of storing or processing such information on our behalf.
+          We require that these parties agree to process such information in compliance with our Privacy Policy. 5.6. We
+          will share statistical and analytical information with our third-party service providers and partners such as
+          our data hosting providers (&quot;Third-Party Services&quot;) to improve our Services. We also use standard
+          analytics tools of Google Analytics and we will use additional or other analytics tools, from time to time.
+          The privacy practices of these tools are subject to their own privacy policies. The Google Analytics Privacy
+          Policy is available at:http://www.google.co/analytics/learn/privacy.html. 5.7. We will disclose your Personal
+          Information or any information you submitted via the Services if we have a good faith belief that disclosure
+          of such information is helpful or reasonably necessary to: (i) comply with any applicable law, regulation,
+          legal process or governmental request; (ii) enforce our Terms, including investigations of potential
+          violations thereof; (iii) detect, prevent, or otherwise address fraud or security issues; or (iv) protect
+          against harm to the rights, property, or safety of Evius, our users, yourself or the public. 5.8. We will use
+          your Personal Information to provide you with features of the Service related to content and interactions and
+          details about other events, in addition to the event that you have registered to. Choice and Opting Out You
+          may choose not to receive future promotional, advertising or other Services-related emails from us by
+          selecting an unsubscribe link at the bottom of each email that we send. Please note that even if you opt out
+          of receiving the foregoing emails, we will still send you a response to any &quot;Contact Us&quot; request as
+          well as administrative emails (for example, in connection with a password reset request) that are necessary to
           facilitate your use of the Services. At all times, you may choose whether or not to provide or disclose
           Personal Information. If you choose not to provide mandatory Personal Information, you may still visit parts
           of the Services, but you may be unable to access certain options, programs, offers, and services that involve
@@ -200,15 +202,15 @@ class Terms extends Component {
           purposes. To make such a request, please send an email to support@Evius.co. You can also write to us. Our
           updated office addresses are published on our &quot;Contact Us&quot; page, at:https://www.Evius.co/contact.
           Please note that we are only required to respond to one request per customer each year. Our California Do Not
-          Track Notice. We do not currently respond or take any action with respect to web browser &quot;do not track&quot;
-          signals or other mechanisms that provide consumers the ability to exercise choice regarding the collection of
-          personally identifiable information about an individual consumer’s online activities over time and across
-          third-party web sites or online services. We will allow third parties, such as companies that provide us with
-          analytics tools, to collect personally identifiable information about an individual consumer’s online
-          activities over time and across different websites when a consumer uses the Services. Transfer Data Outside
-          Your Territory We store and process information in various sites throughout the globe, including in sites
-          operated and maintained by cloud-based service providers. Currently, Evius maintains and processes data in
-          sites located in the US and Israel. If you are a resident in a jurisdiction where transfer of your personal
+          Track Notice. We do not currently respond or take any action with respect to web browser &quot;do not
+          track&quot; signals or other mechanisms that provide consumers the ability to exercise choice regarding the
+          collection of personally identifiable information about an individual consumer’s online activities over time
+          and across third-party web sites or online services. We will allow third parties, such as companies that
+          provide us with analytics tools, to collect personally identifiable information about an individual consumer’s
+          online activities over time and across different websites when a consumer uses the Services. Transfer Data
+          Outside Your Territory We store and process information in various sites throughout the globe, including in
+          sites operated and maintained by cloud-based service providers. Currently, Evius maintains and processes data
+          in sites located in the US and Israel. If you are a resident in a jurisdiction where transfer of your personal
           information to another jurisdiction requires your consent, then you hereby provide us your express and
           unambiguous consent to such transfer. Additional Provisions Related to the Processing of Personal Information
           Under EU Laws If EU data protection laws apply to the processing of your personal information under this

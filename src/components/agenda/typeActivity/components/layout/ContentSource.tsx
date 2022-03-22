@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Result, Typography } from 'antd';
 import InputSource from '../InputSource';
 

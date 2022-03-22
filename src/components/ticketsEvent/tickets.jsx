@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { eventTicketsApi } from '../../helpers/request';
 import Moment from 'moment';
 import CMS from '../newComponent/CMS';
@@ -26,13 +26,9 @@ const Tickets = (props) => {
       dataIndex: 'allowed_to_vote',
       ellipsis: true,
       ...getColumnSearchProps('allowed_to_vote', columnsData),
-      render (val, item) {
-        return (
-          <div>
-            {item.allowed_to_vote ? 'Sí' : 'No'}
-          </div>
-        )
-      }
+      render(val, item) {
+        return <div>{item.allowed_to_vote ? 'Sí' : 'No'}</div>;
+      },
     },
     {
       title: 'Fecha de Creación',
@@ -40,19 +36,15 @@ const Tickets = (props) => {
       ellipsis: true,
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
-      render (val, item) {
-        return (
-          <div>
-            {Moment(item.created_at).format('DD/MM/YYYY')}
-          </div>
-        )
-      }
+      render(val, item) {
+        return <div>{Moment(item.created_at).format('DD/MM/YYYY')}</div>;
+      },
     },
   ];
 
   return (
     <Fragment>
-      <CMS 
+      <CMS
         API={eventTicketsApi}
         eventId={props.event._id}
         title={'Tickets'}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import EviusReactQuill from '../shared/eviusReactQuill';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert } from 'antd';
 
 function WithUserEventRegistered(Component) {
@@ -17,7 +17,7 @@ function WithUserEventRegistered(Component) {
           e;
         }
       })();
-    }, [props.usuarioRegistrado]); 
+    }, [props.usuarioRegistrado]);
 
     return (
       <div>

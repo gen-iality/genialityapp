@@ -1,61 +1,18 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Spin } from 'antd';
+import { Fragment, useState, useEffect } from 'react';
+import { Button, Avatar, Row, Col, Tooltip, Typography, Spin } from 'antd';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
-import { FieldTimeOutlined, SettingOutlined } from '@ant-design/icons';
+import { FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import ENVIVO from '../../Assets/img/EnVivo.svg';
 import { UseEventContext } from '../../context/eventContext';
-import { UseUserEvent } from '../../context/eventUserContext';
 import { Link } from 'react-router-dom';
-import * as StageActions from '../../redux/stage/actions';
 import { truncate } from 'lodash-es';
-
-const { gotoActivity } = StageActions;
-const { Title, Text } = Typography;
-
-let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActivity, eventUser }) => {
-  const [infoActivity, setInfoActivity] = useState({});
-
-  useEffect(() => {
-    setInfoActivity(activity);
-  }, [activity, event]);
-
-  switch (infoActivity.habilitar_ingreso) {
-    case 'open_meeting_room':
-      return (
-        <>
-          <Button
-            size='large'
-            type='primary'
-            className='buttonVirtualConference'
-            onClick={() => {
-              if (activity.platform === 'zoomExterno') {
-                zoomExternoHandleOpen(activity, eventUser);
-              } else {
-                setActivity(activity);
-              }
-            }}>
-            <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
-          </Button>
-        </>
-      );
-
-    case 'closed_meeting_room':
-      return <></>;
-
-    case 'ended_meeting_room':
-      return <></>;
-
-    default:
-      return <h1 style={{ fontWeight: '400', fontSize: '45px' }}></h1>;
-  }
-};
+import { imageUtils } from '../../Utilities/ImageUtils';
+const { Text } = Typography;
 
 const VirtualConference = () => {
   let cEvent = UseEventContext();
-  let cEventUser = UseUserEvent();
   let urlactivity = `/landing/${cEvent.value._id}/activity/`;
   let urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
 
@@ -133,7 +90,7 @@ const VirtualConference = () => {
                         style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           <>
-                            <img src={ENVIVO} style={{ height: '30px' }} />
+                            <img src={imageUtils.EnVivo} style={{ height: '30px' }} />
                             <span className='ultrasmall-mobile' style={{ textAlign: 'center' }}>
                               {<FormattedMessage id='live' defaultMessage='En vivo' />}
                             </span>
@@ -174,14 +131,6 @@ const VirtualConference = () => {
                           <a>{item.habilitar_ingreso == 'open_meeting_room' ? ' Ingresar' : ' Ver'}</a>
                         </Text>
                       </div>
-                      {/* <div>
-                        <MeetingConferenceButton
-                          activity={item}
-                          event={cEvent.value}
-                          setActivity={gotoActivity}
-                          eventUser={cEventUser.value}
-                        />
-                      </div> */}
                     </Col>
                     <Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
                       <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>

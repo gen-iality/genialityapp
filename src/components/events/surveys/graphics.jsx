@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import 'chartjs-plugin-datalabels';
 import { Pagination, Card, Button, Row, Col, Typography } from 'antd';

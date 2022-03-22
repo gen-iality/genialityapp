@@ -1,4 +1,4 @@
-// import React, { Component } from 'react';
+//import  { Component } from 'react';
 // import ReactExport from 'react-data-export';
 // import { Button } from 'antd';
 // import { DownloadOutlined } from '@ant-design/icons';
@@ -32,13 +32,6 @@
 //   }
 // }
 
-import React from 'react'
-
 export const exportReport = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
-
+  return <div></div>;
+};

@@ -1,14 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
 import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd';
-import {
-  SearchOutlined,
-  UserOutlined,
-  DownloadOutlined,
-  UploadOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
+import { SearchOutlined, UserOutlined, DownloadOutlined, UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -129,7 +123,7 @@ class eventUsersList extends Component {
       {
         title: 'Actualizado',
         dataIndex: 'updated_at',
-         width: '160px',
+        width: '160px',
         ellipsis: true,
         sorter: (a, b) => a.updated_at - b.updated_at,
         ...this.getColumnSearchProps('updated_at'),
@@ -306,7 +300,9 @@ class eventUsersList extends Component {
           title={() => (
             <Row wrap gutter={[8, 8]} justify='end'>
               <Col>
-                <Button onClick={() => this.goToSendMessage()} >Enviar comunicación a :  {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}</Button>
+                <Button onClick={() => this.goToSendMessage()}>
+                  Enviar comunicación a : {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}
+                </Button>
                 <ModalAdvise visible={this.state.modalVisible} />
               </Col>
               <Col>

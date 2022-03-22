@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Col, Button, Typography, message, Modal, Space } from 'antd';
 import { PhoneOutlined, MailOutlined, CopyOutlined, CheckCircleOutlined } from '@ant-design/icons';
 

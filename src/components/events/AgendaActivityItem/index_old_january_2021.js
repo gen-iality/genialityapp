@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comment } from 'antd';
 import ReactPlayer from 'react-player';

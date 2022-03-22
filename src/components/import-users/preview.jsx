@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import ErrorServe from '../modal/serverError';
 import { Row, Col, Button, Dropdown, Menu, message, Divider } from 'antd';
 import { UploadOutlined, ExclamationCircleOutlined, ReloadOutlined, DownOutlined } from '@ant-design/icons';

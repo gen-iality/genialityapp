@@ -1,5 +1,3 @@
-import React from 'react';
-
 function feriaBanner(props) {
   // const imageBanner = props.imagen
   return (

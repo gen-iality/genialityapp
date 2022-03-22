@@ -1,6 +1,6 @@
 import { CloseCircleFilled } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Grid, Typography, Button } from 'antd';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../context/withContext';
 import { HelperContext } from '../../context/HelperContext';

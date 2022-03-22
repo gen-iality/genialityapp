@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setTopBanner } from '../../../redux/topBanner/actions';

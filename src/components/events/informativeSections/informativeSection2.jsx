@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, Row, Col } from 'antd';
 import Parser from 'html-react-parser';
 import ReactPlayer from 'react-player';

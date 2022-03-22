@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Form, Input, Button, Typography, message } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import axios from 'axios';

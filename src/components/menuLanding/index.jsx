@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber } from 'antd';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';

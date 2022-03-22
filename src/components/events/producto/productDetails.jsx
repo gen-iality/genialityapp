@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Button, Card, Col, Divider, Input, message, Row, Space, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';

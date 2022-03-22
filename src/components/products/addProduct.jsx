@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Row, Input, Form, Col, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
@@ -258,7 +258,7 @@ function AddProduct(props) {
         <Col span={16}>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} >
+              <label style={{ marginTop: '2%' }}>
                 Nombre del producto <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -271,13 +271,7 @@ function AddProduct(props) {
             />
             {error != null && error.name && <small style={{ color: 'red' }}>El nombre del producto es requerido</small>}
           </Form.Item>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }} >
-                Por
-              </label>
-            }
-            rules={[{ required: false }]}>
+          <Form.Item label={<label style={{ marginTop: '2%' }}>Por</label>} rules={[{ required: false }]}>
             <Input
               value={creator}
               placeholder='Nombre del autor, creador o descripción corta'
@@ -288,7 +282,7 @@ function AddProduct(props) {
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} >
+              <label style={{ marginTop: '2%' }}>
                 Descripción <label style={{ color: 'red' }}>*</label>
               </label>
             }>
@@ -298,11 +292,7 @@ function AddProduct(props) {
             )}
           </Form.Item>
           <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }} >
-                Valor
-              </label>
-            }
+            label={<label style={{ marginTop: '2%' }}>Valor</label>}
             rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
             <Input
               value={price}
@@ -312,7 +302,7 @@ function AddProduct(props) {
             />{' '}
           </Form.Item>
 
-          <label style={{ marginTop: '2%' }} >
+          <label style={{ marginTop: '2%' }}>
             Imagen <label style={{ color: 'red' }}>*</label>
           </label>
 
@@ -329,8 +319,7 @@ function AddProduct(props) {
                 onClick={(e) => {
                   e.preventDefault();
                 }}
-                type='primary'
-                >
+                type='primary'>
                 Cambiar foto
               </Button>
             }
@@ -359,9 +348,7 @@ function AddProduct(props) {
           />
           {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
 
-          <label style={{ marginTop: '2%' }} >
-            Imagen opcional
-          </label>
+          <label style={{ marginTop: '2%' }}>Imagen opcional</label>
 
           <ImageInput
             width={1080}

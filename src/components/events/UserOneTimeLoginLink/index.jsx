@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import UserOneTimeLoginLinKForm from '../UserOneTimeLoginLinkForm';
 
 export default class UserOneTimeLoginLink extends Component {
@@ -9,7 +9,7 @@ export default class UserOneTimeLoginLink extends Component {
         title='Si ya estás registrado, digita tu email para iniciar sesión, luego podrás dar clic en episodios y ver el capítulo'
         successMsg='Se ha enviado un ingreso a su correo'
         actionMsg='Solicitar ingreso'
-        {...this.props} 
+        {...this.props}
       />
     );
   }

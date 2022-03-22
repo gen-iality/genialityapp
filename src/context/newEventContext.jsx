@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { message } from 'antd';
 
@@ -16,37 +16,37 @@ export const NewEventProvider = ({ children }) => {
   const [selectedDateEvent, setSelectedDateEvent] = useState();
   const [valueInputs, setValueInputs] = useState({});
   const [errorInputs, setErrorInputs] = useState([]);
-  const [imageEvents,setImageEvents]=useState({});
+  const [imageEvents, setImageEvents] = useState({});
   const [optTransmitir, setOptTransmitir] = useState(false);
   const [organization, setOrganization] = useState(false);
   const [selectOrganization, setSelectOrganization] = useState();
   const [isbyOrganization, setIsbyOrganization] = useState(false);
   const [loadingOrganization, setLoadingOrganization] = useState(false);
-  const [createOrganizationF,setCreateOrganization]=useState(false);
-  const [templateId, setTemplateId]=useState()
+  const [createOrganizationF, setCreateOrganization] = useState(false);
+  const [templateId, setTemplateId] = useState();
 
   const showModal = () => {
     setIsModalVisible(true);
   };
   const visibilityDescription = (value) => {
     setAddDescription(value);
-    setValueInputs({...valueInputs,['description']:''})
+    setValueInputs({ ...valueInputs, ['description']: '' });
   };
 
-  const saveImageEvent=(image,index)=>{      
-    setImageEvents({...imageEvents,[index]:image})
-  }
+  const saveImageEvent = (image, index) => {
+    setImageEvents({ ...imageEvents, [index]: image });
+  };
 
-  const newOrganization=(value)=>{      
-    setCreateOrganization(value)
-  }
+  const newOrganization = (value) => {
+    setCreateOrganization(value);
+  };
 
-  const eventByOrganization=(value)=>{      
-    setIsbyOrganization(value)
-  }
-  const isLoadingOrganization=(value)=>{      
-    setLoadingOrganization(value)
-  }
+  const eventByOrganization = (value) => {
+    setIsbyOrganization(value);
+  };
+  const isLoadingOrganization = (value) => {
+    setLoadingOrganization(value);
+  };
 
   const changeSelectDay = (day) => {
     setSelectedDay(day);
@@ -74,27 +74,27 @@ export const NewEventProvider = ({ children }) => {
         message.warning(item);
       });
     } else {*/
-      setIsModalVisible(false);
-      setSelectedDateEvent({
-        from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
-        at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
-      });
+    setIsModalVisible(false);
+    setSelectedDateEvent({
+      from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
+      at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
+    });
     //};
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  const changeTransmision=(value)=>{
+  const changeTransmision = (value) => {
     setOptTransmitir(value);
-  }
-  const changeOrganization=(value)=>{
+  };
+  const changeOrganization = (value) => {
     setOrganization(value);
-  }
+  };
 
-  const selectedOrganization=(value)=>{
+  const selectedOrganization = (value) => {
     setSelectOrganization(value);
-  }
+  };
 
   const handleDayClick = (day) => {
     setSelectedDay(day);
@@ -147,12 +147,12 @@ export const NewEventProvider = ({ children }) => {
     }
     return false;
   };
- const onChangeCheck=(check)=>{    
-    setValueInputs({...valueInputs,["temaDark"]:check});   
-  }
-  const selectTemplate=(idTemplate)=>{    
-    setTemplateId(idTemplate)
-  }
+  const onChangeCheck = (check) => {
+    setValueInputs({ ...valueInputs, ['temaDark']: check });
+  };
+  const selectTemplate = (idTemplate) => {
+    setTemplateId(idTemplate);
+  };
 
   useEffect(() => {
     setSelectedDateEvent({
@@ -205,7 +205,7 @@ export const NewEventProvider = ({ children }) => {
         createOrganizationF,
         newOrganization,
         templateId,
-        selectTemplate        
+        selectTemplate,
       }}>
       {children}
     </cNewEventContext.Provider>

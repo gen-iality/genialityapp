@@ -1,16 +1,9 @@
-import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Result } from 'antd';
-import EventFinishedimage from '../../notfound.png';
+import { imageUtils } from '../../Utilities/ImageUtils';
 
 function EventFinished() {
-  return (
-    <Result
-      icon={<img width='40%' src={EventFinishedimage} />}
-      title='Este evento ha finalizado'
-      //   subTitle='Lo sentimos, la página que está visitando no existe.'
-    />
-  );
+  return <Result icon={<img width='40%' src={require(imageUtils.NOTFOUND)} />} title='Este evento ha finalizado' />;
 }
 
 export default withRouter(EventFinished);

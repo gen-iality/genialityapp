@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import CameraFeed from './cameraFeed';
 
 //custom

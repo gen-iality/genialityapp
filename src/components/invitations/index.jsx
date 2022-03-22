@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import InvitedUsers from './eventUsersList';
 import CreateMessage from './send';

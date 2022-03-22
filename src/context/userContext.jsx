@@ -1,5 +1,5 @@
 import { app, firestore } from '../helpers/firebase';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useEffect } from 'react';
 import privateInstance from '../helpers/request';
 

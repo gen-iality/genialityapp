@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import { useHistory } from 'react-router-dom';
 import { toolbarEditor } from '../../helpers/constants';
@@ -33,7 +33,7 @@ const Faq = (props) => {
     let data = response.data.find((faqs) => faqs._id === locationState.edit);
 
     setFaq(data);
-    setFaq(data);//este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar
+    setFaq(data); //este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar
     // if (data.content === '<p><br></p>') {
     //   setFaq({ content: '', title: data.title });
     // }
@@ -151,14 +151,13 @@ const Faq = (props) => {
 
       <Row justify='center' wrap gutter={12}>
         <Col>
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El título es requerido' }]}
-          >
+            rules={[{ required: true, message: 'El título es requerido' }]}>
             <Input
               value={faq && faq.title}
               name={'title'}
@@ -166,14 +165,13 @@ const Faq = (props) => {
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
-          <Form.Item 
+          <Form.Item
             label={
               <label style={{ marginTop: '2%' }} className='label'>
                 Contenido <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El contenido es requerido' }]}
-          >
+            rules={[{ required: true, message: 'El contenido es requerido' }]}>
             <ReactQuill
               id='faqContent'
               value={(faq && faq.content) || ''}

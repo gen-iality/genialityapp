@@ -1,5 +1,5 @@
 import { Modal } from 'antd';
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 export default class ModalRelation extends Component {
   constructor(props) {

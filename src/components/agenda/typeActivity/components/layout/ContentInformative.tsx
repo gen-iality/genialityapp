@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Typography, Row, Col } from 'antd';
 
 interface propsOptions {

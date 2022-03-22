@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { UsersApi, EventsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
@@ -15,7 +15,7 @@ import {
   Result,
   Divider,
   Select,
-  Upload
+  Upload,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -24,18 +24,18 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const textLeft = {
-  textAlign: 'left'
+  textAlign: 'left',
 };
 
 const center = {
-  margin: '0 auto'
+  margin: '0 auto',
 };
 
 const validateMessages = {
   required: 'Este campo ${label} es obligatorio para completar el registro.',
   types: {
-    email: '${label} no válido!'
-  }
+    email: '${label} no válido!',
+  },
 };
 
 export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals }) => {

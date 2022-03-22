@@ -1,6 +1,6 @@
 import { notification } from 'antd';
 import { isFunction, isNonEmptyArray } from 'ramda-adjunct';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { handleRequestError } from '../../../helpers/utils';
 import { fireStoreApi } from '../../../helpers/request';
 import CompanyStand from './exhibitor/Exhibitor';

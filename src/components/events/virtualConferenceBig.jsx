@@ -1,11 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Spin, Badge, Space, Grid } from 'antd';
+import { useState, useEffect } from 'react';
+import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Badge, Space, Grid } from 'antd';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
-import { CaretRightOutlined, FieldTimeOutlined, PlayCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import ENVIVO from '../../Assets/img/EnVivo.svg';
 import { UseEventContext } from '../../context/eventContext';
 import { UseUserEvent } from '../../context/eventUserContext';
 import { Link } from 'react-router-dom';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Col, Avatar } from 'antd';
 
 export default function RankingMyScore({ myScore }) {

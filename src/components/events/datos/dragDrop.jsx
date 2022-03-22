@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Reorder, getItemStyle, getQuestionListStyle } from './utils';
 import { DragOutlined } from '@ant-design/icons';
@@ -13,7 +13,7 @@ class DragDrop extends Component {
 
     this.state = {
       user_properties: [],
-      available: true
+      available: true,
     };
     this.onDragEnd = this.onDragEnd.bind(this);
     this.submit = this.submit.bind(this);
@@ -40,7 +40,7 @@ class DragDrop extends Component {
     notification.open({
       message: 'Información salvada',
       description: 'El orden de la recopilacion de datos se ha guardado',
-      onClick: () => {}
+      onClick: () => {},
     });
   }
 
@@ -69,7 +69,7 @@ class DragDrop extends Component {
       user_properties[result.type].answers = answers;
 
       this.setState({
-        user_properties
+        user_properties,
       });
     }
   }

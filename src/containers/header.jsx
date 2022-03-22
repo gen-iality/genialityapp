@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -6,23 +6,8 @@ import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import {
-  Menu,
-  Drawer,
-  Button,
-  Col,
-  Row,
-  Layout,
-  Space,
-  Grid,
-  Dropdown,
-} from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  LockOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 import withContext from '../context/withContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
@@ -98,8 +83,7 @@ const Headers = (props) => {
   async function LoadCurrentUser() {
     let { value, status } = cUser;
 
-    if (!value && status === 'LOADED')
-      return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral);
+    if (!value && status === 'LOADED') return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral);
     if (!value) return;
 
     setdataGeneral({
@@ -118,9 +102,7 @@ const Headers = (props) => {
   }
 
   const WhereHerePath = () => {
-    let containtorganization = window.location.pathname.includes(
-      '/organization'
-    );
+    let containtorganization = window.location.pathname.includes('/organization');
     return containtorganization ? 'organization' : 'landing';
   };
 
@@ -134,8 +116,7 @@ const Headers = (props) => {
           });
 
           cHelper.authModalDispatch({ type: 'showLogin' });
-        }}
-      >
+        }}>
         <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
       </Menu.Item>
 
@@ -147,12 +128,8 @@ const Headers = (props) => {
           });
 
           cHelper.authModalDispatch({ type: 'showRegister' });
-        }}
-      >
-        <FormattedMessage
-          id='registration.button.create'
-          defaultMessage='Sign Up'
-        />
+        }}>
+        <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
       </Menu.Item>
     </Menu>
   );
@@ -222,30 +199,21 @@ const Headers = (props) => {
           height: '45px',
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
-        }}
-      >
+        }}>
         <Menu theme='light' mode='horizontal'>
           <Row justify='space-between' align='middle'>
             <Row className='logo-header' justify='space-between' align='middle'>
               {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
               {dataGeneral?.showAdmin && (
                 <Col span={2} offset={3} data-target='navbarBasicExample'>
-                  <span
-                    className='icon icon-menu'
-                    onClick={() => handleMenuEvent()}
-                  >
+                  <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
                     <Button style={zIndex} onClick={() => showDrawer()}>
-                      {React.createElement(
-                        dataGeneral.showEventMenu
-                          ? MenuUnfoldOutlined
-                          : MenuFoldOutlined,
-                        {
-                          className: 'trigger',
-                          onClick: () => {
-                            console.log('CERRAR');
-                          },
-                        }
-                      )}
+                      {React.createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                        className: 'trigger',
+                        onClick: () => {
+                          console.log('CERRAR');
+                        },
+                      })}
                     </Button>
                   </span>
                 </Col>
@@ -288,8 +256,7 @@ const Headers = (props) => {
                         });
 
                         cHelper.authModalDispatch({ type: 'showLogin' });
-                      }}
-                    >
+                      }}>
                       {intl.formatMessage({
                         id: 'modal.title.login',
                         defaultMessage: 'Iniciar sesión',
@@ -306,9 +273,7 @@ const Headers = (props) => {
                           }}
                           size='large'
                           shape='circle'
-                          icon={
-                            <AccountCircleIcon style={{ fontSize: '28px' }} />
-                          }
+                          icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
                         />
                       </Dropdown>
                     </Space>
@@ -324,8 +289,7 @@ const Headers = (props) => {
                         });
 
                         cHelper.authModalDispatch({ type: 'showRegister' });
-                      }}
-                    >
+                      }}>
                       {intl.formatMessage({
                         id: 'modal.title.register',
                         defaultMessage: 'Registrarme',
@@ -356,9 +320,7 @@ const Headers = (props) => {
                 <UserStatusAndMenu
                   user={dataGeneral.user}
                   menuOpen={dataGeneral.menuOpen}
-                  photo={
-                    'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-                  }
+                  photo={'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
                   name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}
                   eventId={dataGeneral.eventId}
@@ -387,8 +349,7 @@ const Headers = (props) => {
             placement='left'
             closable={true}
             onClose={() => onClose()}
-            visible={dataGeneral.showEventMenu}
-          >
+            visible={dataGeneral.showEventMenu}>
             <MenuOld match={window.location.pathname} />
           </Drawer>
         </div>

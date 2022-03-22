@@ -11,7 +11,7 @@ import withContext from '../../context/withContext';
 import { HelperContext } from '../../context/HelperContext';
 import { app } from '../../helpers/firebase';
 import { useIntl } from 'react-intl';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from '../../context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';

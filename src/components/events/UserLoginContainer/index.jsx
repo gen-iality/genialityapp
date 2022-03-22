@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { app } from '../../../helpers/firebase';
 import UserLogin from '../UserLogin';
 import FormTags from './constants';

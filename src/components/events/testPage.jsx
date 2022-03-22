@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import ComponentTest from './componentTest';
 import API from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';

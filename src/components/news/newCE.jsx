@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Actions, NewsFeed } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { toolbarEditor } from '../../helpers/constants';
@@ -157,7 +157,9 @@ const NewCE = (props) => {
       values.fecha = true;
     }
 
-    if(values && values.title &&
+    if (
+      values &&
+      values.title &&
       values.description_complete &&
       values.description_short &&
       values.picture &&
@@ -256,7 +258,7 @@ const NewCE = (props) => {
         <Col span={16}>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} >
+              <label style={{ marginTop: '2%' }}>
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -271,7 +273,7 @@ const NewCE = (props) => {
 
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} >
+              <label style={{ marginTop: '2%' }}>
                 Subtítulo <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -286,7 +288,7 @@ const NewCE = (props) => {
 
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} >
+              <label style={{ marginTop: '2%' }}>
                 Noticia <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -302,7 +304,7 @@ const NewCE = (props) => {
 
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} >
+              <label style={{ marginTop: '2%' }}>
                 Imagen <label style={{ color: 'red' }}>*</label>
               </label>
             }

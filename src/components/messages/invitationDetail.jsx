@@ -1,9 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { MessageApi } from '../../helpers/request';
 import MessageUser from './messageUser';
 import EmailPrev from './emailPreview';
-import {Row, Col, Tabs, Empty} from 'antd';
+import { Row, Col, Tabs, Empty } from 'antd';
 import Header from '../../antdComponents/Header';
 
 const { TabPane } = Tabs;
@@ -29,24 +29,28 @@ const InvitationDetail = (props) => {
     <Fragment>
       <Header title={'Detalle de la comunicación'} back />
 
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="Reporte Envios" key="1">
+      <Tabs defaultActiveKey='1'>
+        <TabPane tab='Reporte Envios' key='1'>
           <Row justify='center' wrap gutter={[8, 8]}>
             <Col span={22}>
-              {users.length ? <MessageUser key='users' users={users} /> : <Empty description={'Sin data'}/>}
+              {users.length ? <MessageUser key='users' users={users} /> : <Empty description={'Sin data'} />}
             </Col>
           </Row>
         </TabPane>
-        <TabPane tab="Mensaje Enviado" key="2">
+        <TabPane tab='Mensaje Enviado' key='2'>
           <Row justify='center' wrap gutter={[8, 8]}>
             <Col span={22}>
-              {users.length ? <EmailPrev key='email' event={props.event} item={locationState.item} /> : <Empty description={'Sin data'}/>}
+              {users.length ? (
+                <EmailPrev key='email' event={props.event} item={locationState.item} />
+              ) : (
+                <Empty description={'Sin data'} />
+              )}
             </Col>
           </Row>
         </TabPane>
       </Tabs>
     </Fragment>
-  )
-}
+  );
+};
 
 export default withRouter(InvitationDetail);

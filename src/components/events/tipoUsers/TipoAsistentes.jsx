@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import Moment from 'moment';
 import { RolAttApi } from '../../../helpers/request';
 import EvenTable from '../shared/table';
@@ -16,19 +16,15 @@ const TipoAsistentes = (props) => {
       title: 'Fecha de Creación',
       dataIndex: 'created_at',
       width: 160,
-      render (val, item) {
-        return (
-          <div>
-            {Moment(item.created_at).format('DD/MM/YYYY')}
-          </div>
-        )
-      }
+      render(val, item) {
+        return <div>{Moment(item.created_at).format('DD/MM/YYYY')}</div>;
+      },
     },
   ];
 
   return (
     <Fragment>
-      <CMS 
+      <CMS
         API={RolAttApi}
         eventId={props.event._id}
         title={'Tipo de asistentes'}
@@ -44,7 +40,6 @@ const TipoAsistentes = (props) => {
       />
     </Fragment>
   );
-}
-
+};
 
 export default TipoAsistentes;

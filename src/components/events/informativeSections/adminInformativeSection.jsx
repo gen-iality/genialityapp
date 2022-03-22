@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { EventsApi } from '../../../helpers/request';

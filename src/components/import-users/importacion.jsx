@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { utils, writeFileXLSX } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -29,7 +29,6 @@ class Importacion extends Component {
     const reader = new FileReader();
     const self = this;
     try {
-
       // reader.onload = (e) => {
       //   const data = e.target.result;
       //   const workbook = XLSX.read(data, { type: 'binary' });
@@ -37,17 +36,13 @@ class Importacion extends Component {
       //   const sheetObj = workbook.Sheets[sheetName];
       //   if (sheetObj['!ref']) {
       //     var range = XLSX.utils.decode_range(sheetObj['!ref']);
-  
       //     let fields = [];
-  
       //     for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
       //       const keyCell = sheetObj[XLSX.utils.encode_cell({ r: range.s.r, c: colNum })];
       //       let key = keyCell ? keyCell.v.trim() : undefined;
       //       //columna vacia continuamos
       //       if (!key) continue;
-  
       //       fields[colNum] = { key: key, list: [], used: false };
-  
       //       for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
       //         const secondCell = sheetObj[XLSX.utils.encode_cell({ r: rowNum, c: colNum })];
       //         let val = secondCell ? secondCell.v : undefined;
@@ -59,13 +54,11 @@ class Importacion extends Component {
       //       type: 'success',
       //       content: <>Importación de usuarios exitosa</>,
       //     });
-  
       //     //por si no pudimos agregar ningún dato
       //     if (!fields.length) {
       //       this.setState({ errMsg: 'Excel en blanco, o algún problema con el archivo o el formato' });
       //       return;
       //     }
-  
       //     self.props.handleXls(fields);
       //     return;
       //   } else {

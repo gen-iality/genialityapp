@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, Row, Col, message } from 'antd';
 import { firestore, fireRealtime } from '../../../helpers/firebase';
 import SurveyItem from './surveyItem';

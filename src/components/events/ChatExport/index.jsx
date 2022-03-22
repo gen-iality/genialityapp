@@ -1,41 +1,26 @@
-import React, { useEffect, useState } from "react";
-import {
-  Tag,
-  Button,
-  message,
-  Modal,
-  Row,
-  Col,
-  Tooltip,
-  Tabs,
-  Badge,
-} from "antd";
-import {
-  ExclamationCircleOutlined,
-  DeleteOutlined,
-  DownloadOutlined,
-  ReloadOutlined,
-} from "@ant-design/icons";
+import { useEffect, useState } from 'react';
+import { Tag, Button, message, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
+import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { utils, writeFileXLSX } from 'xlsx';
-import moment from "moment";
-import { getColumnSearchProps } from "../../../components/speakers/getColumnSearch";
-import Table from "../../../antdComponents/Table";
-import { handleRequestError } from "../../../helpers/utils";
-import { firestoreeviuschat, firestore } from "../../../helpers/firebase";
-import { UseEventContext } from "../../../context/eventContext";
-import AccountCancel from "@2fd/ant-design-icons/lib/AccountCancel";
-import Account from "@2fd/ant-design-icons/lib/Account";
+import moment from 'moment';
+import { getColumnSearchProps } from '../../../components/speakers/getColumnSearch';
+import Table from '../../../antdComponents/Table';
+import { handleRequestError } from '../../../helpers/utils';
+import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
+import { UseEventContext } from '../../../context/eventContext';
+import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
+import Account from '@2fd/ant-design-icons/lib/Account';
 
 const { TabPane } = Tabs;
 
 function formatAMPM(hours, minutes) {
   // var hours = date.getHours();
   // var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? "pm" : "am";
+  var ampm = hours >= 12 ? 'pm' : 'am';
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  var strTime = hours + ":" + minutes + " " + ampm;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
   return strTime;
 }
 
@@ -47,60 +32,58 @@ const ChatExport = ({ eventId, event }) => {
   let cEvent = UseEventContext();
 
   const renderMensaje = (text, record) => (
-    <Tooltip title={record.text} placement="topLeft">
-      <Tag color="#3895FA">{record.text}</Tag>
+    <Tooltip title={record.text} placement='topLeft'>
+      <Tag color='#3895FA'>{record.text}</Tag>
     </Tooltip>
   );
-  const renderFecha = (val, item) => (
-    <p>{moment(val).format("DD/MM/YYYY HH:mm")}</p>
-  );
+  const renderFecha = (val, item) => <p>{moment(val).format('DD/MM/YYYY HH:mm')}</p>;
   const columns = [
     {
-      title: "Usuario",
-      dataIndex: "name",
-      key: "name",
+      title: 'Usuario',
+      dataIndex: 'name',
+      key: 'name',
       ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps("name", columnsData),
+      ...getColumnSearchProps('name', columnsData),
     },
 
     {
-      title: "Mensaje",
-      key: "text",
-      dataIndex: "text",
+      title: 'Mensaje',
+      key: 'text',
+      dataIndex: 'text',
       ellipsis: true,
       sorter: (a, b) => a.text.localeCompare(b.text),
-      ...getColumnSearchProps("text", columnsData),
+      ...getColumnSearchProps('text', columnsData),
       render: renderMensaje,
     },
     {
-      title: "Fecha",
-      dataIndex: "hora",
-      key: "hora",
+      title: 'Fecha',
+      dataIndex: 'hora',
+      key: 'hora',
       width: 150,
       ellipsis: true,
       sorter: (a, b) => a.hora.localeCompare(b.hora),
-      ...getColumnSearchProps("hora", columnsData),
+      ...getColumnSearchProps('hora', columnsData),
       render: renderFecha,
     },
   ];
 
   const columnsUserBlocked = [
     {
-      title: "Usuario",
-      dataIndex: "name",
-      key: "name",
+      title: 'Usuario',
+      dataIndex: 'name',
+      key: 'name',
       ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps("name", columnsData),
+      ...getColumnSearchProps('name', columnsData),
     },
     {
-      title: "Email",
-      key: "email",
-      dataIndex: "email",
+      title: 'Email',
+      key: 'email',
+      dataIndex: 'email',
       ellipsis: true,
       sorter: (a, b) => a.email.localeCompare(b.email),
-      ...getColumnSearchProps("email", columnsData),
+      ...getColumnSearchProps('email', columnsData),
     },
     /* {
       title: 'Estatus',
@@ -119,12 +102,10 @@ const ChatExport = ({ eventId, event }) => {
   const exportFile = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    datamsjevent = datamsjevent.filter(
-      (item) => item.text.toLowerCase().indexOf("spam") === -1
-    );
+    datamsjevent = datamsjevent.filter((item) => item.text.toLowerCase().indexOf('spam') === -1);
     const ws = utils.json_to_sheet(datamsjevent);
     const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, "Chat");
+    utils.book_append_sheet(wb, ws, 'Chat');
     writeFileXLSX(wb, `chatEVENTO ${event.name}.xls`);
   };
 
@@ -137,13 +118,11 @@ const ChatExport = ({ eventId, event }) => {
     let datamessagesthisevent = [];
 
     firestoreeviuschat
-      .collection("messagesevent_" + eventId)
+      .collection('messagesevent_' + eventId)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let conversion = moment(doc.data().sortByDateAndTime).format(
-            "YYYY-MM-DD HH:mm:ss"
-          );
+          let conversion = moment(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,
@@ -161,12 +140,12 @@ const ChatExport = ({ eventId, event }) => {
 
   function getBlocketdUsers() {
     let list = [];
-    let path = cEvent.value._id + "_event_attendees/";
+    let path = cEvent.value._id + '_event_attendees/';
 
     setLoading(true);
     firestore
       .collection(path)
-      .where("blocked", "==", true)
+      .where('blocked', '==', true)
       .get()
       .then((res) => {
         res.forEach((user) => {
@@ -185,17 +164,17 @@ const ChatExport = ({ eventId, event }) => {
 
   function deleteAllChat() {
     const loading = message.open({
-      key: "loading",
-      type: "loading",
+      key: 'loading',
+      type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
-      content: "Una vez eliminado, no lo podrá recuperar",
-      okText: "Borrar",
-      okType: "danger",
-      cancelText: "Cancelar",
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
       onOk() {
         const onHandlerRemove = async () => {
           try {
@@ -208,7 +187,7 @@ const ChatExport = ({ eventId, event }) => {
           } catch (e) {
             message.destroy(loading.key);
             message.open({
-              type: "error",
+              type: 'error',
               content: handleRequestError(e).message,
             });
           }
@@ -221,31 +200,31 @@ const ChatExport = ({ eventId, event }) => {
   function deleteSingleChat(eventId, chatId) {
     return new Promise((resolve, reject) => {
       firestoreeviuschat
-        .collection("messagesevent_" + eventId)
+        .collection('messagesevent_' + eventId)
         .doc(chatId)
         .delete()
         .then(() => {
-          resolve("Delete chat", chatId);
+          resolve('Delete chat', chatId);
         })
         .catch((error) => {
-          reject("Error deleting chat: ", error);
+          reject('Error deleting chat: ', error);
         });
     });
   }
 
   function remove(id) {
     const loading = message.open({
-      key: "loading",
-      type: "loading",
+      key: 'loading',
+      type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
-      content: "Una vez eliminado, no lo podrá recuperar",
-      okText: "Borrar",
-      okType: "danger",
-      cancelText: "Cancelar",
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
       onOk() {
         const onHandlerRemove = async () => {
           try {
@@ -256,7 +235,7 @@ const ChatExport = ({ eventId, event }) => {
           } catch (e) {
             message.destroy(loading.key);
             message.open({
-              type: "error",
+              type: 'error',
               content: handleRequestError(e).message,
             });
           }
@@ -267,7 +246,7 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function blockUser(item) {
-    let path = cEvent.value._id + "_event_attendees/" + item.idparticipant;
+    let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
 
     let searchDataUser = new Promise((resolve, reject) => {
       firestore
@@ -281,31 +260,17 @@ const ChatExport = ({ eventId, event }) => {
     searchDataUser.then((res) => {
       let userBlocked = res.data;
       const loading = message.open({
-        key: "loading",
-        type: "loading",
-        content: (
-          <>
-            {" "}
-            Por favor espere miestras {userBlocked
-              ? "desbloquea"
-              : "bloquea"}{" "}
-            el usuario del chat...
-          </>
-        ),
+        key: 'loading',
+        type: 'loading',
+        content: <> Por favor espere miestras {userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...</>,
       });
       Modal.confirm({
-        title: `¿Está seguro de ${
-          userBlocked ? "desbloquear" : "bloquear"
-        } usuario para el chat?`,
+        title: `¿Está seguro de ${userBlocked ? 'desbloquear' : 'bloquear'} usuario para el chat?`,
         icon: <ExclamationCircleOutlined />,
-        content: `${
-          userBlocked
-            ? "Una vez desbloqueado puede bloquearlo"
-            : "Una vez bloqueado puede desbloquearlo"
-        }`,
-        okText: `${userBlocked ? "Desbloquear" : "Bloquear"}`,
-        okType: "danger",
-        cancelText: "Cancelar",
+        content: `${userBlocked ? 'Una vez desbloqueado puede bloquearlo' : 'Una vez bloqueado puede desbloquearlo'}`,
+        okText: `${userBlocked ? 'Desbloquear' : 'Bloquear'}`,
+        okType: 'danger',
+        cancelText: 'Cancelar',
         onOk() {
           const onHandlerBlock = async () => {
             try {
@@ -318,11 +283,7 @@ const ChatExport = ({ eventId, event }) => {
                   blocked: !userBlocked,
                 })
                 .then((res) => {
-                  message.success(
-                    `${
-                      userBlocked ? "Usuario desbloqueado" : "Usuario bloqueado"
-                    }`
-                  );
+                  message.success(`${userBlocked ? 'Usuario desbloqueado' : 'Usuario bloqueado'}`);
                 });
               getChat();
               getBlocketdUsers();
@@ -330,7 +291,7 @@ const ChatExport = ({ eventId, event }) => {
             } catch (e) {
               message.destroy(loading.key);
               message.open({
-                type: "error",
+                type: 'error',
                 content: handleRequestError(e).message,
               });
             }
@@ -342,8 +303,8 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   return (
-    <Tabs defaultActiveKey="1" onChange={(getChat, getBlocketdUsers)}>
-      <TabPane tab="Gestión de chats del evento" key="1">
+    <Tabs defaultActiveKey='1' onChange={(getChat, getBlocketdUsers)}>
+      <TabPane tab='Gestión de chats del evento' key='1'>
         {/* <Header title={'Gestión de chats del evento'} /> */}
 
         <Table
@@ -353,38 +314,26 @@ const ChatExport = ({ eventId, event }) => {
           actions
           remove={remove}
           extraFn={blockUser}
-          extraFnTitle={"Bloquear usuarios"}
-          extraFnType={"ghost"}
+          extraFnTitle={'Bloquear usuarios'}
+          extraFnType={'ghost'}
           extraFnIcon={<AccountCancel />}
           titleTable={
             <Row gutter={[8, 8]} wrap>
               <Col>
-                <Button
-                  onClick={getChat}
-                  type="primary"
-                  icon={<ReloadOutlined />}
-                >
+                <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
                   Recargar
                 </Button>
               </Col>
               <Col>
                 {datamsjevent && datamsjevent.length > 0 && (
-                  <Button
-                    onClick={exportFile}
-                    type="primary"
-                    icon={<DownloadOutlined />}
-                  >
+                  <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
                     Exportar
                   </Button>
                 )}
               </Col>
               <Col>
                 {datamsjevent && datamsjevent.length > 0 && (
-                  <Button
-                    onClick={deleteAllChat}
-                    type="danger"
-                    icon={<DeleteOutlined />}
-                  >
+                  <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
                     Eliminar Chat
                   </Button>
                 )}
@@ -401,27 +350,22 @@ const ChatExport = ({ eventId, event }) => {
             Usuarios bloqueados
           </Badge>
         }
-        key="2"
-      >
+        key='2'>
         <Table
           header={columnsUserBlocked}
           list={listUsersBlocked}
           loading={loading}
           actions
           extraFn={blockUser}
-          extraFnTitle={"Desbloquear usuario"}
-          extraFnType={"ghost"}
+          extraFnTitle={'Desbloquear usuario'}
+          extraFnType={'ghost'}
           extraFnIcon={<Account />}
           exportData
-          fileName={"Usuarios Bloqueados"}
+          fileName={'Usuarios Bloqueados'}
           titleTable={
             <Row gutter={[8, 8]} wrap>
               <Col>
-                <Button
-                  onClick={getBlocketdUsers}
-                  type="primary"
-                  icon={<ReloadOutlined />}
-                >
+                <Button onClick={getBlocketdUsers} type='primary' icon={<ReloadOutlined />}>
                   Recargar
                 </Button>
               </Col>
