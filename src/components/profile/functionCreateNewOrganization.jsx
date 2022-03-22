@@ -94,9 +94,9 @@ const functionCreateNewOrganization = (props) => {
         });
       }
     } else {
-      await props.fetchItem();
+      props.fetchItem && (await props.fetchItem());
       /** se trae la function fetchItem desde el main.jsx para poder actualizar la data */
-      props.resetFields();
+      props.resetFields && props.resetFields();
       if (response?._id) {
         sendDataFinished();
         DispatchMessageService({

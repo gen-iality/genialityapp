@@ -1,12 +1,11 @@
-import ImgInput from '../../shared/imageInput';
+import ImgInput from '../../../shared/imageInput';
 import { Row, Col } from 'antd';
-import { Actions } from '../../../helpers/request';
+import { Actions } from '../../../../helpers/request';
 import Axios from 'axios';
-import { useContextNewEvent } from '../../../context/newEventContext';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { useContextNewEvent } from '../../../../context/newEventContext';
 
 function Apariencia(props) {
-  const { saveImageEvent, imageEvents, onChangeCheck, valueInputs } = useContextNewEvent();
+  const { saveImageEvent, imageEvents } = useContextNewEvent();
 
   const ImagenStyle = {
     width: '100%',

@@ -8,11 +8,11 @@ import { CurrentUserEventProvider } from '../context/eventUserContext';
 import { CurrentEventProvider } from '../context/eventContext';
 import { CurrentUserProvider } from '../context/userContext';
 import { SurveysProvider } from '../context/surveysContext';
+import { NewEventProvider } from '../context/newEventContext';
 
 import { HelperContextProvider } from '../context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
 import Organization from '../components/organization';
-import { NewEventProvider } from '../context/newEventContext';
 import MainProfile from '../components/profile/main';
 import { AgendaContextProvider } from '../context/AgendaContext';
 import { UseCurrentUser } from '../context/userContext';
@@ -25,7 +25,11 @@ const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../components/home'));
 const Landing = loadable(() => import('../components/events/Landing/landing'));
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'));
-const NewEvent = loadable(() => import('../components/events/newEvent'));
+/* const Events = loadable(() => import('../components/events')); */
+const NewEvent = loadable(() => import('../components/events/createEvent/index'));
+/* const MyProfile = loadable(() => import('../components/profile/index_old')); */
+/* const Purchase = loadable(() => import('../components/profile/purchase_old')); */
+/* const EventEdit = loadable(() => import('../components/profile/events_old')); */
 const Terms = loadable(() => import('../components/policies/termsService'));
 const Privacy = loadable(() => import('../components/policies/privacyPolicy'));
 const Policies = loadable(() => import('../components/policies/policies'));
@@ -142,25 +146,27 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>
-              <HelperContextProvider>
-                <SurveysProvider>
-                  <AgendaContextProvider>
-                    <Layout style={{ minHeight: '100vh' }}>
-                      <Header />
-                      {cUser.value ? (
-                        <Component {...props} />
-                      ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                        <>
-                          <ModalAuth />
-                          <ForbiddenPage />
-                        </>
-                      ) : (
-                        <Spin />
-                      )}
-                    </Layout>
-                  </AgendaContextProvider>
-                </SurveysProvider>
-              </HelperContextProvider>
+              <NewEventProvider>
+                <HelperContextProvider>
+                  <SurveysProvider>
+                    <AgendaContextProvider>
+                      <Layout style={{ minHeight: '100vh' }}>
+                        <Header />
+                        {cUser.value ? (
+                          <Component {...props} />
+                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                          <>
+                            <ModalAuth />
+                            <ForbiddenPage />
+                          </>
+                        ) : (
+                          <Spin />
+                        )}
+                      </Layout>
+                    </AgendaContextProvider>
+                  </SurveysProvider>
+                </HelperContextProvider>
+              </NewEventProvider>
             </CurrentUserProvider>
           </CurrentUserEventProvider>
         </CurrentEventProvider>

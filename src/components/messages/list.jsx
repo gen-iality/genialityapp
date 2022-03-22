@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import { MessageApi } from '../../helpers/request';
 import { Button, Row, Col, Space, Typography } from 'antd';
-import { ExclamationCircleOutlined, LineChartOutlined, BarsOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, LineChartOutlined, BarsOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import CMS from '../newComponent/CMS';
 
@@ -75,6 +75,8 @@ function InvitationsList(props) {
         extraPath={`${match.url}/detail`}
         extraPathIcon={<BarsOutlined />}
         extraPathTitle={'Detalle'}
+        extraPathUpdate={<ReloadOutlined />}
+        extraPathUpdateTitle={'Actualizar métricas'}
         exportData
         fileName={'ComunicacionesEnviadas'}
         titleTable={(

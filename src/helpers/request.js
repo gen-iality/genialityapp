@@ -204,7 +204,8 @@ export const EventsApi = {
     return await Actions.getOne(`/api/events/${id}/`, 'invitations');
   },
   sendMeetingRequest: async (eventId, data) => {
-    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify?token=${token}`, data);
   },
 
   sendInvitation: async (eventId, data) => {
@@ -395,7 +396,8 @@ export const UsersApi = {
     return await Actions.getAll(`/api/events/${id}/eventusers?token=${token}&${query}`);
   },
   getOne: async (event_id, user_id) => {
-    return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}?token=${token}`);
   },
   mineTickets: async () => {
     return await Actions.getAll('/api/me/eventUsers/');
@@ -1050,6 +1052,11 @@ export const MessageApi = {
       true
     );
   },
+  updateOne:async (eventId,id) => {
+    /* return await Actions.get(`api/events/${eventId}/messages/`, id); */
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/events/${eventId}/updateStatusMessageUser/${id}?token=${token}`, true);
+  },
   /* editOne: async (data, id, eventId) => {
     return await Actions.edit(`/api/events/${eventId}/messages`, data, id);
   },
@@ -1285,10 +1292,13 @@ export const Activity = {
 
 export const Networking = {
   getInvitationsReceived: async (eventId, userId) => {
-    return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}`);
+    let token = await GetTokenUserFirebase();
+    console.log("OBTENINENDO INVITACIONES===>")
+    return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}?token=${token}`);
   },
   getInvitationsSent: async (eventId, userId) => {
-    return await Actions.get(`api/events/${eventId}/indexinvitations/${userId}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/events/${eventId}/indexinvitations/${userId}?token=${token}`);
   },
   acceptOrDeclineInvitation: async (eventId, userId, data) => {
     return await Actions.put(`/api/events/${eventId}/acceptordecline/${userId}`, data);

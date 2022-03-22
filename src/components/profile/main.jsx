@@ -134,6 +134,11 @@ const MainProfile = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (activeTab !== '2') return;
+    fetchItem();
+  }, [activeTab]);
+
   return (
     <Layout style={{ height: '90.8vh' }}>
       <Sider

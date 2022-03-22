@@ -1,12 +1,27 @@
 import { useEffect, useState } from 'react';
-import { DateTimePicker } from 'react-widgets';
-import { Card, Col, Input, Row, Space, Tooltip, Typography, Form, Modal, List, Button, Spin, Select } from 'antd';
+import {
+  Card,
+  Col,
+  Input,
+  Row,
+  Space,
+  Tooltip,
+  Typography,
+  Form,
+  Modal,
+  List,
+  Button,
+  Spin,
+  Select,
+  TimePicker,
+} from 'antd';
 import { CalendarOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
 import { DispatchMessageService } from '../../../context/MessageService';
+import moment from 'moment';
 
 const { Text, Link, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -265,7 +280,12 @@ const Informacion = (props) => {
                       <Form.Item
                         label='Nombre'
                         name='name'
-                        rules={[{ required: true, message: 'Ingrese un nombre válido' }]}>
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Ingrese un nombre válido',
+                          },
+                        ]}>
                         <Input></Input>
                       </Form.Item>
                       {!loadingAdd && (
@@ -364,10 +384,11 @@ const Informacion = (props) => {
                     <div className='modal-horas'>
                       <span>de</span>
                     </div>
-                    <DateTimePicker
-                      value={selectedHours.from}
+                    <TimePicker
+                      allowClear={false}
+                      use12Hours
+                      value={moment(selectedHours.from)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
-                      date={false}
                     />
                   </Space>
                 </div>
@@ -376,10 +397,11 @@ const Informacion = (props) => {
                     <div className='modal-horas'>
                       <span>a</span>
                     </div>
-                    <DateTimePicker
-                      value={selectedHours.at}
+                    <TimePicker
+                      allowClear={false}
+                      use12Hours
+                      value={moment(selectedHours.at)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}
-                      date={false}
                     />
                   </Space>
                 </div>

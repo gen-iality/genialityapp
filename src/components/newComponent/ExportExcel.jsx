@@ -27,6 +27,26 @@
 
 // export default ExportExcel;
 
-export const ExportExcel = () => {
-  return <div></div>;
+import { DownloadOutlined } from '@ant-design/icons';
+import { Button, message } from 'antd';
+import * as XLSX from 'xlsx/xlsx.mjs';
+
+export const ExportExcel = (props) => {
+  const exportData = () => {
+    if (props.list) {
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(props.list);
+      XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+      XLSX.writeFile(wb, props.fileName + '.xlsx');
+    } else {
+      message.error('No hay datos que exportar');
+    }
+  };
+  return (
+    <div>
+      <Button primary onClick={exportData}>
+        <DownloadOutlined /> Exportar
+      </Button>
+    </div>
+  );
 };
