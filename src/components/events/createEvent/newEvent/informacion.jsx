@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
-import { DateTimePicker } from 'react-widgets';
-import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, message } from 'antd';
+import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePicker } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 import { OrganizationApi } from '../../../../helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
+import moment from 'moment';
 
-const { Text, Link, Title, Paragraph } = Typography;
+const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
 
 const Informacion = (props) => {
@@ -140,10 +140,11 @@ const Informacion = (props) => {
                     <div className='modal-horas'>
                       <span>de</span>
                     </div>
-                    <DateTimePicker
-                      value={selectedHours.from}
+                    <TimePicker
+                      allowClear={false}
+                      use12Hours
+                      value={moment(selectedHours.from)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
-                      date={false}
                     />
                   </Space>
                 </div>
@@ -152,18 +153,18 @@ const Informacion = (props) => {
                     <div className='modal-horas'>
                       <span>a</span>
                     </div>
-                    <DateTimePicker
-                      value={selectedHours.at}
+                    <TimePicker
+                      allowClear={false}
+                      use12Hours
+                      value={moment(selectedHours.at)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}
-                      date={false}
                     />
                   </Space>
                 </div>
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              Si tu evento se extiende por más de un día podrás ajustar las fechas en la sección{' '}
-              <strong>Datos del evento</strong> una vez lo hayas creado.
+              un día podrás ajustar las fechas en la sección <strong>Datos del evento</strong> una vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>

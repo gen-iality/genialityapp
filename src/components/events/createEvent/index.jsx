@@ -5,7 +5,7 @@ import { Steps, Button, message, Card, Row, Spin } from 'antd';
 import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */
 
-import Informacion from './newEvent/Informacion';
+import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import AccessType from './newEvent/accessTypeEvent';
 /*vista de resultado de la creacion de un evento */
