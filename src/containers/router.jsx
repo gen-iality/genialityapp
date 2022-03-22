@@ -17,12 +17,13 @@ import { AgendaContextProvider } from '../context/AgendaContext';
 import ModalAuth from '../components/authentication/ModalAuth';
 import ModalNoRegister from '../components/authentication/ModalNoRegister';
 
+//PAGES
+const Organization = loadable(() => import('../pages/eventOrganization'));
+const Home = loadable(() => import('../pages/home'));
+
 const Landing = loadable(() => import('../components/events/Landing/landing'));
 const NotFoundPage = loadable(() => import('../components/notFoundPage'));
 const Header = loadable(() => import('./header'));
-const Home = loadable(() => import('../components/home'));
-import EventOrganization from '../components/eventOrganization';
-import Organization from '../components/organization';
 
 const MainRouter = (props) => {
   let cUser = UseCurrentUser();
@@ -53,8 +54,8 @@ const MainRouter = (props) => {
           */}
 
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
-          <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
-          <RouteContext exact path='/organization/:id' component={EventOrganization} />
+          <RouteContext exact path='/organization/:id/events' component={Organization} />
+          <RouteContext exact path='/organization/:id' component={Organization} />
           <RouteContext exact path='/' component={PageWithFooter} />
           <Route component={NotFoundPage} />
         </Switch>

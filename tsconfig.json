@@ -18,7 +18,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "src",
     "paths": {
-      "@assets/*": ["./Assets/*"]
+      "@assets/*": ["./Assets/*"],
+      "@components/*": ["./src/components/*"]
     }
   },
   "include": ["./*.ts"],

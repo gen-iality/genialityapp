@@ -10,10 +10,10 @@ import loadable from '@loadable/component';
 Moment.locale('es');
 momentLocalizer();
 
-const ErrorServe = loadable(() => import('../modal/serverError'));
+const ErrorServe = loadable(() => import('../../components/modal/serverError'));
+const LoadingEvent = loadable(() => import('../../components/loaders/loadevent'));
+const EventCard = loadable(() => import('../../components/shared/eventCard'));
 const ModalFeedback = loadable(() => import('../../components/authentication/ModalFeedback'));
-const LoadingEvent = loadable(() => import('../loaders/loadevent'));
-const EventCard = loadable(() => import('../shared/eventCard'));
 
 class Home extends Component {
   constructor(props) {

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import EnvironmentPlugin from 'vite-plugin-environment';
+import tsconfigPaths from 'vite-tsconfig-paths';
 Object.assign(require('less').options, {
   javascriptEnabled: true,
   modifyVars: {},
@@ -26,6 +27,7 @@ export default defineConfig({
       },
       { loadEnvFiles: true }
     ),
+    tsconfigPaths(),
   ],
   css: {
     preprocessorOptions: {
