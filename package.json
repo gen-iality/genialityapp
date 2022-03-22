@@ -4,11 +4,10 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --mode dev",
-    "build": "vite build",
+    "build": "vite build --mode dev",
     "preview": "vite preview",
     "vite:start": "vite",
-    "vite:build": "vite build",
-    "buildStaging": "vite build --mode dev"
+    "vite:build": "vite build"
   },
   "dependencies": {
     "@2fd/ant-design-icons": "^2.4.1",
