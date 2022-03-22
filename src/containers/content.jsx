@@ -8,11 +8,11 @@ import { CurrentUserEventProvider } from '../context/eventUserContext';
 import { CurrentEventProvider } from '../context/eventContext';
 import { CurrentUserProvider } from '../context/userContext';
 import { SurveysProvider } from '../context/surveysContext';
+import { NewEventProvider } from '../context/newEventContext';
 
 import { HelperContextProvider } from '../context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
 import Organization from '../components/organization';
-import { NewEventProvider } from '../context/newEventContext';
 import MainProfile from '../components/profile/main';
 import { AgendaContextProvider } from '../context/AgendaContext';
 import { UseCurrentUser } from '../context/userContext';
@@ -146,25 +146,27 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>
-              <HelperContextProvider>
-                <SurveysProvider>
-                  <AgendaContextProvider>
-                    <Layout style={{ minHeight: '100vh' }}>
-                      <Header />
-                      {cUser.value ? (
-                        <Component {...props} />
-                      ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                        <>
-                          <ModalAuth />
-                          <ForbiddenPage />
-                        </>
-                      ) : (
-                        <Spin />
-                      )}
-                    </Layout>
-                  </AgendaContextProvider>
-                </SurveysProvider>
-              </HelperContextProvider>
+              <NewEventProvider>
+                <HelperContextProvider>
+                  <SurveysProvider>
+                    <AgendaContextProvider>
+                      <Layout style={{ minHeight: '100vh' }}>
+                        <Header />
+                        {cUser.value ? (
+                          <Component {...props} />
+                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                          <>
+                            <ModalAuth />
+                            <ForbiddenPage />
+                          </>
+                        ) : (
+                          <Spin />
+                        )}
+                      </Layout>
+                    </AgendaContextProvider>
+                  </SurveysProvider>
+                </HelperContextProvider>
+              </NewEventProvider>
             </CurrentUserProvider>
           </CurrentUserEventProvider>
         </CurrentEventProvider>

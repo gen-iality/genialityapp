@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Card, message, Space, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ModalCreateOrg from './modalCreateOrg';
-import ModalListOrg from './modalListOrg';
+import ModalOrgListCreate from '../../components/events/createEvent/newEvent/modalOrgListCreate';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
+import { useContextNewEvent } from '../../context/newEventContext';
 
 // Componente modal para la creacion de una organizacion <ModalCreateOrg/>
 
@@ -11,6 +12,7 @@ const NewCard = (props) => {
   const entity = props.entityType ? props.entityType : 'event';
   const [modalCreateOrgIsVisible, setModalCreateOrgIsVisible] = useState(false);
   const [modalListOrgIsVisible, setModalListOrgIsVisible] = useState(false);
+  const { dispatch } = useContextNewEvent();
 
   const newOrganization = () => {
     setModalCreateOrgIsVisible(true);
@@ -18,6 +20,7 @@ const NewCard = (props) => {
   const newEvent = () => {
     if (props?.org?.length > 0) {
       setModalListOrgIsVisible(true);
+      dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } });
     } else {
       const newValues = {
         name: props.cUser.value.names || props.cUser.value.displayName,
@@ -39,12 +42,20 @@ const NewCard = (props) => {
         />
       )}
 
-      {modalListOrgIsVisible && (
+      {/*modalListOrgIsVisible && (
         <ModalListOrg
           modalListOrgIsVisible={modalListOrgIsVisible}
           setModalListOrgIsVisible={setModalListOrgIsVisible}
           org={props.org}
           cUserId={props.cUser.value._id}
+        />
+      )*/}
+
+      {modalListOrgIsVisible && (
+        <ModalOrgListCreate
+          modalListOrgIsVisible={modalListOrgIsVisible}
+          setModalListOrgIsVisible={setModalListOrgIsVisible}
+          org={props.org}
         />
       )}
 
