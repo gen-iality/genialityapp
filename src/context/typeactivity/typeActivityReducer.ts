@@ -1,6 +1,7 @@
 import { typeActivityData } from './constants/constants';
 import { TypeActivityState } from './interfaces/interfaces';
 import { TypeActivityAction } from './types/types';
+import { isValidUrl } from '../../hooks/useIsValidUrl';
 
 export const initialState: TypeActivityState = {
   openModal: false,
@@ -174,7 +175,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           disableNextButton: true,
           previewKey: 'video',
           selectedKey: '',
-          buttonsTextNextOrCreate: 'Crear',
+          buttonsTextNextOrCreate: 'Siguiente',
           buttonTextPreviousOrCancel: 'Anterior',
           typeOptions: initialState.typeOptions.typeOptions[2],
         };
@@ -345,12 +346,13 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       console.log('🚀 ACTION', action);
       console.log('🚀 INITIAL', initialState.typeOptions);
       let disableButton: boolean = true;
-      console.log('🚀 sendData', action?.payload?.sendData, action?.payload?.sendData?.length);
 
-      if (action?.payload?.sendData?.length > 12) {
+      const sendDataPayload = action?.payload?.sendData;
+      if ((sendDataPayload?.length > 12 && sendDataPayload !== '') || sendDataPayload == undefined) {
         disableButton = false;
-      } else if (!action?.payload?.sendData) {
-        disableButton = false;
+        if (sendDataPayload) {
+          console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayload));
+        }
       }
       return {
         ...state,
