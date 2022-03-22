@@ -30,6 +30,7 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import * as XLSX from 'xlsx/xlsx.mjs';
+import { DispatchMessageService } from '../../context/MessageService';
 
 export const ExportExcel = (props) => {
   const exportData = () => {
@@ -39,7 +40,11 @@ export const ExportExcel = (props) => {
       XLSX.utils.book_append_sheet(wb, ws, 'Datos');
       XLSX.writeFile(wb, props.fileName + '.xlsx');
     } else {
-      message.error('No hay datos que exportar');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'No hay datos que exportar',
+        action: 'show',
+      })
     }
   };
   return (

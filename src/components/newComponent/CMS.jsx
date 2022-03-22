@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { handleRequestError } from '../../helpers/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { message, Modal } from 'antd';
+import { Modal } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 import HelperContext from '../../context/HelperContext';
@@ -130,7 +130,11 @@ const CMS = (props) => {
     setLoading(true)
     const updateMails=await API.updateOne(eventId,idMessage);
     await getList();
-    message.success(updateMails?.message)
+    DispatchMessageService({
+      type: 'success',
+      msj: updateMails?.message,
+      action: 'show',
+    })
     setLoading(false)
   }
 

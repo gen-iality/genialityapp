@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
-import { message } from 'antd';
+import { DispatchMessageService } from '../context/MessageService';
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/request';
 import { GetTokenUserFirebase } from '../helpers/HelperAuth';
 import { configEventsTemplate } from '../helpers/constants';
@@ -346,29 +346,53 @@ export const NewEventProvider = ({ children }) => {
               }
               if (template) {
                 // console.log("RESPUESTA TEMPLATE==>",template)
-                message.success('Evento creado correctamente..');
+                DispatchMessageService({
+                  type: 'success',
+                  msj: 'Evento creado correctamente...',
+                  action: 'show',
+                })
                 window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
               } else {
-                message.error('Error al crear evento con su template');
+                DispatchMessageService({
+                  type: 'error',
+                  msj: 'Error al crear evento con su template',
+                  action: 'show',
+                })
               }
             }
           } else {
             //console.log('RESP API==>', result);
-            message.error('Error al crear el evento');
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Error al crear el evento',
+              action: 'show',
+            })
             dispatch({ type: 'COMPLETE' });
           }
         } else {
           //console.log('RESP API==>', result);
-          message.error('Error al crear el evento');
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Error al crear el evento',
+            action: 'show',
+          })
           dispatch({ type: 'COMPLETE' });
         }
       } catch (error) {
         console.log('CATCH==>', error);
-        message.error('Error al crear el evento catch');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Error al crear el evento catch',
+          action: 'show',
+        })
         dispatch({ type: 'COMPLETE' });
       }
     } else {
-      message.error('Seleccione una organización');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Seleccione una organización',
+        action: 'show',
+      })
     }
   };
 

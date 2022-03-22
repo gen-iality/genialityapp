@@ -1,8 +1,9 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { OrganizationFuction, UsersApi } from '../../../helpers/request';
-import { Steps, Button, message, Card, Row, Spin } from 'antd';
+import { Steps, Button, Card, Row, Spin } from 'antd';
 import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '../../../context/MessageService';
 /*vistas de paso a paso */
 
 import Informacion from './newEvent/informacion';
@@ -94,7 +95,11 @@ class NewEvent extends Component {
             { name: 'description', required: eventNewContext.addDescription, length: 9 },
           ])
         ) {
-          message.error('Error en los campos..');
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Error en los campos...',
+            action: 'show',
+          });
         } else {
           this.nextPage();
         }
