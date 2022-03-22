@@ -7,7 +7,6 @@ import {
   Input,
   Col,
   Row,
-  message,
   Checkbox,
   Alert,
   Card,
@@ -19,6 +18,8 @@ import {
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { DispatchMessageService } from '../../../context/MessageService';
+
 const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -85,7 +86,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     const key = 'registerUserService';
 
     // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
-    message.loading({ content: 'Actualizando Usuario', key }, 10);
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Actualizando Usuario',
+      duration: 10,
+      action: 'show',
+    });
 
     const snap = { properties: values };
 
@@ -108,19 +115,43 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
 
         setSubmittedForm(true);
-        message.success(textMessage);
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: textMessage,
+          action: 'show',
+        });
       } else {
         textMessage.content = resp;
         // Retorna un mensaje en caso de que ya se encuentre registrado el correo
         setNotLoggedAndRegister(true);
-        message.success(textMessage);
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: textMessage,
+          action: 'show',
+        });
       }
     } catch (err) {
       // textMessage.content = "Error... Intentalo mas tarde";
       textMessage.content = formMessage.errorMessage;
 
       textMessage.key = key;
-      message.error(textMessage);
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: textMessage,
+        action: 'show',
+      });
     }
   };
 
@@ -162,11 +193,19 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'application/pdf';
     if (!isJpgOrPng) {
-      message.error('You can only upload PDF file!');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'You can only upload PDF file!',
+        action: 'show',
+      });
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      message.error('Image must smaller than 5MB!');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Image must smaller than 5MB!',
+        action: 'show',
+      });
     }
     return isJpgOrPng && isLt5M;
   };

@@ -1,6 +1,7 @@
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { OrganizationApi } from '../../helpers/request';
-import { message } from 'antd';
+import { DispatchMessageService } from '../../context/MessageService';
+
 const functionCreateNewOrganization = (props) => {
   const styles = {
     buttonColor: '#FFF',
@@ -37,12 +38,14 @@ const functionCreateNewOrganization = (props) => {
     data_loader_page: null,
   };
 
-  const loading = message.loading({
-    duration: 90,
+  DispatchMessageService({
+    type: 'loading',
     key: 'loading',
-    content: !props.newEventWithoutOrganization
+    msj: !props.newEventWithoutOrganization
       ? 'Estamos creando la organización.'
       : 'Redirigiendo al creador de eventos rápidos',
+    duration: 90,
+    action: 'show',
   });
 
   function linkToCreateNewEvent(menuRoute) {
@@ -50,7 +53,10 @@ const functionCreateNewOrganization = (props) => {
   }
 
   function sendDataFinished() {
-    message.destroy(loading.key);
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
     props.closeModal(false);
   }
   const uploadLogo = async () => {
@@ -81,7 +87,11 @@ const functionCreateNewOrganization = (props) => {
         linkToCreateNewEvent(`/create-event/${response.author}/?orgId=${response._id}`);
       } else {
         sendDataFinished();
-        message.error('Error al redirigir al creador de eventos rápidos');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Error al redirigir al creador de eventos rápidos',
+          action: 'show',
+        });
       }
     } else {
       await props.fetchItem();
@@ -89,10 +99,18 @@ const functionCreateNewOrganization = (props) => {
       props.resetFields();
       if (response?._id) {
         sendDataFinished();
-        message.success('Organización creada correctamente');
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Organización creada correctamente',
+          action: 'show',
+        });
       } else {
         sendDataFinished();
-        message.error('La organización no pudo ser creada');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'La organización no pudo ser creada',
+          action: 'show',
+        });
       }
     }
   };

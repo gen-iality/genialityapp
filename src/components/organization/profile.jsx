@@ -2,8 +2,9 @@
 import { useState, useEffect } from 'react';
 import { OrganizationApi, TypesApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
-import { Form, Input, Button, Row, Col, message, Select } from 'antd';
+import { Form, Input, Row, Col, Select } from 'antd';
 import Header from '../../antdComponents/Header';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -25,9 +26,17 @@ function OrganizationInformation(props) {
     };
     try {
       await OrganizationApi.editOne(body, organizationId);
-      message.success('Información actualizada correctamente');
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Información actualizada correctamente',
+        action: 'show',
+      });
     } catch (error) {
-      message.error('No se pudo actualizar la información');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'No se pudo actualizar la información',
+        action: 'show',
+      });
     }
   }
 

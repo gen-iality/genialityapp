@@ -1,8 +1,9 @@
-import { Button, Col, Modal, Row, List, Typography, message } from 'antd';
+import { Col, Modal, Row, List } from 'antd';
 import { useEffect, useState } from 'react';
 import { useContextNewEvent } from '../../../context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
 import OptTranmitir from './optTransmitir';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 function Transmitir(props) {
   const {
@@ -54,7 +55,11 @@ function Transmitir(props) {
 
   const selectOrganizationOK = () => {
     if (!selectOrganization || selectOrganization == null) {
-      message.error('Por favor seleccione una organización');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Por favor seleccione una organización',
+        action: 'show',
+      });
     } else {
       changeOrganization(false);
     }

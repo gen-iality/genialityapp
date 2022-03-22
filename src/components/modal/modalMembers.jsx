@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { OrganizationApi } from '../../helpers/request';
 import FormComponent from '../events/registrationForm/form';
-import { message, Modal } from 'antd';
+import { Modal } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
@@ -29,26 +30,35 @@ function ModalMembers(props) {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        const loading = message.open({
-          key: 'loading',
+        DispatchMessageService({
           type: 'loading',
-          content: <> Por favor espere miestras borra la información..</>,
+          key: 'loading',
+          msj: ' Por favor espere miestras se borra la información...',
+          action: 'show',
         });
         const onHandlerRemove = async () => {
           try {
             await OrganizationApi.deleteUser(organizationId, user._id);
             props.closeOrOpenModalMembers();
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
             props.startingComponent();
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: <>Hubo un error al eliminar</>,
+              msj: 'Hubo un error al eliminar',
+              action: 'show',
             });
           }
         };
@@ -77,11 +87,19 @@ function ModalMembers(props) {
     }
 
     if (resp._id) {
-      message.success(`Usuario ${props.editMember ? 'editado ' : 'agregado'} correctamente`);
+      DispatchMessageService({
+        type: 'success',
+        msj: `Usuario ${props.editMember ? 'editado ' : 'agregado'} correctamente`,
+        action: 'show',
+      });
       props.startingComponent();
       props.closeOrOpenModalMembers();
     } else {
-      message.error(`No fue posible ${props.editMember ? 'editar ' : 'agregar'} el Usuario`);
+      DispatchMessageService({
+        type: 'error',
+        msj: `No fue posible ${props.editMember ? 'editar ' : 'agregar'} el Usuario`,
+        action: 'show',
+      });
     }
   }
 

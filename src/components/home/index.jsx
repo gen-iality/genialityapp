@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { EventsApi } from '../../helpers/request';
-import { Button, Row, Col, Typography, Space, message } from 'antd';
+import { Button, Row, Col, Typography, Space } from 'antd';
 import loadable from '@loadable/component';
+import { DispatchMessageService } from '../../context/MessageService';
 
 Moment.locale('es');
 momentLocalizer();
@@ -78,9 +79,10 @@ class Home extends Component {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 401)
-          message.open({
+          DispatchMessageService({
             type: 'error',
-            content: <>Error : {data?.message || status}</>,
+            msj: <>Error : {data?.message || status}</>,
+            action: 'show',
           });
         else this.setState({ serverError: true, loader: false });
       } else {

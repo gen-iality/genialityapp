@@ -1,8 +1,9 @@
 import ImgInput from '../../shared/imageInput';
-import { Row, Col, Switch, message } from 'antd';
+import { Row, Col } from 'antd';
 import { Actions } from '../../../helpers/request';
 import Axios from 'axios';
 import { useContextNewEvent } from '../../../context/newEventContext';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 function Apariencia(props) {
   const { saveImageEvent, imageEvents, onChangeCheck, valueInputs } = useContextNewEvent();
@@ -39,10 +40,18 @@ function Apariencia(props) {
         await Axios.all(uploaders).then((data) => {
           saveImageEvent(path[0], indexImage);
 
-          message.success('Imagen cargada correctamente...');
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Imagen cargada correctamente...',
+            action: 'show',
+          });
         });
       } else {
-        message.error('Error al cargar imagen.');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Error al cargar imagen.',
+          action: 'show',
+        });
       }
     } else {
       saveImageEvent(files, indexImage);

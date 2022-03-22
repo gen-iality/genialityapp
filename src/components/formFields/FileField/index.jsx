@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { Input, message } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { concat, omit, pick } from 'ramda';
 import { Field } from 'formik';
@@ -7,6 +6,7 @@ import FileInput from '../../shared/fileInput';
 import axios from 'axios/index';
 import { Actions } from '../../../helpers/request';
 import { FormattedMessage } from 'react-intl';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const FORMIK_PROPS_KEYS = ['form', 'field', 'meta'];
 const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
@@ -52,7 +52,11 @@ function FileField(rawProps) {
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       axios.all(uploaders).then(async () => {
-        message.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        DispatchMessageService({
+          type: 'success',
+          msj: <FormattedMessage id='toast.img' defaultMessage='Ok!' />,
+          action: 'show',
+        });
       });
     } else {
       //this.setState( { errImg: "Solo se permiten imágenes. Intentalo de nuevo" } );

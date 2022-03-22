@@ -6,6 +6,7 @@ import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const { Text, Link, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -92,7 +93,11 @@ const Informacion = (props) => {
 
   const selectOrganizationOK = () => {
     if (!selectOrganization || selectOrganization == null) {
-      message.error('Por favor seleccione una organización');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Por favor seleccione una organización',
+        action: 'show',
+      });
     } else {
       changeOrganization(false);
     }

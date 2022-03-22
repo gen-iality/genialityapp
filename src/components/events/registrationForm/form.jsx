@@ -7,7 +7,6 @@ import {
   Input,
   Col,
   Row,
-  message,
   Checkbox,
   Alert,
   Card,
@@ -36,6 +35,8 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 import { UseEventContext } from '../../../context/eventContext';
 import { UseCurrentUser } from '../../../context/userContext';
 import { app } from '../../../helpers/firebase';
+import { DispatchMessageService } from '../../../context/MessageService';
+
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
@@ -321,13 +322,13 @@ const FormRegister = ({
         const key = 'registerUserService';
 
         // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
-        message.loading(
-          {
-            content: intl.formatMessage({ id: 'registration.message.loading' }),
-            key,
-          },
-          10
-        );
+        DispatchMessageService({
+          type: 'loading',
+          key: 'loading',
+          msj: intl.formatMessage({ id: 'registration.message.loading' }),
+          duration: 10,
+          action: 'show',
+        });
 
         const registerBody = { ...values };
         const eventUserBody = {
@@ -346,7 +347,15 @@ const FormRegister = ({
             setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
             setSubmittedForm(true);
-            message.success(textMessage);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: textMessage,
+              action: 'show',
+            });
             setTimeout(() => {
               closeModal({
                 status: 'sent_transfer',
@@ -356,7 +365,15 @@ const FormRegister = ({
           } catch (err) {
             // textMessage.content = "Error... Intentalo mas tarde";
             textMessage.content = formMessage.errorMessage;
-            message.error(textMessage);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: textMessage,
+              action: 'show',
+            });
           }
         } else {
           try {
@@ -400,7 +417,11 @@ const FormRegister = ({
               setSuccessMessage($msg);
 
               setSubmittedForm(true);
-              message.success(intl.formatMessage({ id: 'registration.message.created' }));
+              DispatchMessageService({
+                type: 'success',
+                msj: intl.formatMessage({ id: 'registration.message.created' }),
+                action: 'show',
+              });
 
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
@@ -451,7 +472,11 @@ const FormRegister = ({
                 setSuccessMessage(msg);
                 // Retorna un mensaje en caso de que ya se encuentre registrado el correo
                 setNotLoggedAndRegister(true);
-                message.success(msg);
+                DispatchMessageService({
+                  type: 'success',
+                  msj: msg,
+                  action: 'show',
+                });
               } else {
                 setPayMessage(true);
               }
@@ -459,7 +484,11 @@ const FormRegister = ({
           } catch (err) {
             textMessage.content = formMessage.errorMessage;
             textMessage.key = key;
-            message.error(textMessage);
+            DispatchMessageService({
+              type: 'error',
+              msj: textMessage,
+              action: 'show',
+            });
           }
         }
       } else {
@@ -539,7 +568,11 @@ const FormRegister = ({
   const beforeUpload = (file) => {
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      message.error('Image must smaller than 5MB!');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Image must smaller than 5MB!',
+        action: 'show',
+      });
     }
     return isLt5M ? true : false;
   };

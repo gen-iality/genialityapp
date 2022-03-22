@@ -9,11 +9,12 @@ import 'react-toastify/dist/ReactToastify.css'; */
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Button, Checkbox, Row, Space, Col, Form, Input, Modal, message, Spin, Card, Typography } from 'antd';
+import { Button, Checkbox, Row, Col, Form, Input, Modal, Spin, Card, Typography } from 'antd';
 Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -109,14 +110,16 @@ class SendRsvp extends Component {
         if (error.response) {
           const { status, data } = error.response;
           if (status === 401)
-            message.open({
+            DispatchMessageService({
               type: 'error',
-              content: <>Error : {data?.message || status}</>,
+              msj: <>Error : {data?.message || status}</>,
+              action: 'show',
             });
         } else {
-          message.open({
+          DispatchMessageService({
             type: 'error',
-            content: <>Error Subiendo la imagen</>,
+            msj: 'Error Subiendo la imagen',
+            action: 'show',
           });
         }
       });
@@ -140,10 +143,11 @@ class SendRsvp extends Component {
     });
 
   async submit() {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere mientras se envía la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se envíe la información...',
+      action: 'show',
     });
     const { event } = this.props;
     const { rsvp, include_date, selection } = this.state;
@@ -184,16 +188,24 @@ class SendRsvp extends Component {
       /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'success',
-        content: 'Las notificaciones se mandaron de manera satisfactoria',
+        msj: 'Las notificaciones se mandaron de manera satisfactoria',
+        action: 'show',
       });
     } catch (e) {
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'error',
-        content: `Lo sentimos las notificaciones no pudieron ser enviadas, código de error ${e.response.status}`,
+        msj: `Lo sentimos las notificaciones no pudieron ser enviadas, código de error ${e.response.status}`,
+        action: 'show',
       });
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
     }

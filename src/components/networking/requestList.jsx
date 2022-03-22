@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 import { Networking, UsersApi } from '../../helpers/request';
 import { getCurrentUser } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -184,7 +185,11 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
     let data = { response: state ? 'accepted' : 'rejected' };
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
       .then(async () => {
-        message.success('Respuesta enviada');
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Respuesta enviada',
+          action: 'show',
+        });
 
         let notificationr = {
           idReceive: currentUserAc._id,
@@ -197,7 +202,11 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       })
       .catch((err) => {
         // console.error('ERROR API==>', err);
-        message.error('Hubo un problema', err);
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Hubo un problema',
+          action: 'show',
+        });
       });
   };
 

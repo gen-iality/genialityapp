@@ -6,7 +6,7 @@ import { fireStoreApi } from '../../../helpers/request';
 import CompanyStand from './exhibitor/Exhibitor';
 import { getEventCompanies } from '../../empresas/services';
 import './Exhibitors.css';
-import { message } from 'antd';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 class Company extends Component {
   constructor(props) {
@@ -62,12 +62,20 @@ class Company extends Component {
       fireStoreApi
         .createOrUpdate(eventId, companyItem.visitors_space_id, eventUser)
         .then(() => {
-          message.success('Asistente agregado a actividad');
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Asistente agregado a actividad',
+            action: 'show',
+          });
           this.setState({ qrData: {} });
         })
         .catch((error) => {
           console.error('Error updating document: ', error);
-          message.error(handleRequestError(error));
+          DispatchMessageService({
+            type: 'error',
+            msj: handleRequestError(error),
+            action: 'show',
+          });
         });
     }
   };

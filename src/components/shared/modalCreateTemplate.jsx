@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
-import { Modal, Form, Input, Button, Typography, message, Spin } from 'antd';
+import { Modal, Form, Input, Button, Typography, Spin } from 'antd';
 import { DefaultProperties } from './propertiesdefault';
 import { OrganizationPlantillaApi } from '../../helpers/request';
 import HelperContext from '../../context/HelperContext';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const ModalCreateTemplate = (props) => {
   const [loading, setloading] = useState(false);
@@ -14,7 +15,11 @@ const ModalCreateTemplate = (props) => {
     let organizerid = props.organizationid;
     setloading(true);
     await OrganizationPlantillaApi.createTemplate(organizerid, { template_properties: [values] });
-    message.success('Template creada');
+    DispatchMessageService({
+      type: 'success',
+      msj: 'Template creada',
+      action: 'show',
+    });
     setloading(false);
     props.handlevisibleModal();
     handleReloadTemplatesCms();

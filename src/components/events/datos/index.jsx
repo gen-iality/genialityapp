@@ -3,7 +3,7 @@ import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } fr
 /* import { toast } from 'react-toastify'; */
 import { FormattedMessage } from 'react-intl';
 import DatosModal from './modal';
-import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
+import { Tabs, Table, Checkbox, Button, Select, Row, Col, Tooltip, Modal } from 'antd';
 import RelationField from './relationshipFields';
 import {
   EditOutlined,
@@ -345,7 +345,11 @@ class Datos extends Component {
   };
 
   showError = (error) => {
-    message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+    DispatchMessageService({
+      type: 'success',
+      msj: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+      action: 'show',
+    });
     if (error.response) {
       const { status, data } = error.response;
       if (status === 401) this.setState({ timeout: true, loader: false });
