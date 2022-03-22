@@ -1,63 +1,44 @@
-import React, { useEffect, useState, useContext } from "react";
-import { connect } from "react-redux";
-import { UseEventContext } from "../../../context/eventContext";
-import { UseCurrentUser } from "../../../context/userContext";
-import { UseUserEvent } from "../../../context/eventUserContext";
-import { HelperContext } from "../../../context/HelperContext";
+import { useEffect, useState, useContext } from 'react';
+import { connect } from 'react-redux';
+import { UseEventContext } from '../../../context/eventContext';
+import { UseCurrentUser } from '../../../context/userContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
+import { HelperContext } from '../../../context/HelperContext';
 /** ant design */
-import { Layout, Spin, notification, Button } from "antd";
+import { Layout, Spin, notification, Button } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 const { Content } = Layout;
 
-import { setUserAgenda } from "../../../redux/networking/actions";
-import {
-  DesktopOutlined,
-  LoadingOutlined,
-  IssuesCloseOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
+import { setUserAgenda } from '../../../redux/networking/actions';
+import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 /** Google tag manager */
-import { EnableGTMByEVENT } from "./helpers/tagManagerHelper";
+import { EnableGTMByEVENT } from './helpers/tagManagerHelper';
 /** Google Analytics */
-import { EnableAnalyticsByEVENT } from "./helpers/analyticsHelper";
+import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 /** Facebook Pixel */
-import { EnableFacebookPixelByEVENT } from "./helpers/facebookPixelHelper";
+import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 
-import loadable from "@loadable/component";
-import { DispatchMessageService } from "../../../context/MessageService.tsx";
-import WithEviusContext from "../../../context/withContext";
-import { useCheckinUser } from "../../../helpers/HelperAuth";
+import loadable from '@loadable/component';
+import { DispatchMessageService } from '../../../context/MessageService.tsx';
+import WithEviusContext from '../../../context/withContext';
+import { useCheckinUser } from '../../../helpers/HelperAuth';
 
-const EviusFooter = loadable(() => import("./EviusFooter"));
-const AppointmentModal = loadable(() =>
-  import("../../networking/appointmentModal")
-);
-const ModalRegister = loadable(() => import("./modalRegister"));
-const ModalLoginHelpers = loadable(() =>
-  import("../../authentication/ModalLoginHelpers")
-);
-const ModalPermission = loadable(() =>
-  import("../../authentication/ModalPermission")
-);
-const ModalFeedback = loadable(() =>
-  import("../../authentication/ModalFeedback")
-);
-const ModalNoRegister = loadable(() =>
-  import("../../authentication/ModalNoRegister")
-);
+const EviusFooter = loadable(() => import('./EviusFooter'));
+const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
+const ModalRegister = loadable(() => import('./modalRegister'));
+const ModalLoginHelpers = loadable(() => import('../../authentication/ModalLoginHelpers'));
+const ModalPermission = loadable(() => import('../../authentication/ModalPermission'));
+const ModalFeedback = loadable(() => import('../../authentication/ModalFeedback'));
+const ModalNoRegister = loadable(() => import('../../authentication/ModalNoRegister'));
 
 /** Components */
-const TopBanner = loadable(() => import("./TopBanner"));
-const EventSectionRoutes = loadable(() => import("./EventSectionsRoutes"));
-const EventSectionsInnerMenu = loadable(() =>
-  import("./EventSectionsInnerMenu")
-);
-const EventSectionMenuRigth = loadable(() => import("./EventSectionMenuRigth"));
-const MenuTablets = loadable(() => import("./Menus/MenuTablets"));
-const MenuTabletsSocialZone = loadable(() =>
-  import("./Menus/MenuTabletsSocialZone")
-);
+const TopBanner = loadable(() => import('./TopBanner'));
+const EventSectionRoutes = loadable(() => import('./EventSectionsRoutes'));
+const EventSectionsInnerMenu = loadable(() => import('./EventSectionsInnerMenu'));
+const EventSectionMenuRigth = loadable(() => import('./EventSectionMenuRigth'));
+const MenuTablets = loadable(() => import('./Menus/MenuTablets'));
+const MenuTabletsSocialZone = loadable(() => import('./Menus/MenuTabletsSocialZone'));
 
 const iniitalstatetabs = {
   attendees: false,
@@ -68,19 +49,19 @@ const iniitalstatetabs = {
 const IconRender = (type) => {
   let iconRender;
   switch (type) {
-    case "open":
-      iconRender = <DesktopOutlined style={{ color: "#108ee9" }} />;
+    case 'open':
+      iconRender = <DesktopOutlined style={{ color: '#108ee9' }} />;
       break;
 
-    case "close":
-      iconRender = <LoadingOutlined style={{ color: "red" }} />;
+    case 'close':
+      iconRender = <LoadingOutlined style={{ color: 'red' }} />;
       break;
 
-    case "ended":
+    case 'ended':
       iconRender = <IssuesCloseOutlined />;
       break;
 
-    case "networking":
+    case 'networking':
       iconRender = <NotificationOutlined />;
       break;
   }
@@ -92,35 +73,26 @@ const Landing = (props) => {
 
   useEffect(() => {
     DispatchMessageService({
-      type: "loading",
-      msj: "Estamos configurando la mejor experiencia para tí!",
-      action: "show",
+      type: 'loading',
+      msj: 'Estamos configurando la mejor experiencia para tí!',
+      action: 'show',
     });
-    console.log("🚀 first");
+    console.log('🚀 first');
   }, []);
 
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let {
-    isNotification,
-    ChangeActiveNotification,
-    currentActivity,
-    register,
-    setRegister,
-  } = useContext(HelperContext);
+  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useContext(HelperContext);
 
   const ButtonRender = (status, activity) => {
-    return status == "open" ? (
+    return status == 'open' ? (
       <Button
-        type="primary"
-        size="small"
+        type='primary'
+        size='small'
         onClick={() =>
-          window.location.replace(
-            `${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`
-          )
-        }
-      >
+          window.location.replace(`${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`)
+        }>
         Ir a la actividad
       </Button>
     ) : null;
@@ -128,21 +100,21 @@ const Landing = (props) => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("register") !== null) {
-      setRegister(urlParams.get("register"));
+    if (urlParams.get('register') !== null) {
+      setRegister(urlParams.get('register'));
     }
   }, []);
   //PARA OBTENER PARAMETRO AL LOGUEARME
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
-      message: "Nueva notificación",
+      message: 'Nueva notificación',
       description: message,
       icon: IconRender(type),
       onClose: () => {
-        ChangeActiveNotification(false, "none", "none");
+        ChangeActiveNotification(false, 'none', 'none');
       },
       btn: ButtonRender(type, activity),
-      duration: type == "ended" || type == "open" ? 7 : 3,
+      duration: type == 'ended' || type == 'open' ? 7 : 3,
     });
   };
 
@@ -156,10 +128,10 @@ const Landing = (props) => {
   let [totalNewMessages, settotalnewmessages] = useState(0);
 
   useEffect(() => {
-    if (cEventContext.status === "LOADED") {
-      import("../../../helpers/firebase").then((fb) => {
+    if (cEventContext.status === 'LOADED') {
+      import('../../../helpers/firebase').then((fb) => {
         fb.firestore
-          .collection("events")
+          .collection('events')
           .doc(cEventContext.value?._id)
           .onSnapshot(function(eventSnapshot) {
             if (eventSnapshot.exists) {
@@ -170,14 +142,7 @@ const Landing = (props) => {
           });
 
         fb.firestore
-          .collection(
-            "eventchats/" +
-              cEventContext.value._id +
-              "/userchats/" +
-              cUser.uid +
-              "/" +
-              "chats/"
-          )
+          .collection('eventchats/' + cEventContext.value._id + '/userchats/' + cUser.uid + '/' + 'chats/')
           .onSnapshot(function(querySnapshot) {
             let data;
             querySnapshot.forEach((doc) => {
@@ -193,14 +158,14 @@ const Landing = (props) => {
             });
           });
 
-        if (cEventUser.status == "LOADED" && cEventUser.value != null) {
+        if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
           useCheckinUser(cEventUser.value, cEventContext.value._id);
         }
       });
     }
   }, [cEventContext.status, cEventUser.status, cEventUser.value]);
 
-  if (cEventContext.status === "LOADING") return <Spin />;
+  if (cEventContext.status === 'LOADING') return <Spin />;
 
   return (
     <>
@@ -211,13 +176,7 @@ const Landing = (props) => {
       <ModalPermission />
       <ModalFeedback />
       {/*update: modal de actualizar || register: modal de registro */}
-      {register !== null && (
-        <ModalRegister
-          register={register}
-          setRegister={setRegister}
-          event={cEventContext.value}
-        />
-      )}
+      {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
         <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
@@ -230,24 +189,18 @@ const Landing = (props) => {
         <EventSectionsInnerMenu />
         <MenuTablets />
 
-        <Layout className="site-layout">
+        <Layout className='site-layout'>
           <Content
-            className="site-layout-background"
+            className='site-layout-background'
             style={{
               // paddingBottom: '15vh',
-              backgroundSize: "cover",
-              background: `${cEventContext.value &&
-                cEventContext.value?.styles?.containerBgColor}`,
-              backgroundImage: `url(${cEventContext.value &&
-                cEventContext.value?.styles?.BackgroundImage})`,
-            }}
-          >
+              backgroundSize: 'cover',
+              background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
+              backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,
+            }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
 
-            <EventSectionRoutes
-              generaltabs={generaltabs}
-              currentActivity={currentActivity}
-            />
+            <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
           </Content>
           <EviusFooter />
         </Layout>
@@ -281,7 +234,4 @@ const mapDispatchToProps = {
   setUserAgenda,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WithEviusContext(Landing));
+export default connect(mapStateToProps, mapDispatchToProps)(WithEviusContext(Landing));

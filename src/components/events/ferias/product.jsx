@@ -1,23 +1,31 @@
-import React from 'react';
 import { Tooltip, Card, Image, Typography, Badge, Button } from 'antd';
 import ShoppingOutlineIcon from '@2fd/ant-design-icons/lib/ShoppingOutline';
 import HandshakeOutlineIcon from '@2fd/ant-design-icons/lib/HandshakeOutline';
 import { ShoppingCartOutlined, DisconnectOutlined } from '@ant-design/icons';
-import LinkOff from "@2fd/ant-design-icons/lib/LinkOff"
+import LinkOff from '@2fd/ant-design-icons/lib/LinkOff';
 function products(props) {
   const { Paragraph } = Typography;
 
   return (
     <>
       <Card
-        actions={props.url == null ? [<>
-        <Tooltip key='comprar' title='No hay link'><LinkOff style={{ fontSize: '24px' }}/></Tooltip></>] : [
-          <Tooltip key='comprar' title='Comprar'>
-            <a href={props.url} target='__blank'>
-              <ShoppingCartOutlined style={{ fontSize: '24px' }} key='comprar' />
-            </a>
-          </Tooltip>,
-        ]}
+        actions={
+          props.url == null
+            ? [
+                <>
+                  <Tooltip key='comprar' title='No hay link'>
+                    <LinkOff style={{ fontSize: '24px' }} />
+                  </Tooltip>
+                </>,
+              ]
+            : [
+                <Tooltip key='comprar' title='Comprar'>
+                  <a href={props.url} target='__blank'>
+                    <ShoppingCartOutlined style={{ fontSize: '24px' }} key='comprar' />
+                  </a>
+                </Tooltip>,
+              ]
+        }
         style={{ borderRadius: '10px' }}
         bodyStyle={{ padding: '10px' }}
         cover={

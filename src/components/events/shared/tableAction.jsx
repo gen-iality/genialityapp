@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function TableAction({ ...props }) {
   const { id, object, saveItem, editItem, removeNew, removeItem, discardChanges } = props;
   return (
@@ -15,7 +13,7 @@ export default function TableAction({ ...props }) {
           </span>
         </button>
       ) : (
-        <button style={{marginLeft:20,marginRight:20}} data-tooltip='Editar'>
+        <button style={{ marginLeft: 20, marginRight: 20 }} data-tooltip='Editar'>
           <span className='icon' onClick={() => editItem(object)}>
             <i className='fas fa-edit' />
           </span>

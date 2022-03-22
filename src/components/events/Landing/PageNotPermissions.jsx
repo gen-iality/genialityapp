@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Card, Col, Row, Spin, Result, Button } from 'antd';
 import TicketsForm from '../../tickets/formTicket';
 import { connect } from 'react-redux';

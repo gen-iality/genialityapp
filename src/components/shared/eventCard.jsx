@@ -1,20 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Card, Space, Typography } from 'antd';
-import EventImage from '../../Assets/img/eventimage.png';
-
-const isUpper = (str) => {
-  return !/[a-z]/.test(str) && /[A-Z]/.test(str);
-};
-
-const FriendLyUrl = (url) => {
-  let slug = url?.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ');
-  slug = url?.replace(/^\s+|\s+$/gm, '');
-  slug = url?.replace(/\s+/g, '-');
-  return slug;
-};
-
+import { imageUtils } from '../../Utilities/ImageUtils';
+const EventImage = imageUtils.EventImage;
 class EventCard extends Component {
   render() {
     const { event, bordered, right, loading, isAdmin } = this.props;

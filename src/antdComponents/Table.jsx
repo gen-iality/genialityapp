@@ -287,11 +287,11 @@ const Table = (props) => {
           <Row wrap justify='end' gutter={[8, 8]}>
             {exportData && (
               <Col>
-                <ExportExcel
+                {/* <ExportExcel
                   columns={header}
                   list={list}
                   fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`}
-                />
+                /> */}
               </Col>
             )}
             {titleTable && <Col>{titleTable}</Col>}

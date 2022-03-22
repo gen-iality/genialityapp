@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import UserOneTimeLoginLinKForm from '../UserOneTimeLoginLinkForm';
 import { injectIntl } from 'react-intl';
 

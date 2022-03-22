@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import './Lobby.css';
-import StandsList from '../standsList'
-import { Link } from 'react-router-dom';
+import StandsList from '../standsList';
 import fachadaImg from './assets/PH_entrada_final_2021.jpeg';
 import logoImg from './assets/LOGO_PH.png';
 import logoFeriaImg from './assets/TITULO_MOBILE.png';
@@ -13,7 +12,7 @@ class Lobby extends Component {
     this.handleHideIntro = this.handleHideIntro.bind(this);
     this.state = {
       showIntro: false,
-      showStands: false
+      showStands: false,
     };
   }
 
@@ -36,9 +35,9 @@ class Lobby extends Component {
         organizer: 'Prhopio',
         logo: logoImg,
         logoFeria: logoFeriaImg,
-        logoFeriaInner:logoFeriaInnerImg,
+        logoFeriaInner: logoFeriaInnerImg,
         bgImage: bgImage,
-        bgIntroImage: fachadaImg
+        bgIntroImage: fachadaImg,
       },
       virtual_events: [
         {
@@ -49,8 +48,8 @@ class Lobby extends Component {
           speaker: {
             name: 'Pablo Perez',
             image:
-              'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2FchatImage%20(1).png?alt=media&token=8b0577e2-72c8-4aa6-979c-3da53e25227f'
-          }
+              'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2FchatImage%20(1).png?alt=media&token=8b0577e2-72c8-4aa6-979c-3da53e25227f',
+          },
         },
         {
           name: 'Nombre Evento',
@@ -60,10 +59,10 @@ class Lobby extends Component {
           speaker: {
             name: 'Juan Lopez',
             image:
-              'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2FchatImage%20(1).png?alt=media&token=8b0577e2-72c8-4aa6-979c-3da53e25227f'
-          }
-        }
-      ]
+              'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2FchatImage%20(1).png?alt=media&token=8b0577e2-72c8-4aa6-979c-3da53e25227f',
+          },
+        },
+      ],
     };
 
     if (this.state.showStands) {
@@ -79,7 +78,8 @@ class Lobby extends Component {
     }
 
     return (
-      <div onClick={this.handleHideIntro}
+      <div
+        onClick={this.handleHideIntro}
         className={`the-lobby ${this.state.showIntro ? '' : 'venue-exterior'}`}
         style={{ backgroundImage: `url("${lobby_data.info.bgImage}")` }}>
         <div
@@ -95,13 +95,13 @@ class Lobby extends Component {
             </p>
           </div>
         )}
-        
+
         <div className='the-lobby-header'>
           <div className='the-lobby-header-col-left'>
             <img src={lobby_data.info.logo} alt='' />
           </div>
           <div className='the-lobby-header-col-center'>
-            <img src={this.state.showIntro?lobby_data.info.logoFeriaInner:lobby_data.info.logoFeria} alt='' />
+            <img src={this.state.showIntro ? lobby_data.info.logoFeriaInner : lobby_data.info.logoFeria} alt='' />
           </div>
           <div className='the-lobby-header-col-right'>
             <div className='the-lobby-header-general-info'>
@@ -179,11 +179,15 @@ class Lobby extends Component {
             ))}
           </div>
         </div> */}
-        
+
         {/* <div onClick={() => this.handleShowStands()} className='the-lobby-exhibitors-btn'>
           <img src='/lobby/BOTON_STANDS.png' alt='' />
         </div> */}
-        {this.state.showIntro && (<div className='standlist-container'><StandsList /></div>)}
+        {this.state.showIntro && (
+          <div className='standlist-container'>
+            <StandsList />
+          </div>
+        )}
       </div>
     );
   }

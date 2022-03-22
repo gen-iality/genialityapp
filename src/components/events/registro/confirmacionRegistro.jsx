@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { message, Button, Row, Col, Checkbox, Form } from 'antd';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { EventsApi } from '../../../helpers/request';
@@ -41,11 +41,8 @@ function ConfirmacionRegistro(props) {
 
   return (
     <>
-      <Form
-        onFinish={saveData}
-        {...formLayout}
-      >
-        <Header 
+      <Form onFinish={saveData} {...formLayout}>
+        <Header
           title={'Confirmación de Registro'}
           description={'El siguiente mensaje le llegara a las personas luego de haberse registrado al evento'}
           save
@@ -57,10 +54,7 @@ function ConfirmacionRegistro(props) {
               <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
             </Form.Item>
             <Form.Item label={'Requerir la validación del correo antes de completar el registro'}>
-              <Checkbox
-                defaultChecked={validateEmail}
-                onChange={(e) => setValidateEmail(e.target.checked)}
-              />
+              <Checkbox defaultChecked={validateEmail} onChange={(e) => setValidateEmail(e.target.checked)} />
             </Form.Item>
           </Col>
         </Row>

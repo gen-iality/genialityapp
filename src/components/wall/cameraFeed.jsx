@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 //custom
 import { Button, message } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
@@ -13,7 +13,7 @@ class CameraFeed extends Component {
       image: '',
       hidden: true,
       hiddeVideo: false,
-      stream: null
+      stream: null,
     };
   }
   /**

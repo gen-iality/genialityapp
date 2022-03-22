@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Row, Col } from 'antd';
 import CardPreview from '../typeActivity/components/CardPreview';
 import GoToEviusMeet from './components/GoToEviusMeet';

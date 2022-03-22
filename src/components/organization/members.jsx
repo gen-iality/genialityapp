@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { OrganizationApi, RolAttApi } from "../../helpers/request";
-import { FormattedDate, FormattedTime } from "react-intl";
+import { useEffect, useState } from 'react';
+import { OrganizationApi, RolAttApi } from '../../helpers/request';
+import { FormattedDate, FormattedTime } from 'react-intl';
 /** export Excel */
-import { useHistory } from "react-router-dom";
-import { Table,  Button, Row, Col, Tag } from "antd";
-import { DownloadOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { columns } from "./tableColums/membersTableColumns";
-import ModalMembers from "../modal/modalMembers";
-import moment from "moment";
-import withContext from "../../context/withContext";
+import { useHistory } from 'react-router-dom';
+import { Table, Button, Row, Col, Tag } from 'antd';
+import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { columns } from './tableColums/membersTableColumns';
+import ModalMembers from '../modal/modalMembers';
+import moment from 'moment';
+import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
-import Header from "../../antdComponents/Header";
-
+import Header from '../../antdComponents/Header';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
   const [addOrEditUser, setAddOrEditUser] = useState(false);
   const [extraFields, setExtraFields] = useState([]);
   const [roleList, setRoleList] = useState([]);
@@ -31,7 +30,7 @@ function OrgMembers(props) {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
     data.map((membersData) => {
-      console.log("debug membersData ", membersData);
+      console.log('debug membersData ', membersData);
       const properties = {
         _id: membersData._id,
         created_at: membersData.created_at,
@@ -75,8 +74,8 @@ function OrgMembers(props) {
 
     const ws = utils.json_to_sheet(membersData);
     const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, "Members");
-    writeFileXLSX(wb, `Miembros_${moment().format("l")}.xlsx`);
+    utils.book_append_sheet(wb, ws, 'Members');
+    writeFileXLSX(wb, `Miembros_${moment().format('l')}.xlsx`);
   }
 
   function closeOrOpenModalMembers() {
@@ -105,16 +104,15 @@ function OrgMembers(props) {
   return (
     <>
       <Header
-        title={"Miembros"}
+        title={'Miembros'}
         description={
-          "Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda."
+          'Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.'
         }
       />
 
       <p>
         <small>
-          Última Sincronización : <FormattedDate value={lastUpdate} />{" "}
-          <FormattedTime value={lastUpdate} />
+          Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
         </small>
       </p>
 
@@ -125,20 +123,16 @@ function OrgMembers(props) {
       <Table
         columns={columns(columnsData, editModalUser)}
         dataSource={membersData}
-        size="small"
-        rowKey="index"
+        size='small'
+        rowKey='index'
         pagination={false}
         loading={isLoading}
         scroll={{ x: 1200 }}
         title={() => (
-          <Row wrap justify="end" gutter={[8, 8]}>
+          <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
               {membersData.length > 0 && (
-                <Button
-                  type="primary"
-                  icon={<DownloadOutlined />}
-                  onClick={exportFile}
-                >
+                <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
               )}
@@ -149,12 +143,8 @@ function OrgMembers(props) {
               /> */}
             </Col>
             <Col>
-              <Button
-                type="primary"
-                icon={<PlusCircleOutlined />}
-                onClick={addUser}
-              >
-                {"Agregar"}
+              <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>
+                {'Agregar'}
               </Button>
             </Col>
           </Row>

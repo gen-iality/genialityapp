@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Col } from 'antd';
 import EventLanding from './eventLanding';
 import { UseEventContext } from '../../context/eventContext';

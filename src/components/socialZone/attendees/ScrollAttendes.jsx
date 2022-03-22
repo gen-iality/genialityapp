@@ -1,5 +1,3 @@
-import React from 'react';
-
 const AttendeScroll = function(props) {
   return <div style={{ height: '300px' }}></div>;
 };

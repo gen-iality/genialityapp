@@ -1,6 +1,6 @@
 import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import { Button, Card, Modal, Result, Row } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import withContext from '../../../context/withContext';
 import { Actions } from '../../../helpers/request';
 

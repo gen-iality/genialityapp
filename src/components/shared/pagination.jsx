@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Pagination as PaginationAnt } from 'antd';
 
 class Pagination extends Component {
@@ -6,7 +6,7 @@ class Pagination extends Component {
     super(props);
     this.state = {
       pager: {},
-      datos: []
+      datos: [],
     };
   }
 
@@ -14,12 +14,11 @@ class Pagination extends Component {
     let auxArr = this.props.items;
     this.setPage(this.props.initialPage, auxArr);
   }
-  componentDidUpdate(prevProps){
-    if (this.props.items !== prevProps.items || (this.props.updatetable!==prevProps.updatetable)) {
+  componentDidUpdate(prevProps) {
+    if (this.props.items !== prevProps.items || this.props.updatetable !== prevProps.updatetable) {
       let auxArr = this.props.items;
       this.setPage(this.state.pager.currentPage, auxArr);
     }
-
   }
 
   getDerivedStateFromProps(nextProps) {
@@ -80,7 +79,7 @@ class Pagination extends Component {
       endPage: endPage,
       startIndex: startIndex,
       endIndex: endIndex,
-      pages: pages
+      pages: pages,
     };
   };
 

@@ -1,14 +1,43 @@
-import React from 'react';
+;
 import { Typography, Layout, Row, Col, Button } from 'antd';
+import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
 
 const { Header, Content, Footer } = Layout;
 
 interface propsOptions {
   title?: string;
-  children: React.ReactChild;
+  children: JSX.Element | JSX.Element[];
 }
 
 const LayoutTypeActivity = ({ title, children }: propsOptions) => {
+  const {
+    closeModal,
+    selectedKey,
+    previewKey,
+    typeOptions,
+    toggleActivitySteps,
+    buttonsTextNextOrCreate,
+    buttonTextPreviousOrCancel,
+    disableNextButton,
+  } = useTypeActivity();
+  console.log('🚀 NEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx', disableNextButton);
+  console.log('🚀 SELECCIONE ESTE kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk', { selectedKey, typeOptions });
+
+  const previousOrCancel = () => {
+    console.log('🚀 PREVIEW KEY ', previewKey, '----------------', typeOptions.key);
+    if (previewKey === 'close' || typeOptions.key === 'type') closeModal();
+    if (previewKey === 'type' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
+    if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
+  };
+
+  const nextOrCreate = () => {
+    if (selectedKey !== 'initial') {
+      toggleActivitySteps(selectedKey);
+      return;
+    }
+    closeModal();
+  };
+
   return (
     <Layout>
       <Header style={{ textAlign: 'center', padding: '0px 0px 20px 0px' }}>
@@ -18,10 +47,12 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
         <Row justify='end' gutter={[8, 8]} /* style={{ backgroundColor: 'red' }} */>
           <Col>
-            <Button>Cancelar/Anterior</Button>
+            <Button onClick={previousOrCancel}>{buttonTextPreviousOrCancel}</Button>
           </Col>
           <Col>
-            <Button type='primary'>Siguiente/Crear</Button>
+            <Button disabled={disableNextButton} onClick={nextOrCreate} type='primary'>
+              {buttonsTextNextOrCreate}
+            </Button>
           </Col>
         </Row>
       </Footer>

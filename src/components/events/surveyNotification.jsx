@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, notification, Drawer } from 'antd';
 
 let surveyNotification = () => {
@@ -32,7 +32,7 @@ let surveyNotification = () => {
       btn,
       key,
       duration: 0,
-      onClose: close
+      onClose: close,
     });
   };
 

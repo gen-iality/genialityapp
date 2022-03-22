@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Col, Switch } from 'antd';
 
 export default function SurveyItem({ survey, onChange }) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 import { Button } from 'antd';

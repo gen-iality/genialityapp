@@ -1,18 +1,11 @@
-import React, { Component } from "react";
+import { Component } from 'react';
 
 class ZoomConference extends Component {
-    async componentDidMount() {
-    }
+  async componentDidMount() {}
 
-    render() {
-        return (
-            <div>
-            
-            </div >
-        )
-    }
+  render() {
+    return <div></div>;
+  }
 }
 
-
-
-export default ZoomConference
+export default ZoomConference;

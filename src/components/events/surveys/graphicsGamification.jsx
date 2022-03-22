@@ -1,5 +1,5 @@
 import 'chartjs-plugin-datalabels';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Spin, Card } from 'antd';
 import Chart from 'chart.js/auto';
 import { Users } from './services';
@@ -15,7 +15,7 @@ class Graphics extends Component {
       chart: {},
       chartCreated: false,
       totalPesoVoto: 0,
-      pointsList: []
+      pointsList: [],
     };
     // this.percentPesoVoto = this.percentPesoVoto.bind(this)
   }
@@ -76,25 +76,25 @@ class Graphics extends Component {
       verticalBar.options = {
         plugins: {
           datalabels: {
-            color: '#777'
-          }
+            color: '#777',
+          },
         },
         scales: {
           y: [
             {
               ticks: {
                 fontColor: '#777',
-                minor: { display: false }
-              }
-            }
+                minor: { display: false },
+              },
+            },
           ],
           x: [
             {
               ticks: {
-                fontColor: '#777'
-              }
-            }
-          ]
+                fontColor: '#777',
+              },
+            },
+          ],
         },
         indexAxis: 'x',
       };

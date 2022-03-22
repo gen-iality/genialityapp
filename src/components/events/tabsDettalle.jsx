@@ -1,47 +1,47 @@
 import { Card } from 'antd';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const tabList = [
   {
     key: 'tab1',
-    tab: 'tab1'
+    tab: 'tab1',
   },
   {
     key: 'tab2',
-    tab: 'tab2'
-  }
+    tab: 'tab2',
+  },
 ];
 
 const contentList = {
   tab1: <p>content1</p>,
-  tab2: <p>content2</p>
+  tab2: <p>content2</p>,
 };
 
 const tabListNoTitle = [
   {
     key: 'article',
-    tab: 'article'
+    tab: 'article',
   },
   {
     key: 'app',
-    tab: 'app'
+    tab: 'app',
   },
   {
     key: 'project',
-    tab: 'project'
-  }
+    tab: 'project',
+  },
 ];
 
 const contentListNoTitle = {
   article: <p>article content</p>,
   app: <p>app content</p>,
-  project: <p>project content</p>
+  project: <p>project content</p>,
 };
 
 export default class TabsCard extends React.Component {
   state = {
     key: 'tab1',
-    noTitleKey: 'app'
+    noTitleKey: 'app',
   };
 
   onTabChange = (key, type) => {

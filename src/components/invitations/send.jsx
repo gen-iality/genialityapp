@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import 'moment/locale/es-us';

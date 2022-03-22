@@ -1,22 +1,16 @@
-import React from 'react';
 import { Card, Space, Typography, Badge } from 'antd';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Moment from 'moment';
 import './videoCard.css';
 import { UseEventContext } from '../../context/eventContext';
-
 import ReactPlayer from 'react-player';
-import EventImage from '../../Assets/img/eventimage.png';
 import { CalendarOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
 const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
-  let cEvent = UseEventContext();
   const { Meta } = Card;
-  const { Paragraph, Text, Title } = Typography;
-
+  const { Paragraph } = Typography;
   const forma = shape || 'horizontal';
-
   const [duration, setDuration] = useState(0);
 
   const handleDuration = (duration) => {
@@ -47,7 +41,6 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
             cover={
               <ReactPlayer
                 style={{ paddingTop: '2px' }}
-                /* light={duration !== 0 ? true : false} */
                 width={'160px'}
                 height={'100px'}
                 url={activity.video}

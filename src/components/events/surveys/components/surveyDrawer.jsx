@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col, Button, Drawer, Space } from 'antd';
 import { FileDoneOutlined, PieChartOutlined, CloseOutlined } from '@ant-design/icons';
 import { UseSurveysContext } from '../../../../context/surveysContext';

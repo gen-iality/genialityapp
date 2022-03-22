@@ -1,15 +1,17 @@
 import { Card, Space, Typography } from 'antd';
 import Meta from 'antd/lib/card/Meta';
-import React from 'react';
-
 const ProductCard = ({ galery, eventId, history }) => {
   const { Title } = Typography;
   return (
     <Card
       actions={[
-        (galery?.currency && galery?.currency) &&<div style={{ fontWeight: 'bold', fontSize: '18px' }} onClick={null} key={'act-' + galery.id}>
-          {(galery?.currency && galery?.currency) +" $ "+( galery.start_price?.toLocaleString('es-CO') || galery.price?.toLocaleString('es-CO')) }
-        </div>
+        galery?.currency && galery?.currency && (
+          <div style={{ fontWeight: 'bold', fontSize: '18px' }} onClick={null} key={'act-' + galery.id}>
+            {(galery?.currency && galery?.currency) +
+              ' $ ' +
+              (galery.start_price?.toLocaleString('es-CO') || galery.price?.toLocaleString('es-CO'))}
+          </div>
+        ),
       ]}
       bordered={false}
       bodyStyle={{ padding: '10px 10px', minHeight: '120px' }}
@@ -23,10 +25,12 @@ const ProductCard = ({ galery, eventId, history }) => {
             <Title level={5} ellipsis={{ rows: 2 }}>
               {galery.name}
             </Title>
-            {galery && galery.by &&<div>
-              <span style={{ fontWeight: 'bold' }}>by:&nbsp;</span>
-              {galery && galery.by ? galery.by : 'Sin artista'}
-            </div>}
+            {galery && galery.by && (
+              <div>
+                <span style={{ fontWeight: 'bold' }}>by:&nbsp;</span>
+                {galery && galery.by ? galery.by : 'Sin artista'}
+              </div>
+            )}
           </Space>
         }
       />

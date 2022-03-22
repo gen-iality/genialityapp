@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { eventTicketsApi } from '../../helpers/request';
 import { useHistory } from 'react-router-dom';
 import { handleRequestError } from '../../helpers/utils';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import ImageInput from '../shared/imageInput';
 import axios from 'axios/index';
 import { Actions, OrganizationApi } from '../../helpers/request';

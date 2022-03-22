@@ -1,5 +1,4 @@
 //Función para generar UUID
-import React from 'react';
 import moment from 'moment';
 import { Actions } from './request';
 import { Modal, Spin } from 'antd';

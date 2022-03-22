@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { List, Result, Card } from 'antd';
 import GoogleControllerOff from '@2fd/ant-design-icons/lib/GoogleControllerOff';
 import UsersCard from '../../shared/usersCard';

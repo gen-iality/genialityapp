@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTable, usePagination, useRowSelect } from 'react-table';
 
 /**
@@ -26,7 +25,7 @@ export default function EviusTable(props) {
         nuevo: 'nuevo',
         nuevo2: 'nuevo2',
         onClick: (a) => {},
-        ...props
+        ...props,
       };
     });
   };
@@ -44,11 +43,11 @@ export default function EviusTable(props) {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
-      data
+      data,
     },
     usePagination,
     useRowSelect,

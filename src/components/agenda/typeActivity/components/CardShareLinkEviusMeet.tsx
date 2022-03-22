@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
 import { CopyFilled } from '@ant-design/icons';
 

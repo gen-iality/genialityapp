@@ -1,21 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { UseUserEvent } from "../../context/eventUserContext";
-import { isHost } from "../../helpers/helperEventUser";
-import { UseEventContext } from "../../context/eventContext";
-import {
-  getLiveStreamStatus,
-  getLiveStreamStats,
-  ResetLiveStream,
-} from "../../adaptors/wowzaStreamingAPI";
+import { useState, useEffect } from 'react';
+import { UseUserEvent } from '../../context/eventUserContext';
+import { isHost } from '../../helpers/helperEventUser';
+import { UseEventContext } from '../../context/eventContext';
+import { getLiveStreamStatus, getLiveStreamStats, ResetLiveStream } from '../../adaptors/wowzaStreamingAPI';
 
-const IframeZoomComponent = ({
-  platform,
-  name,
-  email,
-  meeting_id,
-  generalTabs,
-  isHost,
-}) => {
+const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, isHost }) => {
   const [platformurl, setPlatformurl] = useState(null);
 
   useEffect(() => {
@@ -38,18 +27,11 @@ const IframeZoomComponent = ({
     await ResetLiveStream(meeting_id);
   };
 
-  const getMeetingPath = async (
-    platform,
-    name,
-    email,
-    meeting_id,
-    generalTabs,
-    isHost
-  ) => {
-    console.log("platform", platform);
+  const getMeetingPath = async (platform, name, email, meeting_id, generalTabs, isHost) => {
+    console.log('platform', platform);
     let url = null;
     switch (platform) {
-      case "zoom":
+      case 'zoom':
         let url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
         url =
           url_conference +
@@ -60,12 +42,12 @@ const IframeZoomComponent = ({
           `&host=${isHost}`;
         break;
 
-      case "vimeo":
+      case 'vimeo':
         url = `https://player.vimeo.com/video/${meeting_id}`;
         break;
-      case "dolby":
+      case 'dolby':
         url = `https://eviusmeets.netlify.app/?username=${name}&email=${email}`;
-      case "streaming":
+      case 'streaming':
     }
     /*
         let live_stream = await getLiveStreamConfig(meeting_id)
@@ -83,19 +65,18 @@ const IframeZoomComponent = ({
 
   return (
     <>
-      {platform === "streaming" ? (
+      {platform === 'streaming' ? (
         <>
           <WOWZAPlayer meeting_id={meeting_id} />
         </>
       ) : (
         <iframe
           src={platformurl}
-          frameBorder="0"
-          allow="autoplay; fullscreen; camera *;microphone *"
+          frameBorder='0'
+          allow='autoplay; fullscreen; camera *;microphone *'
           allowFullScreen
           allowusermedia
-          className="video"
-        ></iframe>
+          className='video'></iframe>
       )}
     </>
   );

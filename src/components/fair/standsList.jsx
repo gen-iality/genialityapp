@@ -1,4 +1,3 @@
-import React from 'react';
 import './standsList.css';
 
 function StandsList() {

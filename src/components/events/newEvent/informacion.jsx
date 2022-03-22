@@ -1,9 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
+import { useEffect, useState } from 'react';
 import { DateTimePicker } from 'react-widgets';
-import EventImage from '../../../Assets/img/eventimage.png';
 import {
-  Badge,
   Card,
   Col,
   Input,
@@ -19,12 +16,7 @@ import {
   Select,
   TimePicker,
 } from 'antd';
-import {
-  CalendarOutlined,
-  CheckCircleFilled,
-  DeleteOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
+import { CalendarOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../context/newEventContext';
@@ -129,9 +121,7 @@ const Informacion = (props) => {
     if (selectOrganization) {
       obtenerTemplates();
       selectTemplate(
-        selectOrganization.template_properties
-          ? selectOrganization?.template_properties[0]._id['$oid']
-          : undefined
+        selectOrganization.template_properties ? selectOrganization?.template_properties[0]._id['$oid'] : undefined
       );
     }
     async function obtenerTemplates() {
@@ -160,9 +150,7 @@ const Informacion = (props) => {
           {containsError('name') && (
             <Col>
               {' '}
-              <small className='text-color'>
-                Ingrese un nombre correcto para el evento
-              </small>
+              <small className='text-color'>Ingrese un nombre correcto para el evento</small>
             </Col>
           )}
         </div>
@@ -174,22 +162,18 @@ const Informacion = (props) => {
                 <Link onClick={() => visibilityDescription(false)}>
                   |{' '}
                   <Tooltip title='Eliminar descripción'>
-                    <DeleteOutlined className='text-color' />{' '}
-                    <small className='text-color'>Eliminar descripción</small>
+                    <DeleteOutlined className='text-color' /> <small className='text-color'>Eliminar descripción</small>
                   </Tooltip>
                 </Link>
               </Text>
               <Input.TextArea
                 id={'description'}
                 value={valueInputs['description'] || ''}
-                onChange={(e) => handleInput(e, 'description')}
-              ></Input.TextArea>
+                onChange={(e) => handleInput(e, 'description')}></Input.TextArea>
               {containsError('description') && (
                 <Col>
                   {' '}
-                  <small className='text-color'>
-                    Ingrese una descripción válida
-                  </small>
+                  <small className='text-color'>Ingrese una descripción válida</small>
                 </Col>
               )}
             </div>
@@ -215,16 +199,14 @@ const Informacion = (props) => {
             {organizations.length > 0 && (
               <div style={{ marginBottom: '30px' }}>
                 <p>
-                  Este evento pertenecerá a la organización |{' '}
-                  <b>{selectOrganization?.name}</b>
+                  Este evento pertenecerá a la organización | <b>{selectOrganization?.name}</b>
                 </p>
                 <Button
                   onClick={() => {
                     newOrganization(false);
                     changeOrganization(true);
                   }}
-                  block
-                >
+                  block>
                   Cambiar de organización
                 </Button>
               </div>
@@ -235,17 +217,10 @@ const Informacion = (props) => {
                   createOrganizationF
                     ? null
                     : [
-                        <Button
-                          key='back'
-                          onClick={() => changeOrganization(false)}
-                        >
+                        <Button key='back' onClick={() => changeOrganization(false)}>
                           Cerrar
                         </Button>,
-                        <Button
-                          key='submit'
-                          type='primary'
-                          onClick={selectOrganizationOK}
-                        >
+                        <Button key='submit' type='primary' onClick={selectOrganizationOK}>
                           Seleccionar
                         </Button>,
                       ]
@@ -255,8 +230,7 @@ const Informacion = (props) => {
                 cancelText='Cerrar'
                 title='Organizaciónes'
                 visible={organization && !isbyOrganization}
-                onCancel={() => changeOrganization(false)}
-              >
+                onCancel={() => changeOrganization(false)}>
                 {!createOrganizationF && (
                   <Row style={{ marginBottom: 10 }} justify={'end'}>
                     <Button onClick={() => newOrganization(true)}>
@@ -266,9 +240,7 @@ const Informacion = (props) => {
                 )}
                 {createOrganizationF && (
                   <Row style={{ marginBottom: 10 }} justify={'end'}>
-                    <Button onClick={() => newOrganization(false)}>
-                      Ver organizaciones
-                    </Button>
+                    <Button onClick={() => newOrganization(false)}>Ver organizaciones</Button>
                   </Row>
                 )}
                 {!createOrganizationF && (
@@ -281,17 +253,10 @@ const Informacion = (props) => {
                       <List.Item
                         style={{
                           cursor: 'pointer',
-                          color:
-                            selectOrganization?.id == item.id
-                              ? 'white'
-                              : 'rgba(0, 0, 0, 0.85)',
-                          background:
-                            selectOrganization?.id == item.id
-                              ? '#40a9ff'
-                              : 'white',
+                          color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
+                          background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
                         }}
-                        onClick={() => selectedOrganization(item)}
-                      >
+                        onClick={() => selectedOrganization(item)}>
                         {item.name}
                       </List.Item>
                     )}
@@ -307,8 +272,7 @@ const Informacion = (props) => {
                       initialValues={{ remember: false }}
                       onFinish={createNewOrganization}
                       onFinishFailed={null}
-                      autoComplete='off'
-                    >
+                      autoComplete='off'>
                       <Form.Item
                         label='Nombre'
                         name='name'
@@ -317,8 +281,7 @@ const Informacion = (props) => {
                             required: true,
                             message: 'Ingrese un nombre válido',
                           },
-                        ]}
-                      >
+                        ]}>
                         <Input></Input>
                       </Form.Item>
                       {!loadingAdd && (
@@ -383,11 +346,7 @@ const Informacion = (props) => {
         {selectOrganization?.template_properties && (
           <Space direction='vertical'>
             <Text>Template: </Text>
-            <Select
-              value={templateId}
-              style={{ minWidth: '400px' }}
-              onChange={handleChange}
-            >
+            <Select value={templateId} style={{ minWidth: '400px' }} onChange={handleChange}>
               {selectOrganization.template_properties.map((template) => (
                 <Option value={template._id['$oid']}>{template.name}</Option>
               ))}
@@ -405,15 +364,10 @@ const Informacion = (props) => {
         onOk={handleOk}
         cancelText='Cancelar'
         onCancel={handleCancel}
-        width={600}
-      >
+        width={600}>
         <Row gutter={[16, 16]} justify='center' align='top'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <DayPicker
-              onDayClick={changeSelectDay}
-              selectedDays={selectedDay}
-              value={selectedDay}
-            />
+            <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Title level={4} type='secondary'>
@@ -430,9 +384,7 @@ const Informacion = (props) => {
                       allowClear={false}
                       use12Hours
                       value={moment(selectedHours.from)}
-                      onChange={(hours) =>
-                        changeSelectHours({ ...selectedHours, from: hours })
-                      }
+                      onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
                     />
                   </Space>
                 </div>
@@ -445,18 +397,15 @@ const Informacion = (props) => {
                       allowClear={false}
                       use12Hours
                       value={moment(selectedHours.at)}
-                      onChange={(hours) =>
-                        changeSelectHours({ ...selectedHours, at: hours })
-                      }
+                      onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}
                     />
                   </Space>
                 </div>
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              Si tu evento se extiende por más de un día podrás ajustar las
-              fechas en la sección <strong>Datos del evento</strong> una vez lo
-              hayas creado.
+              Si tu evento se extiende por más de un día podrás ajustar las fechas en la sección{' '}
+              <strong>Datos del evento</strong> una vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>

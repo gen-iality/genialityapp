@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import API, { EventsApi, TicketsApi } from '../../helpers/request';
 import { fieldNameEmailFirst } from '../../helpers/utils';
 import FormComponent from './registrationForm/form';

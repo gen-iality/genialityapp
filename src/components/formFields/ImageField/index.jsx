@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { concat, omit, pick } from 'ramda';

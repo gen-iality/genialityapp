@@ -1,5 +1,4 @@
-import React from "react";
-import { Spin } from "antd";
+import { Spin } from 'antd';
 
 function WithLoading(Component) {
   return function WihLoadingComponent({ isLoading, ...props }) {

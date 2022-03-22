@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Input, message } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { concat, omit, pick } from 'ramda';

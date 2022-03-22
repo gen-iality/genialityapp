@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
 import { DocumentsApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
@@ -12,10 +12,10 @@ const { confirm } = Modal;
 
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
-const Document = ( props ) => {
+const Document = (props) => {
   const locationState = props.location.state;
   const history = useHistory();
   const [document, setDocument] = useState({});
@@ -27,7 +27,7 @@ const Document = ( props ) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if(locationState?.edit) {
+    if (locationState?.edit) {
       getDocument();
     }
   }, []);
@@ -39,17 +39,17 @@ const Document = ( props ) => {
     setFiles([response.file]);
     setDocumentList(response.documentList);
     setLoading(false);
-  }
+  };
 
   const onSubmit = async () => {
     setLoading(true);
-    if(folder) {
-      setDocument({...document, type: 'folder', folder});
+    if (folder) {
+      setDocument({ ...document, type: 'folder', folder });
     }
 
-    if(!document.title) {
+    if (!document.title) {
       message.error('El título es requerido');
-    } else if(!files && document.type !== 'folder') {
+    } else if (!files && document.type !== 'folder') {
       message.error('El archivo es requerido');
     } else {
       const loading = message.open({
@@ -57,14 +57,21 @@ const Document = ( props ) => {
         type: 'loading',
         content: <> Por favor espere miestras se guarda la información..</>,
       });
-  
+
       try {
-        if(locationState.edit) {
-          await DocumentsApi.editOne(!folder ? document : {title: document.title, type: 'folder', folder}, locationState.edit, props.event._id);
+        if (locationState.edit) {
+          await DocumentsApi.editOne(
+            !folder ? document : { title: document.title, type: 'folder', folder },
+            locationState.edit,
+            props.event._id
+          );
         } else {
-          await DocumentsApi.create(!folder ? document : {title: document.title, type: 'folder', folder}, props.event._id);
-        }     
-      
+          await DocumentsApi.create(
+            !folder ? document : { title: document.title, type: 'folder', folder },
+            props.event._id
+          );
+        }
+
         message.destroy(loading.key);
         message.open({
           type: 'success',
@@ -80,7 +87,7 @@ const Document = ( props ) => {
         });
       }
     }
-  }
+  };
 
   const remove = () => {
     const loading = message.open({
@@ -88,7 +95,7 @@ const Document = ( props ) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    if(locationState.edit) {
+    if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -131,45 +138,50 @@ const Document = ( props ) => {
                 content: handleRequestError(e).message,
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
-  }
+  };
 
   const handleChange = (e) => {
     const { name } = e.target;
     const { value } = e.target;
     setDocument({
       ...document,
-      [name] : value
-    })
+      [name]: value,
+    });
   };
 
   const onHandlerFile = async (e) => {
     /* console.log(e.file.originFileObj); */
     setLoading(true);
     setDocumentList(e.fileList);
-    
+
     const ref = firebase.storage().ref();
     setFiles(e.file.originFileObj);
-    
+
     //Se crea el nombre con base a la fecha y nombre del archivo
     const name = moment().format('YYYY-DD-MM') + '-' + files.name;
     setFileName(name);
     //Se extrae la extencion del archivo por necesidad del aplicativo
-    
+
     setExtention(name.split('.').pop());
 
     /* this.setState({ fileName: name }); */
     /* console.log(fileName, name); */
-    let uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files)
+    let uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files);
     /* setUploadTask(uploadTaskRef); */
     /* console.log(uploadTaskRef); */
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
-    uploadTaskRef.on(firebase.storage.TaskEvent.STATE_CHANGED, stateUploadFile, wrongUpdateFiles, succesUploadFile(uploadTaskRef));
-  }
+    uploadTaskRef.on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      stateUploadFile,
+      wrongUpdateFiles,
+      succesUploadFile(uploadTaskRef)
+    );
+  };
 
   const stateUploadFile = (snapshot) => {
     switch (snapshot.state) {
@@ -204,11 +216,19 @@ const Document = ( props ) => {
         console.log(downloadURL);
         setLoading(false);
       });
-      setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'file', documentList: documentList});
-    } catch(e) {
+      setDocument({
+        ...document,
+        format: extention,
+        title: fileName,
+        name: fileName,
+        file: file,
+        type: 'file',
+        documentList: documentList,
+      });
+    } catch (e) {
       setLoading(true);
     }
-  }
+  };
 
   /* const createFolder = async () => {
     let value = document.getElementById('folderName').value;
@@ -226,38 +246,23 @@ const Document = ( props ) => {
 
   const reload = () => {
     history.go(0);
-  }
+  };
 
   return (
-    <Form
-      onFinish={onSubmit}
-      {...formLayout}
-    >
-      <Header 
-        title={'Documento'}
-        back
-        save
-        form
-        remove={remove}
-        edit={locationState?.edit}
-        loadingSave={loading}
-      />
-      
-      <Spin 
-        spinning={loading} 
+    <Form onFinish={onSubmit} {...formLayout}>
+      <Header title={'Documento'} back save form remove={remove} edit={locationState?.edit} loadingSave={loading} />
+
+      <Spin
+        spinning={loading}
         tip={
           <>
             Por favor espere mientras cargue... <br />
             Si el problema persiste, favor de recargar <br />
-            <Button 
-              type='primary' 
-              icon={<ReloadOutlined />} 
-              onClick={() => reload()}>
-                Recargar
+            <Button type='primary' icon={<ReloadOutlined />} onClick={() => reload()}>
+              Recargar
             </Button>
           </>
-        }
-      >
+        }>
         <Row justify='center' wrap gutter={12}>
           <Col span={14}>
             {/* <Form.Item label={'¿Desea crear carpeta?'} >
@@ -266,43 +271,40 @@ const Document = ( props ) => {
                 onChange={(e) => setFolder(e.target.checked)}
               />
             </Form.Item> */}
-            {
-              !folder && (
-                <Form.Item  
-                  label={
-                    <label style={{ marginTop: '2%' }} >
-                      Archivo <label style={{ color: 'red' }}>*</label>
-                    </label>
-                  }
-                rules={[{ required: true, message: 'El archivo es requerido' }]}
-                >
-                  <Upload
-                    multiple={false}
-                    name={'file'}
-                    type='file'
-                    fileList={documentList}
-                    defaultValue={documentList}
-                    onChange={(e) => {
-                      onHandlerFile(e);
-                      e.file.status = 'success'
-                    }}
-                    listType='picture'
-                    maxCount={1}
-                  >
-                    <Button block icon={<UploadOutlined />}>Toca para subir archivo</Button>
-                  </Upload>
-                </Form.Item>
-              )
-            }
-            <Form.Item 
+            {!folder && (
+              <Form.Item
+                label={
+                  <label style={{ marginTop: '2%' }}>
+                    Archivo <label style={{ color: 'red' }}>*</label>
+                  </label>
+                }
+                rules={[{ required: true, message: 'El archivo es requerido' }]}>
+                <Upload
+                  multiple={false}
+                  name={'file'}
+                  type='file'
+                  fileList={documentList}
+                  defaultValue={documentList}
+                  onChange={(e) => {
+                    onHandlerFile(e);
+                    e.file.status = 'success';
+                  }}
+                  listType='picture'
+                  maxCount={1}>
+                  <Button block icon={<UploadOutlined />}>
+                    Toca para subir archivo
+                  </Button>
+                </Upload>
+              </Form.Item>
+            )}
+            <Form.Item
               label={
-                <label style={{ marginTop: '2%' }} >
+                <label style={{ marginTop: '2%' }}>
                   Título <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El título es requerido' }]}
-            >
-              <Input 
+              rules={[{ required: true, message: 'El título es requerido' }]}>
+              <Input
                 name={'title'}
                 placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
                 value={document.title}
@@ -314,7 +316,7 @@ const Document = ( props ) => {
         </Row>
       </Spin>
     </Form>
-  )
-}
+  );
+};
 
 export default withRouter(Document);

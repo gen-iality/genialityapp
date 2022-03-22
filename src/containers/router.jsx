@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCategories } from '../redux/categories/actions';
@@ -15,11 +15,10 @@ const MainRouter = (props) => {
 
   return (
     <Router
-      basename="/"
+      basename='/'
       getUserConfirmation={() => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
-      }}
-    >
+      }}>
       <ContentContainer />
     </Router>
   );

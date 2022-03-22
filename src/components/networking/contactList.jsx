@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd';
 import { Networking } from '../../helpers/request';
 import { EventFieldsApi } from '../../helpers/request';

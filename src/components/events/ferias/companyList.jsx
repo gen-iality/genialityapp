@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Col, Modal, Button, Typography, Space, Tag, Badge, Card } from 'antd';
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';

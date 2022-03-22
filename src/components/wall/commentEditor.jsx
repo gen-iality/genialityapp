@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, Form, Input, Row, Col, Modal } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { AuthUrl } from '../../helpers/constants';

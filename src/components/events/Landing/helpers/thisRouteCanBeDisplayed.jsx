@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Button, Result, Typography } from 'antd';
 import { UseUserEvent } from '../../../../context/eventUserContext';
 import { UseEventContext } from '../../../../context/eventContext';

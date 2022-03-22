@@ -1,4 +1,3 @@
-import React from 'react';
 import { firestore } from '../../../../helpers/firebase';
 import { SurveyPage } from '../services/services';
 

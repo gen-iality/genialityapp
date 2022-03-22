@@ -1,4 +1,4 @@
-// import React, { createContext, useEffect } from 'react';
+//import  { createContext, useEffect } from 'react';
 // import { useState } from 'react';
 // import { firestore, fireRealtime } from '../helpers/firebase';
 // import { UseEventContext } from './eventContext';
@@ -26,8 +26,6 @@
 //   const [chatAttendeChats, setchatAttendeChats] = useState('1');
 //   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
 //   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
-
- 
 
 //   let generateUniqueIdFromOtherIds = (ida, idb) => {
 //     let chatid;

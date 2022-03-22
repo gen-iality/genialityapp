@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Trivia from './trivia';
 import TriviaEdit from './edit';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Tabs, Button, Menu, Row, Col, Tooltip } from 'antd';
 import {
   CommentOutlined,

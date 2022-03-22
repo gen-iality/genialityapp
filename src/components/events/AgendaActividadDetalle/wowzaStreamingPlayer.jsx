@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import WOWZAPlayer from '../../livetransmision/WOWZAPlayer';
 import { getLiveStreamStatus, getLiveStreamStats } from '../../../adaptors/wowzaStreamingAPI';
 import { CurrentUserContext } from '../../../context/userContext';
