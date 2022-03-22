@@ -51,7 +51,7 @@ const functionCreateNewOrganization = (props) => {
 
   function sendDataFinished() {
     message.destroy(loading.key);
-    props.closeModal(false);
+    props.closeModal && props.closeModal(false);
   }
   const uploadLogo = async () => {
     const selectedLogo = props.logo !== null ? props.logo[0].thumbUrl : null;
@@ -84,9 +84,9 @@ const functionCreateNewOrganization = (props) => {
         message.error('Error al redirigir al creador de eventos rápidos');
       }
     } else {
-      await props.fetchItem();
+      props.fetchItem && (await props.fetchItem());
       /** se trae la function fetchItem desde el main.jsx para poder actualizar la data */
-      props.resetFields();
+      props.resetFields && props.resetFields();
       if (response?._id) {
         sendDataFinished();
         message.success('Organización creada correctamente');

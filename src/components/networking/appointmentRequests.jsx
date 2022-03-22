@@ -91,7 +91,8 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
 
   return (
     <>
-      <div>
+    <Divider>Solicitudes de citas recibidas</Divider>
+      <div style={{marginBottom:15}}>
         {!loading &&
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
@@ -104,7 +105,9 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               />
             ))
           ) : (
+            <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
             <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes recibidas pendientes'}</Card>
+            </Col>
           ))}
 
         {loading && (
@@ -113,7 +116,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           </Row>
         )}
       </div>
-
+      <Divider>Solicitudes de citas enviadas</Divider>
       {showpendingsend !== false && (
         <div>
           {!loading1 &&
@@ -129,7 +132,9 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
                 />
               ))
             ) : (
+              <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
               <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes pendientes enviadas'}</Card>
+              </Col>
             ))}
 
           {loading1 && (
