@@ -1,8 +1,10 @@
-import app from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/storage';
-import 'firebase/database';
+//import { initializeApp } from 'firebase/app';
+import app from 'firebase/compat/app';
+
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import 'firebase/compat/storage';
+import 'firebase/compat/database';
 
 /**
  * FIRESTORE algunas veces se demora en traer los datos
@@ -38,11 +40,14 @@ const fireStorage = eviusaauth.storage();
 const fireRealtime = eviusaauth.database();
 const auth = eviusaauth.auth();
 
+//const firestoreDB = getFirestore(app);
+
 const firestoreeviuschat = eviuschat.firestore();
 const realTimeviuschat = eviuschat.database();
 
 firestore.settings({
   cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
+  merge: true,
 });
 
 firestore

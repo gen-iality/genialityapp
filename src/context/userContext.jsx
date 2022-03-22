@@ -93,6 +93,38 @@ export function UseCurrentUser() {
   if (!contextuser) {
     throw new Error('currentUser debe estar dentro del proveedor');
   }
-
   return contextuser;
+}
+
+export const UseCurrentUserContext = UseCurrentUser;
+
+/**
+ * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
+ * @param {boolean} showNotification If the value is true the remote logout notification is displayed
+ */
+export async function logout(showNotification) {
+  const user = app.auth()?.currentUser;
+  const lastSignInTime = (await user.getIdTokenResult()).authTime;
+
+  app
+    .auth()
+    .signOut()
+    .then(async () => {
+      const currentUserConnect = await conectionRef.doc(cUser.value?.uid).get();
+      if (currentUserConnect?.data()?.lastSignInTime === lastSignInTime)
+        await conectionRef.doc(cUser.value?.uid).delete();
+
+      //const routeUrl = window.location.href;
+      //const weAreOnTheLanding = routeUrl.includes('landing');
+      //handleChangeTypeModal(null);
+      //cEventuser.setuserEvent(initialStateEvenUserContext);
+      //cUser.setCurrentUser(initialStateUserContext);
+      // if (showNotification) remoteLogoutNotification('info');
+      // if (!weAreOnTheLanding) {
+      //   history.push('/');
+      // }
+    })
+    .catch(function(error) {
+      console.log('🚀 error', error);
+    });
 }

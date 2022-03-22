@@ -8,13 +8,15 @@ import { CurrentUserEventProvider } from '../context/eventUserContext';
 import { CurrentEventProvider } from '../context/eventContext';
 import { CurrentUserProvider } from '../context/userContext';
 import { SurveysProvider } from '../context/surveysContext';
-
 import { HelperContextProvider } from '../context/HelperContext';
+import { AgendaContextProvider } from '../context/AgendaContext';
+import { UseCurrentUser } from '../context/userContext';
+
 import EventOrganization from '../components/eventOrganization';
 import Organization from '../components/organization';
 import { NewEventProvider } from '../context/newEventContext';
 import MainProfile from '../components/profile/main';
-import { AgendaContextProvider } from '../context/AgendaContext';
+
 import { UseCurrentUser } from '../context/userContext';
 import loadable from '@loadable/component';
 import ModalAuth from '../components/authentication/ModalAuth';

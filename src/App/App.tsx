@@ -1,27 +1,29 @@
-import { Provider } from 'react-redux';
 import './App.less';
-import store from '../redux/store';
-import MainRouter from '../containers/router';
-import withContext from '../context/withContext';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { PreloaderApp } from '../PreloaderApp/PreloaderApp';
-const queryClient = new QueryClient();
+import loadable from '@loadable/component';
+import { UseCurrentUserContext } from './../context/userContext';
 
-const App = (props) => {
-  if (props.cUser.status == 'LOADING')
-    return (
-      <>
-        <PreloaderApp />
-      </>
-    );
+import MainRouter from '../containers/router';
+
+//import MainRouter from '../containers/router';
+import { PreloaderApp } from '../PreloaderApp/PreloaderApp';
+import { Layout } from 'antd';
+
+const { Footer, Sider, Content } = Layout;
+
+//Code splitting
+const Header = loadable(() => import('./../containers/header'));
+
+const App = () => {
+  const cUser = UseCurrentUserContext();
+  if (cUser.status == 'LOADING') return <PreloaderApp />;
 
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <MainRouter />
-      </QueryClientProvider>
-    </Provider>
+    <Layout style={{ minHeight: '100vh' }}>
+      {/* <Header /> */}
+      <MainRouter />
+      <Footer>Footer</Footer>
+    </Layout>
   );
 };
-let AppwithContext = withContext(App);
-export default AppwithContext;
+
+export default App;
