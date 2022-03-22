@@ -1,9 +1,23 @@
-import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs, Space, Typography, Popconfirm, Divider } from 'antd';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Modal,
+  notification,
+  Row,
+  Spin,
+  Tabs,
+  Space,
+  Typography,
+  Popconfirm,
+  Divider,
+} from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { find, map, mergeRight, path, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
@@ -72,8 +86,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       createChatRoom(currentRoom);
     }
   }, [currentRoom]);
-
-
 
   if (loading) {
     return (
@@ -257,21 +269,20 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     }
   };
 
-  const validDateRoom=(room)=>{
-    let dateFrom= moment(room.timestamp_start).format('YYYY-MM-DD');
-    
-    if(moment().format('YYYY-MM-DD')==dateFrom){
-      
+  const validDateRoom = (room) => {
+    let dateFrom = moment(room.timestamp_start).format('YYYY-MM-DD');
+
+    if (moment().format('YYYY-MM-DD') == dateFrom) {
       return true;
     }
     return false;
-  }
+  };
 
   return (
     <Row justify='center' style={{ marginBottom: '20px' }}>
       <Card
         headStyle={{ border: 'none' }}
-        style={{ width: 600, textAlign: 'left', borderRadius:'10px' }}
+        style={{ width: 600, textAlign: 'left', borderRadius: '10px' }}
         bodyStyle={{ paddingTop: '0px' }}
         bordered={true}
         extra={
@@ -307,12 +318,18 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           }
           title={<Typography.Title level={5}>{userName || 'No registra nombre'}</Typography.Title>}
           description={
-            <Typography.Paragraph style={{marginTop:'-15px'}}>
-              <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>{userEmail || 'No registra correo'}</Typography.Text>
+            <Typography.Paragraph style={{ marginTop: '-15px' }}>
+              <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>
+                {userEmail || 'No registra correo'}
+              </Typography.Text>
               {!!data.message && (
                 <p style={{ paddingRight: '20px' }}>
-                  <Divider orientation="left" plain style={{marginBottom:'0px'}}>Mensaje</Divider>
-                  <Typography.Paragraph type='secondary' ellipsis={{rows:2}}>{data.message}</Typography.Paragraph>
+                  <Divider orientation='left' plain style={{ marginBottom: '0px' }}>
+                    Mensaje
+                  </Divider>
+                  <Typography.Paragraph type='secondary' ellipsis={{ rows: 2 }}>
+                    {data.message}
+                  </Typography.Paragraph>
                 </p>
               )}
             </Typography.Paragraph>
@@ -329,7 +346,11 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                 onClick={() => {
                   accessMeetRoom(data, eventUser);
                 }}>
-                {validDateRoom(data) && !enableMeetings ? 'Ingresar a reunión' : !validDateRoom(data) && !enableMeetings?'Reunión no iniciada':'Reunión Cerrada'}
+                {validDateRoom(data) && !enableMeetings
+                  ? 'Ingresar a reunión'
+                  : !validDateRoom(data) && !enableMeetings
+                  ? 'Reunión no iniciada'
+                  : 'Reunión Cerrada'}
               </Button>
             </Col>
           </Row>

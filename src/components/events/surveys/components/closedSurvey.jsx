@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Card, Result } from 'antd';
 import { connect } from 'react-redux';
 import * as surveysActions from '../../../../redux/survey/actions';
@@ -9,7 +8,7 @@ const { setSurveyResult } = surveysActions;
 function ClosedSurvey(props) {
   const { currentSurvey, setSurveyResult } = props;
   return (
-    <Card style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height:'80vh' }}>
+    <Card style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
       <Result
         icon={<SmileOutlined />}
         title={
@@ -18,7 +17,7 @@ function ClosedSurvey(props) {
           </h1>
         }
         extra={
-          <Button onClick={() => setSurveyResult('results')} type='primary' size='large' >
+          <Button onClick={() => setSurveyResult('results')} type='primary' size='large'>
             Ir a resultados
           </Button>
         }

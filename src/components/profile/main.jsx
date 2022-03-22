@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Avatar,
   Card,
@@ -13,15 +13,11 @@ import {
   Divider,
   Skeleton,
   Menu,
-  Form,
-  Input,
-  Button,
 } from 'antd';
 import {
   AppstoreFilled,
   CarryOutOutlined,
   EditOutlined,
-  EyeTwoTone,
   LockOutlined,
   SettingOutlined,
   UserOutlined,
@@ -35,17 +31,15 @@ import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Loading from './loading';
-import { useIntl } from 'react-intl';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
-import logo from '../../Assets/img/logo.svg';
+import { imageUtils } from '../../Utilities/ImageUtils';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 
 const MainProfile = (props) => {
-  const intl = useIntl();
   const [activeTab, setActiveTab] = useState();
   const [events, setevents] = useState([]);
   const [tickets, settickets] = useState([]);
@@ -60,16 +54,6 @@ const MainProfile = (props) => {
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
-
-  // const rulePassword = [
-  //   { required: true, message: 'Ingrese una contraseña para su cuenta en Evius' },
-  //   {
-  //     type: 'string',
-  //     min: 6,
-  //     max: 18,
-  //     message: 'La contraseña debe tener entre 6 a 18 caracteres',
-  //   },
-  // ];
 
   const showSider = () => {
     if (!collapsed) {
@@ -229,7 +213,7 @@ const MainProfile = (props) => {
                 // bottom: `${screens.xs ? '4%' : '6%'}`,
                 // right: `${screens.xs ? '10%' : '22%'}`,
               }}
-              src={logo}
+              src={imageUtils.LogoSvg}
               alt='logo'
             />
           </Col>

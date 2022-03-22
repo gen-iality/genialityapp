@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
-import EventImage from '../../Assets/img/eventimage.png';
 import { Badge, Card, Space } from 'antd';
-
+import { imageUtils } from '../../Utilities/ImageUtils';
+const EventImage = imageUtils.EventImage;
 class EventCard extends Component {
   render() {
     const { event, bordered, right, loading } = this.props;

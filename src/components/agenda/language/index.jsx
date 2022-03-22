@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { AgendaApi } from '../../../helpers/request';
 import { Typography, Select, Form, Table, Button, InputNumber, notification, Input } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ const { Option } = Select;
 
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 class ActividadLanguage extends Component {

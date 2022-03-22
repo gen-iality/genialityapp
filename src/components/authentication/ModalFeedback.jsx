@@ -1,5 +1,4 @@
 import { Modal, Result, Button, Typography } from 'antd';
-import React from 'react';
 import withContext from '../../context/withContext';
 import { useIntl } from 'react-intl';
 

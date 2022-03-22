@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Redirect, withRouter, Link } from 'react-router-dom';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -53,9 +53,7 @@ import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
 import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
-import InitialView from './typeActivity/InitialView';
-import ModalStepByStep from './typeActivity/ModalStepByStep';
-import ManagerView from './typeActivity/ManagerView';
+import TipeOfActivity from './typeActivity';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -1247,11 +1245,11 @@ class AgendaEdit extends Component {
         <Form onFinish={() => this.submit(true)} {...formLayout}>
           <RouterPrompt
             when={showPendingChangesModal}
-            title=' Tienes cambios sin guardar'
-            description='En realidad quieres irte?'
-            okText='Salir sin guardar'
-            okSaveText='Salir y guardar'
-            cancelText='cerrar'
+            title='Tienes cambios sin guardar.'
+            description='¿Qué deseas hacer?'
+            okText='No guardar'
+            okSaveText='Guardar'
+            cancelText='Cancelar'
             onOK={() => true}
             onOKSave={this.submit}
             onCancel={() => false}
@@ -1292,7 +1290,12 @@ class AgendaEdit extends Component {
                           Nombre <label style={{ color: 'red' }}>*</label>
                         </label>
                       }
-                      rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}>
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Nombre de la actividad requerida',
+                        },
+                      ]}>
                       <Input
                         ref={this.name}
                         autoFocus
@@ -1326,7 +1329,12 @@ class AgendaEdit extends Component {
                               Hora Inicio <label style={{ color: 'red' }}>*</label>
                             </label>
                           }
-                          rules={[{ required: true, message: 'La hora de inicio es requerida' }]}>
+                          rules={[
+                            {
+                              required: true,
+                              message: 'La hora de inicio es requerida',
+                            },
+                          ]}>
                           <DateTimePicker
                             value={hour_start}
                             dropUp
@@ -1343,7 +1351,12 @@ class AgendaEdit extends Component {
                               Hora Fin <label style={{ color: 'red' }}>*</label>
                             </label>
                           }
-                          rules={[{ required: true, message: 'La hora final es requerida' }]}>
+                          rules={[
+                            {
+                              required: true,
+                              message: 'La hora final es requerida',
+                            },
+                          ]}>
                           <DateTimePicker
                             value={hour_end}
                             dropUp
@@ -1565,9 +1578,11 @@ class AgendaEdit extends Component {
                   <TabPane tab='Tipo de actividad' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
-                        {/* <InitialView />   */}
-                        {/* <ModalStepByStep />  */}
-                        {/* <ManagerView /> */}
+                        {/* <TipeOfActivity
+                          eventId={this.props.event._id}
+                          activityId={this.state.activity_id}
+                          activityName={this.state.name}
+                        /> */}
                         <RoomManager
                           event_id={this.props.event._id}
                           activity_id={this.state.activity_id}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert, Tag, Button } from 'antd';
 import { AuthUrl } from '../../../helpers/constants';
 import { useIntl } from 'react-intl';

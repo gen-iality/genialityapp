@@ -1,28 +1,26 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import Moment from "moment";
-import momentLocalizer from "react-widgets-moment";
-import { EventsApi } from "../../helpers/request";
-import { Button, Row, Col, Typography, Space, message } from "antd";
-import loadable from "@loadable/component";
+import { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
+import { EventsApi } from '../../helpers/request';
+import { Button, Row, Col, Typography, Space, message } from 'antd';
+import loadable from '@loadable/component';
 
-Moment.locale("es");
+Moment.locale('es');
 momentLocalizer();
 
-const ErrorServe = loadable(() => import("../modal/serverError"));
-const ModalFeedback = loadable(() =>
-  import("../../components/authentication/ModalFeedback")
-);
-const LoadingEvent = loadable(() => import("../loaders/loadevent"));
-const EventCard = loadable(() => import("../shared/eventCard"));
+const ErrorServe = loadable(() => import('../modal/serverError'));
+const ModalFeedback = loadable(() => import('../../components/authentication/ModalFeedback'));
+const LoadingEvent = loadable(() => import('../loaders/loadevent'));
+const EventCard = loadable(() => import('../shared/eventCard'));
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      typeEvent: "next",
+      typeEvent: 'next',
       events: [],
       tabEvt: false,
       tabEvtType: false,
@@ -43,9 +41,9 @@ class Home extends Component {
   }
 
   FriendLyUrl = (url) => {
-    let slug = url?.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, " ");
-    slug = url?.replace(/^\s+|\s+$/gm, "");
-    slug = url?.replace(/\s+/g, "-");
+    let slug = url?.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ');
+    slug = url?.replace(/^\s+|\s+$/gm, '');
+    slug = url?.replace(/\s+/g, '-');
     return slug;
   };
 
@@ -53,25 +51,19 @@ class Home extends Component {
     try {
       this.setState({ events: [] });
       let { pageSize } = this.state;
-      type == "prev" && pageSize >= this.state.limit
+      type == 'prev' && pageSize >= this.state.limit
         ? this.setState({ hasMore: false })
-        : type == "prev"
+        : type == 'prev'
         ? this.setState({ hasMore: true })
         : pageSize >= this.state.total
         ? this.setState({ hasMore: false })
         : this.setState({ hasMore: true });
       this.setState({ loading: true, typeEvent: type });
       const resp =
-        type === "next"
+        type === 'next'
           ? await EventsApi.getNextEvents(`?pageSize=${pageSize}`)
           : await EventsApi.getOldEvents(`?pageSize=${pageSize}`);
 
-      console.log(
-        "resp.meta.current_page",
-        resp.meta.current_page,
-        pageSize,
-        resp.meta.total
-      );
       //FILTERED
       const events = resp.data.filter((item) => item?.organizer);
 
@@ -86,7 +78,7 @@ class Home extends Component {
         const { status, data } = error.response;
         if (status === 401)
           message.open({
-            type: "error",
+            type: 'error',
             content: <>Error : {data?.message || status}</>,
           });
         else this.setState({ serverError: true, loader: false });
@@ -104,17 +96,10 @@ class Home extends Component {
   };
 
   render() {
-    const {
-      typeEvent,
-      serverError,
-      errorData,
-      events,
-      loading,
-      hasMore,
-    } = this.state;
+    const { typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
 
     return (
-      <div style={{ padding: "20px" }}>
+      <div style={{ padding: '20px' }}>
         <ModalFeedback />
         <Row gutter={[16, 16]} wrap>
           <Col span={24}>
@@ -125,39 +110,29 @@ class Home extends Component {
               <Button
                 onClick={
                   !loading
-                    ? () =>
-                        this.setState(
-                          { pageSize: this.state.nelements },
-                          async () => this.fetchEvent("next")
-                        )
+                    ? () => this.setState({ pageSize: this.state.nelements }, async () => this.fetchEvent('next'))
                     : null
                 }
-                type={typeEvent === "next" ? "primary" : "text"}
-                size="large"
-                shape="round"
-              >
+                type={typeEvent === 'next' ? 'primary' : 'text'}
+                size='large'
+                shape='round'>
                 Próximos
               </Button>
               <Button
                 onClick={
                   !loading
-                    ? () =>
-                        this.setState(
-                          { pageSize: this.state.nelements },
-                          async () => this.fetchEvent("prev")
-                        )
+                    ? () => this.setState({ pageSize: this.state.nelements }, async () => this.fetchEvent('prev'))
                     : null
                 }
-                type={typeEvent === "prev" ? "primary" : "text"}
-                size="large"
-                shape="round"
-              >
+                type={typeEvent === 'prev' ? 'primary' : 'text'}
+                size='large'
+                shape='round'>
                 Pasados
               </Button>
             </Space>
           </Col>
           <Col span={24}>
-            <section className="home">
+            <section className='home'>
               {/* <div className='tabs'>
             <ul>
               <li
@@ -180,13 +155,13 @@ class Home extends Component {
               </li>
             </ul>
           </div> */}
-              <div className="dynamic-content">
+              <div className='dynamic-content'>
                 {loading ? (
                   <LoadingEvent />
                 ) : (
                   <Row gutter={[16, 16]}>
                     {events.length <= 0 ? (
-                      <p className="sin-evento">No hay eventos próximos</p>
+                      <p className='sin-evento'>No hay eventos próximos</p>
                     ) : (
                       events.map((event, key) => {
                         return (
@@ -196,7 +171,7 @@ class Home extends Component {
                               key={event._id}
                               event={event}
                               action={{
-                                name: "Ver",
+                                name: 'Ver',
                                 url: `event/${this.FriendLyUrl(event.name)}`,
                               }}
                             />
@@ -209,20 +184,17 @@ class Home extends Component {
                 {/*hasMore === true && typeEvent === 'prev'*/}
                 {hasMore === true && events.length > 10 ? (
                   <Button
-                    size="large"
+                    size='large'
                     block
                     loading={loading}
-                    onClick={() => this.seeMore(this.state.pageSize, typeEvent)}
-                  >
-                    {!loading
-                      ? "Ver más".toUpperCase()
-                      : "Cargando...".toUpperCase()}
+                    onClick={() => this.seeMore(this.state.pageSize, typeEvent)}>
+                    {!loading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
                   </Button>
-                ) : typeEvent === "next" ? (
-                  loading && "Buscando..."
+                ) : typeEvent === 'next' ? (
+                  loading && 'Buscando...'
                 ) : (
                   <Button disabled block>
-                    {loading ? "Buscando..." : "No hay más eventos"}
+                    {loading ? 'Buscando...' : 'No hay más eventos'}
                   </Button>
                 )}
               </div>

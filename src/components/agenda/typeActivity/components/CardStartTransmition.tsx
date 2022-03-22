@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Result, Space, Button } from 'antd';
 import LoadingTypeActivity from './LoadingTypeActivity';
 
 const CardStartTransmition = () => {
   const [loading, setloading] = useState(false);
-  
+
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
-      { loading ? 
+      {loading ?
         <LoadingTypeActivity />
         :
         <Result

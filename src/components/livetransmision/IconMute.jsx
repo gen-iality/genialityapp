@@ -1,6 +1,4 @@
 import { SoundOutlined, StopOutlined } from '@ant-design/icons';
-import React from 'react';
-
 const IconMute = ({ callback }) => {
   return (
     <div onClick={callback} style={styles.square}>

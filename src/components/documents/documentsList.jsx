@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 //custom
 import { List, Card, Button, Table } from 'antd';
@@ -117,32 +117,33 @@ class documentsList extends Component {
                       }
                     />
                   </List.Item>
-                  {files && files
-                    .filter((file) => file.father_id == item._id)
-                    .map((files, key) => (
-                      <List.Item
-                        key={key}
-                        actions={[
-                          <a
-                            key={'itemDoc' + files._id}
-                            target='_blank'
-                            href={files.file}
-                            download
-                            rel='noopener noreferrer'>
-                            {files.type == 'folder' ? (
-                              <DownOutlined />
-                            ) : (
-                              <IconText text='Descargar' icon={DownloadOutlined} />
-                            )}
-                          </a>,
-                        ]}>
-                        <List.Item.Meta
-                          style={{ marginRight: '10%' }}
-                          avatar={files.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
-                          title={files.title ? files.title : files.name}
-                        />
-                      </List.Item>
-                    ))}
+                  {files &&
+                    files
+                      .filter((file) => file.father_id == item._id)
+                      .map((files, key) => (
+                        <List.Item
+                          key={key}
+                          actions={[
+                            <a
+                              key={'itemDoc' + files._id}
+                              target='_blank'
+                              href={files.file}
+                              download
+                              rel='noopener noreferrer'>
+                              {files.type == 'folder' ? (
+                                <DownOutlined />
+                              ) : (
+                                <IconText text='Descargar' icon={DownloadOutlined} />
+                              )}
+                            </a>,
+                          ]}>
+                          <List.Item.Meta
+                            style={{ marginRight: '10%' }}
+                            avatar={files.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
+                            title={files.title ? files.title : files.name}
+                          />
+                        </List.Item>
+                      ))}
                 </>
               )}
             />

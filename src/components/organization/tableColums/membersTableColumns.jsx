@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty } from 'antd';
 import { EditOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
@@ -96,8 +95,7 @@ export const columns = (columnsData, editModalUser) => [
             onClick={(e) => {
               editModalUser(item);
             }}
-            icon={<EditOutlined />}>
-          </Button>
+            icon={<EditOutlined />}></Button>
         </Tooltip>
       );
     },

@@ -1,5 +1,5 @@
 import { Card, Space, Col, Row, Result, PageHeader } from 'antd';
-import React, { Fragment, useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import { UseEventContext } from '../../../context/eventContext';
 import { HelperContext } from '../../../context/HelperContext';
 import { useState } from 'react';

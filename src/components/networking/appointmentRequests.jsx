@@ -2,7 +2,7 @@ import { Avatar, Button, Card, Col, Divider, notification, Row, Spin } from 'ant
 import moment from 'moment';
 import { find, map, pathOr, propEq, props } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 //context
 import { UseUserEvent } from '../../context/eventUserContext';
 import { UseEventContext } from '../../context/eventContext';

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -11,26 +11,26 @@ const columns = [
   {
     title: 'Creado',
     dataIndex: 'creation_date_text',
-    key: 'creation_date_text'
+    key: 'creation_date_text',
   },
   {
     title: 'Nombre',
     dataIndex: 'user_name',
     key: 'user_name',
-    render: renderNombreUsuario
+    render: renderNombreUsuario,
   },
   {
     title: 'Respuesta',
     dataIndex: 'response',
-    key: 'response'
-  }
+    key: 'response',
+  },
 ];
 class ReportQuestion extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nameQuestion: '',
-      listOfUserResponse: []
+      listOfUserResponse: [],
     };
   }
 
@@ -76,18 +76,9 @@ class ReportQuestion extends Component {
     let { nameQuestion, listOfUserResponse } = this.state;
     return (
       <Fragment>
-        <Header 
-          title={nameQuestion}
-          back
-        />
+        <Header title={nameQuestion} back />
 
-        <Table 
-          header={columns}
-          list={listOfUserResponse}
-          pagination={false}
-          exportData
-          fileName={nameQuestion}
-        />
+        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={nameQuestion} />
 
         {/* <EventContent title={nameQuestion} closeAction={this.goBack}>
           <Divider orientation='right'>Reporte</Divider>

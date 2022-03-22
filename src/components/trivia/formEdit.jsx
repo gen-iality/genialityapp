@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
 import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message, Alert, Space } from 'antd';

@@ -111,7 +111,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const eventUserCtx=useContext(CurrentEventUserContext)
+  const eventUserCtx = useContext(CurrentEventUserContext);
 
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
@@ -119,31 +119,31 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
     setLoading(true);
     let evius_token = await GetTokenUserFirebase();
     if (evius_token) {
-        // Servicio que obtiene el eventUserId del usuario actual
-        let eventUser = eventUserCtx.value;
-        // Servicio que trae las invitaciones / solicitudes recibidas
-        Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
-          setCurrentUserId(eventUser._id);
+      // Servicio que obtiene el eventUserId del usuario actual
+      let eventUser = eventUserCtx.value;
+      // Servicio que trae las invitaciones / solicitudes recibidas
+      Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
+        setCurrentUserId(eventUser._id);
 
-          // Solo se obtendran las invitaciones que no tengan respuesta
-          if (data.length > 0) {
-            let response = data.filter((item) => item.response == undefined);
+        // Solo se obtendran las invitaciones que no tengan respuesta
+        if (data.length > 0) {
+          let response = data.filter((item) => item.response == undefined);
 
-            setRequestListReceived(response);
-            await insertNameRequested(response);
-          } else {
-            setRequestListReceived([]);
-          }
+          setRequestListReceived(response);
+          await insertNameRequested(response);
+        } else {
+          setRequestListReceived([]);
+        }
+        setLoading(false);
+      });
+
+      // Servicio que trae las invitaciones / solicitudes enviadas
+      Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
+        if (data.length > 0) {
+          setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
           setLoading(false);
-        });
-
-        // Servicio que trae las invitaciones / solicitudes enviadas
-        Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
-          if (data.length > 0) {
-            setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
-            setLoading(false);
-          }
-        });
+        }
+      });
     } else {
       setLoading(false);
     }

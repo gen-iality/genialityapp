@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
 import { SurveysApi } from '../../helpers/request';
@@ -13,7 +13,7 @@ class TriviaReport extends Component {
     this.state = {
       surveyQuestions: [],
       loading: true,
-      visibleModal: false
+      visibleModal: false,
     };
   }
 
@@ -39,15 +39,13 @@ class TriviaReport extends Component {
         //
         notification.open({
           message: 'No se registran respuestas guardadas',
-          description: 'No hay respuestas y/o preguntas para realizar el informe'
+          description: 'No hay respuestas y/o preguntas para realizar el informe',
         });
         this.setState({
-          loading: false
+          loading: false,
         });
       });
   };
-
- 
 
   toggleModal = () => {
     let { visibleModal } = this.state;
@@ -67,10 +65,7 @@ class TriviaReport extends Component {
     if (!loading)
       return (
         <Fragment>
-          <Header 
-            title={'Detalle de la Encuesta'}
-            back
-          />
+          <Header title={'Detalle de la Encuesta'} back />
 
           {surveyQuestions.length > 0 ? (
             <List
@@ -81,7 +76,7 @@ class TriviaReport extends Component {
                 md: 2,
                 lg: 3,
                 xl: 3,
-                xxl: 3
+                xxl: 3,
               }}
               dataSource={surveyQuestions}
               renderItem={(item) => (
@@ -89,7 +84,7 @@ class TriviaReport extends Component {
                   <Link
                     to={{
                       pathname: `${this.props.matchUrl}/report/${item.id}`,
-                      state: { titleQuestion: item.title, surveyId: location.state.report }
+                      state: { titleQuestion: item.title, surveyId: location.state.report },
                     }}>
                     <Card title={item.title ? item.title : 'Pregunta sin Titulo'} hoverable>
                       {item.quantityResponses === 0
@@ -154,7 +149,7 @@ class TriviaReport extends Component {
         </Fragment>
       );
 
-    return <Spin></Spin>
+    return <Spin></Spin>;
   }
 }
 

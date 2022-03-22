@@ -1,16 +1,12 @@
-import React, { Component } from "react";
-import { message as Message, message, Modal } from "antd";
-import RoomConfig from "./config";
-import Service from "./service";
-import Moment from "moment";
-import AgendaContext from "../../../context/AgendaContext";
-import { GetTokenUserFirebase } from "../../../helpers/HelperAuth";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import {
-  stopLiveStream,
-  deleteLiveStream,
-  getLiveStreamStatus,
-} from "../../../adaptors/wowzaStreamingAPI";
+import { Component } from 'react';
+import { message as Message, message, Modal } from 'antd';
+import RoomConfig from './config';
+import Service from './service';
+import Moment from 'moment';
+import AgendaContext from '../../../context/AgendaContext';
+import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { stopLiveStream, deleteLiveStream, getLiveStreamStatus } from '../../../adaptors/wowzaStreamingAPI';
 
 class RoomManager extends Component {
   constructor(props) {
@@ -22,7 +18,7 @@ class RoomManager extends Component {
       // Configuracion del gestor de salas
       isPublished: true,
       hasVideoconference: false,
-      activeTab: "config",
+      activeTab: 'config',
       loading: false,
       //juegos disponibles
       avalibleGames: [],
@@ -36,16 +32,16 @@ class RoomManager extends Component {
       host_ids: [],
       host_list: [
         {
-          host_id: "KthHMroFQK24I97YoqxBZw",
-          host_name: "host1@evius.co",
+          host_id: 'KthHMroFQK24I97YoqxBZw',
+          host_name: 'host1@evius.co',
         },
         {
-          host_id: "15DKHS_6TqWIFpwShasM4w",
-          host_name: "host2@evius.co",
+          host_id: '15DKHS_6TqWIFpwShasM4w',
+          host_name: 'host2@evius.co',
         },
         {
-          host_id: "FIRVnSoZR7WMDajgtzf5Uw",
-          host_name: "host3@evius.co",
+          host_id: 'FIRVnSoZR7WMDajgtzf5Uw',
+          host_name: 'host3@evius.co',
         },
         /* {  Esto está en ucronio
           host_id: 'YaXq_TW2f791cVpP8og',
@@ -74,12 +70,7 @@ class RoomManager extends Component {
     const host_ids = host_list.map((host) => host.host_id);
     this.setState({ host_ids });
 
-    if (
-      typeof event_id === "undefined" ||
-      typeof activity_id === "undefined" ||
-      activity_id === false
-    )
-      return;
+    if (typeof event_id === 'undefined' || typeof activity_id === 'undefined' || activity_id === false) return;
 
     this.setState({ loading: true });
 
@@ -112,20 +103,17 @@ class RoomManager extends Component {
     const { event_id } = this.props;
     const activity_id = this.context.activityEdit;
     const { service } = this.state;
-    const hasVideoconference = await service.validateHasVideoconference(
-      event_id,
-      activity_id
-    );
+    const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
     if (hasVideoconference) {
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
       if (
         this.context.platform !== null &&
-        this.context.platform !== "" &&
+        this.context.platform !== '' &&
         this.context.meeting_id !== null &&
-        this.context.meeting_id !== ""
+        this.context.meeting_id !== ''
       ) {
-        this.setState({ hasVideoconference: true, activeTab: "controller" });
+        this.setState({ hasVideoconference: true, activeTab: 'controller' });
       }
       return true;
     } else {
@@ -146,11 +134,8 @@ class RoomManager extends Component {
 
   // Encargado de gestionar los juegos seleccionados
   handleGamesSelected = async (status, itemId, listOfGames) => {
-    if (status === "newOrUpdate") {
-      this.setState(
-        { avalibleGames: listOfGames },
-        async () => await this.saveConfig()
-      );
+    if (status === 'newOrUpdate') {
+      this.setState({ avalibleGames: listOfGames }, async () => await this.saveConfig());
     } else {
       const newData = [];
       listOfGames.forEach((items) => {
@@ -160,10 +145,7 @@ class RoomManager extends Component {
           newData.push({ ...items });
         }
       });
-      this.setState(
-        { avalibleGames: newData },
-        async () => await this.saveConfig()
-      );
+      this.setState({ avalibleGames: newData }, async () => await this.saveConfig());
     }
   };
   // Encargado de gestionar los tabs de la video conferencia
@@ -175,21 +157,18 @@ class RoomManager extends Component {
     //
     // return true;
 
-    if (tab === "chat") {
+    if (tab === 'chat') {
       tabs.chat = valueTab;
       this.setState({ chat: valueTab }, async () => await this.saveConfig());
-    } else if (tab === "surveys") {
+    } else if (tab === 'surveys') {
       tabs.surveys = valueTab;
       this.setState({ surveys: valueTab }, async () => await this.saveConfig());
-    } else if (tab === "games") {
+    } else if (tab === 'games') {
       tabs.games = valueTab;
       this.setState({ games: valueTab }, async () => await this.saveConfig());
-    } else if (tab === "attendees") {
+    } else if (tab === 'attendees') {
       tabs.attendees = valueTab;
-      this.setState(
-        { attendees: valueTab },
-        async () => await this.saveConfig()
-      );
+      this.setState({ attendees: valueTab }, async () => await this.saveConfig());
     }
   };
 
@@ -199,10 +178,10 @@ class RoomManager extends Component {
     let { value } = e.target ? e.target : e;
 
     this.setState({ [name]: value });
-    if (nameS === "select_host_manual") {
+    if (nameS === 'select_host_manual') {
       this.context.select_host_manual = e;
     }
-    if (nameS === "host_id") {
+    if (nameS === 'host_id') {
       this.context.host_id = e;
     }
   };
@@ -239,11 +218,11 @@ class RoomManager extends Component {
 
   // Se usa al eliminar una sala de zoom, elimnar la informacion asociada a ella, se mantiene la configuración de la misma
   restartData = () => {
-    this.context.setPlatform("wowza");
-    this.context.setMeetingId("");
+    this.context.setPlatform('wowza');
+    this.context.setMeetingId('');
     this.context.setHostId(null);
     this.context.setHostName(null);
-    this.context.setRoomStatus("");
+    this.context.setRoomStatus('');
     this.setState(
       {
         hasVideoconference: false,
@@ -262,16 +241,11 @@ class RoomManager extends Component {
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
     try {
-      const result = await service.createOrUpdateActivity(
-        event_id,
-        activity_id,
-        roomInfo,
-        tabs
-      );
+      const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
       if (result && !notify) Message.success(result.message);
       return result;
     } catch (err) {
-      Message.error("Error", err);
+      Message.error('Error', err);
     }
   };
 
@@ -284,20 +258,13 @@ class RoomManager extends Component {
       const { service, platform, meeting_id } = this.state;
 
       // Validación de los campos requeridos
-      if (
-        platform === "" ||
-        platform === null ||
-        meeting_id === "" ||
-        meeting_id === null
-      ) {
-        message.warning(
-          "Seleccione una plataforma e ingrese el id de la videoconferencia"
-        );
+      if (platform === '' || platform === null || meeting_id === '' || meeting_id === null) {
+        message.warning('Seleccione una plataforma e ingrese el id de la videoconferencia');
         return false;
       }
 
       // Se utiliza solo cuando el usuario guarda de manera manual el id del evento en zoom o zoomExterno
-      if (platform === "zoom" || platform === "zoomExterno") {
+      if (platform === 'zoom' || platform === 'zoomExterno') {
         const data = {
           event_id,
           activity_id,
@@ -306,16 +273,16 @@ class RoomManager extends Component {
         const response = await service.getZoomRoom(data);
         if (
           Object.keys(response).length > 0 &&
-          typeof response.meeting_id !== "undefined" &&
-          typeof response.zoom_host_id !== "undefined" &&
-          typeof response.zoom_host_name !== "undefined"
+          typeof response.meeting_id !== 'undefined' &&
+          typeof response.zoom_host_id !== 'undefined' &&
+          typeof response.zoom_host_name !== 'undefined'
         ) {
           this.setState({
             host_id: response.zoom_host_id,
             host_name: response.zoom_host_name,
           });
         } else {
-          message.error("El id de la videoconferencia NO es valido");
+          message.error('El id de la videoconferencia NO es valido');
           return false;
         }
       }
@@ -323,13 +290,11 @@ class RoomManager extends Component {
       //Si las validaciones  son aprobadas  se procede a salvar en firebase
       const result = await this.saveConfig();
 
-      if (result.state === "created" || result.state === "updated") {
+      if (result.state === 'created' || result.state === 'updated') {
         this.setState({ hasVideoconference: true });
       }
     } else {
-      message.warning(
-        "Cambios pendientes por guardar en la fecha y hora de la actividad"
-      );
+      message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
     }
   };
 
@@ -338,20 +303,14 @@ class RoomManager extends Component {
     this.validateForCreateZoomRoom();
     const evius_token = await GetTokenUserFirebase();
 
-    const {
-      activity_id,
-      activity_name,
-      event_id,
-      date_start_zoom,
-      date_end_zoom,
-    } = this.props;
+    const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } = this.props;
     const { select_host_manual, host_ids } = this.state;
     const { host_id } = this.context;
 
     // Se valida si es el host se selecciona de manera manual o automáticamente
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
     // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
-    const host_field = select_host_manual ? "host_id" : "host_ids";
+    const host_field = select_host_manual ? 'host_id' : 'host_ids';
     const host_value = select_host_manual ? host_id : host_ids;
 
     const body = {
@@ -368,9 +327,9 @@ class RoomManager extends Component {
 
     if (
       Object.keys(response).length > 0 &&
-      typeof response.meeting_id !== "undefined" &&
-      typeof response.zoom_host_id !== "undefined" &&
-      typeof response.zoom_host_name !== "undefined"
+      typeof response.meeting_id !== 'undefined' &&
+      typeof response.zoom_host_id !== 'undefined' &&
+      typeof response.zoom_host_name !== 'undefined'
     ) {
       const { meeting_id, zoom_host_id, zoom_host_name } = response;
       this.context.setMeetingId(meeting_id);
@@ -393,25 +352,20 @@ class RoomManager extends Component {
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     if (pendingChangesSave) {
-      message.warning(
-        "Cambios pendientes por guardar en la fecha y hora de la actividad"
-      );
+      message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
       return false;
     }
     //Esta validacion aplcia para actividades creadas antes de el backend devolviera los campos date_start_zoom y date_end_zoom
-    if (
-      typeof this.props.date_start_zoom === "undefined" ||
-      typeof this.props.date_end_zoom === "undefined"
-    ) {
-      Message.error("Guarde primero la actividad antes de continuar");
+    if (typeof this.props.date_start_zoom === 'undefined' || typeof this.props.date_end_zoom === 'undefined') {
+      Message.error('Guarde primero la actividad antes de continuar');
       return false;
     }
     if (!Moment(this.props.date_start_zoom).isValid()) {
-      Message.error("La fecha de inicio no es valida");
+      Message.error('La fecha de inicio no es valida');
       return false;
     }
     if (!Moment(this.props.date_end_zoom).isValid()) {
-      Message.error("La fecha de finalización no es valida");
+      Message.error('La fecha de finalización no es valida');
       return false;
     }
   };
@@ -426,32 +380,29 @@ class RoomManager extends Component {
     Modal.confirm({
       title: `¿Está seguro de eliminar la transmisión?`,
       icon: <ExclamationCircleOutlined />,
-      content: "Una vez eliminado, no lo podrá recuperar",
-      okText: "Eliminar transmisión",
-      okType: "danger",
-      cancelText: "Cancelar",
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Eliminar transmisión',
+      okType: 'danger',
+      cancelText: 'Cancelar',
       onOk() {
         const loading = message.open({
-          key: "loading",
-          type: "loading",
+          key: 'loading',
+          type: 'loading',
           content: <> Por favor espere miestras borra la transmisión...</>,
         });
         const onHandlerRemove = async () => {
           try {
             // Si es una sala de zoom se elimina de la agenda de la api zoom
-            if (platform === "zoom" || platform === "zoomExterno") {
-              const updatedData = await service.deleteZoomRoom(
-                event_id,
-                meeting_id
-              );
+            if (platform === 'zoom' || platform === 'zoomExterno') {
+              const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
               if (updatedData.status === 200) {
-                message.success("Transmisión de Zoom eliminada!");
+                message.success('Transmisión de Zoom eliminada!');
               }
             }
-            if (streamingPlatForm === "wowza") {
+            if (streamingPlatForm === 'wowza') {
               const { state } = await getLiveStreamStatus(streamingMeetingId);
               const refActivity = `request/${self.props.event_id}/activities/${self.context.activityEdit}`;
-              if (state === "started") {
+              if (state === 'started') {
                 await stopLiveStream(streamingMeetingId);
               }
               await deleteLiveStream(streamingMeetingId);
@@ -460,16 +411,16 @@ class RoomManager extends Component {
             }
             message.destroy(loading.key);
             message.open({
-              type: "success",
+              type: 'success',
               content: <> Se eliminó la transmisión correctamente!</>,
             });
 
             self.restartData();
           } catch (e) {
-            console.log("EXCEPCION===>", e);
+            console.log('EXCEPCION===>', e);
             message.destroy(loading.key);
             message.open({
-              type: "error",
+              type: 'error',
               content: <>Hubo un error eliminando la transmisión</>,
             });
           }
@@ -480,10 +431,7 @@ class RoomManager extends Component {
   };
 
   render() {
-    const {
-      hasVideoconference,
-      /* select_host_manual, */ host_list,
-    } = this.state;
+    const { hasVideoconference, /* select_host_manual, */ host_list } = this.state;
     const { activity_name } = this.props;
     return (
       <>

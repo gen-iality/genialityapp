@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import '../editor.scss';
 
 class EditarHtml extends Component {
@@ -13,7 +13,7 @@ class EditarHtml extends Component {
       graf: 0,
       showTooltipMenu: false,
       isActive: true,
-      topButton: 78
+      topButton: 78,
     };
     this.editor = [];
   }

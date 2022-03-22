@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import Table from '../../antdComponents/Table';
 
 const MessageUser = (props) => {
@@ -13,20 +13,14 @@ const MessageUser = (props) => {
       title: 'Estatus',
       dataIndex: 'status',
       key: 'status',
-    }
+    },
   ];
 
   return (
     <Fragment>
-      <Table 
-        header={columns}
-        list={users}
-        pagination
-        exportData
-        fileName={'ReportSends'}
-      />
+      <Table header={columns} list={users} pagination exportData fileName={'ReportSends'} />
     </Fragment>
   );
-}
+};
 
 export default MessageUser;

@@ -1,5 +1,5 @@
 import { Button, Col, Modal, Row, List, Typography, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useContextNewEvent } from '../../../context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
 import OptTranmitir from './optTransmitir';

@@ -1,17 +1,12 @@
-import React, { useState } from "react";
-import {
-  PictureOutlined,
-  MailOutlined,
-  LockOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { Form, Input, Button, Space, Upload, message, Alert } from "antd";
-import ImgCrop from "antd-img-crop";
-import createNewUser from "./ModalsFunctions/createNewUser";
-import { app } from "../../helpers/firebase";
-import { useContext } from "react";
-import HelperContext from "../../context/HelperContext";
-import { useIntl } from "react-intl";
+import { useState } from 'react';
+import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Space, Upload, message, Alert } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import createNewUser from './ModalsFunctions/createNewUser';
+import { app } from '../../helpers/firebase';
+import { useContext } from 'react';
+import HelperContext from '../../context/HelperContext';
+import { useIntl } from 'react-intl';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
@@ -19,17 +14,17 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const [errorEmail, setErrorEmail] = useState(false);
   const ruleEmail = [
     {
-      type: "email",
+      type: 'email',
       message: intl.formatMessage({
-        id: "register.rule.email.message",
-        defaultMessage: "Ingrese un email valido",
+        id: 'register.rule.email.message',
+        defaultMessage: 'Ingrese un email valido',
       }),
     },
     {
       required: true,
       message: intl.formatMessage({
-        id: "register.rule.email.message2",
-        defaultMessage: "Ingrese un email para su cuenta en Evius",
+        id: 'register.rule.email.message2',
+        defaultMessage: 'Ingrese un email para su cuenta en Evius',
       }),
     },
   ];
@@ -38,17 +33,17 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     {
       required: true,
       message: intl.formatMessage({
-        id: "register.rule.password.message",
-        defaultMessage: "Ingrese una contraseña para su cuenta en Evius",
+        id: 'register.rule.password.message',
+        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
       }),
     },
     {
-      type: "string",
+      type: 'string',
       min: 6,
       max: 18,
       message: intl.formatMessage({
-        id: "register.rule.password.message2",
-        defaultMessage: "La contraseña debe tener entre 6 a 18 caracteres",
+        id: 'register.rule.password.message2',
+        defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
       }),
     },
   ];
@@ -57,8 +52,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     {
       required: true,
       message: intl.formatMessage({
-        id: "register.rule.name.message",
-        defaultMessage: "Ingrese su nombre completo para su cuenta en Evius",
+        id: 'register.rule.name.message',
+        defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
       }),
     },
   ];
@@ -66,14 +61,12 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
   let [modalInfo, setModalInfo] = useState(null);
-  let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(
-    false
-  );
+  let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   /** request para no mostrar el error que genera el component upload de antd */
   const dummyRequest = ({ file, onSuccess }) => {
     setTimeout(() => {
-      onSuccess("ok");
+      onSuccess('ok');
     }, 0);
   };
 
@@ -84,8 +77,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
 
   const onFinishCreateNewUser = async (values) => {
     const loading = message.open({
-      key: "loading",
-      type: "loading",
+      key: 'loading',
+      type: 'loading',
       content: <> Por favor espere...</>,
     });
     const newValues = {
@@ -106,48 +99,44 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           .then((login) => {
             if (login) {
               //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
-              if (
-                window.location.toString().includes("landing") ||
-                window.location.toString().includes("event")
-              ) {
-                handleChangeTypeModal("loginSuccess");
+              if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
+                handleChangeTypeModal('loginSuccess');
               } else {
-                handleChangeTypeModal("loginSuccess");
+                handleChangeTypeModal('loginSuccess');
               }
             }
           })
           .catch((err) => {
-            handleChangeTypeModal("loginError");
+            handleChangeTypeModal('loginError');
           });
       } else if (resp == 0) {
-        handleChangeTypeModal("loginError");
+        handleChangeTypeModal('loginError');
         setErrorEmail(false);
       } else {
         setErrorEmail(true);
       }
     } catch (err) {
       console.log(err);
-      message.error("Ha ocurrido un error");
+      message.error('Ha ocurrido un error');
     }
     message.destroy(loading.key);
   };
   return (
     <>
-      {" "}
+      {' '}
       <Form
         onFinish={onFinishCreateNewUser}
         form={form}
-        autoComplete="off"
-        layout="vertical"
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
-      >
+        autoComplete='off'
+        layout='vertical'
+        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
         {/* <Typography.Title level={4} type='secondary'>
                       Nueva organizacion
                     </Typography.Title> */}
         <Form.Item>
-          <ImgCrop rotate shape="round">
+          <ImgCrop rotate shape='round'>
             <Upload
-              accept="image/png,image/jpeg"
+              accept='image/png,image/jpeg'
               onChange={(file) => {
                 if (file.fileList.length > 0) {
                   setImageAvatar(file.fileList);
@@ -157,24 +146,22 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               }}
               customRequest={dummyRequest}
               multiple={false}
-              listType="picture"
+              listType='picture'
               maxCount={1}
-              fileList={imageAvatar}
-            >
+              fileList={imageAvatar}>
               {
                 <Button
-                  type="primary"
-                  shape="circle"
+                  type='primary'
+                  shape='circle'
                   style={{
-                    height: !imageAvatar ? "150px" : "95px",
-                    width: !imageAvatar ? "150px" : "95px",
-                  }}
-                >
-                  <Space direction="vertical">
-                    <PictureOutlined style={{ fontSize: "40px" }} />
+                    height: !imageAvatar ? '150px' : '95px',
+                    width: !imageAvatar ? '150px' : '95px',
+                  }}>
+                  <Space direction='vertical'>
+                    <PictureOutlined style={{ fontSize: '40px' }} />
                     {intl.formatMessage({
-                      id: "modal.label.photo",
-                      defaultMessage: "Subir foto",
+                      id: 'modal.label.photo',
+                      defaultMessage: 'Subir foto',
                     })}
                   </Space>
                 </Button>
@@ -184,78 +171,68 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         </Form.Item>
         <Form.Item
           label={intl.formatMessage({
-            id: "modal.label.email",
-            defaultMessage: "Correo electrónico",
+            id: 'modal.label.email',
+            defaultMessage: 'Correo electrónico',
           })}
-          name="email"
+          name='email'
           hasFeedback
-          style={{ marginBottom: "10px", textAlign: "left" }}
-          rules={ruleEmail}
-        >
+          style={{ marginBottom: '10px', textAlign: 'left' }}
+          rules={ruleEmail}>
           <Input
-            type="email"
-            size="large"
-            placeholder={"micorreo@ejemplo.com"}
-            prefix={
-              <MailOutlined style={{ fontSize: "24px", color: "#c4c4c4" }} />
-            }
+            type='email'
+            size='large'
+            placeholder={'micorreo@ejemplo.com'}
+            prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
         <Form.Item
           label={intl.formatMessage({
-            id: "modal.label.password",
-            defaultMessage: "Contraseña",
+            id: 'modal.label.password',
+            defaultMessage: 'Contraseña',
           })}
-          name="password"
+          name='password'
           hasFeedback
-          style={{ marginBottom: "10px", textAlign: "left" }}
-          rules={rulePassword}
-        >
+          style={{ marginBottom: '10px', textAlign: 'left' }}
+          rules={rulePassword}>
           <Input.Password
-            type="password"
-            size="large"
+            type='password'
+            size='large'
             placeholder={intl.formatMessage({
-              id: "modal.label.password",
-              defaultMessage: "Contraseña",
+              id: 'modal.label.password',
+              defaultMessage: 'Contraseña',
             })}
-            prefix={
-              <LockOutlined style={{ fontSize: "24px", color: "#c4c4c4" }} />
-            }
+            prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
         <Form.Item
           label={intl.formatMessage({
-            id: "modal.label.name",
-            defaultMessage: "Nombre",
+            id: 'modal.label.name',
+            defaultMessage: 'Nombre',
           })}
-          name="names"
+          name='names'
           hasFeedback
-          style={{ marginBottom: "10px", textAlign: "left" }}
-          rules={ruleName}
-        >
+          style={{ marginBottom: '10px', textAlign: 'left' }}
+          rules={ruleName}>
           <Input
-            type="text"
-            size="large"
+            type='text'
+            size='large'
             placeholder={intl.formatMessage({
-              id: "modal.label.name",
-              defaultMessage: "Nombre",
+              id: 'modal.label.name',
+              defaultMessage: 'Nombre',
             })}
-            prefix={
-              <UserOutlined style={{ fontSize: "24px", color: "#c4c4c4" }} />
-            }
+            prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        <Form.Item style={{ marginBottom: "10px", marginTop: "30px" }}>
+        <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
-            id={"submitButton"}
-            htmlType="submit"
+            id={'submitButton'}
+            htmlType='submit'
             block
-            style={{ backgroundColor: "#52C41A", color: "#FFFFFF" }}
-            size="large"
-          >
+            style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+            size='large'>
             {intl.formatMessage({
-              id: "modal.label.create_user",
-              defaultMessage: "Crear cuenta de usuario",
+              id: 'modal.label.create_user',
+              defaultMessage: 'Crear cuenta de usuario',
             })}
           </Button>
         </Form.Item>
@@ -264,21 +241,21 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             showIcon
             onClose={() => setErrorEmail(false)}
             closable
-            className="animate__animated animate__bounceIn"
+            className='animate__animated animate__bounceIn'
             style={{
-              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-              backgroundColor: "#FFFFFF",
-              color: "#000000",
-              borderLeft: "5px solid #FF4E50",
-              fontSize: "14px",
-              textAlign: "start",
-              borderRadius: "5px",
-              marginBottom: "15px",
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              backgroundColor: '#FFFFFF',
+              color: '#000000',
+              borderLeft: '5px solid #FF4E50',
+              fontSize: '14px',
+              textAlign: 'start',
+              borderRadius: '5px',
+              marginBottom: '15px',
             }}
-            type="error"
+            type='error'
             message={intl.formatMessage({
-              id: "modal.feedback.errorDNSNotFound",
-              defaultMessage: "El correo ingresado no es válido.",
+              id: 'modal.feedback.errorDNSNotFound',
+              defaultMessage: 'El correo ingresado no es válido.',
             })}
           />
         )}

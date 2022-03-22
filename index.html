@@ -2,16 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
     <!-- removing cache this is by mocion-->
-    <meta
-      http-equiv="Cache-Control"
-      content="no-cache, no-store, must-revalidate"
-    />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <!-- <meta name="google" content="notranslate"> -->
     <meta http-equiv="Expires" content="0" />
@@ -35,27 +29,16 @@
       // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
       document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
     </script>
-    <script
-      type="module"
-      defer
-      src="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth__es.js"
-    ></script>
+    <script type="module" defer src="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth__es.js"></script>
 
-    <link
-      type="text/css"
-      rel="stylesheet"
-      href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"
-    />
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
       integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
       crossorigin="anonymous"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -63,22 +46,17 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;1,100&display=swap"
       rel="stylesheet"
     />
-    
 
     <script>
       window.less = {
         defer: true,
-        env: "development",
+        env: 'development',
         javascriptEnabled: true,
       };
     </script>
 
     <!-- WOWZA -->
-    <script
-      defer
-      type="module"
-      src="//player.wowza.com/player/latest/wowzaplayer.min.js"
-    ></script>
+    <script defer type="module" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
     <script type="module" defer src="//cdn.jsdelivr.net/npm/less"></script>
 
     <link rel="stylesheet" href="/Assets/css/globalcss.css" />
@@ -89,25 +67,21 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root">
-      <div class='preloaderBg' id='preloader'>
-        <div class='preloader'></div>
-        <div class='preloader2'></div>
+      <div class="preloaderBg" id="preloader">
+        <div class="preloader"></div>
+        <div class="preloader2"></div>
       </div>
     </div>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      type="module"
-      defer
-      src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"
-    ></script>
+    <script type="module" defer src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"></script>
     <script type="module">
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      gtag("js", new Date());
-      gtag("config", "UA-72179148-1");
+      gtag('js', new Date());
+      gtag('config', 'UA-72179148-1');
     </script>
 
     <!-- Google Tag Manager (noscript) -->
@@ -135,39 +109,32 @@
         return true;
       }
     </script>
-    <script
+    <!-- <script
       type="module"
       defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"
-    ></script>
+    ></script> -->
 
     <!-- Facebook Pixel Code -->
     <script type="module">
       !(function(f, b, e, v, n, t, s) {
         if (f.fbq) return;
         n = f.fbq = function() {
-          n.callMethod
-            ? n.callMethod.apply(n, arguments)
-            : n.queue.push(arguments);
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
         };
         if (!f._fbq) f._fbq = n;
         n.push = n;
         n.loaded = !0;
-        n.version = "2.0";
+        n.version = '2.0';
         n.queue = [];
         t = b.createElement(e);
         t.defer = !0;
         t.src = v;
         s = b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t, s);
-      })(
-        window,
-        document,
-        "script",
-        "https://connect.facebook.net/en_US/fbevents.js"
-      );
-      fbq("init", "1224063924627255");
-      fbq("track", "Lead");
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1224063924627255');
+      fbq('track', 'Lead');
     </script>
     <noscript
       ><img
@@ -177,7 +144,7 @@
         src="https://www.facebook.com/tr?id=1224063924627255&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
-    <script type="module" defer src="https://my.afrus.app/template/index.js"></script>
+    <!-- <script type="module" defer src="https://my.afrus.app/template/index.js"></script> -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

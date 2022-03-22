@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Avatar, Button, message, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image, Tooltip } from 'antd';
 import TimeStamp from 'react-timestamp';
 import { MessageOutlined, LikeOutlined, DeleteOutlined, LikeFilled } from '@ant-design/icons';

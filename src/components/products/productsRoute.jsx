@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 

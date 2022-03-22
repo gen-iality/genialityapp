@@ -1,5 +1,9 @@
+<<<<<<< HEAD:src/components/events/createEvent/newEvent/apariencia.jsx
 import React from 'react';
 import ImgInput from '../../../shared/imageInput';
+=======
+import ImgInput from '../../shared/imageInput';
+>>>>>>> f5598892a1b9b35f24936cf018924475b24b6010:src/components/events/newEvent/apariencia.jsx
 import { Row, Col, Switch, message } from 'antd';
 import { Actions } from '../../../../helpers/request';
 import Axios from 'axios';

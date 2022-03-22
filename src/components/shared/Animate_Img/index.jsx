@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Row, Button } from 'antd';
 import { PlayCircleTwoTone } from '@ant-design/icons';
 import ReactPlayer from 'react-player';
@@ -9,7 +8,7 @@ class AnimateImg extends React.Component {
     this.state = {
       eventId: '',
       event: {},
-      autoplay: false
+      autoplay: false,
     };
     this.autoplayVideo = this.autoplayVideo.bind(this);
   }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, Row, Col, message } from 'antd';
 import { firestore } from '../../../helpers/firebase';
 import { ExternalSurvey } from '../../../helpers/request';

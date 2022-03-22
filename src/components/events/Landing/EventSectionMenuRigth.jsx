@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Layout, Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import SocialZone from '../../socialZone/socialZone';

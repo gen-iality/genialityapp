@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Card, Form, Input, Space, Upload, Alert, PageHeader } from 'antd';
 import { PictureOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';

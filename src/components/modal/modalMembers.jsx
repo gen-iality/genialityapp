@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { OrganizationApi } from '../../helpers/request';
 import FormComponent from '../events/registrationForm/form';
 import { message, Modal } from 'antd';

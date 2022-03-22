@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Badge, Col, Menu, Row, Space } from 'antd';
 import { useRouteMatch, Link } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
@@ -38,20 +38,12 @@ const MenuEvent = ({ isMobile }) => {
               let IconoComponente = iconComponents[event.itemsMenu[key].icon];
 
               return key == 'networking' ? (
-                <Menu.Item
-                  key={event.itemsMenu[key].section}
-                  className='MenuItem_event'
-                >
-                  <Badge
-                    key={event.itemsMenu[key].section}
-                    count={totalsolicitudes}
-                    offset={[-30, -2]}
-                  >
+                <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
+                  <Badge key={event.itemsMenu[key].section} count={totalsolicitudes} offset={[-30, -2]}>
                     <Link
                       className='menuEvent_section-text'
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}
-                    >
+                      to={`${url}/${event.itemsMenu[key].section}`}>
                       <IconoComponente
                         style={{
                           fontSize: '22px',
@@ -65,10 +57,7 @@ const MenuEvent = ({ isMobile }) => {
               ) : (
                 key !== 'networking' && (
                   <>
-                    <Menu.Item
-                      key={event.itemsMenu[key].section}
-                      className='MenuItem_event'
-                    >
+                    <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
                       <IconoComponente
                         style={{
                           fontSize: '22px',
@@ -81,16 +70,14 @@ const MenuEvent = ({ isMobile }) => {
                       <Link
                         className='menuEvent_section-text'
                         style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}
-                      >
+                        to={`${url}/${event.itemsMenu[key].section}`}>
                         <span
                           style={{
                             display: 'flex',
                             alignItems: 'center',
                             color: event.styles.textMenu,
                             justifyContent: 'center',
-                          }}
-                        >
+                          }}>
                           {` ${event.itemsMenu[key].name}`}
                         </span>
                       </Link>
@@ -104,19 +91,12 @@ const MenuEvent = ({ isMobile }) => {
         // </div>
         isMobile &&
         !eventPrivate.private && (
-          <Menu
-            style={stylesMenuItems}
-            mode='vertical'
-            defaultSelectedKeys={['1']}
-          >
+          <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
                 let IconoComponente = iconComponents[event.itemsMenu[key].icon];
-                if (
-                  !event.itemsMenu[key].name ||
-                  !event.itemsMenu[key].section
-                ) {
+                if (!event.itemsMenu[key].name || !event.itemsMenu[key].section) {
                   return <></>;
                 }
 
@@ -127,8 +107,7 @@ const MenuEvent = ({ isMobile }) => {
                       color: event.styles.textMenu,
                     }}
                     key={event.itemsMenu[key].section}
-                    className='MenuItem_event'
-                  >
+                    className='MenuItem_event'>
                     <IconoComponente
                       style={{
                         margin: '0 auto',
@@ -140,8 +119,7 @@ const MenuEvent = ({ isMobile }) => {
                     <Link
                       className='menuEvent_section-text'
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}
-                    >
+                      to={`${url}/${event.itemsMenu[key].section}`}>
                       {` ${event.itemsMenu[key].name}`}
                     </Link>
                   </Menu.Item>

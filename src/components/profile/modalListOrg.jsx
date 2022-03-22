@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Form, Select, Button, Typography } from 'antd';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
 

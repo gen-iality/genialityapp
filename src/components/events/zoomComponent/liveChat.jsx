@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function LiveChat(props) {
   if (!props.event || !props.activity) return <></>;
   return (

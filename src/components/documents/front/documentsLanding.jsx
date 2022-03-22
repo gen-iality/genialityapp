@@ -1,5 +1,5 @@
 import { notification, List, Avatar, Button } from 'antd';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { getFiles } from '../services';
 import { Col, Card, Result, Row, Space } from 'antd';
 import { CloudDownloadOutlined } from '@ant-design/icons';

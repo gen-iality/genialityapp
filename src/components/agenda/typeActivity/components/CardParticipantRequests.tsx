@@ -1,4 +1,4 @@
-import React from 'react';
+;
 import { Card, Badge, Space, Typography, Button } from 'antd';
 import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
 

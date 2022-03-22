@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import { Row, Col, Card, Avatar } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';

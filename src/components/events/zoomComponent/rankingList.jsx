@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Col, Avatar } from 'antd';
 
 export default function RankingList({ data }) {

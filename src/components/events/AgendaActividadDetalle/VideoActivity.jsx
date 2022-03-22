@@ -1,6 +1,6 @@
 import { SmileOutlined } from '@ant-design/icons';
 import { Result, Grid } from 'antd';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import ReactPlayer from 'react-player';
 import HelperContext from '../../../context/HelperContext';
 

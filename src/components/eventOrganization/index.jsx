@@ -1,5 +1,5 @@
 import { Col, Row, Typography, Badge, Grid, Space, Divider, Image, Empty, Button } from 'antd';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { OrganizationFuction } from '../../helpers/request';
 import EventCard from '../shared/eventCard';

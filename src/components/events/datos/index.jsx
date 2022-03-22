@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 /* import { toast } from 'react-toastify'; */
 import { FormattedMessage } from 'react-intl';

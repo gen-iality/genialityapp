@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
 import { injectIntl } from 'react-intl';
 

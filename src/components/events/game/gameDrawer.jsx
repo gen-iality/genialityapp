@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col, Button, Drawer, Avatar, Space } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';

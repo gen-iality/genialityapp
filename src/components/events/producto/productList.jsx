@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
 import withContext from '../../../context/withContext';
 import { useHistory } from 'react-router-dom';

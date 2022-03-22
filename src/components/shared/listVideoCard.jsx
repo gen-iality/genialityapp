@@ -1,5 +1,5 @@
 import { Card, Space, Col, Row } from 'antd';
-import React, { Fragment, useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import VideoCard from './videoCard';
 import { UseEventContext } from '../../context/eventContext';
 import { HelperContext } from '../../context/HelperContext';

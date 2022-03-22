@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import 'moment/locale/es';
 import { Actions } from '../../helpers/request';
 import UserRegistration from '../events/userRegistration';

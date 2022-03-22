@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
 import { useState } from 'react';
 import { firestore, fireRealtime, app } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../helpers/request';

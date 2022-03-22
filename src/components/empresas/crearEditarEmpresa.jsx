@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Row, Input, Modal, Switch, Spin } from 'antd';
 import { Field, FieldArray, Formik } from 'formik';

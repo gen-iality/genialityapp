@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form, Input, Button, Alert, Card, PageHeader, Typography } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
