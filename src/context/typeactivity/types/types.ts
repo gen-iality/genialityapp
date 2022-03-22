@@ -11,13 +11,14 @@ export type TypeActivityAction =
   | { type: 'toggleEviusStreaming'; payload: { id: string } }
   | { type: 'toggleVimeo'; payload: { id: string } }
   | { type: 'toggleYouTube'; payload: { id: string } }
+  | { type: 'onFinish'; payload: { id: string; data: object } }
   | { type: 'toggleFinish'; payload: { id: string } }
   | { type: 'toggleCloseModal'; payload: boolean }
   | { type: 'selectLiveBroadcast'; payload: { id: string } }
   | { type: 'selectMeeting'; payload: { id: string } }
   | { type: 'selectVideo'; payload: { id: string } }
   | { type: 'selectCargarVideo'; payload: { id: string } }
-  | { type: 'selectUrl'; payload: { id: string } }
+  | { type: 'selectUrl'; payload: { id: string; sendData: any } }
   | { type: 'selectEviusStreaming'; payload: { id: string } }
   | { type: 'selectVimeo'; payload: { id: string } }
   | { type: 'selectYouTube'; payload: { id: string } }
@@ -28,5 +29,6 @@ export type TypeActivityContextProps = {
   typeActivityState: TypeActivityState;
   toggleActivitySteps: (id: string) => void;
   closeModal: () => void;
-  selectOption: (id: string) => void;
+  selectOption: (id: string, sendData?: any) => void;
+  createTypeActivity: (id: string, data: {}) => void;
 };

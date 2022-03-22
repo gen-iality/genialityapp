@@ -41,11 +41,11 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
 
       default:
-        // typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
+        typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
         break;
     }
   };
-  const selectOption = (id: string) => {
+  const selectOption = (id: string, sendData: any) => {
     console.log('🚀 PROVIDER ID OPCION SELECCIONADA ', id);
     switch (id) {
       case 'liveBroadcast':
@@ -58,7 +58,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         typeActivityDispatch({ type: 'selectVideo', payload: { id } });
         break;
       case 'url':
-        typeActivityDispatch({ type: 'selectUrl', payload: { id } });
+        typeActivityDispatch({ type: 'selectUrl', payload: { id, sendData } });
         break;
       case 'cargarvideo':
         typeActivityDispatch({ type: 'selectCargarVideo', payload: { id } });
@@ -80,16 +80,20 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
 
       default:
-        // typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
+        typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
         break;
     }
+  };
+  const createTypeActivity = (id: string, data: object) => {
+    typeActivityDispatch({ type: 'onFinish', payload: { id, data } });
   };
   const closeModal = () => {
     typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
   };
 
   return (
-    <TypeActivityContext.Provider value={{ typeActivityState, toggleActivitySteps, selectOption, closeModal }}>
+    <TypeActivityContext.Provider
+      value={{ typeActivityState, toggleActivitySteps, selectOption, closeModal, createTypeActivity }}>
       {children}
     </TypeActivityContext.Provider>
   );

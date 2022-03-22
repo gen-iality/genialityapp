@@ -2,7 +2,9 @@ import { useContext } from 'react';
 import { TypeActivityContext } from '../typeActivityContext';
 
 export const useTypeActivity = () => {
-  const { typeActivityState, toggleActivitySteps, selectOption, closeModal } = useContext(TypeActivityContext);
+  const { typeActivityState, toggleActivitySteps, selectOption, closeModal, createTypeActivity } = useContext(
+    TypeActivityContext
+  );
 
   const {
     openModal,
@@ -25,5 +27,6 @@ export const useTypeActivity = () => {
     previewKey,
     buttonsTextNextOrCreate,
     buttonTextPreviousOrCancel,
+    createTypeActivity,
   };
 };

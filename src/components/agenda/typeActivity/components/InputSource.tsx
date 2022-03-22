@@ -1,5 +1,5 @@
-;
 import { Input } from 'antd';
+import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 
 /**
   addonBefore: 'https://vimeo.com/event/' || https://youtu.be/ || <LinkOutlined />
@@ -10,7 +10,18 @@ interface propsOptions {
 }
 
 const InputSource = ({ addonBefore, placeholder }: propsOptions) => {
-  return <Input addonBefore={addonBefore} placeholder={placeholder} size='large' />;
+  const { selectOption, typeOptions } = useTypeActivity();
+  return (
+    <Input
+      addonBefore={addonBefore}
+      placeholder={placeholder}
+      size='large'
+      onChange={(e) => {
+        console.log('🚀 debug ~ InputSource ~ ---------------------------------------->', e.target.value);
+        selectOption(typeOptions.key, e.target.value);
+      }}
+    />
+  );
 };
 
 export default InputSource;
