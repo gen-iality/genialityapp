@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Row, Col, Checkbox, Form } from 'antd';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { EventsApi } from '../../../helpers/request';
@@ -42,7 +42,7 @@ function ConfirmacionRegistro(props) {
       registration_message: registrationMessage,
       validateEmail: validateEmail,
     };
-    try{
+    try {
       await EventsApi.editOne(data, props.event._id);
       DispatchMessageService({
         key: 'loading',
@@ -53,7 +53,7 @@ function ConfirmacionRegistro(props) {
         msj: 'Contenido guardada correctamente!',
         action: 'show',
       });
-    } catch(e){
+    } catch (e) {
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',

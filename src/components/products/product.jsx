@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal,  Typography, Row, Col } from 'antd';
+import { Component } from 'react';
+import { Table, Tooltip, Space, Button, Image, Modal, Typography, Row, Col } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -166,13 +166,12 @@ class Product extends Component {
             }
           });
         }).catch(() => {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Lo sentimos no hay respuesta del servidor',
-              action: 'show',
-            });
-          }
-        );
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Lo sentimos no hay respuesta del servidor',
+            action: 'show',
+          });
+        });
       },
       onCancel() {},
     });
