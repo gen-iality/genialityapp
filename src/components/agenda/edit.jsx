@@ -272,7 +272,7 @@ class AgendaEdit extends Component {
       this.setState({
         showAditionalTabs: true,
       });
-      this.context.setActivityEdit(state.edit);
+      this.context.setActivityEdit(state?.edit);
       const info = await AgendaApi.getOne(state.edit, event._id);
       this.setState({
         selected_document: info.selected_document,
@@ -589,6 +589,7 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
+      this.context.setIsPublished(value);
       this.setState({ isPublished: value }, async () => await this.saveConfig());
     } else {
       this.setState({ [name]: value }, async () => this.valideChangesInActivityData());
@@ -738,8 +739,8 @@ class AgendaEdit extends Component {
       key: 'loading',
       msj: 'Por favor espere miestras se guarda la información...',
       action: 'show',
-    });  
-    const validation = this.validForm();  
+    });
+    const validation = this.validForm();
 
     if (validation) {
       try {
@@ -753,7 +754,7 @@ class AgendaEdit extends Component {
         this.setState({ isLoading: true });
         let agenda;
         let result;
-        if (state.edit || this.state.activityEdit) {       
+        if (state.edit || this.state.activityEdit) {
           const data = {
             activity_id: state.edit || this.state.idNewlyCreatedActivity,
           };
@@ -769,9 +770,9 @@ class AgendaEdit extends Component {
           for (let i = 0; i < selected_document?.length; i++) {
             await DocumentsApi.editOne(data, selected_document[i], event._id);
           }
-        } else {         
+        } else {
           agenda = await AgendaApi.create(event._id, info);
-         
+
           // Al crear una actividad de la agenda se inicializa el id de la actividad y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
           this.setState({
             activity_id: agenda._id,
@@ -1114,9 +1115,8 @@ class AgendaEdit extends Component {
       host_name,
       avalibleGames,
       transmition,
-      isPublished 
+      isPublished,
     } = this.context;
-   // const { isPublished } = this.state;
 
     const roomInfo = {
       platform,
@@ -1238,6 +1238,8 @@ class AgendaEdit extends Component {
       showAditionalTabs,
       showPendingChangesModal,
     } = this.state;
+
+    console.log('IS PUBLISHED===>', isPublished, this.context.isPublished);
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
@@ -1266,15 +1268,17 @@ class AgendaEdit extends Component {
             saveNameIcon
             edit={this.props.location.state.edit || this.state.activityEdit}
             extra={
-              showAditionalTabs && <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
-                <Switch
-                  checkedChildren='Sí'
-                  unCheckedChildren='No'
-                  name={'isPublished'}
-                  checked={isPublished}
-                  onChange={(e) => this.handleChange(e, 'isPublished')}
-                />
-              </Form.Item>
+              showAditionalTabs && (
+                <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
+                  <Switch
+                    checkedChildren='Sí'
+                    unCheckedChildren='No'
+                    name={'isPublished'}
+                    checked={this.context?.isPublished}
+                    onChange={(e) => this.handleChange(e, 'isPublished')}
+                  />
+                </Form.Item>
+              )
             }
           />
           {loading ? (

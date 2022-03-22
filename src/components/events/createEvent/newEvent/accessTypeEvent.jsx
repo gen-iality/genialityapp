@@ -1,6 +1,5 @@
 import { CheckCircleFilled } from '@ant-design/icons';
 import { Badge, Card, Col, Divider, Row, Space, Typography } from 'antd';
-import React from 'react';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 
 const AccessTypeEvent = () => {

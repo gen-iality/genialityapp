@@ -1,7 +1,7 @@
-import { PlusCircleOutlined, PictureOutlined } from '@ant-design/icons';
+import { PictureOutlined } from '@ant-design/icons';
 import { Button, Form, Input, List, Modal, Row, Spin, message, Upload, Typography, Space, Tabs } from 'antd';
 import { UseCurrentUser } from '../../../../context/userContext';
-import React, { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 import ImgCrop from 'antd-img-crop';
 import functionCreateNewOrganization from '../../../profile/functionCreateNewOrganization';

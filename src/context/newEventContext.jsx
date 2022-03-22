@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useReducer, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { message } from 'antd';
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/request';

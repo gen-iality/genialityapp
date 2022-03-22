@@ -59,9 +59,9 @@ const Table = (props) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [components, setComponents] = useState('');
-  let [headerState,setHeaderState]=useState(header)
-  
-  useEffect(()=>{
+  let [headerState, setHeaderState] = useState(header);
+
+  useEffect(() => {
     const options = {
       title: 'Opciones',
       dataIndex: 'options',
@@ -104,17 +104,17 @@ const Table = (props) => {
                 </Tooltip>
               </Col>
             )}
-              {/* ACTUALIZAR STATUS MAILS */}
-              {extraPathUpdate && (
+            {/* ACTUALIZAR STATUS MAILS */}
+            {extraPathUpdate && (
               <Col>
-                <Tooltip placement='topLeft' title={extraPathUpdateTitle}>               
-                    <Button
-                      style={{ backgroundColor:'#00C851',borderColor:'#00C851'}}
-                      onClick={()=>updateMails(item._id)}
-                      icon={extraPathUpdate}
-                      type={'primary'}
-                      size='small'
-                    />               
+                <Tooltip placement='topLeft' title={extraPathUpdateTitle}>
+                  <Button
+                    style={{ backgroundColor: '#00C851', borderColor: '#00C851' }}
+                    onClick={() => updateMails(item._id)}
+                    icon={extraPathUpdate}
+                    type={'primary'}
+                    size='small'
+                  />
                 </Tooltip>
               </Col>
             )}
@@ -190,14 +190,14 @@ const Table = (props) => {
         );
       },
     };
-    if (actions) {  
-      if(!headerState.includes(options)){
-        console.log("AGREGA ACA LAS ACTIONS")
+    if (actions) {
+      if (!headerState.includes(options)) {
+        console.log('AGREGA ACA LAS ACTIONS');
         headerState.push(options);
-        setHeaderState(headerState)
+        setHeaderState(headerState);
       }
     }
-  },[actions])  
+  }, [actions]);
 
   if (list && list.length) {
     list.map((list, index) => {
@@ -311,15 +311,7 @@ const Table = (props) => {
           <Row wrap justify='end' gutter={[8, 8]}>
             {exportData && (
               <Col>
-<<<<<<< HEAD
-                <ExportExcel                 
-=======
-                {/* <ExportExcel
-                  columns={header}
->>>>>>> f5598892a1b9b35f24936cf018924475b24b6010
-                  list={list}
-                  fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`}
-                /> */}
+                <ExportExcel list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} />
               </Col>
             )}
             {titleTable && <Col>{titleTable}</Col>}

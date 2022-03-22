@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import {OrganizationFuction, UsersApi} from '../../../helpers/request';
+import { OrganizationFuction, UsersApi } from '../../../helpers/request';
 import { Steps, Button, message, Card, Row, Spin } from 'antd';
 import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */

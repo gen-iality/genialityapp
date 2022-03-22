@@ -29,7 +29,6 @@
 
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import React from 'react';
 import * as XLSX from 'xlsx/xlsx.mjs';
 
 export const ExportExcel = (props) => {

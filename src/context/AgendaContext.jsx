@@ -1,13 +1,7 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  useReducer,
-} from "react";
-import Service from "../components/agenda/roomManager/service";
-import { fireRealtime, firestore } from "../helpers/firebase";
-import { CurrentEventUserContext } from "./eventUserContext";
+import { createContext, useState, useEffect, useContext, useReducer } from 'react';
+import Service from '../components/agenda/roomManager/service';
+import { fireRealtime, firestore } from '../helpers/firebase';
+import { CurrentEventUserContext } from './eventUserContext';
 export const AgendaContext = createContext();
 
 const initialState = {
@@ -23,17 +17,17 @@ export const AgendaContextProvider = ({ children }) => {
   const [attendees, setAttendees] = useState(false);
   const [host_id, setHostId] = useState(null);
   const [host_name, setHostName] = useState(null);
-  const [habilitar_ingreso, setHabilitarIngreso] = useState("");
-  const [platform, setPlatform] = useState("wowza");
-  const [vimeo_id, setVimeoId] = useState("");
-  const [name_host, setNameHost] = useState("");
+  const [habilitar_ingreso, setHabilitarIngreso] = useState('');
+  const [platform, setPlatform] = useState('wowza');
+  const [vimeo_id, setVimeoId] = useState('');
+  const [name_host, setNameHost] = useState('');
   const [avalibleGames, setAvailableGames] = useState([]);
   const [isPublished, setIsPublished] = useState(true);
   const [meeting_id, setMeetingId] = useState(null);
   const [roomStatus, setRoomStatus] = useState(null);
   const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventUserContext);
-  const [transmition, setTransmition] = useState("EviusMeet"); //EviusMeet Para cuando se tenga terminada
+  const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet Para cuando se tenga terminada
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
   const [request, setRequest] = useState({});
   const [requestList, setRequestList] = useState([]);
@@ -42,15 +36,15 @@ export const AgendaContextProvider = ({ children }) => {
   function reducer(state, action) {
     /* console.log('actiondata', action); */
     switch (action.type) {
-      case "meeting_created":
+      case 'meeting_created':
         /* console.log('meeting_created', action); */
         return { ...state, meeting_id: action.meeting_id };
 
-      case "stop":
+      case 'stop':
         return { ...state, isRunning: false };
-      case "reset":
+      case 'reset':
         return { isRunning: false, time: 0 };
-      case "tick":
+      case 'tick':
         return { ...state, time: state.time + 1 };
       default:
         throw new Error();
@@ -59,7 +53,7 @@ export const AgendaContextProvider = ({ children }) => {
 
   //Un patch temporal mientras la transisicón a reducer/store
   useEffect(() => {
-    console.log("meeting_created_local", activityState);
+    console.log('meeting_created_local', activityState);
     setMeetingId(activityState.meeting_id); //esta linea es temporal mejor reeplazarla por el store del reducer
   }, [activityState.meeting_id]);
 
@@ -69,69 +63,29 @@ export const AgendaContextProvider = ({ children }) => {
       setMeetingId(null);
     }
     async function obtenerDetalleActivity() {
+      console.log('OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
       //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
       const service = new Service(firestore);
-      const hasVideoconference = await service.validateHasVideoconference(
-        cEvent.value._id,
-        activityEdit
-      );
+      const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
+      console.log('EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
       if (hasVideoconference) {
-        const configuration = await service.getConfiguration(
-          cEvent.value._id,
-          activityEdit
-        );
-        setIsPublished(
-          typeof configuration.isPublished !== "undefined"
-            ? configuration.isPublished
-            : true
-        );
-        setPlatform(configuration.platform ? configuration.platform : "wowza");
-        setMeetingId(
-          configuration.meeting_id ? configuration.meeting_id : null
-        );
+        const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+        setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
+        setPlatform(configuration.platform ? configuration.platform : 'wowza');
+        setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
         setRoomStatus(configuration.habilitar_ingreso);
         setTransmition(configuration.transmition || null);
         setAvailableGames(configuration.avalibleGames || []);
-        setChat(
-          configuration.tabs && configuration.tabs.chat
-            ? configuration.tabs.chat
-            : false
-        );
-        setSurveys(
-          configuration.tabs && configuration.tabs.surveys
-            ? configuration.tabs.surveys
-            : false
-        );
-        setGames(
-          configuration.tabs && configuration.tabs.games
-            ? configuration.tabs.games
-            : false
-        );
-        setAttendees(
-          configuration.tabs && configuration.tabs.attendees
-            ? configuration.tabs.attendees
-            : false
-        );
-        setHostId(
-          typeof configuration.host_id !== "undefined"
-            ? configuration.host_id
-            : null
-        );
-        setHostName(
-          typeof configuration.host_name !== "undefined"
-            ? configuration.host_name
-            : null
-        );
-        setHabilitarIngreso(
-          configuration.habilitar_ingreso ? configuration.habilitar_ingreso : ""
-        );
-        setSelect_host_manual(
-          configuration.select_host_manual
-            ? configuration.select_host_manual
-            : false
-        );
-      }else{
-        initializeState()
+        setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
+        setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
+        setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
+        setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
+        setHostId(typeof configuration.host_id !== 'undefined' ? configuration.host_id : null);
+        setHostName(typeof configuration.host_name !== 'undefined' ? configuration.host_name : null);
+        setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
+        setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
+      } else {
+        initializeState();
       }
     }
   }, [activityEdit]);
@@ -157,8 +111,8 @@ export const AgendaContextProvider = ({ children }) => {
   const getRequestByActivity = (refActivity) => {
     fireRealtime
       .ref(refActivity)
-      .orderByChild("date")
-      .on("value", (snapshot) => {
+      .orderByChild('date')
+      .on('value', (snapshot) => {
         let listRequest = {};
         let listRequestArray = [];
         if (snapshot.exists()) {
@@ -180,7 +134,7 @@ export const AgendaContextProvider = ({ children }) => {
                 active: data[requestData].active || false,
               });
             });
-            console.log("1. LISTADO ACA==>", listRequestArray);
+            console.log('1. LISTADO ACA==>', listRequestArray);
             setRequest(listRequest);
             setRequestList(listRequestArray);
           }
@@ -212,7 +166,7 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const approvedOrRejectedRequest = async (refActivity, key, status) => {
-    console.log("1. APROVE ACA=>", refActivity);
+    console.log('1. APROVE ACA=>', refActivity);
     if (refActivity) {
       await fireRealtime
         .ref(`${refActivity}`)
@@ -270,8 +224,7 @@ export const AgendaContextProvider = ({ children }) => {
         refActivity,
         requestList,
         removeAllRequest,
-      }}
-    >
+      }}>
       {children}
     </AgendaContext.Provider>
   );
