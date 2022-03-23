@@ -12,6 +12,9 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   const toggleActivitySteps = (id: string) => {
     console.log('🚀 PROVIDER ID SELECTACTIVITYSTATES', id);
     switch (id) {
+      case 'initial':
+        typeActivityDispatch({ type: 'initial', payload: { id } });
+        break;
       case 'type':
         typeActivityDispatch({ type: 'toggleType', payload: { id } });
         break;
@@ -39,7 +42,9 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'youTube':
         typeActivityDispatch({ type: 'toggleYouTube', payload: { id } });
         break;
-
+      case 'finish':
+        typeActivityDispatch({ type: 'toggleFinish', payload: { id } });
+        break;
       default:
         typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
         break;
@@ -67,18 +72,17 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         typeActivityDispatch({ type: 'selectEviusStreaming', payload: { id } });
         break;
       case 'vimeo':
-        typeActivityDispatch({ type: 'selectVimeo', payload: { id } });
-        break;
-      case 'youTube':
-        typeActivityDispatch({ type: 'selectYouTube', payload: { id } });
-        break;
+        typeActivityDispatch({ type: 'selectVimeo', payload: { id,sendData  } });
+        break;           
       case 'eviusMeet':
         typeActivityDispatch({ type: 'selectEviusMeet', payload: { id } });
         break;
       case 'RTMP':
         typeActivityDispatch({ type: 'selectRTMP', payload: { id } });
         break;
-
+      case 'youTube':
+        typeActivityDispatch({ type: 'selectYouTube', payload: { id,sendData  } });
+        break;
       default:
         typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
         break;

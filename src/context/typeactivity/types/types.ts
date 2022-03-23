@@ -1,6 +1,7 @@
 import { TypeActivity, TypeActivityState } from '../interfaces/interfaces';
 
 export type TypeActivityAction =
+  | { type: 'initial'; payload: { id: string } }
   | { type: 'type'; payload: TypeActivity }
   | { type: 'toggleType'; payload: { id: string } }
   | { type: 'toggleLiveBroadcast'; payload: { id: string } }
@@ -20,8 +21,8 @@ export type TypeActivityAction =
   | { type: 'selectCargarVideo'; payload: { id: string } }
   | { type: 'selectUrl'; payload: { id: string; sendData: any } }
   | { type: 'selectEviusStreaming'; payload: { id: string } }
-  | { type: 'selectVimeo'; payload: { id: string } }
-  | { type: 'selectYouTube'; payload: { id: string } }
+  | { type: 'selectVimeo'; payload: { id: string,sendData: any } }
+  | { type: 'selectYouTube'; payload: { id: string,sendData: any  } }
   | { type: 'selectEviusMeet'; payload: { id: string } }
   | { type: 'selectRTMP'; payload: { id: string } };
 

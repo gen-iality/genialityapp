@@ -2,8 +2,10 @@
 import { Card, Typography, Space, Select, Avatar } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined } from '@ant-design/icons';
+import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 
-const CardPreview = () => {
+const CardPreview = (props:any) => {
+  const { data} = useTypeActivity();
   return (
     <Card bodyStyle={{ padding: '21px' }} style={{ borderRadius: '8px' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
@@ -26,21 +28,21 @@ const CardPreview = () => {
           }
           title={
             <Typography.Text style={{ fontSize: '20px' }} strong>
-              Nombre de la actividad
+              {props.activityName}
             </Typography.Text>
           }
-          description='Estado'
+          description={props.type=="reunión"?'Sala de reuniones':props.type==="vimeo" || props.type=="Youtube"?"":'Estado'}
         />
-        <Space style={{ width: '100%' }}>
-          <Typography.Text strong>ID transmisión:</Typography.Text>
+        {(props.type==="Transmisión" || props.type==="vimeo" || props.type=="Youtube") && <Space style={{ width: '100%' }}>
+          <Typography.Text strong>ID {props.type}:</Typography.Text>
           <Typography.Text
             copyable={{
               tooltips: ['clic para copiar', 'ID copiado!!'],
-              text: 'Aquí va el ID a copiar',
+              text: `${data}`,
             }}>
-            {'HJASDD'}
+            {data}
           </Typography.Text>
-        </Space>
+        </Space>}
         <Space direction='vertical' style={{ width: '100%' }}>
           <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
           <Select

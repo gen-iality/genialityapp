@@ -7,7 +7,7 @@ import InitialView from './InitialView';
 function TipeOfActivity({ eventId, activityId, activityName }) {
   return (
     <TypeActivityProvider>
-      <InitialView />
+      <InitialView eventId={eventId} activityId={activityId} activityName={activityName}/>
     </TypeActivityProvider>
   );
 }

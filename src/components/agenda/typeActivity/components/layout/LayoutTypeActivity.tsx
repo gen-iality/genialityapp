@@ -28,11 +28,16 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
   };
 
   const nextOrCreate = () => {
-    if (selectedKey !== 'initial') {
+    if (selectedKey !== 'initial' && buttonsTextNextOrCreate!=="Crear" ) {
       toggleActivitySteps(selectedKey);
       return;
+    }else if(selectedKey === 'initial'){
+      closeModal();
+    }else{
+      toggleActivitySteps("finish")
+      closeModal();
     }
-    closeModal();
+    
   };
 
   return (

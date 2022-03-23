@@ -6,14 +6,25 @@ import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActi
 
 /* import InitialSVG from './components/svg/InitialSVG'; */
 
-const InitialView = (props: any) => {
-  const { toggleActivitySteps } = useTypeActivity();
+const objecKeys={
+  "url":"Video",
+  "meeting":"reunión",
+  "vimeo":"vimeo",
+  "youTube":"Youtube",
+  "eviusMeet":"EviusMeet",
+  "RTMP":"Transmisión"
+}
 
-  return (
-    <>
-      <ModalStepByStep />
-      {/* <ManagerView /> */}
-      <Card>
+const InitialView = (props: any) => {
+  const { toggleActivitySteps,selectedKey, previewKey,data} = useTypeActivity();
+
+  const renderComponet=()=>{
+    switch (selectedKey) {
+      case 'finish':        
+        let type=objecKeys[previewKey];
+        return (<ManagerView type={type} activityName={props.activityName} activityId={props.activityId} /> )    
+      default:
+        return (<Card>
         <Result
           /* icon={<InitialSVG style={{ width: '150px', height: '150px' }} />} */
           status='info'
@@ -24,7 +35,15 @@ const InitialView = (props: any) => {
             </Button>
           }
         />
-      </Card>
+      </Card>)
+    }
+  }
+  
+  return (
+    <>
+      {console.log("FINAL DATA==>",selectedKey,previewKey,data)}
+      <ModalStepByStep />       
+      {renderComponet()}
     </>
   );
 };

@@ -1,5 +1,7 @@
 ;
 import { Typography, Row, Col } from 'antd';
+import { useEffect } from 'react';
+import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
 
 interface propsOptions {
   title: string;
@@ -7,7 +9,8 @@ interface propsOptions {
   image: string;
 }
 
-const ContentInformative = ({ title, description, image }: propsOptions) => {
+const ContentInformative = ({ title, description, image }: propsOptions) => { 
+  
   return (
     <Row justify='center' align='middle'>
       <Col span={8}>

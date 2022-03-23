@@ -9,6 +9,7 @@ export const initialState: TypeActivityState = {
   typeOptions: typeActivityData,
   selectedKey: 'initial',
   previewKey: 'type',
+  data:"",
   buttonsTextNextOrCreate: 'Siguiente',
   buttonTextPreviousOrCancel: 'Cancel',
 };
@@ -22,6 +23,17 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
     //     typeOptions: [...state.typeOptions, action.payload],
     //   };
 
+    case 'initial':
+      return {
+        openModal: false,
+        disableNextButton: true,
+        typeOptions: typeActivityData,
+        selectedKey: 'initial',
+        previewKey: 'type',
+        data:"",
+        buttonsTextNextOrCreate: 'Siguiente',
+        buttonTextPreviousOrCancel: 'Cancel',
+      };
     case 'toggleType':
       return {
         ...state,
@@ -80,7 +92,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       }
 
     case 'toggleMeeting':
-      const selectedToggleMeetingData = state.typeOptions.typeOptions.find((item: { key: string }) => {
+      const selectedToggleMeetingData = state.typeOptions?.typeOptions?.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
       });
 
@@ -233,8 +245,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           ...state,
           openModal: true,
           disableNextButton: true,
-          previewKey: 'type',
-          // selectedKey: 'liveBroadcast',
+          previewKey: 'type',          
           selectedKey: '',
           buttonsTextNextOrCreate: 'Siguiente',
           buttonTextPreviousOrCancel: 'Anterior',
@@ -252,7 +263,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         openModal: true,
         disableNextButton: true,
         previewKey: state.previewKey,
-        selectedKey: action.payload.id,
+        selectedKey: action.payload.id,       
         buttonsTextNextOrCreate: 'Crear',
         buttonTextPreviousOrCancel: 'Anterior',
         typeOptions: selectToggleVimeo,
@@ -274,24 +285,12 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         typeOptions: selectToggleYouTube,
       };
 
-    // case 'toggleFinish':
-    //   console.log('🚀 STATE', state);
-    //   console.log('🚀 ACTION', action);
-    //   console.log('🚀 INITIAL', initialState.typeOptions);
-    //   const selectToggleFinish = state.typeOptions.typeOptions.find((item: { key: string }) => {
-    //     if (item.key === action.payload.id) return item;
-    //   });
-
-    //   return {
-    //     ...state,
-    //     openModal: true,
-    //     disableNextButton: true,
-    //     previewKey: state.previewKey,
-    //     selectedKey: action.payload.id,
-    //     buttonsTextNextOrCreate: 'Crear',
-    //     buttonTextPreviousOrCancel: 'Anterior',
-    //     typeOptions: selectToggleFinish,
-    //   };
+    case 'toggleFinish':       
+      return {
+        ...state,
+        previewKey: state.selectedKey,
+        selectedKey: action.payload.id,        
+      };
 
     case 'toggleCloseModal':
       return {
@@ -327,7 +326,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         openModal: true,
         disableNextButton: false,
         previewKey: state.typeOptions.key,
-        selectedKey: action.payload.id,
+        selectedKey: action.payload.id,       
         typeOptions: initialState.typeOptions,
       };
 
@@ -361,6 +360,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         previewKey: state.typeOptions.key,
         selectedKey: action.payload.id,
         typeOptions: state.typeOptions,
+        data:action.payload.sendData,
       };
 
     case 'selectEviusStreaming':
@@ -377,29 +377,43 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'selectVimeo':
-      const selectVimeo = initialState.typeOptions.typeOptions.find((item: { key: string }) => {
-        if (item.key === state.typeOptions.key) return item;
-      });
+      let disableButtonVimeo: boolean = true;
+
+      const sendDataPayloadVimeo = action?.payload?.sendData;
+      if ((sendDataPayloadVimeo?.length > 12 && sendDataPayloadVimeo !== '') || sendDataPayloadVimeo == undefined) {
+        disableButtonVimeo = false;
+        if (sendDataPayloadVimeo) {
+          console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayloadVimeo));                
+        }
+      }
       return {
         ...state,
         openModal: true,
-        disableNextButton: false,
+        disableNextButton: disableButtonVimeo,
         previewKey: state.typeOptions.key,
         selectedKey: action.payload.id,
-        typeOptions: selectVimeo,
+        typeOptions: state.typeOptions,
+        data:action.payload.sendData,
       };
 
     case 'selectYouTube':
-      const selectYouTube = initialState.typeOptions.typeOptions.find((item: { key: string }) => {
-        if (item.key === state.typeOptions.key) return item;
-      });
+      let disableButtonYoutube: boolean = true;
+
+      const sendDataPayloadYoutube = action?.payload?.sendData;
+      if ((sendDataPayloadYoutube?.length > 12 && sendDataPayloadYoutube !== '') || sendDataPayloadYoutube == undefined) {
+        disableButtonYoutube = false;
+        if (sendDataPayloadYoutube) {
+          console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayloadYoutube));                
+        }
+      }
       return {
         ...state,
         openModal: true,
-        disableNextButton: false,
+        disableNextButton: disableButtonYoutube,
         previewKey: state.typeOptions.key,
         selectedKey: action.payload.id,
-        typeOptions: selectYouTube,
+        typeOptions: state.typeOptions,
+        data:action.payload.sendData,
       };
 
     case 'selectEviusMeet':

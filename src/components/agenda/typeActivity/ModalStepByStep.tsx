@@ -40,7 +40,7 @@ const ModalStepByStep = () => {
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
               if (options.key === typeOptions.key) {
                 return (
-                  <ContentSource
+                  <ContentSource                    
                     addonBefore={options.addonBefore}
                     placeholder={options.placeholder}
                     icon={options.title}

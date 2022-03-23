@@ -2,7 +2,7 @@
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
 import { CopyFilled } from '@ant-design/icons';
 
-const CardShareLinkEviusMeet = () => {
+const CardShareLinkEviusMeet = (props:any) => {  
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
@@ -22,7 +22,7 @@ const CardShareLinkEviusMeet = () => {
               style={{ width: 'calc(100% - 31px)' }}
               disabled
               value={
-                'https://eviusmeets.netlify.app/prepare?meetingId=617854261432914e2026a544&rtmp=rtmp://027156.entrypoint.cloud.wowza.com/app-Jk5Q65d5/eWpOdnZy'
+                `https://eviusmeets.netlify.app/prepare?meetingId=${props.activityId}&rol=1`
               } /* value={linkRolProductor} */
             />
             <Tooltip title='Copiar productor url'>
@@ -47,7 +47,7 @@ const CardShareLinkEviusMeet = () => {
               style={{ width: 'calc(100% - 31px)' }}
               disabled
               value={
-                'https://eviusmeets.netlify.app/prepare?meetingId=617854261432914e2026a544&rtmp=rtmp://027156.entrypoint.cloud.wowza.com/app-Jk5Q65d5/eWpOdnZy'
+                `https://eviusmeets.netlify.app/prepare?meetingId=${props.activityId}&rol=2`
               } /* value={linkRolProductor} */
             />
             <Tooltip title='Copiar speaker url'>
