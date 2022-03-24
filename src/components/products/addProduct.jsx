@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Row, Input, Form, message, Col, Modal } from 'antd';
+import { Button, Row, Input, Form, Col, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
@@ -9,6 +9,7 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { handleRequestError } from '../../helpers/utils';
+import { DispatchMessageService } from '../../context/MessageService';
 
 export const toolbarEditor = {
   toolbar: [
@@ -101,7 +102,11 @@ function AddProduct(props) {
         option === 'Imagen' ? setPicture(path[0]) : setOptionalPicture(path[0]);
         option === 'Imagen' ? setImgFile(null) : setImgFileOptional(null);
 
-        message.success('Imagen cargada correctamente');
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Imagen cargada correctamente',
+          action: 'show',
+        });
       });
     } else {
       setErrImg('Solo se permiten imágenes. Intentalo de nuevo');
@@ -109,6 +114,12 @@ function AddProduct(props) {
   };
 
   const saveProduct = async () => {
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la información...',
+      action: 'show',
+    });
     let validators = {};
     validators.price = false;
     validators.creator = false;
@@ -168,18 +179,37 @@ function AddProduct(props) {
             props.history.push(`/eventadmin/${props.eventId}/product`);
           }
         }
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Información guardada correctamente!',
+          action: 'show',
+        });
       } catch (e) {
         e;
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: e,
+          action: 'show',
+        });
         /* console.log('10. error ', e); */
       }
     }
   };
 
   const remove = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     if (props.match.params.id) {
       confirm({
@@ -193,17 +223,25 @@ function AddProduct(props) {
           const onHandlerRemove = async () => {
             try {
               await EventsApi.deleteProduct(props.match.params.id, props.eventId);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               goBack();
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e)?.message,
+                msj: handleRequestError(e)?.message,
+                action: 'show',
               });
             }
           };

@@ -1,9 +1,10 @@
 import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message, Alert, Spin } from 'antd';
+import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, Alert, Spin } from 'antd';
 import { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
 import withContext from '../../../context/withContext';
 import { useEffect } from 'react';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const { Title, Text } = Typography;
 
@@ -136,7 +137,11 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
           ) {
             let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
             if (respuestaApi) {
-              message.success('Oferta realizada correctamente..!');
+              DispatchMessageService({
+                type: 'success',
+                msj: 'Oferta realizada correctamente..!',
+                action: 'show',
+              });
               updateValues(true);
             }
           } else {
@@ -145,11 +150,19 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
             setValueOferta(valueOfertaMin);
             setPriceProduct(valueResp);
             setValorProduct(valueNumber);
-            message.error('Actualmente se ha ofertado un valor mucho mayor para esta obra!');
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Actualmente se ha ofertado un valor mucho mayor para esta obra!',
+              action: 'show',
+            });
           }
         }
       } catch (error) {
-        message.error('No estás autorizado para realizar ofertas');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'No estás autorizado para realizar ofertas',
+          action: 'show',
+        });
       }
     }
     setLoadingSave(false);

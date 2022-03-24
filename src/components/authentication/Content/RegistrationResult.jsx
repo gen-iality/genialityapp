@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
-import { Result, Row, Space, Typography, message, Alert, Button } from 'antd';
+import { Result, Row, Space, Typography, Alert, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
 import { app } from '../../../helpers/firebase';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import HelperContext from '../../../context/HelperContext';
 import { useIntl } from 'react-intl';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
   const [fraseLoading, setfraseLoading] = useState('');
@@ -26,7 +27,11 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
         }
       } catch (err) {
         console.log(err);
-        message.error('Ha ocurrido un error');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Ha ocurrido un error',
+          action: 'show',
+        });
       }
     }
 

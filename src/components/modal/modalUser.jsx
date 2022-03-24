@@ -8,13 +8,14 @@ import { Redirect } from 'react-router-dom';
 import { Actions } from '../../helpers/request';
 import Moment from 'moment';
 import FormComponent from '../events/registrationForm/form';
-import { message, Modal } from 'antd';
+import { Modal } from 'antd';
 import withContext from '../../context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
@@ -123,10 +124,11 @@ class UserModal extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        const loading = message.open({
-          key: 'loading',
+        DispatchMessageService({
           type: 'loading',
-          content: <> Por favor espere miestras borra la información..</>,
+          key: 'loading',
+          msj: ' Por favor espere miestras se borra la información...',
+          action: 'show',
         });
         const onHandlerRemove = async () => {
           try {
@@ -137,15 +139,23 @@ class UserModal extends Component {
                 `${user._id}?token=${token}`
               ));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
-            message.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+
+            DispatchMessageService({
+              type: 'info',
+              msj: <FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />,
+            });
 
             self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
             self.props.byActivity && (await self.props.updateView());
 
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
             });
 
             userRef
@@ -154,7 +164,11 @@ class UserModal extends Component {
               .then(function() {
                 messages.class = 'msg_warning';
                 messages.content = 'USER DELETED';
-                message.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+                DispatchMessageService({
+                  type: 'info',
+                  msj: <FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />,
+                  action: 'show',
+                });
 
                 //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
                 //substractSyncQuantity();
@@ -165,10 +179,14 @@ class UserModal extends Component {
               self.closeModal();
             }, 500);
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: <>Error eliminando el usuario</>,
+              msj: 'Error eliminando el usuario',
+              action: 'show',
             });
           }
         };
@@ -254,7 +272,11 @@ class UserModal extends Component {
           try {
             resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
           } catch (e) {
-            message.error('Usuario ya registrado en el evento');
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Usuario ya registrado en el evento',
+              action: 'show',
+            });
             respActivity = false;
           }
           console.log('RESPUESTA==>', resp);
@@ -317,10 +339,18 @@ class UserModal extends Component {
     }
 
     if (resp || respActivity) {
-      message.success(this.props?.edit ? 'Usuario editado correctamente' : 'Usuario agregado correctamente');
+      DispatchMessageService({
+        type: 'success',
+        msj: this.props?.edit ? 'Usuario editado correctamente' : 'Usuario agregado correctamente',
+        action: 'show',
+      });
       this.props.handleModal();
     } else {
-      message.error('Error al guardar el usuario');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error al guardar el usuario',
+        action: 'show',
+      });
       console.log(resp);
     }
 

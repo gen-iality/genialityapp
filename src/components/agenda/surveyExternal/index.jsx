@@ -1,8 +1,9 @@
 import { Component } from 'react';
-import { Card, Row, Col, message } from 'antd';
+import { Card, Row, Col } from 'antd';
 import { firestore } from '../../../helpers/firebase';
 import { ExternalSurvey } from '../../../helpers/request';
 import { EditOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 export default class SurveyExternal extends Component {
   constructor(props) {
@@ -47,7 +48,11 @@ export default class SurveyExternal extends Component {
     const result = await this.updateSurvey(survey_id, data);
 
     if (result && result.state === 'updated') {
-      message.success(result.message);
+      DispatchMessageService({
+        type: 'success',
+        msj: result.message,
+        action: 'show',
+      });
     }
   };
 

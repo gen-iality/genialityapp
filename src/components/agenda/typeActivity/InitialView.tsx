@@ -1,7 +1,9 @@
-import { Card, Result, Button } from 'antd';
+import { Card, Result, Button, Spin } from 'antd';
 import ModalStepByStep from './ModalStepByStep';
 import ManagerView from './ManagerView';
 import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
+import { useContext, useEffect, useState } from 'react';
+import AgendaContext from '../../../context/AgendaContext';
 
 /* import InitialSVG from './components/svg/InitialSVG'; */
 
@@ -16,6 +18,28 @@ const objecKeys = {
 
 const InitialView = (props: any) => {
   const { toggleActivitySteps, selectedKey, previewKey, data } = useTypeActivity();
+  const [loading, setLoading] = useState(true);
+  const { activityEdit, typeActivity } = useContext(AgendaContext);
+  const typeActivityPre = useTypeActivity();
+
+  useEffect(() => {
+    if (props.tab !== '2') return;
+    //OBTENER DETALLE DE ACTIVIDAD
+    if (typeActivity === null) {
+      toggleActivitySteps('initial', {
+        openModal: false,
+        disableNextButton: false,
+        typeOptions: undefined,
+        selectedKey: 'finish',
+        previewKey: 'vimeo',
+        data: 'vimeoiddepruebaInicial',
+        buttonsTextNextOrCreate: '',
+        buttonTextPreviousOrCancel: '',
+      });
+      setLoading(false);
+    } else {
+    }
+  }, [props.tab]);
 
   const renderComponet = () => {
     switch (selectedKey) {
@@ -45,7 +69,7 @@ const InitialView = (props: any) => {
     <>
       {console.log('FINAL DATA==>', selectedKey, previewKey, data)}
       <ModalStepByStep />
-      {renderComponet()}
+      {!loading ? renderComponet() : <Spin />}
     </>
   );
 };

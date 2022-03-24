@@ -33,6 +33,7 @@ class Service {
       const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
       const { roomState, habilitar_ingreso, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
       // eslint-disable-next-line no-unused-vars
+
       return new Promise((resolve, reject) => {
         this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
           if (existActivity) {
@@ -47,7 +48,7 @@ class Service {
                 platform,
                 meeting_id,
                 tabs,
-                isPublished: isPublished ? isPublished : false,
+                isPublished: isPublished,
                 host_id,
                 host_name,
                 transmition: roomInfo.transmition || null,
@@ -64,7 +65,7 @@ class Service {
                 habilitar_ingreso,
                 platform,
                 meeting_id,
-                isPublished: isPublished || null,
+                isPublished: isPublished || false,
                 host_id,
                 host_name,
                 tabs: tabsSchema,

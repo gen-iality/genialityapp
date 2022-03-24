@@ -3,8 +3,9 @@ import { utils, writeFileXLSX } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
-import { Row, Col, Button, Divider, message } from 'antd';
+import { Row, Col, Button, Divider } from 'antd';
 import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '../../context/MessageService';
 
 Moment.locale('es');
 momentLocalizer();
@@ -20,10 +21,11 @@ class Importacion extends Component {
   }
 
   handleXlsFile(files) {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras se envía la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se envía la información...',
+      action: 'show',
     });
     const f = files[0];
     const reader = new FileReader();
@@ -71,11 +73,19 @@ class Importacion extends Component {
       //   }
       // };
       // reader.readAsBinaryString(f);
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
     } catch (e) {
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'error',
-        content: <>Error cargando la información</>,
+        msj: 'Error cargando la información',
+        action: 'show',
       });
     }
   }

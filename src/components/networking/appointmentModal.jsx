@@ -142,8 +142,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
-    var usId = await getUsersId(targetEventUserId, cEvent.value._id);
-    console.log('USID==>', usId);
+    var usId = await getUsersId(targetEventUserId, cEvent.value._id);    
 
     let notificationA = {
       idReceive: usId.account_id,

@@ -5,7 +5,8 @@ import Preview from './preview';
 import Result from './result';
 import Async from 'async';
 import Header from '../../antdComponents/Header';
-import { Steps, Divider, message } from 'antd';
+import { Steps } from 'antd';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Step } = Steps;
 
@@ -29,10 +30,11 @@ class ImportUsers extends Component {
 
   importUsers = (users) => {
     const self = this;
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras se envía la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se envía la información...',
+      action: 'show',
     });
 
     try {
@@ -84,16 +86,24 @@ class ImportUsers extends Component {
           });
         }
       );
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'success',
-        content: <>Información cargada correctamente!</>,
+        msj: 'Información cargada correctamente!',
+        action: 'show',
       });
     } catch (e) {
-      message.destroy(loading.key);
-      message.open({
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
         type: 'error',
-        content: <>Error cargando la información</>,
+        msj: 'Error cargando la información',
+        action: 'show',
       });
     }
   };

@@ -1,8 +1,10 @@
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { getLiveStream } from "../../../../adaptors/wowzaStreamingAPI";
-import { Form, Input,  Alert, message } from "antd";
+import { Form, Input,  Alert } from "antd";
 import { useState, useContext } from "react";
 import AgendaContext from "../../../../context/AgendaContext";
+import { DispatchMessageService } from '../../../../context/MessageService';
+
 export default function StoreAlreadyCreatedMeeting({
   setMeetingId,
   meeting_id,
@@ -28,15 +30,27 @@ export default function StoreAlreadyCreatedMeeting({
                     if (exist) {
                       setMeetingId(meetingValue);
                     } else {
-                      message.error("El id de la transmisión es incorrecto!");
+                      DispatchMessageService({
+                        type: 'error',
+                        msj: 'El id de la transmisión es incorrecto!',
+                        action: 'show',
+                      });
                     }
                   } catch (e) {
-                    message.error("El id de la transmisión es incorrecto!");
+                    DispatchMessageService({
+                      type: 'error',
+                      msj: 'El id de la transmisión es incorrecto!',
+                      action: 'show',
+                    });
                   }
                 } else if (meetingValue && platform != "wowza") {
                   setMeetingId(meetingValue);
                 } else {
-                  message.error("Ingrese un id para la transmisión!");
+                  DispatchMessageService({
+                    type: 'error',
+                    msj: 'Ingrese un id para la transmisión!',
+                    action: 'show',
+                  });
                 }
               }}
             >

@@ -9,6 +9,7 @@ import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
 import withContext from '../../context/withContext';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, refText }) => (
   <Form ref={refText} onFinish={onSubmit}>
@@ -119,9 +120,17 @@ class CreatePost extends Component {
         //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
         //RESET FORMULARIO
         this.formRef.current.resetFields();
-        message.success('Mensaje Publicado');
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Mensaje Publicado',
+          action: 'show',
+        });
       } else {
-        message.error('Error al guardar');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Error al guardar',
+          action: 'show',
+        });
       }
 
       //this.props.addPosts(newPost);

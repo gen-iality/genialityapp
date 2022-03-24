@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Tag, Button, message, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
+import { Tag, Button, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { utils, writeFileXLSX } from 'xlsx';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
 import { UseEventContext } from '../../../context/eventContext';
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
 import Account from '@2fd/ant-design-icons/lib/Account';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 const { TabPane } = Tabs;
 
@@ -163,10 +164,11 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function deleteAllChat() {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -184,11 +186,24 @@ const ChatExport = ({ eventId, event }) => {
             });
             setdatamsjevent([]);
             setLoading(false);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };
@@ -213,10 +228,11 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function remove(id) {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -232,11 +248,24 @@ const ChatExport = ({ eventId, event }) => {
             await deleteSingleChat(eventId, id);
             getChat();
             setLoading(false);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
           } catch (e) {
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: handleRequestError(e).message,
+              msj: handleRequestError(e).message,
+              action: 'show',
             });
           }
         };
@@ -259,10 +288,11 @@ const ChatExport = ({ eventId, event }) => {
 
     searchDataUser.then((res) => {
       let userBlocked = res.data;
-      const loading = message.open({
-        key: 'loading',
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras {userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...</>,
+        key: 'loading',
+        msj: `<> Por favor espere miestras ${userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...</>`,
+        action: 'show',
       });
       Modal.confirm({
         title: `¿Está seguro de ${userBlocked ? 'desbloquear' : 'bloquear'} usuario para el chat?`,
@@ -283,16 +313,28 @@ const ChatExport = ({ eventId, event }) => {
                   blocked: !userBlocked,
                 })
                 .then((res) => {
-                  message.success(`${userBlocked ? 'Usuario desbloqueado' : 'Usuario bloqueado'}`);
+                  DispatchMessageService({
+                    key: 'loading',
+                    action: 'destroy',
+                  });
+                  DispatchMessageService({
+                    type: 'success',
+                    msj: `${userBlocked ? 'Usuario desbloqueado' : 'Usuario bloqueado'}`,
+                    action: 'show',
+                  });
                 });
               getChat();
               getBlocketdUsers();
               setLoading(false);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };

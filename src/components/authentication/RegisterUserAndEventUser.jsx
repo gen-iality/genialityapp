@@ -12,6 +12,8 @@ import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '../../context/eventContext';
 import HelperContext from '../../context/HelperContext';
+import { DispatchMessageService } from '../../context/MessageService';
+
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
@@ -186,7 +188,11 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           setdataEventUser({});
         }
       } catch (err) {
-        message.error('Ha ocurrido un error');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Ha ocurrido un error',
+          action: 'show',
+        });
       }
     }
 

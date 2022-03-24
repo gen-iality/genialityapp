@@ -369,8 +369,8 @@ export const getUserEventbyEmail = async (email, eventid) => {
 
 // OBTENER USUARIO A PARTIR DEL EVENTUSER_ID
 export const getUsersId = async (id, eventid) => {
-  const dataUser = await UsersApi.getAll(eventid, `?filtered=[{"field":"_id","value":"${id}"}]`);
-  return dataUser.data[ 0 ];
+  const dataUser = await UsersApi.getOne(eventid,id)
+  return dataUser; 
 };
 
 /*export const getUserByEventUser = async (eventuser, eventid) => {

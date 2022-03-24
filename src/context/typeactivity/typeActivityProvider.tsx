@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { TypeActivityState } from './interfaces/interfaces';
 import { TypeActivityContext } from './typeActivityContext';
 import { initialState, typeActivityReducer } from './typeActivityReducer';
 
@@ -9,11 +10,11 @@ interface TypeActivityProviderProps {
 export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) => {
   const [typeActivityState, typeActivityDispatch] = useReducer(typeActivityReducer, initialState);
 
-  const toggleActivitySteps = (id: string) => {
+  const toggleActivitySteps = (id: string, payload?: TypeActivityState) => {
     console.log('🚀 PROVIDER ID SELECTACTIVITYSTATES', id);
     switch (id) {
       case 'initial':
-        typeActivityDispatch({ type: 'initial', payload: { id } });
+        typeActivityDispatch({ type: 'initial', payload: { activityState: payload } });
         break;
       case 'type':
         typeActivityDispatch({ type: 'toggleType', payload: { id } });
@@ -72,8 +73,8 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         typeActivityDispatch({ type: 'selectEviusStreaming', payload: { id } });
         break;
       case 'vimeo':
-        typeActivityDispatch({ type: 'selectVimeo', payload: { id,sendData  } });
-        break;           
+        typeActivityDispatch({ type: 'selectVimeo', payload: { id, sendData } });
+        break;
       case 'eviusMeet':
         typeActivityDispatch({ type: 'selectEviusMeet', payload: { id } });
         break;
@@ -81,7 +82,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         typeActivityDispatch({ type: 'selectRTMP', payload: { id } });
         break;
       case 'youTube':
-        typeActivityDispatch({ type: 'selectYouTube', payload: { id,sendData  } });
+        typeActivityDispatch({ type: 'selectYouTube', payload: { id, sendData } });
         break;
       default:
         typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
