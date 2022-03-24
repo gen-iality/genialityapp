@@ -79,7 +79,8 @@ const videoActivity: ProviderOptions[] = [
   {
     key: 'url',
     title: 'Url',
-    image: 'https://cdn-icons-png.flaticon.com/512/455/455691.png',
+    image:
+      'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Furl.jpg?alt=media&token=9bcff159-2e09-4022-add6-2108ed8c6089',
     typeOptions: urlVideoTypeOptions,
   },
   {
@@ -87,7 +88,7 @@ const videoActivity: ProviderOptions[] = [
     title: 'Cargar video',
 
     image:
-      'https://cdn-icons.flaticon.com/png/512/4929/premium/4929314.png?token=exp=1647648704~hmac=8d8f060ba6014e9443bb80a974645782',
+      'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fcargar_video.jpg?alt=media&token=b0990943-3563-4004-9e15-cf9dfea6805c',
   },
 ];
 
@@ -113,7 +114,7 @@ export const typeActivityData: TypeActivity = {
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
       image:
-        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=1f6ef3db-7436-4b6f-b9bf-eb10925919ad',
+        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
     },
     {
       key: 'video',
@@ -122,7 +123,7 @@ export const typeActivityData: TypeActivity = {
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
       image:
-        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=2a6911a5-4b0d-4c74-98e2-0e752b78b903',
+        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
       typeOptions: videoActivity,
     },
   ],
