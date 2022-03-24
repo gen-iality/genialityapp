@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import EnvironmentPlugin from 'vite-plugin-environment';
+
+const path = require('path');
 Object.assign(require('less').options, {
   javascriptEnabled: true,
   modifyVars: {},
@@ -57,10 +59,21 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      {
-        find: /^~/,
-        replacement: '@',
-      },
+      { find: '~', replacement: path.resolve(__dirname, 'src') },
+      { find: '@', replacement: path.resolve(__dirname, 'src') },
+      { find: '@adaptors', replacement: path.resolve(__dirname, 'src/adaptors') },
+      { find: '@components', replacement: path.resolve(__dirname, 'src/components') },
+      { find: '@antdComponents', replacement: path.resolve(__dirname, 'src/antdComponents') },
+      { find: '@App', replacement: path.resolve(__dirname, 'src/App') },
+      { find: '@containers', replacement: path.resolve(__dirname, 'src/containers') },
+      { find: '@context', replacement: path.resolve(__dirname, 'src/context') },
+      { find: '@exhibitors', replacement: path.resolve(__dirname, 'src/exhibitors') },
+      { find: '@helpers', replacement: path.resolve(__dirname, 'src/helpers') },
+      { find: '@PreloaderApp', replacement: path.resolve(__dirname, 'src/PreloaderApp') },
+      { find: '@redux', replacement: path.resolve(__dirname, 'src/redux') },
+      { find: '@styles', replacement: path.resolve(__dirname, 'src/styles') },
+      { find: '@Utilities', replacement: path.resolve(__dirname, 'src/Utilities') },
+      { find: '@Assets', replacement: path.resolve(__dirname, 'src/Assets') },
     ],
   },
   build: {

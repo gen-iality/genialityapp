@@ -3,7 +3,8 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
+    "allowJs": true,
+    "checkJs": false,
     "skipLibCheck": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -18,10 +19,23 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "src",
     "paths": {
-      "@assets/*": ["./Assets/*"]
+      "@/*": ["./*"],
+      "@components/*": ["./components/*"],
+      "@adaptors/*": ["./adaptors/*"],
+      "@antdComponents/*": ["./antdComponents/*"],
+      "@App/*": ["./App/*"],
+      "@containers/*": ["./containers/*"],
+      "@contexts/*": ["./contexts/*"],
+      "@exhibitors/*": ["./exhibitors/*"],
+      "@helpers/*": ["./helpers/*"],
+      "@PreloaderApp/*": ["./PreloaderApp/*"],
+      "@redux/*": ["./redux/*"],
+      "@styles/*": ["./styles/*"],
+      "@Utilities/*": ["./Utilities/*"],
+      "@Assets/*": ["./Assets/*"]
     }
   },
-  "include": ["./*.ts"],
+  "include": ["./*.ts", "src", "src/**/**.jsx", "src/**/**.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"],
   "references": [
     {
