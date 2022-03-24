@@ -1,11 +1,13 @@
-;
 import { Card, Typography, Space, Select, Avatar } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { useContext } from 'react';
+import AgendaContext from '../../../../context/AgendaContext';
 
-const CardPreview = (props:any) => {
-  const { data} = useTypeActivity();
+const CardPreview = (props: any) => {
+  const { data } = useTypeActivity();
+  const { roomStatus, setRoomStatus } = useContext(AgendaContext);
   return (
     <Card bodyStyle={{ padding: '21px' }} style={{ borderRadius: '8px' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
@@ -31,25 +33,33 @@ const CardPreview = (props:any) => {
               {props.activityName}
             </Typography.Text>
           }
-          description={props.type=="reunión"?'Sala de reuniones':props.type==="vimeo" || props.type=="Youtube"?"":'Estado'}
+          description={
+            props.type == 'reunión'
+              ? 'Sala de reuniones'
+              : props.type === 'vimeo' || props.type == 'Youtube'
+              ? ''
+              : 'Estado'
+          }
         />
-        {(props.type==="Transmisión" || props.type==="vimeo" || props.type=="Youtube") && <Space style={{ width: '100%' }}>
-          <Typography.Text strong>ID {props.type}:</Typography.Text>
-          <Typography.Text
-            copyable={{
-              tooltips: ['clic para copiar', 'ID copiado!!'],
-              text: `${data}`,
-            }}>
-            {data}
-          </Typography.Text>
-        </Space>}
+        {(props.type === 'Transmisión' || props.type === 'vimeo' || props.type == 'Youtube') && (
+          <Space style={{ width: '100%' }}>
+            <Typography.Text strong>ID {props.type}:</Typography.Text>
+            <Typography.Text
+              copyable={{
+                tooltips: ['clic para copiar', 'ID copiado!!'],
+                text: `${data}`,
+              }}>
+              {data}
+            </Typography.Text>
+          </Space>
+        )}
         <Space direction='vertical' style={{ width: '100%' }}>
           <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
           <Select
-            /* value={roomStatus}
+            value={roomStatus}
             onChange={(value) => {
               setRoomStatus(value);
-            }} */
+            }}
             style={{ width: '100%' }}>
             <Select.Option value=''>Actividad creada</Select.Option>
             <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>

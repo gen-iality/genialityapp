@@ -47,7 +47,6 @@ import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage
 import Dropzone from 'react-dropzone';
 import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
-import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
@@ -589,6 +588,7 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = value.target.checked;
     } else if (name === 'isPublished') {
+      this.context.setIsPublished(value);
       this.setState({ isPublished: value }, async () => await this.saveConfig());
     } else {
       this.setState({ [name]: value }, async () => this.valideChangesInActivityData());
@@ -1112,8 +1112,8 @@ class AgendaEdit extends Component {
       host_name,
       avalibleGames,
       transmition,
+      isPublished,
     } = this.context;
-    const { isPublished } = this.state;
 
     const roomInfo = {
       platform,
