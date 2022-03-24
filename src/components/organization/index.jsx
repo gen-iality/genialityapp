@@ -46,11 +46,13 @@ function Organization(props) {
       {isLoading ? (
         <Loading />
       ) : (
-        <Layout style={{ width: '100%' }}>
+        <Layout style={{ minHeight: '100vh' }} className='columns'>
           <Layout.Sider
             trigger={null}
             collapsible
             collapsed={collapseMenu}
+            theme='dark'
+            className={` menu event-aside `}
             /* style={{ backgroundColor: '#fff' }} */
             width={220}>
             <Button
@@ -96,7 +98,7 @@ function Organization(props) {
               </Menu.Item>
             </Menu>
           </Layout.Sider>
-          <Layout.Content style={{ height: '100vh' }}>
+          <Layout.Content className='column event-main' style={{ width: 500 }}>
             {isLoading ? (
               <Loading />
             ) : (
