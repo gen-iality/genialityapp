@@ -8,7 +8,7 @@ const urlVideoTypeOptions: OriginOptions[] = [
     image: '',
     addonBefore: '🔗',
     subtitle: 'Descripción del contenido',
-    placeholder: 'llene el campo',
+    placeholder: 'https://www.ejemplo.com/watch?v=oK88Stdw0DI',
   },
 ];
 /** data para mostrar en vimeo y youtube */
@@ -17,17 +17,17 @@ const vimeoAndYotubeType: OriginOptions[] = [
     key: 'vimeo',
     title: 'Vimeo Icon',
     image: '',
-    addonBefore: '🔗',
+    addonBefore: 'https://vimeo.com/event/',
     subtitle: 'Descripción del contenido',
-    placeholder: 'llene el campo',
+    placeholder: 'vimeo id',
   },
   {
     key: 'youTube',
     title: 'youTube Icon',
     image: '',
-    addonBefore: '🔗',
+    addonBefore: 'https://youtu.be/',
     subtitle: 'Descripción del contenido',
-    placeholder: 'llene el campo',
+    placeholder: 'youtube id',
   },
 ];
 
@@ -100,24 +100,29 @@ export const typeActivityData: TypeActivity = {
       key: 'liveBroadcast',
       MainTitle: 'Escoge el tipo de transmision',
       title: 'Transmision en vivo',
-      description: 'Vivamus magna justo.',
-      image: 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+      image:
+        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Ftransmision.jpg?alt=media&token=92443401-db41-485f-a411-ae113186fd9c',
       typeOptions: liveBroadcastTransmissionType,
     },
     {
       key: 'meeting',
       MainTitle: 'Crear reuniones interactivas y personalizadas con todo el poder de evius',
       title: 'Reunion',
-      description: 'Vivamus magna justo.',
-      image: 'https://img.freepik.com/free-psd/digital-marketing-agency-banner-theme_23-2148631935.jpg?w=1480',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+      image:
+        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=1f6ef3db-7436-4b6f-b9bf-eb10925919ad',
     },
     {
       key: 'video',
       MainTitle: 'Asignar video para la actividad',
       title: 'Video',
-      description: 'Vivamus magna justo.',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
       image:
-        'https://img.freepik.com/free-psd/banner-template-with-coffee-design_23-2148469134.jpg?t=st=1647617194~exp=1647617794~hmac=935ce116b67c63714ee3aa684b9954c897e4abbca4efac3e5abaf5d47cfb3edb&w=1480',
+        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=2a6911a5-4b0d-4c74-98e2-0e752b78b903',
       typeOptions: videoActivity,
     },
   ],

@@ -5,7 +5,7 @@ import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActi
 import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../context/AgendaContext';
 
-/* import InitialSVG from './components/svg/InitialSVG'; */
+import InitialSVG from './components/svg/InitialSVG';
 
 const objecKeys = {
   url: 'Video',
@@ -51,7 +51,7 @@ const InitialView = (props: any) => {
         return (
           <Card>
             <Result
-              /* icon={<InitialSVG style={{ width: '150px', height: '150px' }} />} */
+              icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
               status='info'
               title='Todavía no has definido el tipo de actividad'
               extra={
