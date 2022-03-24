@@ -32,14 +32,25 @@ const DrawerProfile = (props) => {
   const intl = useIntl();
 
   useEffect(() => {
-    if (cEventUser.value !== null && cEventUser.status === 'LOADED') {
-      let isContact = isMyContacts(cEventUser.value.properties, props.cHelper.contacts);
-      setIsMe(cUser.value._id == cEventUser.value.user._id);
-      setIsMyContact(isContact);
-      setUserSelected(cEventUser.value.properties);
-      setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
+    if (props.profileuser) {
+      console.log(props.profileuser._id, cEventUser.value, props.profileuser);
+      if (props.profileuser._id !== cEventUser.value?.account_id) {
+        let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
+        setIsMe(cUser.value._id == props.profileuser._id);
+        setIsMyContact(isContact);
+        setUserSelected(props.profileuser);
+        setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
+      } else {
+        //Si es mi usuario, no estaba mostrando el perfil de los demás usuarios
+        if (cEventUser.value == null) return;
+        let isContact = isMyContacts(cEventUser.value, props.cHelper.contacts);
+        setIsMe(cUser.value._id == cEventUser.value.user._id);
+        setIsMyContact(isContact);
+        setUserSelected(cEventUser.value);
+        setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
+      }
     }
-  }, [cEventUser.value]);
+  }, [props.profileuser, cEventUser.value]);
   const haveRequestUser = (user) => {
     //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
@@ -69,13 +80,15 @@ const DrawerProfile = (props) => {
         zIndex={5000}
         visible={props.viewPerfil}
         closable={true}
-        onClose={() => props.setViewPerfil({ view: !props.viewPerfil, perfil: null })}
+        onClose={() => props.setViewPerfil({ view: false, perfil: null })}
         width={'52vh'}
         bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
         <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '10px' }}>
           <Col span={24}>
             <Typography.Paragraph>
-              Esta es tu información suministrada para el evento{' '}
+              {isMe
+                ? 'Esta es tu información suministrada para el evento'
+                : ' Esta es la información suministrada para el evento'}
               <Typography.Text strong> {cEvent.value.name} </Typography.Text>
             </Typography.Paragraph>
           </Col>
@@ -84,7 +97,7 @@ const DrawerProfile = (props) => {
             <Col span={24}>
               <Button
                 onClick={() => {
-                  props.setViewPerfil({ view: !props.viewPerfil, perfil: userSelected });
+                  props.setViewPerfil({ view: false, perfil: userSelected });
                   handleChangeTypeModal('update');
                 }}
                 type='text'
@@ -203,12 +216,11 @@ const DrawerProfile = (props) => {
 
               <List
                 bordered
+                style={{ borderRadius: '8px' }}
                 dataSource={userPropertiesProfile && userPropertiesProfile}
                 renderItem={(item) =>
-                  ((item?.visibleByContacts && isMycontact && !item?.sensibility) ||
-                    !item.sensibility ||
-                    userSelected?._id == cUser.value._id) &&
-                  userSelected[item?.name] &&
+                  ((item?.visibleByContacts && isMycontact && !item?.sensibility) || !item.sensibility) &&
+                  userSelected.properties[item?.name] &&
                   item?.name !== 'picture' &&
                   item?.name !== 'imagendeperfil' &&
                   item?.type !== 'password' &&
@@ -218,11 +230,8 @@ const DrawerProfile = (props) => {
                         title={item?.label}
                         description={formatDataToString(
                           item?.type !== 'codearea'
-                            ? cEventUser.value.properties[item?.name]
-                            : '(+' +
-                                cEventUser.value.properties['code'] +
-                                ')' +
-                                cEventUser.value.properties[item?.name],
+                            ? userSelected.properties[item?.name]
+                            : '(+' + userSelected.properties['code'] + ')' + userSelected.properties[item?.name],
                           item
                         )}
                       />

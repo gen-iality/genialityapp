@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, message, Alert } from 'antd';
+import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { app } from '../../helpers/firebase';
@@ -76,10 +76,11 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   }
 
   const onFinishCreateNewUser = async (values) => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere...</>,
+      key: 'loading',
+      msj: ' Por favor espere...',
+      action: 'show',
     });
     const newValues = {
       ...values,
@@ -109,17 +110,50 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           .catch((err) => {
             handleChangeTypeModal('loginError');
           });
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Información guardada correctamente!',
+            action: 'show',
+          });
       } else if (resp == 0) {
         handleChangeTypeModal('loginError');
         setErrorEmail(false);
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Ha ocurrido un error inesperado',
+          action: 'show',
+        });
       } else {
         setErrorEmail(true);
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Ha ocurrido un error inesperado',
+          action: 'show',
+        });
       }
     } catch (err) {
-      console.log(err);
-      message.error('Ha ocurrido un error');
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Ha ocurrido un error inesperado',
+        action: 'show',
+      });
     }
-    message.destroy(loading.key);
   };
   return (
     <>

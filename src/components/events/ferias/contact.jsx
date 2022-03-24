@@ -1,5 +1,6 @@
-import { Row, Col, Button, Typography, message, Modal, Space } from 'antd';
+import { Row, Col, Button, Typography, Modal, Space } from 'antd';
 import { PhoneOutlined, MailOutlined, CopyOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 function Contact(props) {
   let numWhatsapp = props.codPais + props.tel;
@@ -8,7 +9,11 @@ function Contact(props) {
   const { Text } = Typography;
 
   const copyText = (campo) => {
-    message.success(campo + ' Copiado', 4);
+    DispatchMessageService({
+      type: 'success',
+      msj: campo + ' Copiado',
+      action: 'show',
+    });
   };
 
   function showModal(info) {

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Card, Col, message, Row, Spin, Switch } from 'antd';
+import { Col, Row, Spin, Switch } from 'antd';
 import { withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false);
@@ -40,19 +41,46 @@ const Configuration = (props) => {
     setMessage(e);
   };
 
-  const saveConfiguration = async () => {
-    setLoading(true);
-    let data = {
-      habilitar_subasta: checkSubasta,
-      message: messageF,
-    };
-    let resp = await firestore
+  const saveConfiguration = async() => { 
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la configuración...',
+      action: 'show',
+    });
+    setLoading(true)     
+    let data={
+      habilitar_subasta:checkSubasta,
+      message:messageF
+    }
+
+    try{
+      let resp = await firestore
       .collection('config')
-      .doc(props.eventId)
-      .set({ data });
-    setLoading(false);
-    message.success('Configuración guardada correctamente!');
+      .doc(props.eventId).set({data});
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Configuración guardada correctamente!',
+        action: 'show',
+      });       
+    } catch (e) {
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Ha ocurrido un error',
+        action: 'show',
+      });
+    }
+    setLoading(false)
   };
+  
 
   return !loadingData ? (
     <>

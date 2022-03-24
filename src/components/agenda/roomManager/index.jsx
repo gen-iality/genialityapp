@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { message as Message, message, Modal } from 'antd';
+import { Modal } from 'antd';
 import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
@@ -7,6 +7,7 @@ import AgendaContext from '../../../context/AgendaContext';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { stopLiveStream, deleteLiveStream, getLiveStreamStatus } from '../../../adaptors/wowzaStreamingAPI';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 class RoomManager extends Component {
   constructor(props) {
@@ -242,10 +243,20 @@ class RoomManager extends Component {
     const { service } = this.state;
     try {
       const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
-      if (result && !notify) Message.success(result.message);
+      if (result && !notify) {
+        DispatchMessageService({
+          type: 'success',
+          msj: result.message,
+          action: 'show',
+        });
+      }
       return result;
     } catch (err) {
-      Message.error('Error', err);
+      DispatchMessageService({
+        type: 'error',
+        msj: err,
+        action: 'show',
+      });
     }
   };
 
@@ -259,7 +270,11 @@ class RoomManager extends Component {
 
       // Validación de los campos requeridos
       if (platform === '' || platform === null || meeting_id === '' || meeting_id === null) {
-        message.warning('Seleccione una plataforma e ingrese el id de la videoconferencia');
+        DispatchMessageService({
+          type: 'warning',
+          msj: 'Seleccione una plataforma e ingrese el id de la videoconferencia',
+          action: 'show',
+        });
         return false;
       }
 
@@ -282,7 +297,11 @@ class RoomManager extends Component {
             host_name: response.zoom_host_name,
           });
         } else {
-          message.error('El id de la videoconferencia NO es valido');
+          DispatchMessageService({
+            type: 'error',
+            msj: 'El id de la videoconferencia NO es valido',
+            action: 'show',
+          });
           return false;
         }
       }
@@ -294,7 +313,11 @@ class RoomManager extends Component {
         this.setState({ hasVideoconference: true });
       }
     } else {
-      message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
+      DispatchMessageService({
+        type: 'warning',
+        msj: 'Cambios pendientes por guardar en la fecha y hora de la actividad',
+        action: 'show',
+      });
     }
   };
 
@@ -342,7 +365,11 @@ class RoomManager extends Component {
         async () => await this.saveConfig()
       );
     } else {
-      Message.warning(response.message);
+      DispatchMessageService({
+        type: 'warning',
+        msj: response.message,
+        action: 'show',
+      });
     }
   };
 
@@ -352,20 +379,36 @@ class RoomManager extends Component {
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     if (pendingChangesSave) {
-      message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
+      DispatchMessageService({
+        type: 'warning',
+        msj: 'Cambios pendientes por guardar en la fecha y hora de la actividad',
+        action: 'show',
+      });
       return false;
     }
     //Esta validacion aplcia para actividades creadas antes de el backend devolviera los campos date_start_zoom y date_end_zoom
     if (typeof this.props.date_start_zoom === 'undefined' || typeof this.props.date_end_zoom === 'undefined') {
-      Message.error('Guarde primero la actividad antes de continuar');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Guarde primero la actividad antes de continuar',
+        action: 'show',
+      });
       return false;
     }
     if (!Moment(this.props.date_start_zoom).isValid()) {
-      Message.error('La fecha de inicio no es valida');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'La fecha de inicio no es valida',
+        action: 'show',
+      });
       return false;
     }
     if (!Moment(this.props.date_end_zoom).isValid()) {
-      Message.error('La fecha de finalización no es valida');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'La fecha de finalización no es valida',
+        action: 'show',
+      });
       return false;
     }
   };
@@ -385,10 +428,11 @@ class RoomManager extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        const loading = message.open({
-          key: 'loading',
+        DispatchMessageService({
           type: 'loading',
-          content: <> Por favor espere miestras borra la transmisión...</>,
+          key: 'loading',
+          msj: ' Por favor espere miestras se borra la transmisión...',
+          action: 'show',
         });
         const onHandlerRemove = async () => {
           try {
@@ -396,7 +440,15 @@ class RoomManager extends Component {
             if (platform === 'zoom' || platform === 'zoomExterno') {
               const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
               if (updatedData.status === 200) {
-                message.success('Transmisión de Zoom eliminada!');
+                DispatchMessageService({
+                  key: 'loading',
+                  action: 'destroy',
+                });
+                DispatchMessageService({
+                  type: 'success',
+                  msj: 'Transmisión de Zoom eliminada!',
+                  action: 'show',
+                });
               }
             }
             if (streamingPlatForm === 'wowza') {
@@ -409,19 +461,27 @@ class RoomManager extends Component {
               self.context.setMeetingId(null);
               await self.context.removeAllRequest(refActivity);
             }
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'success',
-              content: <> Se eliminó la transmisión correctamente!</>,
+              msj: 'Se eliminó la transmisión correctamente!',
+              action: 'show',
             });
 
             self.restartData();
           } catch (e) {
             console.log('EXCEPCION===>', e);
-            message.destroy(loading.key);
-            message.open({
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
               type: 'error',
-              content: <>Hubo un error eliminando la transmisión</>,
+              msj: 'Hubo un error eliminando la transmisión',
+              action: 'show',
             });
           }
         };

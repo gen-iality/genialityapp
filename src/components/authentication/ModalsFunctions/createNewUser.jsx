@@ -1,12 +1,17 @@
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { UsersApi } from '../../../helpers/request';
 import { message } from 'antd';
+import { DispatchMessageService } from '../../../context/MessageService';
+
 const createNewUser = async (props) => {
   const { picture, email, names, password, resetFields, setModalInfo, setOpenOrCloseTheModalFeedback } = props;
 
   const pictureDefault = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   function sendDataFinished() {
-    message.destroy('loading');
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
     resetFields();
   }
   const uploadLogo = async () => {

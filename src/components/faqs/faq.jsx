@@ -3,10 +3,11 @@ import { FaqsApi } from '../../helpers/request';
 import { useHistory } from 'react-router-dom';
 import { toolbarEditor } from '../../helpers/constants';
 import { handleRequestError } from '../../helpers/utils';
-import { Row, Col, Form, Input, message, Modal } from 'antd';
+import { Row, Col, Form, Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import ReactQuill from 'react-quill';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
 
@@ -39,11 +40,12 @@ const Faq = (props) => {
   };
 
   const onSubmit = async () => {
-    if (faq.content && faq.title) {
-      const loading = message.open({
-        key: 'loading',
+    if(faq.content && faq.title) {
+      DispatchMessageService({
         type: 'loading',
-        content: <> Por favor espere miestras se guarda la información..</>,
+        key: 'loading',
+        msj: ' Por favor espere miestras se guarda la información...',
+        action: 'show',
       });
 
       try {
@@ -52,22 +54,33 @@ const Faq = (props) => {
         } else {
           await FaqsApi.create(faq, eventID);
         }
-
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'success',
-          content: <> Información guardada correctamente!</>,
+          msj: 'Información guardada correctamente!',
+          action: 'show',
         });
         history.push(`${props.matchUrl}/faqs`);
       } catch (e) {
-        message.destroy(loading.key);
-        message.open({
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
           type: 'error',
-          content: handleRequestError(e).message,
+          msj: handleRequestError(e).message,
+          action: 'show',
         });
       }
     } else {
-      message.error('El título y contenido son requeridos');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'El título y contenido son requeridos',
+        action: 'show',
+      });
     }
   };
 
@@ -76,10 +89,11 @@ const Faq = (props) => {
   };
 
   const onRemoveId = () => {
-    const loading = message.open({
-      key: 'loading',
+    DispatchMessageService({
       type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
+      key: 'loading',
+      msj: ' Por favor espere miestras se borra la información...',
+      action: 'show',
     });
     if (locationState.edit) {
       confirm({
@@ -93,17 +107,25 @@ const Faq = (props) => {
           const onHandlerRemove = async () => {
             try {
               await FaqsApi.deleteOne(locationState.edit, eventID);
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'success',
-                content: <> Se eliminó la información correctamente!</>,
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
               });
               history.push(`${props.matchUrl}/faqs`);
             } catch (e) {
-              message.destroy(loading.key);
-              message.open({
+              DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
                 type: 'error',
-                content: handleRequestError(e).message,
+                msj: handleRequestError(e).message,
+                action: 'show',
               });
             }
           };

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '../../helpers/request';
 import { host_list } from '../../helpers/constants';
-import { Steps, Button, message, Card, Row, Spin } from 'antd';
+import { Steps, Button, Card, Row, Spin } from 'antd';
 import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */
 import Informacion from './newEvent/informacion';
@@ -13,6 +13,7 @@ import { cNewEventContext } from '../../context/newEventContext';
 import Service from '../../components/agenda/roomManager/service';
 import { firestore } from '../../helpers/firebase';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Step } = Steps;
 
@@ -202,11 +203,19 @@ class NewEvent extends Component {
               if (eventNewContext.typeTransmission == 1) {
                 let sala = await this.createZoomRoom(agenda, result._id);
                 if (sala) {
-                  message.success('Evento creado correctamente..');
+                  DispatchMessageService({
+                    type: 'success',
+                    msj: 'Evento creado correctamente...',
+                    action: 'show',
+                  });
                   alert('ACA');
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
-                  message.error('Error al crear sala');
+                  DispatchMessageService({
+                    type: 'error',
+                    msj: 'Error al crear sala',
+                    action: 'show',
+                  });
                 }
               } else {
                 //CREAR TEMPLATE PARA EL EVENTO
@@ -216,27 +225,51 @@ class NewEvent extends Component {
                 }
                 if (template) {
                   // console.log("RESPUESTA TEMPLATE==>",template)
-                  message.success('Evento creado correctamente..');
+                  DispatchMessageService({
+                    type: 'success',
+                    msj: 'Evento creado correctamente...',
+                    action: 'show',
+                  });
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
-                  message.error('Error al crear evento con su template');
+                  DispatchMessageService({
+                    type: 'error',
+                    msj: 'Error al crear evento con su template',
+                    action: 'show',
+                  });
                 }
               }
             }
           } else {
             //console.log('RESP API==>', result);
-            message.error('Error al crear el evento');
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Error al crear el evento',
+              action: 'show',
+            });
           }
         } else {
           //console.log('RESP API==>', result);
-          message.error('Error al crear el evento');
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Error al crear el evento',
+            action: 'show',
+          });
         }
       } catch (error) {
         //console.log(error);
-        message.error('Error al crear el evento');
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Error al crear el evento',
+          action: 'show',
+        });
       }
     } else {
-      message.error('Seleccione una organización');
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Seleccione una organización',
+        action: 'show',
+      });
     }
   }
 
@@ -296,11 +329,19 @@ class NewEvent extends Component {
       if (result) {
         return true;
       } else {
-        message.error(result.message);
+        DispatchMessageService({
+          type: 'error',
+          msj: result.message,
+          action: 'show',
+        });
         return false;
       }
     } else {
-      message.error(response.message);
+      DispatchMessageService({
+        type: 'error',
+        msj: response.message,
+        action: 'show',
+      });
       return false;
     }
   };
@@ -330,7 +371,11 @@ class NewEvent extends Component {
             },
           ])
         ) {
-          message.error('Error en los campos..');
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Error en los campos...',
+            action: 'show',
+          });
         } else {
           this.nextPage();
         }

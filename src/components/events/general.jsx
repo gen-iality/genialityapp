@@ -6,7 +6,6 @@ import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '..
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
-import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
@@ -28,6 +27,8 @@ import {
   Grid,
   Divider,
   Button,
+  TimePicker,
+  DatePicker,
 } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
@@ -174,7 +175,11 @@ class General extends Component {
           });
         } else this.setState({ serverError: true, loader: false });
       } else {
-        this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } });
+        this.setState({
+          serverError: true,
+          loader: false,
+          errorData: { status: 400, message: JSON.stringify(error) },
+        });
       }
     }
 
@@ -284,7 +289,10 @@ class General extends Component {
         date_end = Moment(date_end)
           .add(diff, 'days')
           .toDate();
-      this.setState({ minDate: value, event: { ...this.state.event, date_end: date_end, date_start: value } });
+      this.setState({
+        minDate: value,
+        event: { ...this.state.event, date_end: date_end, date_start: value },
+      });
     } else this.setState({ event: { ...this.state.event, [name]: value } });
   };
   //Cambio en el input de imagen
@@ -323,12 +331,17 @@ class General extends Component {
         });
         DispatchMessageService({
           type: 'success',
-          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          msj: this.props.intl.formatMessage({
+            id: 'toast.img',
+            defaultMessage: 'Ok!',
+          }),
           action: 'show',
         });
       });
     } else {
-      this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
+      this.setState({
+        errImg: 'Solo se permiten imágenes. Intentalo de nuevo',
+      });
     }
   };
 
@@ -367,12 +380,17 @@ class General extends Component {
         });
         DispatchMessageService({
           type: 'success',
-          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+          msj: this.props.intl.formatMessage({
+            id: 'toast.img',
+            defaultMessage: 'Ok!',
+          }),
           action: 'show',
         });
       });
     } else {
-      this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
+      this.setState({
+        errImg: 'Solo se permiten imágenes. Intentalo de nuevo',
+      });
     }
   };
 
@@ -547,7 +565,10 @@ class General extends Component {
         self.setState({ loading: false });
         DispatchMessageService({
           type: 'success',
-          msj: intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+          msj: intl.formatMessage({
+            id: 'toast.success',
+            defaultMessage: 'Ok!',
+          }),
           action: 'show',
         });
       } else {
@@ -558,7 +579,10 @@ class General extends Component {
         } else {
           DispatchMessageService({
             type: 'warning',
-            msj: intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }),
+            msj: intl.formatMessage({
+              id: 'toast.warning',
+              defaultMessage: 'Idk',
+            }),
             action: 'show',
           });
           this.setState({ msg: 'Cant Create', create: false });
@@ -567,7 +591,10 @@ class General extends Component {
     } catch (error) {
       DispatchMessageService({
         type: 'error',
-        msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+        msj: intl.formatMessage({
+          id: 'toast.error',
+          defaultMessage: 'Sry :(',
+        }),
         action: 'show',
       });
       if (error?.response) {
@@ -683,13 +710,31 @@ class General extends Component {
     this.setState({ typeEvent: value });
     if (value === 0) {
       //Evento Público con Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: true } });
+      this.setState({
+        event: {
+          ...this.state.event,
+          visibility: 'PUBLIC',
+          allow_register: true,
+        },
+      });
     } else if (value === 1) {
       //Evento Público sin Registro
-      this.setState({ event: { ...this.state.event, visibility: 'PUBLIC', allow_register: false } });
+      this.setState({
+        event: {
+          ...this.state.event,
+          visibility: 'PUBLIC',
+          allow_register: false,
+        },
+      });
     } else {
       //Evento Privado con Invitación
-      this.setState({ event: { ...this.state.event, visibility: 'PRIVATE', allow_register: false } });
+      this.setState({
+        event: {
+          ...this.state.event,
+          visibility: 'PRIVATE',
+          allow_register: false,
+        },
+      });
     }
   };
 
@@ -871,45 +916,83 @@ class General extends Component {
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
                           <Form.Item label={'Fecha Inicio'}>
-                            <DateTimePicker
+                            <DatePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.date_start)}
+                              format={'DD/MM/YYYY'}
+                              onChange={(value) => this.changeDate(value, 'date_start')}
+                            />
+                            {/* <DateTimePicker
                               value={event.date_start}
                               format={'DD/MM/YYYY'}
                               time={false}
-                              onChange={(value) => this.changeDate(value, 'date_start')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'date_start')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                         <Col span={12}>
                           <Form.Item label={'Hora Inicio'}>
-                            <DateTimePicker
+                            <TimePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.hour_start)}
+                              use12Hours
+                              format='h:mm a'
+                              onChange={(value) => this.changeDate(value, 'hour_start')}
+                            />
+                            {/* <DateTimePicker
                               value={event.hour_start}
                               step={60}
                               date={false}
-                              onChange={(value) => this.changeDate(value, 'hour_start')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'hour_start')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                       </Row>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
                           <Form.Item label={'Fecha Fin'}>
-                            <DateTimePicker
+                            <DatePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.date_end)}
+                              format={'DD/MM/YYYY'}
+                              onChange={(value) => this.changeDate(value, 'date_end')}
+                            />
+                            {/* <DateTimePicker
                               value={event.date_end}
                               min={this.minDate}
                               format={'DD/MM/YYYY'}
                               time={false}
-                              onChange={(value) => this.changeDate(value, 'date_end')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'date_end')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                         <Col span={12}>
                           <Form.Item label={'Hora Fin'}>
-                            <DateTimePicker
+                            <TimePicker
+                              style={{ width: '100%' }}
+                              allowClear={false}
+                              value={Moment(event.hour_end)}
+                              use12Hours
+                              format='h:mm a'
+                              onChange={(value) => this.changeDate(value, 'hour_end')}
+                            />
+                            {/* <DateTimePicker
                               value={event.hour_end}
                               step={60}
                               date={false}
-                              onChange={(value) => this.changeDate(value, 'hour_end')}
-                            />
+                              onChange={(value) =>
+                                this.changeDate(value, 'hour_end')
+                              }
+                            /> */}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -1002,7 +1085,12 @@ class General extends Component {
                       checkedChildren='Arriba'
                       unCheckedChildren='Abajo'
                       onChange={(checked) =>
-                        this.setState({ event: { ...this.state.event, video_position: checked ? 'true' : 'false' } })
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            video_position: checked ? 'true' : 'false',
+                          },
+                        })
                       }
                     />
                   </Form.Item>
@@ -1065,7 +1153,12 @@ class General extends Component {
                           checked={this.state?.tabs?.publicChat}
                           onChange={(checked) =>
                             this.setState(
-                              { tabs: { ...this.state.tabs, publicChat: checked } },
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  publicChat: checked,
+                                },
+                              },
                               async () => await this.upsertTabs()
                             )
                           }
@@ -1079,7 +1172,12 @@ class General extends Component {
                           checked={this.state?.tabs?.privateChat}
                           onChange={(checked) =>
                             this.setState(
-                              { tabs: { ...this.state.tabs, privateChat: checked } },
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  privateChat: checked,
+                                },
+                              },
                               async () => await this.upsertTabs()
                             )
                           }
@@ -1093,7 +1191,12 @@ class General extends Component {
                           checked={this.state?.tabs?.attendees}
                           onChange={(checked) =>
                             this.setState(
-                              { tabs: { ...this.state.tabs, attendees: checked } },
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  attendees: checked,
+                                },
+                              },
                               async () => await this.upsertTabs()
                             )
                           }

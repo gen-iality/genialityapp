@@ -3,8 +3,9 @@ import EviusReactQuill from '../../shared/eviusReactQuill';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { EventsApi } from '../../../helpers/request';
 import { UseEventContext } from '../../../context/eventContext';
-import { Form, message, Button, Row, Col } from 'antd';
+import { Form, Row, Col } from 'antd';
 import Header from '../../../antdComponents/Header';
+import { DispatchMessageService } from '../../../context/MessageService';
 
 export default function AdmininformativeSection1(props) {
   const eventContext = UseEventContext();
@@ -40,9 +41,17 @@ export default function AdmininformativeSection1(props) {
       try {
         const result = await EventsApi.editOne(data, eventContext.value._id);
         console.log('result', result);
-        message.success('Guardado');
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Guardado',
+          action: 'show',
+        });
       } catch (e) {
-        message.error('Error', e.message);
+        DispatchMessageService({
+          type: 'error',
+          msj: e.message,
+          action: 'show',
+        });
       }
     }
     save();

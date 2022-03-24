@@ -1,10 +1,11 @@
 import { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message, Alert, Space } from 'antd';
+import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, Alert, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Option } = Select;
 
@@ -164,6 +165,12 @@ const FormEdit = (
   };
 
   const onFinish = async (values) => {
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere miestras se guarda la información...',
+      action: 'show',
+    });
     values['id'] = questionId;
 
     const imageUrl = await saveEventImage();
@@ -215,20 +222,58 @@ const FormEdit = (
     const dataValues = { ...values, points: pointsValue };
     const exclude = ({ questionOptions, ...rest }) => rest;
     if (questionIndex === undefined) {
-      return SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
-        form.resetFields();
-        closeModal({ questionIndex, data: exclude(dataValues) }, 'created');
-        message.success({ content: 'Pregunta creada', key: 'updating' });
-      });
+      try {
+        SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
+          form.resetFields();
+          closeModal({ questionIndex, data: exclude(dataValues) }, 'created');
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Pregunta creada',
+            action: 'show',
+          });
+        });
+      } catch (err) {
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Problema creando la pregunta!',
+          action: 'show',
+        });
+      }
     }
 
     SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(dataValues))
       .then(() => {
         form.resetFields();
         closeModal({ questionIndex, data: exclude(dataValues) }, 'updated');
-        message.success({ content: 'pregunta actualizada', key: 'updating' });
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Pregunta actualizada',
+          action: 'show',
+        });
       })
-      .catch((err) => message.error('No se pudo actualizar la pregunta: ', err));
+      .catch((err) => {
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'No se pudo actualizar la pregunta',
+          action: 'show',
+        });
+      });
   };
 
   function handleRemoveImg() {

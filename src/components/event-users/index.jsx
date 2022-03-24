@@ -40,6 +40,7 @@ import {
 import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const { Title } = Typography;
 
@@ -505,11 +506,19 @@ class ListEventUser extends Component {
         },
       })
       .then(() => {
-        message.success('Usuario checkeado..');
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Usuario chequeado exitosamente...',
+          action: 'show',
+        });
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
-        message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+        DispatchMessageService({
+          type: 'error',
+          msj: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+          action: 'show',
+        });
       });
   };
 

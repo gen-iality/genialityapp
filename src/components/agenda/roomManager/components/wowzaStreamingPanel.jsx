@@ -34,6 +34,7 @@ import AgendaContext from '../../../../context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';
 import Loading from '../../../profile/loading';
 import { CurrentEventContext } from '../../../../context/eventContext';
+import { DispatchMessageService } from '../../../../context/MessageService';
 
 const WowzaStreamingPanel = ({
   meeting_id,
@@ -161,7 +162,11 @@ const WowzaStreamingPanel = ({
   };
 
   function success() {
-    message.success('URL copiada satisfactoriamente!');
+    DispatchMessageService({
+      type: 'success',
+      msj: 'URL copiada satisfactoriamente!',
+      action: 'show',
+    });
   }
 
   function copyToClipboard(type) {

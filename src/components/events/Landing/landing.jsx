@@ -181,6 +181,8 @@ const Landing = (props) => {
         <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
           targetEventUser={props.userAgenda}
+          cEventUser={cEventUser}
+          cEvent={cEventContext}
           closeModal={() => {
             props.setUserAgenda(null);
           }}

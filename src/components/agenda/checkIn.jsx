@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 /* import CheckSpace from '../event-users/checkSpace_old'; */
 // import * as XLSX from '../../xlsx/xlsx.mjs'
 import { Activity, RolAttApi } from '../../helpers/request';
-import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag, message } from 'antd';
+import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd';
 import {
   SearchOutlined,
   PlusCircleOutlined,
@@ -21,6 +21,7 @@ import UserModal from '../modal/modalUser';
 import Moment from 'moment';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
+import { DispatchMessageService } from '../../context/MessageService';
 
 const html = document.querySelector('html');
 
@@ -349,14 +350,22 @@ class CheckAgenda extends Component {
         checked_at: new Date(),
       })
       .then(() => {
-        message.success('Usuario Chequeado');
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Usuario chequeado exitosamente',
+          action: 'show',
+        });
         if (edit) {
           this.updateAttendeesList(id, user);
         }
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
-        message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+        DispatchMessageService({
+          type: 'error',
+          msj: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+          action: 'show',
+        });
       });
   };
 

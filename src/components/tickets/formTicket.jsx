@@ -4,7 +4,7 @@ import { Actions } from '../../helpers/request';
 import UserRegistration from '../events/userRegistration';
 import withContext from '../../context/withContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
-import { message } from 'antd';
+import { DispatchMessageService } from '../../context/MessageService';
 
 class TicketsForm extends Component {
   constructor(props) {
@@ -213,7 +213,11 @@ class TicketsForm extends Component {
           data.seats = list;
           this.request(data);
         } else {
-          message.info(`Te quedan ${quantity - list.length} puestos por seleccionar`);
+          DispatchMessageService({
+            type: 'info',
+            msj: `Te quedan ${quantity - list.length} puestos por seleccionar`,
+            action: 'show',
+          });
         }
       });
     } else this.request(data);
@@ -233,10 +237,18 @@ class TicketsForm extends Component {
       } else {
         //Muestro error parseado
         this.setState({ loading: false });
-        message.error(JSON.stringify(resp));
+        DispatchMessageService({
+          type: 'error',
+          msj: JSON.stringify(resp),
+          action: 'show',
+        });
       }
     } catch (err) {
-      message.error(JSON.stringify(err));
+      DispatchMessageService({
+        type: 'error',
+        msj: JSON.stringify(err),
+        action: 'show',
+      });
       console.error(err);
       this.setState({ loading: false });
     }
