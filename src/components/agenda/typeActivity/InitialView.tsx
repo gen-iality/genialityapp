@@ -19,25 +19,26 @@ const objecKeys = {
 const InitialView = (props: any) => {
   const { toggleActivitySteps, selectedKey, previewKey, data } = useTypeActivity();
   const [loading, setLoading] = useState(true);
-  const { activityEdit, typeActivity } = useContext(AgendaContext);
-  const typeActivityPre = useTypeActivity();
+  const { typeActivity, meeting_id } = useContext(AgendaContext);
 
   useEffect(() => {
     if (props.tab !== '2') return;
     //OBTENER DETALLE DE ACTIVIDAD
     if (typeActivity === null) {
+      setLoading(false);
+    } else {
       toggleActivitySteps('initial', {
         openModal: false,
         disableNextButton: false,
         typeOptions: undefined,
         selectedKey: 'finish',
-        previewKey: 'vimeo',
-        data: 'vimeoiddepruebaInicial',
+        previewKey: typeActivity,
+        data: typeActivity !== 'url' ? meeting_id : 'urldevideo',
         buttonsTextNextOrCreate: '',
         buttonTextPreviousOrCancel: '',
       });
-      setLoading(false);
-    } else {
+      //MIENTRAS CARGA LOS COMPONENTES
+      setTimeout(() => setLoading(false), 500);
     }
   }, [props.tab]);
 

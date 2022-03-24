@@ -202,6 +202,7 @@ class RoomManager extends Component {
       host_name,
       avalibleGames,
       transmition,
+      typeActivity,
     } = this.context;
     const roomInfo = {
       habilitar_ingreso: roomStatus,
@@ -212,6 +213,7 @@ class RoomManager extends Component {
       host_name,
       avalibleGames,
       transmition,
+      typeActivity,
     };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };

@@ -31,5 +31,5 @@ export type TypeActivityContextProps = {
   toggleActivitySteps: (id: string, payload?: TypeActivityState) => void;
   closeModal: () => void;
   selectOption: (id: string, sendData?: any) => void;
-  createTypeActivity: (id: string, data: {}) => void;
+  createTypeActivity: () => void;
 };
