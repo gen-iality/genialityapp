@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useContext, useReducer } from 'reac
 import Service from '../components/agenda/roomManager/service';
 import { fireRealtime, firestore } from '../helpers/firebase';
 import { CurrentEventUserContext } from './eventUserContext';
+import { DispatchMessageService } from './MessageService';
 export const AgendaContext = createContext();
 
 const initialState = {
@@ -32,7 +33,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [request, setRequest] = useState({});
   const [requestList, setRequestList] = useState([]);
   const [refActivity, setRefActivity] = useState(null);
-  const [typeActivity, setTypeActivity] = useState(null);
+  const [typeActivity, setTypeActivity] = useState(undefined);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -71,10 +72,11 @@ export const AgendaContextProvider = ({ children }) => {
       console.log('EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+        console.log('CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
-        setRoomStatus(configuration.habilitar_ingreso);
+        setRoomStatus(configuration?.habilitar_ingreso == null ? '' : configuration.habilitar_ingreso);
         setTransmition(configuration.transmition || null);
         setAvailableGames(configuration.avalibleGames || []);
         setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
@@ -178,6 +180,72 @@ export const AgendaContextProvider = ({ children }) => {
     }
   };
 
+  const prepareData = ({ type, data, platformNew }) => {
+    const roomInfo = {
+      platform: platformNew || platform,
+      meeting_id: data || meeting_id,
+      isPublished: isPublished ? isPublished : false,
+      host_id,
+      host_name,
+      avalibleGames,
+      habilitar_ingreso: roomStatus,
+      transmition: transmition || null,
+      typeActivity: type || typeActivity,
+    };
+    const tabs = { chat, surveys, games, attendees };
+    return { roomInfo, tabs };
+  };
+
+  const saveConfig = async (data) => {
+    const { roomInfo, tabs } = prepareData(data);
+
+    const activity_id = activityEdit;
+    const service = new Service(firestore);
+    try {
+      const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
+      if (result) {
+        DispatchMessageService({
+          type: 'success',
+          msj: result.message,
+          action: 'show',
+        });
+      }
+      return result;
+    } catch (err) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error en la configuración!',
+        action: 'show',
+      });
+    }
+  };
+
+  const deleteTypeActivity = async () => {
+    const { roomInfo, tabs } = prepareData({ type: null });
+
+    const activity_id = activityEdit;
+    const service = new Service(firestore);
+    try {
+      const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
+      if (result) {
+        DispatchMessageService({
+          type: 'success',
+          msj: result.message,
+          action: 'show',
+        });
+        //CLEAN STATUS
+        setTypeActivity(null);
+      }
+      return result;
+    } catch (err) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error en la configuración!',
+        action: 'show',
+      });
+    }
+  };
+
   return (
     <AgendaContext.Provider
       value={{
@@ -228,6 +296,9 @@ export const AgendaContextProvider = ({ children }) => {
         requestList,
         removeAllRequest,
         typeActivity,
+        saveConfig,
+        deleteTypeActivity,
+        setTypeActivity,
       }}>
       {children}
     </AgendaContext.Provider>

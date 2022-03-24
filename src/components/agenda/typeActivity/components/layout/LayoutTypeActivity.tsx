@@ -18,6 +18,7 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
     buttonsTextNextOrCreate,
     buttonTextPreviousOrCancel,
     disableNextButton,
+    createTypeActivity,
   } = useTypeActivity();
 
   const previousOrCancel = () => {
@@ -28,16 +29,14 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
   };
 
   const nextOrCreate = () => {
-    if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== "Crear") {
+    if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== 'Crear') {
       toggleActivitySteps(selectedKey);
       return;
     } else if (selectedKey === 'initial') {
       closeModal();
     } else {
-      toggleActivitySteps("finish")
-      closeModal();
+      createTypeActivity();
     }
-
   };
 
   return (
