@@ -4,23 +4,42 @@
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
+    "checkJs": false,
     "skipLibCheck": false,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./*"],
+      "@components/*": ["./components/*"],
+      "@adaptors/*": ["./adaptors/*"],
+      "@antdComponents/*": ["./antdComponents/*"],
+      "@App/*": ["./App/*"],
+      "@containers/*": ["./containers/*"],
+      "@contexts/*": ["./contexts/*"],
+      "@exhibitors/*": ["./exhibitors/*"],
+      "@helpers/*": ["./helpers/*"],
+      "@PreloaderApp/*": ["./PreloaderApp/*"],
+      "@redux/*": ["./redux/*"],
+      "@styles/*": ["./styles/*"],
+      "@Utilities/*": ["./Utilities/*"],
+      "@Assets/*": ["./Assets/*"]
     }
   },
-  "include": ["src/**/**.jsx", "src/**/**.ts", "tests/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["./*.ts", "src", "src/**/**.jsx", "src/**/**.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
