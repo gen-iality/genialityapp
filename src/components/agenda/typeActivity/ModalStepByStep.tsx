@@ -28,7 +28,7 @@ const ModalStepByStep = () => {
   console.log('🚀 TYPE OPTIONS ......', typeOptions.key);
 
   return (
-    <Modal visible={openModal} onCancel={closeModal} centered width={1000} footer={null}>
+    <Modal visible={openModal} onCancel={closeModal} centered width={1200} footer={null}>
       <LayoutTypeActivity title={typeOptions?.MainTitle}>
         {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' && typeOptions.key !== 'url' ? (
           <ContentTypeActivity options={typeOptions.typeOptions} />
@@ -38,17 +38,17 @@ const ModalStepByStep = () => {
         {typeOptions.key === 'cargarvideo' ? <h1>CARGAR VIDEO</h1> : null}
         {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
-              if (options.key === typeOptions.key) {
-                return (
-                  <ContentSource                    
-                    addonBefore={options.addonBefore}
-                    placeholder={options.placeholder}
-                    icon={options.title}
-                    subtitle={options.subtitle}
-                  />
-                );
-              }
-            })
+            if (options.key === typeOptions.key) {
+              return (
+                <ContentSource
+                  addonBefore={options.addonBefore}
+                  placeholder={options.placeholder}
+                  icon={options.title}
+                  subtitle={options.subtitle}
+                />
+              );
+            }
+          })
           : null}
 
         {typeOptions.key === 'meeting' && (
