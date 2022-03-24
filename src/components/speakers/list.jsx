@@ -19,7 +19,7 @@ function SpeakersList(props) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [dataSpeakers, setdataSpeakers] = useState([]);
-  let { isLoading, data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
+  let { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
 
   useEffect(() => {
     /* console.log('dataSpeakers', data); */
@@ -203,6 +203,7 @@ function SpeakersList(props) {
     handleReset,
     remove,
     searchText: searchText,
+    refetch,
   };
 
   return (
