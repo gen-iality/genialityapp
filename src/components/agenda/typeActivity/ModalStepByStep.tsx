@@ -53,9 +53,9 @@ const ModalStepByStep = () => {
 
         {typeOptions.key === 'meeting' && (
           <ContentInformative
-            title={'Buenas tardes'}
-            description={'Quiero hamburguesas'}
-            image={'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg'}
+            title={'EviusMeet'}
+            description={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.'}
+            image={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6'}
           />
         )}
       </LayoutTypeActivity>

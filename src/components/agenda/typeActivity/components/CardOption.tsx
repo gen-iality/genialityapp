@@ -1,5 +1,5 @@
-;
-import { Card, Badge, Typography } from 'antd';
+import { Card, Badge, Typography, Skeleton } from 'antd';
+import { useState } from 'react';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 
 interface PropsOptions {
@@ -10,6 +10,7 @@ interface PropsOptions {
 }
 
 const CardOption = ({ id, title, description, image }: PropsOptions) => {
+  const [loading, setloading] = useState(true)
   const { selectOption, selectedKey } = useTypeActivity();
   const borderStyles: {} =
     id === selectedKey
@@ -31,11 +32,13 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
     <Badge.Ribbon text='Selected' color={'#2593FC'} style={badgeStyle}>
       <div onClick={() => selectOption(id)} style={borderStyles}>
         <Card
+          loading={loading}
           hoverable={true}
-          style={{ width: '100%' }}
+          style={{ width: '100%', borderRadius: '8px' }}
           cover={
             <img
-              style={{ objectFit: 'cover' }}
+              onLoad={() => setloading(false)}
+              style={{ objectFit: 'cover', backgroundColor: '#F2F2F2' }}
               alt={title.replace(/ /g, "_") + '-Image'}
               src={
                 image || 'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg'
