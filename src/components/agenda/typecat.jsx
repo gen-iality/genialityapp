@@ -40,15 +40,13 @@ const AgendaTypeCat = (props) => {
       eventId={eventID}
       title={`${subject === 'categorias' ? 'Categorías' : 'Tipos'} de Actividad`}
       back
-      titleTooltip={
-        'Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación'
-      }
+      titleTooltip={'Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación'}
       addUrl={{
         pathname: `${props.matchUrl}/add${subject}`,
         state: { new: true },
       }}
       columns={columns}
-      key="_id"
+      key='_id'
       editPath={`${props.matchUrl}/edit${subject}`}
       pagination={false}
       actions

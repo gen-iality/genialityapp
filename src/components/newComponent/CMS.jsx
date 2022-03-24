@@ -6,6 +6,7 @@ import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 import HelperContext from '../../context/HelperContext';
 import { DispatchMessageService } from '../../context/MessageService';
+import Loading from '../profile/loading';
 
 const { confirm } = Modal;
 
@@ -51,7 +52,7 @@ const CMS = (props) => {
     widthAction,
     deleteCallback,
     extraPathUpdate,
-   extraPathUpdateTitle,
+    extraPathUpdateTitle,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
@@ -126,17 +127,17 @@ const CMS = (props) => {
     });
   };
 
-  const updateMails=async(idMessage)=>{    
-    setLoading(true)
-    const updateMails=await API.updateOne(eventId,idMessage);
+  const updateMails = async (idMessage) => {
+    setLoading(true);
+    const updateMails = await API.updateOne(eventId, idMessage);
     await getList();
     DispatchMessageService({
       type: 'success',
       msj: updateMails?.message,
       action: 'show',
-    })
-    setLoading(false)
-  }
+    });
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -153,41 +154,45 @@ const CMS = (props) => {
         saveMethod={saveMethod}
       />
 
-      <Table
-        header={columns}
-        loading={loading}
-        list={list}
-        setList={setList}
-        key={key}
-        pagination={pagination}
-        actions={actions}
-        editPath={editPath}
-        editFn={editFn}
-        remove={remove}
-        noRemove={noRemove}
-        search={search}
-        setColumnsData={setColumnsData}
-        draggable={draggable}
-        downloadFile={downloadFile}
-        exportData={exportData}
-        fileName={fileName}
-        extraFn={extraFn}
-        extraFnIcon={extraFnIcon}
-        extraFnTitle={extraFnTitle}
-        extraFnType={extraFnType}
-        titleTable={titleTable}
-        extraPath={extraPath}
-        extraPathTitle={extraPathTitle}
-        extraPathIcon={extraPathIcon}
-        extraPathType={extraPathType}
-        extraPathId={extraPathId}
-        extraPathStateName={extraPathStateName}
-        scroll={scroll}
-        widthAction={widthAction}
-        extraPathUpdate={extraPathUpdate}
-        extraPathUpdateTitle={extraPathUpdateTitle}
-        updateMails={updateMails}
-      />
+      {list.length > 0 ? (
+        <Table
+          header={columns}
+          loading={loading}
+          list={list}
+          setList={setList}
+          key={key}
+          pagination={pagination}
+          actions={actions}
+          editPath={editPath}
+          editFn={editFn}
+          remove={remove}
+          noRemove={noRemove}
+          search={search}
+          setColumnsData={setColumnsData}
+          draggable={draggable}
+          downloadFile={downloadFile}
+          exportData={exportData}
+          fileName={fileName}
+          extraFn={extraFn}
+          extraFnIcon={extraFnIcon}
+          extraFnTitle={extraFnTitle}
+          extraFnType={extraFnType}
+          titleTable={titleTable}
+          extraPath={extraPath}
+          extraPathTitle={extraPathTitle}
+          extraPathIcon={extraPathIcon}
+          extraPathType={extraPathType}
+          extraPathId={extraPathId}
+          extraPathStateName={extraPathStateName}
+          scroll={scroll}
+          widthAction={widthAction}
+          extraPathUpdate={extraPathUpdate}
+          extraPathUpdateTitle={extraPathUpdateTitle}
+          updateMails={updateMails}
+        />
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };

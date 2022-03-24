@@ -77,7 +77,7 @@ const FormEdit = (
    */
   async function saveEventImage() {
     const selectedLogo = defaultImgValue !== null ? defaultImgValue[0].thumbUrl : null;
-
+    if (selectedLogo?.includes('https://')) return selectedLogo;
     if (selectedLogo) {
       const urlOfTheUploadedImage = await saveImageStorage(selectedLogo);
 
@@ -247,40 +247,40 @@ const FormEdit = (
           action: 'show',
         });
       }
+    } else {
+      SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(dataValues))
+        .then(() => {
+          form.resetFields();
+          closeModal({ questionIndex, data: exclude(dataValues) }, 'updated');
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Pregunta actualizada',
+            action: 'show',
+          });
+        })
+        .catch((err) => {
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'error',
+            msj: 'No se pudo actualizar la pregunta',
+            action: 'show',
+          });
+        });
     }
-
-    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(dataValues))
-      .then(() => {
-        form.resetFields();
-        closeModal({ questionIndex, data: exclude(dataValues) }, 'updated');
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Pregunta actualizada',
-          action: 'show',
-        });
-      })
-      .catch((err) => {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: 'No se pudo actualizar la pregunta',
-          action: 'show',
-        });
-      });
   };
 
   function handleRemoveImg() {
     setDefaultImgValue(null);
   }
 
-  if (Object.entries(defaultValues).length !== 0)
+  if (Object.entries(defaultValues).length !== 0) {
     return (
       <>
         {loading ? (
@@ -452,7 +452,7 @@ const FormEdit = (
                     {questionType === 'radiogroup' ? (
                       <Radio.Group
                         onChange={handleRadio}
-                        /* disabled={!allowGradableSurvey} */
+                        disabled={!allowGradableSurvey}
                         value={correctAnswerIndex}
                         style={{ display: 'block', marginRight: 0 }}>
                         {fields.map((field, index) => (
@@ -491,7 +491,7 @@ const FormEdit = (
                       questionType === 'checkbox' && (
                         <Checkbox.Group
                           onChange={handleCheckbox}
-                          /* disabled={!allowGradableSurvey} */
+                          disabled={!allowGradableSurvey}
                           value={correctAnswerIndex}
                           style={{ display: 'block', marginRight: 0 }}>
                           {fields.map((field, index) => (
@@ -548,6 +548,9 @@ const FormEdit = (
         )}
       </>
     );
+  } else {
+    return null;
+  }
 };
 
 export default forwardRef(FormEdit);
