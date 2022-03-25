@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCategories } from '../redux/categories/actions';
 import { fetchTypes } from '../redux/types/actions';
 import loadable from '@loadable/component';
-import { Grid, Spin, Layout } from 'antd';
+import { Layout } from 'antd';
 
 import WithFooter from '../components/withFooter';
 import { UseCurrentUser } from '../context/userContext';
