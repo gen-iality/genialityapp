@@ -348,7 +348,10 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       let disableButton: boolean = true;
 
       const sendDataPayload = action?.payload?.sendData;
-      if ((sendDataPayload?.length > 12 && sendDataPayload !== '') || sendDataPayload == undefined) {
+      let regUrl = new RegExp(/^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
+      const isUrl = regUrl.test(sendDataPayload);
+
+      if ((sendDataPayload?.length > 12 && sendDataPayload !== '' && isUrl) || sendDataPayload == undefined) {
         disableButton = false;
         if (sendDataPayload) {
           console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayload));
