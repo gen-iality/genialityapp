@@ -11,7 +11,7 @@ interface propsOptions {
 
 const InputSource = ({ addonBefore, placeholder }: propsOptions) => {
   const { selectOption, typeOptions } = useTypeActivity();
-  console.log("typeOptions.key==>",typeOptions.key,)
+  console.log('10. typeOptions.key==>', typeOptions.key);
   return (
     <Input
       addonBefore={addonBefore}

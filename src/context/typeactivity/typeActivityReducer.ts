@@ -387,11 +387,13 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayloadVimeo));
         }
       }
+
+      console.log('STATE==>', state);
       return {
         ...state,
         openModal: true,
         disableNextButton: disableButtonVimeo,
-        previewKey: state.typeOptions.key,
+        previewKey: state.typeOptions.key !== 'vimeo' ? state.typeOptions.key : state.previewKey,
         selectedKey: action.payload.id,
         typeOptions: state.typeOptions,
         data: action.payload.sendData,
@@ -410,11 +412,12 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayloadYoutube));
         }
       }
+      console.log('STATE==>', state);
       return {
         ...state,
         openModal: true,
         disableNextButton: disableButtonYoutube,
-        previewKey: state.typeOptions.key,
+        previewKey: state.typeOptions.key !== 'youTube' ? state.typeOptions.key : state.previewKey,
         selectedKey: action.payload.id,
         typeOptions: state.typeOptions,
         data: action.payload.sendData,
