@@ -46,7 +46,8 @@ const liveBroadcastTransmissionOriginType: OriginOptions[] = [
     key: 'RTMP',
     title: 'RTMP',
     description: 'Vivamus magna justo.',
-    image: 'https://streamyard.com/blog/wp-content/uploads/2021/01/custom-rtmp-live-streaming-facebook.png',
+    image:
+      'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2FRTMP.jpg?alt=media&token=d0c74ddc-5ad6-49bf-ad57-c1d0c02a1ee6',
   },
 ];
 
