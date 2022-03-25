@@ -1,4 +1,5 @@
-import { useReducer } from 'react';
+import { useContext, useReducer } from 'react';
+import AgendaContext from '../AgendaContext';
 import { TypeActivityState } from './interfaces/interfaces';
 import { TypeActivityContext } from './typeActivityContext';
 import { initialState, typeActivityReducer } from './typeActivityReducer';
@@ -8,12 +9,14 @@ interface TypeActivityProviderProps {
 }
 
 export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) => {
+  const { saveConfig, deleteTypeActivity, setMeetingId, setPlatform, setTypeActivity } = useContext(AgendaContext);
   const [typeActivityState, typeActivityDispatch] = useReducer(typeActivityReducer, initialState);
 
-  const toggleActivitySteps = (id: string, payload?: TypeActivityState) => {
+  const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
     console.log('🚀 PROVIDER ID SELECTACTIVITYSTATES', id);
     switch (id) {
       case 'initial':
+        await deleteTypeActivity();
         typeActivityDispatch({ type: 'initial', payload: { activityState: payload } });
         break;
       case 'type':
@@ -89,9 +92,77 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
     }
   };
-  const createTypeActivity = (id: string, data: object) => {
+  /*const createTypeActivity = (id: string, data: object) => {
     typeActivityDispatch({ type: 'onFinish', payload: { id, data } });
+  };*/
+
+  const createTypeActivity = async () => {
+    console.log('DATA ACTUAL==>', typeActivityState);
+    /* url: 'Video',
+  meeting: 'reunión',
+  vimeo: 'vimeo',
+  youTube: 'Youtube',
+  eviusMeet: 'EviusMeet',
+  RTMP: 'Transmisión',*/
+    let resp;
+    switch (typeActivityState.selectedKey) {
+      case 'url':
+        resp = await saveConfig({ platformNew: '', type: 'url', data: typeActivityState.data });
+        setTypeActivity('url');
+        setPlatform('wowza');
+        //setMeetingId(typeActivityState?.data);
+        ////Type:url
+        break;
+      case 'vimeo':
+        //Type:Vimeo
+        //Platform
+        //meeting_id
+        resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: typeActivityState.data });
+        setTypeActivity('vimeo');
+        setPlatform('vimeo');
+        setMeetingId(typeActivityState?.data);
+
+        break;
+      case 'youTube':
+        resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: typeActivityState.data });
+        setTypeActivity('youTube');
+        setPlatform('wowza');
+        setMeetingId(typeActivityState?.data);
+        //Type:youTube
+        break;
+      case 'eviusMeet':
+        resp = await saveConfig({ platformNew: '', type: 'eviusMeet', data: typeActivityState?.data });
+        setTypeActivity('eviusMeet');
+        setPlatform('wowza');
+        //type:eviusMeet
+        break;
+      case 'RTMP':
+        resp = await saveConfig({ platformNew: '', type: 'RTMP', data: typeActivityState?.data });
+        setTypeActivity('RTMP');
+        setPlatform('wowza');
+        //type:RTMP
+        break;
+      case 'meeting':
+        resp = await saveConfig({ platformNew: '', type: 'meeting', data: typeActivityState?.data });
+        setTypeActivity('meeting');
+        setPlatform('wowza');
+        //Type:reunión
+        break;
+      case 'cargarvideo':
+        resp = await saveConfig({ platformNew: '', type: 'url', data: typeActivityState?.data });
+        setTypeActivity('url');
+        setPlatform('wowza');
+        //Type:url
+        break;
+
+      default:
+        break;
+    }
+    if (resp.state === 'created' || resp.state === 'updated') {
+      toggleActivitySteps('finish');
+    }
   };
+
   const closeModal = () => {
     typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
   };

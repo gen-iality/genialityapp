@@ -7,6 +7,7 @@ import ContentSource from '../typeActivity/components/layout/ContentSource';
 import ContentInformative from '../typeActivity/components/layout/ContentInformative';
 import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons'; //Este icono para el addonBefore
 import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
+import InputUploadVideo from './components/InputUploadVideo';
 
 const newContentSource = {
   title: 'Titulo principal',
@@ -21,11 +22,12 @@ interface mapContentSource {
   placeholder: string;
   title: string;
   subtitle: string;
+  image: string;
 }
 
 const ModalStepByStep = () => {
   const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
-  console.log('🚀 TYPE OPTIONS ......', typeOptions.key);
+  console.log('🚀 TYPE OPTIONS ......', typeOptions);
 
   return (
     <Modal visible={openModal} onCancel={closeModal} centered width={1200} footer={null}>
@@ -35,7 +37,7 @@ const ModalStepByStep = () => {
         ) : null}
         {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
         {/* <LoadingTypeActivity /> */}
-        {typeOptions.key === 'cargarvideo' ? <h1>CARGAR VIDEO</h1> : null}
+        {typeOptions.key === 'cargarvideo' ? <InputUploadVideo /> : null}
         {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
             if (options.key === typeOptions.key) {
@@ -43,7 +45,7 @@ const ModalStepByStep = () => {
                 <ContentSource
                   addonBefore={options.addonBefore}
                   placeholder={options.placeholder}
-                  icon={options.title}
+                  icon={options.image}
                   subtitle={options.subtitle}
                 />
               );
@@ -53,9 +55,9 @@ const ModalStepByStep = () => {
 
         {typeOptions.key === 'meeting' && (
           <ContentInformative
-            title={'Buenas tardes'}
-            description={'Quiero hamburguesas'}
-            image={'https://img.freepik.com/vector-gratis/plantilla-banner-contraccion-conexion_52683-42130.jpg'}
+            title={'EviusMeet'}
+            description={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.'}
+            image={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6'}
           />
         )}
       </LayoutTypeActivity>

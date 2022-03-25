@@ -9,7 +9,7 @@ const ContentTypeActivity = ({ options }: propsOptions) => {
   return (
     <Row /* style={{width: '100%'}} */ gutter={[16, 16]} justify='center'>
       {options && options.length > 0 && options.length < 3
-        ? options.map((option) => (
+        ? options?.map((option) => (
             <Col span={6} offset={2} key={'key-' + option.title}>
               <CardOption
                 id={option.key}

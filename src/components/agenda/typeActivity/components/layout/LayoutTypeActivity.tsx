@@ -18,6 +18,7 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
     buttonsTextNextOrCreate,
     buttonTextPreviousOrCancel,
     disableNextButton,
+    createTypeActivity,
   } = useTypeActivity();
 
   const previousOrCancel = () => {
@@ -28,22 +29,20 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
   };
 
   const nextOrCreate = () => {
-    if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== "Crear") {
+    if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== 'Crear') {
       toggleActivitySteps(selectedKey);
       return;
     } else if (selectedKey === 'initial') {
       closeModal();
     } else {
-      toggleActivitySteps("finish")
-      closeModal();
+      createTypeActivity();
     }
-
   };
 
   return (
     <Layout>
-      <Header style={{ textAlign: 'center', padding: '0px 0px 20px 0px' }}>
-        <Typography.Title level={2}>{title}</Typography.Title>
+      <Header style={{ textAlign: 'center', padding: '20px 0px 20px 0px' }}>
+        <Typography.Title level={3}>{title}</Typography.Title>
       </Header>
       <Content style={{ padding: '60px 50px 60px 50px' }}>{children}</Content>
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>

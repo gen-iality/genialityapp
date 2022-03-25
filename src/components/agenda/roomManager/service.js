@@ -31,7 +31,16 @@ class Service {
     if (activity_id) {
       console.log(event_id, activity_id, roomInfo, tabs, 'service');
       const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
-      const { roomState, habilitar_ingreso, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
+      const {
+        roomState,
+        habilitar_ingreso,
+        platform,
+        meeting_id,
+        isPublished,
+        host_id,
+        host_name,
+        typeActivity,
+      } = roomInfo;
       // eslint-disable-next-line no-unused-vars
 
       return new Promise((resolve, reject) => {
@@ -51,6 +60,7 @@ class Service {
                 isPublished: isPublished,
                 host_id,
                 host_name,
+                typeActivity,
                 transmition: roomInfo.transmition || null,
                 avalibleGames: roomInfo?.avalibleGames || [],
               })
@@ -69,6 +79,7 @@ class Service {
                 host_id,
                 host_name,
                 tabs: tabsSchema,
+                typeActivity,
                 avalibleGames: roomInfo?.avalibleGames || [],
                 roomState: roomState || null,
               })

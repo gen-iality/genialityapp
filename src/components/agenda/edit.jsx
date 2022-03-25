@@ -1115,6 +1115,7 @@ class AgendaEdit extends Component {
       avalibleGames,
       transmition,
       isPublished,
+      typeActivity,
     } = this.context;
 
     const roomInfo = {
@@ -1126,6 +1127,7 @@ class AgendaEdit extends Component {
       avalibleGames,
       habilitar_ingreso: roomStatus,
       transmition: transmition || null,
+      typeActivity,
     };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
@@ -1136,7 +1138,6 @@ class AgendaEdit extends Component {
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
     const activity_id = this.context.activityEdit || this.state.idNewlyCreatedActivity;
-
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
       if (result) {
@@ -1609,7 +1610,7 @@ class AgendaEdit extends Component {
                           activityName={this.state.name}
                           tab={this.state.tabs}
                         />
-                        <RoomManager
+                        {/*<RoomManager
                           event_id={this.props.event._id}
                           activity_id={this.state.activity_id}
                           activity_name={this.state.name}
@@ -1619,7 +1620,7 @@ class AgendaEdit extends Component {
                           date_activity={this.state.date}
                           pendingChangesSave={this.state.pendingChangesSave}
                           updateRoomManager={this.updateRoomManager}
-                        />
+                        />*/}
                         <BackTop />
                       </Col>
                     </Row>

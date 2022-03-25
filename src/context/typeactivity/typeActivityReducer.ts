@@ -288,6 +288,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
     case 'toggleFinish':
       return {
         ...state,
+        openModal: false,
         previewKey: state.selectedKey,
         selectedKey: action.payload.id,
       };

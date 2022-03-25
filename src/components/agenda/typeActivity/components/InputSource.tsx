@@ -39,12 +39,10 @@ const rules = {
     () => ({
       validator(_: any, value: string) {
         //Aqui validamos si el ID es valido o si la url es validad si cualquiera de los dos es valido entonces retornamos true si no  retornamos el error
-        console.log('🚀 debug ~ InputSourceValue 🚀~ ------->', value);
         let regUrl = new RegExp(
           /(?:http:|https:|)\/\/(?:player.|www.)?vimeo\.com\/(?:.|event\/|embed\/|watch\?\S*v=|v\/)?(\d*)/
         );
         // este regex validad las las urls de vimeo
-
         let regId = new RegExp(/^[0-9]{1,}$/);
         if (regUrl.test(value) || regId.test(value)) {
           return Promise.resolve();
@@ -64,7 +62,6 @@ const onChange = {
   //Esto se puede alojar en un archivo de configuracion
   // Este ochenge cumple la funcion de
   youTube: (e: any) => {
-    console.log('🚀 debug ~ InputSourceValueYoutube 🚀~ ------->', e.target.value);
     //obtenemos el ID del youtube
     let id = e.target.value.match(
       /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
@@ -73,12 +70,10 @@ const onChange = {
     return id ? id[1] : e.target.value;
   },
   vimeo: (e: any) => {
-    console.log('🚀 debug ~ InputSourceValueVimeo 🚀~ ------->', e.target.value);
     let idVimeo = e.target.value.match(/(videos|video|channels|event|\.com)\/([\d]+)/);
     return idVimeo ? idVimeo[2] : e.target.value;
   },
   url: (e: any) => {
-    console.log('🚀 debug ~ InputSourceValueUrl 🚀~ ------->', e.target.value);
     return e.target.value;
   },
 };

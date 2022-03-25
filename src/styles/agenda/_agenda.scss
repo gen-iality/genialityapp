@@ -442,3 +442,11 @@
     height: auto !important ;
   }
 }
+
+#cardOption {
+  .ant-card-cover {
+    border: 1px solid #f0f0f0;
+    border-bottom-style: none;
+    border-radius: 8px;
+  }
+}
