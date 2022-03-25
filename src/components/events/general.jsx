@@ -770,6 +770,7 @@ class General extends Component {
                     }
                     rules={[{ required: true, message: 'El nombre es requerido' }]}>
                     <Input
+                      autoFocus={true}
                       name={'name'}
                       placeholder={'Nombre del evento'}
                       value={event.name}

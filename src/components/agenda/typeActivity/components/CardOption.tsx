@@ -32,6 +32,7 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
     <Badge.Ribbon text='Selected' color={'#2593FC'} style={badgeStyle}>
       <div onClick={() => selectOption(id)} style={borderStyles}>
         <Card
+          id='cardOption'
           loading={loading}
           hoverable={true}
           style={{ width: '100%', borderRadius: '8px' }}

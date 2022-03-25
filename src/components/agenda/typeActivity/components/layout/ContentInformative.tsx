@@ -1,4 +1,3 @@
-;
 import { Typography, Row, Col } from 'antd';
 import { useEffect, useState } from 'react';
 import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
@@ -10,7 +9,7 @@ interface propsOptions {
 }
 
 const ContentInformative = ({ title, description, image }: propsOptions) => {
-  const [loading, setloading] = useState(true)
+  const [loading, setloading] = useState(true);
 
   return (
     <Row justify='space-around' align='middle' style={{ margin: '0px 40px 0px 40px' }}>
@@ -19,7 +18,12 @@ const ContentInformative = ({ title, description, image }: propsOptions) => {
         <Typography.Paragraph>{description} </Typography.Paragraph>
       </Col>
       <Col span={12} style={{ textAlign: 'right' }}>
-        <img onLoad={() => setloading(false)} src={image} style={{ objectFit: 'contain', backgroundColor: loading ? '#F2F2F2' : 'transparent' }} width='400' />
+        <img
+          onLoad={() => setloading(false)}
+          src={image}
+          style={{ objectFit: 'contain', backgroundColor: loading ? '#F2F2F2' : 'transparent' }}
+          width='400'
+        />
       </Col>
     </Row>
   );
