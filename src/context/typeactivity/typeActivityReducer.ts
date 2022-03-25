@@ -72,7 +72,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           previewKey: state.previewKey,
           selectedKey: '',
           buttonsTextNextOrCreate: 'Siguiente',
-          buttonTextPreviousOrCancel: 'Cancelar',
+          buttonTextPreviousOrCancel: 'Anterior',
           typeOptions: initialState.typeOptions,
         };
       } else {
@@ -86,7 +86,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           previewKey: state.previewKey,
           selectedKey: '',
           buttonsTextNextOrCreate: 'Siguiente',
-          buttonTextPreviousOrCancel: 'Cancelar',
+          buttonTextPreviousOrCancel: 'Anterior',
           typeOptions: selectedToggleLiveBroadcastData,
         };
       }
