@@ -380,7 +380,14 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       let disableButtonVimeo: boolean = true;
 
       const sendDataPayloadVimeo = action?.payload?.sendData;
-      if ((sendDataPayloadVimeo?.length > 12 && sendDataPayloadVimeo !== '') || sendDataPayloadVimeo == undefined) {
+      const isNumber = /^\d+$/.test(sendDataPayloadVimeo);
+      if (
+        (sendDataPayloadVimeo?.length >= 8 &&
+          sendDataPayloadVimeo !== '' &&
+          sendDataPayloadVimeo?.length <= 12 &&
+          isNumber) ||
+        sendDataPayloadVimeo == undefined
+      ) {
         disableButtonVimeo = false;
         if (sendDataPayloadVimeo) {
           console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayloadVimeo));
@@ -401,7 +408,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
 
       const sendDataPayloadYoutube = action?.payload?.sendData;
       if (
-        (sendDataPayloadYoutube?.length > 12 && sendDataPayloadYoutube !== '') ||
+        (sendDataPayloadYoutube?.length === 11 && sendDataPayloadYoutube !== '') ||
         sendDataPayloadYoutube == undefined
       ) {
         disableButtonYoutube = false;
