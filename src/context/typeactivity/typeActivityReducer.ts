@@ -72,7 +72,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           previewKey: state.previewKey,
           selectedKey: '',
           buttonsTextNextOrCreate: 'Siguiente',
-          buttonTextPreviousOrCancel: 'Anterior',
+          buttonTextPreviousOrCancel: 'Cancelar',
           typeOptions: initialState.typeOptions,
         };
       } else {
@@ -139,7 +139,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           previewKey: state.previewKey,
           selectedKey: action.payload.id,
           buttonsTextNextOrCreate: 'Siguiente',
-          buttonTextPreviousOrCancel: 'Cancelar',
+          buttonTextPreviousOrCancel: 'Anterior',
           typeOptions: selectedToggleVideoData,
         };
       } else {
