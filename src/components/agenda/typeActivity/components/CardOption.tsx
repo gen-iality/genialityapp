@@ -35,7 +35,7 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
           id='cardOption'
           loading={loading}
           hoverable={true}
-          style={{ width: '100%', borderRadius: '8px' }}
+          style={{ width: '100%', borderRadius: '8px', minHeight: description?.length > 0 ? '333px' : 'auto' }}
           cover={
             <img
               onLoad={() => setloading(false)}
@@ -47,7 +47,7 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
               height={150}
             />
           }>
-          <Card.Meta title={title} description={<Typography.Paragraph type='secondary'>{description}</Typography.Paragraph>} style={{ textAlign: 'center' }} />
+          <Card.Meta title={<Typography.Title style={{ userSelect: 'none' }} level={5}>{title}</Typography.Title>} description={<Typography.Paragraph type='secondary' style={{ userSelect: 'none' }}>{description}</Typography.Paragraph>} style={{ textAlign: 'center' }} />
         </Card>
       </div>
     </Badge.Ribbon>
