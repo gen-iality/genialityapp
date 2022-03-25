@@ -5,7 +5,7 @@ import { handleRequestError } from '../../helpers/utils';
 import { Row, Col, Form, Input, Modal, Switch } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -18,7 +18,7 @@ const Ticket = (props) => {
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
-  const [ticket, setTicket] = useState({ ...ticket, event_id: props.event._id });
+  const [ticket, setTicket] = useState({ event_id: props.event._id });
 
   useEffect(() => {
     if (locationState.edit) {

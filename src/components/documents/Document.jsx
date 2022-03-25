@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
 import { DocumentsApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin } from 'antd';
+import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin, Progress } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
-import firebase from 'firebase';
+import { fireStorage } from '@/helpers/firebase';
 import Header from '../../antdComponents/Header';
 import moment from 'moment';
 import { DispatchMessageService } from '../../context/MessageService';
@@ -26,6 +26,7 @@ const Document = (props) => {
   let [extention, setExtention] = useState('');
   const [folder, setFolder] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadPercentage, setLoadPercentage] = useState(0);
 
   useEffect(() => {
     if (locationState?.edit) {
@@ -48,13 +49,13 @@ const Document = (props) => {
       setDocument({ ...document, type: 'folder', folder });
     }
 
-    if(!document.title) {
+    if (!document.title) {
       DispatchMessageService({
         type: 'error',
         msj: 'El título es requerido',
         action: 'show',
       });
-    } else if(!files && document.type !== 'folder') {
+    } else if (!files && document.type !== 'folder') {
       DispatchMessageService({
         type: 'error',
         msj: 'El archivo es requerido',
@@ -76,9 +77,12 @@ const Document = (props) => {
             props.event._id
           );
         } else {
-          await DocumentsApi.create(!folder ? document : {title: document.title, type: 'folder', folder}, props.event._id);
-        }     
-      
+          await DocumentsApi.create(
+            !folder ? document : { title: document.title, type: 'folder', folder },
+            props.event._id
+          );
+        }
+
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
@@ -183,7 +187,7 @@ const Document = (props) => {
     setLoading(true);
     setDocumentList(e.fileList);
 
-    const ref = firebase.storage().ref();
+    const ref = fireStorage.ref();
     setFiles(e.file.originFileObj);
 
     //Se crea el nombre con base a la fecha y nombre del archivo
@@ -199,37 +203,30 @@ const Document = (props) => {
     /* setUploadTask(uploadTaskRef); */
     /* console.log(uploadTaskRef); */
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
+
     uploadTaskRef.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      stateUploadFile,
-      wrongUpdateFiles,
-      succesUploadFile(uploadTaskRef)
+      'state_changed',
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setLoadPercentage(progress);
+        switch (snapshot.state) {
+          case 'paused':
+            // console.log('Upload is paused');
+            break;
+          case 'running':
+            // console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        succesUploadFile(uploadTaskRef);
+      }
     );
-  };
-
-  const stateUploadFile = (snapshot) => {
-    switch (snapshot.state) {
-      case firebase.storage.TaskState.PAUSED:
-        //
-        break;
-      case firebase.storage.TaskState.RUNNING:
-        //
-        break;
-    }
-  };
-
-  const wrongUpdateFiles = (error) => {
-    //Si hay algun error se valida si fue cancelada la carga, si no tiene acceso o si hay un error al guardar
-    switch (error.code) {
-      case 'storage/unauthorized':
-        break;
-
-      case 'storage/canceled':
-        break;
-
-      case 'storage/unknown':
-        break;
-    }
   };
 
   const succesUploadFile = async (uploadTaskRef) => {
@@ -274,7 +271,15 @@ const Document = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Documento'} back save form remove={remove} edit={locationState?.edit} loadingSave={loading} />
+      <Header
+        title={'Documento'}
+        back
+        save={loadPercentage > 0 && true}
+        form
+        remove={remove}
+        edit={locationState?.edit}
+        loadingSave={loading}
+      />
 
       <Spin
         spinning={loading}
@@ -321,6 +326,8 @@ const Document = (props) => {
                 </Upload>
               </Form.Item>
             )}
+            {loadPercentage > 0 && <Progress percent={loadPercentage} />}
+
             <Form.Item
               label={
                 <label style={{ marginTop: '2%' }}>

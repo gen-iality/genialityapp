@@ -1,4 +1,4 @@
-import Datos from '../events/datos';
+import Datos from '@/components/events/datos';
 import { OrganizationApi } from '../../helpers/request';
 
 function TemplateMemberSettings(props) {

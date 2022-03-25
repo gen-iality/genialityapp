@@ -202,37 +202,6 @@ export const HelperContextProvider = ({ children }) => {
   const conectionRef = firestore.collection(`connections`);
 
   /**
-   * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
-   * @param {boolean} showNotification If the value is true the remote logout notification is displayed
-   */
-  const logout = async (showNotification) => {
-    const user = app.auth()?.currentUser;
-    const lastSignInTime = (await user.getIdTokenResult()).authTime;
-
-    app
-      .auth()
-      .signOut()
-      .then(async () => {
-        const currentUserConnect = await conectionRef.doc(cUser.value?.uid).get();
-
-        if (currentUserConnect?.data()?.lastSignInTime === lastSignInTime)
-          await conectionRef.doc(cUser.value?.uid).delete();
-        const routeUrl = window.location.href;
-        const weAreOnTheLanding = routeUrl.includes('landing');
-        handleChangeTypeModal(null);
-        cEventuser.setuserEvent(initialStateEvenUserContext);
-        cUser.setCurrentUser(initialStateUserContext);
-        if (showNotification) remoteLogoutNotification('info');
-        if (!weAreOnTheLanding) {
-          history.push('/');
-        }
-      })
-      .catch(function(error) {
-        console.log('🚀 error', error);
-      });
-  };
-
-  /**
    * It gets the last sign in time of the user.
    * @returns The last sign user time.
    */
@@ -252,6 +221,8 @@ export const HelperContextProvider = ({ children }) => {
     if (change.type !== 'added' && change?.doc?.data()?.email == cUser.value?.email) return true;
     return false;
   }
+
+  function logout() {}
 
   useEffect(() => {
     if (!cUser.value) return;

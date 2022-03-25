@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Table, Button, Row, Col, Tag } from 'antd';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
-import ModalMembers from '../modal/modalMembers';
+import ModalMembers from '@/components/modal/modalMembers';
 import moment from 'moment';
 import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';

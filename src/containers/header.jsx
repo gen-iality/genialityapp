@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import MenuOld from '../components/events/shared/menu';
 import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 import withContext from '../context/withContext';
+import { UseCurrentUserContext, logout } from './../context/userContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { FormattedMessage } from 'react-intl';
@@ -45,8 +46,9 @@ const initialDataGeneral = {
 };
 
 const Headers = (props) => {
-  const { cUser, showMenu, loginInfo, cHelper, cEvent, cEventUser } = props;
-  const { logout } = cHelper;
+  const { showMenu, loginInfo, cHelper, cEvent, cEventUser } = props;
+
+  const cUser = UseCurrentUserContext();
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
   const [showButtons, setshowButtons] = useState({
@@ -377,5 +379,5 @@ const mapDispatchToProps = {
   showMenu,
 };
 
-let HeaderWithContext = withContext(withRouter(Headers));
+let HeaderWithContext = withContext(Headers);
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithContext);

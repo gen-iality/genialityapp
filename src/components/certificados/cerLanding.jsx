@@ -121,8 +121,11 @@ class CertificadoLanding extends Component {
     //Por defecto se trae el certificado sin rol
     let rolCert = certs.find((cert) => !cert.rol_id);
     //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado
-    if (dataUser.rol_id && roles.find((rol) => rol._id === dataUser.rol_id))
-      rolCert = certs.find((cert) => cert.rol_id === dataUser.rol_id);
+    const rolValidation = roles.find((rol) => rol._id === dataUser.rol_id);
+    if (dataUser.rol_id && rolValidation)
+      rolCert = certs.find((cert) => {
+        return cert.rol._id === dataUser.rol_id;
+      });
     let content = rolCert?.content ? rolCert?.content : this.state.content;
     this.state.tags.map((item) => {
       let value;

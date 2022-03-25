@@ -17,7 +17,10 @@ import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import { useCheckinUser } from '../../../helpers/HelperAuth';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { UseUserEvent } from '@/context/eventUserContext';
+import { UseEventContext } from '@/context/eventContext';
+import { UseCurrentUserContext } from '@/context/userContext';
+
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
@@ -28,7 +31,9 @@ const AgendaActividadDetalle = (props) => {
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);
   const [activity, setactivity] = useState('');
+  const cUser = UseCurrentUserContext();
   let cEventUser = UseUserEvent();
+  const cEvent = UseEventContext();
 
   const intl = useIntl();
   {
@@ -37,7 +42,7 @@ const AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     async function getActividad() {
-      return await AgendaApi.getOne(props.match.params.activity_id, props.cEvent.value._id);
+      return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id);
     }
 
     function orderHost(hosts) {
@@ -115,13 +120,13 @@ const AgendaActividadDetalle = (props) => {
 
   // VALIDAR ACTIVIDADES POR CODIGO
   useEffect(() => {
-    if (props.cEvent.value && props.cUser) {
-      if (props.cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
+    if (cEvent.value && cUser.value) {
+      if (cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
         if (activitiesCode.includes(props.match.params.activity_id)) {
-          if (props.cEventUser.value) {
+          if (cEventUser.value) {
             if (
-              codeActivity.includes(props.cEventUser.value?.properties.codigo) ||
-              cityValid.includes(props.cEventUser.value?.properties.ciudad)
+              codeActivity.includes(cEventUser.value?.properties.codigo) ||
+              cityValid.includes(cEventUser.value?.properties.ciudad)
             ) {
               setblockActivity(false);
             } else {
@@ -133,7 +138,7 @@ const AgendaActividadDetalle = (props) => {
         setblockActivity(false);
       }
     }
-  }, [props.cEvent.value, props.cEventUser.value, props.cUser.value]);
+  }, [cEvent.value, cEventUser.value, cUser.value]);
 
   return (
     <div>
@@ -143,7 +148,7 @@ const AgendaActividadDetalle = (props) => {
           {!blockActivity ? (
             <>
               {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-              props.cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+              cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
                 <Alert
                   showIcon
                   style={{
@@ -155,7 +160,7 @@ const AgendaActividadDetalle = (props) => {
                   }}
                   message={
                     <>
-                      {`Hola ${props.cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
+                      {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
                     </>
                   }
                   type='warning'
@@ -194,10 +199,7 @@ const AgendaActividadDetalle = (props) => {
         </Card>
       </div>
       {/* Drawer encuestas */}
-      <SurveyDrawer
-        colorFondo={props.cEvent.value.styles.toolbarDefaultBg}
-        colorTexto={props.cEvent.value.styles.textMenu}
-      />
+      <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
     </div>
   );
 };
@@ -221,5 +223,5 @@ const mapDispatchToProps = {
   setHasOpenSurveys,
 };
 
-let AgendaActividadDetalleWithContext = WithEviusContext(AgendaActividadDetalle);
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalleWithContext));
+// let AgendaActividadDetalleWithContext = WithEviusContext(AgendaActividadDetalle);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
