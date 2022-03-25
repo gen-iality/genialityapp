@@ -657,7 +657,7 @@ const FormRegister = ({
                 setareacodeselected(val);
                 //console.log(val);
               }}
-              placeholder='Codigo de area del pais'>
+              placeholder='Código de area del pais'>
               {areaCode.map((code, key) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -718,6 +718,7 @@ const FormRegister = ({
           );
         }
 
+        let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
         if (type === 'multiplelisttable') {
           input = <ReactSelect options={m.options} isMulti name={name} />;
         }
@@ -918,8 +919,6 @@ const FormRegister = ({
             </div>
           );
         }
-
-        let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
 
         //esogemos el tipo de validación para email
         rule = type === 'email' ? { ...rule, type: 'email' } : rule;

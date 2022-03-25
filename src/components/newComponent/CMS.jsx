@@ -6,6 +6,7 @@ import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
+import Loading from '../profile/loading';
 
 const { confirm } = Modal;
 
@@ -153,41 +154,45 @@ const CMS = (props) => {
         saveMethod={saveMethod}
       />
 
-      <Table
-        header={columns}
-        loading={loading}
-        list={list}
-        setList={setList}
-        key={key}
-        pagination={pagination}
-        actions={actions}
-        editPath={editPath}
-        editFn={editFn}
-        remove={remove}
-        noRemove={noRemove}
-        search={search}
-        setColumnsData={setColumnsData}
-        draggable={draggable}
-        downloadFile={downloadFile}
-        exportData={exportData}
-        fileName={fileName}
-        extraFn={extraFn}
-        extraFnIcon={extraFnIcon}
-        extraFnTitle={extraFnTitle}
-        extraFnType={extraFnType}
-        titleTable={titleTable}
-        extraPath={extraPath}
-        extraPathTitle={extraPathTitle}
-        extraPathIcon={extraPathIcon}
-        extraPathType={extraPathType}
-        extraPathId={extraPathId}
-        extraPathStateName={extraPathStateName}
-        scroll={scroll}
-        widthAction={widthAction}
-        extraPathUpdate={extraPathUpdate}
-        extraPathUpdateTitle={extraPathUpdateTitle}
-        updateMails={updateMails}
-      />
+      {list.length > 0 ? (
+        <Table
+          header={columns}
+          loading={loading}
+          list={list}
+          setList={setList}
+          key={key}
+          pagination={pagination}
+          actions={actions}
+          editPath={editPath}
+          editFn={editFn}
+          remove={remove}
+          noRemove={noRemove}
+          search={search}
+          setColumnsData={setColumnsData}
+          draggable={draggable}
+          downloadFile={downloadFile}
+          exportData={exportData}
+          fileName={fileName}
+          extraFn={extraFn}
+          extraFnIcon={extraFnIcon}
+          extraFnTitle={extraFnTitle}
+          extraFnType={extraFnType}
+          titleTable={titleTable}
+          extraPath={extraPath}
+          extraPathTitle={extraPathTitle}
+          extraPathIcon={extraPathIcon}
+          extraPathType={extraPathType}
+          extraPathId={extraPathId}
+          extraPathStateName={extraPathStateName}
+          scroll={scroll}
+          widthAction={widthAction}
+          extraPathUpdate={extraPathUpdate}
+          extraPathUpdateTitle={extraPathUpdateTitle}
+          updateMails={updateMails}
+        />
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };

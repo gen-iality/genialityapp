@@ -41,6 +41,7 @@ import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
+import Loading from '../profile/loading';
 
 const { Title } = Typography;
 
@@ -713,6 +714,7 @@ class ListEventUser extends Component {
       lastUpdate,
       disabledPersistence,
       nameActivity,
+      columns,
     } = this.state;
     const { event, type } = this.props;
 
@@ -796,54 +798,58 @@ class ListEventUser extends Component {
           </Col>
         </Row>
 
-        <TableA
-          list={users}
-          header={this.state.columns}
-          scroll={{ x: 3200 }}
-          loading={this.state.loading}
-          titleTable={
-            <Row gutter={[8, 8]}>
-              <Col>
-                <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
-                  Expandir
-                </Button>
-              </Col>
-              {/* <Col>
-                Pendiente por actualizar QR
-                <Select
-                  name={'type-scanner'}
-                  value={this.state.typeScanner}
-                  defaultValue={this.state.typeScanner}
-                  onChange={(e) => this.handleChange(e)}
-                  style={{ width: 220 }}
-                >
-                  <Option value='options'>Escanear...</Option>
-                  <Option value='scanner-qr'>Escanear QR</Option>
-                  <Option value='scanner-document'>Escanear Documento</Option>
-                </Select>
-              </Col> */}
-              <Col>
-                {usersReq.length > 0 && (
-                  <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
-                    Exportar
+        {users.length > 0 && this.state.columns ? (
+          <TableA
+            list={users.length > 0 && users}
+            header={this.state.columns}
+            scroll={{ x: 3200 }}
+            loading={this.state.loading}
+            titleTable={
+              <Row gutter={[8, 8]}>
+                <Col>
+                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                    Expandir
                   </Button>
-                )}
-              </Col>
-              <Col>
-                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                  <Button type='primary' icon={<UploadOutlined />}>
-                    Importar usuarios
+                </Col>
+                {/* <Col>
+                  Pendiente por actualizar QR
+                  <Select
+                    name={'type-scanner'}
+                    value={this.state.typeScanner}
+                    defaultValue={this.state.typeScanner}
+                    onChange={(e) => this.handleChange(e)}
+                    style={{ width: 220 }}
+                  >
+                    <Option value='options'>Escanear...</Option>
+                    <Option value='scanner-qr'>Escanear QR</Option>
+                    <Option value='scanner-document'>Escanear Documento</Option>
+                  </Select>
+                </Col> */}
+                <Col>
+                  {usersReq.length > 0 && (
+                    <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
+                      Exportar
+                    </Button>
+                  )}
+                </Col>
+                <Col>
+                  <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
+                    <Button type='primary' icon={<UploadOutlined />}>
+                      Importar usuarios
+                    </Button>
+                  </Link>
+                </Col>
+                <Col>
+                  <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
+                    {'Agregar Usuario'}
                   </Button>
-                </Link>
-              </Col>
-              <Col>
-                <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
-                  {'Agregar Usuario'}
-                </Button>
-              </Col>
-            </Row>
-          }
-        />
+                </Col>
+              </Row>
+            }
+          />
+        ) : (
+          <Loading />
+        )}
 
         {!this.props.loading && editUser && (
           <UserModal

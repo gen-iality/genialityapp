@@ -78,13 +78,12 @@ export const columns = (columnsData) => [
     ellipsis: true,
     width: '80px',
     render(val, item) {
-      const [publish, setPublish] = useState(item.published);
       const update = async (checked) => {
         item.published = checked;
         try {
           const res = await SpeakersApi.editOne(item, item._id, item.event_id);
           if (res) {
-            setPublish(res.published);
+            columnsData.refetch();
             DispatchMessageService({
               type: 'success',
               msj: 'Se actualizó la publicación!',
@@ -99,12 +98,13 @@ export const columns = (columnsData) => [
           });
         }
       };
+
       return (
         <Switch
           checkedChildren='Sí'
           unCheckedChildren='No'
           onChange={update}
-          checked={publish}
+          checked={item.published}
           id={`editSwitch${item.index}`}
         />
       );

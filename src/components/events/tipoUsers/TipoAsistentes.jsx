@@ -27,8 +27,8 @@ const TipoAsistentes = (props) => {
       <CMS
         API={RolAttApi}
         eventId={props.event._id}
-        title={'Tipo de asistentes'}
-        titleTooltip={'Agregue o edite los Asistentes que se muestran en la aplicación'}
+        title={'Organizadores'}
+        titleTooltip={'Administre los organizadores que se muestran en la aplicación'}
         addUrl={{
           pathname: `${props.matchUrl}/tipoAsistente`,
           state: { new: true },
