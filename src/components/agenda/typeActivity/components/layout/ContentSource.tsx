@@ -5,7 +5,7 @@ import InputSource from '../InputSource';
 interface propsOptions {
   addonBefore: React.ReactNode;
   placeholder?: string;
-  icon: React.ReactNode;
+  icon: string;
   subtitle?: string;
 }
 
@@ -13,7 +13,7 @@ const ContentSource = ({ addonBefore, icon, subtitle, placeholder }: propsOption
   return (
     <Result
       style={{ margin: '0px 100px 0px 100px' }}
-      icon={icon}
+      icon={<img width={150} src={icon} />}
       subTitle={<Typography.Paragraph>{subtitle}</Typography.Paragraph>}
       title={<InputSource addonBefore={addonBefore} placeholder={placeholder} />}
     />
