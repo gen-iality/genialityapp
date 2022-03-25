@@ -1,9 +1,9 @@
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
 import { UseUserEvent } from '../../../context/eventUserContext';
@@ -42,7 +42,7 @@ const ThisRouteCanBeDisplayed = loadable(() => import('./helpers/thisRouteCanBeD
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
-  let { GetPermissionsEvent } = useContext(HelperContext);
+  let { GetPermissionsEvent } = useHelper();
   let cEventUser = UseUserEvent();
 
   //redirigir a evento Cancilleria

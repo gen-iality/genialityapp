@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { handleRequestError } from '../../helpers/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
-import HelperContext from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
@@ -51,12 +51,12 @@ const CMS = (props) => {
     widthAction,
     deleteCallback,
     extraPathUpdate,
-   extraPathUpdateTitle,
+    extraPathUpdateTitle,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
-  let { reloadTemplatesCms } = useContext(HelperContext);
+  let { reloadTemplatesCms } = useHelper();
 
   useEffect(() => {
     getList();
@@ -126,17 +126,17 @@ const CMS = (props) => {
     });
   };
 
-  const updateMails=async(idMessage)=>{    
-    setLoading(true)
-    const updateMails=await API.updateOne(eventId,idMessage);
+  const updateMails = async (idMessage) => {
+    setLoading(true);
+    const updateMails = await API.updateOne(eventId, idMessage);
     await getList();
     DispatchMessageService({
       type: 'success',
       msj: updateMails?.message,
       action: 'show',
-    })
-    setLoading(false)
-  }
+    });
+    setLoading(false);
+  };
 
   return (
     <div>

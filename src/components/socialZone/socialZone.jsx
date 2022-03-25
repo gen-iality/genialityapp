@@ -1,5 +1,5 @@
 import { withRouter } from 'react-router-dom';
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, Row, Badge, Button, Alert, Space } from 'antd';
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
@@ -15,7 +15,7 @@ import { UseEventContext } from '../../context/eventContext';
 import { UseCurrentUser } from '../../context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { HelperContext } from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import ThisRouteCanBeDisplayed, { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
 const { setMainStage } = StageActions;
@@ -39,7 +39,7 @@ let SocialZone = function(props) {
     totalPrivateMessages,
     currentActivity,
     tabsGenerals,
-  } = useContext(HelperContext);
+  } = useHelper();
   const [currentUser, setCurrentUser] = useState(null);
   let [busqueda, setBusqueda] = useState(null);
   let [strAttende, setstrAttende] = useState();

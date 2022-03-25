@@ -1,8 +1,8 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Button, Result, Typography } from 'antd';
 import { UseUserEvent } from '../../../../context/eventUserContext';
 import { UseEventContext } from '../../../../context/eventContext';
-import HelperContext from '../../../../context/HelperContext';
+import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
 import Loading from '../../../profile/loading';
 import { useIntl } from 'react-intl';
 
@@ -31,7 +31,7 @@ function ThisRouteCanBeDisplayed({ children }) {
   let eventUserId = cEventUser?.value?._id;
   let eventUserStatus = cEventUser.status;
   let cEvent = UseEventContext();
-  let { handleChangeTypeModal } = useContext(HelperContext);
+  let { handleChangeTypeModal } = useHelper();
 
   useEffect(() => {
     /** Abrir modal de registro al evento automaticamente para eventos con registro obligatorio */

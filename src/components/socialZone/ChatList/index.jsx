@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { List, Badge, Tabs } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../context/eventContext';
@@ -6,7 +5,7 @@ import { UseCurrentUser } from '../../../context/userContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import UsersCard from '../../shared/usersCard';
 
 import ThisRouteCanBeDisplayed, {
@@ -28,9 +27,7 @@ const ChatList = (props) => {
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
 
-  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
-    HelperContext
-  );
+  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useHelper();
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();

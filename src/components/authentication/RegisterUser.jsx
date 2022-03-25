@@ -4,13 +4,12 @@ import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { app } from '../../helpers/firebase';
-import { useContext } from 'react';
-import HelperContext from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
-  const { handleChangeTypeModal } = useContext(HelperContext);
+  const { handleChangeTypeModal } = useHelper();
   const [errorEmail, setErrorEmail] = useState(false);
   const ruleEmail = [
     {
@@ -110,15 +109,15 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           .catch((err) => {
             handleChangeTypeModal('loginError');
           });
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          });
-          DispatchMessageService({
-            type: 'success',
-            msj: 'Información guardada correctamente!',
-            action: 'show',
-          });
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Información guardada correctamente!',
+          action: 'show',
+        });
       } else if (resp == 0) {
         handleChangeTypeModal('loginError');
         setErrorEmail(false);

@@ -1,15 +1,15 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import useHasRole from './userhasRole';
 import { Spin } from 'antd';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '../../../context/eventUserContext';
 
 function ValidateAccessRouteCms({ children }) {
   const { eventId } = children.props;
   const [component, setComponent] = useState(null);
   const [thisComponentIsLoading, setThisComponentIsLoading] = useState(true);
-  const { theRoleExists, getOrganizationUser } = useContext(HelperContext);
+  const { theRoleExists, getOrganizationUser } = useHelper();
 
   let cEventUser = UseUserEvent();
 

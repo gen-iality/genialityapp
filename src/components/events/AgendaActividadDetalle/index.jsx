@@ -8,7 +8,7 @@ import WithEviusContext from '../../../context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '../../../helpers/request';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import HelperContext from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseSurveysContext } from '../../../context/surveysContext';
 import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
@@ -21,9 +21,7 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
-  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, handleChangeCurrentActivity } = useContext(
-    HelperContext
-  );
+  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, handleChangeCurrentActivity } = useHelper();
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);

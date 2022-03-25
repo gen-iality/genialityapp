@@ -10,7 +10,7 @@ import { CurrentUserProvider } from '../context/userContext';
 import { SurveysProvider } from '../context/surveysContext';
 import { NewEventProvider } from '../context/newEventContext';
 
-import { HelperContextProvider } from '../context/HelperContext';
+import { HelperContextProvider } from '../context/helperContext/helperProvider';
 import EventOrganization from '../components/eventOrganization';
 import Organization from '../components/organization';
 import MainProfile from '../components/profile/main';
@@ -117,17 +117,15 @@ const RouteContext = ({ component: Component, ...rest }) => (
           <CurrentUserProvider>
             <AgendaContextProvider>
               <HelperContextProvider>
-                <SurveysProvider>
-                  <Layout
-                    style={{
-                      minHeight: '100vh',
-                    }}>
-                    <Header />
-                    <Component {...props} />
-                    <ModalAuth />
-                    <ModalNoRegister />
-                  </Layout>
-                </SurveysProvider>
+                <Layout
+                  style={{
+                    minHeight: '100vh',
+                  }}>
+                  <Header />
+                  <Component {...props} />
+                  <ModalAuth />
+                  <ModalNoRegister />
+                </Layout>
               </HelperContextProvider>
             </AgendaContextProvider>
           </CurrentUserProvider>

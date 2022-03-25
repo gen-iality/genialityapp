@@ -1,7 +1,7 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseCurrentUser } from '../../../context/userContext';
 import UsersCard from '../../shared/usersCard';
 
@@ -19,7 +19,7 @@ const AttendeList = function(props) {
     knowMaleOrFemale,
     maleIcons,
     femaleicons,
-  } = useContext(HelperContext);
+  } = useHelper();
   let cUser = UseCurrentUser();
   const pag = 15;
 

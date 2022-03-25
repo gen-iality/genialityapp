@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import WithEviusContext from '../../../context/withContext';
 import ImageComponentwithContext from './ImageComponent';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
@@ -35,7 +35,7 @@ const RenderComponent = (props) => {
     setcurrenActivity,
     HandleChatOrAttende,
     HandlePublicPrivate,
-  } = useContext(HelperContext);
+  } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     let tempactivty = currentActivity;

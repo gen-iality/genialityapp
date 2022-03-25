@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu, Badge } from 'antd';
 import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
@@ -6,7 +6,7 @@ import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutli
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../../../context/withContext';
-import { HelperContext } from '../../../../context/HelperContext';
+import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
 import { UseEventContext } from '../../../../context/eventContext';
 import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed';
 
@@ -21,7 +21,7 @@ const MenuRigth = (props) => {
     totalPrivateMessages,
     currentActivity,
     tabsGenerals,
-  } = useContext(HelperContext);
+  } = useHelper();
 
   useEffect(() => {
     settypeEvent(recordTypeForThisEvent(cEvent));

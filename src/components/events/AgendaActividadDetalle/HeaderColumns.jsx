@@ -1,7 +1,7 @@
 import { Button, Col, Modal, Row, Spin } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import HelperContext from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import {
   ArrowLeftOutlined,
@@ -23,7 +23,7 @@ import { imageUtils } from '../../../Utilities/ImageUtils';
 import { DispatchMessageService } from '../../../context/MessageService';
 
 const HeaderColumns = (props) => {
-  let { currentActivity } = useContext(HelperContext);
+  let { currentActivity } = useHelper();
   let cEvent = UseEventContext();
   let cEventUSer = useContext(CurrentEventUserContext);
   let [loading, setLoading] = useState(false);

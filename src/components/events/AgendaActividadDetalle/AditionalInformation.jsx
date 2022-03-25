@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react';
-import HelperContext from '../../../context/HelperContext';
+import { useState } from 'react';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row } from 'antd';
 import WithEviusContext from '../../../context/withContext';
@@ -12,7 +12,7 @@ const { TabPane } = Tabs;
 const { Title } = Typography;
 
 const AditionalInformation = (props) => {
-  let { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useContext(HelperContext);
+  let { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
   let [idSpeaker, setIdSpeaker] = useState(false);

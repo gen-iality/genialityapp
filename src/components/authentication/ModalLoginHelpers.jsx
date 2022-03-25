@@ -1,9 +1,9 @@
 import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row } from 'antd';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { EventsApi } from '../../helpers/request';
 import withContext from '../../context/withContext';
-import { HelperContext } from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { UseEventContext } from '../../context/eventContext';
 
@@ -19,7 +19,7 @@ const stylePaddingMobile = {
 };
 
 const ModalLoginHelpers = (props) => {
-  let { handleChangeTypeModal, typeModal, authModalDispatch } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, authModalDispatch } = useHelper();
   let cEvent = UseEventContext();
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);

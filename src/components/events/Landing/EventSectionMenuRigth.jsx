@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Layout, Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import SocialZone from '../../socialZone/socialZone';
@@ -8,13 +8,13 @@ import { connect } from 'react-redux';
 const { Sider } = Layout;
 import { UseEventContext } from '../../../context/eventContext';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import DrawerProfile from './DrawerProfile';
 
 const EventSectionMenuRigth = (props) => {
   let [optionselected, setOptionselected] = useState(1);
   let cEvent = UseEventContext();
-  let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useContext(HelperContext);
+  let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useHelper();
 
   return (
     <Sider

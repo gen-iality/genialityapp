@@ -1,9 +1,9 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
 import { MessageTwoTone, EyeOutlined, CrownFilled, FileImageOutlined } from '@ant-design/icons';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
-import { HelperContext } from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { UseCurrentUser } from '../../context/userContext';
 import { UseEventContext } from '../../context/eventContext';
 import moment from 'moment';
@@ -51,7 +51,7 @@ function UsersCard(props) {
     imageforDefaultProfile,
     HandleGoToChat,
     setGameData,
-  } = useContext(HelperContext);
+  } = useHelper();
   const [actionCapture, setActionCapture] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');

@@ -1,12 +1,12 @@
 import { Card, Space, Col, Row } from 'antd';
-import { Fragment, useContext } from 'react';
 import VideoCard from './videoCard';
 import { UseEventContext } from '../../context/eventContext';
-import { HelperContext } from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useState } from 'react';
+
 const ListVideoCard = () => {
   let cEvent = UseEventContext();
-  let { activitiesEvent } = useContext(HelperContext);
+  let { activitiesEvent } = useHelper();
   const [existActivity, setexistActivity] = useState(0);
   function ExistvideoInActivity() {
     activitiesEvent &&

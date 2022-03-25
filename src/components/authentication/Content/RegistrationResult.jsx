@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Result, Row, Space, Typography, Alert, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
 import { app } from '../../../helpers/firebase';
 import { UseUserEvent } from '../../../context/eventUserContext';
-import HelperContext from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '../../../context/MessageService';
 
@@ -66,7 +66,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
 
 const RedirectUser = ({ basicDataUser }) => {
   const cEventUser = UseUserEvent();
-  let { HandleControllerLoginVisible, authModalDispatch } = useContext(HelperContext);
+  let { HandleControllerLoginVisible, authModalDispatch } = useHelper();
   const intl = useIntl();
   const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
 

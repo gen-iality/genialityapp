@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Col, Row, Spin, Result, Button } from 'antd';
 import TicketsForm from '../../tickets/formTicket';
 import { connect } from 'react-redux';
@@ -10,7 +10,7 @@ import { EventsApi } from '../../../helpers/request';
 import ProductCard from '../producto/productCard';
 import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import UserLoginContainer from '../UserLoginContainer';
 
 const PageNotPermissions = (props) => {
@@ -21,7 +21,7 @@ const PageNotPermissions = (props) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   let history = useHistory();
-  let { eventPrivate } = useContext(HelperContext);
+  let { eventPrivate } = useHelper();
 
   const center = {
     margin: '30px auto',

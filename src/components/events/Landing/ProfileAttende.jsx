@@ -1,9 +1,9 @@
-import { useContext } from 'react';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { List } from 'antd';
+
 import { formatDataToString } from '../../../helpers/utils';
 const ProfileAttende = () => {
-  let { propertiesOtherprofile } = useContext(HelperContext);
+  let { propertiesOtherprofile } = useHelper();
   return (
     <div className='ant-list ant-list-split ant-list-bordered'>
       <List.Item>

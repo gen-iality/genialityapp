@@ -1,9 +1,8 @@
 import { CloseCircleFilled } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Grid, Typography, Button } from 'antd';
-import { useContext } from 'react';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../context/withContext';
-import { HelperContext } from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 
 import { useIntl } from 'react-intl';
 const { useBreakpoint } = Grid;
@@ -18,7 +17,7 @@ const stylePaddingMobile = {
 };
 
 const ModalPermission = (props) => {
-  let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal } = useHelper();
   const screens = useBreakpoint();
   const intl = useIntl();
 

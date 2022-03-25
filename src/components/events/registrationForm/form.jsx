@@ -29,8 +29,7 @@ import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
-import { useContext } from 'react';
-import HelperContext from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { UseEventContext } from '../../../context/eventContext';
 import { UseCurrentUser } from '../../../context/userContext';
@@ -156,9 +155,14 @@ const FormRegister = ({
   const cEvent = UseEventContext();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
-  const { authModalState, typeModal, eventPrivate, handleChangeTypeModal, setRegister, authModalDispatch } = useContext(
-    HelperContext
-  );
+  const {
+    authModalState,
+    typeModal,
+    eventPrivate,
+    handleChangeTypeModal,
+    setRegister,
+    authModalDispatch,
+  } = useHelper();
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);

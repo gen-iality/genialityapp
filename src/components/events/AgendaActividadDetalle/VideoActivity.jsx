@@ -1,13 +1,12 @@
 import { SmileOutlined } from '@ant-design/icons';
 import { Result, Grid } from 'antd';
-import { useContext } from 'react';
 import ReactPlayer from 'react-player';
-import HelperContext from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 
 const { useBreakpoint } = Grid;
 
 export const VideoActivity = () => {
-  let { currentActivity } = useContext(HelperContext);
+  let { currentActivity } = useHelper();
   const screens = useBreakpoint();
   return (
     <>

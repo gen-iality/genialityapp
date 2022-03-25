@@ -1,15 +1,15 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
 import { Divider } from 'antd';
 import { UseSurveysContext } from '../../../context/surveysContext';
 import { UseCurrentUser } from '../../../context/userContext';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseEventContext } from '../../../context/eventContext';
 
 function RankingTrivia(props) {
-  const { setGameRanking, setMyScore } = useContext(HelperContext);
+  const { setGameRanking, setMyScore } = useHelper();
   let cSurveys = UseSurveysContext();
   let cUser = UseCurrentUser();
   let eventContext = UseEventContext();

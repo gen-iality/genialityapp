@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Modal, Form, Input, Button, Typography, Spin } from 'antd';
 import { DefaultProperties } from './propertiesdefault';
 import { OrganizationPlantillaApi } from '../../helpers/request';
-import HelperContext from '../../context/HelperContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const ModalCreateTemplate = (props) => {
   const [loading, setloading] = useState(false);
-  let { handleReloadTemplatesCms } = useContext(HelperContext);
+  let { handleReloadTemplatesCms } = useHelper();
 
   const onFinish = async (values) => {
     //por defecto

@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Tooltip, Skeleton, Card, Avatar, notification, Spin } from 'antd';
 import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
-import { HelperContext } from '../../../context/HelperContext';
-import { useContext } from 'react';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
@@ -11,7 +10,6 @@ import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../.
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { UseEventContext } from '../../../context/eventContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
-import { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
 
 const { Meta } = Card;
@@ -28,18 +26,18 @@ const PopoverInfoUser = (props) => {
     requestSend,
     obtenerContactos,
     contacts,
-  } = useContext(HelperContext);
+  } = useHelper();
 
   useEffect(() => {
-    let user = { _id: props.item.iduser, properties: props.item.properties, eventUserId: props.item._id, send: 0 };   
+    let user = { _id: props.item.iduser, properties: props.item.properties, eventUserId: props.item._id, send: 0 };
     setUserSelected(user);
     obtainContacts();
     async function obtainContacts() {
       await obtenerContactos();
     }
-    return ()=>{
+    return () => {
       setUserSelected(null);
-    }
+    };
   }, [props.item.iduser]);
 
   return (

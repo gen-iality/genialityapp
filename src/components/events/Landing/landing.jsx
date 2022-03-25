@@ -1,9 +1,9 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { UseEventContext } from '../../../context/eventContext';
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
-import { HelperContext } from '../../../context/HelperContext';
+
 /** ant design */
 import { Layout, Spin, notification, Button } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
@@ -23,6 +23,7 @@ import loadable from '@loadable/component';
 import { DispatchMessageService } from '../../../context/MessageService.tsx';
 import WithEviusContext from '../../../context/withContext';
 import { useCheckinUser } from '../../../helpers/HelperAuth';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
@@ -83,7 +84,7 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useContext(HelperContext);
+  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (

@@ -1,7 +1,7 @@
 import { CurrentUserContext } from './userContext';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';
-import HelperContext from './HelperContext';
+import { HelperContext } from './helperContext/helperContext';
 
 export default function WithEviusContext(Component) {
   return function WithEviusContextComponent(props) {

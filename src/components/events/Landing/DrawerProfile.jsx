@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
 
 import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
@@ -6,7 +5,7 @@ import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@
 import { UseCurrentUser } from '../../../context/userContext';
 import { formatDataToString } from '../../../helpers/utils';
 
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
@@ -23,7 +22,7 @@ const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
-  let { propertiesProfile, requestSend, handleChangeTypeModal } = useContext(HelperContext);
+  let { propertiesProfile, requestSend, handleChangeTypeModal } = useHelper();
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);

@@ -1,11 +1,11 @@
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import WithEviusContext from '../../../context/withContext';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { Result } from 'antd';
 
 const ImageComponent = (props) => {
   let { willStartSoon } = props;
-  let { currentActivity } = useContext(HelperContext);
+  let { currentActivity } = useHelper();
   const [activityState, setactivityState] = useState('');
 
   useEffect(() => {

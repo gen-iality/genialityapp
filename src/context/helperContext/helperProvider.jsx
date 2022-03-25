@@ -1,21 +1,21 @@
-import { createContext, useEffect, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
+import { HelperContext } from './helperContext';
 import { useState } from 'react';
-import { firestore, fireRealtime, app } from '../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../helpers/request';
-import { UseEventContext } from './eventContext';
-import { UseCurrentUser } from './userContext';
-import { UseUserEvent } from './eventUserContext';
+import { firestore, fireRealtime, app } from '../../helpers/firebase';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../../helpers/request';
+import { UseEventContext } from '../eventContext';
+import { UseCurrentUser } from '../userContext';
+import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { createChatInitalPrivate, createChatRoom } from '../components/networking/agendaHook';
+import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
-import { maleIcons, femaleicons } from '../helpers/constants';
+import { maleIcons, femaleicons } from '../../helpers/constants';
 import Logout from '@2fd/ant-design-icons/lib/Logout';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-
-export const HelperContext = createContext();
+import { helperReducer, helperInitialState } from './helperReducer';
 
 export function knowMaleOrFemale(nombre) {
   return getGender(nombre, 'es');
@@ -82,6 +82,8 @@ export const HelperContextProvider = ({ children }) => {
     organization: '',
     logo: '',
   });
+
+  const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
 
   const initialState = {
     currentAuthScreen: 'login',
@@ -758,6 +760,8 @@ export const HelperContextProvider = ({ children }) => {
   return (
     <HelperContext.Provider
       value={{
+        ...helperState,
+        helperDispatch,
         containtNetworking,
         infoAgenda,
         isNotification,
@@ -829,5 +833,3 @@ export const HelperContextProvider = ({ children }) => {
     </HelperContext.Provider>
   );
 };
-
-export default HelperContext;

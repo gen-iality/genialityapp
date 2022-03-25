@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import { HelperContext } from '../../../context/HelperContext';
+import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import ImageComponentwithContext from './ImageComponent';
 import RenderComponent from './RenderComponent';
 
 const HCOActividad = () => {
-  let { currentActivity } = useContext(HelperContext);
+  let { currentActivity } = useHelper();
   const imageVisible = () => {
     if (
       ((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null) &&
