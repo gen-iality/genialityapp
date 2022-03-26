@@ -6,6 +6,8 @@ import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../context/AgendaContext';
 
 import InitialSVG from './components/svg/InitialSVG';
+import { AgendaApi } from '../../../helpers/request';
+import { CurrentEventContext } from '../../../context/eventContext';
 
 const objecKeys = {
   url: 'Video',
@@ -19,28 +21,48 @@ const objecKeys = {
 const InitialView = (props: any) => {
   const { toggleActivitySteps, selectedKey, previewKey, data } = useTypeActivity();
   const [loading, setLoading] = useState(true);
-  const { typeActivity, meeting_id } = useContext(AgendaContext);
+  const { typeActivity, meeting_id, setActivityName, activityEdit, roomStatus, saveConfig } = useContext(AgendaContext);
+  const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
     if (props.tab !== '2') return;
     //OBTENER DETALLE DE ACTIVIDAD
+    setActivityName(props.activityName);
     if (typeActivity === null) {
       setLoading(false);
     } else {
-      toggleActivitySteps('initial', {
-        openModal: false,
-        disableNextButton: false,
-        typeOptions: undefined,
-        selectedKey: 'finish',
-        previewKey: typeActivity,
-        data: typeActivity !== 'url' ? meeting_id : 'urldevideo',
-        buttonsTextNextOrCreate: '',
-        buttonTextPreviousOrCancel: '',
-      });
+      obtainDataInitial();
       //MIENTRAS CARGA LOS COMPONENTES
       setTimeout(() => setLoading(false), 500);
     }
   }, [props.tab]);
+  //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA ACTIVIDAD
+  useEffect(() => {
+    saveConfig(null, 1);
+  }, [roomStatus]);
+  //OBTENER DATOS INICIALES Y SETEARLOS EN EL REDUCER
+  const obtainDataInitial = async () => {
+    let urlVideo;
+    if (typeActivity === 'url') {
+      const dataActivity = await obtainUrlVideo();
+      urlVideo = dataActivity.video;
+    }
+    toggleActivitySteps('initial', {
+      openModal: false,
+      disableNextButton: false,
+      typeOptions: undefined,
+      selectedKey: 'finish',
+      previewKey: typeActivity,
+      data: typeActivity !== 'url' ? meeting_id : urlVideo,
+      buttonsTextNextOrCreate: '',
+      buttonTextPreviousOrCancel: '',
+    });
+  };
+  // (SE PUEDE OPTIMIZAR) X AHORA EL VIDEO SE ESTA GUARDANDO EN MONGO
+  const obtainUrlVideo = async () => {
+    const resp = await AgendaApi.getOne(activityEdit, cEvent?.value._id);
+    return resp;
+  };
 
   const renderComponet = () => {
     switch (selectedKey) {
@@ -68,7 +90,6 @@ const InitialView = (props: any) => {
 
   return (
     <>
-      {console.log('FINAL DATA==>', selectedKey, previewKey, data)}
       <ModalStepByStep />
       {!loading ? renderComponet() : <Spin />}
     </>

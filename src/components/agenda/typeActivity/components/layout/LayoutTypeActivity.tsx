@@ -1,4 +1,5 @@
-import { Typography, Layout, Row, Col, Button } from 'antd';
+import { Typography, Layout, Row, Col, Button, Spin } from 'antd';
+import { useState } from 'react';
 import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
 
 const { Header, Content, Footer } = Layout;
@@ -9,6 +10,7 @@ interface propsOptions {
 }
 
 const LayoutTypeActivity = ({ title, children }: propsOptions) => {
+  const [loading, setLoading] = useState(false);
   const {
     closeModal,
     selectedKey,
@@ -28,14 +30,16 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
     if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
   };
 
-  const nextOrCreate = () => {
+  const nextOrCreate = async () => {
     if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== 'Crear') {
       toggleActivitySteps(selectedKey);
       return;
     } else if (selectedKey === 'initial') {
       closeModal();
     } else {
+      setLoading(true);
       createTypeActivity();
+      setLoading(false);
     }
   };
 
@@ -51,9 +55,13 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
             <Button onClick={previousOrCancel}>{buttonTextPreviousOrCancel}</Button>
           </Col>
           <Col>
-            <Button disabled={disableNextButton} onClick={nextOrCreate} type='primary'>
-              {buttonsTextNextOrCreate}
-            </Button>
+            {!loading ? (
+              <Button disabled={disableNextButton} onClick={nextOrCreate} type='primary'>
+                {buttonsTextNextOrCreate}
+              </Button>
+            ) : (
+              <Spin />
+            )}
           </Col>
         </Row>
       </Footer>
