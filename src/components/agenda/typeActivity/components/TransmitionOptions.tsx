@@ -1,14 +1,15 @@
-import { Card, Button, Space, Typography } from 'antd';
+import { Card, Button, Space, Typography, Spin } from 'antd';
 import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { deleteLiveStream, stopLiveStream } from '../../../../adaptors/gcoreStreamingApi';
 import { AgendaApi } from '../../../../helpers/request';
 import { CurrentEventContext } from '../../../../context/eventContext';
 
 const TransmitionOptions = (props: any) => {
-  const { toggleActivitySteps, executer_stopStream } = useTypeActivity();
+  const { toggleActivitySteps, executer_stopStream, loadingStop } = useTypeActivity();
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const { dataLive, meeting_id, deleteTypeActivity, activityEdit } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
 
@@ -30,24 +31,32 @@ const TransmitionOptions = (props: any) => {
         avatar={<WarningOutlined style={{ color: '#FE5455', fontSize: '25px' }} />}
         description={
           <Space>
-            {isVisible && dataLive?.active && (
+            {isVisible && dataLive?.active && !loadingStop ? (
               <Button onClick={() => executer_stopStream()} type='primary' danger>
                 Detener
               </Button>
+            ) : (
+              loadingStop && <Spin />
             )}
-            <Button
-              onClick={async () => {
-                if (isVisible && meeting_id) {
-                  await deleteTransmition();
-                }
-                await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
-                await deleteTypeActivity();
-                toggleActivitySteps('initial');
-              }}
-              type='text'
-              danger>
-              <DeleteOutlined /> Eliminar {props.type}
-            </Button>
+            {!loadingDelete ? (
+              <Button
+                onClick={async () => {
+                  setLoadingDelete(true);
+                  if (isVisible && meeting_id) {
+                    await deleteTransmition();
+                  }
+                  await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
+                  await deleteTypeActivity();
+                  toggleActivitySteps('initial');
+                  setLoadingDelete(false);
+                }}
+                type='text'
+                danger>
+                <DeleteOutlined /> Eliminar {props.type}
+              </Button>
+            ) : (
+              <Spin />
+            )}
           </Space>
         }
       />

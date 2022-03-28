@@ -9,6 +9,7 @@ export const useTypeActivity = () => {
     closeModal,
     createTypeActivity,
     executer_stopStream,
+    loadingStop,
   } = useContext(TypeActivityContext);
 
   const {
@@ -36,5 +37,6 @@ export const useTypeActivity = () => {
     buttonTextPreviousOrCancel,
     createTypeActivity,
     executer_stopStream,
+    loadingStop,
   };
 };
