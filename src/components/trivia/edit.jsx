@@ -776,7 +776,7 @@ class triviaEdit extends Component {
             ) : (
               <Form.Item
                 label={
-                  <label style={{ marginTop: '2%' }} className='label'>
+                  <label style={{ marginTop: '2%' }}>
                     Nombre <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
@@ -925,7 +925,7 @@ class triviaEdit extends Component {
                     <Form.Item
                       /* label={'Texto de muestra para la pantalla inicial de la encuesta'} */
                       label={
-                        <label style={{ marginTop: '2%' }} className='label'>
+                        <label style={{ marginTop: '2%' }}>
                           {'Texto de muestra para la pantalla inicial de la encuesta'}{' '}
                           <label style={{ color: 'red' }}>*</label>
                         </label>
@@ -939,12 +939,13 @@ class triviaEdit extends Component {
                       />
                     </Form.Item>
                     <Form.Item
-                      /* label={'Mensaje al ganar'} */
-                      label={
-                        <label style={{ marginTop: '2%' }} className='label'>
+                      label={'Mensaje al ganar'}
+                      /* label={
+                        <label style={{ marginTop: '2%' }}>
                           {'Mensaje al ganar'} <label style={{ color: 'red' }}>*</label>
                         </label>
-                      }>
+                      } */
+                    >
                       <ReactQuill
                         name={'win_Message'}
                         id={'win_Message'}
@@ -954,12 +955,13 @@ class triviaEdit extends Component {
                       />
                     </Form.Item>
                     <Form.Item
-                      /* label={'Mensaje neutral'} */
-                      label={
-                        <label style={{ marginTop: '2%' }} className='label'>
+                      label={'Mensaje neutral'}
+                      /* label={
+                        <label style={{ marginTop: '2%' }}>
                           {'Mensaje neutral'} <label style={{ color: 'red' }}>*</label>
                         </label>
-                      }>
+                      } */
+                    >
                       <ReactQuill
                         name={'neutral_Message'}
                         id={'neutral_Message'}
@@ -969,12 +971,13 @@ class triviaEdit extends Component {
                       />
                     </Form.Item>
                     <Form.Item
-                      /* label={'Mensaje al perder'} */
-                      label={
-                        <label style={{ marginTop: '2%' }} className='label'>
+                      label={'Mensaje al perder'}
+                      /* label={
+                        <label style={{ marginTop: '2%' }}>
                           {'Mensaje al perder'} <label style={{ color: 'red' }}>*</label>
                         </label>
-                      }>
+                      } */
+                    >
                       <ReactQuill
                         name={'lose_Message'}
                         id={'lose_Message'}
