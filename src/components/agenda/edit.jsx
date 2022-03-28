@@ -1610,19 +1610,19 @@ class AgendaEdit extends Component {
                           activityName={this.state.name}
                           tab={this.state.tabs}
                         />
-                        {/*
-                          <RoomManager
-                            event_id={this.props.event._id}
-                            activity_id={this.state.activity_id}
-                            activity_name={this.state.name}
-                            firestore={firestore}
-                            date_start_zoom={date_start_zoom}
-                            date_end_zoom={date_end_zoom}
-                            date_activity={this.state.date}
-                            pendingChangesSave={this.state.pendingChangesSave}
-                            updateRoomManager={this.updateRoomManager}
-                          />
-                       */}
+
+                        {/* <RoomManager
+                          event_id={this.props.event._id}
+                          activity_id={this.state.activity_id}
+                          activity_name={this.state.name}
+                          firestore={firestore}
+                          date_start_zoom={date_start_zoom}
+                          date_end_zoom={date_end_zoom}
+                          date_activity={this.state.date}
+                          pendingChangesSave={this.state.pendingChangesSave}
+                          updateRoomManager={this.updateRoomManager}
+                        /> */}
+
                         <BackTop />
                       </Col>
                     </Row>
