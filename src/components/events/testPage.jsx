@@ -6,7 +6,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 
-const intl = useIntl();
 class Test extends Component {
   constructor(props) {
     super(props);
@@ -66,7 +65,7 @@ class Test extends Component {
               console.error('Error updating document: ', error);
               DispatchMessageService({
                 type: 'error',
-                msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Error :('}),
+                msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Error :('}),
                 action: 'show',
               });
             });

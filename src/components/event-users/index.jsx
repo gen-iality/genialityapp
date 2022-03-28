@@ -44,7 +44,6 @@ import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 
 const { Title } = Typography;
-const intl = useIntl();
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -518,7 +517,7 @@ class ListEventUser extends Component {
         console.error('Error updating document: ', error);
         DispatchMessageService({
           type: 'error',
-          msj: intl.formatMessage({id: 'toast.error', defaultMessage: 'Sry :('}),
+          msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
           action: 'show',
         });
       });

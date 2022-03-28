@@ -24,7 +24,6 @@ import Table from '../../antdComponents/Table';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const html = document.querySelector('html');
-const intl = useIntl();
 
 class CheckAgenda extends Component {
   constructor(props) {
@@ -364,7 +363,7 @@ class CheckAgenda extends Component {
         console.error('Error updating document: ', error);
         DispatchMessageService({
           type: 'error',
-          msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+          msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
           action: 'show',
         });
       });

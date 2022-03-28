@@ -18,7 +18,6 @@ import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
-const intl = useIntl();
 class UserModal extends Component {
   constructor(props) {
     super(props);
@@ -142,7 +141,7 @@ class UserModal extends Component {
 
             DispatchMessageService({
               type: 'info',
-              msj: intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
+              msj: this.props.intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
               action: 'show',
             });
 
@@ -167,7 +166,7 @@ class UserModal extends Component {
                 messages.content = 'USER DELETED';
                 DispatchMessageService({
                   type: 'info',
-                  msj: intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
+                  msj: this.props.intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
                   action: 'show',
                 });
 

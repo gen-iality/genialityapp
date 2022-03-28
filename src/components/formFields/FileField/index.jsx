@@ -11,7 +11,6 @@ import { DispatchMessageService } from '../../../context/MessageService';
 const FORMIK_PROPS_KEYS = ['form', 'field', 'meta'];
 const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
 const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS);
-const intl = useIntl();
 
 function FileField(rawProps) {
   let ancho = '200';
@@ -55,7 +54,7 @@ function FileField(rawProps) {
       axios.all(uploaders).then(async () => {
         DispatchMessageService({
           type: 'success',
-          msj: intl.formatMessage({id: 'toast.img', defaultMessage: 'Ok!'}),
+          msj: this.props.intl.formatMessage({id: 'toast.img', defaultMessage: 'Ok!'}),
           action: 'show',
         });
       });

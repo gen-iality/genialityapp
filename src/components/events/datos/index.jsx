@@ -28,7 +28,6 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { confirm } = Modal;
-const intl = useIntl();
 class Datos extends Component {
   constructor(props) {
     super(props);
@@ -195,7 +194,7 @@ class Datos extends Component {
       action: 'show',
     });
     const organizationId = this?.organization?._id;
-    try{
+    try {
       if (organizationId && !this.eventId) {
         await this.props.orderFields(this.state.properties);
       } else if (this.eventId && !organizationId) {
@@ -313,7 +312,7 @@ class Datos extends Component {
               action: 'show',
             });
           }
-        }
+        };
         //self.onHandlerRemove(loading, item);
         onHandlerRemove();
       },
@@ -347,7 +346,7 @@ class Datos extends Component {
   showError = (error) => {
     DispatchMessageService({
       type: 'success',
-      msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :('}),
+      msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
       action: 'show',
     });
     if (error.response) {
