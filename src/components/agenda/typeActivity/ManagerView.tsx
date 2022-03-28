@@ -28,7 +28,7 @@ const ManagerView = (props: any) => {
           <CardPreview type={props.type} activityName={props.activityName} />
         </Col>
         <Col span={14}>
-          {(props.type == 'Transmisión' || props.type == 'EviusMeet') && <CardStartTransmition />}
+          {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && <CardStartTransmition />}
           <Row gutter={[16, 16]}>
             {(props.type == 'reunión' || props.type == 'EviusMeet') && dataLive?.active && (
               <Col span={12}>
