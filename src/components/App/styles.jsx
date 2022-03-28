@@ -236,7 +236,6 @@ class Styles extends Component {
     }
 
     if (dataStyles) {
-      console.log('🚀 TITLE..... ==========================>', dataStyles.show_title);
       this.setState({
         styles: {
           brandPrimary: dataStyles.brandPrimary || '#FFFFFF',
@@ -590,30 +589,24 @@ class Styles extends Component {
                 </div>
               ))}
 
-              {this.selectsDrawer.map(
-                (item, key) => (
-                  console.log('🚀 LABEL ====> ', item.label),
-                  console.log('🚀 NAME ====> ', item.name),
-                  console.log('🚀 VALUE ====> ', this.state.styles[item.name]),
-                  console.log('🚀 VALUE ====> ', this.state.styles),
-                  (
-                    <div key={key}>
-                      <Form.Item label={item.label}>
-                        <Select
-                          defaultValue={this.state.styles[item.name] /* item.defaultValue */}
-                          value={this.state.styles[item.name]}
-                          name={item.name}
-                          onChange={(e) => this.handleChange(e, item.name)}
-                          style={{ width: 120 }}>
-                          {item.options.map((item2, key2) => (
-                            <Option key={key2} value={item2.value}>
-                              {item2.label}
-                            </Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
+              {this.selectsDrawer.map((item, key) => (
+                <div key={key}>
+                  <Form.Item label={item.label}>
+                    <Select
+                      defaultValue={this.state.styles[item.name] /* item.defaultValue */}
+                      value={this.state.styles[item.name]}
+                      name={item.name}
+                      onChange={(e) => this.handleChange(e, item.name)}
+                      style={{ width: 120 }}>
+                      {item.options.map((item2, key2) => (
+                        <Option key={key2} value={item2.value}>
+                          {item2.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
 
-                      {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
+                  {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
                     <Form.Item label={'Link de video'}>
                       <Input
                         defaultValue={this.state.styles['data_loader_page']}
@@ -634,10 +627,8 @@ class Styles extends Component {
                       />
                     </Form.Item>
                   )} */}
-                    </div>
-                  )
-                )
-              )}
+                </div>
+              ))}
 
               <Space direction='vertical' wrap>
                 {this.imageDrawer.map((item, key) => (
