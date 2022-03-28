@@ -45,8 +45,10 @@ const liveBroadcastTransmissionOriginType: OriginOptions[] = [
   {
     key: 'RTMP',
     title: 'RTMP',
-    description: 'Vivamus magna justo.',
-    image: 'https://streamyard.com/blog/wp-content/uploads/2021/01/custom-rtmp-live-streaming-facebook.png',
+    description:
+      'El Protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet.',
+    image:
+      'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2FRTMP.jpg?alt=media&token=d0c74ddc-5ad6-49bf-ad57-c1d0c02a1ee6',
   },
 ];
 
@@ -56,8 +58,7 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
     key: 'eviusStreaming',
     title: 'Evius streaming',
     MainTitle: 'Escoge el origen de transmisión',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+    description: 'Configura de forma fácil y rápida una transmisión con la tecnología de Evius.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fevius_streaming.jpg?alt=media&token=3bdcd392-143f-4958-a1c2-f5663ff0f650',
     typeOptions: liveBroadcastTransmissionOriginType,
@@ -67,7 +68,7 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
     title: 'Vimeo',
     MainTitle: 'Ingrese el identificador de la conferencia/streaming',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+      'Si posees una transmisión ya configurada en Vimeo, puedes enlazarlo a Evius proporcionando el ID de transmisión.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
     typeOptions: vimeoAndYotubeType,
@@ -77,7 +78,7 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
     title: 'YouTube',
     MainTitle: 'Ingrese el identificador de la conferencia/streaming',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+      'Si posees una transmisión ya configurada en Youtube, puedes enlazarlo a Evius proporcionando el ID de transmisión.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
     typeOptions: vimeoAndYotubeType,
@@ -111,8 +112,7 @@ export const typeActivityData: TypeActivity = {
       key: 'liveBroadcast',
       MainTitle: 'Escoge el tipo de transmision',
       title: 'Transmision en vivo',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+      description: 'Actividad en la que quieras presentar un en vivo para tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Ftransmision.jpg?alt=media&token=92443401-db41-485f-a411-ae113186fd9c',
       typeOptions: liveBroadcastTransmissionType,
@@ -121,8 +121,7 @@ export const typeActivityData: TypeActivity = {
       key: 'meeting',
       MainTitle: 'Crear reuniones interactivas y personalizadas con todo el poder de evius',
       title: 'Reunion',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+      description: 'Actividad en la que quieras tener una reunión virtual con tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
     },
@@ -130,8 +129,7 @@ export const typeActivityData: TypeActivity = {
       key: 'video',
       MainTitle: 'Asignar video para la actividad',
       title: 'Video',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.',
+      description: 'Actividad en la que solo quieras mostrar un video para tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
       typeOptions: videoActivity,

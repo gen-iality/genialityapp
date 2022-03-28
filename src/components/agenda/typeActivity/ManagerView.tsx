@@ -31,11 +31,11 @@ const ManagerView = (props: any) => {
           {(props.type == 'Transmisión' || props.type == 'EviusMeet') && <CardStartTransmition />}
           <Row gutter={[16, 16]}>
             {props.type == 'reunión' && (
-              <Col span={24}>
+              <Col span={12}>
                 <GoToEviusMeet activityId={props.activityId} />
               </Col>
             )}
-            <Col span={24}>
+            <Col span={props.type == 'Video' ? 24 : 12}>
               <TransmitionOptions type={props.type} />
             </Col>
             {props.type == 'Video' && (
@@ -48,7 +48,7 @@ const ManagerView = (props: any) => {
                       </Typography.Text>
                     }
                     description={'Esta es la url cargada'}
-                  />{' '}
+                  />
                   <br />
                   <strong>Url:</strong> {data}
                 </Card>
