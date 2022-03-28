@@ -159,7 +159,7 @@ class Speakers extends Component {
     let eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
 
     return (
-      <>
+      <div style={{ padding: '20px' }}>
         {renderSpeakerCategories && speakerCategories.length && (
           <>
             {speakerCategories.map((category) => (
@@ -170,21 +170,21 @@ class Speakers extends Component {
                       <>
                         {speakersWithCategory[category.order].length && (
                           <Row wrap gutter={[16, 16]} justify='center'>
+                            <div
+                              style={{
+                                width: '98%',
+                                margin: '50px auto 0px auto',
+                                padding: '5px',
+                                borderRadius: '5px',
+                                backgroundColor: '#FFFFFF',
+                                boxSizing: 'border-box',
+                              }}>
+                              <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
+                            </div>
                             {speakersWithCategory[category.order].map((speaker, key) => (
                               <>
                                 {speaker.published && (
                                   <Col key={key} xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                                    <div
-                                      style={{
-                                        width: '98%',
-                                        margin: '30px auto',
-                                        padding: '5px',
-                                        borderRadius: '5px',
-                                        backgroundColor: '#FFFFFF',
-                                        boxSizing: 'border-box',
-                                      }}>
-                                      <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
-                                    </div>
                                     <Card
                                       onClick={() => {
                                         if (
@@ -439,7 +439,7 @@ class Speakers extends Component {
             </div>
           )}
         </Modal>
-      </>
+      </div>
     );
   }
 }

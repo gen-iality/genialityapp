@@ -52,7 +52,6 @@ function Organization(props) {
             collapsible
             collapsed={collapseMenu}
             theme='dark'
-            className={` menu event-aside `}
             /* style={{ backgroundColor: '#fff' }} */
             width={220}>
             <Button

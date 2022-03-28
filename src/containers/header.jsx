@@ -191,7 +191,7 @@ const Headers = (props) => {
     <React.Fragment>
       <Header
         style={{
-          position: fixed ? 'fixed' : 'relative',
+          position: 'sticky',
           zIndex: 1,
           width: '100%',
           left: 0,
