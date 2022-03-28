@@ -144,7 +144,7 @@ export const AgendaContextProvider = ({ children }) => {
                 active: data[requestData].active || false,
               });
             });
-            console.log('1. LISTADO ACA==>', listRequestArray);
+            // console.log('100. LISTADO ACA==>', listRequestArray);
             setRequest(listRequest);
             setRequestList(listRequestArray);
           }

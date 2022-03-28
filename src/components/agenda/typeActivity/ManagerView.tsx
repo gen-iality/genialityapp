@@ -7,7 +7,7 @@ import CardParticipantRequests from './components/CardParticipantRequests';
 import CardRTMP from './components/CardRTMP';
 import CardStartTransmition from './components/CardStartTransmition';
 import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventContext } from '../../../context/eventContext';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
@@ -17,6 +17,10 @@ const ManagerView = (props: any) => {
   const { activityEdit, getRequestByActivity, request, transmition } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+  useEffect(() => {
+    if (props.type !== 'EviusMeet') return;
+    getRequestByActivity(refActivity);
+  }, [props.type]);
   return (
     <>
       <Row gutter={[16, 16]}>
