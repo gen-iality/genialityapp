@@ -28,6 +28,7 @@ class Service {
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
     //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
+    console.log('***SE EJECUTA LA ACTUALIZACION***');
     if (activity_id) {
       console.log(event_id, activity_id, roomInfo, tabs, 'service');
       const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
@@ -47,6 +48,7 @@ class Service {
         this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
           if (existActivity) {
             // console.log('avalibleGames', avalibleGames);
+
             this.firestore
               .collection('events')
               .doc(event_id)
@@ -60,11 +62,12 @@ class Service {
                 isPublished: isPublished,
                 host_id,
                 host_name,
-                typeActivity,
+                typeActivity: typeActivity || null,
                 transmition: roomInfo.transmition || null,
                 avalibleGames: roomInfo?.avalibleGames || [],
               })
-              .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
+              .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }))
+              .catch((err) => console.log('11. ERROR==>', err));
           } else {
             this.firestore
               .collection('events')
@@ -79,11 +82,12 @@ class Service {
                 host_id,
                 host_name,
                 tabs: tabsSchema,
-                typeActivity,
+                typeActivity: typeActivity || null,
                 avalibleGames: roomInfo?.avalibleGames || [],
                 roomState: roomState || null,
               })
-              .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
+              .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }))
+              .catch((err) => console.log('11. ERROR==>', err));
           }
         });
       });

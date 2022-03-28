@@ -7,20 +7,20 @@ import AgendaContext from '../../../../context/AgendaContext';
 
 const CardPreview = (props: any) => {
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus } = useContext(AgendaContext);
+  const { roomStatus, setRoomStatus, dataLive } = useContext(AgendaContext);
+  console.log('100. TYPE==>', props.type);
+  const urlVideo =
+    props.type !== 'Video'
+      ? dataLive && dataLive?.live
+        ? dataLive?.hls_playlist_url
+        : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
+      : data;
+
   return (
     <Card bodyStyle={{ padding: '21px' }} style={{ borderRadius: '8px' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
-          <ReactPlayer
-            style={{ objectFit: 'cover' }}
-            width='100%'
-            height='100%'
-            url={
-              'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-            }
-            controls
-          />
+          <ReactPlayer style={{ objectFit: 'cover' }} width='100%' height='100%' url={urlVideo} controls />
         </div>
         <Card.Meta
           avatar={

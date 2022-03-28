@@ -32,4 +32,6 @@ export type TypeActivityContextProps = {
   closeModal: () => void;
   selectOption: (id: string, sendData?: any) => void;
   createTypeActivity: () => void;
+  executer_stopStream: () => void;
+  loadingStop: boolean;
 };

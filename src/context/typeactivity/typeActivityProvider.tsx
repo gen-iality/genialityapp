@@ -1,5 +1,9 @@
-import { useContext, useReducer } from 'react';
+import { useContext, useReducer, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
+import { AgendaApi } from '../../helpers/request';
 import AgendaContext from '../AgendaContext';
+import { CurrentEventContext } from '../eventContext';
 import { TypeActivityState } from './interfaces/interfaces';
 import { TypeActivityContext } from './typeActivityContext';
 import { initialState, typeActivityReducer } from './typeActivityReducer';
@@ -9,14 +13,29 @@ interface TypeActivityProviderProps {
 }
 
 export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) => {
-  const { saveConfig, deleteTypeActivity, setMeetingId, setPlatform, setTypeActivity } = useContext(AgendaContext);
+  const {
+    saveConfig,
+    deleteTypeActivity,
+    setMeetingId,
+    setPlatform,
+    setTypeActivity,
+    activityName,
+    activityDispatch,
+    dataLive,
+    meeting_id,
+    activityEdit,
+    setDataLive,
+  } = useContext(AgendaContext);
+  const cEvent = useContext(CurrentEventContext);
   const [typeActivityState, typeActivityDispatch] = useReducer(typeActivityReducer, initialState);
+  const [loadingStop, setLoadingStop] = useState(false);
+  const queryClient = useQueryClient();
 
   const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
     console.log('🚀 PROVIDER ID SELECTACTIVITYSTATES', id);
     switch (id) {
       case 'initial':
-        await deleteTypeActivity();
+        //await deleteTypeActivity();
         typeActivityDispatch({ type: 'initial', payload: { activityState: payload } });
         break;
       case 'type':
@@ -92,24 +111,42 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
     }
   };
-  /*const createTypeActivity = (id: string, data: object) => {
-    typeActivityDispatch({ type: 'onFinish', payload: { id, data } });
-  };*/
+  //REACT QUERY
+  const executer_createStream = useMutation(() => createLiveStream(activityName), {
+    onSuccess: async (data) => {
+      // console.log('sucks', data);
+      queryClient.setQueryData('livestream', data);
+      console.log('8. SELECTED KEY===>', typeActivityState.selectedKey, typeActivityState);
+      console.log('8. CREANDO EL RTMP', { platformNew: 'wowza', type: typeActivityState.selectedKey, data: data.id });
+      await saveConfig({ platformNew: 'wowza', type: typeActivityState.selectedKey, data: data.id });
+      setDataLive(data);
+      activityDispatch({ type: 'meeting_created', meeting_id: data.id });
+      // Invalidate and refetch
+      //queryClient.invalidateQueries('todos')
+    },
+  });
 
+  const executer_stopStream = async () => {
+    //await removeAllRequest(refActivity);
+    setLoadingStop(true);
+    const liveStreamresponse = await stopLiveStream(meeting_id);
+    setDataLive(liveStreamresponse);
+    setLoadingStop(false);
+    //queryClient.setQueryData('livestream', null);
+  };
   const createTypeActivity = async () => {
-    console.log('DATA ACTUAL==>', typeActivityState);
-    /* url: 'Video',
-  meeting: 'reunión',
-  vimeo: 'vimeo',
-  youTube: 'Youtube',
-  eviusMeet: 'EviusMeet',
-  RTMP: 'Transmisión',*/
+    //console.log('DATA ACTUAL==>', typeActivityState);
     let resp;
     switch (typeActivityState.selectedKey) {
       case 'url':
-        resp = await saveConfig({ platformNew: '', type: 'url', data: typeActivityState.data });
-        setTypeActivity('url');
-        setPlatform('wowza');
+        const respUrl = await AgendaApi.editOne({ video: typeActivityState.data }, activityEdit, cEvent?.value?._id);
+        if (respUrl) {
+          resp = await saveConfig({ platformNew: '', type: 'url', data: typeActivityState.data });
+          setTypeActivity('url');
+          setPlatform('wowza');
+        } else {
+          console.log('ERROR AL GUARDAR URL');
+        }
         //setMeetingId(typeActivityState?.data);
         ////Type:url
         break;
@@ -131,15 +168,27 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         //Type:youTube
         break;
       case 'eviusMeet':
-        resp = await saveConfig({ platformNew: '', type: 'eviusMeet', data: typeActivityState?.data });
+        !meeting_id && executer_createStream.mutate();
+        meeting_id &&
+          (await saveConfig({
+            platformNew: 'wowza',
+            type: typeActivityState.selectedKey,
+            data: meeting_id,
+          }));
         setTypeActivity('eviusMeet');
         setPlatform('wowza');
+        toggleActivitySteps('finish');
+
         //type:eviusMeet
         break;
       case 'RTMP':
-        resp = await saveConfig({ platformNew: '', type: 'RTMP', data: typeActivityState?.data });
+        !meeting_id && executer_createStream.mutate();
+        meeting_id &&
+          (await saveConfig({ platformNew: 'wowza', type: typeActivityState.selectedKey, data: meeting_id }));
         setTypeActivity('RTMP');
         setPlatform('wowza');
+        toggleActivitySteps('finish');
+
         //type:RTMP
         break;
       case 'meeting':
@@ -158,7 +207,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       default:
         break;
     }
-    if (resp.state === 'created' || resp.state === 'updated') {
+    if (resp?.state === 'created' || resp?.state === 'updated') {
       toggleActivitySteps('finish');
     }
   };
@@ -169,7 +218,15 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
 
   return (
     <TypeActivityContext.Provider
-      value={{ typeActivityState, toggleActivitySteps, selectOption, closeModal, createTypeActivity }}>
+      value={{
+        typeActivityState,
+        toggleActivitySteps,
+        selectOption,
+        closeModal,
+        createTypeActivity,
+        executer_stopStream,
+        loadingStop,
+      }}>
       {children}
     </TypeActivityContext.Provider>
   );

@@ -1,7 +1,6 @@
 import { typeActivityData } from './constants/constants';
 import { TypeActivityState } from './interfaces/interfaces';
 import { TypeActivityAction } from './types/types';
-import { isValidUrl } from '../../hooks/useIsValidUrl';
 
 export const initialState: TypeActivityState = {
   openModal: false,
@@ -353,9 +352,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
 
       if ((sendDataPayload?.length > 12 && sendDataPayload !== '' && isUrl) || sendDataPayload == undefined) {
         disableButton = false;
-        if (sendDataPayload) {
-          console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayload));
-        }
       }
       return {
         ...state,
@@ -393,9 +389,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         sendDataPayloadVimeo == undefined
       ) {
         disableButtonVimeo = false;
-        if (sendDataPayloadVimeo) {
-          console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayloadVimeo));
-        }
       }
 
       console.log('STATE==>', state);
@@ -418,9 +411,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         sendDataPayloadYoutube == undefined
       ) {
         disableButtonYoutube = false;
-        if (sendDataPayloadYoutube) {
-          console.log('🚀 sendData ~ isValidUrl ~ isValidUrl', isValidUrl(sendDataPayloadYoutube));
-        }
       }
       console.log('STATE==>', state);
       return {
