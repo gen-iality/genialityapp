@@ -21,6 +21,7 @@ const ManagerView = (props: any) => {
     if (props.type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
   }, [props.type]);
+  console.log('type', props.type);
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -56,10 +57,17 @@ const ManagerView = (props: any) => {
                 </Card>
               </Col>
             )}
-            {(props.type == 'reunión' || props.type == 'EviusMeet') && dataLive?.active && (
+            {props.type == 'reunión' ? (
               <Col span={24}>
                 <CardShareLinkEviusMeet activityId={props.activityId} />
               </Col>
+            ) : (
+              props.type == 'EviusMeet' &&
+              dataLive?.active && (
+                <Col span={24}>
+                  <CardShareLinkEviusMeet activityId={props.activityId} />
+                </Col>
+              )
             )}
             {props.type == 'EviusMeet' && dataLive?.active && (
               <Col span={24}>
