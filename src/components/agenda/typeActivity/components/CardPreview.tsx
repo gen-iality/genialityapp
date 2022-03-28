@@ -13,7 +13,7 @@ const CardPreview = (props: any) => {
   console.log('datalive', dataLive);
   const urlVideo =
     props.type !== 'Video'
-      ? dataLive && dataLive?.live
+      ? dataLive && dataLive?.live && dataLive?.active
         ? dataLive?.hls_playlist_url
         : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
       : data;

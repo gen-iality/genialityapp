@@ -36,7 +36,7 @@ const ManagerView = (props: any) => {
               </Col>
             )}
             {((props.type === 'EviusMeet' && dataLive?.active) || props.type !== 'EviusMeet') && (
-              <Col span={props.type == 'Video' ? 24 : 14}>
+              <Col span={props.type == 'Video' || props.type == 'reunión' ? 24 : 14}>
                 <TransmitionOptions type={props.type} />
               </Col>
             )}
