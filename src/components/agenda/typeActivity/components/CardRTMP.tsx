@@ -4,7 +4,7 @@ import AgendaContext from '../../../../context/AgendaContext';
 import { useContext, useEffect, useState } from 'react';
 
 const CardRTMP = () => {
-  const { dataLive } = useContext(AgendaContext);
+  const { dataLive, copyToClipboard } = useContext(AgendaContext);
   const [dataRtmp, setDataRtmp] = useState(null);
   useEffect(() => {
     if (dataLive && dataLive?.push_url) {
@@ -38,14 +38,7 @@ const CardRTMP = () => {
             />
             <Tooltip title='Copiar RTMP url'>
               <Button
-                /* onClick={() => copyToClipboard('Productor')} */
-                /* icon={
-                    copySuccessProductor ? (
-                      <CheckCircleFilled style={{ color: '#52C41A' }} />
-                    ) : (
-                      <CopyFilled style={{ color: '#0089FF' }} />
-                    )
-                  } */
+                onClick={() => copyToClipboard(dataRtmp?.rtmp)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
             </Tooltip>
@@ -61,14 +54,7 @@ const CardRTMP = () => {
             />
             <Tooltip title='Copiar RTMP clave'>
               <Button
-                /* onClick={() => copyToClipboard('Productor')} */
-                /* icon={
-                    copySuccessProductor ? (
-                      <CheckCircleFilled style={{ color: '#52C41A' }} />
-                    ) : (
-                      <CopyFilled style={{ color: '#0089FF' }} />
-                    )
-                  } */
+                onClick={() => copyToClipboard(dataRtmp?.password)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
             </Tooltip>

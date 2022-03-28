@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
 import { fireRealtime, firestore } from '../helpers/firebase';
@@ -264,6 +265,11 @@ export const AgendaContextProvider = ({ children }) => {
     }
   };
 
+  const copyToClipboard = (data) => {
+    navigator.clipboard.writeText(data);
+    message.success('Copiado correctamente.!');
+  };
+
   return (
     <AgendaContext.Provider
       value={{
@@ -321,6 +327,7 @@ export const AgendaContextProvider = ({ children }) => {
         activityName,
         dataLive,
         setDataLive,
+        copyToClipboard,
       }}>
       {children}
     </AgendaContext.Provider>
