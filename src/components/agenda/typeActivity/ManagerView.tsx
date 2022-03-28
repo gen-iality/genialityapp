@@ -31,12 +31,12 @@ const ManagerView = (props: any) => {
           {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && <CardStartTransmition />}
           <Row gutter={[16, 16]}>
             {(props.type == 'reunión' || props.type == 'EviusMeet') && dataLive?.active && (
-              <Col span={12}>
+              <Col span={10}>
                 <GoToEviusMeet type={props.type} activityId={props.activityId} />
               </Col>
             )}
             {((props.type === 'EviusMeet' && dataLive?.active) || props.type !== 'EviusMeet') && (
-              <Col span={props.type == 'Video' ? 24 : 12}>
+              <Col span={props.type == 'Video' ? 24 : 14}>
                 <TransmitionOptions type={props.type} />
               </Col>
             )}

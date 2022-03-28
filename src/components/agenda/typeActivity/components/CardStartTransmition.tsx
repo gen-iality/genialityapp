@@ -56,7 +56,7 @@ const CardStartTransmition = () => {
       // console.log('live_stream_status', live_stream_status);
       console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.active);
       setDataLive(live_stream_status);
-    } catch (e) {}
+    } catch (e) { }
     const timer_id = setTimeout(executer_startMonitorStatus, 5000);
     setTimerId(timer_id);
     if (!live_stream_status.active) {

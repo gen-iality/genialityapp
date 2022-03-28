@@ -13,6 +13,7 @@ const TransmitionOptions = (props: any) => {
   const { dataLive, meeting_id, deleteTypeActivity, activityEdit } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
 
+
   const deleteTransmition = async () => {
     deleteLiveStream(meeting_id);
     await deleteTypeActivity();
@@ -52,7 +53,7 @@ const TransmitionOptions = (props: any) => {
                 }}
                 type='text'
                 danger>
-                <DeleteOutlined /> Eliminar {props.type}
+                <DeleteOutlined /> {props.type === 'Transmisión' || props.type === 'EviusMeet' || props.type === 'vimeo' || props.type === 'Youtube' ? 'Eliminar transmisión' : props.type === 'reunión' ? 'Eliminar sala de reunión' : 'Eliminar video'}
               </Button>
             ) : (
               <Spin />
