@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
 import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
-import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
+import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import QRCode from 'qrcode.react';
 import { icon } from '../../helpers/constants';
 import { Redirect } from 'react-router-dom';
@@ -18,7 +18,7 @@ import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
-
+const intl = useIntl();
 class UserModal extends Component {
   constructor(props) {
     super(props);
@@ -142,7 +142,8 @@ class UserModal extends Component {
 
             DispatchMessageService({
               type: 'info',
-              msj: <FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />,
+              msj: intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
+              action: 'show',
             });
 
             self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
@@ -166,7 +167,7 @@ class UserModal extends Component {
                 messages.content = 'USER DELETED';
                 DispatchMessageService({
                   type: 'info',
-                  msj: <FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />,
+                  msj: intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
                   action: 'show',
                 });
 

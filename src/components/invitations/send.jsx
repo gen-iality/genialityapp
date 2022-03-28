@@ -112,7 +112,7 @@ class SendRsvp extends Component {
           if (status === 401)
             DispatchMessageService({
               type: 'error',
-              msj: <>Error : {data?.message || status}</>,
+              msj: `Error : ${data?.message || status}`,
               action: 'show',
             });
         } else {

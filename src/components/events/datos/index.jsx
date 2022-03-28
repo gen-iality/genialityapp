@@ -1,7 +1,7 @@
 import { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 /* import { toast } from 'react-toastify'; */
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import DatosModal from './modal';
 import { Tabs, Table, Checkbox, Button, Select, Row, Col, Tooltip, Modal } from 'antd';
 import RelationField from './relationshipFields';
@@ -28,7 +28,7 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { confirm } = Modal;
-
+const intl = useIntl();
 class Datos extends Component {
   constructor(props) {
     super(props);
@@ -347,7 +347,7 @@ class Datos extends Component {
   showError = (error) => {
     DispatchMessageService({
       type: 'success',
-      msj: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+      msj: intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :('}),
       action: 'show',
     });
     if (error.response) {
