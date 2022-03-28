@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Card, Result, Space, Button } from 'antd';
+import { Card, Result, Space, Button, Spin } from 'antd';
 import LoadingTypeActivity from './LoadingTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
 import { useEffect } from 'react';
@@ -65,9 +65,11 @@ const CardStartTransmition = () => {
   };
 
   const executer_startStream = async () => {
+    setloading(true);
     const liveStreamresponse = await startLiveStream(meeting_id);
     setDataLive(liveStreamresponse);
     executer_startMonitorStatus();
+    setloading(false);
     //inicia el monitoreo
   };
 
@@ -86,10 +88,12 @@ const CardStartTransmition = () => {
                   Eliminar transmisión
                 </Button>
               )*/}
-              {!dataLive?.active && (
+              {!dataLive?.active && !loading ? (
                 <Button onClick={() => executer_startStream()} type='primary'>
                   Iniciar transmisión
                 </Button>
+              ) : (
+                loading && <Spin />
               )}
             </Space>
           }

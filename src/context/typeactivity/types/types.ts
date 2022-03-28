@@ -33,4 +33,5 @@ export type TypeActivityContextProps = {
   selectOption: (id: string, sendData?: any) => void;
   createTypeActivity: () => void;
   executer_stopStream: () => void;
+  loadingStop: boolean;
 };

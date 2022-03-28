@@ -1,4 +1,4 @@
-import { useContext, useReducer } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
 import { AgendaApi } from '../../helpers/request';
@@ -28,6 +28,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
   const [typeActivityState, typeActivityDispatch] = useReducer(typeActivityReducer, initialState);
+  const [loadingStop, setLoadingStop] = useState(false);
   const queryClient = useQueryClient();
 
   const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
@@ -127,8 +128,10 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
 
   const executer_stopStream = async () => {
     //await removeAllRequest(refActivity);
+    setLoadingStop(true);
     const liveStreamresponse = await stopLiveStream(meeting_id);
     setDataLive(liveStreamresponse);
+    setLoadingStop(false);
     //queryClient.setQueryData('livestream', null);
   };
   const createTypeActivity = async () => {
@@ -222,6 +225,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         closeModal,
         createTypeActivity,
         executer_stopStream,
+        loadingStop,
       }}>
       {children}
     </TypeActivityContext.Provider>

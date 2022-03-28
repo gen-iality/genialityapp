@@ -29,6 +29,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         let live_stream = await getLiveStream(meeting_id);
         //console.log('LIVE STREAM===>', live_stream);
         let url = live_stream.hls_playlist_url;
+        //console.log('100. URL==>', live_stream.hls_playlist_url);
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */
         setTimeout(() => {
           setPlatformurl(url);
