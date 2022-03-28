@@ -2,11 +2,11 @@
 export const selectOptions = [
   {
     value: 'radiogroup',
-    text: 'Selección Unica',
+    text: 'Selección Única',
   },
   {
     value: 'checkbox',
-    text: 'Selección Multiple',
+    text: 'Selección Múltiple',
   },
   {
     value: 'comment',
