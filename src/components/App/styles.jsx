@@ -236,6 +236,7 @@ class Styles extends Component {
     }
 
     if (dataStyles) {
+      console.log('🚀 TITLE..... ==========================>', dataStyles.show_title);
       this.setState({
         styles: {
           brandPrimary: dataStyles.brandPrimary || '#FFFFFF',
@@ -265,12 +266,12 @@ class Styles extends Component {
           mobile_banner: dataStyles.mobile_banner || null,
           banner_footer_email: dataStyles.banner_footer_email || null,
           show_banner: dataStyles.show_banner || false,
-          show_title: dataStyles?.show_title || true,
+          show_title: dataStyles?.show_title || false,
           show_video_widget: dataStyles?.show_video_widget || false,
-          show_card_banner: dataStyles.show_card_banner || true,
+          show_card_banner: dataStyles.show_card_banner || false,
           show_inscription: info?.show_inscription || false,
           hideDatesAgenda: dataStyles.hideDatesAgenda || false,
-          hideBtnDetailAgenda: dataStyles.hideBtnDetailAgenda || true,
+          hideBtnDetailAgenda: dataStyles?.hideBtnDetailAgenda || false,
           loader_page: dataStyles.loader_page || 'no',
           data_loader_page: dataStyles.data_loader_page || '',
           // Estilos de las actividades de la agenda
@@ -589,24 +590,30 @@ class Styles extends Component {
                 </div>
               ))}
 
-              {this.selectsDrawer.map((item, key) => (
-                <div key={key}>
-                  <Form.Item label={item.label}>
-                    <Select
-                      defaultValue={this.state.styles[item.name] /* item.defaultValue */}
-                      value={this.state.styles[item.name]}
-                      name={item.name}
-                      onChange={(e) => this.handleChange(e, item.name)}
-                      style={{ width: 120 }}>
-                      {item.options.map((item2, key2) => (
-                        <Option key={key2} value={item2.value}>
-                          {item2.label}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+              {this.selectsDrawer.map(
+                (item, key) => (
+                  console.log('🚀 LABEL ====> ', item.label),
+                  console.log('🚀 NAME ====> ', item.name),
+                  console.log('🚀 VALUE ====> ', this.state.styles[item.name]),
+                  console.log('🚀 VALUE ====> ', this.state.styles),
+                  (
+                    <div key={key}>
+                      <Form.Item label={item.label}>
+                        <Select
+                          defaultValue={this.state.styles[item.name] /* item.defaultValue */}
+                          value={this.state.styles[item.name]}
+                          name={item.name}
+                          onChange={(e) => this.handleChange(e, item.name)}
+                          style={{ width: 120 }}>
+                          {item.options.map((item2, key2) => (
+                            <Option key={key2} value={item2.value}>
+                              {item2.label}
+                            </Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
 
-                  {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
+                      {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
                     <Form.Item label={'Link de video'}>
                       <Input
                         defaultValue={this.state.styles['data_loader_page']}
@@ -627,8 +634,10 @@ class Styles extends Component {
                       />
                     </Form.Item>
                   )} */}
-                </div>
-              ))}
+                    </div>
+                  )
+                )
+              )}
 
               <Space direction='vertical' wrap>
                 {this.imageDrawer.map((item, key) => (
