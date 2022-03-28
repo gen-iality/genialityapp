@@ -2,7 +2,7 @@
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
 import { CopyFilled } from '@ant-design/icons';
 
-const CardShareLinkEviusMeet = (props:any) => {  
+const CardShareLinkEviusMeet = (props: any) => {
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
@@ -11,8 +11,8 @@ const CardShareLinkEviusMeet = (props:any) => {
             Enlaces para participantes
           </Typography.Text>
         }
-        description={'Lorem ipsum dolor sit amet consectetur adipisicing elit. '}
-      />{' '}
+        description={'Puedes compartir estos enlaces a las personas que participaran en tu reunión, ten en cuenta que los hosts pueden administrar la sala de reuniones, personalizarla e incluso finalizarla'}
+      />
       <br />
       <Space direction='vertical' style={{ width: '100%' }}>
         <Space direction='vertical' style={{ width: '100%' }}>

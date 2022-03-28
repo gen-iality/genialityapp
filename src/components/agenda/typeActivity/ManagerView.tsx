@@ -21,7 +21,7 @@ const ManagerView = (props: any) => {
           <Row gutter={[16, 16]}>
             {props.type == 'reunión' && (
               <Col span={12}>
-                <GoToEviusMeet activityId={props.activityId} />
+                <GoToEviusMeet type={props.type} activityId={props.activityId} />
               </Col>
             )}
             <Col span={props.type == 'Video' ? 24 : 12}>
