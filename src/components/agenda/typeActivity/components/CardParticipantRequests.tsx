@@ -1,18 +1,22 @@
-;
 import { Card, Badge, Space, Typography, Button } from 'antd';
 import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
 
-const CardParticipantRequests = () => {
+const CardParticipantRequests = (props: any) => {
+  const { request, setViewModal } = props;
+
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Space size='large'>
-        <Badge count={1}>
-          <HumanGreetingVariantIcon style={{ fontSize: '36px' }} />
-        </Badge>
+        <HumanGreetingVariantIcon style={{ fontSize: '36px' }} />
+
         <Typography.Text style={{ fontSize: '20px' }} strong>
           Solicitudes de participación de asistentes
         </Typography.Text>
-        <Button type='primary'>Ver solicitudes</Button>
+        <Badge count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}>
+          <Button onClick={() => setViewModal(true)} type='primary'>
+            Ver solicitudes
+          </Button>
+        </Badge>
       </Space>
     </Card>
   );

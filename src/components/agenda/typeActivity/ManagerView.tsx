@@ -7,9 +7,16 @@ import CardParticipantRequests from './components/CardParticipantRequests';
 import CardRTMP from './components/CardRTMP';
 import CardStartTransmition from './components/CardStartTransmition';
 import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
-
+import { useState, useContext } from 'react';
+import AgendaContext from '../../../context/AgendaContext';
+import { CurrentEventContext } from '../../../context/eventContext';
+import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 const ManagerView = (props: any) => {
+  const eventContext = useContext(CurrentEventContext);
   const { data } = useTypeActivity();
+  const { activityEdit, getRequestByActivity, request, transmition } = useContext(AgendaContext);
+  const [viewModal, setViewModal] = useState(false);
+  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -50,7 +57,7 @@ const ManagerView = (props: any) => {
             )}
             {props.type == 'EviusMeet' && (
               <Col span={24}>
-                <CardParticipantRequests />
+                <CardParticipantRequests request={request} setViewModal={setViewModal} />
               </Col>
             )}
           </Row>
@@ -61,6 +68,7 @@ const ManagerView = (props: any) => {
           </Col>
         )}
       </Row>
+      <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
     </>
   );
 };
