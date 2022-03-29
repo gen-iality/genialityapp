@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
 import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import QRCode from 'qrcode.react';
 import { icon } from '../../helpers/constants';
 import { Redirect } from 'react-router-dom';
@@ -104,7 +104,7 @@ class UserModal extends Component {
   ];
 
   deleteUser = async (user) => {
-    const { substractSyncQuantity } = this.props;
+    // const { substractSyncQuantity } = this.props;
     let messages = {};
     // let resultado = null;
     const self = this;
@@ -140,11 +140,11 @@ class UserModal extends Component {
               ));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
 
-            DispatchMessageService({
-              type: 'info',
-              msj: this.props.intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
-              action: 'show',
-            });
+            // DispatchMessageService({
+            //   type: 'info',
+            //   msj: self.props?.intl.formatMessage({ id: 'toast.user_deleted', defaultMessage: 'Ok!' }),
+            //   action: 'show',
+            // });
 
             self.props.byActivity && (await Activity.DeleteRegister(self.props.cEvent.value?._id, user.idActivity));
             self.props.byActivity && (await self.props.updateView());
@@ -166,8 +166,8 @@ class UserModal extends Component {
                 messages.class = 'msg_warning';
                 messages.content = 'USER DELETED';
                 DispatchMessageService({
-                  type: 'info',
-                  msj: this.props.intl.formatMessage({id: 'toast.user_deleted', defaultMessage: 'Ok!'}),
+                  type: 'success',
+                  msj: self.props?.intl.formatMessage({ id: 'toast.user_deleted', defaultMessage: 'Ok!' }),
                   action: 'show',
                 });
 
@@ -253,7 +253,6 @@ class UserModal extends Component {
   saveUser = async (values) => {
     this.setState({ loadingregister: true });
     //console.log('callback=>', values);
-    console.log('BY ACTIVITY==>', this.props.byActivity, this.props.organizationId, this.props.edit);
     let resp;
     let respActivity = true;
     if (values) {
@@ -269,7 +268,6 @@ class UserModal extends Component {
         /* console.log("10. resp ", resp) */
       } else {
         if (!this.props.edit) {
-          console.log('EVENT==>', this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
           try {
             resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
           } catch (e) {
@@ -280,7 +278,6 @@ class UserModal extends Component {
             });
             respActivity = false;
           }
-          console.log('RESPUESTA==>', resp);
         } else {
           resp = await UsersApi.editEventUser(
             snap,
@@ -352,7 +349,6 @@ class UserModal extends Component {
         msj: 'Error al guardar el usuario',
         action: 'show',
       });
-      console.log(resp);
     }
 
     this.setState({ loadingregister: false });
@@ -389,4 +385,4 @@ class UserModal extends Component {
   }
 }
 
-export default withContext(UserModal);
+export default injectIntl(withContext(UserModal));

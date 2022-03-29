@@ -191,12 +191,13 @@ const Table = (props) => {
       },
     };
     if (actions) {
-      if (!headerState.includes(options)) {
-        headerState.push(options);
-        setHeaderState(headerState);
+      let auxHeader = header;
+      if (!auxHeader.includes(options)) {
+        auxHeader.push(options);
+        setHeaderState(auxHeader);
       }
     }
-  }, [actions]);
+  }, [header]);
 
   if (list && list.length) {
     list.map((list, index) => {
