@@ -5,14 +5,14 @@ import 'firebase/storage';
 import 'firebase/database';
 
 const config = {
-  apiKey: process.env.VITE_FB_APIKEY_CHATEVIUS,
-  authDomain: process.env.VITE_FB_AUTHDOMAIN_CHATEVIUS,
-  databaseURL: process.env.VITE_FB_DB_CHATEVIUS,
-  projectId: process.env.VITE_PROJECTID_CHATEVIUS,
-  storageBucket: process.env.VITE_STORAGEBUCKET_CHATEVIUS,
-  appId: process.env.VITE_APPID_CHATEVIUS,
-  messagingSenderId: process.env.VITE_MESSAGINGSENDER_CHATEVIUS,
-  measurementId: process.env.VITE_MEASUREMENTID_CHATEVIUS,
+  apiKey: process.env.VITE_FB_APIKEY_EVIUSAUTH,
+  authDomain: process.env.VITE_FB_AUTHDOMAIN_EVIUSAUTH,
+  databaseURL: process.env.VITE_FB_DB_EVIUSAUTH,
+  projectId: process.env.VITE_PROJECTID_EVIUSAUTH,
+  storageBucket: process.env.VITE_STORAGEBUCKET_EVIUSAUTH,
+  appId: process.env.VITE_APPID_EVIUSAUTH,
+  messagingSenderId: process.env.VITE_MESSAGINGSENDER_EVIUSAUTH,
+  measurementId: process.env.VITE_MEASUREMENTID_EVIUSAUTH,
 };
 
 app.initializeApp(config);

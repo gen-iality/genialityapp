@@ -13,7 +13,7 @@ import 'firebase/compat/database';
  */
 
 const config = {
-  apiKey: process.env.VITE_FB_APIKEY_VITE_FB_APIKEY_CHATEVIUS,
+  apiKey: process.env.VITE_FB_APIKEY_EVIUSAUTH,
   authDomain: process.env.VITE_FB_AUTHDOMAIN_EVIUSAUTH,
   databaseURL: process.env.VITE_FB_DB_EVIUSAUTH,
   projectId: process.env.VITE_PROJECTID_EVIUSAUTH,
@@ -33,6 +33,8 @@ const configEviuschat = {
   messagingSenderId: process.env.VITE_MESSAGINGSENDER_CHATEVIUS,
   measurementId: process.env.VITE_MEASUREMENTID_CHATEVIUS,
 };
+
+console.log('config', config);
 
 let eviusaauth = app.initializeApp(config);
 let eviuschat = app.initializeApp(configEviuschat, 'secondary');
