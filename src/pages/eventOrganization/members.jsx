@@ -30,7 +30,6 @@ function OrgMembers(props) {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
     data.map((membersData) => {
-      console.log('debug membersData ', membersData);
       const properties = {
         _id: membersData._id,
         created_at: membersData.created_at,

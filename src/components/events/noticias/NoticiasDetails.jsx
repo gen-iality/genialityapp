@@ -22,7 +22,6 @@ const NoticiasDetails = (props) => {
   const [eventId, setEventId] = useState(props.cEvent.value._id);
   const [loading, setLoading] = useState(true);
   const [noticia, setNoticia] = useState();
-  console.log('PROPS ACA==>', props);
 
   const screens = useBreakpoint();
 

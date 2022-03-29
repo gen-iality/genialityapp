@@ -34,8 +34,6 @@ const configEviuschat = {
   measurementId: process.env.VITE_MEASUREMENTID_CHATEVIUS,
 };
 
-console.log('config', config);
-
 let eviusaauth = app.initializeApp(config);
 let eviuschat = app.initializeApp(configEviuschat, 'secondary');
 
