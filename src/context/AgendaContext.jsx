@@ -245,15 +245,15 @@ export const AgendaContextProvider = ({ children }) => {
     try {
       const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
       if (result) {
+        //CLEAN STATUS
+        setTypeActivity(null);
+        setMeetingId(null);
+        setRoomStatus('');
         DispatchMessageService({
           type: 'success',
           msj: result.message,
           action: 'show',
         });
-        //CLEAN STATUS
-        setTypeActivity(null);
-        setMeetingId(null);
-        setRoomStatus('');
       }
       return result;
     } catch (err) {

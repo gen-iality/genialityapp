@@ -15,7 +15,7 @@ import WithEviusContext from '../../../context/withContext';
 
 import Moment from 'moment-timezone';
 import { UseEventContext } from '../../../context/eventContext';
-import HumanGreetingIcon from '@2fd/ant-design-icons/lib/HumanGreeting';
+import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
 import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventUserContext } from '../../../context/eventUserContext';
@@ -256,7 +256,7 @@ const HeaderColumns = (props) => {
                   onClick={() => (!loading ? sendOrCancelRequest() : null)}
                   icon={
                     !haveRequest() && !loading ? (
-                      <HumanGreetingIcon style={{ fontSize: '16px' }} />
+                      <HumanGreetingVariantIcon style={{ fontSize: '16px' }} />
                     ) : haveRequest() && !loading ? (
                       <CancelIcon style={{ fontSize: '16px' }} />
                     ) : (
@@ -280,7 +280,7 @@ const HeaderColumns = (props) => {
                   onClick={() => showPropsConfirm()}
                   icon={
                     !haveRequest() ? (
-                      <HumanGreetingIcon style={{ fontSize: '16px' }} />
+                      <HumanGreetingVariantIcon style={{ fontSize: '16px' }} />
                     ) : (
                       <CancelIcon style={{ fontSize: '16px' }} />
                     )
