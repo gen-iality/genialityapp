@@ -17,7 +17,8 @@ const CardPreview = (props: any) => {
         ? dataLive?.hls_playlist_url
         : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
       : data;
-  console.log('10. DATA===>', data);
+
+  //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
   const filterData = data
     ? data.includes('https://vimeo.com/event/') || data.includes('https://youtu.be/')
       ? data.split('/')[data.split('/').length - 1]
