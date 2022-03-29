@@ -165,7 +165,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: ' Gestion de Chats',
+        name: ' Gestión de Chats',
         path: '/chatexport',
         key: 'gestion-chats',
         onClick: handleClick,
