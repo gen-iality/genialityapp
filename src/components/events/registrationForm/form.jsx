@@ -214,7 +214,7 @@ const FormRegister = ({
 
   useEffect(() => {
     if (validateEventUser?.status) {
-      buttonSubmit.current.click();
+      buttonSubmit?.current?.click();
     }
   }, [validateEventUser?.status, validateEventUser?.statusFields]);
 
@@ -1174,7 +1174,6 @@ const FormRegister = ({
                     />
                   </Col>
                 )}
-
                 <Col span={24} align='center'>
                   {!loadingregister && (
                     <Form.Item>
@@ -1186,8 +1185,8 @@ const FormRegister = ({
                         }}
                         type='primary'
                         htmlType='submit'>
-                        {(initialValues != null && cEventUser.value !== null && typeModal !== 'update') ||
-                        (initialValues != null && Object.keys(initialValues).length > 0 && typeModal !== 'update')
+                        {(initialValues !== null && cEventUser.value !== null && !initialValues.user) ||
+                        (initialValues !== null && Object.keys(initialValues).length === 0)
                           ? intl.formatMessage({ id: 'Button.signup' })
                           : intl.formatMessage({
                               id: 'registration.button.update',
@@ -1195,7 +1194,8 @@ const FormRegister = ({
                       </Button>
 
                       {options &&
-                        initialValues != null &&
+                        initialValues !== null &&
+                        initialValues._id &&
                         options.map((option) => (
                           <Button
                             key={'option-' + option.text}
@@ -1204,6 +1204,7 @@ const FormRegister = ({
                             type={option.type}
                             style={{
                               marginLeft: 10,
+                              marginTop: 10,
                             }}>
                             {option.text}
                           </Button>
