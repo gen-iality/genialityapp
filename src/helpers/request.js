@@ -846,22 +846,30 @@ export const FaqsApi = {
 export const RolAttApi = {
   byEvent: async (event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.getAll(`api/events/${event}/rolesattendees?token=${token}`, true);
+    const rollsByEvent = await Actions.getAll(`api/events/${event}/rolesattendees?token=${token}`, true);
+
+    /** Se discriminan estos dos rol id debido a que no se deben editar ni eliminar y aunque el back tiene dicha validacion en el componente CMS es dificil validar dicha accion ya que es un componente que se reutiliza varias veces y puede alterar la logica de otras funcionalidades, este arreglo es temporal mientras se estructura la logica para roles */
+
+    const rollsByEventFiltered = rollsByEvent.filter(
+      (rol) => rol._id !== '5c1a59b2f33bd40bb67f2322' && rol._id !== '60e8a7e74f9fb74ccd00dc22'
+    );
+    return rollsByEventFiltered;
   },
   byEventRolsGeneral: async () => {
     let token = await GetTokenUserFirebase();
     return await Actions.getAll(`api/rols?token=${token}`);
   },
   getOne: async (event, id) => {
-    return await Actions.get(`api/events/${event}/rolesattendees/`, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/events/${event}/rolesattendees/${id}/?token=${token}`, true);
   },
   editOne: async (data, id, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.edit(`/api/events/${event}/rolesattendees/${id}`, data, `?token=${token}`);
+    return await Actions.edit(`/api/events/${event}/rolesattendees/${id}?token=${token}`, data, true);
   },
   deleteOne: async (id, event) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/events/${event}/rolesattendees`, `${id}?token=${token}`);
+    return await Actions.delete(`/api/events/${event}/rolesattendees/${id}?token=${token}`, '', true);
   },
   create: async (data, event) => {
     let token = await GetTokenUserFirebase();

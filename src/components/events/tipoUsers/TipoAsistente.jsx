@@ -18,28 +18,32 @@ const TipoAsistente = (props) => {
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
-  const [tipoAsistente, setTipoAsistente] = useState({ ...tipoAsistente, event_id: props.event._id });
+  const [tipoAsistente, setTipoAsistente] = useState({ event_id: props.event._id });
 
   useEffect(() => {
     if (locationState.edit) {
+      console.log('🚀 debug ~ useEffect ~ locationState.edit', locationState.edit);
       getOne();
     }
   }, [locationState.edit]);
 
   const getOne = async () => {
     const response = await RolAttApi.getOne(eventID, locationState.edit);
+    console.log('🚀 debug ~ getOne ~ response', response);
     let data = response.find((tipoAsistentes) => tipoAsistentes._id === locationState.edit);
 
+    // setTipoAsistente({ event_id: '6219441bcac07f74232f5d60', name: 'nuevo hola', type: 'attendee' });
     setTipoAsistente(data);
   };
 
   const handleInputChange = (e) => {
     if (tipoAsistente) {
-      setTipoAsistente({ ...tipoAsistente, name: e.target.value });
+      setTipoAsistente({ ...tipoAsistente, name: e.target.value, type: 'attendee' });
     }
   };
 
   const onSubmit = async () => {
+    console.log('🚀 debug ~ onSubmit ~ tipoAsistente', tipoAsistente);
     if (tipoAsistente.name) {
       DispatchMessageService({
         type: 'loading',
@@ -54,11 +58,7 @@ const TipoAsistente = (props) => {
           } */
           await RolAttApi.editOne(tipoAsistente, locationState.edit, eventID);
         } else {
-          const data = {
-            name: tipoAsistente.name,
-            event_id: eventID,
-          };
-          await RolAttApi.create(data, eventID);
+          await RolAttApi.create(tipoAsistente, eventID);
         }
 
         DispatchMessageService({
@@ -154,7 +154,7 @@ const TipoAsistente = (props) => {
             <Input
               name={'name'}
               placeholder={'Nombre del rol'}
-              value={tipoAsistente.name}
+              value={tipoAsistente?.name}
               onChange={(e) => handleInputChange(e)}
             />
           </Form.Item>

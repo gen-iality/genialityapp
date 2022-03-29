@@ -1,6 +1,8 @@
 import { Component } from 'react';
-import { UsersApi, eventTicketsApi } from '../../helpers/request';
+import { UsersApi, eventTicketsApi } from '@/helpers/request';
 import { Modal, Form, Input, Select, Checkbox, Button } from 'antd';
+import { DispatchMessageService } from '@/context/MessageService';
+import { handleRequestError } from '@/helpers/utils';
 
 const { Option } = Select;
 
@@ -13,7 +15,6 @@ class AddUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: {},
       user: {},
       emailError: false,
       valid: true,
@@ -39,27 +40,41 @@ class AddUser extends Component {
       properties: this.state.user,
     };
 
-    let message = {};
     this.setState({ create: true });
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere miestras se guarda la información...',
+      action: 'show',
+    });
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
-      if (resp.message === 'OK') {
-        /* this.props.addToList(resp.data); */
-        message.class = resp.status === 'CREATED' ? 'msg_success' : 'msg_warning';
-        message.content = 'USER ' + resp.status;
-      } else {
-        message.class = 'msg_danger';
-        message.content = 'User can`t be created';
+      if (resp) {
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Información guardada correctamente!',
+          action: 'show',
+        });
       }
-      setTimeout(() => {
-        message.class = message.content = '';
-        this.closeModal();
-      }, 1000);
     } catch (err) {
-      message.class = 'msg_error';
-      message.content = 'ERROR...TRYING LATER';
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: handleRequestError(e).message || err?.response?.data?.message,
+        action: 'show',
+      });
     }
-    this.setState({ message, create: false });
+    setTimeout(() => {
+      this.setState({ create: false });
+      this.closeModal();
+    }, 1000);
   }
 
   renderForm = () => {
@@ -182,18 +197,9 @@ class AddUser extends Component {
           onCancel={this.props.handleModal}
           visible={this.props.modal}
           footer={[
-            <>
-              {this.state.create ? (
-                <div>Creando...</div>
-              ) : (
-                <Button type='primary' onClick={this.handleSubmit} /* disabled={this.state.valid} */>
-                  {this.state.edit ? 'Guardar' : 'Crear'}
-                </Button>
-              )}
-              <div className={'msg'}>
-                <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
-              </div>
-            </>,
+            <Button type='primary' onClick={this.handleSubmit} disabled={this.state.create} loading={this.state.create}>
+              {this.state.edit ? 'Guardar' : 'Crear'}
+            </Button>,
           ]}>
           <Form {...formLayout}>
             {Object.keys(this.state.user).length > 0 && this.renderForm()}
