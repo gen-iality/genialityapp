@@ -151,17 +151,22 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         ////Type:url
         break;
       case 'vimeo':
-        //Type:Vimeo
-        //Platform
-        //meeting_id
-        resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: typeActivityState.data });
+        //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
+        let newDataVimeo = typeActivityState.data.includes('https://vimeo.com/event/')
+          ? typeActivityState.data
+          : 'https://vimeo.com/event/' + typeActivityState.data;
+        resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
         setTypeActivity('vimeo');
         setPlatform('vimeo');
         setMeetingId(typeActivityState?.data);
 
         break;
       case 'youTube':
-        resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: typeActivityState.data });
+        //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
+        let newData = typeActivityState.data.includes('https://youtu.be/')
+          ? typeActivityState.data
+          : 'https://youtu.be/' + typeActivityState.data;
+        resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: newData });
         setTypeActivity('youTube');
         setPlatform('wowza');
         setMeetingId(typeActivityState?.data);

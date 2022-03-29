@@ -9,7 +9,7 @@ import InitialSVG from './components/svg/InitialSVG';
 import { AgendaApi } from '../../../helpers/request';
 import { CurrentEventContext } from '../../../context/eventContext';
 
-const objecKeys = {
+const objecKeys: object = {
   url: 'Video',
   meeting: 'reunión',
   vimeo: 'vimeo',

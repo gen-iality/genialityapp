@@ -9,14 +9,23 @@ import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus, dataLive } = useContext(AgendaContext);
-  console.log('datalive', dataLive);
+  const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
+  //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const urlVideo =
-    props.type !== 'Video'
+    props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
       ? dataLive && dataLive?.live && dataLive?.active
         ? dataLive?.hls_playlist_url
         : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
       : data;
+
+  //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
+  const filterData = data
+    ? data.includes('https://vimeo.com/event/') || data.includes('https://youtu.be/')
+      ? data.split('/')[data.split('/').length - 1]
+      : data
+    : meeting_id
+    ? meeting_id
+    : null;
 
   const handleDuration = (duration: number) => {
     console.log('onDuration', duration);
@@ -49,7 +58,7 @@ const CardPreview = (props: any) => {
       style={{ borderRadius: '8px' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
-          {props.type !== 'reunión' && (
+          {props?.type !== 'reunión' && (
             <ReactPlayer
               onDuration={props.type === 'Video' ? handleDuration : null}
               style={{ objectFit: 'cover' }}
@@ -114,26 +123,29 @@ const CardPreview = (props: any) => {
             <Typography.Text
               copyable={{
                 tooltips: ['clic para copiar', 'ID copiado!!'],
-                text: `${data}`,
+                text: `${filterData}`,
               }}>
-              {data}
+              {filterData}
             </Typography.Text>
           </Space>
         )}
-        <Space direction='vertical' style={{ width: '100%' }}>
-          <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
-          <Select
-            value={roomStatus}
-            onChange={(value) => {
-              setRoomStatus(value);
-            }}
-            style={{ width: '100%' }}>
-            <Select.Option value=''>Actividad creada</Select.Option>
-            <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
-            <Select.Option value='open_meeting_room'>En vivo</Select.Option>
-            <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
-          </Select>
-        </Space>
+        {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
+          (props.type !== 'Transmisión' && props.type !== 'EviusMeet')) && (
+          <Space direction='vertical' style={{ width: '100%' }}>
+            <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
+            <Select
+              value={roomStatus}
+              onChange={(value) => {
+                setRoomStatus(value);
+              }}
+              style={{ width: '100%' }}>
+              <Select.Option value=''>Actividad creada</Select.Option>
+              <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
+              <Select.Option value='open_meeting_room'>En vivo</Select.Option>
+              <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
+            </Select>
+          </Space>
+        )}
       </Space>
     </Card>
   );
