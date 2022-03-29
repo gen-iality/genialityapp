@@ -1,7 +1,10 @@
+import { message } from 'antd';
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
 import { fireRealtime, firestore } from '../helpers/firebase';
+import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';
+import { DispatchMessageService } from './MessageService';
 export const AgendaContext = createContext();
 
 const initialState = {
@@ -24,14 +27,17 @@ export const AgendaContextProvider = ({ children }) => {
   const [avalibleGames, setAvailableGames] = useState([]);
   const [isPublished, setIsPublished] = useState(true);
   const [meeting_id, setMeetingId] = useState(null);
-  const [roomStatus, setRoomStatus] = useState(null);
+  const [roomStatus, setRoomStatus] = useState('');
   const [select_host_manual, setSelect_host_manual] = useState(false);
-  const cEvent = useContext(CurrentEventUserContext);
+  const cEvent = useContext(CurrentEventContext);
   const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet Para cuando se tenga terminada
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
   const [request, setRequest] = useState({});
   const [requestList, setRequestList] = useState([]);
   const [refActivity, setRefActivity] = useState(null);
+  const [typeActivity, setTypeActivity] = useState(undefined);
+  const [activityName, setActivityName] = useState(null);
+  const [dataLive, setDataLive] = useState(null);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -39,7 +45,8 @@ export const AgendaContextProvider = ({ children }) => {
       case 'meeting_created':
         /* console.log('meeting_created', action); */
         return { ...state, meeting_id: action.meeting_id };
-
+      case 'meeting_delete':
+        return { ...state, meeting_id: null };
       case 'stop':
         return { ...state, isRunning: false };
       case 'reset':
@@ -59,21 +66,23 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (activityEdit) {
+      console.log('8. ACTIVIDAD ACA===>', activityEdit);
       obtenerDetalleActivity();
       setMeetingId(null);
     }
     async function obtenerDetalleActivity() {
-      console.log('OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
+      console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
       //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
       const service = new Service(firestore);
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
-      console.log('EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
+      console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+        console.log('8. CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
-        setRoomStatus(configuration.habilitar_ingreso);
+        setRoomStatus(configuration?.habilitar_ingreso == null ? '' : configuration.habilitar_ingreso);
         setTransmition(configuration.transmition || null);
         setAvailableGames(configuration.avalibleGames || []);
         setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
@@ -84,6 +93,7 @@ export const AgendaContextProvider = ({ children }) => {
         setHostName(typeof configuration.host_name !== 'undefined' ? configuration.host_name : null);
         setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
         setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
+        setTypeActivity(configuration.typeActivity || null);
       } else {
         initializeState();
       }
@@ -106,6 +116,7 @@ export const AgendaContextProvider = ({ children }) => {
     setHostName(null);
     setHabilitarIngreso('');
     setSelect_host_manual(false);
+    setTypeActivity(null);
   };
 
   const getRequestByActivity = (refActivity) => {
@@ -134,7 +145,7 @@ export const AgendaContextProvider = ({ children }) => {
                 active: data[requestData].active || false,
               });
             });
-            console.log('1. LISTADO ACA==>', listRequestArray);
+            // console.log('100. LISTADO ACA==>', listRequestArray);
             setRequest(listRequest);
             setRequestList(listRequestArray);
           }
@@ -173,6 +184,90 @@ export const AgendaContextProvider = ({ children }) => {
         .child(key)
         .update({ active: status });
     }
+  };
+
+  const prepareData = (datos) => {
+    console.log('8. DATOS PREPARE===>', datos);
+    const roomInfo = {
+      platform: datos?.platformNew || platform,
+      //VARIABLE QUE GUARDA LA DATA QUE SE GENERA AL CREAR UN TIPO DE ACTIVIDAD VALIDACIÓN QUE PERMITE CONSERVAR ESTADO O LIMPIARLO
+      meeting_id: datos?.data ? datos?.data : datos?.type !== 'delete' ? meeting_id : null,
+      isPublished: isPublished ? isPublished : false,
+      host_id,
+      host_name,
+      avalibleGames,
+      habilitar_ingreso: datos?.type === 'delete' ? '' : roomStatus,
+      transmition: transmition || null,
+      //PERMITE REINICIALIZAR EL TIPO DE ACTIVIDAD O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
+      typeActivity:
+        datos?.type && datos?.type !== 'delete' ? datos?.type : datos?.type == 'delete' ? null : typeActivity,
+    };
+    const tabs = { chat, surveys, games, attendees };
+    return { roomInfo, tabs };
+  };
+
+  const saveConfig = async (data = null, notify = 1) => {
+    console.log('8. LLEGA ACA SAVE CONFIG===>');
+    const respuesta = prepareData(data);
+    console.log('8. RESPUEST PREPARE===>', respuesta);
+    if (respuesta) {
+      console.log('8. ENTRA AL IF==>');
+      const { roomInfo, tabs } = respuesta;
+      console.log('8. DATA ACA===>', roomInfo, activityEdit);
+
+      const activity_id = activityEdit;
+      const service = new Service(firestore);
+      try {
+        const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
+        if (result && notify) {
+          DispatchMessageService({
+            type: 'success',
+            msj: result.message,
+            action: 'show',
+          });
+        }
+        return result;
+      } catch (err) {
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Error en la configuración!',
+          action: 'show',
+        });
+      }
+    }
+  };
+
+  const deleteTypeActivity = async () => {
+    const { roomInfo, tabs } = prepareData({ type: 'delete' });
+
+    const activity_id = activityEdit;
+    const service = new Service(firestore);
+    try {
+      const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
+      if (result) {
+        DispatchMessageService({
+          type: 'success',
+          msj: result.message,
+          action: 'show',
+        });
+        //CLEAN STATUS
+        setTypeActivity(null);
+        setMeetingId(null);
+        setRoomStatus('');
+      }
+      return result;
+    } catch (err) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error en la configuración!',
+        action: 'show',
+      });
+    }
+  };
+
+  const copyToClipboard = (data) => {
+    navigator.clipboard.writeText(data);
+    message.success('Copiado correctamente.!');
   };
 
   return (
@@ -224,6 +319,15 @@ export const AgendaContextProvider = ({ children }) => {
         refActivity,
         requestList,
         removeAllRequest,
+        typeActivity,
+        saveConfig,
+        deleteTypeActivity,
+        setTypeActivity,
+        setActivityName,
+        activityName,
+        dataLive,
+        setDataLive,
+        copyToClipboard,
       }}>
       {children}
     </AgendaContext.Provider>

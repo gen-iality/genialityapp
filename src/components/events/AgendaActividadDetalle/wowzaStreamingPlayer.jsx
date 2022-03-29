@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import WOWZAPlayer from '../../livetransmision/WOWZAPlayer';
-import { getLiveStreamStatus, getLiveStreamStats } from '../../../adaptors/wowzaStreamingAPI';
 import { CurrentUserContext } from '../../../context/userContext';
 import { Grid } from 'antd';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventUserContext } from '../../../context/eventUserContext';
+import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi';
 
 const { useBreakpoint } = Grid;
 
@@ -34,19 +34,20 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
 
   const executer_startMonitorStatus = async () => {
     let live_stream_status = null;
-    let live_stream_stats = null;
     try {
+      console.log('meeting_id==>', meeting_id);
       live_stream_status = await getLiveStreamStatus(meeting_id);
       //   setLivestreamStatus(live_stream_status);
-      live_stream_stats = await getLiveStreamStats(meeting_id);
-      setLivestreamStats(live_stream_stats);
+      setLivestreamStats(live_stream_status);
+      console.log('live_stream_status=>', live_stream_status);
+      // console.log('live_stream_status===>', live_stream_status);
     } catch (e) {}
     let timerId = setTimeout(executer_startMonitorStatus, 5000);
     setTimerId(timerId);
   };
   //ESCUCHA CUANDO LA TRANSMISION SE DETIENE
   useEffect(() => {
-    if (livestreamStats && (livestreamStats.state === 'stopped' || !livestreamStats.state)) {
+    if (!livestreamStats?.active) {
       clearTimeout(timer_id);
       setTimerId(null);
     }
@@ -64,10 +65,11 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
 
   return (
     <>
-      {livestreamStats?.connected.value === 'Yes' ? (
+      {console.log('100. livestreamStats==>', livestreamStats)}
+      {livestreamStats?.live ? (
         <>
           {((transmition == 'EviusMeet' && !visibleMeets) || transmition !== 'EviusMeet') && (
-            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.live} />
           )}
           {transmition == 'EviusMeet' && visibleMeets && (
             <div style={{ aspectRatio: screens.xs ? '9/12' : '16/9' }}>
@@ -85,7 +87,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       ) : (
         <>
           {((transmition == 'EviusMeet' && !visibleMeets) || transmition !== 'EviusMeet') && (
-            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
+            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.live} />
           )}
           {transmition == 'EviusMeet' && visibleMeets && (
             <div style={{ aspectRatio: screens.xs ? '9/12' : '16/9' }}>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { getLiveStream } from '../../adaptors/wowzaStreamingAPI';
+import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button } from 'antd';
 
@@ -13,21 +13,23 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [loopBackGround, setLoopBackGround] = useState(false);
   //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA ACTIVIDAD
   const [conected, setConected] = useState('No');
-
+  //console.log('DATOOS PLAYER===>', meeting_id, thereIsConnection);
   useEffect(() => {
     if (!meeting_id) return;
-    if (thereIsConnection === 'No' || !thereIsConnection) {
+    if (!thereIsConnection) {
       setConected('No');
       setLoopBackGround(false);
       setPlatformurl(defaultVideo);
       setMuted(true);
-    } else if (thereIsConnection === 'Yes') {
+    } else if (thereIsConnection) {
       let asyncfunction = async () => {
         setConected('Yes');
         setLoopBackGround(true);
         setPlatformurl('none');
         let live_stream = await getLiveStream(meeting_id);
-        let url = live_stream.player_hls_playback_url;
+        //console.log('LIVE STREAM===>', live_stream);
+        let url = live_stream.hls_playlist_url;
+        //console.log('100. URL==>', live_stream.hls_playlist_url);
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */
         setTimeout(() => {
           setPlatformurl(url);
@@ -45,6 +47,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
 
   return (
     <>
+      {console.log('100. WOWZAPLAYER=====>', thereIsConnection)}
       <div className='mediaplayer'>
         {muted && conected !== 'No' && (
           <Button

@@ -47,7 +47,6 @@ import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage
 import Dropzone from 'react-dropzone';
 import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
-import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
@@ -1116,6 +1115,7 @@ class AgendaEdit extends Component {
       avalibleGames,
       transmition,
       isPublished,
+      typeActivity,
     } = this.context;
 
     const roomInfo = {
@@ -1127,6 +1127,7 @@ class AgendaEdit extends Component {
       avalibleGames,
       habilitar_ingreso: roomStatus,
       transmition: transmition || null,
+      typeActivity,
     };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
@@ -1137,7 +1138,6 @@ class AgendaEdit extends Component {
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
     const activity_id = this.context.activityEdit || this.state.idNewlyCreatedActivity;
-
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, activity_id, roomInfo, tabs);
       if (result) {
@@ -1284,7 +1284,7 @@ class AgendaEdit extends Component {
           {loading ? (
             <Loading />
           ) : (
-            <Tabs defaultActiveKey='1'>
+            <Tabs activeKey={this.state.tabs} onChange={(key) => this.setState({ tabs: key })}>
               <TabPane tab='Agenda' key='1'>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
@@ -1604,12 +1604,14 @@ class AgendaEdit extends Component {
                   <TabPane tab='Tipo de actividad' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
-                        {/* <TipeOfActivity
+                        <TipeOfActivity
                           eventId={this.props.event._id}
                           activityId={this.state.activity_id}
                           activityName={this.state.name}
-                        /> */}
-                        <RoomManager
+                          tab={this.state.tabs}
+                        />
+
+                        {/* <RoomManager
                           event_id={this.props.event._id}
                           activity_id={this.state.activity_id}
                           activity_name={this.state.name}
@@ -1619,7 +1621,8 @@ class AgendaEdit extends Component {
                           date_activity={this.state.date}
                           pendingChangesSave={this.state.pendingChangesSave}
                           updateRoomManager={this.updateRoomManager}
-                        />
+                        /> */}
+
                         <BackTop />
                       </Col>
                     </Row>

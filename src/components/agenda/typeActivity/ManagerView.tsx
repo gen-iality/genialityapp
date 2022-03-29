@@ -1,5 +1,4 @@
-;
-import { Row, Col } from 'antd';
+import { Row, Col, Card, Typography } from 'antd';
 import CardPreview from '../typeActivity/components/CardPreview';
 import GoToEviusMeet from './components/GoToEviusMeet';
 import TransmitionOptions from './components/TransmitionOptions';
@@ -7,35 +6,83 @@ import CardShareLinkEviusMeet from './components/CardShareLinkEviusMeet';
 import CardParticipantRequests from './components/CardParticipantRequests';
 import CardRTMP from './components/CardRTMP';
 import CardStartTransmition from './components/CardStartTransmition';
-
-const ManagerView = () => {
+import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
+import { useState, useContext, useEffect } from 'react';
+import AgendaContext from '../../../context/AgendaContext';
+import { CurrentEventContext } from '../../../context/eventContext';
+import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
+const ManagerView = (props: any) => {
+  const eventContext = useContext(CurrentEventContext);
+  const { data } = useTypeActivity();
+  const { activityEdit, getRequestByActivity, request, transmition, dataLive } = useContext(AgendaContext);
+  const [viewModal, setViewModal] = useState(false);
+  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+  useEffect(() => {
+    if (props.type !== 'EviusMeet') return;
+    getRequestByActivity(refActivity);
+  }, [props.type]);
+  console.log('type', props.type);
   return (
     <>
       <Row gutter={[16, 16]}>
         <Col span={10}>
-          <CardPreview />
+          <CardPreview type={props.type} activityName={props.activityName} />
         </Col>
         <Col span={14}>
-          <CardStartTransmition />
+          {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && <CardStartTransmition />}
           <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <GoToEviusMeet />
-            </Col>
-            <Col span={24}>
-              <TransmitionOptions />
-            </Col>
-            <Col span={24}>
-              <CardShareLinkEviusMeet />
-            </Col>
-            <Col span={24}>
-              <CardParticipantRequests />
-            </Col>
+            {(props.type == 'reunión' || props.type == 'EviusMeet') && dataLive?.active && (
+              <Col span={10}>
+                <GoToEviusMeet type={props.type} activityId={props.activityId} />
+              </Col>
+            )}
+            {((props.type === 'EviusMeet' && dataLive?.active) || props.type !== 'EviusMeet') && (
+              <Col span={props.type == 'Video' || props.type == 'reunión' ? 24 : 14}>
+                <TransmitionOptions type={props.type} />
+              </Col>
+            )}
+            {props.type == 'Video' && (
+              <Col span={24}>
+                <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
+                  <Card.Meta
+                    title={
+                      <Typography.Text style={{ fontSize: '20px' }} strong>
+                        Video cargado
+                      </Typography.Text>
+                    }
+                    description={'Esta es la url cargada'}
+                  />
+                  <br />
+                  <strong>Url:</strong> {data}
+                </Card>
+              </Col>
+            )}
+            {props.type == 'reunión' ? (
+              <Col span={24}>
+                <CardShareLinkEviusMeet activityId={props.activityId} />
+              </Col>
+            ) : (
+              props.type == 'EviusMeet' &&
+              dataLive?.active && (
+                <Col span={24}>
+                  <CardShareLinkEviusMeet activityId={props.activityId} />
+                </Col>
+              )
+            )}
+            {props.type == 'EviusMeet' && dataLive?.active && (
+              <Col span={24}>
+                <CardParticipantRequests request={request} setViewModal={setViewModal} />
+              </Col>
+            )}
           </Row>
         </Col>
-        <Col span={24}>
-          <CardRTMP />
-        </Col>
+        {(props.type == 'Transmisión' || props.type == 'EviusMeet') && dataLive?.active && (
+          <Col span={24}>
+            <CardRTMP />
+          </Col>
+        )}
       </Row>
+      <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
     </>
   );
 };

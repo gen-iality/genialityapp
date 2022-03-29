@@ -39,6 +39,7 @@ export interface TypeActivityState {
   typeOptions: TypeActivity | any;
   selectedKey: string;
   previewKey: string;
+  data:string;
   buttonsTextNextOrCreate: string;
   buttonTextPreviousOrCancel: string;
 }

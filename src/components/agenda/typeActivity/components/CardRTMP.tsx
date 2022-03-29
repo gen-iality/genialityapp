@@ -1,8 +1,21 @@
-;
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
 import { CopyFilled } from '@ant-design/icons';
+import AgendaContext from '../../../../context/AgendaContext';
+import { useContext, useEffect, useState } from 'react';
 
 const CardRTMP = () => {
+  const { dataLive, copyToClipboard } = useContext(AgendaContext);
+  const [dataRtmp, setDataRtmp] = useState(null);
+  useEffect(() => {
+    if (dataLive && dataLive?.push_url) {
+      const data = dataLive?.push_url.split('/');
+      const password = data[data.length - 1];
+      const rtmp = dataLive.push_url.replace(password, '');
+      console.log('PASSWORD==>', password, rtmp);
+      setDataRtmp({ rtmp, password });
+    }
+  }, [dataLive]);
+
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
@@ -21,20 +34,11 @@ const CardRTMP = () => {
             <Input
               style={{ width: 'calc(100% - 31px)' }}
               disabled
-              value={
-                'https://eviusmeets.netlify.app/prepare?meetingId=617854261432914e2026a544&rtmp=rtmp://027156.entrypoint.cloud.wowza.com/app-Jk5Q65d5/eWpOdnZy'
-              } /* value={linkRolProductor} */
+              value={dataRtmp?.rtmp} /* value={linkRolProductor} */
             />
             <Tooltip title='Copiar RTMP url'>
               <Button
-                /* onClick={() => copyToClipboard('Productor')} */
-                /* icon={
-                    copySuccessProductor ? (
-                      <CheckCircleFilled style={{ color: '#52C41A' }} />
-                    ) : (
-                      <CopyFilled style={{ color: '#0089FF' }} />
-                    )
-                  } */
+                onClick={() => copyToClipboard(dataRtmp?.rtmp)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
             </Tooltip>
@@ -46,20 +50,11 @@ const CardRTMP = () => {
             <Input
               style={{ width: 'calc(100% - 31px)' }}
               disabled
-              value={
-                'https://eviusmeets.netlify.app/prepare?meetingId=617854261432914e2026a544&rtmp=rtmp://027156.entrypoint.cloud.wowza.com/app-Jk5Q65d5/eWpOdnZy'
-              } /* value={linkRolProductor} */
+              value={dataRtmp?.password} /* value={linkRolProductor} */
             />
             <Tooltip title='Copiar RTMP clave'>
               <Button
-                /* onClick={() => copyToClipboard('Productor')} */
-                /* icon={
-                    copySuccessProductor ? (
-                      <CheckCircleFilled style={{ color: '#52C41A' }} />
-                    ) : (
-                      <CopyFilled style={{ color: '#0089FF' }} />
-                    )
-                  } */
+                onClick={() => copyToClipboard(dataRtmp?.password)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
             </Tooltip>
