@@ -27,11 +27,11 @@ export const useApiMultiple = () => {
 
   const handleRequest = async ({ payloads, methods, requests, withCredentials, keys }: multipleRequest) => {
     setIsLoading(true);
-    setIsError({
+    /* setIsError({
       status: false,
       message: '',
     });
-    setIsSuccess(false);
+    setIsSuccess(false); */
     try {
       let requestToMake = requests.map((request, index) => {
         return [request, methods[index], keys[index], payloads[index], withCredentials[index]];
@@ -52,7 +52,7 @@ export const useApiMultiple = () => {
         status: false,
         message: '',
       });
-      setIsSuccess(false);
+      setIsSuccess(true);
     } catch (error) {
       handleError(error);
     }

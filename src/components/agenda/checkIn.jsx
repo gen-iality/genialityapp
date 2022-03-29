@@ -2,7 +2,7 @@ import { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '../../helpers/utils';
 import { firestore } from '../../helpers/firebase';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 /* import CheckSpace from '../event-users/checkSpace_old'; */
 // import * as XLSX from '../../xlsx/xlsx.mjs'
 import { Activity, RolAttApi } from '../../helpers/request';
@@ -363,7 +363,7 @@ class CheckAgenda extends Component {
         console.error('Error updating document: ', error);
         DispatchMessageService({
           type: 'error',
-          msj: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+          msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
           action: 'show',
         });
       });

@@ -223,7 +223,7 @@ function CrearEditarEmpresa(props) {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras borra la información...',
+      msj: 'Por favor espere mientras borra la información...',
       action: 'show',
     });
     if (props.location.state.edit) {

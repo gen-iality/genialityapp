@@ -1,7 +1,7 @@
 import { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 /* import { toast } from 'react-toastify'; */
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import DatosModal from './modal';
 import { Tabs, Table, Checkbox, Button, Select, Row, Col, Tooltip, Modal } from 'antd';
 import RelationField from './relationshipFields';
@@ -28,7 +28,6 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { confirm } = Modal;
-
 class Datos extends Component {
   constructor(props) {
     super(props);
@@ -126,7 +125,7 @@ class Datos extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se guarda la información...',
+      msj: ' Por favor espere mientras se guarda la información...',
       action: 'show',
     });
     try {
@@ -191,11 +190,11 @@ class Datos extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se guarda la información...',
+      msj: ' Por favor espere mientras se guarda la información...',
       action: 'show',
     });
     const organizationId = this?.organization?._id;
-    try{
+    try {
       if (organizationId && !this.eventId) {
         await this.props.orderFields(this.state.properties);
       } else if (this.eventId && !organizationId) {
@@ -273,7 +272,7 @@ class Datos extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se borra la información...',
+      msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
     });
     confirm({
@@ -313,7 +312,7 @@ class Datos extends Component {
               action: 'show',
             });
           }
-        }
+        };
         //self.onHandlerRemove(loading, item);
         onHandlerRemove();
       },
@@ -347,7 +346,7 @@ class Datos extends Component {
   showError = (error) => {
     DispatchMessageService({
       type: 'success',
-      msj: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+      msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
       action: 'show',
     });
     if (error.response) {
@@ -368,7 +367,7 @@ class Datos extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se guarda la información...',
+      msj: ' Por favor espere mientras se guarda la información...',
       action: 'show',
     });
     try {

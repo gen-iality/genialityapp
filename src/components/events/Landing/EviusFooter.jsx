@@ -13,7 +13,11 @@ const EviusFooter = () => {
               : null
           }
           style={{ textAlign: 'center' }}>
-          <img alt='image-dialog' src={cEventContext.value.styles.banner_footer} style={{ maxWidth: '100%' }} />
+          <img
+            alt='image-dialog'
+            src={cEventContext.value.styles.banner_footer}
+            style={{ width: '100%', maxWidth: '100%', height: '255px', objectFit: 'cover' }}
+          />
         </div>
       )}
     </>

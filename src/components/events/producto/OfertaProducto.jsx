@@ -182,6 +182,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   };
   return (
     <>
+      {console.log(product, 'producto')}
       {product && product._id != '6116cae171f4b926d1363266' && (
         <Card>
           <Row>
@@ -191,8 +192,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 <Title level={4}>
                   {(product &&
                     product.start_price &&
-                    product?.currency + ' $ ' + product.start_price.toLocaleString('es-CO')) ||
-                    (priceProduct && product?.currency + ' $ ' + priceProduct.toLocaleString('es-CO'))}
+                    /* product?.currency +  */ ' $ ' + product.start_price.toLocaleString('es-CO')) ||
+                    /* priceProduct && product?.currency + */ ' $ ' + priceProduct.toLocaleString('es-CO')}
                 </Title>
               </Text>
               {hability && <Divider></Divider>}
@@ -202,7 +203,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 <Text type='secondary'>
                   Oferta actual:{' '}
                   <Title level={4}>
-                    {priceProduct && product?.currency + ' $ ' + priceProduct.toLocaleString('es-CO')}
+                    {/* priceProduct && product?.currency +  */ ' $ ' + priceProduct.toLocaleString('es-CO')}
                   </Title>
                 </Text>
                 {hability && permission() && <Divider></Divider>}

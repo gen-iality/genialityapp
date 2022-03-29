@@ -5,7 +5,7 @@ import { Field } from 'formik';
 import FileInput from '../../shared/fileInput';
 import axios from 'axios/index';
 import { Actions } from '../../../helpers/request';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { DispatchMessageService } from '../../../context/MessageService';
 
 const FORMIK_PROPS_KEYS = ['form', 'field', 'meta'];
@@ -54,7 +54,7 @@ function FileField(rawProps) {
       axios.all(uploaders).then(async () => {
         DispatchMessageService({
           type: 'success',
-          msj: <FormattedMessage id='toast.img' defaultMessage='Ok!' />,
+          msj: this.props.intl.formatMessage({id: 'toast.img', defaultMessage: 'Ok!'}),
           action: 'show',
         });
       });

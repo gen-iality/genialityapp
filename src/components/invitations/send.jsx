@@ -112,7 +112,7 @@ class SendRsvp extends Component {
           if (status === 401)
             DispatchMessageService({
               type: 'error',
-              msj: <>Error : {data?.message || status}</>,
+              msj: `Error : ${data?.message || status}`,
               action: 'show',
             });
         } else {
@@ -146,7 +146,7 @@ class SendRsvp extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se envíe la información...',
+      msj: ' Por favor espere mientras se envíe la información...',
       action: 'show',
     });
     const { event } = this.props;

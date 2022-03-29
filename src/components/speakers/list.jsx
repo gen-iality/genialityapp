@@ -163,7 +163,7 @@ function SpeakersList(props) {
           queryClient.setQueryData('getSpeakersByEvent', queryData.newData);
           DispatchMessageService({
             type: 'success',
-            msj: <>La Posición de los conferencistas ha sido actualizada correctamente!</>,
+            msj: 'La Posición de los conferencistas ha sido actualizada correctamente!',
             action: 'show',
           });
         } else {

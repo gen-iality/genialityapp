@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
+import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
@@ -517,7 +517,7 @@ class ListEventUser extends Component {
         console.error('Error updating document: ', error);
         DispatchMessageService({
           type: 'error',
-          msj: <FormattedMessage id='toast.error' defaultMessage='Sry :(' />,
+          msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
           action: 'show',
         });
       });

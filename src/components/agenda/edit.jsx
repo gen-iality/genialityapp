@@ -622,7 +622,7 @@ class AgendaEdit extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras guarda la información...',
+      msj: 'Por favor espere mientras guarda la información...',
       action: 'show',
     });
     try {
@@ -691,7 +691,7 @@ class AgendaEdit extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras carga la imagen...',
+      msj: 'Por favor espere mientras carga la imagen...',
       action: 'show',
     });
     try {
@@ -737,7 +737,7 @@ class AgendaEdit extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras se guarda la información...',
+      msj: 'Por favor espere mientras se guarda la información...',
       action: 'show',
     });
     const validation = this.validForm();
@@ -997,7 +997,7 @@ class AgendaEdit extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras borra la información...',
+      msj: 'Por favor espere mientras borra la información...',
       action: 'show',
     });
     if (self.state.activity_id) {

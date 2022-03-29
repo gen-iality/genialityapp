@@ -24,7 +24,7 @@ class Importacion extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se envía la información...',
+      msj: ' Por favor espere mientras se envía la información...',
       action: 'show',
     });
     const f = files[0];

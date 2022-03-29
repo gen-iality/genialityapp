@@ -2,7 +2,7 @@ import { Component, Fragment } from 'react';
 import ComponentTest from './componentTest';
 import API from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 
@@ -65,7 +65,7 @@ class Test extends Component {
               console.error('Error updating document: ', error);
               DispatchMessageService({
                 type: 'error',
-                msj: <FormattedMessage id='toast.error' defaultMessage='Error :(' />,
+                msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Error :('}),
                 action: 'show',
               });
             });

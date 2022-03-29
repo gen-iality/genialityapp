@@ -35,7 +35,7 @@ function ConfirmacionRegistro(props) {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se guarda el contenido...',
+      msj: ' Por favor espere mientras se guarda el contenido...',
       action: 'show',
     });
     let data = {
