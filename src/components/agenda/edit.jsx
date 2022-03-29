@@ -156,8 +156,8 @@ class AgendaEdit extends Component {
     const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, activity_id);
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(this.props.event._id, activity_id);
-      console.log('GET CONFIGURATION===>', configuration);
-      console.log('2. activityEdit==>', activity_id);
+      // console.log('GET CONFIGURATION===>', configuration);
+      // console.log('2. activityEdit==>', activity_id);
       this.setState({
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
@@ -331,7 +331,8 @@ class AgendaEdit extends Component {
 
   async componentDidUpdate(prevProps) {
     /** a copy of the initial states is captured to be able to validate after any change */
-    if (!this.state.initialActivityStates && this.state.isPublished !== undefined) {
+
+    if (!this.state.initialActivityStates) {
       const {
         name,
         subtitle,
@@ -1239,7 +1240,6 @@ class AgendaEdit extends Component {
       showPendingChangesModal,
     } = this.state;
 
-    console.log('IS PUBLISHED===>', isPublished, this.context.isPublished);
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (

@@ -49,7 +49,6 @@ class Datos extends Component {
     this.updateTable = this.updateTable.bind(this);
     this.handlevisibleModal = this.handlevisibleModal.bind(this);
     this.organization = this.props?.sendprops ? this.props?.sendprops?.org : this.props?.org;
-    console.log('PROPS==>', props);
   }
 
   async componentDidMount() {
