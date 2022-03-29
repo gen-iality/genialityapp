@@ -19,7 +19,7 @@ const vimeoAndYotubeType: OriginOptions[] = [
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
     addonBefore: 'https://vimeo.com/event/',
-    subtitle: 'Descripción del contenido',
+    subtitle: 'Coloca aquí el ID o URL de tu transmisión de Vimeo',
     placeholder: 'vimeo id',
   },
   {
@@ -28,7 +28,7 @@ const vimeoAndYotubeType: OriginOptions[] = [
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
     addonBefore: 'https://youtu.be/',
-    subtitle: 'Descripción del contenido',
+    subtitle: 'Coloca aquí el ID o URL de tu transmisión de YouTube',
     placeholder: 'youtube id',
   },
 ];
@@ -38,7 +38,7 @@ const liveBroadcastTransmissionOriginType: OriginOptions[] = [
   {
     key: 'eviusMeet',
     title: 'EviusMeet',
-    description: 'Vivamus magna justo.',
+    description: 'La herramienta ideal para realizar tus transmisiones en vivo.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fevius_streaming.jpg?alt=media&token=3bdcd392-143f-4958-a1c2-f5663ff0f650',
   },
