@@ -33,7 +33,7 @@ function ModalMembers(props) {
         DispatchMessageService({
           type: 'loading',
           key: 'loading',
-          msj: ' Por favor espere miestras se borra la información...',
+          msj: ' Por favor espere mientras se borra la información...',
           action: 'show',
         });
         const onHandlerRemove = async () => {

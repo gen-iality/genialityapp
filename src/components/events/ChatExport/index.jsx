@@ -167,7 +167,7 @@ const ChatExport = ({ eventId, event }) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se borra la información...',
+      msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
     });
     Modal.confirm({
@@ -231,7 +231,7 @@ const ChatExport = ({ eventId, event }) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se borra la información...',
+      msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
     });
     Modal.confirm({
@@ -291,7 +291,7 @@ const ChatExport = ({ eventId, event }) => {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
-        msj: `<> Por favor espere miestras ${userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...</>`,
+        msj: `<> Por favor espere mientras ${userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...</>`,
         action: 'show',
       });
       Modal.confirm({

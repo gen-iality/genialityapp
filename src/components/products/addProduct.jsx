@@ -117,7 +117,7 @@ function AddProduct(props) {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se guarda la información...',
+      msj: ' Por favor espere mientras se guarda la información...',
       action: 'show',
     });
     let validators = {};
@@ -208,7 +208,7 @@ function AddProduct(props) {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se borra la información...',
+      msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
     });
     if (props.match.params.id) {

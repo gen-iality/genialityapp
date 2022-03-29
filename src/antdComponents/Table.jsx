@@ -192,7 +192,6 @@ const Table = (props) => {
     };
     if (actions) {
       if (!headerState.includes(options)) {
-        console.log('AGREGA ACA LAS ACTIONS');
         headerState.push(options);
         setHeaderState(headerState);
       }

@@ -84,7 +84,7 @@ class Product extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se guarda la configuración...',
+      msj: ' Por favor espere mientras se guarda la configuración...',
       action: 'show',
     });
     try {
@@ -126,7 +126,7 @@ class Product extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se borra la configuración...',
+      msj: ' Por favor espere mientras se borra la configuración...',
       action: 'show',
     });
     let self = this;

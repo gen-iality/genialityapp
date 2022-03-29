@@ -175,7 +175,7 @@ class triviaEdit extends Component {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
-        msj: 'Por favor espere miestras se guarda la información...',
+        msj: 'Por favor espere mientras se guarda la información...',
         action: 'show',
       });
       //Se recogen los datos a actualizar
@@ -435,7 +435,7 @@ class triviaEdit extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras se borra la información...',
+      msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
     });
     let { question, _id } = self.state;
@@ -613,7 +613,7 @@ class triviaEdit extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras se borra la información...',
+      msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
     });
     confirm({

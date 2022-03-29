@@ -45,7 +45,7 @@ const Configuration = (props) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: ' Por favor espere miestras se guarda la configuración...',
+      msj: ' Por favor espere mientras se guarda la configuración...',
       action: 'show',
     });
     setLoading(true)     

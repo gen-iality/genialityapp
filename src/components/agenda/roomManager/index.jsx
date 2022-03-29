@@ -431,7 +431,7 @@ class RoomManager extends Component {
         DispatchMessageService({
           type: 'loading',
           key: 'loading',
-          msj: ' Por favor espere miestras se borra la transmisión...',
+          msj: ' Por favor espere mientras se borra la transmisión...',
           action: 'show',
         });
         const onHandlerRemove = async () => {

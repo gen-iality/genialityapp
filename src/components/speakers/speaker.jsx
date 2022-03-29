@@ -140,7 +140,7 @@ function Speaker(props) {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
-        msj: 'Por favor espere miestras guarda la información...',
+        msj: 'Por favor espere mientras guarda la información...',
         action: 'show',
       });
       const { name, profession, description, image, order, published } = values;
@@ -193,7 +193,7 @@ function Speaker(props) {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras se borra la información...',
+      msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
     });
     if (state.edit) {
