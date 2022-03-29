@@ -6,6 +6,7 @@ import createNewUser from './ModalsFunctions/createNewUser';
 import { app } from '../../helpers/firebase';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
