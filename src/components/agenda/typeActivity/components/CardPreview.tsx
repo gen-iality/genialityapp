@@ -13,9 +13,17 @@ const CardPreview = (props: any) => {
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const urlVideo =
     props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
-      ? dataLive && dataLive?.live && dataLive?.active
+      ? dataLive && dataLive?.live && dataLive?.hls_playlist_url
         ? dataLive?.hls_playlist_url
         : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
+      : props.type == 'Youtube'
+      ? data.includes('https://youtu.be/')
+        ? data
+        : 'https://youtu.be/' + data
+      : props.type === 'vimeo'
+      ? data.includes('https://vimeo.com/event/')
+        ? data
+        : 'https://vimeo.com/event/' + data
       : data;
 
   //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO

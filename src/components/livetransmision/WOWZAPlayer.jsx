@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button } from 'antd';
+import AgendaContext from '@/context/AgendaContext';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const defaultVideo =
@@ -11,12 +12,14 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [platformurl, setPlatformurl] = useState(defaultVideo);
   const [muted, setMuted] = useState(false);
   const [loopBackGround, setLoopBackGround] = useState(false);
+  const { typeActivity } = useContext(AgendaContext);
   //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA ACTIVIDAD
   const [conected, setConected] = useState('No');
   //console.log('DATOOS PLAYER===>', meeting_id, thereIsConnection);
+  console.log('11. WOWZA PLAYER===>', typeActivity);
   useEffect(() => {
     if (!meeting_id) return;
-    if (!thereIsConnection) {
+    if (!thereIsConnection && typeActivity !== 'youTube') {
       setConected('No');
       setLoopBackGround(false);
       setPlatformurl(defaultVideo);
@@ -37,13 +40,17 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         }, 2000);
       };
       asyncfunction();
+    } else if (typeActivity === 'youTube') {
+      console.log('11. ENTRA ACA===>');
+      setConected('Yes');
+      setPlatformurl('https://youtu.be/' + meeting_id);
     }
     return () => {
       setLoopBackGround(false);
       setPlatformurl(null);
       setMuted(false);
     };
-  }, [meeting_id, thereIsConnection]);
+  }, [meeting_id, thereIsConnection, typeActivity]);
 
   return (
     <>
