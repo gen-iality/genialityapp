@@ -40,24 +40,28 @@ const ModalStepByStep = () => {
         {typeOptions.key === 'cargarvideo' ? <InputUploadVideo /> : null}
         {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
-            if (options.key === typeOptions.key) {
-              return (
-                <ContentSource
-                  addonBefore={options.addonBefore}
-                  placeholder={options.placeholder}
-                  icon={options.image}
-                  subtitle={options.subtitle}
-                />
-              );
-            }
-          })
+              if (options.key === typeOptions.key) {
+                return (
+                  <ContentSource
+                    addonBefore={options.addonBefore}
+                    placeholder={options.placeholder}
+                    icon={options.image}
+                    subtitle={options.subtitle}
+                  />
+                );
+              }
+            })
           : null}
 
         {typeOptions.key === 'meeting' && (
           <ContentInformative
             title={'EviusMeet'}
-            description={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim sagittis, faucibus risus diam pretium. Est ligula egestas turpis donec nunc, feugiat in eget. Justo turpis metus quis.'}
-            image={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6'}
+            description={
+              'La herramienta para videoconferencias, comparte tu cámara, habla con tus participantes y presenta lo que quieras desde tu PC. Puedes personalizar el escenario a tu gusto, imágenes de fondo, recuadros o marcos para el escenario, muestra mensajes para todos, usa los colores de tu marca. Controla el acceso y lo que comparten tus participantes. Descubre esto y mucho más con EviusMeet.'
+            }
+            image={
+              'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6'
+            }
           />
         )}
       </LayoutTypeActivity>

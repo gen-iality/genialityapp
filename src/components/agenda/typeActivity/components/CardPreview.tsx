@@ -40,7 +40,7 @@ const CardPreview = (props: any) => {
     setDuration(duration);
   };
 
-  function videoDuration(seconds) {
+  function videoDuration(seconds: number) {
     var hour: number | string = Math.floor(seconds / 3600);
     var minute: number | string = Math.floor((seconds / 60) % 60);
     var second: number | string = seconds % 60;
@@ -68,7 +68,7 @@ const CardPreview = (props: any) => {
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && (
             <ReactPlayer
-              onDuration={props.type === 'Video' ? handleDuration : null}
+              onDuration={props.type === 'Video' ? handleDuration : undefined}
               style={{ objectFit: 'cover' }}
               width='100%'
               height='100%'
@@ -100,8 +100,9 @@ const CardPreview = (props: any) => {
                       ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
                       : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
                     : props.type === 'vimeo'
-                    ? { backgroundColor: 'gba(26, 183, 234, 0.1)', color: '#32B8E8' }
-                    : props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }
+                    ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
+                    : (props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
+                      undefined
                 }
               />
             )
