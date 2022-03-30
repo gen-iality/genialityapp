@@ -1,4 +1,4 @@
-import { Card, Typography, Space, Select, Avatar } from 'antd';
+import { Card, Typography, Space, Select, Avatar, Button } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
@@ -53,13 +53,13 @@ const CardPreview = (props: any) => {
         {visibleReactPlayer && (
           <ReactPlayer
             playing={true}
-            loop={valideUrl(urlVideo)}
+            loop={true}
             onDuration={props.type === 'Video' ? handleDuration : undefined}
             style={{ objectFit: 'cover' }}
             width='100%'
             height='100%'
             url={urlVideo}
-            controls={valideUrl(urlVideo)}
+            controls={true}
             onError={(e) => console.log('Error ==>', e)}
           />
         )}
@@ -105,6 +105,7 @@ const CardPreview = (props: any) => {
 
   return (
     <Card
+      actions={[<Button>Iniciar grabacion</Button>]}
       cover={
         props.type === 'reunión' && (
           <img
