@@ -110,8 +110,8 @@ export const typeActivityData: TypeActivity = {
   typeOptions: [
     {
       key: 'liveBroadcast',
-      MainTitle: 'Escoge el tipo de transmision',
-      title: 'Transmision en vivo',
+      MainTitle: 'Escoge el tipo de transmisión',
+      title: 'Transmisión en vivo',
       description: 'Actividad en la que quieras presentar un en vivo para tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Ftransmision.jpg?alt=media&token=92443401-db41-485f-a411-ae113186fd9c',
@@ -120,7 +120,7 @@ export const typeActivityData: TypeActivity = {
     {
       key: 'meeting',
       MainTitle: 'Crear reuniones interactivas y personalizadas con todo el poder de evius',
-      title: 'Reunion',
+      title: 'Reunión',
       description: 'Actividad en la que quieras tener una reunión virtual con tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
