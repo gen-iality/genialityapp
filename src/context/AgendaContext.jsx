@@ -1,3 +1,4 @@
+import { getLiveStreamStatus } from '@/adaptors/gcoreStreamingApi';
 import { message } from 'antd';
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
@@ -38,6 +39,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [typeActivity, setTypeActivity] = useState(undefined);
   const [activityName, setActivityName] = useState(null);
   const [dataLive, setDataLive] = useState(null);
+  const [timerId, setTimerId] = useState(null);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -207,18 +209,14 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const saveConfig = async (data = null, notify = 1) => {
-    console.log('8. LLEGA ACA SAVE CONFIG===>');
     const respuesta = prepareData(data);
-    console.log('8. RESPUEST PREPARE===>', respuesta);
     if (respuesta) {
-      console.log('8. ENTRA AL IF==>');
       const { roomInfo, tabs } = respuesta;
-      console.log('8. DATA ACA===>', roomInfo, activityEdit);
-
       const activity_id = activityEdit;
       const service = new Service(firestore);
       try {
         const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
+        // await TypesAgendaApi.create(cEvent.value._id, data);
         if (result && notify) {
           DispatchMessageService({
             type: 'success',
@@ -236,6 +234,32 @@ export const AgendaContextProvider = ({ children }) => {
       }
     }
   };
+  const stopInterval = () => {
+    if (timerId) {
+      clearInterval(timerId);
+    }
+  };
+  const executer_startMonitorStatus = async () => {
+    let live_stream_status = null;
+    let liveLocal = false;
+    try {
+      live_stream_status = await getLiveStreamStatus(meeting_id);
+
+      // console.log('live_stream_status', live_stream_status);
+      console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.live, liveLocal);
+
+      if (liveLocal !== live_stream_status?.live) {
+        console.log('10. ENTRO A DETENER');
+        setDataLive(live_stream_status);
+      }
+      liveLocal = live_stream_status?.live;
+    } catch (e) {}
+    const timer_id = setTimeout(executer_startMonitorStatus, 5000);
+    setTimerId(timer_id);
+    if (!live_stream_status.active) {
+      clearTimeout(timer_id);
+    }
+  };
 
   const deleteTypeActivity = async () => {
     const { roomInfo, tabs } = prepareData({ type: 'delete' });
@@ -249,6 +273,7 @@ export const AgendaContextProvider = ({ children }) => {
         setTypeActivity(null);
         setMeetingId(null);
         setRoomStatus('');
+        setDataLive(null);
         DispatchMessageService({
           type: 'success',
           msj: result.message,
@@ -328,6 +353,8 @@ export const AgendaContextProvider = ({ children }) => {
         dataLive,
         setDataLive,
         copyToClipboard,
+        stopInterval,
+        executer_startMonitorStatus,
       }}>
       {children}
     </AgendaContext.Provider>
