@@ -15,7 +15,15 @@ import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeA
 const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const { meeting_id, setDataLive, dataLive, saveConfig, deleteTypeActivity } = useContext(AgendaContext);
+  const {
+    meeting_id,
+    setDataLive,
+    dataLive,
+    saveConfig,
+    deleteTypeActivity,
+    executer_startMonitorStatus,
+    stopInterval,
+  } = useContext(AgendaContext);
   const { toggleActivitySteps } = useTypeActivity();
   const queryClient = useQueryClient();
   const [timerId, setTimerId] = useState(null);
@@ -24,7 +32,7 @@ const CardStartTransmition = (props: any) => {
       saveConfig(null, 0);
       initializeStream();
     } else {
-      clearTimeout(timerId);
+      stopInterval();
     }
     async function initializeStream() {
       const status = await getLiveStream(meeting_id);
@@ -47,25 +55,6 @@ const CardStartTransmition = (props: any) => {
     await deleteTypeActivity();
     toggleActivitySteps('initial');
     setLoadingDelete(false);
-  };
-
-  const executer_startMonitorStatus = async () => {
-    let live_stream_status = null;
-    try {
-      live_stream_status = await getLiveStreamStatus(meeting_id);
-
-      // console.log('live_stream_status', live_stream_status);
-      console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.active);
-
-      if (dataLive && dataLive?.active !== live_stream_status.active) {
-        setDataLive(live_stream_status);
-      }
-    } catch (e) {}
-    const timer_id = setTimeout(executer_startMonitorStatus, 5000);
-    setTimerId(timer_id);
-    if (!live_stream_status.active) {
-      clearTimeout(timer_id);
-    }
   };
 
   const executer_startStream = async () => {

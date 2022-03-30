@@ -38,7 +38,8 @@ const ManagerView = (props: any) => {
                 <GoToEviusMeet type={props.type} activityId={props.activityId} />
               </Col>
             )}
-            {((props.type === 'EviusMeet' && dataLive?.active) || props.type !== 'EviusMeet') && (
+            {(((props.type === 'EviusMeet' || props.type === 'Transmisión') && dataLive?.active) ||
+              (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
               <Col span={props.type !== 'EviusMeet' ? 24 : 14}>
                 <TransmitionOptions type={props.type} />
               </Col>
