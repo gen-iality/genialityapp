@@ -4,19 +4,18 @@ import LoadingTypeActivity from './LoadingTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
 import { useEffect } from 'react';
 import {
-  createLiveStream,
   deleteLiveStream,
   getLiveStream,
   getLiveStreamStatus,
   startLiveStream,
-  stopLiveStream,
 } from '../../../../adaptors/gcoreStreamingApi';
-import { useMutation, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 
 const CardStartTransmition = () => {
   const [loading, setloading] = useState(false);
-  const { meeting_id, setDataLive, dataLive, saveConfig } = useContext(AgendaContext);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const { meeting_id, setDataLive, dataLive, saveConfig, deleteTypeActivity } = useContext(AgendaContext);
   const { toggleActivitySteps } = useTypeActivity();
   const queryClient = useQueryClient();
   const [timerId, setTimerId] = useState(null);
@@ -35,18 +34,20 @@ const CardStartTransmition = () => {
         await executer_startMonitorStatus();
       } catch (e) {
         await executer_startMonitorStatus();
-        /*console.log('AL TRAER EL MEETING==>', e);
-        let livestreamInitial = { state: 'Finished' };
-        setLivestreamStatus(livestreamInitial);*/
+        // console.log('AL TRAER EL MEETING==>', e);
+        // let livestreamInitial = { state: 'Finished' };
+        // setLiveStreamStatus(livestreamInitial);
       }
     }
   }, [meeting_id]);
 
-  /* const deleteStreaming = async () => {
+  const deleteStreaming = async () => {
+    setLoadingDelete(true);
     deleteLiveStream(meeting_id);
     await deleteTypeActivity();
     toggleActivitySteps('initial');
-  };*/
+    setLoadingDelete(false);
+  };
 
   const executer_startMonitorStatus = async () => {
     let live_stream_status = null;
@@ -56,7 +57,7 @@ const CardStartTransmition = () => {
       // console.log('live_stream_status', live_stream_status);
       console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.active);
       setDataLive(live_stream_status);
-    } catch (e) { }
+    } catch (e) {}
     const timer_id = setTimeout(executer_startMonitorStatus, 5000);
     setTimerId(timer_id);
     if (!live_stream_status.active) {
@@ -83,11 +84,14 @@ const CardStartTransmition = () => {
           subTitle='Tus asistentes no verán lo que transmites hasta que cambies el estado de la transmisión para tus asistentes. '
           extra={
             <Space>
-              {/*!liveStreamStatus.active && (
+              {!loadingDelete ? (
                 <Button onClick={() => deleteStreaming()} type='text' danger>
                   Eliminar transmisión
                 </Button>
-              )*/}
+              ) : (
+                <Spin />
+              )}
+
               {!dataLive?.active && !loading ? (
                 <Button onClick={() => executer_startStream()} type='primary'>
                   Iniciar transmisión
