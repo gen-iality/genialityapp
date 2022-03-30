@@ -12,7 +12,6 @@ const CardPreview = (props: any) => {
   const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
-    console.log('🚀 debug ~ valideUrl ~ url', url);
     if (url.includes('Loading2')) {
       return false;
     } else {
@@ -21,7 +20,6 @@ const CardPreview = (props: any) => {
   };
 
   const renderPlayer = () => {
-    console.log('🚀 SE EJECUTA EL RENDER PLAYER');
     let urlVideo =
       props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
         ? dataLive && dataLive?.live && dataLive?.hls_playlist_url
