@@ -22,8 +22,8 @@ const CardPreview = (props: any) => {
     }
   };
 
+  //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
   const renderPlayer = () => {
-    console.log('🚀 SE EJECUTA EL RENDER PLAYER');
     let urlVideo =
       props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
         ? dataLive && dataLive.active && dataLive?.live && dataLive?.iframe_url
@@ -40,14 +40,15 @@ const CardPreview = (props: any) => {
             : 'https://vimeo.com/event/' + data
           : data
         : data;
-    console.log('🚀 props.type', props.type, dataLive?.live, dataLive?.active);
+
+    //VISIBILIDAD DEL REACT PLAYER
     const visibleReactPlayer =
       ((props.type == 'Video' || props.type == 'Youtube' || props.type == 'vimeo') && urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
         (props.type === 'Transmisión' || props.type === 'EviusMeet'))
         ? true
         : false;
-    console.log('🚀 visibleReactPlayer', visibleReactPlayer);
+    //RENDERIZAR COMPONENTE
     return (
       <>
         {visibleReactPlayer && (
