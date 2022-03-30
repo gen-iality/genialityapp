@@ -31,7 +31,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         setPlatformurl('none');
         let live_stream = await getLiveStream(meeting_id);
         //console.log('LIVE STREAM===>', live_stream);
-        let url = live_stream.hls_playlist_url;
+        let url = live_stream.iframe_url;
         //console.log('100. URL==>', live_stream.hls_playlist_url);
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */
         setTimeout(() => {
@@ -56,12 +56,12 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
     <>
       {console.log('100. WOWZAPLAYER=====>', thereIsConnection)}
       <div className='mediaplayer'>
-        {muted && conected !== 'No' && (
+        {/* { muted && conected !== 'No' && (
           <Button
             onClick={() => setMuted(false)}
             shape='circle'
             style={{
-              /* fontSize: '25px',  */
+             
               position: 'absolute',
               top: 'auto',
               left: 'auto',
@@ -69,23 +69,23 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             }}
             icon={<VolumeOff />}
           />
-        )}
-        <ReactPlayer
+        )} */}
+        {/* <ReactPlayer
           style={{ aspectRatio: '16/9' }}
           muted={muted}
           playing={true}
           loop={!loopBackGround}
-          /* style={{ height: '100% !important', objectFit: 'cover' }} */
-          // height='400px'
           width='100%'
           url={platformurl}
           controls={loopBackGround}
-          // config={{
-          //   file: {
-          //     forceHLS: loopBackGround,
-          //   },
-          // }}
-        />
+        /> */}
+        <iframe
+          style={{ aspectRatio: '16/9' }}
+          width='100%'
+          src={platformurl + '?muted=1&autoplay=1'}
+          frameborder='0'
+          allow='autoplay; encrypted-media'
+          allowfullscreen></iframe>
       </div>
     </>
   );
