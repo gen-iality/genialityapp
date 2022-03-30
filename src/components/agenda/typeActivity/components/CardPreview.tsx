@@ -43,7 +43,8 @@ const CardPreview = (props: any) => {
     console.log('🚀 props.type', props.type, dataLive?.live, dataLive?.active);
     const visibleReactPlayer =
       ((props.type == 'Video' || props.type == 'Youtube' || props.type == 'vimeo') && urlVideo) ||
-      (dataLive?.live && !dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet'))
+      (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
+        (props.type === 'Transmisión' || props.type === 'EviusMeet'))
         ? true
         : false;
     console.log('🚀 visibleReactPlayer', visibleReactPlayer);
