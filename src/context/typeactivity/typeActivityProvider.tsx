@@ -1,7 +1,7 @@
 import { useContext, useReducer, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
-import { AgendaApi } from '../../helpers/request';
+import { AgendaApi, TypesAgendaApi } from '../../helpers/request';
 import AgendaContext from '../AgendaContext';
 import { CurrentEventContext } from '../eventContext';
 import { TypeActivityState } from './interfaces/interfaces';
@@ -130,8 +130,19 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     setLoadingStop(false);
     //queryClient.setQueryData('livestream', null);
   };
+
+  const saveTypeActivity = async () => {
+    const createTypeActivityBody = {
+      name: typeActivityState.selectedKey,
+    };
+
+    const activityType = await TypesAgendaApi.create(cEvent?.value?._id, createTypeActivityBody);
+    await AgendaApi.editOne({ type_id: activityType._id }, activityEdit, cEvent?.value?._id);
+  };
+
   const createTypeActivity = async () => {
     let resp;
+    saveTypeActivity();
     switch (typeActivityState.selectedKey) {
       case 'url':
         const respUrl = await AgendaApi.editOne({ video: typeActivityState.data }, activityEdit, cEvent?.value?._id);

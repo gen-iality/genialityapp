@@ -5,7 +5,6 @@ import { fireRealtime, firestore } from '../helpers/firebase';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';
 import { DispatchMessageService } from './MessageService';
-import { TypesAgendaApi } from '../helpers/request';
 export const AgendaContext = createContext();
 
 const initialState = {
@@ -208,7 +207,6 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const saveConfig = async (data = null, notify = 1) => {
-    console.log('🚀 debug ~ saveConfig ~ data', data);
     const respuesta = prepareData(data);
     if (respuesta) {
       const { roomInfo, tabs } = respuesta;
