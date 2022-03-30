@@ -174,11 +174,12 @@ const Table = (props) => {
             )}
             {remove && !noRemove && (
               <Col>
+                {console.log('ssdsdsadsd', item)}
                 <Tooltip placement='topLeft' title='Eliminar'>
                   <Button
                     key={`removeAction${item.index}`}
                     id={`removeAction${item.index}`}
-                    onClick={() => remove(item.chatId ? item.chatId : item._id)}
+                    onClick={() => remove(item.chatId ? item.chatId : item._id, item.meeting_id)}
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'

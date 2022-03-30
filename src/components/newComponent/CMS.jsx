@@ -7,7 +7,7 @@ import Table from '../../antdComponents/Table';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
-
+import { deleteLiveStream } from '@/adaptors/gcoreStreamingApi';
 const { confirm } = Modal;
 
 const CMS = (props) => {
@@ -81,7 +81,7 @@ const CMS = (props) => {
     setLoading(false);
   };
 
-  const remove = (id) => {
+  const remove = (id, meeting_id) => {
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -97,7 +97,9 @@ const CMS = (props) => {
           action: 'show',
         });
         const onHandlerRemove = async () => {
+          console.log('esss aquissssss', meeting_id);
           try {
+            if (meeting_id) await deleteLiveStream(meeting_id);
             if (deleteCallback) await deleteCallback(id);
             await API.deleteOne(id, eventId);
             DispatchMessageService({

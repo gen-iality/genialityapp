@@ -53,6 +53,7 @@ import Service from './roomManager/service';
 import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
 import TipeOfActivity from './typeActivity';
+import { deleteLiveStream } from '@/adaptors/gcoreStreamingApi';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -431,6 +432,7 @@ class AgendaEdit extends Component {
 
       this.context.setActivityEdit(idNewlyCreatedActivity);
       const info = await AgendaApi.getOne(idNewlyCreatedActivity, event._id);
+
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
@@ -1011,6 +1013,10 @@ class AgendaEdit extends Component {
         onOk() {
           const onHandlerRemove = async () => {
             try {
+              if (self.state.transmition === 'EviusMeet') {
+                console.log('evismeeeee', self.state.meeting_id);
+                await deleteLiveStream(self.state.meeting_id);
+              }
               await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
               DispatchMessageService({
                 key: 'loading',
@@ -1225,6 +1231,7 @@ class AgendaEdit extends Component {
       selectedType,
       selectedCategories,
       video,
+      //meeting_id,
       hosts,
       spaces,
       categories,
