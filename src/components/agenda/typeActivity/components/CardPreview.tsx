@@ -11,10 +11,18 @@ const CardPreview = (props: any) => {
   const { data } = useTypeActivity();
   const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
+  const valideUrl = (url: string) => {
+    console.log('🚀 debug ~ valideUrl ~ url', url);
+    if (url.includes('Loading2')) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   const renderPlayer = () => {
-    console.log('SE EJECUTA EL RENDER PLAYER');
-    const urlVideo =
+    console.log('🚀 SE EJECUTA EL RENDER PLAYER');
+    let urlVideo =
       props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
         ? dataLive && dataLive?.live && dataLive?.hls_playlist_url
           ? dataLive?.hls_playlist_url
@@ -30,16 +38,27 @@ const CardPreview = (props: any) => {
             : 'https://vimeo.com/event/' + data
           : data
         : data;
-    console.log('URL DEL VIDEO===>', urlVideo);
+    // console.log('🚀 URL DEL VIDEO===>', urlVideo);
     return (
-      <ReactPlayer
-        onDuration={props.type === 'Video' ? handleDuration : undefined}
-        style={{ objectFit: 'cover' }}
-        width='100%'
-        height='100%'
-        url={urlVideo}
-        controls
-      />
+      <>
+        {urlVideo && (
+          <ReactPlayer
+            playing={true}
+            loop={valideUrl(urlVideo)}
+            onDuration={props.type === 'Video' ? handleDuration : undefined}
+            style={{ objectFit: 'cover' }}
+            width='100%'
+            height='100%'
+            url={urlVideo}
+            controls={valideUrl(urlVideo)}
+            config={{
+              file: {
+                forceHLS: valideUrl(urlVideo),
+              },
+            }}
+          />
+        )}
+      </>
     );
   };
 
