@@ -10,10 +10,10 @@ const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
   const { data } = useTypeActivity();
   const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
-  const [url, setUrl] = useState(null);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
 
-  useEffect(() => {
+  const renderPlayer = () => {
+    console.log('SE EJECUTA EL RENDER PLAYER');
     const urlVideo =
       props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
         ? dataLive && dataLive?.live && dataLive?.hls_playlist_url
@@ -30,13 +30,22 @@ const CardPreview = (props: any) => {
             : 'https://vimeo.com/event/' + data
           : data
         : data;
-    setUrl(urlVideo);
-  }, [data, dataLive]);
+    console.log('URL DEL VIDEO===>', urlVideo);
+    return (
+      <ReactPlayer
+        onDuration={props.type === 'Video' ?? handleDuration}
+        style={{ objectFit: 'cover' }}
+        width='100%'
+        height='100%'
+        url={urlVideo}
+        controls
+      />
+    );
+  };
 
-  console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url, url);
+  console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url);
 
   //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
-  console.log('99. DATA===>', data);
   const filterData = data
     ? data.toString()?.includes('https://vimeo.com/event/') || data?.toString().includes('https://youtu.be/')
       ? data?.split('/')[data?.split('/').length - 1]
@@ -76,16 +85,7 @@ const CardPreview = (props: any) => {
       style={{ borderRadius: '8px' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
-          {props?.type !== 'reunión' && (
-            <ReactPlayer
-              onDuration={props.type === 'Video' ? handleDuration : undefined}
-              style={{ objectFit: 'cover' }}
-              width='100%'
-              height='100%'
-              url={url}
-              controls
-            />
-          )}
+          {props?.type !== 'reunión' && renderPlayer()}
         </div>
         <Card.Meta
           avatar={
