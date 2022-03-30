@@ -26,7 +26,7 @@ const CardPreview = (props: any) => {
     console.log('🚀 SE EJECUTA EL RENDER PLAYER');
     let urlVideo =
       props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
-        ? dataLive && dataLive?.live && dataLive?.iframe_url
+        ? dataLive && dataLive.active && dataLive?.live && dataLive?.iframe_url
           ? dataLive?.iframe_url
           : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
         : props.type == 'Youtube'
@@ -40,10 +40,16 @@ const CardPreview = (props: any) => {
             : 'https://vimeo.com/event/' + data
           : data
         : data;
-    // console.log('🚀 URL DEL VIDEO===>', urlVideo);
+    console.log('🚀 props.type', props.type, dataLive?.live, dataLive?.active);
+    const visibleReactPlayer =
+      ((props.type == 'Video' || props.type == 'Youtube' || props.type == 'vimeo') && urlVideo) ||
+      (dataLive?.live && !dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet'))
+        ? true
+        : false;
+    console.log('🚀 visibleReactPlayer', visibleReactPlayer);
     return (
       <>
-        {/* {urlVideo && (
+        {visibleReactPlayer && (
           <ReactPlayer
             playing={true}
             loop={valideUrl(urlVideo)}
@@ -55,14 +61,16 @@ const CardPreview = (props: any) => {
             controls={valideUrl(urlVideo)}
             onError={(e) => console.log('Error ==>', e)}
           />
-        )} */}
-        <iframe
-          style={{ aspectRatio: '16/9' }}
-          width='100%'
-          src={urlVideo + '?muted=1&autoplay=1'}
-          frameBorder='0'
-          allow='autoplay; encrypted-media'
-          allowFullScreen></iframe>
+        )}
+        {!visibleReactPlayer && (
+          <iframe
+            style={{ aspectRatio: '16/9' }}
+            width='100%'
+            src={urlVideo + '?muted=1&autoplay=1'}
+            frameBorder='0'
+            allow='autoplay; encrypted-media'
+            allowFullScreen></iframe>
+        )}
       </>
     );
   };
