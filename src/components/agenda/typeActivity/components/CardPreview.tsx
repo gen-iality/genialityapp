@@ -2,7 +2,7 @@ import { Card, Typography, Space, Select, Avatar } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../../context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 
@@ -11,17 +11,44 @@ const CardPreview = (props: any) => {
   const { data } = useTypeActivity();
   const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
-  const urlVideo =
-    props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
-      ? dataLive && dataLive?.live && dataLive?.active
-        ? dataLive?.hls_playlist_url
-        : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-      : data;
+
+  const renderPlayer = () => {
+    console.log('SE EJECUTA EL RENDER PLAYER');
+    const urlVideo =
+      props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
+        ? dataLive && dataLive?.live && dataLive?.hls_playlist_url
+          ? dataLive?.hls_playlist_url
+          : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
+        : props.type == 'Youtube'
+        ? data
+          ? data?.includes('https://youtu.be/')
+            ? data
+            : 'https://youtu.be/' + data
+          : props.type === 'vimeo'
+          ? data?.includes('https://vimeo.com/event/')
+            ? data
+            : 'https://vimeo.com/event/' + data
+          : data
+        : data;
+    console.log('URL DEL VIDEO===>', urlVideo);
+    return (
+      <ReactPlayer
+        onDuration={props.type === 'Video' ?? handleDuration}
+        style={{ objectFit: 'cover' }}
+        width='100%'
+        height='100%'
+        url={urlVideo}
+        controls
+      />
+    );
+  };
+
+  console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url);
 
   //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
   const filterData = data
-    ? data.includes('https://vimeo.com/event/') || data.includes('https://youtu.be/')
-      ? data.split('/')[data.split('/').length - 1]
+    ? data.toString()?.includes('https://vimeo.com/event/') || data?.toString().includes('https://youtu.be/')
+      ? data?.split('/')[data?.split('/').length - 1]
       : data
     : meeting_id
     ? meeting_id
@@ -58,16 +85,7 @@ const CardPreview = (props: any) => {
       style={{ borderRadius: '8px' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
-          {props?.type !== 'reunión' && (
-            <ReactPlayer
-              onDuration={props.type === 'Video' ? handleDuration : undefined}
-              style={{ objectFit: 'cover' }}
-              width='100%'
-              height='100%'
-              url={urlVideo}
-              controls
-            />
-          )}
+          {props?.type !== 'reunión' && renderPlayer()}
         </div>
         <Card.Meta
           avatar={

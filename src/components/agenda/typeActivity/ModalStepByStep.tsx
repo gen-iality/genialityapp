@@ -27,7 +27,6 @@ interface mapContentSource {
 
 const ModalStepByStep = () => {
   const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
-  console.log('🚀 TYPE OPTIONS ......', typeOptions);
 
   return (
     <Modal visible={openModal} onCancel={closeModal} centered width={1200} footer={null}>

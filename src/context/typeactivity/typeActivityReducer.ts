@@ -14,7 +14,6 @@ export const initialState: TypeActivityState = {
 };
 
 export const typeActivityReducer = (state: TypeActivityState, action: TypeActivityAction): TypeActivityState => {
-  console.log('🚀 REDUCER ACTIONTYPE ', action.type);
   switch (action.type) {
     // case 'type':
     //   return {
@@ -45,9 +44,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'toggleLiveBroadcast':
-      // console.log('🚀 STATE', state);
-      // console.log('🚀 ACTION', action);
-      // console.log('🚀 INITIAL', initialState.typeOptions);
       const selectedToggleLiveBroadcastData = state.typeOptions.typeOptions.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
       });
@@ -111,11 +107,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       const selectedToggleVideoData = preValidateState.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
       });
-      console.log(
-        '🚀 debug ~ selectedToggleVideoData ~ selectedToggleVideoData',
-        selectedToggleVideoData,
-        state.typeOptions.key
-      );
 
       if ((state.typeOptions.key === 'cargarvideo' || state.typeOptions.key === 'url') && !selectedToggleVideoData) {
         return {
@@ -171,15 +162,12 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'toggleUrl':
-      console.log('🚀 KEYYYYYYYYYYYYYYYYY ', state, state.typeOptions.typeOptions);
       let preValidateStates: [] = state.typeOptions?.typeOptions.length > 1 ? state.typeOptions.typeOptions : [];
       const selectedToggleUrl = preValidateStates.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
       });
 
       if (!selectedToggleUrl && state.typeOptions?.typeOptions.length === 1) {
-        console.log('🚀 debug ~ -----------------------------+-+-+-+-+-');
-
         return {
           ...state,
           openModal: true,
@@ -204,8 +192,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
           typeOptions: selectedToggleUrl,
         };
       } else {
-        console.log('🚀 debug ~ -----------------------------ELSE');
-
         return {
           ...state,
           openModal: true,
@@ -223,7 +209,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         if (item.key === action.payload.id) return item;
       });
       if (selectToggleEviusStreaming) {
-        console.log('🚀 AQUIIIIIIIIIIIIIIIIIIIIIIIIIII', selectToggleEviusStreaming);
         return {
           ...state,
           openModal: true,
@@ -341,9 +326,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'selectUrl':
-      console.log('🚀 STATE', state);
-      console.log('🚀 ACTION', action);
-      console.log('🚀 INITIAL', initialState.typeOptions);
       let disableButton: boolean = true;
 
       const sendDataPayload = action?.payload?.sendData;
@@ -391,7 +373,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         disableButtonVimeo = false;
       }
 
-      console.log('STATE==>', state);
       return {
         ...state,
         openModal: true,
@@ -412,7 +393,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       ) {
         disableButtonYoutube = false;
       }
-      console.log('STATE==>', state);
+
       return {
         ...state,
         openModal: true,
@@ -424,10 +405,6 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'selectEviusMeet':
-      // console.log('🚀 STATE', state);
-      // console.log('🚀 ACTION', action);
-      // console.log('🚀 INITIAL', initialState.typeOptions);
-
       const selectEviusMeet = state.typeOptions;
 
       return {
@@ -454,7 +431,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     default:
-      console.log('🚀 FUERA DEL ESTADO');
+      return state;
       break;
   }
 };
