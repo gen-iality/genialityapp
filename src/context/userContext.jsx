@@ -125,6 +125,6 @@ export async function logout(showNotification) {
       // }
     })
     .catch(function(error) {
-      console.log('🚀 error', error);
+      console.error('error', error);
     });
 }

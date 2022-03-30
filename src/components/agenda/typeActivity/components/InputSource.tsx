@@ -88,7 +88,6 @@ const InputSource = ({ addonBefore, placeholder }: propsOptions) => {
           placeholder={placeholder}
           size='large'
           onChange={(e) => {
-            console.log('🚀 debug ~ InputSource ~ ---------------------------------------->', e.target.value);
             //esto es para enviar solo el ID si es una url de youtube o vimeo
             selectOption(typeOptions.key, onChange[typeOptions.key](e));
           }}

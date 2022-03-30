@@ -38,7 +38,6 @@ import {
   RolAttApi,
   SpacesApi,
   SpeakersApi,
-  TypesAgendaApi,
   DocumentsApi,
   eventTicketsApi,
   // getCurrentUser,
@@ -72,7 +71,7 @@ class AgendaEdit extends Component {
       loading: true,
       // Estado para la redireccion de navegacion interna al eliminar actividad o volver al listado de actividades.
       redirect: false,
-      isLoading: { types: true, categories: true },
+      isLoading: { categories: true },
       name: '',
       subtitle: '',
       bigmaker_meeting_id: null,
@@ -101,7 +100,6 @@ class AgendaEdit extends Component {
       join_url: null,
       meeting_id: '',
       documents: [],
-      types: [],
       roles: [],
       hosts: [],
       selected_document: [],
@@ -258,14 +256,12 @@ class AgendaEdit extends Component {
 
     let roles = await RolAttApi.byEvent(this.props.event._id);
     let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
-    let types = await TypesAgendaApi.byEvent(this.props.event._id);
 
     //La información se neceista de tipo [{label,value}] para los select
     spaces = handleSelect(spaces);
     hosts = handleSelect(hosts);
     roles = handleSelect(roles);
     categories = handleSelect(categories);
-    types = handleSelect(types);
 
     if (state?.edit) {
       this.setState({
@@ -303,7 +299,6 @@ class AgendaEdit extends Component {
         selectedHosts: fieldsSelect(info.host_ids, hosts),
         selectedTickets: info.selectedTicket ? info.selectedTicket : [],
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
-        selectedType: fieldsSelect(info.type_id, types),
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
         // currentUser: currentUser,
       });
@@ -313,13 +308,12 @@ class AgendaEdit extends Component {
       //this.context.setActivityEdit(null);
     }
 
-    const isLoading = { types: false, categories: false };
+    const isLoading = { categories: false };
     this.setState({
       days,
       spaces,
       hosts,
       categories,
-      types,
       roles,
       loading: false,
       isLoading,
@@ -345,7 +339,6 @@ class AgendaEdit extends Component {
         capacity,
         access_restriction_type,
         selectedCategories,
-        selectedType,
         selectedRol,
         description,
         registration_message,
@@ -378,7 +371,6 @@ class AgendaEdit extends Component {
         capacity,
         access_restriction_type,
         selectedCategories,
-        selectedType,
         selectedRol,
         description,
         registration_message,
@@ -420,14 +412,12 @@ class AgendaEdit extends Component {
 
       let roles = await RolAttApi.byEvent(this.props.event._id);
       let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
-      let types = await TypesAgendaApi.byEvent(this.props.event._id);
 
       //La información se neceista de tipo [{label,value}] para los select
       spaces = handleSelect(spaces);
       hosts = handleSelect(hosts);
       roles = handleSelect(roles);
       categories = handleSelect(categories);
-      types = handleSelect(types);
 
       this.context.setActivityEdit(idNewlyCreatedActivity);
       const info = await AgendaApi.getOne(idNewlyCreatedActivity, event._id);
@@ -461,7 +451,6 @@ class AgendaEdit extends Component {
         selectedHosts: fieldsSelect(info.host_ids, hosts),
         selectedTickets: info.selectedTicket ? info.selectedTicket : [],
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
-        selectedType: fieldsSelect(info.type_id, types),
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
         // currentUser: currentUser,
         showAditionalTabs: true,
@@ -509,7 +498,6 @@ class AgendaEdit extends Component {
       capacity,
       access_restriction_type,
       selectedCategories,
-      selectedType,
       selectedRol,
       description,
       registration_message,
@@ -541,7 +529,6 @@ class AgendaEdit extends Component {
       capacity,
       access_restriction_type,
       selectedCategories,
-      selectedType,
       selectedRol,
       description,
       registration_message,
@@ -601,9 +588,7 @@ class AgendaEdit extends Component {
     this.setState({ [name]: value, pendingChangesSave: true }, async () => this.valideChangesInActivityData());
   };
   //Cada select tiene su propia función para evitar errores y asegurar la información correcta
-  selectType = (value) => {
-    this.setState({ selectedType: value }, async () => this.valideChangesInActivityData());
-  };
+
   selectCategory = (selectedCategories) => {
     this.setState({ selectedCategories }, async () => this.valideChangesInActivityData());
   };
@@ -629,11 +614,10 @@ class AgendaEdit extends Component {
       this.setState({ isLoading: { ...this.isLoading, [name]: true } }, async () => this.valideChangesInActivityData());
       //Se revisa a que ruta apuntar
       const item =
-        name === 'types'
-          ? await TypesAgendaApi.create(this.props.event._id, { name: value })
-          : await CategoriesAgendaApi.create(this.props.event._id, {
-              name: value,
-            });
+        name === 'categories' &&
+        (await CategoriesAgendaApi.create(this.props.event._id, {
+          name: value,
+        }));
       const newOption = { label: value, value: item._id, item };
       this.setState(
         (prevState) => (
@@ -644,17 +628,14 @@ class AgendaEdit extends Component {
           async () => this.valideChangesInActivityData()
         ),
         () => {
-          if (name === 'types')
-            this.setState({ selectedType: newOption }, async () => this.valideChangesInActivityData());
-          else
-            this.setState(
-              (state) => (
-                {
-                  selectedCategories: [...state.selectedCategories, newOption],
-                },
-                async () => this.valideChangesInActivityData()
-              )
-            );
+          this.setState(
+            (state) => (
+              {
+                selectedCategories: [...state.selectedCategories, newOption],
+              },
+              async () => this.valideChangesInActivityData()
+            )
+          );
         }
       );
       DispatchMessageService({
@@ -865,7 +846,6 @@ class AgendaEdit extends Component {
       access_restriction_type,
       selectedCategories,
       requires_registration,
-      selectedType,
       selectedRol,
       description,
       registration_message,
@@ -880,7 +860,6 @@ class AgendaEdit extends Component {
     const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
 
-    const type_id = selectedType.value;
     return {
       name,
       subtitle,
@@ -895,7 +874,6 @@ class AgendaEdit extends Component {
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
-      type_id,
       has_date,
       selected_document,
       requires_registration,
@@ -920,7 +898,6 @@ class AgendaEdit extends Component {
       access_restriction_type,
       selectedCategories,
       selectedHosts,
-      selectedType,
       selectedRol,
       description,
       registration_message,
@@ -955,7 +932,6 @@ class AgendaEdit extends Component {
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
     const host_ids = selectedHosts >= 0 ? [] : selectedHosts?.filter((host) => host != null).map(({ value }) => value);
-    const type_id = selectedType ? '' : selectedType?.value;
     return {
       name,
       subtitle,
@@ -970,7 +946,6 @@ class AgendaEdit extends Component {
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
-      type_id,
       has_date,
       timeConference: '',
       selected_document,
@@ -1222,13 +1197,11 @@ class AgendaEdit extends Component {
       image,
       space_id,
       selectedHosts,
-      selectedType,
       selectedCategories,
       video,
       hosts,
       spaces,
       categories,
-      types,
       isLoading,
       date_start_zoom,
       date_end_zoom,
@@ -1454,29 +1427,6 @@ class AgendaEdit extends Component {
                         </Col>
                         <Col span={1}>
                           <Button onClick={() => this.goSection(`${matchUrl}/categorias`)} icon={<SettingOutlined />} />
-                        </Col>
-                      </Row>
-                    </Form.Item>
-                    <Form.Item label={'Tipo de actividad'}>
-                      <Row wrap gutter={[8, 8]}>
-                        <Col span={23}>
-                          <Creatable
-                            isClearable
-                            styles={creatableStyles}
-                            className='basic-multi-select'
-                            classNamePrefix='select'
-                            isDisabled={isLoading.types}
-                            isLoading={isLoading.types}
-                            onChange={this.selectType}
-                            onCreateOption={(value) => this.handleCreate(value, 'types')}
-                            options={types}
-                            value={selectedType}
-                          />
-                        </Col>
-                        <Col span={1}>
-                          <Link to={`${matchUrl}/tipos`}>
-                            <Button icon={<SettingOutlined />} />
-                          </Link>
                         </Col>
                       </Row>
                     </Form.Item>

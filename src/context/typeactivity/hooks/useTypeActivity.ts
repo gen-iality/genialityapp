@@ -22,7 +22,7 @@ export const useTypeActivity = () => {
     buttonTextPreviousOrCancel,
     data,
   } = typeActivityState;
-  console.log('🚀 debug HOOK =================>', typeActivityState, '<=================');
+
   return {
     openModal,
     disableNextButton,
