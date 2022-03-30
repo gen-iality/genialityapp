@@ -364,7 +364,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       const sendDataPayloadVimeo = action?.payload?.sendData;
       const isNumber = /^\d+$/.test(sendDataPayloadVimeo);
       if (
-        (sendDataPayloadVimeo?.length >= 8 &&
+        (sendDataPayloadVimeo?.length >= 5 &&
           sendDataPayloadVimeo !== '' &&
           sendDataPayloadVimeo?.length <= 12 &&
           isNumber) ||
