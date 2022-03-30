@@ -24,7 +24,6 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
   } = useTypeActivity();
 
   const previousOrCancel = () => {
-    console.log('🚀 PREVIEW KEY ', previewKey, '----------------', typeOptions.key);
     if (previewKey === 'close' || typeOptions.key === 'type') closeModal();
     if (previewKey === 'type' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
     if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);

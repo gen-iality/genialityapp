@@ -32,7 +32,6 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   const queryClient = useQueryClient();
 
   const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
-    console.log('🚀 PROVIDER ID SELECTACTIVITYSTATES', id);
     switch (id) {
       case 'initial':
         //await deleteTypeActivity();
@@ -74,7 +73,6 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     }
   };
   const selectOption = (id: string, sendData: any) => {
-    console.log('🚀 PROVIDER ID OPCION SELECCIONADA ', id);
     switch (id) {
       case 'liveBroadcast':
         typeActivityDispatch({ type: 'selectLiveBroadcast', payload: { id } });
@@ -114,10 +112,8 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   //REACT QUERY
   const executer_createStream = useMutation(() => createLiveStream(activityName), {
     onSuccess: async (data) => {
-      // console.log('sucks', data);
       queryClient.setQueryData('livestream', data);
-      console.log('8. SELECTED KEY===>', typeActivityState.selectedKey, typeActivityState);
-      console.log('8. CREANDO EL RTMP', { platformNew: 'wowza', type: typeActivityState.selectedKey, data: data.id });
+
       await saveConfig({ platformNew: 'wowza', type: typeActivityState.selectedKey, data: data.id });
       setDataLive(data);
       activityDispatch({ type: 'meeting_created', meeting_id: data.id });
@@ -135,7 +131,6 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     //queryClient.setQueryData('livestream', null);
   };
   const createTypeActivity = async () => {
-    //console.log('DATA ACTUAL==>', typeActivityState);
     let resp;
     switch (typeActivityState.selectedKey) {
       case 'url':
@@ -145,7 +140,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
           setTypeActivity('url');
           setPlatform('wowza');
         } else {
-          console.log('ERROR AL GUARDAR URL');
+          console.error('ERROR AL GUARDAR URL');
         }
         //setMeetingId(typeActivityState?.data);
         ////Type:url

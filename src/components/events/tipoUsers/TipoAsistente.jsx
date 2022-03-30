@@ -22,14 +22,12 @@ const TipoAsistente = (props) => {
 
   useEffect(() => {
     if (locationState.edit) {
-      console.log('🚀 debug ~ useEffect ~ locationState.edit', locationState.edit);
       getOne();
     }
   }, [locationState.edit]);
 
   const getOne = async () => {
     const response = await RolAttApi.getOne(eventID, locationState.edit);
-    console.log('🚀 debug ~ getOne ~ response', response);
     let data = response.find((tipoAsistentes) => tipoAsistentes._id === locationState.edit);
 
     // setTipoAsistente({ event_id: '6219441bcac07f74232f5d60', name: 'nuevo hola', type: 'attendee' });
@@ -43,7 +41,6 @@ const TipoAsistente = (props) => {
   };
 
   const onSubmit = async () => {
-    console.log('🚀 debug ~ onSubmit ~ tipoAsistente', tipoAsistente);
     if (tipoAsistente.name) {
       DispatchMessageService({
         type: 'loading',
