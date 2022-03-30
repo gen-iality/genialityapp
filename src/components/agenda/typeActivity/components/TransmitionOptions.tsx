@@ -64,7 +64,7 @@ const TransmitionOptions = (props: any) => {
                 okText='Si'
                 cancelText='No'>
                 <Button type='text' danger>
-                  <DeleteOutlined />{' '}
+                  <DeleteOutlined />
                   {props.type === 'Transmisión' ||
                   props.type === 'EviusMeet' ||
                   props.type === 'vimeo' ||

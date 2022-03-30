@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Card, Result, Space, Button, Spin } from 'antd';
+import { Card, Result, Space, Button, Spin, Popconfirm } from 'antd';
 import LoadingTypeActivity from './LoadingTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
 import { useEffect } from 'react';
@@ -12,7 +12,7 @@ import {
 import { useQueryClient } from 'react-query';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 
-const CardStartTransmition = () => {
+const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const { meeting_id, setDataLive, dataLive, saveConfig, deleteTypeActivity } = useContext(AgendaContext);
@@ -85,9 +85,32 @@ const CardStartTransmition = () => {
           extra={
             <Space>
               {!loadingDelete ? (
-                <Button onClick={() => deleteStreaming()} type='text' danger>
-                  Eliminar transmisión
-                </Button>
+                <Popconfirm
+                  title={`¿Está seguro que desea ${
+                    props.type === 'Transmisión' ||
+                    props.type === 'EviusMeet' ||
+                    props.type === 'vimeo' ||
+                    props.type === 'Youtube'
+                      ? 'eliminar transmisión'
+                      : props.type === 'reunión'
+                      ? 'eliminar sala de reunión'
+                      : 'eliminar video'
+                  }? `}
+                  onConfirm={() => deleteStreaming()}
+                  onCancel={() => console.log('cancelado')}
+                  okText='Si'
+                  cancelText='No'>
+                  <Button type='text' danger>
+                    {props.type === 'Transmisión' ||
+                    props.type === 'EviusMeet' ||
+                    props.type === 'vimeo' ||
+                    props.type === 'Youtube'
+                      ? 'Eliminar transmisión'
+                      : props.type === 'reunión'
+                      ? 'Eliminar sala de reunión'
+                      : 'Eliminar video'}
+                  </Button>
+                </Popconfirm>
               ) : (
                 <Spin />
               )}
