@@ -68,7 +68,7 @@ const CardPreview = (props: any) => {
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && (
             <ReactPlayer
-              onDuration={props.type === 'Video' ? handleDuration : undefined}
+              onDuration={props?.type === 'Video' ? handleDuration : undefined}
               style={{ objectFit: 'cover' }}
               width='100%'
               height='100%'

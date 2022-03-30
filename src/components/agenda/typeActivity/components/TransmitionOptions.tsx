@@ -1,4 +1,4 @@
-import { Card, Button, Space, Typography, Spin } from 'antd';
+import { Card, Button, Space, Typography, Spin, Popconfirm } from 'antd';
 import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
@@ -12,7 +12,6 @@ const TransmitionOptions = (props: any) => {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const { dataLive, meeting_id, deleteTypeActivity, activityEdit } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
-
 
   const deleteTransmition = async () => {
     deleteLiveStream(meeting_id);
@@ -40,8 +39,18 @@ const TransmitionOptions = (props: any) => {
               loadingStop && <Spin />
             )}
             {!loadingDelete ? (
-              <Button
-                onClick={async () => {
+              <Popconfirm
+                title={`¿Está seguro que desea ${
+                  props.type === 'Transmisión' ||
+                  props.type === 'EviusMeet' ||
+                  props.type === 'vimeo' ||
+                  props.type === 'Youtube'
+                    ? 'eliminar transmisión'
+                    : props.type === 'reunión'
+                    ? 'eliminar sala de reunión'
+                    : 'eliminar video'
+                }? `}
+                onConfirm={async () => {
                   setLoadingDelete(true);
                   if (isVisible && meeting_id) {
                     await deleteTransmition();
@@ -51,10 +60,21 @@ const TransmitionOptions = (props: any) => {
                   toggleActivitySteps('initial');
                   setLoadingDelete(false);
                 }}
-                type='text'
-                danger>
-                <DeleteOutlined /> {props.type === 'Transmisión' || props.type === 'EviusMeet' || props.type === 'vimeo' || props.type === 'Youtube' ? 'Eliminar transmisión' : props.type === 'reunión' ? 'Eliminar sala de reunión' : 'Eliminar video'}
-              </Button>
+                onCancel={() => console.log('cancelado')}
+                okText='Si'
+                cancelText='No'>
+                <Button type='text' danger>
+                  <DeleteOutlined />{' '}
+                  {props.type === 'Transmisión' ||
+                  props.type === 'EviusMeet' ||
+                  props.type === 'vimeo' ||
+                  props.type === 'Youtube'
+                    ? 'Eliminar transmisión'
+                    : props.type === 'reunión'
+                    ? 'Eliminar sala de reunión'
+                    : 'Eliminar video'}
+                </Button>
+              </Popconfirm>
             ) : (
               <Spin />
             )}
