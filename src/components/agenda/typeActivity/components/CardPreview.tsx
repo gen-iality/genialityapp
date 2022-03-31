@@ -117,7 +117,7 @@ const CardPreview = (props: any) => {
           {props?.type !== 'reunión' && renderPlayer()}
         </div>
         <Row align='top' justify='space-between'>
-          <Col span={16}>
+          <Col span={dataLive?.live && dataLive?.active ? 16 : 24}>
             <Comment
               avatar={
                 props.type === 'reunión' || props.type === 'Video' ? null : (
@@ -150,7 +150,7 @@ const CardPreview = (props: any) => {
               }
               author={
                 <Typography.Text style={{ fontSize: '20px' }} strong>
-                  {props.activityName} mas largo de lo normal
+                  {props.activityName}
                 </Typography.Text>
               }
               content={
@@ -168,9 +168,10 @@ const CardPreview = (props: any) => {
               }
             />
           </Col>
-          <Col span={8}>
-            {dataLive?.live && dataLive?.active ? (
-              dataLive?.live && !loadingRecord ? (
+
+          {dataLive?.live && dataLive?.active ? (
+            dataLive?.live && !loadingRecord ? (
+              <Col span={8}>
                 <Button
                   onClick={() => {
                     record === 'start' ? startRecordTransmition() : stopRecordTransmition();
@@ -178,11 +179,11 @@ const CardPreview = (props: any) => {
                   type='primary'>
                   {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
                 </Button>
-              ) : (
-                loadingRecord && <Spin />
-              )
-            ) : null}
-          </Col>
+              </Col>
+            ) : (
+              loadingRecord && <Spin />
+            )
+          ) : null}
         </Row>
 
         {(props.type === 'Transmisión' ||
