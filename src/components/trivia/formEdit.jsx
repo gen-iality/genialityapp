@@ -1,7 +1,7 @@
 import { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, Alert, Space } from 'antd';
+import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, Alert, Space, Typography } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
@@ -11,8 +11,9 @@ const { Option } = Select;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  wrapperCol: { span: 14 },
 };
+const { Title, Text } = Typography;
 
 const validateMessages = {
   required: '${label} is required!',
@@ -448,55 +449,20 @@ const FormEdit = (
             <Form.List name={`choices`}>
               {(fields, { add, remove }) => {
                 return (
-                  <div>
-                    {questionType === 'radiogroup' ? (
-                      <Radio.Group
-                        onChange={handleRadio}
-                        disabled={!allowGradableSurvey}
-                        value={correctAnswerIndex}
-                        style={{ display: 'block', marginRight: 0 }}>
-                        {fields.map((field, index) => (
-                          <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                            <Radio value={index} style={{ width: '100%' }}>
-                              <Form.Item
-                                {...field}
-                                validateTrigger={['onChange', 'onBlur']}
-                                rules={[
-                                  {
-                                    required: true,
-                                    whitespace: true,
-                                    message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
-                                  },
-                                  {
-                                    validator: fieldValidation,
-                                  },
-                                ]}
-                                noStyle>
-                                <Input placeholder='Texto de la Respuesta' style={{ width: '90%' }} />
-                              </Form.Item>
-                              {fields.length > 2 ? (
-                                <MinusCircleOutlined
-                                  className='dynamic-delete-button'
-                                  style={{ margin: '0 8px' }}
-                                  onClick={() => {
-                                    remove(field.name);
-                                  }}
-                                />
-                              ) : null}
-                            </Radio>
-                          </Form.Item>
-                        ))}
-                      </Radio.Group>
-                    ) : (
-                      questionType === 'checkbox' && (
-                        <Checkbox.Group
-                          onChange={handleCheckbox}
+                  <>
+                    <Space direction='horizontal'>
+                      {questionType === 'radiogroup' ? (
+                        <Radio.Group
+                          onChange={handleRadio}
                           disabled={!allowGradableSurvey}
                           value={correctAnswerIndex}
                           style={{ display: 'block', marginRight: 0 }}>
                           {fields.map((field, index) => (
-                            <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                              <Checkbox value={index} style={{ width: '100%' }}>
+                            <Form.Item
+                              label={<Text type='secondary'>Respuesta {index + 1}</Text>}
+                              required={false}
+                              key={field.key}>
+                              <Radio value={index} style={{ width: '100%' }}>
                                 <Form.Item
                                   {...field}
                                   validateTrigger={['onChange', 'onBlur']}
@@ -511,25 +477,63 @@ const FormEdit = (
                                     },
                                   ]}
                                   noStyle>
-                                  <Input placeholder='Texto de la Respuesta' style={{ width: '85%' }} />
+                                  <Input placeholder='Asingar Respuesta' style={{ width: '100%' }} />
                                 </Form.Item>
                                 {fields.length > 2 ? (
                                   <MinusCircleOutlined
-                                    className='dynamic-delete-button'
-                                    style={{ margin: '0 8px' }}
                                     onClick={() => {
                                       remove(field.name);
                                     }}
                                   />
                                 ) : null}
-                              </Checkbox>
+                              </Radio>
                             </Form.Item>
                           ))}
-                        </Checkbox.Group>
-                      )
-                    )}
-
-                    {/* {fields.length < 5 && ( */}
+                        </Radio.Group>
+                      ) : (
+                        questionType === 'checkbox' && (
+                          <Checkbox.Group
+                            onChange={handleCheckbox}
+                            disabled={!allowGradableSurvey}
+                            value={correctAnswerIndex}
+                            style={{ display: 'block' }}>
+                            {fields.map((field, index) => (
+                              <Form.Item
+                                label={<Text type='secondary'>Respuesta {index + 1}</Text>}
+                                required={false}
+                                key={field.key}>
+                                <Checkbox value={index} style={{ width: '100%' }}>
+                                  <Form.Item
+                                    {...field}
+                                    validateTrigger={['onChange', 'onBlur']}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        whitespace: true,
+                                        message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                                      },
+                                      {
+                                        validator: fieldValidation,
+                                      },
+                                    ]}
+                                    noStyle>
+                                    <Input placeholder='Asingar Respuesta' style={{ width: '100%' }} />
+                                  </Form.Item>
+                                  {fields.length > 2 ? (
+                                    <MinusCircleOutlined
+                                      onClick={() => {
+                                        remove(field.name);
+                                      }}
+                                    />
+                                  ) : null}
+                                </Checkbox>
+                              </Form.Item>
+                            ))}
+                          </Checkbox.Group>
+                        )
+                      )}
+                    </Space>
+                    {fields.length < 15 && (
                       <Form.Item>
                         <Button
                           type='dashed'
@@ -539,8 +543,8 @@ const FormEdit = (
                           <PlusOutlined /> Agregar Otra Respuesta
                         </Button>
                       </Form.Item>
-                    {/* )} */}
-                  </div>
+                    )}
+                  </>
                 );
               }}
             </Form.List>

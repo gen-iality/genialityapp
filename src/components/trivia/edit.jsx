@@ -6,7 +6,22 @@ import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './se
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
-import { Button, Row, Col, Table, Modal, Input, Switch, Select, Tag, InputNumber, Form, Tooltip } from 'antd';
+import {
+  Button,
+  Row,
+  Col,
+  Table,
+  Modal,
+  Input,
+  Switch,
+  Select,
+  Tag,
+  InputNumber,
+  Form,
+  Tooltip,
+  Typography,
+  Space,
+} from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -27,7 +42,7 @@ const formLayout = {
 
 const { Option } = Select;
 const { confirm } = Modal;
-
+const { Title } = Typography;
 class triviaEdit extends Component {
   constructor(props) {
     super(props);
@@ -995,7 +1010,9 @@ class triviaEdit extends Component {
                 {this.state.idSurvey && Object.entries(currentQuestion).length !== 0 && (
                   <Modal
                     width={700}
-                    title={'Gestionar Pregunta'}
+                    bodyStyle={{
+                      textAlign: 'center',
+                    }}
                     visible={visibleModal}
                     maskClosable={false}
                     onOk={this.sendForm}
@@ -1013,16 +1030,27 @@ class triviaEdit extends Component {
                         Guardar
                       </Button>,
                     ]}>
-                    <FormQuestionEdit
-                      ref={this.formEditRef}
-                      valuesQuestion={currentQuestion}
-                      eventId={this.props.event._id}
-                      surveyId={this.state.idSurvey}
-                      closeModal={this.closeModal}
-                      toggleConfirmLoading={this.toggleConfirmLoading}
-                      gradableSurvey={allow_gradable_survey}
-                      unmountForm={() => this.setState({ currentQuestion: {} })}
-                    />
+                    <>
+                      <Title
+                        style={{
+                          marginTop: '20px',
+                          marginBottom: '20px',
+                        }}
+                        level={4}
+                        type='secondary'>
+                        Gestionar Pregunta
+                      </Title>
+                      <FormQuestionEdit
+                        ref={this.formEditRef}
+                        valuesQuestion={currentQuestion}
+                        eventId={this.props.event._id}
+                        surveyId={this.state.idSurvey}
+                        closeModal={this.closeModal}
+                        toggleConfirmLoading={this.toggleConfirmLoading}
+                        gradableSurvey={allow_gradable_survey}
+                        unmountForm={() => this.setState({ currentQuestion: {} })}
+                      />
+                    </>
                   </Modal>
                 )}
               </>
