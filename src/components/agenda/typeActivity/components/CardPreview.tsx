@@ -17,7 +17,6 @@ const CardPreview = (props: any) => {
   console.log('DATALIVE ===>', dataLive);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
-    console.log('🚀 debug ~ valideUrl ~ url', url);
     if (url.includes('Loading2')) {
       return false;
     } else {
