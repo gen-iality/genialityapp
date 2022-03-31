@@ -14,7 +14,7 @@ import ModalListRequestsParticipate from '../roomManager/components/ModalListReq
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
   const { data } = useTypeActivity();
-  const { activityEdit, getRequestByActivity, request, transmition, dataLive } = useContext(AgendaContext);
+  const { activityEdit, getRequestByActivity, request, dataLive } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
   useEffect(() => {

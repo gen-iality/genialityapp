@@ -14,6 +14,7 @@ import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeA
 
 const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
+  const [loadingComponent, setloadingComponent] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const {
     meeting_id,
@@ -46,6 +47,7 @@ const CardStartTransmition = (props: any) => {
         // let livestreamInitial = { state: 'Finished' };
         // setLiveStreamStatus(livestreamInitial);
       }
+      setloadingComponent(false);
     }
   }, [meeting_id]);
 
@@ -66,7 +68,7 @@ const CardStartTransmition = (props: any) => {
     //inicia el monitoreo
   };
 
-  return (
+  return !loadingComponent ? (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       {loading ? (
         <LoadingTypeActivity />
@@ -119,6 +121,8 @@ const CardStartTransmition = (props: any) => {
         />
       )}
     </Card>
+  ) : (
+    <Spin />
   );
 };
 

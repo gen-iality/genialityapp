@@ -262,11 +262,9 @@ export const AgendaContextProvider = ({ children }) => {
 
       // console.log('live_stream_status', live_stream_status);
       console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.live, liveLocal);
+      console.log('10. ENTRO A DETENER');
+      setDataLive(live_stream_status);
 
-      if (liveLocal !== live_stream_status?.live) {
-        console.log('10. ENTRO A DETENER');
-        setDataLive(live_stream_status);
-      }
       liveLocal = live_stream_status?.live;
     } catch (e) {}
     const timer_id = setTimeout(executer_startMonitorStatus, 5000);
@@ -274,6 +272,32 @@ export const AgendaContextProvider = ({ children }) => {
     if (!live_stream_status.active) {
       clearTimeout(timer_id);
     }
+  };
+
+  const obtainUrl = (type, data) => {
+    let urlVideo =
+      type !== 'Video' && type !== 'Youtube' && type !== 'vimeo'
+        ? dataLive && dataLive.active && dataLive?.live && dataLive?.iframe_url
+          ? dataLive?.iframe_url
+          : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
+        : type == 'Youtube'
+        ? data
+          ? data?.includes('https://youtu.be/')
+            ? data
+            : 'https://youtu.be/' + data
+          : type === 'vimeo'
+          ? data?.includes('https://vimeo.com/event/')
+            ? data
+            : 'https://vimeo.com/event/' + data
+          : data
+        : data;
+    const visibleReactPlayer =
+      ((type == 'Video' || type == 'Youtube' || type == 'vimeo') && urlVideo) ||
+      (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
+        (type === 'Transmisión' || type === 'EviusMeet'))
+        ? true
+        : false;
+    return { urlVideo, visibleReactPlayer };
   };
 
   const deleteTypeActivity = async () => {
@@ -371,6 +395,8 @@ export const AgendaContextProvider = ({ children }) => {
         stopInterval,
         executer_startMonitorStatus,
         recordings,
+
+        obtainUrl,
       }}>
       {children}
     </AgendaContext.Provider>
