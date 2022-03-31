@@ -10,7 +10,7 @@ import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gc
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
+  const { roomStatus, setRoomStatus, dataLive, meeting_id, obtainUrl } = useContext(AgendaContext);
   const [loadingRecord, setLoadingRecord] = useState(false);
   const [record, setRecord] = useState('start');
   console.log('DATALIVE ===>', dataLive);
@@ -24,32 +24,12 @@ const CardPreview = (props: any) => {
     }
   };
 
+  //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
   const renderPlayer = () => {
-    console.log('🚀 SE EJECUTA EL RENDER PLAYER');
-    let urlVideo =
-      props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
-        ? dataLive && dataLive.active && dataLive?.live && dataLive?.iframe_url
-          ? dataLive?.iframe_url
-          : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-        : props.type == 'Youtube'
-        ? data
-          ? data?.includes('https://youtu.be/')
-            ? data
-            : 'https://youtu.be/' + data
-          : props.type === 'vimeo'
-          ? data?.includes('https://vimeo.com/event/')
-            ? data
-            : 'https://vimeo.com/event/' + data
-          : data
-        : data;
-    console.log('🚀 props.type', props.type, dataLive?.live, dataLive?.active);
-    const visibleReactPlayer =
-      ((props.type == 'Video' || props.type == 'Youtube' || props.type == 'vimeo') && urlVideo) ||
-      (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
-        (props.type === 'Transmisión' || props.type === 'EviusMeet'))
-        ? true
-        : false;
-    console.log('🚀 visibleReactPlayer', visibleReactPlayer);
+    //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
+    let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+
+    //RENDERIZAR COMPONENTE
     return (
       <>
         {visibleReactPlayer && (
