@@ -99,11 +99,13 @@ const stopRecordingLiveStream = async (stream_id) => {
 
 const getVideosLiveStream = async (name_activity) => {
   const res = await gCoreCLient.get('/videos/search?q=' + name_activity);
+
   if (res?.status === 200) {
     return res.data;
   }
   return null;
 };
+
 const getVideoLiveStream = async (video_id) => {
   const res = await gCoreCLient.get('/videos/' + video_id);
   if (res?.status === 200) {

@@ -22,6 +22,7 @@ import { firestore } from '../../helpers/firebase';
 import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
 import { createChatRoom } from './agendaHook';
+import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
@@ -149,18 +150,11 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     event._id +
                     '&userid=' +
                     currentEventUserId +
-                    '&version=0.0.2'
+                    '&version=0.0.2' +
+                    '&mode=' +
+                    isStagingOrProduccion()
                   }></iframe>
-              )
-
-              // https://chatevius.netlify.app?nombre=Pruebas Mocionsoft&chatid=6XNNGi7NCpQXHwOmU6xy
-
-              // <iframe
-              //   title='chatevius'
-              //   className='ChatEvius'
-              //   style={{ width: 400, height: 373 }}
-              //   src={'https://chatevius.netlify.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
-              }
+              )}
             </Col>
           </Row>
         </Col>

@@ -1,6 +1,6 @@
-ad# Importación de módulos
+# Importación de módulos
 
-Ahora existe una nueva forma de importar los componentes o elementos de la aplicación, para hacer uso de este debe colocar **“~/”** luego el componente.
+Ahora existe una nueva forma de importar los componentes o elementos de la aplicación, para hacer uso de este debe colocar **“@/”** luego el componente.
 
 **Forma común:**
 `import { DocumentsApi } from '../../../helpers/request';`
@@ -8,22 +8,7 @@ Ahora existe una nueva forma de importar los componentes o elementos de la aplic
 **Nueva forma:**
 `import { DocumentsApi } from '@helpers/request';` || `import { DocumentsApi } from '@/helpers/request';`
 
-## Importaciones agregadas
-
-- @/
-- @components
-- @adaptors
-- @antdComponent
-- @App
-- @containers
-- @contexts
-- @exhibitors
-- @helpers
-- @PreloaderApp
-- @redux
-- @styles
-- @Utilities
-- @Assets
+Es decir, para acceder al componente se debe agregar "@" o "@/"
 
 ## Tener en cuenta
 

@@ -113,11 +113,26 @@ class Graphics extends Component {
     let colorB = [];
     let list = [];
 
-    const alphabet = ['A', 'B', 'C', 'D', 'E'];
+    /**
+     * Given a number, return the letter of the alphabet that corresponds to that number
+     * @returns The numberToLetterOfAlphabet function is returning the order of the alphabet that the
+     * number is in.
+     */
+    const numberToLetterOfAlphabet = (number) => {
+      const alphabet = graphy.data.datasets[0].alphabet;
+
+      let orderAlphabet = alphabet[number % alphabet.length];
+      if (number < 26) return orderAlphabet;
+
+      return orderAlphabet + number;
+    };
 
     //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
+    // colorB = graphy.data.datasets[0].backgroundColor;
+    const colorsforGraphics = graphy.data.datasets[0].backgroundColor;
+
     for (let a = 0; options.choices.length > a; a++) {
-      colorB = graphy.data.datasets[0].backgroundColor[a];
+      colorB = colorsforGraphics[a % colorsforGraphics.length];
       // options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`}
       switch (operation) {
         case 'onlyCount':
@@ -127,9 +142,7 @@ class Graphics extends Component {
         case 'participationPercentage':
           generatedlabels[a] =
             answer_count && answer_count[a]
-              ? ` ${options.choices[a].length == 2 ? options.choices[a] : alphabet[a]}  ${
-                  answer_count[a][0]
-                } Voto(s), ${answer_count[a][1]}% \n `
+              ? `${numberToLetterOfAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
               : '0 Votos';
           break;
       }
@@ -139,7 +152,8 @@ class Graphics extends Component {
         voto: answer_count[a][0],
         porcentaje: answer_count[a][1],
         answer: options.choices[a],
-        option: options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : alphabet[a],
+        option:
+          options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : numberToLetterOfAlphabet(a),
         color: colorB,
       });
       totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
@@ -359,7 +373,7 @@ class Graphics extends Component {
                               display: 'grid',
                               fontSize: '24px',
                             }}>
-                            {votos.option.toUpperCase()}{' '}
+                            {votos?.option?.toUpperCase()}{' '}
                           </span>
                         </div>
                       </Col>

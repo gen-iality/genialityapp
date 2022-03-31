@@ -65,7 +65,7 @@ export default defineConfig({
         //FIREBASE CONFIG CHATEVIUS
         VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyDaQI5E1P6mIhcNfDdRq8oSGpJ13Qllv00',
         VITE_FB_AUTHDOMAIN_CHATEVIUS: 'chateviusdev.firebaseapp.com',
-        VITE_FB_DB_CHATEVIUS: 'https://chateviusdev.firebaseio.com',
+        VITE_FB_DB_CHATEVIUS: 'https://chateviusdev-default-rtdb.firebaseio.com',
         VITE_PROJECTID_CHATEVIUS: 'chateviusdev',
         VITE_STORAGEBUCKET_CHATEVIUS: 'chateviusdev.appspot.com',
         VITE_MESSAGINGSENDER_CHATEVIUS: '520741764660',
@@ -75,7 +75,7 @@ export default defineConfig({
         //FIREBASE CONFIG EVIUSAUTH
         VITE_FB_APIKEY_EVIUSAUTH: 'AIzaSyAohyXq3R4t3ao7KFzLDY7W6--g6kOuS7Q',
         VITE_FB_AUTHDOMAIN_EVIUSAUTH: 'eviusauthdev.firebaseapp.com',
-        VITE_FB_DB_EVIUSAUTH: 'https://eviusauthdev.firebaseio.com',
+        VITE_FB_DB_EVIUSAUTH: 'https://eviusauthdev-default-rtdb.firebaseio.com',
         VITE_PROJECTID_EVIUSAUTH: 'eviusauthdev',
         VITE_STORAGEBUCKET_EVIUSAUTH: 'eviusauthdev.appspot.com',
         VITE_MESSAGINGSENDER_EVIUSAUTH: '86708016609',
@@ -102,7 +102,7 @@ export default defineConfig({
         //FIREBASE CONFIG CHATEVIUS
         VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyDaQI5E1P6mIhcNfDdRq8oSGpJ13Qllv00',
         VITE_FB_AUTHDOMAIN_CHATEVIUS: 'chateviusdev.firebaseapp.com',
-        VITE_FB_DB_CHATEVIUS: 'https://chateviusdev.firebaseio.com',
+        VITE_FB_DB_CHATEVIUS: 'https://chateviusdev-default-rtdb.firebaseio.com',
         VITE_PROJECTID_CHATEVIUS: 'chateviusdev',
         VITE_STORAGEBUCKET_CHATEVIUS: 'chateviusdev.appspot.com',
         VITE_MESSAGINGSENDER_CHATEVIUS: '520741764660',
@@ -112,7 +112,7 @@ export default defineConfig({
         //FIREBASE CONFIG EVIUSAUTH
         VITE_FB_APIKEY_EVIUSAUTH: 'AIzaSyAohyXq3R4t3ao7KFzLDY7W6--g6kOuS7Q',
         VITE_FB_AUTHDOMAIN_EVIUSAUTH: 'eviusauthdev.firebaseapp.com',
-        VITE_FB_DB_EVIUSAUTH: 'https://eviusauthdev.firebaseio.com',
+        VITE_FB_DB_EVIUSAUTH: 'https://eviusauthdev-default-rtdb.firebaseio.com',
         VITE_PROJECTID_EVIUSAUTH: 'eviusauthdev',
         VITE_STORAGEBUCKET_EVIUSAUTH: 'eviusauthdev.appspot.com',
         VITE_MESSAGINGSENDER_EVIUSAUTH: '86708016609',

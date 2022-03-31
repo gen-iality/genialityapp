@@ -529,7 +529,7 @@ const FormEdit = (
                       )
                     )}
 
-                    {fields.length < 5 && (
+                    {/* {fields.length < 5 && ( */}
                       <Form.Item>
                         <Button
                           type='dashed'
@@ -539,7 +539,7 @@ const FormEdit = (
                           <PlusOutlined /> Agregar Otra Respuesta
                         </Button>
                       </Form.Item>
-                    )}
+                    {/* )} */}
                   </div>
                 );
               }}
