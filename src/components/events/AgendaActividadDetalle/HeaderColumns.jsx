@@ -21,6 +21,7 @@ import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventUserContext } from '../../../context/eventUserContext';
 import { imageUtils } from '../../../Utilities/ImageUtils';
 import { DispatchMessageService } from '../../../context/MessageService';
+import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useHelper();
@@ -36,6 +37,7 @@ const HeaderColumns = (props) => {
     refActivity,
     removeRequest,
     setActivityEdit,
+    typeActivity,
   } = useContext(AgendaContext);
 
   function showPropsConfirm() {
@@ -66,15 +68,17 @@ const HeaderColumns = (props) => {
     if (currentActivity) {
       //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
       setActivityEdit(currentActivity._id);
+      
+      console.log("1. SE EJECUTA ESTO")
     }
-    if (!currentActivity || transmition !== 'EviusMeet') return;
+    if (!currentActivity || typeActivity !== 'eviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
     setRefActivity(refActivity);
     getRequestByActivity(refActivity);
     return () => {
       setActivityEdit(null);
     };
-  }, [currentActivity, transmition]);
+  }, [currentActivity, typeActivity]);
 
   const haveRequest = () => {
     if ((request && !request[cEventUSer.value?._id]) || !request) {
@@ -247,10 +251,11 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-            {transmition == 'EviusMeet' &&
+          {console.log("1. TIPE ACTIVITY==>",typeActivity,recordTypeForThisEvent( cEvent.value?._id) )}
+            {typeActivity == 'eviusMeet' &&
               !request[cEventUSer.value?._id]?.active &&
               cEventUSer.value?._id &&
-              props.activityState === 'open_meeting_room' && (
+              props.activityState === 'open_meeting_room' && recordTypeForThisEvent( cEvent)!=="UN_REGISTERED_PUBLIC_EVENT" && (
                 <Button
                   style={{ transition: 'all 1s' }}
                   onClick={() => (!loading ? sendOrCancelRequest() : null)}
@@ -272,7 +277,7 @@ const HeaderColumns = (props) => {
                     : 'Espere...'}
                 </Button>
               )}
-            {transmition == 'EviusMeet' &&
+            {typeActivity == 'eviusMeet' &&
               request[cEventUSer.value?._id]?.active &&
               props.activityState === 'open_meeting_room' && (
                 <Button

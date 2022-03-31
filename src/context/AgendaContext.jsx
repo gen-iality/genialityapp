@@ -73,7 +73,7 @@ export const AgendaContextProvider = ({ children }) => {
       setMeetingId(null);
     }
     async function obtenerDetalleActivity() {
-      console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
+      console.log('1. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
       //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
       const service = new Service(firestore);
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
@@ -198,7 +198,7 @@ export const AgendaContextProvider = ({ children }) => {
       host_id,
       host_name,
       avalibleGames,
-      habilitar_ingreso: datos?.type === 'delete' ? '' : roomStatus,
+      habilitar_ingreso: datos?.type === 'delete' ? '' : datos?.habilitar_ingreso?datos?.habilitar_ingreso:roomStatus,
       transmition: transmition || null,
       //PERMITE REINICIALIZAR EL TIPO DE ACTIVIDAD O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
       typeActivity:
@@ -319,6 +319,10 @@ export const AgendaContextProvider = ({ children }) => {
     message.success('Copiado correctamente.!');
   };
 
+  const refreshActivity=()=>{
+    obtenerDetalleActivity();
+  }
+
   return (
     <AgendaContext.Provider
       value={{
@@ -380,6 +384,7 @@ export const AgendaContextProvider = ({ children }) => {
         stopInterval,
         executer_startMonitorStatus,
         obtainUrl,
+        refreshActivity
       }}>
       {children}
     </AgendaContext.Provider>

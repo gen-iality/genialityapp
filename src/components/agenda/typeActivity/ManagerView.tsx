@@ -33,7 +33,7 @@ const ManagerView = (props: any) => {
             <CardStartTransmition type={props.type} />
           )}
           <Row gutter={[16, 16]}>
-            {(props.type == 'reunión' || props.type == 'EviusMeet') && dataLive?.active && (
+            {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
               <Col span={10}>
                 <GoToEviusMeet type={props.type} activityId={props.activityId} />
               </Col>
