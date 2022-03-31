@@ -1,5 +1,6 @@
-import { getLiveStreamStatus } from '@/adaptors/gcoreStreamingApi';
+import { getLiveStreamStatus, getVideosLiveStream } from '@/adaptors/gcoreStreamingApi';
 import { message } from 'antd';
+
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
 import { fireRealtime, firestore } from '../helpers/firebase';
@@ -40,6 +41,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [activityName, setActivityName] = useState(null);
   const [dataLive, setDataLive] = useState(null);
   const [timerId, setTimerId] = useState(null);
+  const [recordings, setRecordings] = useState([]);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -67,6 +69,18 @@ export const AgendaContextProvider = ({ children }) => {
   }, [activityState.meeting_id]);
 
   useEffect(() => {
+    if (dataLive) {
+      getRecordingsLiveStream();
+    }
+    async function getRecordingsLiveStream() {
+      const videos = await getVideosLiveStream(dataLive.name);
+      if (videos.length > 0) {
+        setRecordings(videos.filter((video) => video.stream_id === dataLive.id));
+      }
+    }
+  }, [dataLive]);
+
+  useEffect(() => {
     if (activityEdit) {
       console.log('8. ACTIVIDAD ACA===>', activityEdit);
       obtenerDetalleActivity();
@@ -74,12 +88,13 @@ export const AgendaContextProvider = ({ children }) => {
     }
     async function obtenerDetalleActivity() {
       console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
-      //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
+
       const service = new Service(firestore);
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
       console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+
         console.log('8. CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
@@ -355,6 +370,7 @@ export const AgendaContextProvider = ({ children }) => {
         copyToClipboard,
         stopInterval,
         executer_startMonitorStatus,
+        recordings,
       }}>
       {children}
     </AgendaContext.Provider>

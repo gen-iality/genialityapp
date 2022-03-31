@@ -1,4 +1,4 @@
-import { Card, Typography, Space, Select, Avatar, Button, Spin } from 'antd';
+import { Card, Typography, Space, Select, Avatar, Button, Spin, Badge } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
@@ -10,7 +10,7 @@ import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gc
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
+  const { roomStatus, setRoomStatus, dataLive, meeting_id, recordings } = useContext(AgendaContext);
   const [loadingRecord, setLoadingRecord] = useState(false);
   const [record, setRecord] = useState('start');
   console.log('DATALIVE ===>', dataLive);
@@ -125,13 +125,15 @@ const CardPreview = (props: any) => {
         dataLive?.live && dataLive?.active
           ? [
               dataLive?.live && !loadingRecord ? (
-                <Button
-                  onClick={() => {
-                    record === 'start' ? startRecordTransmition() : stopRecordTransmition();
-                  }}
-                  type='primary'>
-                  {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
-                </Button>
+                <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
+                  <Button
+                    onClick={() => {
+                      record === 'start' ? startRecordTransmition() : stopRecordTransmition();
+                    }}
+                    type='primary'>
+                    {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
+                  </Button>
+                </Badge>
               ) : (
                 loadingRecord && <Spin />
               ),
