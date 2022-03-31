@@ -1,16 +1,18 @@
-import { Card, Typography, Space, Select, Avatar, Button } from 'antd';
+import { Card, Typography, Space, Select, Avatar, Button, Spin } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import AgendaContext from '../../../../context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
+import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
   const { data } = useTypeActivity();
   const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
-
+  const [loadingRecord, setLoadingRecord] = useState(false);
+  const [record, setRecord] = useState('start');
   console.log('DATALIVE ===>', dataLive);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
@@ -102,10 +104,40 @@ const CardPreview = (props: any) => {
     if (hour == 0) return minute + ':' + second;
     return hour + ':' + minute + ':' + second;
   }
+  const startRecordTransmition = async () => {
+    setLoadingRecord(true);
+    const response = await startRecordingLiveStream(meeting_id);
+    console.log('response', response);
+    setLoadingRecord(false);
+    setRecord('stop');
+  };
 
+  const stopRecordTransmition = async () => {
+    setLoadingRecord(true);
+    const response = await stopRecordingLiveStream(meeting_id);
+    console.log('response', response);
+    setLoadingRecord(false);
+    setRecord('start');
+  };
   return (
     <Card
-      actions={[<Button>Iniciar grabacion</Button>]}
+      actions={
+        dataLive?.live && dataLive?.active
+          ? [
+              dataLive?.live && !loadingRecord ? (
+                <Button
+                  onClick={() => {
+                    record === 'start' ? startRecordTransmition() : stopRecordTransmition();
+                  }}
+                  type='primary'>
+                  {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
+                </Button>
+              ) : (
+                loadingRecord && <Spin />
+              ),
+            ]
+          : []
+      }
       cover={
         props.type === 'reunión' && (
           <img

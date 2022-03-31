@@ -7,6 +7,8 @@ import Table from '../../antdComponents/Table';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
+import Service from '../agenda/roomManager/service';
+import { firestore } from '@/helpers/firebase';
 import { deleteLiveStream } from '@/adaptors/gcoreStreamingApi';
 const { confirm } = Modal;
 
@@ -81,7 +83,7 @@ const CMS = (props) => {
     setLoading(false);
   };
 
-  const remove = (id, meeting_id) => {
+  const remove = (id) => {
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -97,9 +99,12 @@ const CMS = (props) => {
           action: 'show',
         });
         const onHandlerRemove = async () => {
-          console.log('esss aquissssss', meeting_id);
           try {
-            if (meeting_id) await deleteLiveStream(meeting_id);
+            const service = new Service(firestore);
+            const configuration = await service.getConfiguration(eventId, id);
+            if (configuration && configuration.typeActivity === 'eviusMeet') {
+              await deleteLiveStream(configuration.meeting_id);
+            }
             if (deleteCallback) await deleteCallback(id);
             await API.deleteOne(id, eventId);
             DispatchMessageService({

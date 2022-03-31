@@ -971,6 +971,7 @@ class AgendaEdit extends Component {
   //FN para eliminar la actividad
   remove = async () => {
     let self = this;
+    const { service } = this.state;
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -988,9 +989,9 @@ class AgendaEdit extends Component {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              if (self.state.transmition === 'EviusMeet') {
-                console.log('evismeeeee', self.state.meeting_id);
-                await deleteLiveStream(self.state.meeting_id);
+              const configuration = await service.getConfiguration(self.props.event._id, self.state.activity_id);
+              if (configuration && configuration.typeActivity === 'eviusMeet') {
+                await deleteLiveStream(configuration.meeting_id);
               }
               await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
               DispatchMessageService({
