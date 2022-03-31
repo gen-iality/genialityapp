@@ -116,7 +116,7 @@ export const typeInputs = [
   { value: 'file', label: 'Archivo' },
   { value: 'complex', label: 'JSON' },
   { value: 'tituloseccion', label: 'Titulo para indicar campos relacionados' },
-  /* { value: 'password', label: 'Password' }, */
+  { value: 'password', label: 'Password' },
   { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
   { value: 'codearea', label: 'Código de área para números' },
   /* { value: 'avatar', label: 'Imagen de perfil' }, */
