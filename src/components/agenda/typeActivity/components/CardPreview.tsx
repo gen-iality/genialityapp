@@ -1,4 +1,4 @@
-import { Card, Typography, Space, Select, Avatar, Button, Spin, Badge } from 'antd';
+import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Col, Badge } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
@@ -102,25 +102,6 @@ const CardPreview = (props: any) => {
   };
   return (
     <Card
-      actions={
-        dataLive?.live && dataLive?.active
-          ? [
-              dataLive?.live && !loadingRecord ? (
-                <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
-                  <Button
-                    onClick={() => {
-                      record === 'start' ? startRecordTransmition() : stopRecordTransmition();
-                    }}
-                    type='primary'>
-                    {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
-                  </Button>
-                </Badge>
-              ) : (
-                loadingRecord && <Spin />
-              ),
-            ]
-          : []
-      }
       cover={
         props.type === 'reunión' && (
           <img
@@ -136,55 +117,78 @@ const CardPreview = (props: any) => {
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && renderPlayer()}
         </div>
-        <Card.Meta
-          avatar={
-            props.type === 'reunión' || props.type === 'Video' ? null : (
-              <Avatar
-                icon={
-                  props.type === 'EviusMeet' ? (
-                    dataLive?.active ? (
-                      <CheckCircleOutlined />
-                    ) : (
-                      <StopOutlined />
-                    )
-                  ) : props.type === 'vimeo' ? (
-                    <VimeoIcon />
-                  ) : (
-                    props.type === 'Youtube' && <YoutubeFilled />
-                  )
-                }
-                style={
-                  props.type === 'EviusMeet'
-                    ? dataLive?.active
-                      ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
-                      : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
-                    : props.type === 'vimeo'
-                    ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
-                    : (props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
-                      undefined
-                }
-              />
-            )
-          }
-          title={
-            <Typography.Text style={{ fontSize: '20px' }} strong>
-              {props.activityName}
-            </Typography.Text>
-          }
-          description={
-            props.type == 'reunión' ? (
-              'Sala de reuniones'
-            ) : props.type === 'Video' ? (
-              videoDuration(duration)
-            ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
-              'Conexión externa'
-            ) : dataLive?.active ? (
-              <Typography.Text type='success'>Iniciado</Typography.Text>
+        <Row align='top' justify='space-between'>
+          <Col span={dataLive?.live && dataLive?.active ? 16 : 24}>
+            <Comment
+              avatar={
+                props.type === 'reunión' || props.type === 'Video' ? null : (
+                  <Avatar
+                    icon={
+                      props.type === 'EviusMeet' ? (
+                        dataLive?.active ? (
+                          <CheckCircleOutlined />
+                        ) : (
+                          <StopOutlined />
+                        )
+                      ) : props.type === 'vimeo' ? (
+                        <VimeoIcon />
+                      ) : (
+                        props.type === 'Youtube' && <YoutubeFilled />
+                      )
+                    }
+                    style={
+                      props.type === 'EviusMeet'
+                        ? dataLive?.active
+                          ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
+                          : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
+                        : props.type === 'vimeo'
+                        ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
+                        : (props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
+                          undefined
+                    }
+                  />
+                )
+              }
+              author={
+                <Typography.Text style={{ fontSize: '20px' }} strong>
+                  {props.activityName}
+                </Typography.Text>
+              }
+              content={
+                props.type == 'reunión' ? (
+                  'Sala de reuniones'
+                ) : props.type === 'Video' ? (
+                  videoDuration(duration)
+                ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
+                  'Conexión externa'
+                ) : dataLive?.active ? (
+                  <Typography.Text type='success'>Iniciado</Typography.Text>
+                ) : (
+                  <Typography.Text type='danger'>Detenido</Typography.Text>
+                )
+              }
+            />
+          </Col>
+
+          {dataLive?.live && dataLive?.active ? (
+            dataLive?.live && !loadingRecord ? (
+              <Col span={8}>
+                <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
+                  <Button
+                    onClick={() => {
+                      record === 'start' ? startRecordTransmition() : stopRecordTransmition();
+                    }}
+                    type='primary'>
+                    {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
+                  </Button>
+                </Badge>
+              </Col>
             ) : (
-              <Typography.Text type='danger'>Detenido</Typography.Text>
+              loadingRecord && <Spin />
             )
-          }
-        />
+          ) : null}
+        </Row>
+
         {(props.type === 'Transmisión' ||
           props.type === 'vimeo' ||
           props.type == 'Youtube' ||
