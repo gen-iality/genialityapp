@@ -176,7 +176,9 @@ const CardPreview = (props: any) => {
                   onClick={() => {
                     record === 'start' ? startRecordTransmition() : stopRecordTransmition();
                   }}
-                  type='primary'>
+                  type='primary'
+                  ghost
+                  danger>
                   {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
                 </Button>
               </Col>
