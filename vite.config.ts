@@ -50,8 +50,8 @@ export default defineConfig({
     EnvironmentPlugin(
       {
         VITE_AUTH_URL: 'http://localhost:3010',
-        VITE_API_URL: 'https://api.evius.co',
-        VITE_API_DEV_URL: 'https://api.evius.co',
+        VITE_API_URL: 'https://devapi.evius.co',
+        VITE_API_DEV_URL: 'https://devapi.evius.co',
         REACT_APP_SENTRY: 'https://d22c22662dfe45ab806c3bea19c1017b@o1156387.ingest.sentry.io/6237649',
         EVIUS_GOOGLE_MAPS_KEY: 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk',
         VITE_API_EVIUS_ZOOM_SERVER: 'https://apimeetings.evius.co:6490/crearroom',
@@ -87,8 +87,8 @@ export default defineConfig({
     EnvironmentPlugin(
       {
         VITE_AUTH_URL: 'http://localhost:3010',
-        VITE_API_URL: 'https://api.evius.co',
-        VITE_API_DEV_URL: 'https://api.evius.co',
+        VITE_API_URL: 'https://devapi.evius.co',
+        VITE_API_DEV_URL: 'https://devapi.evius.co',
         REACT_APP_SENTRY: 'https://d22c22662dfe45ab806c3bea19c1017b@o1156387.ingest.sentry.io/6237649',
         EVIUS_GOOGLE_MAPS_KEY: 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk',
         VITE_API_EVIUS_ZOOM_SERVER: 'https://apimeetings.evius.co:6490/crearroom',
