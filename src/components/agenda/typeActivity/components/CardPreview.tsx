@@ -9,7 +9,7 @@ import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
+  const { roomStatus, setRoomStatus, dataLive, meeting_id, obtainUrl } = useContext(AgendaContext);
 
   console.log('DATALIVE ===>', dataLive);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
@@ -24,30 +24,9 @@ const CardPreview = (props: any) => {
 
   //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
   const renderPlayer = () => {
-    let urlVideo =
-      props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
-        ? dataLive && dataLive.active && dataLive?.live && dataLive?.iframe_url
-          ? dataLive?.iframe_url
-          : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-        : props.type == 'Youtube'
-        ? data
-          ? data?.includes('https://youtu.be/')
-            ? data
-            : 'https://youtu.be/' + data
-          : props.type === 'vimeo'
-          ? data?.includes('https://vimeo.com/event/')
-            ? data
-            : 'https://vimeo.com/event/' + data
-          : data
-        : data;
+    //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
+    let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
 
-    //VISIBILIDAD DEL REACT PLAYER
-    const visibleReactPlayer =
-      ((props.type == 'Video' || props.type == 'Youtube' || props.type == 'vimeo') && urlVideo) ||
-      (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
-        (props.type === 'Transmisión' || props.type === 'EviusMeet'))
-        ? true
-        : false;
     //RENDERIZAR COMPONENTE
     return (
       <>

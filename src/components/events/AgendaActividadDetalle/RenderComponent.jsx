@@ -25,6 +25,7 @@ const RenderComponent = (props) => {
   const [renderGame, setRenderGame] = useState('');
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
+  const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
   let { transmition, setTransmition } = useContext(AgendaContext);
   let {
@@ -38,37 +39,40 @@ const RenderComponent = (props) => {
   } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
-    let tempactivty = currentActivity;
-    firestore
-      .collection('events')
-      .doc(event_id)
-      .collection('activities')
-      .doc(activity_id)
-      .onSnapshot((infoActivity) => {
-        if (!infoActivity.exists) return;
-        const data = infoActivity.data();
-        const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
-        setplatform(platform);
-        settabsGeneral(tabs);
-        setactivityState(habilitar_ingreso);
-        setactivityStateGlobal(habilitar_ingreso);
-        setmeetingId(meeting_id);
-        setTransmition(data.transmition);
-        if (!tabs.games) {
-          HandleChatOrAttende('1');
-          HandlePublicPrivate('public');
-        }
-        //Validacion para colombina (quitar apenas pase el evento)
-        if (event_id == '619d09f7cbd9a47c2d386372') {
-          HandleChatOrAttende('4');
-        }
+    if (!fnCiclo) {
+      let tempactivty = currentActivity;
+      firestore
+        .collection('events')
+        .doc(event_id)
+        .collection('activities')
+        .doc(activity_id)
+        .onSnapshot((infoActivity) => {
+          if (!infoActivity.exists) return;
+          const data = infoActivity.data();
+          const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
+          setplatform(platform);
+          settabsGeneral(tabs);
+          setactivityState(habilitar_ingreso);
+          setactivityStateGlobal(habilitar_ingreso);
+          setmeetingId(meeting_id);
+          setTransmition(data.transmition);
+          if (!tabs.games) {
+            HandleChatOrAttende('1');
+            HandlePublicPrivate('public');
+          }
+          //Validacion para colombina (quitar apenas pase el evento)
+          if (event_id == '619d09f7cbd9a47c2d386372') {
+            HandleChatOrAttende('4');
+          }
 
-        handleChangeTabs(tabs);
-        tempactivty.habilitar_ingreso = habilitar_ingreso;
-        tempactivty.avalibleGames = avalibleGames;
-        setcurrenActivity(tempactivty);
-        console.log('tempactivty', tempactivty);
-      });
+          handleChangeTabs(tabs);
+          tempactivty.habilitar_ingreso = habilitar_ingreso;
+          tempactivty.avalibleGames = avalibleGames;
+          setcurrenActivity(tempactivty);
+          setFnCiclo(true);
+          console.log('tempactivty', tempactivty);
+        });
+    }
   }
   useEffect(() => {
     async function GetStateMeetingRoom() {
