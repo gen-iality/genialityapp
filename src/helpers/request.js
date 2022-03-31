@@ -489,7 +489,8 @@ export const TicketsApi = {
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}&limit=20`, true);
   },
   getByEvent: async (event) => {
-    return await Actions.getOne(`/api/me/eventusers/event/${event}`);
+    let token = await GetTokenUserFirebase();
+    return await Actions.getOne(`/api/me/eventusers/event/${event}${token ? `/?token=${token}` : '/'}`);
   },
   transferToUser: async (event, event_user, data) => {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
