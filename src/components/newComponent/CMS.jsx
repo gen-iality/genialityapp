@@ -7,7 +7,9 @@ import Table from '../../antdComponents/Table';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
-
+import Service from '../agenda/roomManager/service';
+import { firestore } from '@/helpers/firebase';
+import { deleteLiveStream } from '@/adaptors/gcoreStreamingApi';
 const { confirm } = Modal;
 
 const CMS = (props) => {
@@ -98,6 +100,11 @@ const CMS = (props) => {
         });
         const onHandlerRemove = async () => {
           try {
+            const service = new Service(firestore);
+            const configuration = await service.getConfiguration(eventId, id);
+            if (configuration && configuration.typeActivity === 'eviusMeet') {
+              await deleteLiveStream(configuration.meeting_id);
+            }
             if (deleteCallback) await deleteCallback(id);
             await API.deleteOne(id, eventId);
             DispatchMessageService({

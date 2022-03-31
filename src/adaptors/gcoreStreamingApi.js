@@ -82,6 +82,37 @@ const deleteLiveStream = async (stream_id) => {
 
   return null;
 };
+const startRecordingLiveStream = async (stream_id) => {
+  const res = await gCoreCLient.put('streams/' + stream_id + '/start_recording');
+  if (res?.status === 204) {
+    return 'LiveStream recording started';
+  }
+  return null;
+};
+const stopRecordingLiveStream = async (stream_id) => {
+  const res = await gCoreCLient.put('streams/' + stream_id + '/stop_recording');
+  if (res?.status === 204) {
+    return 'LiveStream recording stopped';
+  }
+  return null;
+};
+
+const getVideosLiveStream = async (name_activity) => {
+  const res = await gCoreCLient.get('/videos/search?q=' + name_activity);
+
+  if (res?.status === 200) {
+    return res.data;
+  }
+  return null;
+};
+
+const getVideoLiveStream = async (video_id) => {
+  const res = await gCoreCLient.get('/videos/' + video_id);
+  if (res?.status === 200) {
+    return res.data;
+  }
+  return null;
+};
 
 export {
   getLiveStream,
@@ -92,4 +123,8 @@ export {
   stopLiveStream,
   createLiveStream,
   deleteLiveStream,
+  startRecordingLiveStream,
+  stopRecordingLiveStream,
+  getVideosLiveStream,
+  getVideoLiveStream,
 };

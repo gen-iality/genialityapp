@@ -1,15 +1,20 @@
-import { Card, Typography, Space, Select, Avatar } from 'antd';
+import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Col, Badge } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import AgendaContext from '../../../../context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
+import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
+  const [loadingRecord, setLoadingRecord] = useState(false);
+  const [record, setRecord] = useState('start');
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus, dataLive, meeting_id } = useContext(AgendaContext);
+  const { roomStatus, setRoomStatus, dataLive, meeting_id, obtainUrl, recordings } = useContext(AgendaContext);
+
+  console.log('DATALIVE ===>', dataLive);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {
@@ -19,42 +24,35 @@ const CardPreview = (props: any) => {
     }
   };
 
+  //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
   const renderPlayer = () => {
-    let urlVideo =
-      props.type !== 'Video' && props.type !== 'Youtube' && props.type !== 'vimeo'
-        ? dataLive && dataLive?.live && dataLive?.hls_playlist_url
-          ? dataLive?.hls_playlist_url
-          : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-        : props.type == 'Youtube'
-        ? data
-          ? data?.includes('https://youtu.be/')
-            ? data
-            : 'https://youtu.be/' + data
-          : props.type === 'vimeo'
-          ? data?.includes('https://vimeo.com/event/')
-            ? data
-            : 'https://vimeo.com/event/' + data
-          : data
-        : data;
-    // console.log('🚀 URL DEL VIDEO===>', urlVideo);
+    //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
+    let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+
+    //RENDERIZAR COMPONENTE
     return (
       <>
-        {urlVideo && (
+        {visibleReactPlayer && (
           <ReactPlayer
             playing={true}
-            loop={valideUrl(urlVideo)}
-            onDuration={props.type === 'Video' ?? handleDuration}
+            loop={true}
+            onDuration={props.type === 'Video' ? handleDuration : undefined}
             style={{ objectFit: 'cover' }}
             width='100%'
             height='100%'
             url={urlVideo}
-            controls={valideUrl(urlVideo)}
-            config={{
-              file: {
-                forceHLS: valideUrl(urlVideo),
-              },
-            }}
+            controls={true}
+            onError={(e) => console.log('Error ==>', e)}
           />
+        )}
+        {!visibleReactPlayer && (
+          <iframe
+            style={{ aspectRatio: '16/9' }}
+            width='100%'
+            src={urlVideo + '?muted=1&autoplay=1'}
+            frameBorder='0'
+            allow='autoplay; encrypted-media'
+            allowFullScreen></iframe>
         )}
       </>
     );
@@ -86,7 +84,21 @@ const CardPreview = (props: any) => {
     if (hour == 0) return minute + ':' + second;
     return hour + ':' + minute + ':' + second;
   }
+  const startRecordTransmition = async () => {
+    setLoadingRecord(true);
+    const response = await startRecordingLiveStream(meeting_id);
+    console.log('response', response);
+    setLoadingRecord(false);
+    setRecord('stop');
+  };
 
+  const stopRecordTransmition = async () => {
+    setLoadingRecord(true);
+    const response = await stopRecordingLiveStream(meeting_id);
+    console.log('response', response);
+    setLoadingRecord(false);
+    setRecord('start');
+  };
   return (
     <Card
       cover={
@@ -104,56 +116,82 @@ const CardPreview = (props: any) => {
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && renderPlayer()}
         </div>
-        <Card.Meta
-          avatar={
-            props.type === 'reunión' || props.type === 'Video' ? null : (
-              <Avatar
-                icon={
-                  props.type === 'EviusMeet' ? (
-                    dataLive?.active ? (
-                      <CheckCircleOutlined />
-                    ) : (
-                      <StopOutlined />
-                    )
-                  ) : props.type === 'vimeo' ? (
-                    <VimeoIcon />
-                  ) : (
-                    props.type === 'Youtube' && <YoutubeFilled />
-                  )
-                }
-                style={
-                  props.type === 'EviusMeet'
-                    ? dataLive?.active
-                      ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
-                      : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
-                    : props.type === 'vimeo'
-                    ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
-                    : (props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
-                      undefined
-                }
-              />
-            )
-          }
-          title={
-            <Typography.Text style={{ fontSize: '20px' }} strong>
-              {props.activityName}
-            </Typography.Text>
-          }
-          description={
-            props.type == 'reunión' ? (
-              'Sala de reuniones'
-            ) : props.type === 'Video' ? (
-              videoDuration(duration)
-            ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
-              'Conexión externa'
-            ) : dataLive?.active ? (
-              <Typography.Text type='success'>Iniciado</Typography.Text>
+        <Row align='top' justify='space-between'>
+          <Col span={dataLive?.live && dataLive?.active ? 16 : 24}>
+            <Comment
+              avatar={
+                props.type === 'reunión' || props.type === 'Video' ? null : (
+                  <Avatar
+                    icon={
+                      props.type === 'EviusMeet' ? (
+                        dataLive?.active ? (
+                          <CheckCircleOutlined />
+                        ) : (
+                          <StopOutlined />
+                        )
+                      ) : props.type === 'vimeo' ? (
+                        <VimeoIcon />
+                      ) : (
+                        props.type === 'Youtube' && <YoutubeFilled />
+                      )
+                    }
+                    style={
+                      props.type === 'EviusMeet'
+                        ? dataLive?.active
+                          ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
+                          : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
+                        : props.type === 'vimeo'
+                        ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
+                        : (props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
+                          undefined
+                    }
+                  />
+                )
+              }
+              author={
+                <Typography.Text style={{ fontSize: '20px' }} strong>
+                  {props.activityName}
+                </Typography.Text>
+              }
+              content={
+                props.type == 'reunión' ? (
+                  'Sala de reuniones'
+                ) : props.type === 'Video' ? (
+                  videoDuration(duration)
+                ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
+                  'Conexión externa'
+                ) : dataLive?.active ? (
+                  <Typography.Text type='success'>Iniciado</Typography.Text>
+                ) : (
+                  <Typography.Text type='danger'>Detenido</Typography.Text>
+                )
+              }
+            />
+          </Col>
+
+          {dataLive?.live && dataLive?.active ? (
+            dataLive?.live && !loadingRecord ? (
+              <Col span={8}>
+                <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
+                  <Button
+                    onClick={() => {
+                      record === 'start' ? startRecordTransmition() : stopRecordTransmition();
+                    }}
+                    type='primary'>
+                    {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
+                  </Button>
+                </Badge>
+              </Col>
             ) : (
-              <Typography.Text type='danger'>Detenido</Typography.Text>
+              loadingRecord && <Spin />
             )
-          }
-        />
-        {(props.type === 'Transmisión' || props.type === 'vimeo' || props.type == 'Youtube') && (
+          ) : null}
+        </Row>
+
+        {(props.type === 'Transmisión' ||
+          props.type === 'vimeo' ||
+          props.type == 'Youtube' ||
+          props.type == 'EviusMeet') && (
           <Space style={{ width: '100%' }}>
             <Typography.Text strong>ID {props.type}:</Typography.Text>
             <Typography.Text

@@ -1,4 +1,6 @@
+import { getLiveStreamStatus, getVideosLiveStream } from '@/adaptors/gcoreStreamingApi';
 import { message } from 'antd';
+
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
 import { fireRealtime, firestore } from '../helpers/firebase';
@@ -38,6 +40,8 @@ export const AgendaContextProvider = ({ children }) => {
   const [typeActivity, setTypeActivity] = useState(undefined);
   const [activityName, setActivityName] = useState(null);
   const [dataLive, setDataLive] = useState(null);
+  const [timerId, setTimerId] = useState(null);
+  const [recordings, setRecordings] = useState([]);
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -65,6 +69,18 @@ export const AgendaContextProvider = ({ children }) => {
   }, [activityState.meeting_id]);
 
   useEffect(() => {
+    if (dataLive) {
+      getRecordingsLiveStream();
+    }
+    async function getRecordingsLiveStream() {
+      const videos = await getVideosLiveStream(dataLive.name);
+      if (videos.length > 0) {
+        setRecordings(videos.filter((video) => video.stream_id === dataLive.id));
+      }
+    }
+  }, [dataLive]);
+
+  useEffect(() => {
     if (activityEdit) {
       console.log('8. ACTIVIDAD ACA===>', activityEdit);
       obtenerDetalleActivity();
@@ -72,12 +88,13 @@ export const AgendaContextProvider = ({ children }) => {
     }
     async function obtenerDetalleActivity() {
       console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
-      //const info = await AgendaApi.getOne(activityEdit, cEvent.value._id);
+
       const service = new Service(firestore);
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
       console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+
         console.log('8. CONFIGURATION==>', configuration);
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
@@ -232,6 +249,56 @@ export const AgendaContextProvider = ({ children }) => {
       }
     }
   };
+  const stopInterval = () => {
+    if (timerId) {
+      clearInterval(timerId);
+    }
+  };
+  const executer_startMonitorStatus = async () => {
+    let live_stream_status = null;
+    let liveLocal = false;
+    try {
+      live_stream_status = await getLiveStreamStatus(meeting_id);
+
+      // console.log('live_stream_status', live_stream_status);
+      console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.live, liveLocal);
+      console.log('10. ENTRO A DETENER');
+      setDataLive(live_stream_status);
+
+      liveLocal = live_stream_status?.live;
+    } catch (e) {}
+    const timer_id = setTimeout(executer_startMonitorStatus, 5000);
+    setTimerId(timer_id);
+    if (!live_stream_status.active) {
+      clearTimeout(timer_id);
+    }
+  };
+
+  const obtainUrl = (type, data) => {
+    let urlVideo =
+      type !== 'Video' && type !== 'Youtube' && type !== 'vimeo'
+        ? dataLive && dataLive.active && dataLive?.live && dataLive?.iframe_url
+          ? dataLive?.iframe_url
+          : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
+        : type == 'Youtube'
+        ? data
+          ? data?.includes('https://youtu.be/')
+            ? data
+            : 'https://youtu.be/' + data
+          : type === 'vimeo'
+          ? data?.includes('https://vimeo.com/event/')
+            ? data
+            : 'https://vimeo.com/event/' + data
+          : data
+        : data;
+    const visibleReactPlayer =
+      ((type == 'Video' || type == 'Youtube' || type == 'vimeo') && urlVideo) ||
+      (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
+        (type === 'Transmisión' || type === 'EviusMeet'))
+        ? true
+        : false;
+    return { urlVideo, visibleReactPlayer };
+  };
 
   const deleteTypeActivity = async () => {
     const { roomInfo, tabs } = prepareData({ type: 'delete' });
@@ -245,6 +312,7 @@ export const AgendaContextProvider = ({ children }) => {
         setTypeActivity(null);
         setMeetingId(null);
         setRoomStatus('');
+        setDataLive(null);
         DispatchMessageService({
           type: 'success',
           msj: result.message,
@@ -324,6 +392,11 @@ export const AgendaContextProvider = ({ children }) => {
         dataLive,
         setDataLive,
         copyToClipboard,
+        stopInterval,
+        executer_startMonitorStatus,
+        recordings,
+
+        obtainUrl,
       }}>
       {children}
     </AgendaContext.Provider>
