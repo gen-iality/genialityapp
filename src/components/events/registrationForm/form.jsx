@@ -106,7 +106,9 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
 
 function fieldsAditional(extraFields) {
   if (extraFields) {
-    const countFields = extraFields.filter((field) => field.name != 'names' && field.name != 'email');
+    const countFields = extraFields.filter(
+      (field) => field.name !== 'names' && field.name !== 'email' && field.type !== 'password'
+    );
     return countFields.length;
   }
   return 0;

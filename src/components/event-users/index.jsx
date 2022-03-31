@@ -252,7 +252,8 @@ class ListEventUser extends Component {
 
       let extraColumns = extraFields
         .filter((item) => {
-          return item.type != 'tituloseccion';
+          console.log(item.type);
+          return item.type !== 'tituloseccion' && item.type !== 'password';
         })
         .map((item) => {
           return {

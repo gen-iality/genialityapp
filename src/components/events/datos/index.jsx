@@ -81,8 +81,9 @@ class Datos extends Component {
       ) {
         fields = await this.props.getFields();
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
+        //Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
         fields.map((field) => {
-          if (field.name !== 'password' && field.name !== 'contrasena' && field.name !== 'avatar') {
+          if (/* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !== 'avatar') {
             fieldsReplace.push(field);
           }
         });
@@ -91,8 +92,9 @@ class Datos extends Component {
       } else if (!this.props.edittemplate) {
         fields = await EventFieldsApi.getAll(this.props.eventId);
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
+        //Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
         fields.map((field) => {
-          if (field.name !== 'password' && field.name !== 'contrasena' && field.name !== 'avatar') {
+          if (/* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !== 'avatar') {
             fieldsReplace.push(field);
           }
         });
@@ -545,7 +547,7 @@ class Datos extends Component {
         render: (key) => (
           <Row wrap gutter={[8, 8]}>
             <Col>
-              {key.name !== 'email' && key.name !== 'contrasena' && (
+              {key.name !== 'email' /* && key.name !== 'contrasena' */ && (
                 <Tooltip placement='topLeft' title='Editar'>
                   <Button
                     key={`editAction${key.index}`}
@@ -559,7 +561,7 @@ class Datos extends Component {
               )}
             </Col>
             <Col>
-              {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
+              {key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
                 <Tooltip placement='topLeft' title='Eliminar'>
                   <Button
                     key={`removeAction${key.index}`}
