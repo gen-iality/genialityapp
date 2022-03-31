@@ -291,7 +291,7 @@ const ChatExport = ({ eventId, event }) => {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
-        msj: `<> Por favor espere mientras ${userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...</>`,
+        msj: `Por favor espere mientras ${userBlocked ? 'desbloquea' : 'bloquea'} el usuario del chat...`,
         action: 'show',
       });
       Modal.confirm({
