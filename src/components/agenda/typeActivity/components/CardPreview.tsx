@@ -37,7 +37,7 @@ const CardPreview = (props: any) => {
             playing={true}
             loop={true}
             onDuration={props.type === 'Video' ? handleDuration : undefined}
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover', aspectRatio: '16/9' }}
             width='100%'
             height='100%'
             url={urlVideo}
@@ -204,7 +204,7 @@ const CardPreview = (props: any) => {
           </Space>
         )}
         {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
-          props.type !== 'Video') && (
+          (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'Video')) && (
           <Space direction='vertical' style={{ width: '100%' }}>
             <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
             <Select
