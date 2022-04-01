@@ -213,7 +213,8 @@ export const AgendaContextProvider = ({ children }) => {
       host_id,
       host_name,
       avalibleGames,
-      habilitar_ingreso: datos?.type === 'delete' ? '' : datos?.habilitar_ingreso?datos?.habilitar_ingreso:roomStatus,
+      habilitar_ingreso:
+        datos?.type === 'delete' ? '' : datos?.habilitar_ingreso ? datos?.habilitar_ingreso : roomStatus,
       transmition: transmition || null,
       //PERMITE REINICIALIZAR EL TIPO DE ACTIVIDAD O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
       typeActivity:
@@ -275,22 +276,18 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const obtainUrl = (type, data) => {
-    let urlVideo =
-      type !== 'Video' && type !== 'Youtube' && type !== 'vimeo'
-        ? dataLive && dataLive.active && dataLive?.live && dataLive?.iframe_url
-          ? dataLive?.iframe_url
-          : 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-        : type == 'Youtube'
-        ? data
-          ? data?.includes('https://youtu.be/')
-            ? data
-            : 'https://youtu.be/' + data
-          : type === 'vimeo'
-          ? data?.includes('https://vimeo.com/event/')
-            ? data
-            : 'https://vimeo.com/event/' + data
-          : data
-        : data;
+    console.log('DATA===>', data, type);
+    let urlVideo;
+    switch (type) {
+      case 'vimeo':
+        urlVideo = data?.includes('https://vimeo.com/') ? data : 'https://vimeo.com/' + data;
+        break;
+      case 'Youtube':
+        urlVideo = data?.includes('https://youtu.be/') ? data : 'https://youtu.be/' + data;
+        break;
+      default:
+        urlVideo = data;
+    }
     const visibleReactPlayer =
       ((type == 'Video' || type == 'Youtube' || type == 'vimeo') && urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
@@ -334,9 +331,9 @@ export const AgendaContextProvider = ({ children }) => {
     message.success('Copiado correctamente.!');
   };
 
-  const refreshActivity=()=>{
+  const refreshActivity = () => {
     obtenerDetalleActivity();
-  }
+  };
 
   return (
     <AgendaContext.Provider
@@ -401,7 +398,7 @@ export const AgendaContextProvider = ({ children }) => {
         recordings,
 
         obtainUrl,
-        refreshActivity
+        refreshActivity,
       }}>
       {children}
     </AgendaContext.Provider>
