@@ -25,7 +25,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     meeting_id,
     activityEdit,
     setDataLive,
-    setHabilitarIngreso
+    setHabilitarIngreso,
   } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
   const [typeActivityState, typeActivityDispatch] = useReducer(typeActivityReducer, initialState);
@@ -129,8 +129,8 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     const liveStreamresponse = await stopLiveStream(meeting_id);
     setDataLive(liveStreamresponse);
     setLoadingStop(false);
-    setHabilitarIngreso('ended_meeting_room')
-    await saveConfig({ habilitar_ingreso:'ended_meeting_room'});
+    setHabilitarIngreso('ended_meeting_room');
+    await saveConfig({ habilitar_ingreso: 'ended_meeting_room' });
     //queryClient.setQueryData('livestream', null);
   };
 
@@ -150,7 +150,12 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'url':
         const respUrl = await AgendaApi.editOne({ video: typeActivityState.data }, activityEdit, cEvent?.value?._id);
         if (respUrl) {
-          resp = await saveConfig({ platformNew: '', type: 'url', habilitar_ingreso:'only', data: typeActivityState.data, });
+          resp = await saveConfig({
+            platformNew: '',
+            type: 'url',
+            habilitar_ingreso: 'only',
+            data: typeActivityState.data,
+          });
           setTypeActivity('url');
           setPlatform('wowza');
         } else {
@@ -161,9 +166,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
       case 'vimeo':
         //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
-        let newDataVimeo = typeActivityState.data.includes('https://vimeo.com/event/')
-          ? typeActivityState.data
-          : 'https://vimeo.com/event/' + typeActivityState.data;
+        let newDataVimeo = typeActivityState.data;
         resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
         setTypeActivity('vimeo');
         setPlatform('vimeo');
@@ -175,7 +178,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         let newData = typeActivityState.data.includes('https://youtu.be/')
           ? typeActivityState.data
           : 'https://youtu.be/' + typeActivityState.data;
-        resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: newData});
+        resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: newData });
         setTypeActivity('youTube');
         setPlatform('wowza');
         setMeetingId(typeActivityState?.data);
@@ -187,7 +190,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
           (await saveConfig({
             platformNew: 'wowza',
             type: typeActivityState.selectedKey,
-            data: meeting_id,            
+            data: meeting_id,
           }));
         setTypeActivity('eviusMeet');
         setPlatform('wowza');
@@ -206,7 +209,12 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         //type:RTMP
         break;
       case 'meeting':
-        resp = await saveConfig({ platformNew: '', type: 'meeting', data: typeActivityState?.data,habilitar_ingreso:'only' });
+        resp = await saveConfig({
+          platformNew: '',
+          type: 'meeting',
+          data: typeActivityState?.data,
+          habilitar_ingreso: 'only',
+        });
         setTypeActivity('meeting');
         setPlatform('wowza');
         //Type:reunión
