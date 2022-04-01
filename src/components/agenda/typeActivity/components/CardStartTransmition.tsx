@@ -24,6 +24,7 @@ const CardStartTransmition = (props: any) => {
     deleteTypeActivity,
     executer_startMonitorStatus,
     stopInterval,
+    setHabilitarIngreso
   } = useContext(AgendaContext);
   const { toggleActivitySteps } = useTypeActivity();
   const queryClient = useQueryClient();
@@ -64,6 +65,7 @@ const CardStartTransmition = (props: any) => {
     const liveStreamresponse = await startLiveStream(meeting_id);
     setDataLive(liveStreamresponse);
     executer_startMonitorStatus();
+    setHabilitarIngreso('')
     setloading(false);
     //inicia el monitoreo
   };

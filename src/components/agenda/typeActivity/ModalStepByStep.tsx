@@ -42,6 +42,7 @@ const ModalStepByStep = () => {
               if (options.key === typeOptions.key) {
                 return (
                   <ContentSource
+                    key={options.key}
                     addonBefore={options.addonBefore}
                     placeholder={options.placeholder}
                     icon={options.image}

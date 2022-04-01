@@ -47,6 +47,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
         break;
       case 'dolby':
         url = `https://eviusmeets.netlify.app/?username=${name}&email=${email}`;
+        break;
       case 'streaming':
     }
     /*
@@ -61,6 +62,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 
     setPlatformurl(url);*/
     setPlatformurl(url);
+    break;
   };
 
   return (

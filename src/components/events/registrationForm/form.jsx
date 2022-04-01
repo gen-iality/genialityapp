@@ -104,6 +104,10 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
   return false;
 }
 
+function isRegister(initialValues, cEventUser) {
+  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null ? true : false;
+}
+
 function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter((field) => field.name != 'names' && field.name != 'email');
@@ -179,7 +183,7 @@ const FormRegister = ({
   const [typeRegister, setTypeRegister] = useState('pay');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState();
+  let [areacodeselected, setareacodeselected] = useState(57);
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState({});
@@ -500,6 +504,21 @@ const FormRegister = ({
       }
     }
   };
+  useEffect(() => {
+    console.log('INITIAL VALUES===>', initialValues, extraFields);
+    form.setFieldsValue(initialValues);
+    const fieldCountry = extraFields?.filter((field) => field.type == 'country');
+    if (fieldCountry.length > 0) {
+      setCountry(initialValues[fieldCountry[0].name]);
+    }
+  }, [initialValues]);
+
+  useEffect(() => {
+    if (areacodeselected) {
+      //form.setFieldsValue({ ...form.getFieldsValue, code: areacodeselected });
+      HandleHookForm({ target: { value: areacodeselected } }, 'code', null);
+    }
+  }, [areacodeselected]);
 
   const ValidateEmptyFields = (allValues) => {
     // if (allValues.picture == '') {
@@ -669,34 +688,12 @@ const FormRegister = ({
           );
           input = (
             <Input
-              // addonBefore={prefixSelector}
+              addonBefore={prefixSelector}
               //onChange={(e) => setnumberareacode(e.target.value)}
               defaultvalue={value?.toString().split()[2]}
-              disabled={
-                /* cEvent.value.allow_register === false && Este para el caso que se evalue tambien anonimo */
-                //como validar cuando es usuario y admin?
-                cUser.value?.autorizaciontratamientodedatospersonales === true
-                  ? true
-                  : m.name == 'email' && initialValues?.email
-                  ? true
-                  : cEvent?.value?.visibility === 'PUBLIC' && m.name == 'names' && initialValues?.names
-                  ? true
-                  : false
-              }
-              {...props}
-              addonBefore={
-                labelPosition === 'izquierda' && (
-                  <span>
-                    {mandatory && <span style={{ color: 'red' }}>* </span>}
-                    <strong>{label}</strong>
-                  </span>
-                )
-              }
-              type={type}
-              key={key}
               name={name}
               //required={mandatory}
-              // type='number'
+              type='number'
               // key={key}
               style={{ width: '100%' }}
               placeholder='Numero de telefono'
@@ -1185,8 +1182,8 @@ const FormRegister = ({
                         }}
                         type='primary'
                         htmlType='submit'>
-                        {(initialValues !== null && cEventUser.value !== null && !initialValues.user) ||
-                        (initialValues !== null && Object.keys(initialValues).length === 0)
+                        {}
+                        {isRegister(initialValues, cEventUser)
                           ? intl.formatMessage({ id: 'Button.signup' })
                           : intl.formatMessage({
                               id: 'registration.button.update',
