@@ -213,7 +213,8 @@ export const AgendaContextProvider = ({ children }) => {
       host_id,
       host_name,
       avalibleGames,
-      habilitar_ingreso: datos?.type === 'delete' ? '' : datos?.habilitar_ingreso?datos?.habilitar_ingreso:roomStatus,
+      habilitar_ingreso:
+        datos?.type === 'delete' ? '' : datos?.habilitar_ingreso ? datos?.habilitar_ingreso : roomStatus,
       transmition: transmition || null,
       //PERMITE REINICIALIZAR EL TIPO DE ACTIVIDAD O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
       typeActivity:
@@ -286,9 +287,9 @@ export const AgendaContextProvider = ({ children }) => {
             ? data
             : 'https://youtu.be/' + data
           : type === 'vimeo'
-          ? data?.includes('https://vimeo.com/event/')
+          ? data?.includes('https://vimeo.com/')
             ? data
-            : 'https://vimeo.com/event/' + data
+            : 'https://vimeo.com/' + data
           : data
         : data;
     const visibleReactPlayer =
@@ -334,9 +335,9 @@ export const AgendaContextProvider = ({ children }) => {
     message.success('Copiado correctamente.!');
   };
 
-  const refreshActivity=()=>{
+  const refreshActivity = () => {
     obtenerDetalleActivity();
-  }
+  };
 
   return (
     <AgendaContext.Provider
@@ -401,7 +402,7 @@ export const AgendaContextProvider = ({ children }) => {
         recordings,
 
         obtainUrl,
-        refreshActivity
+        refreshActivity,
       }}>
       {children}
     </AgendaContext.Provider>

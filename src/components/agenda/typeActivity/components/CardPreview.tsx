@@ -203,7 +203,8 @@ const CardPreview = (props: any) => {
             </Typography.Text>
           </Space>
         )}
-        {(dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) && (
+        {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
+          props.type !== 'Video') && (
           <Space direction='vertical' style={{ width: '100%' }}>
             <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
             <Select
