@@ -31,9 +31,9 @@ const InitialView = (props: any) => {
     if (typeActivity === null) {
       setLoading(false);
     } else {
+      setLoading(true);
       obtainDataInitial();
       //MIENTRAS CARGA LOS COMPONENTES
-      setTimeout(() => setLoading(false), 500);
     }
   }, [props.tab]);
   //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA ACTIVIDAD
@@ -57,6 +57,7 @@ const InitialView = (props: any) => {
       buttonsTextNextOrCreate: '',
       buttonTextPreviousOrCancel: '',
     });
+    setTimeout(() => setLoading(false), 500);
   };
   // (SE PUEDE OPTIMIZAR) X AHORA EL VIDEO SE ESTA GUARDANDO EN MONGO
   const obtainUrlVideo = async () => {

@@ -13,6 +13,7 @@ import ThisRouteCanBeDisplayed, {
   recordTypeForThisEvent,
 } from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
 import AnonymousEvenUserForm from '../hooks/anonymousEvenUserForm';
+import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 
@@ -85,7 +86,9 @@ const ChatList = (props) => {
               cUser.value?.uid +
               '&version=0.0.2' +
               '&anonimo=' +
-              anonymous
+              anonymous +
+              '&mode=' +
+              isStagingOrProduccion()
             }></iframe>
         </TabPane>
       )}
@@ -138,7 +141,9 @@ const ChatList = (props) => {
                   '&userid=' +
                   cUser.value?.uid +
                   '&nombre=' +
-                  chatActual?.chatname
+                  chatActual?.chatname +
+                  '&mode=' +
+                  isStagingOrProduccion()
                 }></iframe>
             </>
           )}

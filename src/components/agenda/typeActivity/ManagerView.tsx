@@ -14,7 +14,7 @@ import ModalListRequestsParticipate from '../roomManager/components/ModalListReq
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
   const { data } = useTypeActivity();
-  const { activityEdit, getRequestByActivity, request, transmition, dataLive } = useContext(AgendaContext);
+  const { activityEdit, getRequestByActivity, request, dataLive } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
   useEffect(() => {
@@ -29,14 +29,17 @@ const ManagerView = (props: any) => {
           <CardPreview type={props.type} activityName={props.activityName} />
         </Col>
         <Col span={14}>
-          {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && <CardStartTransmition />}
+          {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && (
+            <CardStartTransmition type={props.type} />
+          )}
           <Row gutter={[16, 16]}>
             {(props.type == 'reunión' || props.type == 'EviusMeet') && dataLive?.active && (
               <Col span={10}>
                 <GoToEviusMeet type={props.type} activityId={props.activityId} />
               </Col>
             )}
-            {((props.type === 'EviusMeet' && dataLive?.active) || props.type !== 'EviusMeet') && (
+            {(((props.type === 'EviusMeet' || props.type === 'Transmisión') && dataLive?.active) ||
+              (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
               <Col span={props.type !== 'EviusMeet' ? 24 : 14}>
                 <TransmitionOptions type={props.type} />
               </Col>
