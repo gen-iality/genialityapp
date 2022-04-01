@@ -37,7 +37,7 @@ const CardPreview = (props: any) => {
             playing={true}
             loop={true}
             onDuration={props.type === 'Video' ? handleDuration : undefined}
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover', aspectRatio: '16/9' }}
             width='100%'
             height='100%'
             url={urlVideo}

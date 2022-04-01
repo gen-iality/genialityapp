@@ -43,10 +43,11 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
         break;
 
       case 'vimeo':
-        url = `https://vimeo.com/${meeting_id}`;
+        url = `https://player.vimeo.com/video/${meeting_id}`;
         break;
       case 'dolby':
         url = `https://eviusmeets.netlify.app/?username=${name}&email=${email}`;
+        break;
       case 'streaming':
     }
     /*
@@ -61,6 +62,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 
     setPlatformurl(url);*/
     setPlatformurl(url);
+    break;
   };
 
   return (
