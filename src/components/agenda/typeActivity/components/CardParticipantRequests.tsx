@@ -12,7 +12,12 @@ const CardParticipantRequests = (props: any) => {
         <Typography.Text style={{ fontSize: '20px' }} strong>
           Solicitudes de participación de asistentes
         </Typography.Text>
-        <Badge count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}>
+        <Badge
+          count={
+            request && Object.keys(request).length > 0
+              ? Object.values(request).filter((request: any) => request.active != true).length
+              : 0
+          }>
           <Button onClick={() => setViewModal(true)} type='primary'>
             Ver solicitudes
           </Button>

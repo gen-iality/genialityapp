@@ -1483,11 +1483,11 @@ class AgendaEdit extends Component {
                   value={selected_document}
                 />
               </Form.Item> */}
-                    <Form.Item label={'Link del vídeo'}>
+                    {/* <Form.Item label={'Link del vídeo'}>
                       <ExclamationCircleOutlined style={{ color: '#faad14' }} />
                       <Text type='secondary'>Este video solo se vera cuando la transmisión no está en vivo.</Text>
                       <Input name='video' type='text' value={video} onChange={this.handleChange} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item label={'Descripción'}>
                       <Space>
                         <ExclamationCircleOutlined style={{ color: '#faad14' }} />
