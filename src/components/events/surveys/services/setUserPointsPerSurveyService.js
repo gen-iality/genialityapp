@@ -1,6 +1,6 @@
 import { firestore } from '../../../../helpers/firebase';
 
-async function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestions) {
+async function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestions, timeSpent) {
   const { email, _id } = user;
   const userName = user.names ? user.names : user.name ? user.name : 'Anonymous';
   const doc = await firestore
@@ -27,6 +27,7 @@ async function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestion
       totalQuestions: totalQuestions,
       correctAnswers: totalPoints + partialPoints,
       registerDate: new Date(),
+      timeSpent: timeSpent,
     });
 }
 

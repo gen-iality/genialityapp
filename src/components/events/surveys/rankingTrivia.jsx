@@ -54,7 +54,7 @@ function RankingTrivia(props) {
         .collection('surveys')
         .doc(currentSurvey._id)
         .collection('ranking')
-        .orderBy('correctAnswers', 'desc')
+        .orderBy('timeSpent', 'asc')
         // .limit(10)
         .onSnapshot(async (querySnapshot) => {
           var puntajes = [];
@@ -74,12 +74,12 @@ function RankingTrivia(props) {
 
           /** Puntaje de todos los participantes */
           // /** Ordenamos por puntaje */
-          const orderScoresByTime = puntajes.sort(function(a, b) {
+          const orderScoresByScore = puntajes.sort(function(a, b) {
             return b.correctAnswers - a.correctAnswers;
           });
 
           // /** Agregamos la posición correspondiente */
-          const positionScoresByScore = orderScoresByTime.map((item, index) => {
+          const positionScoresByScore = orderScoresByScore.map((item, index) => {
             return { ...item, index: index + 1 };
           });
           setGameRanking(positionScoresByScore.slice(0, 10));
