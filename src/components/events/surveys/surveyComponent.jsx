@@ -145,7 +145,6 @@ function SurveyComponent(props) {
       user_email: currentUser.email,
       points: rankingPoints,
     });
-    console.log('🚀 debug ~ registerRankingPoints ~ rankingPoints', surveyModel?.timeSpent);
 
     setUserPointsPerSurvey(
       surveyData._id,
