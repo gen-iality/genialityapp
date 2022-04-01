@@ -104,6 +104,10 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
   return false;
 }
 
+function isRegister(initialValues, cEventUser) {
+  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null ? true : false;
+}
+
 function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter((field) => field.name != 'names' && field.name != 'email');
@@ -1178,8 +1182,8 @@ const FormRegister = ({
                         }}
                         type='primary'
                         htmlType='submit'>
-                        {(initialValues !== null && cEventUser.value !== null && !initialValues.user) ||
-                        (initialValues !== null && Object.keys(initialValues).length === 0)
+                        {}
+                        {isRegister(initialValues, cEventUser)
                           ? intl.formatMessage({ id: 'Button.signup' })
                           : intl.formatMessage({
                               id: 'registration.button.update',
