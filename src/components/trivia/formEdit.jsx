@@ -1,8 +1,14 @@
 import { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, Alert, Space, Typography } from 'antd';
-import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, Alert, Space, Typography, Tooltip } from 'antd';
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+  UploadOutlined,
+  QuestionCircleOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DispatchMessageService } from '../../context/MessageService';
@@ -13,7 +19,7 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 14 },
 };
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const validateMessages = {
   required: '${label} is required!',
@@ -388,9 +394,9 @@ const FormEdit = (
                 )}
               </div>
             )}
-            <div>
+            <>
               <Form.Item key={`img`} name={'image'} label={'Imagen'}>
-                <Space direction='vertical'>
+                <Space direction='horizontal'>
                   <Upload
                     multiple={false}
                     accept='image/png, image/jpeg'
@@ -439,12 +445,13 @@ const FormEdit = (
                       }
                     />
                   )}
-                  <p>
-                    <small>Tenga en cuenta que la dimensión de la imagen debe ser 500px*300px ó 600px*300px</small>
-                  </p>
+                  <Tooltip
+                    title={'Tenga en cuenta que la dimensión de la imagen debe ser 500px * 300px ó 600px * 300px'}>
+                    <QuestionCircleOutlined style={{ color: '#faad14', marginRight: '10px' }} />
+                  </Tooltip>
                 </Space>
               </Form.Item>
-            </div>
+            </>
 
             <Form.List name={`choices`}>
               {(fields, { add, remove }) => {
@@ -548,6 +555,12 @@ const FormEdit = (
                 );
               }}
             </Form.List>
+            <p>
+              <ExclamationCircleOutlined style={{ color: '#faad14', marginRight: '10px' }} />
+              <small>
+                <b>Tenga en cuenta que la cantidad de respuestas posibles está limitada a 15</b>
+              </small>
+            </p>
           </Form>
         )}
       </>
