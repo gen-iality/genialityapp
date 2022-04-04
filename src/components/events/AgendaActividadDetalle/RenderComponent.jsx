@@ -27,7 +27,7 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  let { transmition, setTransmition } = useContext(AgendaContext);
+  let { transmition, setTransmition,setTypeActivity } = useContext(AgendaContext);
   let {
     currentActivity,
     chatAttendeChats,
@@ -50,12 +50,14 @@ const RenderComponent = (props) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
           const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
+          console.log("1. OBTENIENDO DATA DE SNAPSHOT",infoActivity.data())
           setplatform(platform);
           settabsGeneral(tabs);
           setactivityState(habilitar_ingreso);
           setactivityStateGlobal(habilitar_ingreso);
           setmeetingId(meeting_id);
           setTransmition(data.transmition);
+          setTypeActivity(data.typeActivity)
           if (!tabs.games) {
             HandleChatOrAttende('1');
             HandlePublicPrivate('public');
@@ -200,7 +202,11 @@ const RenderComponent = (props) => {
             return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
       case null:
-        return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
+        return  <><WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+        <GameDrawer /></>
+      case 'only':        
+          return  <><WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+          <GameDrawer /></>
     }
   });
 

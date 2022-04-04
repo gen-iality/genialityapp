@@ -54,7 +54,7 @@ function RankingTrivia(props) {
         .collection('surveys')
         .doc(currentSurvey._id)
         .collection('ranking')
-        .orderBy('correctAnswers', 'desc')
+        .orderBy('timeSpent', 'asc')
         // .limit(10)
         .onSnapshot(async (querySnapshot) => {
           var puntajes = [];
@@ -68,18 +68,29 @@ function RankingTrivia(props) {
               result['score'] = result.correctAnswers;
               result['name'] = result.userName;
               result['imageProfile'] = picture;
-              result['index'] = index + 1;
               return result;
             })
           );
-          const cUserId = cUser.value?._id;
-          const filterForRankingUserId = puntajes.filter((rankingUsers) => rankingUsers.userId === cUserId);
-
-          /** Puntaje individual */
-          if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
 
           /** Puntaje de todos los participantes */
-          setGameRanking(puntajes.slice(0, 10));
+          // /** Ordenamos por puntaje */
+          const orderScoresByScore = puntajes.sort(function(a, b) {
+            return b.correctAnswers - a.correctAnswers;
+          });
+
+          // /** Agregamos la posición correspondiente */
+          const positionScoresByScore = orderScoresByScore.map((item, index) => {
+            return { ...item, index: index + 1 };
+          });
+          setGameRanking(positionScoresByScore.slice(0, 10));
+
+          /** Puntaje individual */
+          const cUserId = cUser.value?._id;
+          const filterForRankingUserId = positionScoresByScore.filter(
+            (rankingUsers) => rankingUsers.userId === cUserId
+          );
+
+          if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
         });
     }
     return () => {

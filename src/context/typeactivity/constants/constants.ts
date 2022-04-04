@@ -18,7 +18,7 @@ const vimeoAndYotubeType: OriginOptions[] = [
     title: 'Vimeo Icon',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
-    addonBefore: 'https://vimeo.com/event/',
+    addonBefore: 'https://vimeo.com/',
     subtitle: 'Coloca aquí el ID o URL de tu transmisión de Vimeo',
     placeholder: 'vimeo id',
   },

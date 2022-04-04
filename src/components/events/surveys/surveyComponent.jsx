@@ -146,7 +146,13 @@ function SurveyComponent(props) {
       points: rankingPoints,
     });
 
-    setUserPointsPerSurvey(surveyData._id, currentUser, rankingPoints, surveyModel.getAllQuestions().length - 1);
+    setUserPointsPerSurvey(
+      surveyData._id,
+      currentUser,
+      rankingPoints,
+      surveyModel.getAllQuestions().length - 1,
+      surveyModel?.timeSpent
+    );
     // message.success({ content: responseMessage });
   }
 

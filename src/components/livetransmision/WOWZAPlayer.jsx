@@ -4,6 +4,7 @@ import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button, Spin } from 'antd';
 import AgendaContext from '@/context/AgendaContext';
+import { CurrentUserContext } from '@/context/userContext';
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const defaultVideo =
@@ -13,21 +14,37 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [muted, setMuted] = useState(false);
   const [loopBackGround, setLoopBackGround] = useState(false);
   const [visibleReactPlayer, setVisibleReactPlayer] = useState(false);
-  const { typeActivity } = useContext(AgendaContext);
+  const { typeActivity, activityEdit } = useContext(AgendaContext);
+  const userContext = useContext(CurrentUserContext);
   //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA ACTIVIDAD
   const [conected, setConected] = useState('No');
+  const urlDefault =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
   //console.log('DATOOS PLAYER===>', meeting_id, thereIsConnection);
   console.log('11. WOWZA PLAYER===>', typeActivity);
+
   useEffect(() => {
-    console.log('typeActivity=>', typeActivity,conected);
+    if (!meeting_id && typeActivity === 'meeting') {
+      console.log('100. INGRESA ACA===>');
+      setVisibleReactPlayer(false);
+      setConected('Yes');
+      setPlatformurl(
+        `https://eviusmeets.netlify.app/?meetingId=${activityEdit}&rol=0&username=${userContext.value?.names}&email=${
+          userContext.value?.email
+        }&photo=${userContext.value?.picture || urlDefault}`
+      );
+    }
+    console.log('100. typeActivity=>', typeActivity, conected, meeting_id);
     if (!meeting_id) return;
-    if (!thereIsConnection && (typeActivity !== 'youTube' ||  !typeActivity)) {
+    if (!thereIsConnection && (typeActivity !== 'youTube' || !typeActivity)) {
+      console.log('100. INGRESA ACA 1===>');
       setConected('Yes');
       setLoopBackGround(false);
-      setPlatformurl(defaultVideo);
-      setMuted(true);
+      setPlatformurl(typeActivity !== 'url' ? defaultVideo : meeting_id);
+      setMuted(typeActivity !== 'url' ? true : false);
       setVisibleReactPlayer(true);
-    } else if (thereIsConnection && (typeActivity !== 'youTube' || !typeActivity) ) {
+    } else if (thereIsConnection && (typeActivity !== 'youTube' || !typeActivity)) {
+      console.log('100. INGRESA ACA 2===>');
       let asyncfunction = async () => {
         setConected('Yes');
         setLoopBackGround(true);
@@ -85,6 +102,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             playing={true}
             loop={!loopBackGround}
             width='100%'
+            height={'100%'}
             url={platformurl}
             controls={loopBackGround}
           />
