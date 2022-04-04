@@ -2,9 +2,8 @@ import { Component } from 'react';
 import { utils, writeFileXLSX, read } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import Dropzone from 'react-dropzone';
-import { Row, Col, Button, Divider } from 'antd';
-import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Row, Col, Button, Divider, Upload } from 'antd';
+import { UploadOutlined, DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
 
 Moment.locale('es');
@@ -21,13 +20,14 @@ class Importacion extends Component {
   }
 
   handleXlsFile(files) {
+    /* console.log(files, 'files'); */
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: ' Por favor espere mientras se envía la información...',
       action: 'show',
     });
-    const f = files[0];
+    const f = files;
     const reader = new FileReader();
     const self = this;
     try {
@@ -53,10 +53,13 @@ class Importacion extends Component {
           }
 
           DispatchMessageService({
-            type: 'success',
             key: 'loading',
-            msj: 'importación de usuarios exitosa',
             action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            msj: 'importación de usuarios exitosa',
+            action: 'show',
           });
 
           //por si no pudimos agregar ningún dato
@@ -67,10 +70,14 @@ class Importacion extends Component {
           self.props.handleXls(fields);
           return;
         } else {
-          message.destroy(loading.key);
-          message.open({
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
             type: 'error',
-            content: <>Excel en blanco</>,
+            msj: 'Excel en blanco',
+            action: 'show',
           });
           this.setState({ errMsg: 'Excel en blanco' });
         }
@@ -117,7 +124,7 @@ class Importacion extends Component {
   };
 
   render() {
-    console.log('debug this.props.extraFields', this.addMoreItemsToExtraFields());
+    /* console.log('debug this.props.extraFields', this.addMoreItemsToExtraFields()); */
     return (
       <React.Fragment>
         <div className='importacion-txt'>
@@ -137,13 +144,18 @@ class Importacion extends Component {
           ))}
         </Row>
         <br />
-        <Row justify='center' wrap gutter={[16, 16]}>
+        <Row justify='center' align='middle' wrap gutter={[16, 16]}>
           <Col>
-            <Dropzone onDrop={this.handleXlsFile} accept='.xls,.xlsx' className='zone'>
-              <Button type='primary' icon={<UploadOutlined />}>
-                Importar Excel
-              </Button>
-            </Dropzone>
+            <Upload.Dragger
+              onChange={(e) => this.handleXlsFile(e.fileList[0].originFileObj)}
+              onDrop={(e) => this.handleXlsFile(e.fileList[0].originFileObj)}
+              multiple={false}
+              accept='.xls,.xlsx'
+              style={{ margin: '0 15px', padding: '0 !important' }}>
+              <p style={{ textAlign: 'center' }}>
+                <InboxOutlined /> <span>Importar Excel</span>
+              </p>
+            </Upload.Dragger>
           </Col>
           <Col>
             <Button type='link' icon={<DownloadOutlined />} onClick={this.downloadExcel}>
