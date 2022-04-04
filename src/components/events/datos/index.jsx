@@ -505,7 +505,7 @@ class Datos extends Component {
               name='mandatory'
               onChange={() => this.changeCheckBox(key, 'mandatory')}
               checked={record}
-              disabled={key.name === 'contrasena' || key.type === 'password'}
+              /* disabled={key.name === 'contrasena' || key.type === 'password'} */
             />
           ) : (
             <Checkbox checked />
@@ -520,7 +520,7 @@ class Datos extends Component {
             name='visibleByContacts'
             onChange={() => this.changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
             checked={record}
-            disabled={key.name === 'contrasena' || key.type === 'password'}
+            /* disabled={key.name === 'contrasena' || key.type === 'password'} */
           />
         ),
       },
@@ -533,7 +533,7 @@ class Datos extends Component {
             name='sensibility'
             onChange={() => this.changeCheckBox(key, 'sensibility')}
             checked={record}
-            disabled={key.name === 'contrasena' || key.type === 'password'}
+            /* disabled={key.name === 'contrasena' || key.type === 'password'} */
           />
         ),
       },
@@ -547,7 +547,7 @@ class Datos extends Component {
               name='visibleByAdmin'
               onChange={() => this.changeCheckBox(key, 'visibleByAdmin', 'visibleByContacts')}
               checked={record}
-              disabled={key.name === 'contrasena' || key.type === 'password'}
+              /* disabled={key.name === 'contrasena' || key.type === 'password'} */
             />
           ) : (
             <Checkbox checked />
