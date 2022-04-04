@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { utils, writeFileXLSX } from 'xlsx';
+import { utils, writeFileXLSX, read } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
@@ -17,7 +17,7 @@ class Importacion extends Component {
     this.state = {
       showMsg: false,
     };
-    this.handleXlsFile = this.handleXlsFile.bind(this); // properly bound once
+    this.handleXlsFile = this.handleXlsFile.bind(this);
   }
 
   handleXlsFile(files) {
@@ -31,48 +31,51 @@ class Importacion extends Component {
     const reader = new FileReader();
     const self = this;
     try {
-      // reader.onload = (e) => {
-      //   const data = e.target.result;
-      //   const workbook = XLSX.read(data, { type: 'binary' });
-      //   const sheetName = workbook.SheetNames[0];
-      //   const sheetObj = workbook.Sheets[sheetName];
-      //   if (sheetObj['!ref']) {
-      //     var range = XLSX.utils.decode_range(sheetObj['!ref']);
-      //     let fields = [];
-      //     for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
-      //       const keyCell = sheetObj[XLSX.utils.encode_cell({ r: range.s.r, c: colNum })];
-      //       let key = keyCell ? keyCell.v.trim() : undefined;
-      //       //columna vacia continuamos
-      //       if (!key) continue;
-      //       fields[colNum] = { key: key, list: [], used: false };
-      //       for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
-      //         const secondCell = sheetObj[XLSX.utils.encode_cell({ r: rowNum, c: colNum })];
-      //         let val = secondCell ? secondCell.v : undefined;
-      //         fields[colNum].list.push(val);
-      //       }
-      //     }
-      //     message.destroy(loading.key);
-      //     message.open({
-      //       type: 'success',
-      //       content: <>Importación de usuarios exitosa</>,
-      //     });
-      //     //por si no pudimos agregar ningún dato
-      //     if (!fields.length) {
-      //       this.setState({ errMsg: 'Excel en blanco, o algún problema con el archivo o el formato' });
-      //       return;
-      //     }
-      //     self.props.handleXls(fields);
-      //     return;
-      //   } else {
-      //     message.destroy(loading.key);
-      //     message.open({
-      //       type: 'error',
-      //       content: <>Excel en blanco</>,
-      //     });
-      //     this.setState({ errMsg: 'Excel en blanco' });
-      //   }
-      // };
-      // reader.readAsBinaryString(f);
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const sheetObj = workbook.Sheets[sheetName];
+        if (sheetObj['!ref']) {
+          var range = utils.decode_range(sheetObj['!ref']);
+          let fields = [];
+          for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
+            const keyCell = sheetObj[utils.encode_cell({ r: range.s.r, c: colNum })];
+            let key = keyCell ? keyCell.v.trim() : undefined;
+            //columna vacia continuamos
+            if (!key) continue;
+            fields[colNum] = { key: key, list: [], used: false };
+            for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
+              const secondCell = sheetObj[utils.encode_cell({ r: rowNum, c: colNum })];
+              let val = secondCell ? secondCell.v : undefined;
+              fields[colNum].list.push(val);
+            }
+          }
+
+          DispatchMessageService({
+            type: 'success',
+            key: 'loading',
+            msj: 'importación de usuarios exitosa',
+            action: 'destroy',
+          });
+
+          //por si no pudimos agregar ningún dato
+          if (!fields.length) {
+            this.setState({ errMsg: 'Excel en blanco, o algún problema con el archivo o el formato' });
+            return;
+          }
+          self.props.handleXls(fields);
+          return;
+        } else {
+          message.destroy(loading.key);
+          message.open({
+            type: 'error',
+            content: <>Excel en blanco</>,
+          });
+          this.setState({ errMsg: 'Excel en blanco' });
+        }
+      };
+      reader.readAsBinaryString(f);
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
@@ -95,7 +98,7 @@ class Importacion extends Component {
     this.props.extraFields.map((extra) => {
       return (data[0][extra.name] = '');
     });
-    // data[0]['tiquete'] = '';
+    data[0]['tiquete'] = '';
     /** Se agrega campo requerido que no viene en la consulta de la base de datos */
     data[0]['rol'] = '';
     const ws = utils.json_to_sheet(data);
@@ -114,7 +117,7 @@ class Importacion extends Component {
   };
 
   render() {
-    // console.log('debug this.props.extraFields', this.addMoreItemsToExtraFields());
+    console.log('debug this.props.extraFields', this.addMoreItemsToExtraFields());
     return (
       <React.Fragment>
         <div className='importacion-txt'>
