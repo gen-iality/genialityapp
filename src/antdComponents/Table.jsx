@@ -55,6 +55,7 @@ const Table = (props) => {
     extraPathUpdate,
     extraPathUpdateTitle,
     updateMails,
+    takeOriginalHeader,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -195,6 +196,8 @@ const Table = (props) => {
       if (!auxHeader.includes(options)) {
         auxHeader.push(options);
         setHeaderState(auxHeader);
+      } else {
+        setHeaderState(auxHeader);
       }
     }
   }, [header]);
@@ -300,7 +303,7 @@ const Table = (props) => {
   return (
     <Suspense fallback={<h1>Cargando ...</h1>}>
       <TableAnt
-        columns={headerState}
+        columns={takeOriginalHeader ? header : headerState}
         dataSource={list}
         size='small'
         rowKey={(record) => record.index}
