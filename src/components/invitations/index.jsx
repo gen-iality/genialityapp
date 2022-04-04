@@ -1,8 +1,9 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import InvitedUsers from './eventUsersList';
 import CreateMessage from './send';
 import ImportUsers from '../import-users/importUser';
+import { EventsApi } from '@/helpers/request';
 
 // function Tabla(props) {
 //   const [guests, setGuests] = useState([]);
@@ -38,7 +39,19 @@ import ImportUsers from '../import-users/importUser';
 function ListaInvitados({ ...props }) {
   const { eventId, event, match } = props;
 
+  useEffect(() => {
+    if (match.path === `/eventAdmin/${eventId}/invitados`) {
+      obtenerEvento();
+    }
+
+    async function obtenerEvento() {
+      const respEvento = await EventsApi.getOne(eventId);
+      setUserProperties(respEvento.user_properties);
+    }
+  }, [match]);
+
   const [guestSelected, setGuestSelected] = useState([]);
+  const [userProperties, setUserProperties] = useState([]);
 
   return (
     <Fragment>
@@ -68,7 +81,7 @@ function ListaInvitados({ ...props }) {
           exact
           path={`${match.url}/importar-excel`}
           render={() => (
-            <ImportUsers extraFields={event.user_properties} eventId={eventId} event={event} matchUrl={match.url} />
+            <ImportUsers extraFields={userProperties} eventId={eventId} event={event} matchUrl={match.url} />
           )}
         />
       </Switch>

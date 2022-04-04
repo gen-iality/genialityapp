@@ -85,6 +85,8 @@ export const AgendaContextProvider = ({ children }) => {
       console.log('8. ACTIVIDAD ACA===>', activityEdit);
       obtenerDetalleActivity();
       setMeetingId(null);
+    } else {
+      initializeState();
     }
     async function obtenerDetalleActivity() {
       console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
