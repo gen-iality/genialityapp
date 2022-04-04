@@ -2,7 +2,7 @@ import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Co
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../../context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
@@ -27,8 +27,8 @@ const CardPreview = (props: any) => {
   //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
   const renderPlayer = () => {
     //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
-    let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
-
+    const type = roomStatus == 'ended_meeting_room' ? 'finish' : props.type;
+    let { urlVideo, visibleReactPlayer } = obtainUrl(type, data);
     //RENDERIZAR COMPONENTE
     return (
       <>

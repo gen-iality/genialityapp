@@ -107,11 +107,35 @@ const getVideosLiveStream = async (name_activity) => {
 };
 
 const getVideoLiveStream = async (video_id) => {
-  const res = await gCoreCLient.get('/videos/' + video_id);
+  const res = await gCoreCLient.get('/videos/' + video_id + '?download=true');
   if (res?.status === 200) {
     return res.data;
   }
   return null;
+};
+
+const obtenerVideos = async (name_activity, stream_id) => {
+  const listVideo = [];
+  const videos = await getVideosLiveStream('My Stream');
+  if (videos) {
+    await Promise.all(
+      videos.map(async (video, index) => {
+        if (video.stream_id == 271266) {
+          const dataVideo = await getVideoLiveStream(video.id);
+          if (dataVideo) {
+            listVideo.push({
+              name: `video ${listVideo.length + 1}`,
+              url: dataVideo.iframe_url,
+              download: dataVideo.download_url,
+            });
+            console.log('1. DATA VIDEO===>', dataVideo);
+          }
+        }
+      })
+    );
+  }
+
+  return listVideo;
 };
 
 export {
@@ -127,4 +151,5 @@ export {
   stopRecordingLiveStream,
   getVideosLiveStream,
   getVideoLiveStream,
+  obtenerVideos,
 };

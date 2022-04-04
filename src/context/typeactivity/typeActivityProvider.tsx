@@ -68,6 +68,9 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'finish':
         typeActivityDispatch({ type: 'toggleFinish', payload: { id } });
         break;
+      case 'visualize':
+        typeActivityDispatch({ type: 'visualize', payload: { id: payload?.data as string } });
+        break;
       default:
         typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
         break;

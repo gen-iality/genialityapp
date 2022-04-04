@@ -1,4 +1,4 @@
-import { Row, Col, Card, Typography } from 'antd';
+import { Row, Col, Card, Typography, List } from 'antd';
 import CardPreview from '../typeActivity/components/CardPreview';
 import GoToEviusMeet from './components/GoToEviusMeet';
 import TransmitionOptions from './components/TransmitionOptions';
@@ -11,81 +11,124 @@ import { useState, useContext, useEffect } from 'react';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventContext } from '../../../context/eventContext';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
+import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
-  const { data } = useTypeActivity();
-  const { activityEdit, getRequestByActivity, request, dataLive } = useContext(AgendaContext);
+  const { data, toggleActivitySteps } = useTypeActivity();
+  const { activityEdit, getRequestByActivity, request, dataLive, roomStatus } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+  const [videos, setVideos] = useState([] as any[]);
   useEffect(() => {
+    obtenerListadodeVideos();
     if (props.type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
   }, [props.type]);
-  console.log('type', props.type);
+
+  const obtenerListadodeVideos = async () => {
+    const listVideos = await obtenerVideos();
+    setVideos(listVideos);
+  };
+
   return (
     <>
       <Row gutter={[16, 16]}>
         <Col span={10}>
           <CardPreview type={props.type} activityName={props.activityName} />
         </Col>
+
         <Col span={14}>
-          {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && (
-            <CardStartTransmition type={props.type} />
-          )}
-          <Row gutter={[16, 16]}>
-            {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
-              <Col span={10}>
-                <GoToEviusMeet type={props.type} activityId={props.activityId} />
-              </Col>
-            )}
-            {(((props.type === 'EviusMeet' || props.type === 'Transmisión') && dataLive?.active) ||
-              (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
-              <Col span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}>
-                <TransmitionOptions type={props.type} />
-              </Col>
-            )}
-            {props.type == 'Video' && (
-              <Col span={24}>
-                <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
-                  <Card.Meta
-                    title={
-                      <Typography.Text style={{ fontSize: '20px' }} strong>
-                        Video cargado
-                      </Typography.Text>
-                    }
-                    description={'Esta es la url cargada'}
-                  />
-                  <br />
-                  <strong>Url:</strong> {data}
-                </Card>
-              </Col>
-            )}
-            {props.type == 'reunión' ? (
-              <Col span={24}>
-                <CardShareLinkEviusMeet activityId={props.activityId} />
-              </Col>
-            ) : (
-              props.type == 'EviusMeet' &&
-              dataLive?.active && (
+          {(((props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active) ||
+            roomStatus === 'ended_meeting_room') && <CardStartTransmition type={props.type} />}
+          {roomStatus !== 'ended_meeting_room' && (
+            <Row gutter={[16, 16]}>
+              {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
+                <Col span={10}>
+                  <GoToEviusMeet type={props.type} activityId={props.activityId} />
+                </Col>
+              )}
+              {(((props.type === 'EviusMeet' || props.type === 'Transmisión') && dataLive?.active) ||
+                (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
+                <Col span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}>
+                  <TransmitionOptions type={props.type} />
+                </Col>
+              )}
+              {roomStatus !== 'ended_meeting_room' && props.type == 'Video' && (
+                <Col span={24}>
+                  <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
+                    <Card.Meta
+                      title={
+                        <Typography.Text style={{ fontSize: '20px' }} strong>
+                          Video cargado
+                        </Typography.Text>
+                      }
+                      description={'Esta es la url cargada'}
+                    />
+                    <br />
+                    <strong>Url:</strong> {data}
+                  </Card>
+                </Col>
+              )}
+              {roomStatus !== 'ended_meeting_room' && props.type == 'reunión' ? (
                 <Col span={24}>
                   <CardShareLinkEviusMeet activityId={props.activityId} />
                 </Col>
-              )
-            )}
-            {props.type == 'EviusMeet' && dataLive?.active && (
-              <Col span={24}>
-                <CardParticipantRequests request={request} setViewModal={setViewModal} />
-              </Col>
-            )}
-          </Row>
+              ) : (
+                roomStatus !== 'ended_meeting_room' &&
+                props.type == 'EviusMeet' &&
+                dataLive?.active && (
+                  <Col span={24}>
+                    <CardShareLinkEviusMeet activityId={props.activityId} />
+                  </Col>
+                )
+              )}
+              {roomStatus !== 'ended_meeting_room' && props.type == 'EviusMeet' && dataLive?.active && (
+                <Col span={24}>
+                  <CardParticipantRequests request={request} setViewModal={setViewModal} />
+                </Col>
+              )}
+            </Row>
+          )}
+          {/** COMPONENTE DE VIDEOS */}
+          {roomStatus === 'ended_meeting_room' && (
+            <Card>
+              {videos && (
+                <List
+                  header={<div>Listado de videos</div>}
+                  bordered
+                  dataSource={videos}
+                  renderItem={(item) => (
+                    <List.Item
+                      actions={[
+                        <a href={item.download} key='list-loadmore-edit'>
+                          Descargar
+                        </a>,
+                        <a
+                          onClick={() => toggleActivitySteps('visualize', { data: item?.url })}
+                          key='list-loadmore-edit'>
+                          Visualizar
+                        </a>,
+                      ]}>
+                      <p>{item.name}</p>
+                    </List.Item>
+                  )}
+                />
+              )}
+            </Card>
+          )}
         </Col>
-        {(props.type == 'Transmisión' || props.type == 'EviusMeet') && dataLive?.active && (
-          <Col span={24}>
-            <CardRTMP />
-          </Col>
-        )}
+
+        {roomStatus !== 'ended_meeting_room' &&
+          (props.type == 'Transmisión' || props.type == 'EviusMeet') &&
+          dataLive?.active && (
+            <Col span={24}>
+              <CardRTMP />
+            </Col>
+          )}
       </Row>
-      <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
+      {roomStatus !== 'ended_meeting_room' && (
+        <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
+      )}
     </>
   );
 };

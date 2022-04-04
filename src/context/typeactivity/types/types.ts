@@ -24,7 +24,8 @@ export type TypeActivityAction =
   | { type: 'selectVimeo'; payload: { id: string; sendData: any } }
   | { type: 'selectYouTube'; payload: { id: string; sendData: any } }
   | { type: 'selectEviusMeet'; payload: { id: string } }
-  | { type: 'selectRTMP'; payload: { id: string } };
+  | { type: 'selectRTMP'; payload: { id: string } }
+  | { type: 'visualize'; payload: { id: string } };
 
 export type TypeActivityContextProps = {
   typeActivityState: TypeActivityState;
