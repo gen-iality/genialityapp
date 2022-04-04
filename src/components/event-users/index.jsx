@@ -798,20 +798,21 @@ class ListEventUser extends Component {
           </Col>
         </Row>
 
-        {users.length > 0 && this.state.columns ? (
-          <TableA
-            list={users.length > 0 && users}
-            header={this.state.columns}
-            scroll={{ x: 3200 }}
-            loading={this.state.loading}
-            titleTable={
-              <Row gutter={[8, 8]}>
-                <Col>
-                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
-                    Expandir
-                  </Button>
-                </Col>
-                {/* <Col>
+        {/* {users.length > 0 && this.state.columns ? ( */}
+        <TableA
+          list={users.length > 0 && users}
+          header={this.state.columns}
+          takeOriginalHeader
+          scroll={{ x: 3200 }}
+          loading={this.state.loading}
+          titleTable={
+            <Row gutter={[8, 8]}>
+              <Col>
+                <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                  Expandir
+                </Button>
+              </Col>
+              {/* <Col>
                   Pendiente por actualizar QR
                   <Select
                     name={'type-scanner'}
@@ -825,31 +826,31 @@ class ListEventUser extends Component {
                     <Option value='scanner-document'>Escanear Documento</Option>
                   </Select>
                 </Col> */}
-                <Col>
-                  {usersReq.length > 0 && (
-                    <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
-                      Exportar
-                    </Button>
-                  )}
-                </Col>
-                <Col>
-                  <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                    <Button type='primary' icon={<UploadOutlined />}>
-                      Importar usuarios
-                    </Button>
-                  </Link>
-                </Col>
-                <Col>
-                  <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
-                    {'Agregar Usuario'}
+              <Col>
+                {usersReq.length > 0 && (
+                  <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
+                    Exportar
                   </Button>
-                </Col>
-              </Row>
-            }
-          />
-        ) : (
+                )}
+              </Col>
+              <Col>
+                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
+                  <Button type='primary' icon={<UploadOutlined />}>
+                    Importar usuarios
+                  </Button>
+                </Link>
+              </Col>
+              <Col>
+                <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
+                  {'Agregar Usuario'}
+                </Button>
+              </Col>
+            </Row>
+          }
+        />
+        {/* ) : (
           <Loading />
-        )}
+        )} */}
 
         {!this.props.loading && editUser && (
           <UserModal
