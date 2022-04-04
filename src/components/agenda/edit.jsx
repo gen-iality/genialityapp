@@ -926,7 +926,7 @@ class AgendaEdit extends Component {
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids =
-      selectedCategories !== undefined
+      selectedCategories !== undefined && selectedCategories !== null
         ? selectedCategories[0] === undefined
           ? []
           : selectedCategories.map(({ value }) => value)
