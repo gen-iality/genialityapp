@@ -141,7 +141,7 @@ class Datos extends Component {
         else await EventFieldsApi.createOne(field, this.eventId);
         totaluser = await firestore.collection(`${this.eventId}_event_attendees`).get();
       }
-      if (totaluser?.docs?.length > 0 && field.name == 'pesovoto') {
+      if (totaluser?.docs?.length > 0 && field?.name == 'pesovoto') {
         firestore
           .collection(`${this.eventId}_event_attendees`)
           .get()
