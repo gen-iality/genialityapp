@@ -164,11 +164,12 @@ const CardPreview = (props: any) => {
           </Col>
 
           {dataLive?.live && dataLive?.active ? (
-            dataLive?.live && !loadingRecord ? (
+            dataLive?.live ? (
               <Col span={8}>
                 <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
                   {record === 'start' ? (
                     <Button
+                      loading={loadingRecord}
                       onClick={() => {
                         startRecordTransmition();
                       }}
@@ -184,7 +185,9 @@ const CardPreview = (props: any) => {
                         stopRecordTransmition();
                       }}
                       onCancel={() => console.log('cancelado')}>
-                      <Button type='primary'>Detener grabación</Button>
+                      <Button loading={loadingRecord} type='primary' danger>
+                        Detener grabación
+                      </Button>
                     </Popconfirm>
                   )}
                 </Badge>
