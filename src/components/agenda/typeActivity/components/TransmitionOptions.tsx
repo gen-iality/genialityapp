@@ -31,15 +31,13 @@ const TransmitionOptions = (props: any) => {
         avatar={<WarningOutlined style={{ color: '#FE5455', fontSize: '25px' }} />}
         description={
           <Space>
-            {isVisible && dataLive?.active && !loadingStop ? (
-              <Button type='primary' danger onClick={() => executer_stopStream()}>
+            {isVisible && dataLive?.active && (
+              <Button loading={loadingStop} type='primary' danger onClick={() => executer_stopStream()}>
                 Detener
               </Button>
-            ) : (
-              loadingStop && <Spin />
             )}
 
-            {!loadingDelete ? (
+            {
               <Popconfirm
                 title={`¿Está seguro que desea ${
                   props.type === 'Transmisión' ||
@@ -64,11 +62,11 @@ const TransmitionOptions = (props: any) => {
                 onCancel={() => console.log('cancelado')}
                 okText='Si'
                 cancelText='No'>
-                <Button danger>Eliminar</Button>
+                <Button loading={loadingDelete} danger>
+                  Eliminar
+                </Button>
               </Popconfirm>
-            ) : (
-              <Spin />
-            )}
+            }
           </Space>
         }
       />

@@ -5,7 +5,7 @@ import ReactPlayer from 'react-player';
 
 const ModalPreviewVideo = () => {
   return (
-    <Modal width={'680px'} bodyStyle={{ paddingTop: '40px' }} visible={true} footer={null}>
+    <Modal width={'680px'} bodyStyle={{ paddingTop: '40px' }} visible={false} footer={null}>
       <Row gutter={[0, 0]}>
         <Col style={{ borderRadius: '5px', overflow: 'hidden', aspectRatio: '16/9' }} span={24}>
           <ReactPlayer
@@ -19,7 +19,7 @@ const ModalPreviewVideo = () => {
         <Col>
           <Comment
             author={<Typography.Text style={{ fontSize: '16px' }}>Nombre del video</Typography.Text>}
-            datetime={'fecha de creacion'}
+            datetime={moment('2022-04-04T20:21:08.000Z').format('MMMM Do YYYY, h:mm:ss a')}
             content={''}
           />
         </Col>

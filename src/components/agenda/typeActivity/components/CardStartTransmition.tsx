@@ -24,7 +24,7 @@ const CardStartTransmition = (props: any) => {
     deleteTypeActivity,
     executer_startMonitorStatus,
     stopInterval,
-    setHabilitarIngreso
+    setHabilitarIngreso,
   } = useContext(AgendaContext);
   const { toggleActivitySteps } = useTypeActivity();
   const queryClient = useQueryClient();
@@ -65,7 +65,7 @@ const CardStartTransmition = (props: any) => {
     const liveStreamresponse = await startLiveStream(meeting_id);
     setDataLive(liveStreamresponse);
     executer_startMonitorStatus();
-    setHabilitarIngreso('')
+    setHabilitarIngreso('');
     setloading(false);
     //inicia el monitoreo
   };
@@ -80,7 +80,7 @@ const CardStartTransmition = (props: any) => {
           subTitle='Tus asistentes no verán lo que transmites hasta que cambies el estado de la transmisión para tus asistentes. '
           extra={
             <Space>
-              {!loadingDelete ? (
+              {
                 <Popconfirm
                   title={`¿Está seguro que desea ${
                     props.type === 'Transmisión' ||
@@ -96,7 +96,7 @@ const CardStartTransmition = (props: any) => {
                   onCancel={() => console.log('cancelado')}
                   okText='Si'
                   cancelText='No'>
-                  <Button type='text' danger>
+                  <Button loading={loadingDelete} type='text' danger>
                     {props.type === 'Transmisión' ||
                     props.type === 'EviusMeet' ||
                     props.type === 'vimeo' ||
@@ -107,16 +107,12 @@ const CardStartTransmition = (props: any) => {
                       : 'Eliminar video'}
                   </Button>
                 </Popconfirm>
-              ) : (
-                <Spin />
-              )}
+              }
 
-              {!dataLive?.active && !loading ? (
-                <Button onClick={() => executer_startStream()} type='primary'>
+              {!dataLive?.active && (
+                <Button loading={loading} onClick={() => executer_startStream()} type='primary'>
                   Iniciar transmisión
                 </Button>
-              ) : (
-                loading && <Spin />
               )}
             </Space>
           }
