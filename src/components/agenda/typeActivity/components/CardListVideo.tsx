@@ -1,10 +1,27 @@
+import AgendaContext from '@/context/AgendaContext';
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
+import { AgendaApi } from '@/helpers/request';
 import { BorderOutlined, DownloadOutlined, PlaySquareOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Card, List, Button, Image, Tooltip, Typography } from 'antd';
 import moment from 'moment';
+import { useContext, useEffect, useState } from 'react';
 
 const CardListVideo = (props: any) => {
   const { visualizeVideo } = useTypeActivity();
+  const { activityEdit } = useContext(AgendaContext);
+  const [selectVideo, setSelectVideo] = useState(null);
+
+  useEffect(() => {
+    if (activityEdit) {
+      obtenerDetalleActivity();
+    }
+    async function obtenerDetalleActivity() {
+      const agenda = await AgendaApi.getOne(activityEdit);
+      if (agenda.video) {
+        setSelectVideo(agenda.video);
+      }
+    }
+  }, [props?.videos]);
 
   const dowloadVideo = async (url: string) => {
     console.log('URL===>', url);
