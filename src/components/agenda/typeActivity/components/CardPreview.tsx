@@ -27,8 +27,7 @@ const CardPreview = (props: any) => {
   //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
   const renderPlayer = () => {
     //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
-    const type = roomStatus == 'ended_meeting_room' ? 'finish' : props.type;
-    let { urlVideo, visibleReactPlayer } = obtainUrl(type, data);
+    let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
     //RENDERIZAR COMPONENTE
     return (
       <>

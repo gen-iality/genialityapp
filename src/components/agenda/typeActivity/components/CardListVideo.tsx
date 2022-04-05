@@ -17,7 +17,7 @@ const CardListVideo = (props: any) => {
                 <Button type='link' href={item.download} key='list-loadmore-edit'>
                   Descargar
                 </Button>,
-                <a onClick={() => props.toggleActivitySteps('visualize', { data: item?.url })} key='list-loadmore-edit'>
+                <a onClick={() => console.log('ITEM==>', item.hls_url)} key='list-loadmore-edit'>
                   Visualizar
                 </a>,
               ]}>

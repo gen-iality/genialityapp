@@ -124,8 +124,9 @@ const obtenerVideos = async (name_activity, stream_id) => {
           const dataVideo = await getVideoLiveStream(video.id);
           if (dataVideo) {
             listVideo.push({
-              name: `video ${listVideo.length + 1}`,
+              name: dataVideo.name,
               url: dataVideo.iframe_url,
+              hls_url: dataVideo.hls_url,
               download: dataVideo.download_url,
             });
             console.log('1. DATA VIDEO===>', dataVideo);
