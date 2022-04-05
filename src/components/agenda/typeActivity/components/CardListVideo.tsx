@@ -1,20 +1,42 @@
-import { DownloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons';
 import { Card, List, Button } from 'antd';
-import React from 'react';
 
 const CardListVideo = (props: any) => {
   console.log('%c🆗 - Videos', 'color: #00A6ED;', props.videos);
+
+  const dowloadVideo = async (url: string) => {
+    console.log('URL===>', url);
+    fetch(url)
+      .then((response) => response.blob())
+      .then((video) => {
+        console.log('RESPONSE==>', video);
+        const url = window.URL.createObjectURL(video);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'video.mp4');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+  };
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       {props.videos && (
         <List
-          header={<div>Listado de videos</div>}
+          header={
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <p>Listado de videos</p>
+              <Button onClick={() => props.refreshData()}>
+                <ReloadOutlined />
+              </Button>
+            </div>
+          }
           bordered={false}
           dataSource={props.videos}
           renderItem={(item: any) => (
             <List.Item
               actions={[
-                <Button type='link' href={item.download} key='list-loadmore-edit'>
+                <Button type='link' onClick={() => dowloadVideo(item.url)} key='list-loadmore-edit'>
                   Descargar
                 </Button>,
                 <a onClick={() => console.log('ITEM==>', item.hls_url)} key='list-loadmore-edit'>
