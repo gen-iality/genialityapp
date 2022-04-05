@@ -53,6 +53,7 @@ import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
 import TipeOfActivity from './typeActivity';
 import { deleteLiveStream } from '@/adaptors/gcoreStreamingApi';
+import moment from 'moment';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -80,8 +81,8 @@ class AgendaEdit extends Component {
       description: '',
       registration_message: '',
       date: Moment(new Date()).format('YYYY-MM-DD'),
-      hour_start: new Date(),
-      hour_end: new Date(),
+      hour_start: '',
+      hour_end: '',
       key: new Date(),
       image: '',
       video: '',
@@ -330,66 +331,37 @@ class AgendaEdit extends Component {
     if (!this.state.initialActivityStates) {
       const {
         name,
-        subtitle,
-        bigmaker_meeting_id,
-        has_date,
         hour_start,
         hour_end,
         date,
         space_id,
-        capacity,
-        access_restriction_type,
         selectedCategories,
-        selectedRol,
         description,
-        registration_message,
-        selected_document,
         image,
-        meeting_id,
-        video,
-        selectedTicket,
-        vimeo_id,
-        platform,
-        start_url,
-        join_url,
-        name_host,
-        requires_registration,
-        isPublished,
+        // isPublished,
         length,
         latitude,
         selectedHosts,
+        isPhysical,
       } = this.state;
+
+      const initialHour = Moment(hour_start).format('HH:mm');
+      const finalHour = Moment(hour_end).format('HH:mm');
 
       const initialActivityStates = {
         name,
-        subtitle,
-        bigmaker_meeting_id,
-        has_date,
-        hour_start: hour_start.toTimeString(),
-        hour_end: hour_end.toTimeString(),
+        hour_start: initialHour,
+        hour_end: finalHour,
         date,
         space_id,
-        capacity,
-        access_restriction_type,
         selectedCategories,
-        selectedRol,
         description,
-        registration_message,
-        selected_document,
         image,
-        meeting_id,
-        video,
-        selectedTicket,
-        vimeo_id,
-        platform,
-        start_url,
-        join_url,
-        name_host,
-        requires_registration,
-        isPublished,
+        isPublished: this.context?.isPublished,
         length,
         latitude,
         selectedHosts,
+        isPhysical,
       };
       this.setState({
         initialActivityStates,
@@ -404,6 +376,7 @@ class AgendaEdit extends Component {
     /** Se renderiza de nuevo el componente para mostrar los tabs Transmision, Juegos, Encuestas y Documentos */
     const idNewlyCreatedActivity = this.state.idNewlyCreatedActivity;
     const reloadActivity = this.state.reloadActivity;
+
     if (reloadActivity) {
       this.setState({
         reloadActivity: false,
@@ -490,65 +463,37 @@ class AgendaEdit extends Component {
     if (!initialActivityStates) return;
     const {
       name,
-      subtitle,
-      bigmaker_meeting_id,
-      has_date,
       hour_start,
       hour_end,
       date,
       space_id,
-      capacity,
-      access_restriction_type,
       selectedCategories,
-      selectedRol,
       description,
-      registration_message,
-      selected_document,
       image,
-      meeting_id,
-      video,
-      selectedTicket,
-      vimeo_id,
-      platform,
-      start_url,
-      join_url,
-      name_host,
-      requires_registration,
       isPublished,
       length,
       latitude,
       selectedHosts,
+      isPhysical,
     } = this.state;
+
+    const initialHour = Moment(hour_start).format('HH:mm');
+    const finalHour = Moment(hour_end).format('HH:mm');
+
     let actualActivityStates = {
       name,
-      subtitle,
-      bigmaker_meeting_id,
-      has_date,
-      hour_start: hour_start.toTimeString(),
-      hour_end: hour_end.toTimeString(),
+      hour_start: initialHour,
+      hour_end: finalHour,
       date,
       space_id,
-      capacity,
-      access_restriction_type,
       selectedCategories,
-      selectedRol,
       description,
-      registration_message,
-      selected_document,
       image,
-      meeting_id,
-      video,
-      selectedTicket,
-      vimeo_id,
-      platform,
-      start_url,
-      join_url,
-      name_host,
-      requires_registration,
       isPublished,
       length,
       latitude,
       selectedHosts,
+      isPhysical,
     };
 
     let equalityValidation = this.deepStateEqualityValidation(initialActivityStates, actualActivityStates);
@@ -1333,7 +1278,7 @@ class AgendaEdit extends Component {
                           <TimePicker
                             style={{ width: '100%' }}
                             allowClear={false}
-                            value={Moment(hour_start)}
+                            value={Moment(hour_start !== '' ? hour_start : new Date())}
                             use12Hours
                             format='h:mm a'
                             onChange={(value) => this.handleChangeDate(value, 'hour_start')}
@@ -1366,7 +1311,7 @@ class AgendaEdit extends Component {
                           <TimePicker
                             style={{ width: '100%' }}
                             allowClear={false}
-                            value={Moment(hour_end)}
+                            value={Moment(hour_end !== '' ? hour_end : new Date())}
                             use12Hours
                             format='h:mm a'
                             onChange={(value) => this.handleChangeDate(value, 'hour_end')}
