@@ -57,6 +57,7 @@ const CardListVideo = (props: any) => {
               actions={[
                 <Tooltip title='Descargar'>
                   <Button
+                    size='large'
                     icon={<DownloadOutlined />}
                     type='link'
                     onClick={() => dowloadVideo(item.url)}
@@ -64,17 +65,19 @@ const CardListVideo = (props: any) => {
                 </Tooltip>,
                 <Tooltip title='Visualizar'>
                   <Button
-                    type='link'
+                    size='large'
+                    type='text'
                     icon={<PlaySquareOutlined />}
                     onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
                     key='list-loadmore-edit'></Button>
                 </Tooltip>,
                 <Tooltip placement='left' color={'blue'} title='Asignar a esta actividad'>
                   <Button
+                    size='large'
                     icon={
                       <BorderOutlined /> /* sin asignar es <BorderOutlined /> y asigando es <CheckSquareOutlined />  */
                     }
-                    type='link'
+                    type='text'
                     onClick={() => console.log('asignar')}
                     key='list-loadmore-edit'></Button>
                 </Tooltip>,
