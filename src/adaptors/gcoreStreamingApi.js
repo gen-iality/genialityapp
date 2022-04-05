@@ -116,25 +116,31 @@ const getVideoLiveStream = async (video_id) => {
 
 const obtenerVideos = async (name_activity, stream_id) => {
   const listVideo = [];
-  const videos = await getVideosLiveStream('Prueba');
-  if (videos) {
-    await Promise.all(
-      videos.map(async (video, index) => {
-        if (video.stream_id == 272322) {
-          const dataVideo = await getVideoLiveStream(video.id);
-          if (dataVideo) {
-            listVideo.push({
-              name: dataVideo.name,
-              url: dataVideo.iframe_url,
-              hls_url: dataVideo.hls_url,
-              download: dataVideo.download_url,
-              created_at: dataVideo.created_at,
-            });
-            console.log('1. DATA VIDEO===>', dataVideo);
+  try {
+    const videos = await getVideosLiveStream('Prueba');
+    if (videos) {
+      await Promise.all(
+        videos.map(async (video, index) => {
+          if (video.stream_id == 272322) {
+            const dataVideo = await getVideoLiveStream(video.id);
+            if (dataVideo) {
+              listVideo.push({
+                name: dataVideo.name,
+                url: dataVideo.iframe_url,
+                hls_url: dataVideo.hls_url,
+                download: dataVideo.download_url,
+                created_at: dataVideo.created_at,
+                image: dataVideo.screenshot,
+              });
+              console.log('1. DATA VIDEO===>', dataVideo);
+            }
           }
-        }
-      })
-    );
+        })
+      );
+    }
+  } catch (e) {
+    console.log('EXCEPCION===>', e);
+    return listVideo;
   }
 
   return listVideo;
