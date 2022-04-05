@@ -117,11 +117,11 @@ const getVideoLiveStream = async (video_id) => {
 const obtenerVideos = async (name_activity, stream_id) => {
   const listVideo = [];
   try {
-    const videos = await getVideosLiveStream('Prueba');
+    const videos = await getVideosLiveStream(name_activity);
     if (videos) {
       await Promise.all(
-        videos.map(async (video, index) => {
-          if (video.stream_id == 272322) {
+        videos.map(async (video) => {
+          if (video.stream_id == stream_id) {
             const dataVideo = await getVideoLiveStream(video.id);
             if (dataVideo) {
               listVideo.push({

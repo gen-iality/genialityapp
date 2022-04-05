@@ -9,10 +9,19 @@ import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gc
 
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
-  const [loadingRecord, setLoadingRecord] = useState(false);
-  const [record, setRecord] = useState('start');
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus, dataLive, meeting_id, obtainUrl, recordings } = useContext(AgendaContext);
+  const {
+    roomStatus,
+    setRoomStatus,
+    dataLive,
+    meeting_id,
+    obtainUrl,
+    recordings,
+    startRecordTransmition,
+    stopRecordTransmition,
+    loadingRecord,
+    record,
+  } = useContext(AgendaContext);
 
   console.log('DATALIVE ===>', dataLive);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
@@ -83,21 +92,7 @@ const CardPreview = (props: any) => {
     if (hour == 0) return minute + ':' + second;
     return hour + ':' + minute + ':' + second;
   }
-  const startRecordTransmition = async () => {
-    setLoadingRecord(true);
-    const response = await startRecordingLiveStream(meeting_id);
-    console.log('response', response);
-    setLoadingRecord(false);
-    setRecord('stop');
-  };
 
-  const stopRecordTransmition = async () => {
-    setLoadingRecord(true);
-    const response = await stopRecordingLiveStream(meeting_id);
-    console.log('response', response);
-    setLoadingRecord(false);
-    setRecord('start');
-  };
   return (
     <Card
       cover={

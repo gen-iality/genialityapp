@@ -17,19 +17,19 @@ import LoadingTypeActivity from './components/LoadingTypeActivity';
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
   const { data, toggleActivitySteps } = useTypeActivity();
-  const { activityEdit, getRequestByActivity, request, dataLive, roomStatus } = useContext(AgendaContext);
+  const { activityEdit, getRequestByActivity, request, dataLive, roomStatus, meeting_id } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
   const [videos, setVideos] = useState<any[] | null>(null);
   useEffect(() => {
-    obtenerListadodeVideos();
+    meeting_id && obtenerListadodeVideos();
     if (props.type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
-  }, [props.type]);
+  }, [props.type, meeting_id]);
 
   const obtenerListadodeVideos = async () => {
     setVideos(null);
-    const listVideos = await obtenerVideos();
+    const listVideos = await obtenerVideos(props.activityName, meeting_id);
     if (listVideos) {
       setVideos(listVideos);
     }
@@ -44,8 +44,7 @@ const ManagerView = (props: any) => {
 
         <Col span={14}>
           <Row gutter={[16, 16]}>
-            {(((props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active) ||
-              roomStatus === 'ended_meeting_room') && (
+            {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && (
               <Col span={24}>
                 <CardStartTransmition type={props.type} />
               </Col>
@@ -55,13 +54,11 @@ const ManagerView = (props: any) => {
               !dataLive?.active &&
               (videos ? (
                 <Col span={24}>
-                  {videos.length > 0 && (
-                    <CardListVideo
-                      refreshData={obtenerListadodeVideos}
-                      videos={videos}
-                      toggleActivitySteps={toggleActivitySteps}
-                    />
-                  )}
+                  <CardListVideo
+                    refreshData={obtenerListadodeVideos}
+                    videos={videos}
+                    toggleActivitySteps={toggleActivitySteps}
+                  />
                 </Col>
               ) : (
                 <Col span={24}>
