@@ -1,15 +1,25 @@
 import AgendaContext from '@/context/AgendaContext';
+import { CurrentEventContext } from '@/context/eventContext';
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
 import { AgendaApi } from '@/helpers/request';
-import { BorderOutlined, DownloadOutlined, PlaySquareOutlined, ReloadOutlined } from '@ant-design/icons';
-import { Card, List, Button, Image, Tooltip, Typography } from 'antd';
+import {
+  BorderOutlined,
+  CheckSquareOutlined,
+  DownloadOutlined,
+  PlaySquareOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons';
+import { Card, List, Button, Image, Tooltip, Typography, message, Spin } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 
 const CardListVideo = (props: any) => {
   const { visualizeVideo } = useTypeActivity();
   const { activityEdit } = useContext(AgendaContext);
-  const [selectVideo, setSelectVideo] = useState(null);
+  const cEvent = useContext(CurrentEventContext);
+  const [selectVideo, setSelectVideo] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [keyVideo, setKeyVideo] = useState<string | null>(null);
 
   useEffect(() => {
     if (activityEdit) {
@@ -22,6 +32,29 @@ const CardListVideo = (props: any) => {
       }
     }
   }, [props?.videos]);
+
+  const asignarVideo = async (url: string) => {
+    setKeyVideo(url);
+    setLoading(true);
+
+    try {
+      if (activityEdit && cEvent?.value?._id && url) {
+        const video = await AgendaApi.editOne({ video: url }, activityEdit, cEvent?.value?._id);
+        if (video) {
+          setSelectVideo(url);
+          message.success('Asignado correctamente el video');
+        } else {
+          message.error('Error al asignar el video');
+        }
+      } else {
+        message.error('No se puede asignar el video');
+      }
+    } catch (e) {
+      message.error('Error al asignar el video');
+    }
+    setLoading(false);
+    setKeyVideo(null);
+  };
 
   const dowloadVideo = async (url: string) => {
     console.log('URL===>', url);
@@ -38,6 +71,7 @@ const CardListVideo = (props: any) => {
         document.body.removeChild(link);
       });
   };
+
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       {props.videos && (
@@ -75,10 +109,16 @@ const CardListVideo = (props: any) => {
                   <Button
                     size='large'
                     icon={
-                      <BorderOutlined /> /* sin asignar es <BorderOutlined /> y asigando es <CheckSquareOutlined />  */
+                      !loading && item.hls_url == selectVideo ? (
+                        <CheckSquareOutlined />
+                      ) : keyVideo !== item.hls_url ? (
+                        <BorderOutlined />
+                      ) : (
+                        keyVideo == item.hls_url && <Spin />
+                      ) /* sin asignar es <BorderOutlined /> y asigando es <CheckSquareOutlined />  */
                     }
                     type='text'
-                    onClick={() => console.log('asignar')}
+                    onClick={() => asignarVideo(item.hls_url)}
                     key='list-loadmore-edit'></Button>
                 </Tooltip>,
               ]}>
