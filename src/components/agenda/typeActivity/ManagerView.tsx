@@ -1,4 +1,4 @@
-import { Row, Col, Card, Typography, List } from 'antd';
+import { Row, Col, Card, Typography, List, Spin } from 'antd';
 import CardPreview from '../typeActivity/components/CardPreview';
 import GoToEviusMeet from './components/GoToEviusMeet';
 import TransmitionOptions from './components/TransmitionOptions';
@@ -19,7 +19,7 @@ const ManagerView = (props: any) => {
   const { activityEdit, getRequestByActivity, request, dataLive, roomStatus } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
-  const [videos, setVideos] = useState([] as any[]);
+  const [videos, setVideos] = useState<any[] | null>(null);
   useEffect(() => {
     obtenerListadodeVideos();
     if (props.type !== 'EviusMeet') return;
@@ -27,6 +27,7 @@ const ManagerView = (props: any) => {
   }, [props.type]);
 
   const obtenerListadodeVideos = async () => {
+    setVideos(null);
     const listVideos = await obtenerVideos();
     setVideos(listVideos);
   };
@@ -48,11 +49,21 @@ const ManagerView = (props: any) => {
               </Col>
             )}
 
-            {roomStatus === 'ended_meeting_room' && (
-              <Col span={24}>
-                <CardListVideo videos={videos} toggleActivitySteps={toggleActivitySteps} />
-              </Col>
-            )}
+            {(props.type === 'EviusMeet' || props.type === 'Transmisión') &&
+              !dataLive?.active &&
+              (videos ? (
+                <Col span={24}>
+                  {videos.length > 0 && (
+                    <CardListVideo
+                      refreshData={obtenerListadodeVideos}
+                      videos={videos}
+                      toggleActivitySteps={toggleActivitySteps}
+                    />
+                  )}
+                </Col>
+              ) : (
+                <Spin />
+              ))}
           </Row>
           <Row gutter={[16, 16]}>
             {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
@@ -101,18 +112,13 @@ const ManagerView = (props: any) => {
             )}
           </Row>
         </Col>
-
-        {roomStatus !== 'ended_meeting_room' &&
-          (props.type == 'Transmisión' || props.type == 'EviusMeet') &&
-          dataLive?.active && (
-            <Col span={24}>
-              <CardRTMP />
-            </Col>
-          )}
+        {(props.type == 'Transmisión' || props.type == 'EviusMeet') && dataLive?.active && (
+          <Col span={24}>
+            <CardRTMP />
+          </Col>
+        )}
       </Row>
-      {roomStatus !== 'ended_meeting_room' && (
-        <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
-      )}
+      <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
     </>
   );
 };

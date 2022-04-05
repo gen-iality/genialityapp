@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Card, Result, Space, Button, Spin, Popconfirm } from 'antd';
+import { Card, Result, Space, Button, Spin, Popconfirm, Modal } from 'antd';
 import LoadingTypeActivity from './LoadingTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ import {
 } from '../../../../adaptors/gcoreStreamingApi';
 import { useQueryClient } from 'react-query';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
@@ -27,8 +28,7 @@ const CardStartTransmition = (props: any) => {
     setHabilitarIngreso,
   } = useContext(AgendaContext);
   const { toggleActivitySteps } = useTypeActivity();
-  const queryClient = useQueryClient();
-  const [timerId, setTimerId] = useState(null);
+  const { confirm } = Modal;
   useEffect(() => {
     if (meeting_id) {
       saveConfig(null, 0);
@@ -63,10 +63,25 @@ const CardStartTransmition = (props: any) => {
   const executer_startStream = async () => {
     setloading(true);
     const liveStreamresponse = await startLiveStream(meeting_id);
-    setDataLive(liveStreamresponse);
-    executer_startMonitorStatus();
-    setHabilitarIngreso('');
-    setloading(false);
+    if (liveStreamresponse) {
+      setDataLive(liveStreamresponse);
+      executer_startMonitorStatus();
+      setHabilitarIngreso('');
+      setloading(false);
+    } else {
+      confirm({
+        title: 'Error',
+        icon: <ExclamationCircleOutlined />,
+        content: 'Ha ocurrido un error al iniciar la trasnmisión',
+        onOk() {
+          window.location.reload();
+        },
+        onCancel() {},
+        cancelButtonProps: {
+          disabled: true,
+        },
+      });
+    }
     //inicia el monitoreo
   };
 

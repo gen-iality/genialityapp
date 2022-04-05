@@ -20,7 +20,7 @@ const objecKeys: object = {
 };
 
 const InitialView = (props: any) => {
-  const { toggleActivitySteps, selectedKey, previewKey, data } = useTypeActivity();
+  const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity();
   const [loading, setLoading] = useState(true);
   const { typeActivity, meeting_id, setActivityName, activityEdit, roomStatus, saveConfig } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);

@@ -35,4 +35,6 @@ export type TypeActivityContextProps = {
   createTypeActivity: () => void;
   executer_stopStream: () => void;
   loadingStop: boolean;
+  urlVideo: string | null;
+  visualizeVideo: (url: string | null) => void;
 };
