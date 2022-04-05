@@ -29,7 +29,9 @@ const ManagerView = (props: any) => {
   const obtenerListadodeVideos = async () => {
     setVideos(null);
     const listVideos = await obtenerVideos();
-    setVideos(listVideos);
+    if (listVideos) {
+      setVideos(listVideos);
+    }
   };
 
   return (
