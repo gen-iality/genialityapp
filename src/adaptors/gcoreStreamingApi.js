@@ -125,6 +125,7 @@ const obtenerVideos = async (name_activity, stream_id) => {
             const dataVideo = await getVideoLiveStream(video.id);
             if (dataVideo) {
               listVideo.push({
+                id: dataVideo.id,
                 name: dataVideo.name,
                 url: dataVideo.iframe_url,
                 hls_url: dataVideo.hls_url,
@@ -146,6 +147,15 @@ const obtenerVideos = async (name_activity, stream_id) => {
   return listVideo;
 };
 
+const deleteVideo = async (idVideo) => {
+  const res = await gCoreCLient.delete('/videos/' + video_id);
+  if (res?.status === 200) {
+    return res.data;
+  } else {
+    return null;
+  }
+};
+
 export {
   getLiveStream,
   getLiveStreamStatus,
@@ -160,4 +170,5 @@ export {
   getVideosLiveStream,
   getVideoLiveStream,
   obtenerVideos,
+  deleteVideo,
 };
