@@ -1,9 +1,9 @@
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
-import { DownloadOutlined, PlaySquareOutlined, ReloadOutlined } from '@ant-design/icons';
-import { Card, List, Button, Image, Tooltip } from 'antd';
+import { BorderOutlined, DownloadOutlined, PlaySquareOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Card, List, Button, Image, Tooltip, Typography } from 'antd';
+import moment from 'moment';
 
 const CardListVideo = (props: any) => {
-  console.log('%c🆗 - Videos', 'color: #00A6ED;', props.videos);
   const { visualizeVideo } = useTypeActivity();
 
   const dowloadVideo = async (url: string) => {
@@ -27,9 +27,9 @@ const CardListVideo = (props: any) => {
         <List
           header={
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <p>Videos grabados</p>
-              <Button onClick={() => props.refreshData()}>
-                <ReloadOutlined />
+              <Typography.Text strong>Videos grabados</Typography.Text>
+              <Button icon={<ReloadOutlined />} onClick={() => props.refreshData()}>
+                Actualizar lista
               </Button>
             </div>
           }
@@ -52,10 +52,30 @@ const CardListVideo = (props: any) => {
                     onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
                     key='list-loadmore-edit'></Button>
                 </Tooltip>,
+                <Tooltip placement='left' color={'blue'} title='Asignar a esta actividad'>
+                  <Button
+                    icon={
+                      <BorderOutlined /> /* sin asignar es <BorderOutlined /> y asigando es <CheckSquareOutlined />  */
+                    }
+                    type='link'
+                    onClick={() => console.log('asignar')}
+                    key='list-loadmore-edit'></Button>
+                </Tooltip>,
               ]}>
               <List.Item.Meta
-                avatar={<Image style={{ borderRadius: '5px' }} preview={false} width={80} src={item.image} />}
+                avatar={
+                  <Image
+                    style={{ borderRadius: '5px' }}
+                    preview={false}
+                    width={100}
+                    height={60}
+                    src={item.image}
+                    alt='Miniatura del video'
+                    fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
+                  />
+                }
                 title={item.name}
+                description={moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}
               />
             </List.Item>
           )}
