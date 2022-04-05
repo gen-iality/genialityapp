@@ -53,7 +53,6 @@ import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
 import TipeOfActivity from './typeActivity';
 import { deleteLiveStream } from '@/adaptors/gcoreStreamingApi';
-import moment from 'moment';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -78,7 +77,7 @@ class AgendaEdit extends Component {
       subtitle: '',
       bigmaker_meeting_id: null,
       has_date: '',
-      description: '',
+      description: '<p><br></p>',
       registration_message: '',
       date: Moment(new Date()).format('YYYY-MM-DD'),
       hour_start: '',
@@ -328,7 +327,7 @@ class AgendaEdit extends Component {
   async componentDidUpdate(prevProps) {
     /** a copy of the initial states is captured to be able to validate after any change */
 
-    if (!this.state.initialActivityStates) {
+    if (!this.state.initialActivityStates && this.state.name !== '') {
       const {
         name,
         hour_start,
@@ -473,7 +472,7 @@ class AgendaEdit extends Component {
       selectedCategories,
       description,
       image,
-      isPublished,
+      // isPublished,
       length,
       latitude,
       selectedHosts,
@@ -492,7 +491,7 @@ class AgendaEdit extends Component {
       selectedCategories,
       description,
       image,
-      isPublished,
+      isPublished: this.context?.isPublished,
       length,
       latitude,
       selectedHosts,
@@ -873,6 +872,7 @@ class AgendaEdit extends Component {
     /* console.log(date, '========================== date'); */
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
+
     const activity_categories_ids =
       selectedCategories !== undefined && selectedCategories !== null
         ? selectedCategories[0] === undefined
@@ -1141,6 +1141,19 @@ class AgendaEdit extends Component {
     this.context.setActivityEdit(null);
   }
 
+  startOrEndHourWithAdditionalMinutes = (minutes, isStart) => {
+    const fecha = new Date();
+    fecha.setMinutes(fecha.getMinutes() + minutes);
+
+    if (isStart) {
+      this.setState({ hour_start: Moment(fecha, 'HH:mm:ss') });
+    } else {
+      this.setState({ hour_end: Moment(fecha, 'HH:mm:ss') });
+    }
+
+    return Moment(fecha, 'HH:mm:ss');
+  };
+
   render() {
     const {
       name,
@@ -1281,7 +1294,9 @@ class AgendaEdit extends Component {
                           <TimePicker
                             style={{ width: '100%' }}
                             allowClear={false}
-                            value={Moment(hour_start !== '' ? hour_start : new Date())}
+                            value={
+                              hour_start !== '' ? Moment(hour_start) : this.startOrEndHourWithAdditionalMinutes(1, true)
+                            }
                             use12Hours
                             format='h:mm a'
                             onChange={(value) => this.handleChangeDate(value, 'hour_start')}
@@ -1314,7 +1329,9 @@ class AgendaEdit extends Component {
                           <TimePicker
                             style={{ width: '100%' }}
                             allowClear={false}
-                            value={Moment(hour_end !== '' ? hour_end : new Date())}
+                            value={
+                              hour_end !== '' ? Moment(hour_end) : this.startOrEndHourWithAdditionalMinutes(5, false)
+                            }
                             use12Hours
                             format='h:mm a'
                             onChange={(value) => this.handleChangeDate(value, 'hour_end')}
