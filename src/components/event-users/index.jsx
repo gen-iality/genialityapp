@@ -22,6 +22,7 @@ import {
   Input,
   Space,
   Tooltip,
+  Select,
 } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -36,6 +37,7 @@ import {
   UsergroupAddOutlined,
   StarOutlined,
 } from '@ant-design/icons';
+import QrModal from './qrModal';
 
 import Header from '../../antdComponents/Header';
 import TableA from '../../antdComponents/Table';
@@ -44,6 +46,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -610,12 +613,11 @@ class ListEventUser extends Component {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
 
-  /* handleChange = (e) => {
-    Pendiente actualizar QR
-    console.log(e);
+  handleChange = (e) => {
+    /* console.log(e); */
     this.setState({ typeScanner: e });
     this.checkModal();
-  }; */
+  };
 
   // Set options in dropdown list
   clearOption = () => {
@@ -754,6 +756,19 @@ class ListEventUser extends Component {
           </Row>
         )}
 
+        {this.state.qrModal && (
+          <QrModal
+            fields={extraFields}
+            usersReq={usersReq}
+            typeScanner={this.state.typeScanner}
+            clearOption={this.clearOption}
+            checkIn={this.checkIn}
+            eventID={this.props.event._id}
+            closeModal={this.closeQRModal}
+            openEditModalUser={this.openEditModalUser}
+          />
+        )}
+
         <Row gutter={8}>
           <Col>
             <p>
@@ -812,20 +827,19 @@ class ListEventUser extends Component {
                   Expandir
                 </Button>
               </Col>
-              {/* <Col>
-                  Pendiente por actualizar QR
-                  <Select
-                    name={'type-scanner'}
-                    value={this.state.typeScanner}
-                    defaultValue={this.state.typeScanner}
-                    onChange={(e) => this.handleChange(e)}
-                    style={{ width: 220 }}
-                  >
-                    <Option value='options'>Escanear...</Option>
-                    <Option value='scanner-qr'>Escanear QR</Option>
-                    <Option value='scanner-document'>Escanear Documento</Option>
-                  </Select>
-                </Col> */}
+              <Col>
+                <Select
+                  name={'type-scanner'}
+                  value={this.state.typeScanner}
+                  defaultValue={this.state.typeScanner}
+                  onChange={(e) => this.handleChange(e)}
+                  /* style={{ width: 220 }} */
+                >
+                  <Option value='options'>Escanear...</Option>
+                  <Option value='scanner-qr'>Escanear QR</Option>
+                  <Option value='scanner-document'>Escanear Documento</Option>
+                </Select>
+              </Col>
               <Col>
                 {usersReq.length > 0 && (
                   <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
