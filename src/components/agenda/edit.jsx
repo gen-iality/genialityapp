@@ -345,8 +345,8 @@ class AgendaEdit extends Component {
         isPhysical,
       } = this.state;
 
-      const initialHour = Moment(hour_start).format('HH:mm');
-      const finalHour = Moment(hour_end).format('HH:mm');
+      const initialHour = typeof hour_start === 'string' ? hour_start : Moment(hour_start).format('HH:mm');
+      const finalHour = typeof hour_end === 'string' ? hour_end : Moment(hour_end).format('HH:mm');
 
       const initialActivityStates = {
         name,
@@ -363,6 +363,9 @@ class AgendaEdit extends Component {
         selectedHosts,
         isPhysical,
       };
+
+      if (hour_start === '' && hour_end === '') return;
+
       this.setState({
         initialActivityStates,
       });
