@@ -13,6 +13,7 @@ import { CurrentEventContext } from '../../../context/eventContext';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
 import CardListVideo from './components/CardListVideo';
+import LoadingTypeActivity from './components/LoadingTypeActivity';
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
   const { data, toggleActivitySteps } = useTypeActivity();
@@ -44,7 +45,6 @@ const ManagerView = (props: any) => {
             {(((props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active) ||
               roomStatus === 'ended_meeting_room') && (
               <Col span={24}>
-                {' '}
                 <CardStartTransmition type={props.type} />
               </Col>
             )}
@@ -62,7 +62,11 @@ const ManagerView = (props: any) => {
                   )}
                 </Col>
               ) : (
-                <Spin />
+                <Col span={24}>
+                  <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
+                    <LoadingTypeActivity />
+                  </Card>
+                </Col>
               ))}
           </Row>
           <Row gutter={[16, 16]}>
