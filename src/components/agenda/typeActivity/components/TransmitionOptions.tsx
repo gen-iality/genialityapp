@@ -31,9 +31,10 @@ const TransmitionOptions = (props: any) => {
         avatar={<WarningOutlined style={{ color: '#FE5455', fontSize: '25px' }} />}
         description={
           <Space>
-            {isVisible && dataLive?.active && <Button onClick={() => console.log('Finalizar')}>Finalizar</Button>}
             {isVisible && dataLive?.active && !loadingStop ? (
-              <Button onClick={() => executer_stopStream()}>Pausar</Button>
+              <Button type='primary' danger onClick={() => executer_stopStream()}>
+                Detener
+              </Button>
             ) : (
               loadingStop && <Spin />
             )}
