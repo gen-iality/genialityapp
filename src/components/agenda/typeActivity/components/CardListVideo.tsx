@@ -1,8 +1,10 @@
+import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
 import { ReloadOutlined } from '@ant-design/icons';
 import { Card, List, Button } from 'antd';
 
 const CardListVideo = (props: any) => {
   console.log('%c🆗 - Videos', 'color: #00A6ED;', props.videos);
+  const { visualizeVideo } = useTypeActivity();
 
   const dowloadVideo = async (url: string) => {
     console.log('URL===>', url);
@@ -39,7 +41,7 @@ const CardListVideo = (props: any) => {
                 <Button type='link' onClick={() => dowloadVideo(item.url)} key='list-loadmore-edit'>
                   Descargar
                 </Button>,
-                <a onClick={() => console.log('ITEM==>', item.hls_url)} key='list-loadmore-edit'>
+                <a onClick={() => visualizeVideo(item.hls_url)} key='list-loadmore-edit'>
                   Visualizar
                 </a>,
               ]}>
