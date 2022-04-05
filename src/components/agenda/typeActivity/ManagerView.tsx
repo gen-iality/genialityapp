@@ -39,12 +39,21 @@ const ManagerView = (props: any) => {
         </Col>
 
         <Col span={14}>
-          {(((props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active) ||
-            roomStatus === 'ended_meeting_room') && <CardStartTransmition type={props.type} />}
+          <Row gutter={[16, 16]}>
+            {(((props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active) ||
+              roomStatus === 'ended_meeting_room') && (
+              <Col span={24}>
+                {' '}
+                <CardStartTransmition type={props.type} />
+              </Col>
+            )}
 
-          {roomStatus === 'ended_meeting_room' && (
-            <CardListVideo videos={videos} toggleActivitySteps={toggleActivitySteps} />
-          )}
+            {roomStatus === 'ended_meeting_room' && (
+              <Col span={24}>
+                <CardListVideo videos={videos} toggleActivitySteps={toggleActivitySteps} />
+              </Col>
+            )}
+          </Row>
           {roomStatus !== 'ended_meeting_room' && (
             <Row gutter={[16, 16]}>
               {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (

@@ -1,5 +1,5 @@
 import { DownloadOutlined } from '@ant-design/icons';
-import { Card, List } from 'antd';
+import { Card, List, Button } from 'antd';
 import React from 'react';
 
 const CardListVideo = (props: any) => {
@@ -14,9 +14,9 @@ const CardListVideo = (props: any) => {
           renderItem={(item: any) => (
             <List.Item
               actions={[
-                <a href={item.download} key='list-loadmore-edit'>
+                <Button type='link' href={item.download} key='list-loadmore-edit'>
                   Descargar
-                </a>,
+                </Button>,
                 <a onClick={() => props.toggleActivitySteps('visualize', { data: item?.url })} key='list-loadmore-edit'>
                   Visualizar
                 </a>,
