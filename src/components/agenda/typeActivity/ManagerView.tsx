@@ -12,6 +12,7 @@ import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventContext } from '../../../context/eventContext';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
+import CardListVideo from './components/CardListVideo';
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
   const { data, toggleActivitySteps } = useTypeActivity();
@@ -40,6 +41,10 @@ const ManagerView = (props: any) => {
         <Col span={14}>
           {(((props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active) ||
             roomStatus === 'ended_meeting_room') && <CardStartTransmition type={props.type} />}
+
+          {roomStatus === 'ended_meeting_room' && (
+            <CardListVideo videos={videos} toggleActivitySteps={toggleActivitySteps} />
+          )}
           {roomStatus !== 'ended_meeting_room' && (
             <Row gutter={[16, 16]}>
               {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
@@ -88,33 +93,6 @@ const ManagerView = (props: any) => {
                 </Col>
               )}
             </Row>
-          )}
-          {/** COMPONENTE DE VIDEOS */}
-          {roomStatus === 'ended_meeting_room' && (
-            <Card>
-              {videos && (
-                <List
-                  header={<div>Listado de videos</div>}
-                  bordered
-                  dataSource={videos}
-                  renderItem={(item) => (
-                    <List.Item
-                      actions={[
-                        <a href={item.download} key='list-loadmore-edit'>
-                          Descargar
-                        </a>,
-                        <a
-                          onClick={() => toggleActivitySteps('visualize', { data: item?.url })}
-                          key='list-loadmore-edit'>
-                          Visualizar
-                        </a>,
-                      ]}>
-                      <p>{item.name}</p>
-                    </List.Item>
-                  )}
-                />
-              )}
-            </Card>
           )}
         </Col>
 

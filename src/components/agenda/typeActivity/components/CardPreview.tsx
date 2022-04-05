@@ -111,7 +111,7 @@ const CardPreview = (props: any) => {
         )
       }
       bodyStyle={{ padding: '21px' }}
-      style={{ borderRadius: '8px' }}>
+      style={{ borderRadius: '8px', overflow: 'hidden' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && renderPlayer()}
