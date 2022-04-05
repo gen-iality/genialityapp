@@ -54,55 +54,52 @@ const ManagerView = (props: any) => {
               </Col>
             )}
           </Row>
-          {roomStatus !== 'ended_meeting_room' && (
-            <Row gutter={[16, 16]}>
-              {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
-                <Col span={10}>
-                  <GoToEviusMeet type={props.type} activityId={props.activityId} />
-                </Col>
-              )}
-              {(((props.type === 'EviusMeet' || props.type === 'Transmisión') && dataLive?.active) ||
-                (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
-                <Col span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}>
-                  <TransmitionOptions type={props.type} />
-                </Col>
-              )}
-              {roomStatus !== 'ended_meeting_room' && props.type == 'Video' && (
-                <Col span={24}>
-                  <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
-                    <Card.Meta
-                      title={
-                        <Typography.Text style={{ fontSize: '20px' }} strong>
-                          Video cargado
-                        </Typography.Text>
-                      }
-                      description={'Esta es la url cargada'}
-                    />
-                    <br />
-                    <strong>Url:</strong> {data}
-                  </Card>
-                </Col>
-              )}
-              {roomStatus !== 'ended_meeting_room' && props.type == 'reunión' ? (
+          <Row gutter={[16, 16]}>
+            {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
+              <Col span={10}>
+                <GoToEviusMeet type={props.type} activityId={props.activityId} />
+              </Col>
+            )}
+            {(((props.type === 'EviusMeet' || props.type === 'Transmisión') && dataLive?.active) ||
+              (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
+              <Col span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}>
+                <TransmitionOptions type={props.type} />
+              </Col>
+            )}
+            {props.type == 'Video' && (
+              <Col span={24}>
+                <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
+                  <Card.Meta
+                    title={
+                      <Typography.Text style={{ fontSize: '20px' }} strong>
+                        Video cargado
+                      </Typography.Text>
+                    }
+                    description={'Esta es la url cargada'}
+                  />
+                  <br />
+                  <strong>Url:</strong> {data}
+                </Card>
+              </Col>
+            )}
+            {props.type == 'reunión' ? (
+              <Col span={24}>
+                <CardShareLinkEviusMeet activityId={props.activityId} />
+              </Col>
+            ) : (
+              props.type == 'EviusMeet' &&
+              dataLive?.active && (
                 <Col span={24}>
                   <CardShareLinkEviusMeet activityId={props.activityId} />
                 </Col>
-              ) : (
-                roomStatus !== 'ended_meeting_room' &&
-                props.type == 'EviusMeet' &&
-                dataLive?.active && (
-                  <Col span={24}>
-                    <CardShareLinkEviusMeet activityId={props.activityId} />
-                  </Col>
-                )
-              )}
-              {roomStatus !== 'ended_meeting_room' && props.type == 'EviusMeet' && dataLive?.active && (
-                <Col span={24}>
-                  <CardParticipantRequests request={request} setViewModal={setViewModal} />
-                </Col>
-              )}
-            </Row>
-          )}
+              )
+            )}
+            {props.type == 'EviusMeet' && dataLive?.active && (
+              <Col span={24}>
+                <CardParticipantRequests request={request} setViewModal={setViewModal} />
+              </Col>
+            )}
+          </Row>
         </Col>
 
         {roomStatus !== 'ended_meeting_room' &&
