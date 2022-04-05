@@ -41,7 +41,7 @@ const CardListVideo = (props: any) => {
                 <Button type='link' onClick={() => dowloadVideo(item.url)} key='list-loadmore-edit'>
                   Descargar
                 </Button>,
-                <a onClick={() => visualizeVideo(item.hls_url)} key='list-loadmore-edit'>
+                <a onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)} key='list-loadmore-edit'>
                   Visualizar
                 </a>,
               ]}>

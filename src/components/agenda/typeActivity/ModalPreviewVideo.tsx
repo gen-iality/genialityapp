@@ -5,22 +5,22 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 
 const ModalPreviewVideo = () => {
-  const { urlVideo, visualizeVideo } = useTypeActivity();
+  const { videoObject, visualizeVideo } = useTypeActivity();
   return (
     <Modal
-      onCancel={() => visualizeVideo(null)}
+      onCancel={() => visualizeVideo(null, null, null)}
       width={'680px'}
       bodyStyle={{ paddingTop: '40px' }}
-      visible={urlVideo !== null ? true : false}
+      visible={videoObject !== null ? true : false}
       footer={null}>
       <Row gutter={[0, 0]}>
         <Col style={{ borderRadius: '5px', overflow: 'hidden', aspectRatio: '16/9' }} span={24}>
-          <ReactPlayer controls width={'100%'} height={'100%'} style={{}} url={urlVideo as string} />
+          <ReactPlayer controls width={'100%'} height={'100%'} style={{}} url={videoObject?.url as string} />
         </Col>
         <Col>
           <Comment
-            author={<Typography.Text style={{ fontSize: '16px' }}>Nombre del video</Typography.Text>}
-            datetime={'fecha de creacion'}
+            author={<Typography.Text style={{ fontSize: '16px' }}>{videoObject?.name as string}</Typography.Text>}
+            datetime={videoObject && moment(videoObject?.created_at).format('MMMM Do YYYY, h:mm:ss a')}
             content={''}
           />
         </Col>

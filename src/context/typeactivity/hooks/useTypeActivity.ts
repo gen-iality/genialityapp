@@ -10,7 +10,7 @@ export const useTypeActivity = () => {
     createTypeActivity,
     executer_stopStream,
     loadingStop,
-    urlVideo,
+    videoObject,
     visualizeVideo,
   } = useContext(TypeActivityContext);
 
@@ -40,7 +40,7 @@ export const useTypeActivity = () => {
     createTypeActivity,
     executer_stopStream,
     loadingStop,
-    urlVideo,
+    videoObject,
     visualizeVideo,
   };
 };
