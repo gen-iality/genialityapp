@@ -130,6 +130,7 @@ const obtenerVideos = async (name_activity, stream_id) => {
                 hls_url: dataVideo.hls_url,
                 download: dataVideo.download_url,
                 created_at: dataVideo.created_at,
+                image: dataVideo.screenshot,
               });
               console.log('1. DATA VIDEO===>', dataVideo);
             }

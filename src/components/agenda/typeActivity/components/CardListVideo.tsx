@@ -54,14 +54,7 @@ const CardListVideo = (props: any) => {
                 </Tooltip>,
               ]}>
               <List.Item.Meta
-                avatar={
-                  <Image
-                    style={{ borderRadius: '5px' }}
-                    preview={false}
-                    width={80}
-                    src={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
-                  />
-                }
+                avatar={<Image style={{ borderRadius: '5px' }} preview={false} width={80} src={item.image} />}
                 title={item.name}
               />
             </List.Item>
