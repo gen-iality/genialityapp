@@ -1,4 +1,4 @@
-import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Col, Badge } from 'antd';
+import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Col, Badge, Popconfirm } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
@@ -172,13 +172,26 @@ const CardPreview = (props: any) => {
             dataLive?.live && !loadingRecord ? (
               <Col span={8}>
                 <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
-                  <Button
-                    onClick={() => {
-                      record === 'start' ? startRecordTransmition() : stopRecordTransmition();
-                    }}
-                    type='primary'>
-                    {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
-                  </Button>
+                  {record === 'start' ? (
+                    <Button
+                      onClick={() => {
+                        startRecordTransmition();
+                      }}
+                      type='primary'>
+                      Iniciar grabación
+                    </Button>
+                  ) : (
+                    <Popconfirm
+                      title='¿Está seguro que desea detener la grabación?'
+                      okText='Si'
+                      cancelText='No'
+                      onConfirm={() => {
+                        stopRecordTransmition();
+                      }}
+                      onCancel={() => console.log('cancelado')}>
+                      <Button type='primary'>Detener grabación</Button>
+                    </Popconfirm>
+                  )}
                 </Badge>
               </Col>
             ) : (
