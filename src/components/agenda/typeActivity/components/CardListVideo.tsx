@@ -36,12 +36,12 @@ const CardListVideo = (props: any) => {
   const asignarVideo = async (url: string) => {
     setKeyVideo(url);
     setLoading(true);
-
     try {
       if (activityEdit && cEvent?.value?._id && url) {
-        const video = await AgendaApi.editOne({ video: url }, activityEdit, cEvent?.value?._id);
+        const urlVideo = url == selectVideo ? null : url;
+        const video = await AgendaApi.editOne({ video: url == urlVideo }, activityEdit, cEvent?.value?._id);
         if (video) {
-          setSelectVideo(url);
+          setSelectVideo(urlVideo);
           message.success('Asignado correctamente el video');
         } else {
           message.error('Error al asignar el video');
