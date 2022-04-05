@@ -1,6 +1,6 @@
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
-import { ReloadOutlined } from '@ant-design/icons';
-import { Card, List, Button } from 'antd';
+import { DownloadOutlined, PlaySquareOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Card, List, Button, Image, Tooltip } from 'antd';
 
 const CardListVideo = (props: any) => {
   console.log('%c🆗 - Videos', 'color: #00A6ED;', props.videos);
@@ -27,7 +27,7 @@ const CardListVideo = (props: any) => {
         <List
           header={
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <p>Listado de videos</p>
+              <p>Videos grabados</p>
               <Button onClick={() => props.refreshData()}>
                 <ReloadOutlined />
               </Button>
@@ -38,14 +38,32 @@ const CardListVideo = (props: any) => {
           renderItem={(item: any) => (
             <List.Item
               actions={[
-                <Button type='link' onClick={() => dowloadVideo(item.url)} key='list-loadmore-edit'>
-                  Descargar
-                </Button>,
-                <a onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)} key='list-loadmore-edit'>
-                  Visualizar
-                </a>,
+                <Tooltip title='Descargar'>
+                  <Button
+                    icon={<DownloadOutlined />}
+                    type='link'
+                    onClick={() => dowloadVideo(item.url)}
+                    key='list-loadmore-edit'></Button>
+                </Tooltip>,
+                <Tooltip title='Visualizar'>
+                  <Button
+                    type='link'
+                    icon={<PlaySquareOutlined />}
+                    onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
+                    key='list-loadmore-edit'></Button>
+                </Tooltip>,
               ]}>
-              <p>{item.name}</p>
+              <List.Item.Meta
+                avatar={
+                  <Image
+                    style={{ borderRadius: '5px' }}
+                    preview={false}
+                    width={80}
+                    src={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
+                  />
+                }
+                title={item.name}
+              />
             </List.Item>
           )}
         />

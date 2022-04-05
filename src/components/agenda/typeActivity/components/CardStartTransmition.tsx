@@ -135,7 +135,9 @@ const CardStartTransmition = (props: any) => {
       )}
     </Card>
   ) : (
-    <Spin />
+    <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
+      <LoadingTypeActivity />
+    </Card>
   );
 };
 
