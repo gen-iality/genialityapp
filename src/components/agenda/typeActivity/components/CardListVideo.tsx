@@ -5,11 +5,12 @@ import { AgendaApi } from '@/helpers/request';
 import {
   BorderOutlined,
   CheckSquareOutlined,
+  DeleteOutlined,
   DownloadOutlined,
   PlaySquareOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
-import { Card, List, Button, Image, Tooltip, Typography, message, Spin } from 'antd';
+import { Card, List, Button, Image, Tooltip, Typography, message, Spin, Popconfirm } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 
@@ -89,28 +90,12 @@ const CardListVideo = (props: any) => {
           renderItem={(item: any) => (
             <List.Item
               actions={[
-                <Tooltip title='Descargar'>
-                  <Button
-                    size='large'
-                    icon={<DownloadOutlined />}
-                    type='link'
-                    onClick={() => dowloadVideo(item.url)}
-                    key='list-loadmore-edit'></Button>
-                </Tooltip>,
-                <Tooltip title='Visualizar'>
-                  <Button
-                    size='large'
-                    type='text'
-                    icon={<PlaySquareOutlined />}
-                    onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
-                    key='list-loadmore-edit'></Button>
-                </Tooltip>,
-                <Tooltip placement='left' color={'blue'} title='Asignar a esta actividad'>
+                <Tooltip color={'green'} title='Asignar a esta actividad'>
                   <Button
                     size='large'
                     icon={
                       !loading && item.hls_url == selectVideo ? (
-                        <CheckSquareOutlined />
+                        <CheckSquareOutlined style={{ color: '#52C41A' }} />
                       ) : keyVideo !== item.hls_url ? (
                         <BorderOutlined />
                       ) : (
@@ -119,8 +104,35 @@ const CardListVideo = (props: any) => {
                     }
                     type='text'
                     onClick={() => asignarVideo(item.hls_url)}
-                    key='list-loadmore-edit'></Button>
+                    key='option-assign'></Button>
                 </Tooltip>,
+                <Tooltip title='Descargar'>
+                  <Button
+                    size='large'
+                    icon={<DownloadOutlined />}
+                    type='link'
+                    onClick={() => dowloadVideo(item.url)}
+                    key='option-dowload'></Button>
+                </Tooltip>,
+                <Tooltip title='Visualizar'>
+                  <Button
+                    size='large'
+                    type='text'
+                    icon={<PlaySquareOutlined />}
+                    onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
+                    key='option-preview'></Button>
+                </Tooltip>,
+                ,
+                <Popconfirm
+                  title={'¿Está seguro que deseas eliminar esta grabación?'}
+                  onCancel={() => console.log('cancelado')}
+                  onConfirm={() => console.log('eliminar')}
+                  okText='Si'
+                  cancelText='No'>
+                  <Tooltip color={'red'} title='Eliminar video'>
+                    <Button danger size='large' icon={<DeleteOutlined />} type='text' key='option-delete'></Button>
+                  </Tooltip>
+                </Popconfirm>,
               ]}>
               <List.Item.Meta
                 avatar={
