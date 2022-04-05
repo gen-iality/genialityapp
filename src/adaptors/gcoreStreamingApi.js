@@ -148,9 +148,9 @@ const obtenerVideos = async (name_activity, stream_id) => {
 };
 
 const deleteVideo = async (idVideo) => {
-  const res = await gCoreCLient.delete('/videos/' + video_id);
-  if (res?.status === 200) {
-    return res.data;
+  const res = await gCoreCLient.delete('/videos/' + idVideo);
+  if (res?.status === 204) {
+    return res;
   } else {
     return null;
   }

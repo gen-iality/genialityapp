@@ -1,3 +1,4 @@
+import { deleteVideo } from '@/adaptors/gcoreStreamingApi';
 import AgendaContext from '@/context/AgendaContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
@@ -126,7 +127,15 @@ const CardListVideo = (props: any) => {
                 <Popconfirm
                   title={'¿Está seguro que deseas eliminar esta grabación?'}
                   onCancel={() => console.log('cancelado')}
-                  onConfirm={() => console.log('eliminar')}
+                  onConfirm={async () => {
+                    const resp = await deleteVideo(item.id);
+                    if (resp) {
+                      await props.refreshData();
+                      message.success('Video borrado correctamente.');
+                    } else {
+                      message.error('Error al eliminar video');
+                    }
+                  }}
                   okText='Si'
                   cancelText='No'>
                   <Tooltip color={'red'} title='Eliminar video'>
