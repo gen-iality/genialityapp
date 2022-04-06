@@ -102,7 +102,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           <ReactPlayer
             style={{ aspectRatio: '16/9' }}
             muted={muted}
-            playing={true}
+            playing={typeActivity !== 'url' ? true : false}
             loop={!loopBackGround}
             width='100%'
             height={'100%'}

@@ -226,14 +226,14 @@ const RenderComponent = (props) => {
                 <GameDrawer />
               </>
             );
-          case 'only':
-            return (
-              <>
-                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-                <GameDrawer />
-              </>
-            );
         }
+      case 'only':
+        return (
+          <>
+            <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            <GameDrawer />
+          </>
+        );
     }
   });
 
