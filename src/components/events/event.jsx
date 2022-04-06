@@ -168,7 +168,6 @@ class Event extends Component {
 
   render() {
     const { match, permissions, showMenu } = this.props;
-    console.log('🚀 debug ~ eventoooo', this.state.event);
     const { timeout } = this.state;
     if (this.state.loading || this.props.loading || permissions.loading) return <Loading />;
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;

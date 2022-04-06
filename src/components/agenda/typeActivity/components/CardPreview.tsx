@@ -117,7 +117,7 @@ const CardPreview = (props: any) => {
                 props.type === 'reunión' || props.type === 'Video' ? null : (
                   <Avatar
                     icon={
-                      props.type === 'EviusMeet' ? (
+                      props.type === 'EviusMeet' || props.type === 'Transmisión' ? (
                         dataLive?.active ? (
                           <CheckCircleOutlined />
                         ) : (
@@ -130,7 +130,7 @@ const CardPreview = (props: any) => {
                       )
                     }
                     style={
-                      props.type === 'EviusMeet'
+                      props.type === 'EviusMeet' || props.type === 'Transmisión'
                         ? dataLive?.active
                           ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
                           : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }

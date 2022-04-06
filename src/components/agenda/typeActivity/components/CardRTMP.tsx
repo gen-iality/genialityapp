@@ -24,7 +24,9 @@ const CardRTMP = () => {
             RTMP
           </Typography.Text>
         }
-        description={'Lorem ipsum dolor sit amet consectetur adipisicing elit. '}
+        description={
+          'El Protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet. '
+        }
       />{' '}
       <br />
       <Space direction='vertical' style={{ width: '100%' }}>
