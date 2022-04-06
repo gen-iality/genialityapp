@@ -626,6 +626,7 @@ export const OrganizationApi = {
         name: item.organization?.name,
         styles: item.organization?.styles,
         created_at: item.organization?.created_at,
+        itemsMenu: item.organization?.itemsMenu,
       };
     });
     return data;
