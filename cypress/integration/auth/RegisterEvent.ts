@@ -3,7 +3,7 @@ describe('Register User in Event', () => {
   const stagingUrl = 'https://staging.evius.co';
   const localUrl = 'http://localhost:3000';
   const email = 'mario.montero@mocionsoft.com';
-  const emailCypress = 'pruebasCypress15@mocionsoft.com';
+  const emailCypress = 'pruebasCypress@mocionsoft.com';
   const clave = 'mocion.2040';
   const nombre = 'Mario Montero';
   const apellido = 'Montero';
@@ -27,7 +27,7 @@ describe('Register User in Event', () => {
     }
   });
 
-  it.only('Deberia obtener el token del usuario', () => {
+  it('Deberia obtener el token del usuario', () => {
     cy.request({
       method: 'POST',
       url:
@@ -45,7 +45,7 @@ describe('Register User in Event', () => {
     });
   });
 
-  it.only('Deberia obtener el id del usuario', () => {
+  it('Deberia obtener el id del usuario', () => {
     cy.request({
       method: 'GET',
       url: `https://devapi.evius.co/auth/currentUser?token=${token}`,
@@ -57,7 +57,7 @@ describe('Register User in Event', () => {
       id = response.body._id;
     });
   });
-  it.only('Deberia obtener el eventUserId del usuario', () => {
+  it('Deberia obtener el eventUserId del usuario', () => {
     cy.request({
       method: 'GET',
       url: `https://devapi.evius.co/api/me/events/624362c612e3604d37212ed3/eventusers?token=${token}`,
@@ -155,9 +155,11 @@ describe('Register User in Event', () => {
     cy.get('#btnnextRegister').should('not.be.disabled');
   });
 
-  it('I should do the registration', () => {
+  it.only('I should do the registration', () => {
     const filePath = 'mocion.jpg';
     cy.get("input[type='file']").attachFile(filePath);
+    cy.contains('OK').click();
+    cy.wait(1000);
     cy.get('input[type=email]')
       .eq(1)
       .type(emailCypress);
@@ -188,90 +190,3 @@ describe('Register User in Event', () => {
     cy.contains('Si, cerrar la sesión').click();
   });
 });
-// it.only('Deberia obtener el token del usuario', () => {
-//   cy.request({
-//     method: 'POST',
-//     url:
-//       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAohyXq3R4t3ao7KFzLDY7W6--g6kOuS7Q',
-//     body: {
-//       email: emailCypress,
-//       password: clave,
-//       returnSecureToken: true,
-//     },
-//     headers: {
-//       accept: 'application/json',
-//     },
-//   }).then((response) => {
-//     token = response.body.idToken;
-//   });
-// });
-
-// it.only('Deberia obtener el id del usuario', () => {
-//   cy.request({
-//     method: 'GET',
-//     url: `https://devapi.evius.co/auth/currentUser?token=${token}`,
-
-//     headers: {
-//       accept: 'application/json',
-//     },
-//   }).then((response) => {
-//     id = response.body._id;
-//   });
-// });
-// it.only('Deberia eliminar el usario', () => {
-//   cy.request({
-//     method: 'DELETE',
-//     url: `https://devapi.evius.co/api/users/${id}?token=${token}`,
-//     headers: {
-//       accept: 'application/json',
-//     },
-//   }).then((response) => {
-//     cy.log(response.body);
-//   });
-// });
-// it.only('Deberia eliminar el usuario del evento', () => {
-//   cy.request({
-//     method: 'DELETE',
-//     url: `https://devapi.evius.co/api/users/${id}?token=${token}`,
-//     headers: {
-//       accept: 'application/json',
-//     },
-//   }).then((response) => {
-//     cy.log(response.body);
-//   });
-// });
-//   it.only('It should allow user registration without photo', () => {
-//     const filePath = 'mocion.jpg';
-//     cy.get("input[type='file']").attachFile(filePath);
-//     cy.contains('OK').click();
-//     cy.get('input[type=email]')
-//       .eq(1)
-//       .type(emailCypress);
-//     cy.get('input[type=password]')
-//       .eq(1)
-//       .type(clave);
-//     cy.get;
-//     cy.get('#names').type(nombre + ' ' + apellido);
-//     cy.get('#btnnextRegister').should('not.be.disabled');
-//     cy.get('#btnnextRegister').click();
-//     cy.wait(1000);
-//     cy.contains('Datos del usuario').should('exist');
-//     cy.contains(nombre + ' ' + apellido).should('exist');
-//     cy.contains(emailCypress).should('exist');
-//     cy.get('#btnnextRegister').click();
-//     cy.wait(1000);
-//     cy.contains('¡Registro exitoso!').should('exist');
-//     cy.contains('Iniciando sesión con tu cuenta!').should('exist');
-//     cy.wait(15000);
-//     cy.get('.ant-modal-body')
-//       .contains('Inscribirme al evento')
-//       .click();
-//     cy.wait(5000);
-//     cy.get('.ant-dropdown-trigger')
-//       .eq(0)
-//       .trigger('mouseover');
-//     cy.contains('Administración').should('exist');
-//     cy.contains('Cerrar sesión').click();
-//     cy.contains('Si, cerrar la sesión').click();
-//   });
-//
