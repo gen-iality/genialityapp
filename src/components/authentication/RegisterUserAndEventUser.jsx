@@ -326,6 +326,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               <>
                 {current < steps.length - 1 && (
                   <Button
+                    id='btnnextRegister'
                     disabled={buttonStatus}
                     size='large'
                     type='primary'
