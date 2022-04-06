@@ -19,6 +19,7 @@ const initialState = {
 };
 //REDUCERS
 function reducer(state, action) {
+  console.log('🚀 debug ~ reducer ~ action', action);
   const organizationSelect = action.payload?.organization || null;
   const organizationIdURL = action.payload?.orgId || null;
   let organizationSelected;
@@ -82,6 +83,7 @@ export const NewEventProvider = ({ children }) => {
   async function OrganizationsList() {
     dispatch({ type: 'LOADING' });
     const organizations = await OrganizationApi.mine();
+    console.log('🚀 debug ~ OrganizationsList ~ organizations', organizations);
     const organizationsFilter = organizations.filter((orgData) => orgData.id);
     dispatch({ type: 'ORGANIZATIONS', payload: { organizationList: organizationsFilter } });
     dispatch({ type: 'COMPLETE' });
@@ -350,14 +352,14 @@ export const NewEventProvider = ({ children }) => {
                   type: 'success',
                   msj: 'Evento creado correctamente...',
                   action: 'show',
-                })
+                });
                 window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
               } else {
                 DispatchMessageService({
                   type: 'error',
                   msj: 'Error al crear evento con su template',
                   action: 'show',
-                })
+                });
               }
             }
           } else {
@@ -366,7 +368,7 @@ export const NewEventProvider = ({ children }) => {
               type: 'error',
               msj: 'Error al crear el evento',
               action: 'show',
-            })
+            });
             dispatch({ type: 'COMPLETE' });
           }
         } else {
@@ -375,7 +377,7 @@ export const NewEventProvider = ({ children }) => {
             type: 'error',
             msj: 'Error al crear el evento',
             action: 'show',
-          })
+          });
           dispatch({ type: 'COMPLETE' });
         }
       } catch (error) {
@@ -384,7 +386,7 @@ export const NewEventProvider = ({ children }) => {
           type: 'error',
           msj: 'Error al crear el evento catch',
           action: 'show',
-        })
+        });
         dispatch({ type: 'COMPLETE' });
       }
     } else {
@@ -392,7 +394,7 @@ export const NewEventProvider = ({ children }) => {
         type: 'error',
         msj: 'Seleccione una organización',
         action: 'show',
-      })
+      });
     }
   };
 

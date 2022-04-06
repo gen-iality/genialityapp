@@ -77,11 +77,11 @@ class AgendaEdit extends Component {
       subtitle: '',
       bigmaker_meeting_id: null,
       has_date: '',
-      description: '',
+      description: '<p><br></p>',
       registration_message: '',
       date: Moment(new Date()).format('YYYY-MM-DD'),
-      hour_start: new Date(),
-      hour_end: new Date(),
+      hour_start: '',
+      hour_end: '',
       key: new Date(),
       image: '',
       video: '',
@@ -327,70 +327,44 @@ class AgendaEdit extends Component {
   async componentDidUpdate(prevProps) {
     /** a copy of the initial states is captured to be able to validate after any change */
 
-    if (!this.state.initialActivityStates) {
+    if (!this.state.initialActivityStates && this.state.name !== '') {
       const {
         name,
-        subtitle,
-        bigmaker_meeting_id,
-        has_date,
         hour_start,
         hour_end,
         date,
         space_id,
-        capacity,
-        access_restriction_type,
         selectedCategories,
-        selectedRol,
         description,
-        registration_message,
-        selected_document,
         image,
-        meeting_id,
-        video,
-        selectedTicket,
-        vimeo_id,
-        platform,
-        start_url,
-        join_url,
-        name_host,
-        requires_registration,
-        isPublished,
+        // isPublished,
         length,
         latitude,
         selectedHosts,
+        isPhysical,
       } = this.state;
+
+      const initialHour = typeof hour_start === 'string' ? hour_start : Moment(hour_start).format('HH:mm');
+      const finalHour = typeof hour_end === 'string' ? hour_end : Moment(hour_end).format('HH:mm');
 
       const initialActivityStates = {
         name,
-        subtitle,
-        bigmaker_meeting_id,
-        has_date,
-        hour_start: hour_start.toTimeString(),
-        hour_end: hour_end.toTimeString(),
+        hour_start: initialHour,
+        hour_end: finalHour,
         date,
         space_id,
-        capacity,
-        access_restriction_type,
         selectedCategories,
-        selectedRol,
         description,
-        registration_message,
-        selected_document,
         image,
-        meeting_id,
-        video,
-        selectedTicket,
-        vimeo_id,
-        platform,
-        start_url,
-        join_url,
-        name_host,
-        requires_registration,
-        isPublished,
+        isPublished: this.context?.isPublished,
         length,
         latitude,
         selectedHosts,
+        isPhysical,
       };
+
+      if (hour_start === '' && hour_end === '') return;
+
       this.setState({
         initialActivityStates,
       });
@@ -404,6 +378,7 @@ class AgendaEdit extends Component {
     /** Se renderiza de nuevo el componente para mostrar los tabs Transmision, Juegos, Encuestas y Documentos */
     const idNewlyCreatedActivity = this.state.idNewlyCreatedActivity;
     const reloadActivity = this.state.reloadActivity;
+
     if (reloadActivity) {
       this.setState({
         reloadActivity: false,
@@ -490,65 +465,37 @@ class AgendaEdit extends Component {
     if (!initialActivityStates) return;
     const {
       name,
-      subtitle,
-      bigmaker_meeting_id,
-      has_date,
       hour_start,
       hour_end,
       date,
       space_id,
-      capacity,
-      access_restriction_type,
       selectedCategories,
-      selectedRol,
       description,
-      registration_message,
-      selected_document,
       image,
-      meeting_id,
-      video,
-      selectedTicket,
-      vimeo_id,
-      platform,
-      start_url,
-      join_url,
-      name_host,
-      requires_registration,
-      isPublished,
+      // isPublished,
       length,
       latitude,
       selectedHosts,
+      isPhysical,
     } = this.state;
+
+    const initialHour = Moment(hour_start).format('HH:mm');
+    const finalHour = Moment(hour_end).format('HH:mm');
+
     let actualActivityStates = {
       name,
-      subtitle,
-      bigmaker_meeting_id,
-      has_date,
-      hour_start: hour_start.toTimeString(),
-      hour_end: hour_end.toTimeString(),
+      hour_start: initialHour,
+      hour_end: finalHour,
       date,
       space_id,
-      capacity,
-      access_restriction_type,
       selectedCategories,
-      selectedRol,
       description,
-      registration_message,
-      selected_document,
       image,
-      meeting_id,
-      video,
-      selectedTicket,
-      vimeo_id,
-      platform,
-      start_url,
-      join_url,
-      name_host,
-      requires_registration,
-      isPublished,
+      isPublished: this.context?.isPublished,
       length,
       latitude,
       selectedHosts,
+      isPhysical,
     };
 
     let equalityValidation = this.deepStateEqualityValidation(initialActivityStates, actualActivityStates);
@@ -925,6 +872,7 @@ class AgendaEdit extends Component {
     /* console.log(date, '========================== date'); */
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
+
     const activity_categories_ids =
       selectedCategories !== undefined && selectedCategories !== null
         ? selectedCategories[0] === undefined
@@ -1193,6 +1141,19 @@ class AgendaEdit extends Component {
     this.context.setActivityEdit(null);
   }
 
+  startOrEndHourWithAdditionalMinutes = (minutes, isStart) => {
+    const fecha = new Date();
+    fecha.setMinutes(fecha.getMinutes() + minutes);
+
+    if (isStart) {
+      this.setState({ hour_start: Moment(fecha, 'HH:mm:ss') });
+    } else {
+      this.setState({ hour_end: Moment(fecha, 'HH:mm:ss') });
+    }
+
+    return Moment(fecha, 'HH:mm:ss');
+  };
+
   render() {
     const {
       name,
@@ -1333,7 +1294,9 @@ class AgendaEdit extends Component {
                           <TimePicker
                             style={{ width: '100%' }}
                             allowClear={false}
-                            value={Moment(hour_start)}
+                            value={
+                              hour_start !== '' ? Moment(hour_start) : this.startOrEndHourWithAdditionalMinutes(1, true)
+                            }
                             use12Hours
                             format='h:mm a'
                             onChange={(value) => this.handleChangeDate(value, 'hour_start')}
@@ -1366,7 +1329,9 @@ class AgendaEdit extends Component {
                           <TimePicker
                             style={{ width: '100%' }}
                             allowClear={false}
-                            value={Moment(hour_end)}
+                            value={
+                              hour_end !== '' ? Moment(hour_end) : this.startOrEndHourWithAdditionalMinutes(5, false)
+                            }
                             use12Hours
                             format='h:mm a'
                             onChange={(value) => this.handleChangeDate(value, 'hour_end')}
