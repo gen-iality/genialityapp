@@ -482,6 +482,7 @@ class ListEventUser extends Component {
   };
 
   checkIn = async (id, item) => {
+    let checkInStatus = null;
     const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;
@@ -493,11 +494,18 @@ class ListEventUser extends Component {
     } */
     //return;
     let eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
-    const userRef = firestore.collection(`${eventIdSearch}_event_attendees`).doc(id);
+
+    let userRef = null;
+    try {
+      userRef = firestore.collection(`${eventIdSearch}_event_attendees`).doc(id);
+    } catch (error) {
+      checkInStatus = false;
+      return;
+    }
 
     // Actualiza el usuario en la base de datos
 
-    userRef
+    await userRef
       .update({
         ...item,
         updated_at: new Date(),
@@ -515,6 +523,7 @@ class ListEventUser extends Component {
           msj: 'Usuario chequeado exitosamente...',
           action: 'show',
         });
+        checkInStatus = true;
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
@@ -523,7 +532,9 @@ class ListEventUser extends Component {
           msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
           action: 'show',
         });
+        checkInStatus = false;
       });
+    return checkInStatus;
   };
 
   onChangePage = (pageOfItems) => {
