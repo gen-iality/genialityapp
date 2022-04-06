@@ -31,6 +31,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   const [typeActivityState, typeActivityDispatch] = useReducer(typeActivityReducer, initialState);
   const [loadingStop, setLoadingStop] = useState(false);
   const queryClient = useQueryClient();
+  const [videoObject, setVideoObject] = useState<any | null>(null);
 
   const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
     switch (id) {
@@ -67,6 +68,9 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
       case 'finish':
         typeActivityDispatch({ type: 'toggleFinish', payload: { id } });
+        break;
+      case 'visualize':
+        typeActivityDispatch({ type: 'visualize', payload: { id: payload?.data as string } });
         break;
       default:
         typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
@@ -238,6 +242,10 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     typeActivityDispatch({ type: 'toggleCloseModal', payload: false });
   };
 
+  const visualizeVideo = (url: string | null, created_at: string | null, name: string | null) => {
+    url !== null ? setVideoObject({ url, created_at, name }) : setVideoObject(null);
+  };
+
   return (
     <TypeActivityContext.Provider
       value={{
@@ -248,6 +256,8 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         createTypeActivity,
         executer_stopStream,
         loadingStop,
+        videoObject,
+        visualizeVideo,
       }}>
       {children}
     </TypeActivityContext.Provider>

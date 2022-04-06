@@ -1,4 +1,9 @@
-import { getLiveStreamStatus, getVideosLiveStream } from '@/adaptors/gcoreStreamingApi';
+import {
+  getLiveStreamStatus,
+  getVideosLiveStream,
+  startRecordingLiveStream,
+  stopRecordingLiveStream,
+} from '@/adaptors/gcoreStreamingApi';
 import { message } from 'antd';
 
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
@@ -42,6 +47,8 @@ export const AgendaContextProvider = ({ children }) => {
   const [dataLive, setDataLive] = useState(null);
   const [timerId, setTimerId] = useState(null);
   const [recordings, setRecordings] = useState([]);
+  const [loadingRecord, setLoadingRecord] = useState(false);
+  const [record, setRecord] = useState('start');
 
   function reducer(state, action) {
     /* console.log('actiondata', action); */
@@ -70,13 +77,8 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (dataLive) {
-      getRecordingsLiveStream();
-    }
-    async function getRecordingsLiveStream() {
-      const videos = await getVideosLiveStream(dataLive.name);
-      if (videos.length > 0) {
-        setRecordings(videos.filter((video) => video.stream_id === dataLive.id));
-      }
+      console.log('DATA LIVE===>', dataLive.recording);
+      setRecord(dataLive.recording ? 'stop' : 'start');
     }
   }, [dataLive]);
 
@@ -272,7 +274,7 @@ export const AgendaContextProvider = ({ children }) => {
     } catch (e) {}
     const timer_id = setTimeout(executer_startMonitorStatus, 5000);
     setTimerId(timer_id);
-    if (!live_stream_status.active) {
+    if (!live_stream_status?.active) {
       clearTimeout(timer_id);
     }
   };
@@ -347,6 +349,22 @@ export const AgendaContextProvider = ({ children }) => {
     obtenerDetalleActivity();
   };
 
+  const startRecordTransmition = async () => {
+    setLoadingRecord(true);
+    const response = await startRecordingLiveStream(meeting_id);
+    console.log('response', response);
+    setLoadingRecord(false);
+    setRecord('stop');
+  };
+
+  const stopRecordTransmition = async () => {
+    setLoadingRecord(true);
+    const response = await stopRecordingLiveStream(meeting_id);
+    console.log('response', response);
+    setLoadingRecord(false);
+    setRecord('start');
+  };
+
   return (
     <AgendaContext.Provider
       value={{
@@ -408,9 +426,12 @@ export const AgendaContextProvider = ({ children }) => {
         stopInterval,
         executer_startMonitorStatus,
         recordings,
-
         obtainUrl,
         refreshActivity,
+        startRecordTransmition,
+        stopRecordTransmition,
+        loadingRecord,
+        record,
       }}>
       {children}
     </AgendaContext.Provider>

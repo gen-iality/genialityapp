@@ -4,11 +4,13 @@ import { FaCamera } from 'react-icons/fa';
 import { IoIosQrScanner, IoIosCamera } from 'react-icons/io';
 import QrReader from 'react-qr-reader';
 import { firestore } from '../../helpers/firebase';
-import { Modal, Row, Col, Tabs, Button, Select, Input, Form } from 'antd';
+import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
+const { Title } = Typography;
 
 const html = document.querySelector('html');
 class QrModal extends Component {
@@ -45,15 +47,18 @@ class QrModal extends Component {
       this.setState({ qrData });
     }
   };
+
   handleError = (err) => {
     console.error(err);
   };
+
   readQr = () => {
     const { qrData } = this.state;
     if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
     this.setState({ qrData: { ...this.state.qrData, msg: '', user: null } });
     this.setState({ newCC: '' });
   };
+
   closeQr = () => {
     this.setState(
       { qrData: { ...this.state.qrData, msg: '', user: null }, qrModal: false, newCC: '', tabActive: 'camera' },
@@ -64,6 +69,7 @@ class QrModal extends Component {
     html.classList.remove('is-clipped');
     this.props.clearOption(); // Clear dropdown to options scanner
   };
+
   searchCC = (Scanner) => {
     const usersRef = firestore.collection(`${this.props.eventID}_event_attendees`);
     let value = String(this.state.newCC).toLowerCase();
@@ -82,8 +88,9 @@ class QrModal extends Component {
             this.setState({ qrData });
           } else {
             querySnapshot.forEach((doc) => {
+              const user = { ...doc.data(), checked_in: doc.data().properties?.checked_in };
               qrData.msg = 'User found';
-              qrData.user = doc.data();
+              qrData.user = user;
               qrData.another = !!qrData.user.checked_in;
               this.setState({ qrData });
             });
@@ -117,10 +124,12 @@ class QrModal extends Component {
         });
     }
   };
+
   changeCC = (e) => {
     const { value } = e.target;
     this.setState({ newCC: value });
   };
+
   editQRUser = (user) => {
     this.closeQr();
     this.props.openEditModalUser(user);
@@ -131,22 +140,41 @@ class QrModal extends Component {
     this.setState({ newCC: '' });
   };
 
+  /* function that saves the user's checkIn. If the user's checkIn was successful,
+will show the checkIn information in the popUp. If not, it will show an error message.*/
+  userCheckIn = async (user) => {
+    const theUserWasChecked = await this.props.checkIn(user._id, user);
+
+    if (theUserWasChecked) {
+      setTimeout(() => {
+        this.handleScan(user._id);
+      }, 500);
+      return;
+    }
+
+    DispatchMessageService({
+      type: 'error',
+      msj: 'Lo sentimos, hubo un error al registrar el checkIn del usuario',
+      action: 'show',
+    });
+  };
+
   render() {
     const { qrData, facingMode, tabActive } = this.state;
     const { fields, typeScanner } = this.props;
+
     return (
       <div>
         <Modal
-          title={typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
           visible={qrData}
           onCancel={this.closeQr}
           footer={[
             <>
-              {qrData.user && !!qrData.another && (
+              {qrData.user && !qrData.another && (
                 <Button
                   type='primary'
                   onClick={() => {
-                    this.props.checkIn(qrData.user._id);
+                    this.userCheckIn(qrData.user);
                   }}>
                   Check User
                 </Button>
@@ -170,15 +198,20 @@ class QrModal extends Component {
               )}
             </>,
           ]}>
+          <Title level={4} type='secondary'>
+            {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
+          </Title>
           {qrData.user ? (
             <div>
               {qrData.user.checked_in && (
                 <div>
-                  <h1 className='title'>Usuario Chequeado</h1>
-                  <h2 className='subtitle'>
-                    Fecha: <FormattedDate value={qrData.user.checked_at.toDate()} /> -{' '}
-                    <FormattedTime value={qrData.user.checked_at.toDate()} />
-                  </h2>
+                  <Title level={3} type='secondary'>
+                    Usuario Chequeado
+                  </Title>
+                  <Title level={5}>
+                    El checkIn se llevó a cabo el día: <FormattedDate value={qrData.user.checked_at.toDate()} /> a las{' '}
+                    <FormattedTime value={qrData.user.checked_at.toDate()} /> horas
+                  </Title>
                 </div>
               )}
               {fields.map((obj, key) => {
@@ -214,7 +247,7 @@ class QrModal extends Component {
                       facingMode={facingMode}
                       onError={this.handleError}
                       onScan={this.handleScan}
-                      style={{ width: '60%' }}
+                      style={{ width: '80%' }}
                     />
                   </Row>
                 </TabPane>
@@ -258,7 +291,25 @@ class QrModal extends Component {
               </Row>
             </React.Fragment>
           )}
-          <p>{qrData.msg}</p>
+          {qrData?.msg === 'User not found' && (
+            <Alert
+              type={qrData?.msg === 'User found' ? 'success' : 'error'}
+              message={'Usuario no encontrado'}
+              showIcon
+              closable
+              className='animate__animated animate__pulse'
+              style={{
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                backgroundColor: '#FFFFFF',
+                color: '#000000',
+                borderLeft: `5px solid ${qrData?.msg === 'User found' ? '#52C41A' : '#FF4E50'}`,
+                fontSize: '14px',
+                textAlign: 'start',
+                borderRadius: '5px',
+                marginTop: '10px',
+              }}
+            />
+          )}
         </Modal>
       </div>
     );

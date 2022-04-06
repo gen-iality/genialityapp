@@ -430,6 +430,11 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         typeOptions: selectRTMP,
       };
 
+    case 'visualize':
+      return {
+        ...state,
+        data: action.payload.id,
+      };
     default:
       return state;
       break;

@@ -31,15 +31,13 @@ const TransmitionOptions = (props: any) => {
         avatar={<WarningOutlined style={{ color: '#FE5455', fontSize: '25px' }} />}
         description={
           <Space>
-            {isVisible && dataLive?.active && !loadingStop ? (
-              <Button onClick={() => executer_stopStream()} type='primary' danger>
+            {isVisible && dataLive?.active && (
+              <Button loading={loadingStop} type='primary' danger onClick={() => executer_stopStream()}>
                 Detener
               </Button>
-            ) : (
-              loadingStop && <Spin />
             )}
 
-            {!loadingDelete ? (
+            {
               <Popconfirm
                 title={`¿Está seguro que desea ${
                   props.type === 'Transmisión' ||
@@ -64,21 +62,11 @@ const TransmitionOptions = (props: any) => {
                 onCancel={() => console.log('cancelado')}
                 okText='Si'
                 cancelText='No'>
-                <Button type='text' danger>
-                  <DeleteOutlined />
-                  {props.type === 'Transmisión' ||
-                  props.type === 'EviusMeet' ||
-                  props.type === 'vimeo' ||
-                  props.type === 'Youtube'
-                    ? 'Eliminar transmisión'
-                    : props.type === 'reunión'
-                    ? 'Eliminar sala de reunión'
-                    : 'Eliminar video'}
+                <Button loading={loadingDelete} danger>
+                  Eliminar
                 </Button>
               </Popconfirm>
-            ) : (
-              <Spin />
-            )}
+            }
           </Space>
         }
       />
