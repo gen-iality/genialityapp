@@ -143,12 +143,12 @@ const CardListVideo = (props: any) => {
                     fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
                   />
                 }
-                title={<p>{item.name + '  ' + '(' + obtenerStatus(item.status) + ')'}</p>}
+                title={<p>{item.name + '  ' + '(' + obtenerStatus(item?.status) + ')'}</p>}
                 description={
                   <>
                     {' '}
                     {moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}
-                    <Tag style={{ marginLeft: 20 }}>{milisegundosTohour(item.duration)}</Tag>
+                    <Tag style={{ marginLeft: 20 }}>{milisegundosTohour(item?.duration)}</Tag>
                   </>
                 }
               />
