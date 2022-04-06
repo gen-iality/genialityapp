@@ -2,6 +2,7 @@ import { deleteVideo } from '@/adaptors/gcoreStreamingApi';
 import AgendaContext from '@/context/AgendaContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
+import { milisegundosTohour } from '@/helpers/helperFormatMseconds';
 import { AgendaApi } from '@/helpers/request';
 import {
   BorderOutlined,
@@ -11,7 +12,7 @@ import {
   PlaySquareOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
-import { Card, List, Button, Image, Tooltip, Typography, message, Spin, Popconfirm } from 'antd';
+import { Card, List, Button, Image, Tooltip, Typography, message, Spin, Popconfirm, Tag } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 
@@ -34,6 +35,9 @@ const CardListVideo = (props: any) => {
       }
     }
   }, [props?.videos]);
+  const obtenerStatus = (status: string) => {
+    return status == 'ready' ? 'Procesado' : 'Procesando...';
+  };
 
   const asignarVideo = async (url: string) => {
     setKeyVideo(url);
@@ -139,8 +143,14 @@ const CardListVideo = (props: any) => {
                     fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
                   />
                 }
-                title={item.name}
-                description={moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}
+                title={<p>{item.name + '  ' + '(' + obtenerStatus(item.status) + ')'}</p>}
+                description={
+                  <>
+                    {' '}
+                    {moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}
+                    <Tag style={{ marginLeft: 20 }}>{milisegundosTohour(item.duration)}</Tag>
+                  </>
+                }
               />
             </List.Item>
           )}
