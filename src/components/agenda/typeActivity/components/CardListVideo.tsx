@@ -40,8 +40,8 @@ const CardListVideo = (props: any) => {
     setLoading(true);
     try {
       if (activityEdit && cEvent?.value?._id && url) {
-        const urlVideo = url == selectVideo ? null : url;
-        const video = await AgendaApi.editOne({ video: url == urlVideo }, activityEdit, cEvent?.value?._id);
+        const urlVideo = url === selectVideo ? null : url;
+        const video = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent?.value?._id);
         if (video) {
           setSelectVideo(urlVideo);
           message.success('Asignado correctamente el video');
@@ -57,23 +57,6 @@ const CardListVideo = (props: any) => {
     setLoading(false);
     setKeyVideo(null);
   };
-
-  const dowloadVideo = async (url: string) => {
-    console.log('URL===>', url);
-    fetch(url)
-      .then((response) => response.blob())
-      .then((video) => {
-        console.log('RESPONSE==>', video);
-        const url = window.URL.createObjectURL(video);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'video.mp4');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
-  };
-
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       {props.videos && (
@@ -112,7 +95,8 @@ const CardListVideo = (props: any) => {
                     size='large'
                     icon={<DownloadOutlined />}
                     type='link'
-                    onClick={() => dowloadVideo(item.url)}
+                    download={'video.mp4'}
+                    href={item.download}
                     key='option-dowload'></Button>
                 </Tooltip>,
                 <Tooltip title='Visualizar'>

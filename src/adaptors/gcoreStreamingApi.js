@@ -129,7 +129,7 @@ const obtenerVideos = async (name_activity, stream_id) => {
                 name: dataVideo.name,
                 url: dataVideo.iframe_url,
                 hls_url: dataVideo.hls_url,
-                download: dataVideo.download_url,
+                download: 'https://' + dataVideo.origin_host + '/' + dataVideo.origin_resource,
                 created_at: dataVideo.created_at,
                 image: dataVideo.screenshot,
               });
