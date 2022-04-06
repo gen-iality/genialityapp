@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Card, Result, Space, Button, Spin, Popconfirm } from 'antd';
+import { Card, Result, Space, Button, Spin, Popconfirm, Modal } from 'antd';
 import LoadingTypeActivity from './LoadingTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ import {
 } from '../../../../adaptors/gcoreStreamingApi';
 import { useQueryClient } from 'react-query';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
@@ -24,11 +25,10 @@ const CardStartTransmition = (props: any) => {
     deleteTypeActivity,
     executer_startMonitorStatus,
     stopInterval,
-    setHabilitarIngreso
+    setHabilitarIngreso,
   } = useContext(AgendaContext);
   const { toggleActivitySteps } = useTypeActivity();
-  const queryClient = useQueryClient();
-  const [timerId, setTimerId] = useState(null);
+  const { confirm } = Modal;
   useEffect(() => {
     if (meeting_id) {
       saveConfig(null, 0);
@@ -63,10 +63,25 @@ const CardStartTransmition = (props: any) => {
   const executer_startStream = async () => {
     setloading(true);
     const liveStreamresponse = await startLiveStream(meeting_id);
-    setDataLive(liveStreamresponse);
-    executer_startMonitorStatus();
-    setHabilitarIngreso('')
-    setloading(false);
+    if (liveStreamresponse) {
+      setDataLive(liveStreamresponse);
+      executer_startMonitorStatus();
+      setHabilitarIngreso('');
+      setloading(false);
+    } else {
+      confirm({
+        title: 'Error',
+        icon: <ExclamationCircleOutlined />,
+        content: 'Ha ocurrido un error al iniciar la trasnmisión',
+        onOk() {
+          window.location.reload();
+        },
+        onCancel() {},
+        cancelButtonProps: {
+          disabled: true,
+        },
+      });
+    }
     //inicia el monitoreo
   };
 
@@ -80,7 +95,7 @@ const CardStartTransmition = (props: any) => {
           subTitle='Tus asistentes no verán lo que transmites hasta que cambies el estado de la transmisión para tus asistentes. '
           extra={
             <Space>
-              {!loadingDelete ? (
+              {
                 <Popconfirm
                   title={`¿Está seguro que desea ${
                     props.type === 'Transmisión' ||
@@ -96,7 +111,7 @@ const CardStartTransmition = (props: any) => {
                   onCancel={() => console.log('cancelado')}
                   okText='Si'
                   cancelText='No'>
-                  <Button type='text' danger>
+                  <Button loading={loadingDelete} type='text' danger>
                     {props.type === 'Transmisión' ||
                     props.type === 'EviusMeet' ||
                     props.type === 'vimeo' ||
@@ -107,16 +122,12 @@ const CardStartTransmition = (props: any) => {
                       : 'Eliminar video'}
                   </Button>
                 </Popconfirm>
-              ) : (
-                <Spin />
-              )}
+              }
 
-              {!dataLive?.active && !loading ? (
-                <Button onClick={() => executer_startStream()} type='primary'>
+              {!dataLive?.active && (
+                <Button loading={loading} onClick={() => executer_startStream()} type='primary'>
                   Iniciar transmisión
                 </Button>
-              ) : (
-                loading && <Spin />
               )}
             </Space>
           }
@@ -124,7 +135,9 @@ const CardStartTransmition = (props: any) => {
       )}
     </Card>
   ) : (
-    <Spin />
+    <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
+      <LoadingTypeActivity />
+    </Card>
   );
 };
 

@@ -8,6 +8,7 @@ import AgendaContext from '../../../context/AgendaContext';
 import InitialSVG from './components/svg/InitialSVG';
 import { AgendaApi } from '../../../helpers/request';
 import { CurrentEventContext } from '../../../context/eventContext';
+import ModalPreviewVideo from './ModalPreviewVideo';
 
 const objecKeys: object = {
   url: 'Video',
@@ -19,7 +20,7 @@ const objecKeys: object = {
 };
 
 const InitialView = (props: any) => {
-  const { toggleActivitySteps, selectedKey, previewKey, data } = useTypeActivity();
+  const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity();
   const [loading, setLoading] = useState(true);
   const { typeActivity, meeting_id, setActivityName, activityEdit, roomStatus, saveConfig } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
@@ -91,6 +92,7 @@ const InitialView = (props: any) => {
 
   return (
     <>
+      <ModalPreviewVideo />
       <ModalStepByStep />
       {!loading ? renderComponet() : <Spin />}
     </>

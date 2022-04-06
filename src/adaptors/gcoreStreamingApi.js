@@ -107,11 +107,55 @@ const getVideosLiveStream = async (name_activity) => {
 };
 
 const getVideoLiveStream = async (video_id) => {
-  const res = await gCoreCLient.get('/videos/' + video_id);
+  const res = await gCoreCLient.get('/videos/' + video_id + '?download=true');
   if (res?.status === 200) {
     return res.data;
   }
   return null;
+};
+
+const obtenerVideos = async (name_activity, stream_id) => {
+  const listVideo = [];
+  try {
+    const videos = await getVideosLiveStream(name_activity);
+    if (videos) {
+      await Promise.all(
+        videos.map(async (video) => {
+          if (video.stream_id == stream_id) {
+            const dataVideo = await getVideoLiveStream(video.id);
+            if (dataVideo) {
+              listVideo.push({
+                id: dataVideo.id,
+                name: dataVideo.name,
+                url: dataVideo.iframe_url,
+                hls_url: dataVideo.hls_url,
+                download: 'https://' + dataVideo.origin_host + '/' + dataVideo.origin_resource,
+                duration: dataVideo.duration,
+                status: dataVideo.status,
+                created_at: dataVideo.created_at,
+                image: dataVideo.screenshot,
+              });
+              console.log('1. DATA VIDEO===>', dataVideo);
+            }
+          }
+        })
+      );
+    }
+  } catch (e) {
+    console.log('EXCEPCION===>', e);
+    return listVideo;
+  }
+
+  return listVideo;
+};
+
+const deleteVideo = async (idVideo) => {
+  const res = await gCoreCLient.delete('/videos/' + idVideo);
+  if (res?.status === 204) {
+    return res;
+  } else {
+    return null;
+  }
 };
 
 export {
@@ -127,4 +171,6 @@ export {
   stopRecordingLiveStream,
   getVideosLiveStream,
   getVideoLiveStream,
+  obtenerVideos,
+  deleteVideo,
 };

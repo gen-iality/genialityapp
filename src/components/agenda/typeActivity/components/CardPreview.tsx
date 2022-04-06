@@ -1,18 +1,27 @@
-import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Col, Badge } from 'antd';
+import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Col, Badge, Popconfirm } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../../context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
-  const [loadingRecord, setLoadingRecord] = useState(false);
-  const [record, setRecord] = useState('start');
   const { data } = useTypeActivity();
-  const { roomStatus, setRoomStatus, dataLive, meeting_id, obtainUrl, recordings } = useContext(AgendaContext);
+  const {
+    roomStatus,
+    setRoomStatus,
+    dataLive,
+    meeting_id,
+    obtainUrl,
+    recordings,
+    startRecordTransmition,
+    stopRecordTransmition,
+    loadingRecord,
+    record,
+  } = useContext(AgendaContext);
 
   console.log('DATALIVE ===>', dataLive);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
@@ -28,7 +37,6 @@ const CardPreview = (props: any) => {
   const renderPlayer = () => {
     //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
     let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
-
     //RENDERIZAR COMPONENTE
     return (
       <>
@@ -84,21 +92,7 @@ const CardPreview = (props: any) => {
     if (hour == 0) return minute + ':' + second;
     return hour + ':' + minute + ':' + second;
   }
-  const startRecordTransmition = async () => {
-    setLoadingRecord(true);
-    const response = await startRecordingLiveStream(meeting_id);
-    console.log('response', response);
-    setLoadingRecord(false);
-    setRecord('stop');
-  };
 
-  const stopRecordTransmition = async () => {
-    setLoadingRecord(true);
-    const response = await stopRecordingLiveStream(meeting_id);
-    console.log('response', response);
-    setLoadingRecord(false);
-    setRecord('start');
-  };
   return (
     <Card
       cover={
@@ -111,7 +105,7 @@ const CardPreview = (props: any) => {
         )
       }
       bodyStyle={{ padding: '21px' }}
-      style={{ borderRadius: '8px' }}>
+      style={{ borderRadius: '8px', overflow: 'hidden' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && renderPlayer()}
@@ -170,16 +164,32 @@ const CardPreview = (props: any) => {
           </Col>
 
           {dataLive?.live && dataLive?.active ? (
-            dataLive?.live && !loadingRecord ? (
+            dataLive?.live ? (
               <Col span={8}>
                 <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
-                  <Button
-                    onClick={() => {
-                      record === 'start' ? startRecordTransmition() : stopRecordTransmition();
-                    }}
-                    type='primary'>
-                    {record === 'start' ? 'Iniciar grabación' : 'Detener grabación'}
-                  </Button>
+                  {record === 'start' ? (
+                    <Button
+                      loading={loadingRecord}
+                      onClick={() => {
+                        startRecordTransmition();
+                      }}
+                      type='primary'>
+                      Iniciar grabación
+                    </Button>
+                  ) : (
+                    <Popconfirm
+                      title='¿Está seguro que desea detener la grabación?'
+                      okText='Si'
+                      cancelText='No'
+                      onConfirm={() => {
+                        stopRecordTransmition();
+                      }}
+                      onCancel={() => console.log('cancelado')}>
+                      <Button loading={loadingRecord} type='primary' danger>
+                        Detener grabación
+                      </Button>
+                    </Popconfirm>
+                  )}
                 </Badge>
               </Col>
             ) : (

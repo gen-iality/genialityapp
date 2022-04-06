@@ -1,4 +1,4 @@
-import { Row, Col, Card, Typography } from 'antd';
+import { Row, Col, Card, Typography, List, Spin } from 'antd';
 import CardPreview from '../typeActivity/components/CardPreview';
 import GoToEviusMeet from './components/GoToEviusMeet';
 import TransmitionOptions from './components/TransmitionOptions';
@@ -11,27 +11,63 @@ import { useState, useContext, useEffect } from 'react';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventContext } from '../../../context/eventContext';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
+import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
+import CardListVideo from './components/CardListVideo';
+import LoadingTypeActivity from './components/LoadingTypeActivity';
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
-  const { data } = useTypeActivity();
-  const { activityEdit, getRequestByActivity, request, dataLive } = useContext(AgendaContext);
+  const { data, toggleActivitySteps } = useTypeActivity();
+  const { activityEdit, getRequestByActivity, request, dataLive, roomStatus, meeting_id } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+  const [videos, setVideos] = useState<any[] | null>(null);
   useEffect(() => {
+    meeting_id && obtenerListadodeVideos();
     if (props.type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
-  }, [props.type]);
-  console.log('type', props.type);
+  }, [props.type, meeting_id]);
+
+  const obtenerListadodeVideos = async () => {
+    setVideos(null);
+    const listVideos = await obtenerVideos(props.activityName, meeting_id);
+    if (listVideos) {
+      setVideos(listVideos);
+    }
+  };
+
   return (
     <>
       <Row gutter={[16, 16]}>
         <Col span={10}>
           <CardPreview type={props.type} activityName={props.activityName} />
         </Col>
+
         <Col span={14}>
-          {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && (
-            <CardStartTransmition type={props.type} />
-          )}
+          <Row gutter={[16, 16]}>
+            {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && (
+              <Col span={24}>
+                <CardStartTransmition type={props.type} />
+              </Col>
+            )}
+
+            {(props.type === 'EviusMeet' || props.type === 'Transmisión') &&
+              !dataLive?.active &&
+              (videos ? (
+                <Col span={24}>
+                  <CardListVideo
+                    refreshData={obtenerListadodeVideos}
+                    videos={videos}
+                    toggleActivitySteps={toggleActivitySteps}
+                  />
+                </Col>
+              ) : (
+                <Col span={24}>
+                  <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
+                    <LoadingTypeActivity />
+                  </Card>
+                </Col>
+              ))}
+          </Row>
           <Row gutter={[16, 16]}>
             {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
               <Col span={10}>
