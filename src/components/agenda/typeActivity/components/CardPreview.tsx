@@ -214,10 +214,7 @@ const CardPreview = (props: any) => {
           </Space>
         )}
         {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
-          (props.type !== 'Transmisión' &&
-            props.type !== 'EviusMeet' &&
-            props.type !== 'Video' &&
-            props.type !== 'reunión')) && (
+          (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'reunión')) && (
           <Space direction='vertical' style={{ width: '100%' }}>
             <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
             <Select
@@ -230,6 +227,7 @@ const CardPreview = (props: any) => {
               <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
               <Select.Option value='open_meeting_room'>En vivo</Select.Option>
               <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
+              {props.type === 'Video' && <Select.Option value='no_visibe'>Oculto</Select.Option>}
             </Select>
           </Space>
         )}

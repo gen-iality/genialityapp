@@ -208,7 +208,6 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const prepareData = (datos) => {
-    console.log('8. DATOS PREPARE===>', datos);
     const roomInfo = {
       platform: datos?.platformNew || platform,
       //VARIABLE QUE GUARDA LA DATA QUE SE GENERA AL CREAR UN TIPO DE ACTIVIDAD VALIDACIÓN QUE PERMITE CONSERVAR ESTADO O LIMPIARLO

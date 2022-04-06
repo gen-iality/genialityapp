@@ -25,7 +25,7 @@ const CardStartTransmition = (props: any) => {
     deleteTypeActivity,
     executer_startMonitorStatus,
     stopInterval,
-    setHabilitarIngreso,
+    setRoomStatus,
   } = useContext(AgendaContext);
   const { toggleActivitySteps } = useTypeActivity();
   const { confirm } = Modal;
@@ -65,8 +65,9 @@ const CardStartTransmition = (props: any) => {
     const liveStreamresponse = await startLiveStream(meeting_id);
     if (liveStreamresponse) {
       setDataLive(liveStreamresponse);
+      setRoomStatus('');
+      saveConfig({ habilitar_ingreso: '' }, 1);
       executer_startMonitorStatus();
-      setHabilitarIngreso('');
       setloading(false);
     } else {
       confirm({

@@ -24,7 +24,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   console.log('11. WOWZA PLAYER===>', typeActivity);
 
   useEffect(() => {
-    if (!meeting_id && typeActivity === 'meeting') {
+    if (typeActivity === 'meeting') {
       console.log('100. INGRESA ACA===>');
       setVisibleReactPlayer(false);
       setConected('Yes');
@@ -57,7 +57,8 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         //console.log('100. URL==>', live_stream.hls_playlist_url);
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */
         setTimeout(() => {
-          setPlatformurl(url);
+          const aditionalParameters = typeActivity !== 'url' ? '?muted=1&autoplay=1' : '';
+          setPlatformurl(url + aditionalParameters);
           setMuted(true);
         }, 2000);
       };
@@ -67,7 +68,9 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
       setConected('Yes');
       setPlatformurl('https://youtu.be/' + meeting_id);
     } else {
+      setPlatformurl(meeting_id);
       setVisibleReactPlayer(true);
+      setLoopBackGround(false);
       setConected('Yes');
     }
     return () => {
@@ -79,7 +82,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
 
   return (
     <>
-      {console.log('100. WOWZAPLAYER=====>', thereIsConnection, typeActivity, visibleReactPlayer)}
+      {console.log('10. TYPE ACTIVITY=====>', conected, visibleReactPlayer, typeActivity, meeting_id)}
       <div className='mediaplayer'>
         {/* { muted && conected !== 'No' && (
           <Button
@@ -110,9 +113,9 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           <iframe
             style={{ aspectRatio: '16/9' }}
             width='100%'
-            src={platformurl + '?muted=1&autoplay=1'}
+            src={platformurl}
             frameborder='0'
-            allow='autoplay; encrypted-media'
+            allow={typeActivity == 'meeting' ? 'camera *;microphone *' : 'autoplay; encrypted-media'}
             allowfullscreen></iframe>
         ) : (
           <Spin />

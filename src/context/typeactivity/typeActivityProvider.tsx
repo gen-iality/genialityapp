@@ -157,11 +157,12 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
           resp = await saveConfig({
             platformNew: '',
             type: 'url',
-            habilitar_ingreso: 'only',
+            habilitar_ingreso: '',
             data: typeActivityState.data,
           });
           setTypeActivity('url');
           setPlatform('wowza');
+          setMeetingId(typeActivityState.data);
         } else {
           console.error('ERROR AL GUARDAR URL');
         }
