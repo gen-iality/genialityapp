@@ -82,7 +82,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
 
   return (
     <>
-      {console.log('10. TYPE ACTIVITY=====>', conected, visibleReactPlayer, typeActivity, meeting_id)}
+      {/*console.log('10. TYPE ACTIVITY=====>', conected, visibleReactPlayer, typeActivity, meeting_id)*/}
       <div className='mediaplayer'>
         {/* { muted && conected !== 'No' && (
           <Button
