@@ -80,7 +80,6 @@ const CardListVideo = (props: any) => {
               actions={[
                 <Tooltip color={'green'} title='Asignar a esta actividad'>
                   <Button
-                    disabled={item?.status == 'ready' ? false : true}
                     size='large'
                     icon={
                       !loading && item.hls_url == selectVideo ? (
@@ -100,7 +99,6 @@ const CardListVideo = (props: any) => {
                     size='large'
                     icon={<DownloadOutlined />}
                     type='link'
-                    disabled={item?.status == 'ready' ? false : true}
                     download={'video.mp4'}
                     href={item.download}
                     key='option-dowload'></Button>
@@ -109,7 +107,6 @@ const CardListVideo = (props: any) => {
                   <Button
                     size='large'
                     type='text'
-                    disabled={item?.status == 'ready' ? false : true}
                     icon={<PlaySquareOutlined />}
                     onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
                     key='option-preview'></Button>
@@ -130,13 +127,7 @@ const CardListVideo = (props: any) => {
                   okText='Si'
                   cancelText='No'>
                   <Tooltip color={'red'} title='Eliminar video'>
-                    <Button
-                      danger
-                      size='large'
-                      icon={<DeleteOutlined />}
-                      disabled={item?.status == 'ready' ? false : true}
-                      type='text'
-                      key='option-delete'></Button>
+                    <Button danger size='large' icon={<DeleteOutlined />} type='text' key='option-delete'></Button>
                   </Tooltip>
                 </Popconfirm>,
               ]}>
