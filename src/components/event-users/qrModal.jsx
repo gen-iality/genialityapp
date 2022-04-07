@@ -75,9 +75,33 @@ class QrModal extends Component {
     this.props.clearOption(); // Clear dropdown to options scanner
   };
 
-  handleSearchByCc = (cedula) => {
+  handleSearchByCc = (cedula, usersRef) => {
     axios.get(`${ApiUrl}${useRequest.EventUsers.getEventUserByCedula(cedula, this.props.eventID)}`).then((res) => {
       console.log('res', res);
+      let idUser = res.data.data[0]?._id || null;
+      usersRef
+        .where('_id', '==', `${idUser}`)
+        .get()
+        .then((querySnapshot) => {
+          const qrData = {};
+          if (querySnapshot.empty) {
+            qrData.msg = 'User not found';
+            qrData.another = true;
+            qrData.user = null;
+            this.setState({ qrData });
+          } else {
+            querySnapshot.forEach((doc) => {
+              qrData.msg = 'User found';
+              qrData.user = doc.data();
+              console.log('docdata', doc.data());
+              qrData.another = !!qrData.user.checked_in;
+              this.setState({ qrData });
+            });
+          }
+        })
+        .catch(() => {
+          this.setState({ found: 0 });
+        });
     });
   };
 
@@ -111,30 +135,7 @@ class QrModal extends Component {
           this.setState({ found: 0 });
         });
     } else {
-      this.handleSearchByCc(value);
-      usersRef
-        .where('cedula', '==', `${value}`)
-        .get()
-        .then((querySnapshot) => {
-          const qrData = {};
-          if (querySnapshot.empty) {
-            qrData.msg = 'User not found';
-            qrData.another = true;
-            qrData.user = null;
-            this.setState({ qrData });
-          } else {
-            querySnapshot.forEach((doc) => {
-              qrData.msg = 'User found';
-              qrData.user = doc.data();
-              console.log('docdata', doc.data());
-              qrData.another = !!qrData.user.checked_in;
-              this.setState({ qrData });
-            });
-          }
-        })
-        .catch(() => {
-          this.setState({ found: 0 });
-        });
+      this.handleSearchByCc(value, usersRef);
     }
   };
 
@@ -149,7 +150,6 @@ class QrModal extends Component {
       cedula = value;
       contador++;
     }
-    console.log('valueQR', value);
     for (let i = 0; i < value.length; i++) {
       if (value[i] != ' ') {
         acumulador = acumulador + value[i];
@@ -159,13 +159,9 @@ class QrModal extends Component {
         acumulador = '';
         contador++;
       }
-      console.log('acumulador', acumulador);
-      console.log('contador', contador);
-      console.log('cedula', cedula);
 
       var cedulaOnlynumbers = cedula.match(/(\d+)/);
-      this.setState({ newCC: cedulaOnlynumbers[0] });
-      sessionStorage.setItem('dato', cedulaOnlynumbers[0]);
+      this.setState({ newCC: Number(cedulaOnlynumbers[0]) });
     }
   };
 
