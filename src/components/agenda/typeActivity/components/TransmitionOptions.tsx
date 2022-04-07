@@ -3,21 +3,22 @@ import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
 import { useContext, useState } from 'react';
-import { deleteLiveStream } from '../../../../adaptors/gcoreStreamingApi';
+import { deleteLiveStream, deleteAllVideos } from '../../../../adaptors/gcoreStreamingApi';
 import { AgendaApi } from '../../../../helpers/request';
 import { CurrentEventContext } from '../../../../context/eventContext';
-
+import Service from '../../../agenda/roomManager/service';
+import { firestore } from '@/helpers/firebase';
 const TransmitionOptions = (props: any) => {
   const { toggleActivitySteps, executer_stopStream, loadingStop } = useTypeActivity();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
-  const { dataLive, meeting_id, deleteTypeActivity, activityEdit } = useContext(AgendaContext);
+  const { dataLive, meeting_id, deleteTypeActivity, activityEdit, removeAllRequest } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
   const deleteTransmition = async () => {
     deleteLiveStream(meeting_id);
     await deleteTypeActivity();
   };
-
+  const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`;
   const isVisible = props.type === 'Transmisión' || props.type === 'EviusMeet';
 
   return (
@@ -52,6 +53,8 @@ const TransmitionOptions = (props: any) => {
                 onConfirm={async () => {
                   setLoadingDelete(true);
                   if (isVisible && meeting_id) {
+                    await deleteAllVideos(dataLive.name, meeting_id);
+                    await removeAllRequest(refActivity);
                     await deleteTransmition();
                   }
                   await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);

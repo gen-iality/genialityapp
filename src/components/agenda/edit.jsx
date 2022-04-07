@@ -46,7 +46,7 @@ import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage
 import Dropzone from 'react-dropzone';
 import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
-import { firestore } from '../../helpers/firebase';
+import { firestore, fireRealtime } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
 import AgendaContext from '../../context/AgendaContext';
@@ -920,7 +920,7 @@ class AgendaEdit extends Component {
   remove = async () => {
     let self = this;
     const { service } = this.state;
-
+    const { removeAllRequest } = this.context;
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -938,11 +938,14 @@ class AgendaEdit extends Component {
         onOk() {
           const onHandlerRemove = async () => {
             try {
+              const refActivity = `request/${self.props.event._id}/activities/${self.state.activity_id}`;
               const configuration = await service.getConfiguration(self.props.event._id, self.state.activity_id);
               if (configuration && configuration.typeActivity === 'eviusMeet') {
                 await deleteAllVideos(self.state.name, configuration.meeting_id),
                   await deleteLiveStream(configuration.meeting_id);
               }
+              await fireRealtime.ref(refActivity).remove();
+              await service.deleteActivity(self.props.event._id, self.state.activity_id);
               await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
               DispatchMessageService({
                 key: 'loading',

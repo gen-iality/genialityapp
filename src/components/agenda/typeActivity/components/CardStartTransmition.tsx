@@ -13,7 +13,7 @@ import {
 import { useQueryClient } from 'react-query';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-
+import { CurrentEventContext } from '@/context/eventContext';
 const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
   const [loadingComponent, setloadingComponent] = useState(true);
@@ -27,7 +27,11 @@ const CardStartTransmition = (props: any) => {
     executer_startMonitorStatus,
     stopInterval,
     setRoomStatus,
+    removeAllRequest,
+    activityEdit,
   } = useContext(AgendaContext);
+  const cEvent = useContext(CurrentEventContext);
+  const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`;
   const { toggleActivitySteps } = useTypeActivity();
   const { confirm } = Modal;
   useEffect(() => {
@@ -57,6 +61,7 @@ const CardStartTransmition = (props: any) => {
     setLoadingDelete(true);
     deleteAllVideos(dataLive.name, meeting_id); // verificar sis eva aelimnar los videos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
+    await removeAllRequest(refActivity);
     await deleteTypeActivity();
     toggleActivitySteps('initial');
     setLoadingDelete(false);

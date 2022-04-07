@@ -115,6 +115,21 @@ class Service {
     });
   };
 
+  deleteActivity = (event_id, activity_id) => {
+    return new Promise((resolve, reject) => {
+      this.firestore
+        .collection('events')
+        .doc(event_id)
+        .collection('activities')
+        .doc(activity_id)
+        .delete()
+        .then(() => resolve('Eliminado'))
+        .catch((err) => {
+          reject('Hubo un problema ', err);
+        });
+    });
+  };
+
   setZoomRoom = (token, data) => {
     const url = `https://apimeetings.evius.co:6490/crearroom?token=${token}`;
 
