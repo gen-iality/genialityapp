@@ -24,7 +24,13 @@ import { UseCurrentUserContext } from '@/context/userContext';
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
-  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, handleChangeCurrentActivity } = useHelper();
+  let {
+    chatAttendeChats,
+    HandleOpenCloseMenuRigth,
+    currentActivity,
+    handleChangeCurrentActivity,
+    helperDispatch,
+  } = useHelper();
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
