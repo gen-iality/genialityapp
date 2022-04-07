@@ -27,7 +27,7 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  let { transmition, setTransmition,setTypeActivity } = useContext(AgendaContext);
+  let { transmition, setTransmition, setTypeActivity } = useContext(AgendaContext);
   let {
     currentActivity,
     chatAttendeChats,
@@ -36,6 +36,7 @@ const RenderComponent = (props) => {
     setcurrenActivity,
     HandleChatOrAttende,
     HandlePublicPrivate,
+    helperDispatch,
   } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
@@ -50,14 +51,14 @@ const RenderComponent = (props) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
           const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
-          console.log("1. OBTENIENDO DATA DE SNAPSHOT",infoActivity.data())
+          console.log('1. OBTENIENDO DATA DE SNAPSHOT', infoActivity.data());
           setplatform(platform);
           settabsGeneral(tabs);
           setactivityState(habilitar_ingreso);
           setactivityStateGlobal(habilitar_ingreso);
           setmeetingId(meeting_id);
           setTransmition(data.transmition);
-          setTypeActivity(data.typeActivity)
+          setTypeActivity(data.typeActivity);
           if (!tabs.games) {
             HandleChatOrAttende('1');
             HandlePublicPrivate('public');
@@ -67,7 +68,8 @@ const RenderComponent = (props) => {
             HandleChatOrAttende('4');
           }
 
-          handleChangeTabs(tabs);
+          // handleChangeTabs(tabs);
+          helperDispatch({ type: 'changeTabs', tabs: tabs });
           tempactivty.habilitar_ingreso = habilitar_ingreso;
           tempactivty.avalibleGames = avalibleGames;
           setcurrenActivity(tempactivty);
@@ -202,11 +204,19 @@ const RenderComponent = (props) => {
             return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
       case null:
-        return  <><WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-        <GameDrawer /></>
-      case 'only':        
-          return  <><WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-          <GameDrawer /></>
+        return (
+          <>
+            <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            <GameDrawer />
+          </>
+        );
+      case 'only':
+        return (
+          <>
+            <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            <GameDrawer />
+          </>
+        );
     }
   });
 

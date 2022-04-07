@@ -1,3 +1,5 @@
 export interface HelperState {
-  helperOptions: {};
+  reloadTemplatesCms: boolean;
+  tabsGenerals: {};
+  currentAuthScreen: string;
 }

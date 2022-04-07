@@ -11,7 +11,6 @@ export const useHelper = () => {
     totalSolicitudAmistad,
     totalsolicitudAgenda,
     totalsolicitudes,
-    HandleChangeDrawerProfile,
     propertiesProfile,
     getPropertiesUserWithId,
     propertiesOtherprofile,
@@ -38,12 +37,10 @@ export const useHelper = () => {
     obtenerContactos,
     typeModal,
     handleChangeTypeModal,
-    authModalState,
-    authModalDispatch,
+    currentAuthScreen,
     visibleLoginEvents,
     visibilityLoginEvents,
     reloadTemplatesCms,
-    handleReloadTemplatesCms,
     gameData,
     setGameData,
     theUserHasPlayed,
@@ -65,12 +62,12 @@ export const useHelper = () => {
     setRegister,
     HandleControllerLoginVisible,
     controllerLoginVisible,
-    rolHasPermissions,
-    theRoleExists,
     setcurrenActivity,
-    getOrganizationUser,
     logout,
   } = useContext(HelperContext);
+
+  // const helperContextDebug = useContext(HelperContext);
+  // console.log('🚀 =====>  ', helperContextDebug);
 
   return {
     helperDispatch,
@@ -81,7 +78,6 @@ export const useHelper = () => {
     totalSolicitudAmistad,
     totalsolicitudAgenda,
     totalsolicitudes,
-    HandleChangeDrawerProfile,
     propertiesProfile,
     getPropertiesUserWithId,
     propertiesOtherprofile,
@@ -108,12 +104,10 @@ export const useHelper = () => {
     obtenerContactos,
     typeModal,
     handleChangeTypeModal,
-    authModalState,
-    authModalDispatch,
+    currentAuthScreen,
     visibleLoginEvents,
     visibilityLoginEvents,
     reloadTemplatesCms,
-    handleReloadTemplatesCms,
     gameData,
     setGameData,
     theUserHasPlayed,
@@ -135,10 +129,7 @@ export const useHelper = () => {
     setRegister,
     HandleControllerLoginVisible,
     controllerLoginVisible,
-    rolHasPermissions,
-    theRoleExists,
     setcurrenActivity,
-    getOrganizationUser,
     logout,
   };
 };

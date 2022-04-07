@@ -66,7 +66,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
 
 const RedirectUser = ({ basicDataUser }) => {
   const cEventUser = UseUserEvent();
-  let { HandleControllerLoginVisible, authModalDispatch } = useHelper();
+  let { HandleControllerLoginVisible, helperDispatch } = useHelper();
   const intl = useIntl();
   const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
 
@@ -115,7 +115,7 @@ const RedirectUser = ({ basicDataUser }) => {
                   <Button
                     style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                     onClick={() => {
-                      authModalDispatch({ type: 'showLogin' });
+                      helperDispatch({ type: 'showLogin' });
                     }}
                     type='link'>
                     {intl.formatMessage({

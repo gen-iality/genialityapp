@@ -7,7 +7,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 
 const ModalCreateTemplate = (props) => {
   const [loading, setloading] = useState(false);
-  let { handleReloadTemplatesCms } = useHelper();
+  let { helperDispatch } = useHelper();
 
   const onFinish = async (values) => {
     //por defecto
@@ -22,7 +22,7 @@ const ModalCreateTemplate = (props) => {
     });
     setloading(false);
     props.handlevisibleModal();
-    handleReloadTemplatesCms();
+    helperDispatch({ type: 'reloadTemplatesCms' });
   };
 
   return (

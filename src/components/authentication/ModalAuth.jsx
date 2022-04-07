@@ -44,8 +44,8 @@ const ModalAuth = (props) => {
     typeModal,
     controllerLoginVisible,
     HandleControllerLoginVisible,
-    authModalDispatch,
-    authModalState,
+    helperDispatch,
+    currentAuthScreen,
   } = useHelper();
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
@@ -72,13 +72,13 @@ const ModalAuth = (props) => {
         case 'PRIVATE_EVENT':
           setmodalVisible(true);
           HandleControllerLoginVisible({ visible: true });
-          authModalDispatch({ type: 'showLogin' });
+          helperDispatch({ type: 'showLogin' });
           break;
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
           setmodalVisible(true);
           HandleControllerLoginVisible({ visible: true });
-          authModalDispatch({ type: 'showRegister' });
+          helperDispatch({ type: 'showRegister' });
           break;
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
@@ -110,7 +110,7 @@ const ModalAuth = (props) => {
     form1.resetFields();
     setErrorRegisterUSer(false);
     setErrorLogin(false);
-  }, [typeModal, authModalState]);
+  }, [typeModal, currentAuthScreen]);
 
   const DetecError = (code) => {
     switch (code) {
@@ -135,11 +135,11 @@ const ModalAuth = (props) => {
     form1.resetFields();
     switch (key) {
       case 'login':
-        authModalDispatch({ type: 'showLogin' });
+        helperDispatch({ type: 'showLogin' });
         break;
 
       case 'register':
-        authModalDispatch({ type: 'showRegister' });
+        helperDispatch({ type: 'showRegister' });
         break;
 
       default:
@@ -191,7 +191,7 @@ const ModalAuth = (props) => {
         zIndex={1000}
         visible={controllerLoginVisible.visible}
         closable={controllerLoginVisible.organization !== 'organization' ? true : false}>
-        <Tabs onChange={callback} centered size='large' activeKey={authModalState.currentAuthScreen}>
+        <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',

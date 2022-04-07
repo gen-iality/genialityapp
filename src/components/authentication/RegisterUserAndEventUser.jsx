@@ -26,7 +26,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     password: '',
     picture: '',
   });
-  let { authModalDispatch, authModalState } = useHelper();
+  let { helperDispatch, currentAuthScreen } = useHelper();
   const [dataEventUser, setdataEventUser] = useState({});
   const [buttonStatus, setbuttonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
@@ -287,12 +287,12 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   }, [basicDataUser, dataEventUser, current]);
 
   useEffect(() => {
-    if (authModalState.currentAuthScreen === 'login') setCurrent(0);
+    if (currentAuthScreen === 'login') setCurrent(0);
 
     return () => {
       setCurrent(0);
     };
-  }, [authModalState.currentAuthScreen]);
+  }, [currentAuthScreen]);
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
@@ -370,7 +370,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               {validationGeneral.component ? (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
-                  onClick={() => authModalDispatch({ type: 'showLogin' })}
+                  onClick={() => helperDispatch({ type: 'showLogin' })}
                   type='link'>
                   {validationGeneral.component}
                 </Button>

@@ -43,7 +43,6 @@ export const HelperContextProvider = ({ children }) => {
   const [totalSolicitudAmistad, setTotalSolicitudAmistad] = useState(0);
   const [totalsolicitudAgenda, setTotalsolicitudAgenda] = useState(0);
   const [totalsolicitudes, setTotalsolicitudes] = useState(0);
-  const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
   const [propertiesProfile, setpropertiesProfile] = useState();
   const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null);
   const [activitiesEvent, setactivitiesEvent] = useState(null);
@@ -66,13 +65,11 @@ export const HelperContextProvider = ({ children }) => {
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
-  const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
   const [gameData, setGameData] = useState('');
   const [currentActivity, setcurrenActivity] = useState(null);
   const [gameRanking, setGameRanking] = useState([]);
   const [myScore, setMyScore] = useState([{ name: '', score: 0 }]);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
-  const [tabsGenerals, settabsGenerals] = useState();
   const [updateEventUser, setUpdateEventUser] = useState(false);
   const [register, setRegister] = useState(null);
 
@@ -85,34 +82,6 @@ export const HelperContextProvider = ({ children }) => {
 
   const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
 
-  const initialState = {
-    currentAuthScreen: 'login',
-  };
-
-  /**
-   * The authModalReducer function takes in a state and an action.
-   * It then checks the action type and returns a new modalAuth state depending on the action type
-   * @param {object} state - The current state of the reducer.
-   * @param {string} state.currentAuthScreen - login or register.
-   * @param {object} action - The action object that was dispatched.
-   * @param {String} action.type - showLogin or showRegister.
-   * @returns The state of the authModalReducer.
-   */
-  const authModalReducer = (state, action) => {
-    switch (action.type) {
-      case 'showLogin':
-        return { ...state, currentAuthScreen: 'login' };
-
-      case 'showRegister':
-        return { ...state, currentAuthScreen: 'register' };
-
-      default:
-        return state;
-    }
-  };
-
-  const [authModalState, authModalDispatch] = useReducer(authModalReducer, initialState);
-
   const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
     setcontrollerLoginVisible({
       visible,
@@ -122,56 +91,12 @@ export const HelperContextProvider = ({ children }) => {
     });
   };
 
-  function handleReloadTemplatesCms() {
-    setreloadTemplatesCms(!reloadTemplatesCms);
-  }
-
-  const handleChangeTabs = (tabs) => {
-    settabsGenerals(tabs);
-  };
-
   const handleChangeCurrentActivity = (activity) => {
     setcurrenActivity(activity);
   };
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
-  }
-
-  /**
-   * Get the permissions for a role in a given event.
-   * @param rolId - The id of the role you want to check permissions for.
-   * @returns The array of permissions for this role.
-   */
-  async function rolHasPermissions(rolId) {
-    if (!rolId) return;
-    let permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId);
-    return permissionsForThisRole;
-  }
-
-  /**
-   * Validate the existence of a specific role
-   * @param rolId - The id of the role you want to validate exists
-   * @returns The role object data.
-   */
-  async function theRoleExists(rolId) {
-    if (!rolId) return;
-    let ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
-
-    return ifTheRoleExists;
-  }
-
-  /**
-   * Get the user details for a member of an organization
-   * @param orgId - The ID of the organization.
-   * @param memberId - The ID of the user you want to get.
-   * @returns The OrganizationUser object.
-   */
-  async function getOrganizationUser(orgId) {
-    if (!orgId) return;
-    let { data } = await OrganizationApi.getMeUser(orgId);
-
-    return data;
   }
 
   /**
@@ -513,10 +438,6 @@ export const HelperContextProvider = ({ children }) => {
     return true;
   };
 
-  const HandleChangeDrawerProfile = () => {
-    setisOpenDrawerProfile(!isOpenDrawerProfile);
-  };
-
   const GetInfoAgenda = async () => {
     const infoAgenda = await AgendaApi.byEvent(cEvent.value._id);
     setinfoAgenda(infoAgenda.data);
@@ -769,7 +690,6 @@ export const HelperContextProvider = ({ children }) => {
         totalSolicitudAmistad,
         totalsolicitudAgenda,
         totalsolicitudes,
-        HandleChangeDrawerProfile,
         propertiesProfile,
         getPropertiesUserWithId,
         propertiesOtherprofile,
@@ -796,12 +716,8 @@ export const HelperContextProvider = ({ children }) => {
         obtenerContactos,
         typeModal,
         handleChangeTypeModal,
-        authModalState,
-        authModalDispatch,
         visibleLoginEvents,
         visibilityLoginEvents,
-        reloadTemplatesCms,
-        handleReloadTemplatesCms,
         gameData,
         setGameData,
         theUserHasPlayed,
@@ -815,18 +731,13 @@ export const HelperContextProvider = ({ children }) => {
         setGameRanking,
         myScore,
         setMyScore,
-        tabsGenerals,
-        handleChangeTabs,
         updateEventUser,
         setUpdateEventUser,
         register,
         setRegister,
         HandleControllerLoginVisible,
         controllerLoginVisible,
-        rolHasPermissions,
-        theRoleExists,
         setcurrenActivity,
-        getOrganizationUser,
         logout,
       }}>
       {children}

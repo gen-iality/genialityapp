@@ -117,7 +117,7 @@ const Headers = (props) => {
             organization: WhereHerePath(),
           });
 
-          cHelper.authModalDispatch({ type: 'showLogin' });
+          cHelper.helperDispatch({ type: 'showLogin' });
         }}>
         <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
       </Menu.Item>
@@ -129,7 +129,7 @@ const Headers = (props) => {
             organization: WhereHerePath(),
           });
 
-          cHelper.authModalDispatch({ type: 'showRegister' });
+          cHelper.helperDispatch({ type: 'showRegister' });
         }}>
         <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
       </Menu.Item>
@@ -257,7 +257,7 @@ const Headers = (props) => {
                           organization: WhereHerePath(),
                         });
 
-                        cHelper.authModalDispatch({ type: 'showLogin' });
+                        cHelper.helperDispatch({ type: 'showLogin' });
                       }}>
                       {intl.formatMessage({
                         id: 'modal.title.login',
@@ -290,7 +290,7 @@ const Headers = (props) => {
                           organization: WhereHerePath(),
                         });
 
-                        cHelper.authModalDispatch({ type: 'showRegister' });
+                        cHelper.helperDispatch({ type: 'showRegister' });
                       }}>
                       {intl.formatMessage({
                         id: 'modal.title.register',
