@@ -8,7 +8,7 @@ import { remoteLogoutNotificationInterface } from '../interfaces/interfaces';
  * @param {string} userName Name of the user to log out
  * @param {function} formatMessage Function to change the message language
  */
-export const remoteLogoutNotification = ({ type, userName, formatMessage }: remoteLogoutNotificationInterface) => {
+export const remoteLogoutNotification = ({ type, names, formatMessage }: remoteLogoutNotificationInterface) => {
   if (type == 'success' || type == 'warning' || type == 'error' || type == 'info')
     notification[type]({
       duration: 0,
@@ -18,7 +18,7 @@ export const remoteLogoutNotification = ({ type, userName, formatMessage }: remo
           style={{ color: '#FF4E50' }}
         />
       ),
-      message: <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{userName}</b>,
+      message: <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{names}</b>,
       description: formatMessage({
         id: 'notification.log_out',
         defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
@@ -28,5 +28,5 @@ export const remoteLogoutNotification = ({ type, userName, formatMessage }: remo
       },
     });
 
-  return;
+  return null;
 };

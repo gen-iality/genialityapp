@@ -15,7 +15,6 @@ import { maleIcons, femaleicons } from '../../helpers/constants';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { helperReducer, helperInitialState } from './helperReducer';
-import { remoteLogoutNotification } from './hooks/remoteLogoutNotification';
 
 export function knowMaleOrFemale(nombre) {
   return getGender(nombre, 'es');
@@ -78,41 +77,6 @@ export const HelperContextProvider = ({ children }) => {
     setTypeModal(type);
   }
 
-  /* Creating a reference to the connection object. */
-  const conectionRef = firestore.collection(`connections`);
-
-  /**
-   * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
-   * @param {boolean} showNotification If the value is true the remote logout notification is displayed
-   */
-  const logout = async (showNotification) => {
-    const user = app.auth()?.currentUser;
-    const lastSignInTime = (await user.getIdTokenResult()).authTime;
-    const userName = cUser.value?.names;
-
-    app
-      .auth()
-      .signOut()
-      .then(async () => {
-        const currentUserConnect = await conectionRef.doc(cUser.value?.uid).get();
-
-        if (currentUserConnect?.data()?.lastSignInTime === lastSignInTime)
-          await conectionRef.doc(cUser.value?.uid).delete();
-        const routeUrl = window.location.href;
-        const weAreOnTheLanding = routeUrl.includes('landing');
-        handleChangeTypeModal(null);
-        cEventuser.setuserEvent(initialStateEvenUserContext);
-        cUser.setCurrentUser(initialStateUserContext);
-        if (showNotification) remoteLogoutNotification({ type: 'info', userName, formatMessage: intl.formatMessage });
-        if (!weAreOnTheLanding) {
-          history.push('/');
-        }
-      })
-      .catch(function(error) {
-        console.error('error', error);
-      });
-  };
-
   /**
    * It gets the last sign in time of the user.
    * @returns The last sign user time.
@@ -134,8 +98,20 @@ export const HelperContextProvider = ({ children }) => {
     return false;
   }
 
+  // /* Creating a reference to the connection object. */
+  const conectionRef = firestore.collection(`connections`);
+
   useEffect(() => {
     if (!cUser.value) return;
+
+    const params = {
+      user: cUser.value,
+      setCurrentUser: cUser.setCurrentUser,
+      setuserEvent: cEventuser.setuserEvent,
+      formatMessage: intl.formatMessage,
+      handleChangeTypeModal,
+      history,
+    };
 
     const unsubscribe = conectionRef.onSnapshot((snapshot) => {
       const changes = snapshot.docChanges();
@@ -143,8 +119,9 @@ export const HelperContextProvider = ({ children }) => {
         changes.forEach((change) => {
           if (docChangesTypeAndEmailValidation(change)) {
             getlastSignInTime().then((userlastSignInTime) => {
-              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime && change.type == 'modified') logout(true);
-              if (change.type == 'removed') logout(true);
+              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime && change.type == 'modified')
+                helperDispatch({ type: 'logout', showNotification: true, params });
+              if (change.type == 'removed') helperDispatch({ type: 'logout', showNotification: true, params });
             });
           }
         });
@@ -687,7 +664,6 @@ export const HelperContextProvider = ({ children }) => {
         setUpdateEventUser,
         register,
         setRegister,
-        logout,
       }}>
       {children}
     </HelperContext.Provider>

@@ -60,7 +60,6 @@ export const useHelper = () => {
     register,
     setRegister,
     controllerLoginVisible,
-    logout,
   } = useContext(HelperContext);
 
   // const helperContextDebug = useContext(HelperContext);
@@ -124,6 +123,5 @@ export const useHelper = () => {
     register,
     setRegister,
     controllerLoginVisible,
-    logout,
   };
 };

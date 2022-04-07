@@ -1,3 +1,4 @@
+import { logout } from './hooks/logOut';
 import { HelperState } from './interfaces/interfaces';
 import { HelperAction } from './types/types';
 
@@ -7,10 +8,12 @@ export const helperInitialState: HelperState = {
   currentAuthScreen: 'login',
   controllerLoginVisible: { visible: false, idOrganization: '', organization: '', logo: '' },
   currentActivity: null,
+  showNotification: false,
+  params: {},
 };
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
-  console.log(`🚀 REDUCER ACTION ${action?.type}`, action);
+  // console.log(`🚀 REDUCER ACTION ${action?.type}`, action);
 
   switch (action.type) {
     case 'reloadTemplatesCms':
@@ -54,6 +57,16 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
         ...state,
         currentActivity: action.currentActivity,
       };
+
+    case 'logout':
+      const params = {
+        showNotification: action.showNotification,
+        params: action.params,
+      };
+
+      logout(params);
+
+      return;
 
     //   case 'selectLiveBroadcast':
     //     return {
