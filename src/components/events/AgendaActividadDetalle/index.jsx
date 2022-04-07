@@ -53,7 +53,7 @@ const AgendaActividadDetalle = (props) => {
     }
 
     getActividad().then((result) => {
-      handleChangeCurrentActivity(result);
+      helperDispatch({ type: 'currentActivity', currentActivity: result });
       setactivity(result);
       orderHost(result.hosts);
       cSurveys.set_current_activity(result);
