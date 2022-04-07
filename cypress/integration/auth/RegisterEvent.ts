@@ -3,7 +3,7 @@ describe('Register User in Event', () => {
   const stagingUrl = 'https://staging.evius.co';
   const localUrl = 'http://localhost:3000';
   const email = 'mario.montero@mocionsoft.com';
-  const emailCypress = 'pruebasCypress@mocionsoft.com';
+  const emailCypress = 'pruebasCypress01@mocionsoft.com';
   const clave = 'mocion.2040';
   const nombre = 'Mario Montero';
   const apellido = 'Montero';
@@ -27,7 +27,7 @@ describe('Register User in Event', () => {
     }
   });
 
-  it('Deberia obtener el token del usuario', () => {
+  it.only('Deberia obtener el token del usuario', () => {
     cy.request({
       method: 'POST',
       url:
@@ -45,7 +45,7 @@ describe('Register User in Event', () => {
     });
   });
 
-  it('Deberia obtener el id del usuario', () => {
+  it.only('Deberia obtener el id del usuario', () => {
     cy.request({
       method: 'GET',
       url: `https://devapi.evius.co/auth/currentUser?token=${token}`,
@@ -57,7 +57,7 @@ describe('Register User in Event', () => {
       id = response.body._id;
     });
   });
-  it('Deberia obtener el eventUserId del usuario', () => {
+  it.only('Deberia obtener el eventUserId del usuario', () => {
     cy.request({
       method: 'GET',
       url: `https://devapi.evius.co/api/me/events/624362c612e3604d37212ed3/eventusers?token=${token}`,
@@ -66,10 +66,36 @@ describe('Register User in Event', () => {
         accept: 'application/json',
       },
     }).then((response) => {
-      console.log(response.body);
+      eventUserID = response.body._id;
     });
   });
 
+  it.only('Deberia eliminar el usuario del envento', () => {
+    cy.request({
+      method: 'DELETE',
+      url: `https://devapi.evius.co/api/events/624362c612e3604d37212ed3/eventusers/${eventUserID}?token=${token}`,
+      headers: {
+        accept: 'application/json',
+      },
+    }).then((response) => {
+      console.log(response.body);
+    });
+  });
+  it.only('Deberia eliminar el usuario ', () => {
+    cy.request({
+      method: 'DELETE',
+      url: `https://devapi.evius.co/api/users/${id}?token=${token}`,
+
+      headers: {
+        accept: 'application/json',
+      },
+    }).then((response) => {
+      console.log(response.body);
+    });
+    console.log(token);
+    console.log(id);
+    console.log(eventUserID);
+  });
   it('it should show the registration modal', () => {
     cy.contains('Registrarme').should('exist');
     cy.contains('Correo electrónico').should('exist');
@@ -181,12 +207,14 @@ describe('Register User in Event', () => {
     cy.get('.ant-modal-body')
       .contains('Inscribirme al evento')
       .click();
-    cy.wait(5000);
+    cy.wait(15000);
     cy.get('.ant-dropdown-trigger')
       .eq(0)
       .trigger('mouseover');
     cy.contains('Administración').should('exist');
     cy.contains('Cerrar sesión').click();
+    cy.wait(2000);
     cy.contains('Si, cerrar la sesión').click();
+    cy.wait(5000);
   });
 });
