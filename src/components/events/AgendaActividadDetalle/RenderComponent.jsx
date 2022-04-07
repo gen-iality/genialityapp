@@ -27,7 +27,7 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  let { transmition, setTransmition, setTypeActivity } = useContext(AgendaContext);
+  let { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
   let {
     currentActivity,
     chatAttendeChats,
@@ -51,7 +51,6 @@ const RenderComponent = (props) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
           const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
-          console.log('1. OBTENIENDO DATA DE SNAPSHOT', infoActivity.data());
           setplatform(platform);
           settabsGeneral(tabs);
           setactivityState(habilitar_ingreso);
@@ -191,25 +190,45 @@ const RenderComponent = (props) => {
                     <br />
                   </>
                 )} */}
+
                 <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
               </>
             );
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext willStartSoon={true} />;
+            {
+              console.log('100. TYPE ACTIVITY==>', typeActivity);
+            }
+            return typeActivity === 'url' ? (
+              <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            ) : (
+              <ImageComponentwithContext willStartSoon={true} />
+            );
 
           case 'ended_meeting_room':
-            return <VideoActivity />;
+            return typeActivity === 'url' ? (
+              <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            ) : (
+              <VideoActivity />
+            );
           case '':
-            return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
+            return typeActivity === 'url' ? (
+              <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+            ) : currentActivity?.video ? (
+              <VideoActivity />
+            ) : (
+              <ImageComponentwithContext />
+            );
+          case 'no_visibe':
+            return <ImageComponentwithContext />;
+          case null:
+            return (
+              <>
+                <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
+                <GameDrawer />
+              </>
+            );
         }
-      case null:
-        return (
-          <>
-            <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
-            <GameDrawer />
-          </>
-        );
       case 'only':
         return (
           <>

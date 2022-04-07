@@ -1,4 +1,4 @@
-import { Row, Col, Card, Typography, List, Spin } from 'antd';
+import { Row, Col, Card, Typography, List, Spin, Affix } from 'antd';
 import CardPreview from '../typeActivity/components/CardPreview';
 import GoToEviusMeet from './components/GoToEviusMeet';
 import TransmitionOptions from './components/TransmitionOptions';
@@ -39,7 +39,9 @@ const ManagerView = (props: any) => {
     <>
       <Row gutter={[16, 16]}>
         <Col span={10}>
-          <CardPreview type={props.type} activityName={props.activityName} />
+          <Affix offsetTop={80}>
+            <CardPreview type={props.type} activityName={props.activityName} />
+          </Affix>
         </Col>
 
         <Col span={14}>
@@ -113,13 +115,13 @@ const ManagerView = (props: any) => {
                 <CardParticipantRequests request={request} setViewModal={setViewModal} />
               </Col>
             )}
+            {(props.type == 'Transmisión' || props.type == 'EviusMeet') && dataLive?.active && (
+              <Col span={24}>
+                <CardRTMP />
+              </Col>
+            )}
           </Row>
         </Col>
-        {(props.type == 'Transmisión' || props.type == 'EviusMeet') && dataLive?.active && (
-          <Col span={24}>
-            <CardRTMP />
-          </Col>
-        )}
       </Row>
       <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
     </>

@@ -117,7 +117,7 @@ const CardPreview = (props: any) => {
                 props.type === 'reunión' || props.type === 'Video' ? null : (
                   <Avatar
                     icon={
-                      props.type === 'EviusMeet' ? (
+                      props.type === 'EviusMeet' || props.type === 'Transmisión' ? (
                         dataLive?.active ? (
                           <CheckCircleOutlined />
                         ) : (
@@ -130,7 +130,7 @@ const CardPreview = (props: any) => {
                       )
                     }
                     style={
-                      props.type === 'EviusMeet'
+                      props.type === 'EviusMeet' || props.type === 'Transmisión'
                         ? dataLive?.active
                           ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
                           : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
@@ -214,10 +214,7 @@ const CardPreview = (props: any) => {
           </Space>
         )}
         {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
-          (props.type !== 'Transmisión' &&
-            props.type !== 'EviusMeet' &&
-            props.type !== 'Video' &&
-            props.type !== 'reunión')) && (
+          (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'reunión')) && (
           <Space direction='vertical' style={{ width: '100%' }}>
             <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
             <Select
@@ -230,6 +227,7 @@ const CardPreview = (props: any) => {
               <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
               <Select.Option value='open_meeting_room'>En vivo</Select.Option>
               <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
+              {props.type === 'Video' && <Select.Option value='no_visibe'>Oculto</Select.Option>}
             </Select>
           </Space>
         )}
