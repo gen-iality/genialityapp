@@ -516,6 +516,7 @@ class ListEventUser extends Component {
           checkedin_at: new Date(),
           checked_in: true,
         },
+        checked_in: true,
       })
       .then(() => {
         DispatchMessageService({
