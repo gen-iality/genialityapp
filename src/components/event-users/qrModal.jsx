@@ -20,6 +20,8 @@ class QrModal extends Component {
       tabActive: 'camera',
       facingMode: 'user',
       qrData: {},
+      nextreadcc: true,
+      saveqrsscanner: [],
     };
   }
 
@@ -126,8 +128,33 @@ class QrModal extends Component {
   };
 
   changeCC = (e) => {
+    this.setState({ newCC: '' });
     const { value } = e.target;
-    this.setState({ newCC: value });
+    let acumulador = '';
+    let contador = 0;
+    let cedula = 0;
+    if (contador == 0) {
+      cedula = value;
+      contador++;
+    }
+    console.log('valueQR', value);
+    for (let i = 0; i < value.length; i++) {
+      if (value[i] != ' ') {
+        acumulador = acumulador + value[i];
+        contador++;
+      } else if (value[i] == ' ') {
+        cedula = acumulador;
+        acumulador = '';
+        contador++;
+      }
+
+      if (contador == 11 && this.state.nextreadcc) {
+        this.setState({ nextreadcc: false });
+        var cedulaOnlynumbers = cedula.match(/(\d+)/);
+        this.setState({ newCC: cedulaOnlynumbers[0] });
+        sessionStorage.setItem('dato', cedulaOnlynumbers[0]);
+      }
+    }
   };
 
   editQRUser = (user) => {
@@ -260,7 +287,13 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   }
                   key='2'>
                   <Form.Item label={'Id Usuario'}>
-                    <Input name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
+                    <input
+                      placeholder='type here '
+                      onKeyDown={(e) => {
+                        e.preventDefault();
+                        console.log('key', e);
+                      }}
+                    />
                   </Form.Item>
                   <Row justify='center' wrap gutter={8}>
                     <Col>
@@ -280,7 +313,12 @@ will show the checkIn information in the popUp. If not, it will show an error me
           ) : (
             <React.Fragment>
               <Form.Item label={'Cédula'}>
-                <Input name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
+                <input
+                  placeholder='type here '
+                  onKeyDown={(e) => {
+                    console.log('key', e);
+                  }}
+                />
               </Form.Item>
               <Row justify='center' wrap gutter={8}>
                 <Col>

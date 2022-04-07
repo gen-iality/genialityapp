@@ -844,8 +844,7 @@ class ListEventUser extends Component {
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
-                  /* style={{ width: 220 }} */
-                >
+                  style={{ width: 220 }}>
                   <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
                   <Option value='scanner-document'>Escanear Documento</Option>
