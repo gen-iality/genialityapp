@@ -28,16 +28,7 @@ const RenderComponent = (props) => {
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
   let { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
-  let {
-    currentActivity,
-    chatAttendeChats,
-    handleChangeTabs,
-    handleChangeCurrentActivity,
-    setcurrenActivity,
-    HandleChatOrAttende,
-    HandlePublicPrivate,
-    helperDispatch,
-  } = useHelper();
+  let { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     if (!fnCiclo) {
@@ -71,7 +62,7 @@ const RenderComponent = (props) => {
           helperDispatch({ type: 'changeTabs', tabs: tabs });
           tempactivty.habilitar_ingreso = habilitar_ingreso;
           tempactivty.avalibleGames = avalibleGames;
-          setcurrenActivity(tempactivty);
+          helperDispatch({ type: 'currentActivity', currentActivity: tempactivty });
           setFnCiclo(true);
           console.log('tempactivty', tempactivty);
         });

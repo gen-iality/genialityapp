@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { HelperContext } from './helperContext';
 import { useState } from 'react';
 import { firestore, fireRealtime, app } from '../../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../../helpers/request';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../../helpers/request';
 import { UseEventContext } from '../eventContext';
 import { UseCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
@@ -12,10 +12,10 @@ import moment from 'moment';
 import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
 import { maleIcons, femaleicons } from '../../helpers/constants';
-import Logout from '@2fd/ant-design-icons/lib/Logout';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { helperReducer, helperInitialState } from './helperReducer';
+import { remoteLogoutNotification } from './hooks/remoteLogoutNotification';
 
 export function knowMaleOrFemale(nombre) {
   return getGender(nombre, 'es');
@@ -31,6 +31,8 @@ let initialStateEvenUserContext = { status: 'LOADING', value: null };
 let initialStateUserContext = { status: 'LOADING', value: undefined };
 
 export const HelperContextProvider = ({ children }) => {
+  const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
+
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventuser = UseUserEvent();
@@ -66,64 +68,15 @@ export const HelperContextProvider = ({ children }) => {
   const [typeModal, setTypeModal] = useState(null);
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
   const [gameData, setGameData] = useState('');
-  const [currentActivity, setcurrenActivity] = useState(null);
   const [gameRanking, setGameRanking] = useState([]);
   const [myScore, setMyScore] = useState([{ name: '', score: 0 }]);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [updateEventUser, setUpdateEventUser] = useState(false);
   const [register, setRegister] = useState(null);
 
-  const [controllerLoginVisible, setcontrollerLoginVisible] = useState({
-    visible: false,
-    idOrganization: '',
-    organization: '',
-    logo: '',
-  });
-
-  const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
-
-  const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
-    setcontrollerLoginVisible({
-      visible,
-      idOrganization,
-      organization,
-      logo,
-    });
-  };
-
-  const handleChangeCurrentActivity = (activity) => {
-    setcurrenActivity(activity);
-  };
-
   function handleChangeTypeModal(type) {
     setTypeModal(type);
   }
-
-  /**
-   * @function remoteLogoutNotification - Show notification after logging out remotely the user is notified why their current session has been logged out
-   * @param {string} type Type of notification, success - info - warning - error
-   */
-  const remoteLogoutNotification = (type) => {
-    notification[type]({
-      duration: 0,
-      icon: (
-        <Logout
-          className='animate__animated animate__heartBeat animate__infinite animate__slower'
-          style={{ color: '#FF4E50' }}
-        />
-      ),
-      message: (
-        <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{cUser.value?.names}</b>
-      ),
-      description: intl.formatMessage({
-        id: 'notification.log_out',
-        defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
-      }),
-      style: {
-        borderRadius: '10px',
-      },
-    });
-  };
 
   /* Creating a reference to the connection object. */
   const conectionRef = firestore.collection(`connections`);
@@ -135,6 +88,7 @@ export const HelperContextProvider = ({ children }) => {
   const logout = async (showNotification) => {
     const user = app.auth()?.currentUser;
     const lastSignInTime = (await user.getIdTokenResult()).authTime;
+    const userName = cUser.value?.names;
 
     app
       .auth()
@@ -149,7 +103,7 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeTypeModal(null);
         cEventuser.setuserEvent(initialStateEvenUserContext);
         cUser.setCurrentUser(initialStateUserContext);
-        if (showNotification) remoteLogoutNotification('info');
+        if (showNotification) remoteLogoutNotification({ type: 'info', userName, formatMessage: intl.formatMessage });
         if (!weAreOnTheLanding) {
           history.push('/');
         }
@@ -725,8 +679,6 @@ export const HelperContextProvider = ({ children }) => {
         knowMaleOrFemale,
         femaleicons,
         maleIcons,
-        handleChangeCurrentActivity,
-        currentActivity,
         gameRanking,
         setGameRanking,
         myScore,
@@ -735,9 +687,6 @@ export const HelperContextProvider = ({ children }) => {
         setUpdateEventUser,
         register,
         setRegister,
-        HandleControllerLoginVisible,
-        controllerLoginVisible,
-        setcurrenActivity,
         logout,
       }}>
       {children}

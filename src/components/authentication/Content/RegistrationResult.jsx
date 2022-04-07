@@ -66,7 +66,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
 
 const RedirectUser = ({ basicDataUser }) => {
   const cEventUser = UseUserEvent();
-  let { HandleControllerLoginVisible, helperDispatch } = useHelper();
+  let { helperDispatch } = useHelper();
   const intl = useIntl();
   const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
 
@@ -79,9 +79,7 @@ const RedirectUser = ({ basicDataUser }) => {
         .then((response) => {
           if (response.user) {
             cEventUser.setUpdateUser(true);
-            HandleControllerLoginVisible({
-              visible: false,
-            });
+            helperDispatch({ type: 'showLogin', visible: false });
           }
         })
         .catch((err) => {
