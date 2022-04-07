@@ -105,6 +105,7 @@ class Importacion extends Component {
     this.props.extraFields.map((extra) => {
       return (data[0][extra.name] = '');
     });
+
     data[0]['tiquete'] = '';
     /** Se agrega campo requerido que no viene en la consulta de la base de datos */
     data[0]['rol'] = '';
