@@ -6,12 +6,11 @@ export const helperInitialState: HelperState = {
   reloadTemplatesCms: false,
   tabsGenerals: {},
   currentAuthScreen: 'login',
-  controllerLoginVisible: { visible: false, idOrganization: '', organization: '', logo: '' },
-  currentActivity: null,
 };
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
-  console.log(`🚀 REDUCER ACTION ${action?.type}`, action);
+  console.log('🚀 REDUCER ACTION', action);
+  console.log('🚀 REDUCER ACTIONTYPE ', action.type);
 
   switch (action.type) {
     case 'reloadTemplatesCms':
@@ -27,34 +26,10 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
       };
 
     case 'showLogin':
-      return {
-        ...state,
-        currentAuthScreen: 'login',
-        controllerLoginVisible: {
-          visible: action?.visible,
-          idOrganization: action.idOrganization,
-          organization: action.organization,
-          logo: action.logo,
-        },
-      };
+      return { ...state, currentAuthScreen: 'login' };
 
     case 'showRegister':
-      return {
-        ...state,
-        currentAuthScreen: 'register',
-        controllerLoginVisible: {
-          visible: action?.visible,
-          idOrganization: action.idOrganization,
-          organization: action.organization,
-          logo: action.logo,
-        },
-      };
-
-    case 'currentActivity':
-      return {
-        ...state,
-        currentActivity: action.currentActivity,
-      };
+      return { ...state, currentAuthScreen: 'register' };
 
     //   case 'selectLiveBroadcast':
     //     return {

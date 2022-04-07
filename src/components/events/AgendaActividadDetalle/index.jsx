@@ -24,7 +24,7 @@ import { UseCurrentUserContext } from '@/context/userContext';
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
-  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
+  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, handleChangeCurrentActivity } = useHelper();
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
@@ -53,8 +53,7 @@ const AgendaActividadDetalle = (props) => {
     }
 
     getActividad().then((result) => {
-      console.log('🚀 debug ~ getActividad ~ result', result);
-      helperDispatch({ type: 'currentActivity', currentActivity: result });
+      handleChangeCurrentActivity(result);
       setactivity(result);
       orderHost(result.hosts);
       cSurveys.set_current_activity(result);
@@ -74,7 +73,7 @@ const AgendaActividadDetalle = (props) => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
       HandleOpenCloseMenuRigth(true);
-      helperDispatch({ type: 'currentActivity', currentActivity: null });
+      handleChangeCurrentActivity(null);
       setactivity(null);
     };
   }, []);

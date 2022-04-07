@@ -112,14 +112,24 @@ const Headers = (props) => {
     <Menu>
       <Menu.Item
         onClick={() => {
-          cHelper.helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
+          cHelper.HandleControllerLoginVisible({
+            visible: true,
+            organization: WhereHerePath(),
+          });
+
+          cHelper.helperDispatch({ type: 'showLogin' });
         }}>
         <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
       </Menu.Item>
 
       <Menu.Item
         onClick={() => {
-          cHelper.helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
+          cHelper.HandleControllerLoginVisible({
+            visible: true,
+            organization: WhereHerePath(),
+          });
+
+          cHelper.helperDispatch({ type: 'showRegister' });
         }}>
         <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
       </Menu.Item>
@@ -242,7 +252,12 @@ const Headers = (props) => {
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                       size='large'
                       onClick={() => {
-                        cHelper.helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
+                        cHelper.HandleControllerLoginVisible({
+                          visible: true,
+                          organization: WhereHerePath(),
+                        });
+
+                        cHelper.helperDispatch({ type: 'showLogin' });
                       }}>
                       {intl.formatMessage({
                         id: 'modal.title.login',
@@ -270,7 +285,12 @@ const Headers = (props) => {
                     <Button
                       size='large'
                       onClick={() => {
-                        cHelper.helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
+                        cHelper.HandleControllerLoginVisible({
+                          visible: true,
+                          organization: WhereHerePath(),
+                        });
+
+                        cHelper.helperDispatch({ type: 'showRegister' });
                       }}>
                       {intl.formatMessage({
                         id: 'modal.title.register',
