@@ -5,6 +5,6 @@ export const useRequest = {
   },
   EventUsers: {
     getEventUserByCedula: (cedula: string, eventId: string) =>
-      `/api/events/${eventId}/eventusers/?filtered=[{"field":"properties.cedula","value":"${cedula}", "comparator":"="}]`,
+      `/api/events/${eventId}/eventusers/?filtered=[{"field":"properties.cedula","value":${cedula}, "comparator":"="}]`,
   },
 };
