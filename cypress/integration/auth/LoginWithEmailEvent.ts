@@ -35,7 +35,7 @@ describe('Login with Email in Event', () => {
     cy.contains('Registrarme').should('exist');
     cy.get('#rc-tabs-0-tab-login').click();
     cy.contains('Iniciar sesión solo con mi correo').click();
-
+    cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
       .type(nombre);
@@ -53,10 +53,30 @@ describe('Login with Email in Event', () => {
       .eq(4)
       .type(email);
     cy.wait(1000);
-    cy.get('button[type=submit]')
-      .eq(3)
-      .click();
-    cy.wait(3000);
-    cy.get('.ant-alert-message').should('exist');
+    // cy.get('button[type=submit]')
+    //   .eq(3)
+    //   .click();
+    // cy.wait(3000);
+    // cy.get('.ant-alert-message').should('exist');
+    // cy.request({
+    //   method: 'POST',
+    //   url: 'https://devapi.evius.co/api/getloginlink',
+    //   body: {
+    //     email: email,
+    //   },
+    //   headers: {
+    //     accept: 'application/json',
+    //   },
+    // }).then((response) => {
+    //   linkLogin = response.body;
+    // });
+  });
+  it.only('Deberia hacer el login usando el correo', () => {
+    cy.forceVisit('https://apple.com');
+    //   cy.get('.ant-dropdown-trigger')
+    //   .eq(0)
+    //   .trigger('mouseover');
+    // cy.contains('Administración').should('exist');
+    // cy.wait(10000);
   });
 });
