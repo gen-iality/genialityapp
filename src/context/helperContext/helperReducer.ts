@@ -66,7 +66,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
 
       logout(params);
 
-      return;
+      return { ...state };
 
     //   case 'selectLiveBroadcast':
     //     return {
