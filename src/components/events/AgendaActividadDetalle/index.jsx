@@ -53,7 +53,6 @@ const AgendaActividadDetalle = (props) => {
     }
 
     getActividad().then((result) => {
-      console.log('🚀 debug ~ getActividad ~ result', result);
       helperDispatch({ type: 'currentActivity', currentActivity: result });
       setactivity(result);
       orderHost(result.hosts);
