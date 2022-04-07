@@ -158,6 +158,24 @@ const deleteVideo = async (idVideo) => {
   }
 };
 
+const deleteAllVideos = async (name_activity, stream_id) => {
+  try {
+    const videos = await getVideosLiveStream(name_activity);
+    if (videos) {
+      await Promise.all(
+        videos.map(async (video) => {
+          if (video.stream_id == stream_id) {
+            await deleteVideo(video.id);
+          }
+        })
+      );
+    }
+  } catch (e) {
+    console.log('EXCEPCION===>', e);
+    return null;
+  }
+};
+
 export {
   getLiveStream,
   getLiveStreamStatus,
@@ -173,4 +191,5 @@ export {
   getVideoLiveStream,
   obtenerVideos,
   deleteVideo,
+  deleteAllVideos,
 };

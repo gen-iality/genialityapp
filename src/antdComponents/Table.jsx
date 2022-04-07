@@ -69,6 +69,7 @@ const Table = (props) => {
       fixed: 'right',
       width: widthAction ? widthAction : 110,
       render(val, item) {
+        console.log(item);
         return (
           <Row wrap gutter={[8, 8]}>
             {extraFn && (
@@ -179,7 +180,7 @@ const Table = (props) => {
                   <Button
                     key={`removeAction${item.index}`}
                     id={`removeAction${item.index}`}
-                    onClick={() => remove(item.chatId ? item.chatId : item._id)}
+                    onClick={() => remove(item.chatId ? item.chatId : item._id, item.name)}
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'

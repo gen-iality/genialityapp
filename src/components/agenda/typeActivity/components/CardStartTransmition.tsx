@@ -8,6 +8,7 @@ import {
   getLiveStream,
   getLiveStreamStatus,
   startLiveStream,
+  deleteAllVideos,
 } from '../../../../adaptors/gcoreStreamingApi';
 import { useQueryClient } from 'react-query';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
@@ -54,6 +55,7 @@ const CardStartTransmition = (props: any) => {
 
   const deleteStreaming = async () => {
     setLoadingDelete(true);
+    deleteAllVideos(dataLive.name, meeting_id); // verificar sis eva aelimnar los videos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
     await deleteTypeActivity();
     toggleActivitySteps('initial');
