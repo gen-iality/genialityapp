@@ -48,6 +48,7 @@ export const useHelper = () => {
     knowMaleOrFemale,
     femaleicons,
     maleIcons,
+    handleChangeCurrentActivity,
     currentActivity,
     gameRanking,
     setGameRanking,
@@ -59,6 +60,7 @@ export const useHelper = () => {
     setUpdateEventUser,
     register,
     setRegister,
+    HandleControllerLoginVisible,
     controllerLoginVisible,
   } = useContext(HelperContext);
 
@@ -111,6 +113,7 @@ export const useHelper = () => {
     knowMaleOrFemale,
     femaleicons,
     maleIcons,
+    handleChangeCurrentActivity,
     currentActivity,
     gameRanking,
     setGameRanking,
@@ -122,6 +125,7 @@ export const useHelper = () => {
     setUpdateEventUser,
     register,
     setRegister,
+    HandleControllerLoginVisible,
     controllerLoginVisible,
   };
 };

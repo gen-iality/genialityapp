@@ -1,5 +1,3 @@
-import { HelperState } from '../interfaces/interfaces';
-
 export type HelperAction = {
   type: string;
   tabs?: any;
