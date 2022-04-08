@@ -495,3 +495,5 @@ export const configEventsTemplate = {
   banner_image:
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Fbanner.jpg?alt=media&token=8642d0ed-61e2-4fed-97fa-1cdd5687aeaf',
 };
+
+export const imageforDefaultProfile = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';

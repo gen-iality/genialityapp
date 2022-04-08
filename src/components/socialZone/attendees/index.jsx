@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseCurrentUser } from '../../../context/userContext';
 import UsersCard from '../../shared/usersCard';
+import { imageforDefaultProfile } from '@/helpers/constants';
 
 const AttendeList = function(props) {
   //contextos
@@ -12,14 +13,7 @@ const AttendeList = function(props) {
   let [page, setPage] = useState(0);
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
-  let {
-    attendeeListPresence,
-    attendeeList,
-    imageforDefaultProfile,
-    knowMaleOrFemale,
-    maleIcons,
-    femaleicons,
-  } = useHelper();
+  let { attendeeListPresence, attendeeList, knowMaleOrFemale, maleIcons, femaleicons } = useHelper();
   let cUser = UseCurrentUser();
   const pag = 15;
 

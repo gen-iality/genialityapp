@@ -11,7 +11,7 @@ import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/ic
 import moment from 'moment';
 import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
-import { maleIcons, femaleicons } from '../../helpers/constants';
+import { maleIcons, femaleicons, imageforDefaultProfile } from '../../helpers/constants';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { helperReducer, helperInitialState } from './helperReducer';
@@ -25,9 +25,6 @@ const initialStateNotification = {
   message: 'no message',
   type: 'none',
 };
-
-let initialStateEvenUserContext = { status: 'LOADING', value: null };
-let initialStateUserContext = { status: 'LOADING', value: undefined };
 
 export const HelperContextProvider = ({ children }) => {
   const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
@@ -62,7 +59,6 @@ export const HelperContextProvider = ({ children }) => {
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
-  const imageforDefaultProfile = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
@@ -642,7 +638,6 @@ export const HelperContextProvider = ({ children }) => {
         seteventPrivate,
         GetPermissionsEvent,
         totalPrivateMessages,
-        imageforDefaultProfile,
         requestSend,
         obtenerContactos,
         typeModal,
