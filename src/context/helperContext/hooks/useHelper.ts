@@ -32,7 +32,6 @@ export const useHelper = () => {
     seteventPrivate,
     GetPermissionsEvent,
     totalPrivateMessages,
-    imageforDefaultProfile,
     requestSend,
     obtenerContactos,
     typeModal,
@@ -45,7 +44,6 @@ export const useHelper = () => {
     setGameData,
     theUserHasPlayed,
     setTheUserHasPlayed,
-    knowMaleOrFemale,
     femaleicons,
     maleIcons,
     handleChangeCurrentActivity,
@@ -62,8 +60,6 @@ export const useHelper = () => {
     setRegister,
     HandleControllerLoginVisible,
     controllerLoginVisible,
-    setcurrenActivity,
-    logout,
   } = useContext(HelperContext);
 
   // const helperContextDebug = useContext(HelperContext);
@@ -99,7 +95,6 @@ export const useHelper = () => {
     seteventPrivate,
     GetPermissionsEvent,
     totalPrivateMessages,
-    imageforDefaultProfile,
     requestSend,
     obtenerContactos,
     typeModal,
@@ -112,7 +107,6 @@ export const useHelper = () => {
     setGameData,
     theUserHasPlayed,
     setTheUserHasPlayed,
-    knowMaleOrFemale,
     femaleicons,
     maleIcons,
     handleChangeCurrentActivity,
@@ -129,7 +123,5 @@ export const useHelper = () => {
     setRegister,
     HandleControllerLoginVisible,
     controllerLoginVisible,
-    setcurrenActivity,
-    logout,
   };
 };

@@ -1,3 +1,4 @@
+import { logout } from './hooks/logOut';
 import { HelperState } from './interfaces/interfaces';
 import { HelperAction } from './types/types';
 
@@ -5,11 +6,14 @@ export const helperInitialState: HelperState = {
   reloadTemplatesCms: false,
   tabsGenerals: {},
   currentAuthScreen: 'login',
+  controllerLoginVisible: { visible: false, idOrganization: '', organization: '', logo: '' },
+  currentActivity: null,
+  showNotification: false,
+  params: {},
 };
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
-  console.log('🚀 REDUCER ACTION', action);
-  console.log('🚀 REDUCER ACTIONTYPE ', action.type);
+  // console.log(`🚀 REDUCER ACTION ${action?.type}`, action);
 
   switch (action.type) {
     case 'reloadTemplatesCms':
@@ -25,10 +29,44 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
       };
 
     case 'showLogin':
-      return { ...state, currentAuthScreen: 'login' };
+      return {
+        ...state,
+        currentAuthScreen: 'login',
+        controllerLoginVisible: {
+          visible: action?.visible,
+          idOrganization: action.idOrganization,
+          organization: action.organization,
+          logo: action.logo,
+        },
+      };
 
     case 'showRegister':
-      return { ...state, currentAuthScreen: 'register' };
+      return {
+        ...state,
+        currentAuthScreen: 'register',
+        controllerLoginVisible: {
+          visible: action?.visible,
+          idOrganization: action.idOrganization,
+          organization: action.organization,
+          logo: action.logo,
+        },
+      };
+
+    case 'currentActivity':
+      return {
+        ...state,
+        currentActivity: action.currentActivity,
+      };
+
+    case 'logout':
+      const params = {
+        showNotification: action.showNotification,
+        params: action.params,
+      };
+
+      logout(params);
+
+      return { ...state };
 
     //   case 'selectLiveBroadcast':
     //     return {

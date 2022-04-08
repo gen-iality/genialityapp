@@ -6,6 +6,7 @@ import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { UseCurrentUser } from '../../context/userContext';
 import { UseEventContext } from '../../context/eventContext';
+import { imageforDefaultProfile } from '@/helpers/constants';
 import moment from 'moment';
 
 const { Paragraph, Title, Text } = Typography;
@@ -44,14 +45,7 @@ function UsersCard(props) {
   let eventValues = cEvent.value;
 
   let eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';
-  let {
-    createNewOneToOneChat,
-    HandleChatOrAttende,
-    HandlePublicPrivate,
-    imageforDefaultProfile,
-    HandleGoToChat,
-    setGameData,
-  } = useHelper();
+  let { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, HandleGoToChat, setGameData } = useHelper();
   const [actionCapture, setActionCapture] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
