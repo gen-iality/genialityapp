@@ -10,15 +10,10 @@ import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
-import { getGender } from 'gender-detection-from-name';
 import { maleIcons, femaleicons, imageforDefaultProfile } from '../../helpers/constants';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { helperReducer, helperInitialState } from './helperReducer';
-
-export function knowMaleOrFemale(nombre) {
-  return getGender(nombre, 'es');
-}
 
 const initialStateNotification = {
   notify: false,
@@ -648,7 +643,6 @@ export const HelperContextProvider = ({ children }) => {
         setGameData,
         theUserHasPlayed,
         setTheUserHasPlayed,
-        knowMaleOrFemale,
         femaleicons,
         maleIcons,
         gameRanking,
