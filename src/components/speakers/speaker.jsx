@@ -19,6 +19,7 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { areaCode } from '../../helpers/constants';
 import { DispatchMessageService } from '../../context/MessageService';
+import ImageUploaderDragAndDrop from '@/Utilities/imageUploaderDragAndDrop';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -321,10 +322,11 @@ function Speaker(props) {
             />
           </Form.Item>
           <Form.Item label={'Carga de imagen'}>
-            <Card style={{ textAlign: 'center' }}>
+            <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
               <Form.Item noStyle>
-                <p>Dimensiones: 1080px x 1080px</p>
-                <Dropzone
+                {/* <p>Dimensiones: 1080px x 1080px</p> */}
+                <ImageUploaderDragAndDrop />
+                {/* <Dropzone
                   style={{ fontSize: '21px', fontWeight: 'bold' }}
                   onDrop={handleImage}
                   accept='image/*'
@@ -339,7 +341,7 @@ function Speaker(props) {
                   ) : (
                     <Empty image={<UserOutlined style={{ fontSize: '100px' }} />} description='No hay Imagen' />
                   )}
-                </div>
+                </div> */}
               </Form.Item>
             </Card>
           </Form.Item>

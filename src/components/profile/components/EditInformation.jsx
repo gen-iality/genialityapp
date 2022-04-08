@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { UsersApi } from '../../../helpers/request';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
+import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
 const EditInformation = ({ cUser }) => {
   const { value, setCurrentUser } = cUser;
@@ -23,13 +24,6 @@ const EditInformation = ({ cUser }) => {
   const intl = useIntl();
 
   const ruleName = [{ required: true, message: 'Ingrese un nombre para su cuenta en Evius!' }];
-
-  /** request para no mostrar el error que genera el component upload de antd */
-  const dummyRequest = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess('ok');
-    }, 0);
-  };
 
   const uploadNewUserPicture = async () => {
     const selectedLogo = imageAvatar ? imageAvatar[0] : imageAvatar;
@@ -114,7 +108,7 @@ const EditInformation = ({ cUser }) => {
                     setImageAvatar(null);
                   }
                 }}
-                customRequest={dummyRequest}
+                customRequest={uploadImagedummyRequest}
                 multiple={false}
                 listType='picture'
                 maxCount={1}
