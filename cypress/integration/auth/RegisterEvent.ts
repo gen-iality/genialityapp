@@ -55,18 +55,22 @@ describe('Register User in Event', () => {
       },
     }).then((response) => {
       id = response.body._id;
+      console.log(response.body._id);
+      cy.log(id);
     });
   });
   it.only('Deberia obtener el eventUserId del usuario', () => {
     cy.request({
       method: 'GET',
-      url: `https://devapi.evius.co/api/me/events/624362c612e3604d37212ed3/eventusers?token=${token}`,
+      url: `https://devapi.evius.co/api/events/624362c612e3604d37212ed3/eventusers?filtered=[{"field":"properties.email","value":"${emailCypress}"}]`,
 
       headers: {
         accept: 'application/json',
       },
     }).then((response) => {
-      eventUserID = response.body._id;
+      eventUserID = response.body.data[0]._id;
+      console.log(eventUserID);
+      cy.log(eventUserID);
     });
   });
 
