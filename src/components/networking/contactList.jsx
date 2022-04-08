@@ -66,7 +66,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
       <div>
         <Row gutter={[10, 10]}>
           {contactsList.map((contact, key) => {
-            const user = contact.properties ? contact.properties : contact.user;
+            const user = contact.properties ? { ...contact.properties, picture: contact.user?.picture } : contact.user;
             return (
               <Col key={'contactlist' + key} xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
                 <Card
@@ -103,6 +103,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                     avatar={
                       <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
                         {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
+                        {console.log('USER ACA==>', user)}
                       </Avatar>
                     }
                     title={user.names ? user.names : 'No registra Nombre'}

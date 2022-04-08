@@ -44,25 +44,25 @@ export const saveFirebase = {
     var docSnap = await docRef.get();
     var doc = docSnap.data();
 
-    var count = doc[ 'usersLikes' ].length; //cuenta la cantidad de usuarios que han dado like
-    const array = doc[ 'usersLikes' ]; //asigna a un array los uauruarios que han dado like
+    var count = doc['usersLikes'].length; //cuenta la cantidad de usuarios que han dado like
+    const array = doc['usersLikes']; //asigna a un array los uauruarios que han dado like
 
     // si el usuario actual no se encuntra en el array, lo guarda y suma al contador de like
     if (array.filter((user) => user == userId).length == 0) {
       array.push(userId);
 
-      doc[ 'usersLikes' ] = array;
-      doc[ 'likes' ] = count + 1;
-      doc[ 'id' ] = docRef.id;
+      doc['usersLikes'] = array;
+      doc['likes'] = count + 1;
+      doc['id'] = docRef.id;
       await docRef.update(doc);
     }
     // si el usuario actual se encuentra en el array lo elimina y reduce el contador de like
     else {
       const newArray = array.filter((user) => user !== userId);
 
-      doc[ 'usersLikes' ] = newArray;
-      doc[ 'likes' ] = count - 1;
-      doc[ 'id' ] = docRef.id;
+      doc['usersLikes'] = newArray;
+      doc['likes'] = count - 1;
+      doc['id'] = docRef.id;
       await docRef.update(doc);
     }
 
@@ -70,6 +70,7 @@ export const saveFirebase = {
   },
 
   async createComment(postId, eventId, comment, user) {
+    console.log('USER COMMENTARIO==>', user);
     const dataPost = [];
     var docRef = await firestore
       .collection('adminPost')
@@ -79,8 +80,8 @@ export const saveFirebase = {
     var docSnap = await docRef.get();
     var doc = docSnap.data();
 
-    doc[ 'comments' ] = doc.comments ? doc.comments + 1 : 1;
-    doc[ 'id' ] = docRef.id;
+    doc['comments'] = doc.comments ? doc.comments + 1 : 1;
+    doc['id'] = docRef.id;
     await docRef.update(doc);
     let posts = await firestore
       .collection('adminPost')
@@ -96,10 +97,11 @@ export const saveFirebase = {
       .collection('comments')
       .add({
         author: user._id,
-        authorName: user.names || user.emai,
+        authorName: user.names || user.email,
         comment: comment,
         date: new Date(),
         idPost: postId,
+        picture: user.picture,
       });
 
     /* let snapshot = await posts.get();
@@ -136,7 +138,7 @@ export const saveFirebase = {
 
       var querySnapshot = await query.get();
       if (querySnapshot) {
-        querySnapshot.forEach(async function (doc) {
+        querySnapshot.forEach(async function(doc) {
           await doc.ref.delete();
         });
         queryPostId.delete();
