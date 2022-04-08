@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react';
 import { HelperContext } from './helperContext';
 import { useState } from 'react';
-import { firestore, fireRealtime, app } from '../../helpers/firebase';
+import { firestore, fireRealtime } from '../../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../../helpers/request';
 import { UseEventContext } from '../eventContext';
 import { UseCurrentUser } from '../userContext';
@@ -14,6 +14,7 @@ import { maleIcons, femaleicons, imageforDefaultProfile } from '../../helpers/co
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { helperReducer, helperInitialState } from './helperReducer';
+import { remoteLogOutValidator } from './hooks/remoteLogOutValidator';
 
 const initialStateNotification = {
   notify: false,
@@ -68,30 +69,7 @@ export const HelperContextProvider = ({ children }) => {
     setTypeModal(type);
   }
 
-  /**
-   * It gets the last sign in time of the user.
-   * @returns The last sign user time.
-   */
-  async function getlastSignInTime() {
-    const user = app.auth().currentUser;
-    const lastSignInTime = (await user.getIdTokenResult()).authTime;
-    return lastSignInTime;
-  }
-
-  /**
-   * *If the change type is not an add and the email in the change is diferent as the current user's
-   * email, return true.*
-   * @param {object} change - The change object.
-   * @returns a boolean value.
-   */
-  function docChangesTypeAndEmailValidation(change) {
-    if (change.type !== 'added' && change?.doc?.data()?.email == cUser.value?.email) return true;
-    return false;
-  }
-
-  // /* Creating a reference to the connection object. */
-  const conectionRef = firestore.collection(`connections`);
-
+  /** useEffect usado para validar la desconexion remota*/
   useEffect(() => {
     if (!cUser.value) return;
 
@@ -102,22 +80,11 @@ export const HelperContextProvider = ({ children }) => {
       formatMessage: intl.formatMessage,
       handleChangeTypeModal,
       history,
+      helperDispatch,
     };
 
-    const unsubscribe = conectionRef.onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges();
-      if (changes) {
-        changes.forEach((change) => {
-          if (docChangesTypeAndEmailValidation(change)) {
-            getlastSignInTime().then((userlastSignInTime) => {
-              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime && change.type == 'modified')
-                helperDispatch({ type: 'logout', showNotification: true, params });
-              if (change.type == 'removed') helperDispatch({ type: 'logout', showNotification: true, params });
-            });
-          }
-        });
-      }
-    });
+    const unsubscribe = remoteLogOutValidator(params);
+
     return () => {
       unsubscribe();
     };
