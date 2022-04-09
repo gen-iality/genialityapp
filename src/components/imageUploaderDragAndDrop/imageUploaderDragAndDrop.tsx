@@ -4,7 +4,12 @@ import { FileImageOutlined } from '@ant-design/icons';
 import { uploadImagedummyRequest, readUrlImg } from '../../Utilities/imgUtils';
 import { ImageUploaderDragAndDropType } from '../../Utilities/types/types';
 
-const ImageUploaderDragAndDrop = ({ imageDataCallBack, imageUrl }: ImageUploaderDragAndDropType) => {
+const ImageUploaderDragAndDrop = ({
+  imageDataCallBack,
+  imageUrl,
+  width = 0,
+  height = 0,
+}: ImageUploaderDragAndDropType) => {
   const { Dragger } = Upload;
   let [image, setImage] = useState<any>(null);
   let [isUploading, setIsUploading] = useState<boolean>(false);
@@ -83,7 +88,9 @@ const ImageUploaderDragAndDrop = ({ imageDataCallBack, imageUrl }: ImageUploader
               <FileImageOutlined style={{ color: '#009fd9' }} />
             </p>
             <p className='ant-upload-text'>Haga clic o arrastre el archivo a esta área para cargarlo</p>
-            <p className='ant-upload-hint'>Dimensiones sugeridas: 1080px * 1080px</p>
+            <p className='ant-upload-hint'>
+              Dimensiones sugeridas: {width}px * {height}px
+            </p>
           </>
         )}
       </Dragger>

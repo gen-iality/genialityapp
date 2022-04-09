@@ -325,7 +325,12 @@ function Speaker(props) {
             <Form.Item label={'Carga de imagen'}>
               <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
                 <Form.Item noStyle>
-                  <ImageUploaderDragAndDrop imageDataCallBack={handleImage} imageUrl={data.image} />
+                  <ImageUploaderDragAndDrop
+                    imageDataCallBack={handleImage}
+                    imageUrl={data.image}
+                    width='1080'
+                    height='1080'
+                  />
                 </Form.Item>
               </Card>
             </Form.Item>
