@@ -46,7 +46,7 @@ function Speaker(props) {
     description_activity: false,
     profession: '',
     published: true,
-    image: '',
+    image: null,
     order: 0,
     category_id: '',
     index: 0,
@@ -108,23 +108,6 @@ function Speaker(props) {
     });
   }
 
-  async function handleImage(files) {
-    try {
-      const file = files[0];
-      if (file) {
-        const imageData = await uploadImage(file);
-        setData({
-          ...data,
-          image: imageData,
-        });
-      } else {
-        setErrorImage('Solo se permiten archivos de imágenes. Inténtalo de nuevo :)');
-      }
-    } catch (e) {
-      sweetAlert.showError(handleRequestError(e));
-    }
-  }
-
   function chgTxt(content) {
     let description = content;
     if (description === '<p><br></p>') {
@@ -136,6 +119,38 @@ function Speaker(props) {
     });
   }
 
+  async function handleImage(files) {
+    if (files) {
+      setData({
+        ...data,
+        image: files,
+      });
+    } else {
+      setErrorImage('Solo se permiten archivos de imágenes. Inténtalo de nuevo :)');
+    }
+  }
+  async function uploadSpeakerImage() {
+    let imagenUrl = null;
+    if (data.image) {
+      try {
+        imagenUrl = await uploadImage(data.image);
+      } catch (e) {
+        imagenUrl = null;
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: `Error al guardar la imagen: ${handleRequestError(e).message}`,
+          action: 'show',
+          duration: 8,
+        });
+      }
+    }
+    return imagenUrl;
+  }
+
   async function submit(values) {
     if (values.name) {
       DispatchMessageService({
@@ -144,11 +159,14 @@ function Speaker(props) {
         msj: 'Por favor espere mientras guarda la información...',
         action: 'show',
       });
-      const { name, profession, description, image, order, published } = values;
+
+      const imagenUrl = await uploadSpeakerImage();
+
+      const { name, profession, description, order, published } = values;
 
       const body = {
         name,
-        image,
+        image: imagenUrl,
         description_activity: showDescription_activity,
         description,
         profession,
@@ -325,7 +343,7 @@ function Speaker(props) {
             <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
               <Form.Item noStyle>
                 {/* <p>Dimensiones: 1080px x 1080px</p> */}
-                <ImageUploaderDragAndDrop />
+                <ImageUploaderDragAndDrop imageDataCallBack={handleImage} />
                 {/* <Dropzone
                   style={{ fontSize: '21px', fontWeight: 'bold' }}
                   onDrop={handleImage}

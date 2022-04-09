@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Upload, Spin, Image } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
 import { uploadImagedummyRequest, readUrlImg } from './imgUtils';
+import { ImageUploaderDragAndDropType } from './types/types';
 
-const ImageUploaderDragAndDrop = () => {
+const ImageUploaderDragAndDrop = ({ imageDataCallBack }: ImageUploaderDragAndDropType) => {
   const { Dragger } = Upload;
   let [image, setImage] = useState<any>(null);
   let [isUploading, setIsUploading] = useState<boolean>(false);
@@ -21,6 +22,7 @@ const ImageUploaderDragAndDrop = () => {
       switch (status) {
         case 'done':
           readUrlImg({ files: file.originFileObj, setImage });
+          imageDataCallBack(file.originFileObj);
           setIsUploading(false);
           break;
 
