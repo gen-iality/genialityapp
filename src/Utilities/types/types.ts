@@ -1,1 +1,1 @@
-export type ImageUploaderDragAndDropType = { imageDataCallBack: (file: object) => void };
+export type ImageUploaderDragAndDropType = { imageDataCallBack: (file: object | null) => void; imageUrl: string };
