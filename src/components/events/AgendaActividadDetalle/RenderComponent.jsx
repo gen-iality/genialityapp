@@ -190,20 +190,20 @@ const RenderComponent = (props) => {
             {
               console.log('100. TYPE ACTIVITY==>', typeActivity);
             }
-            return typeActivity === 'url' ? (
+            return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : (
               <ImageComponentwithContext willStartSoon={true} />
             );
 
           case 'ended_meeting_room':
-            return typeActivity === 'url' ? (
+            return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : (
               <VideoActivity />
             );
           case '':
-            return typeActivity === 'url' ? (
+            return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : currentActivity?.video ? (
               <VideoActivity />

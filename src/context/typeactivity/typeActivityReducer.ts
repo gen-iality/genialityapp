@@ -146,19 +146,23 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       }
 
     case 'toggleCargarvideo':
-      const selectedtToggleCargarvideo = state.typeOptions.typeOptions.find((item: { key: string }) => {
-        if (item.key === action.payload.id) return item;
+      const selectedtToggleCargarvideo = state.typeOptions?.typeOptions?.find((item: { key: string }) => {
+        if (item.key === 'cargarvideo') return item;
       });
+
+      const disableButtonCargarVideo = action.payload.id === 'cargarvideo';
+      console.log('state.typeOptions', action.payload);
 
       return {
         ...state,
         openModal: true,
-        disableNextButton: true,
+        disableNextButton: disableButtonCargarVideo,
         previewKey: state.previewKey,
         selectedKey: '',
-        buttonsTextNextOrCreate: 'Crear',
+        data: action.payload.sendData,
+        buttonsTextNextOrCreate: selectedtToggleCargarvideo ? 'Crear' : 'Siguiente',
         buttonTextPreviousOrCancel: 'Anterior',
-        typeOptions: selectedtToggleCargarvideo,
+        typeOptions: selectedtToggleCargarvideo || initialState.typeOptions.typeOptions[2],
       };
 
     case 'toggleUrl':
@@ -323,6 +327,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
         previewKey: state.typeOptions.key,
         selectedKey: action.payload.id,
         typeOptions: state.typeOptions,
+        data: action.payload.sendData,
       };
 
     case 'selectUrl':
