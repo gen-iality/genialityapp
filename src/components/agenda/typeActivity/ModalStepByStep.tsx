@@ -25,7 +25,7 @@ interface mapContentSource {
   image: string;
 }
 
-const ModalStepByStep = () => {
+const ModalStepByStep = (props: any) => {
   const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
 
   return (
@@ -36,7 +36,7 @@ const ModalStepByStep = () => {
         ) : null}
         {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
         {/* <LoadingTypeActivity /> */}
-        {typeOptions.key === 'cargarvideo' ? <InputUploadVideo /> : null}
+        {typeOptions.key === 'cargarvideo' ? <InputUploadVideo activityName={props.activityName} /> : null}
         {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
               if (options.key === typeOptions.key) {
