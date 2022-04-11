@@ -5,6 +5,7 @@ import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { useEventArkmed } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
+import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
@@ -68,13 +69,6 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
 
-  /** request para no mostrar el error que genera el component upload de antd */
-  const dummyRequest = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess('ok');
-    }, 0);
-  };
-
   function onFinish(values) {
     console.log('values', values);
     handleNext(values);
@@ -104,7 +98,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
                   setImageAvatar(null);
                 }
               }}
-              customRequest={dummyRequest}
+              customRequest={uploadImagedummyRequest}
               multiple={false}
               listType='picture'
               maxCount={1}

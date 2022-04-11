@@ -39,14 +39,7 @@ const ModalAuth = (props) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
-  let {
-    handleChangeTypeModal,
-    typeModal,
-    controllerLoginVisible,
-    HandleControllerLoginVisible,
-    authModalDispatch,
-    authModalState,
-  } = useHelper();
+  let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
@@ -71,19 +64,17 @@ const ModalAuth = (props) => {
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
           setmodalVisible(true);
-          HandleControllerLoginVisible({ visible: true });
-          authModalDispatch({ type: 'showLogin' });
+          helperDispatch({ type: 'showLogin', visible: true });
           break;
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
           setmodalVisible(true);
-          HandleControllerLoginVisible({ visible: true });
-          authModalDispatch({ type: 'showRegister' });
+          helperDispatch({ type: 'showRegister', visible: true });
           break;
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
           setmodalVisible(true);
-          HandleControllerLoginVisible({ visible: false });
+          helperDispatch({ type: 'showLogin', visible: false });
           break;
 
         default:
@@ -96,7 +87,8 @@ const ModalAuth = (props) => {
       app.auth().onAuthStateChanged((user) => {
         if (user) {
           setmodalVisible(false);
-          HandleControllerLoginVisible({ visible: false });
+
+          helperDispatch({ type: 'showLogin', visible: false });
         } else {
           isModalVisible();
         }
@@ -110,7 +102,7 @@ const ModalAuth = (props) => {
     form1.resetFields();
     setErrorRegisterUSer(false);
     setErrorLogin(false);
-  }, [typeModal, authModalState]);
+  }, [typeModal, currentAuthScreen]);
 
   const DetecError = (code) => {
     switch (code) {
@@ -135,11 +127,11 @@ const ModalAuth = (props) => {
     form1.resetFields();
     switch (key) {
       case 'login':
-        authModalDispatch({ type: 'showLogin' });
+        helperDispatch({ type: 'showLogin', visible: true });
         break;
 
       case 'register':
-        authModalDispatch({ type: 'showRegister' });
+        helperDispatch({ type: 'showRegister', visible: true });
         break;
 
       default:
@@ -161,7 +153,7 @@ const ModalAuth = (props) => {
       .then(async (response) => {
         if (response.user) {
           setLoading(false);
-          HandleControllerLoginVisible({ visible: false });
+          helperDispatch({ type: 'showLogin', visible: false });
           form1.resetFields();
         }
       })
@@ -178,20 +170,18 @@ const ModalAuth = (props) => {
     console.error('Failed:', errorInfo);
   };
 
-  // console.log('modalVisible', modalVisible);
-  // console.log('controllerLoginVisible.visible', controllerLoginVisible.visible);
   return (
     modalVisible && (
       <Modal
         maskStyle={props.organization == 'organization' && { backgroundColor: '#333333' }}
-        onCancel={() => HandleControllerLoginVisible({ visible: false })}
+        onCancel={() => helperDispatch({ type: 'showLogin', visible: false })}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
         footer={null}
         zIndex={1000}
-        visible={controllerLoginVisible.visible}
-        closable={controllerLoginVisible.organization !== 'organization' ? true : false}>
-        <Tabs onChange={callback} centered size='large' activeKey={authModalState.currentAuthScreen}>
+        visible={controllerLoginVisible?.visible}
+        closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
+        <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',

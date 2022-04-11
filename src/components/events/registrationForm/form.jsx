@@ -163,12 +163,12 @@ const FormRegister = ({
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
   const {
-    authModalState,
+    currentAuthScreen,
     typeModal,
     eventPrivate,
     handleChangeTypeModal,
     setRegister,
-    authModalDispatch,
+    helperDispatch,
   } = useHelper();
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
@@ -261,7 +261,7 @@ const FormRegister = ({
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
-  }, [authModalState.currentAuthScreen, typeModal]);
+  }, [currentAuthScreen, typeModal]);
 
   const showGeneralMessage = (values, error, date) => {
     setvalidateEventUser({
@@ -1140,7 +1140,7 @@ const FormRegister = ({
                           size='middle'
                           type='primary'
                           onClick={() => {
-                            authModalDispatch({ type: 'showLogin' });
+                            helperDispatch({ type: 'showLogin' });
                             setNotLoggedAndRegister(false);
                           }}>
                           {intl.formatMessage({

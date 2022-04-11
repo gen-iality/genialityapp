@@ -8,13 +8,36 @@ import { addNotification } from '../../helpers/netWorkingFunctions';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import { CurrentEventUserContext } from '../../context/eventUserContext';
+import { CurrentEventContext } from '@/context/eventContext';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([]);
-
+  const cEvent = useContext(CurrentEventContext);
+  const [loading, setLoading] = useState(true);
+  const obtenerImageUser = async (idUser) => {
+    const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser);
+    if (eventUser) {
+      return eventUser.user?.picture;
+    }
+    return null;
+  };
   useEffect(() => {
-    setInvitationsReceived(list);
+    if (list) {
+      obtenerData();
+    }
+
+    async function obtenerData() {
+      setLoading(true);
+      var dataNew = await Promise.all(
+        list.map(async (request) => {
+          const picture = await obtenerImageUser(request.id_user_requested);
+          return { ...request, picture };
+        })
+      );
+      setInvitationsReceived(dataNew);
+      setLoading(false);
+    }
   }, [list]);
 
   if (invitationsReceived.length)
@@ -36,8 +59,10 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                 ]}>
                 <List.Item.Meta
                   avatar={
-                    <Avatar>
-                      {item.user_name_requested
+                    <Avatar src={item?.picture ? item.picture : null}>
+                      {item?.picture
+                        ? null
+                        : item.user_name_requested
                         ? item.user_name_requested.charAt(0).toUpperCase()
                         : item._id.charAt(0).toUpperCase()}
                     </Avatar>
@@ -52,19 +77,43 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
       </Col>
     );
 
-  return (
+  return !loading ? (
     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
       <Card>No tiene solicitudes actualmente</Card>
     </Col>
+  ) : (
+    <Spin />
   );
 };
 
 // Componente que lista las invitaciones enviadas -----------------------------------------------------------
 const InvitacionListSent = ({ list }) => {
   const [invitationsSent, setInvitationsSent] = useState([]);
-
+  const cEvent = useContext(CurrentEventContext);
+  const [loading, setLoading] = useState(true);
+  const obtenerImageUser = async (idUser) => {
+    const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser);
+    if (eventUser) {
+      return eventUser.user?.picture;
+    }
+    return null;
+  };
   useEffect(() => {
-    setInvitationsSent(list);
+    if (list) {
+      obtenerData();
+    }
+
+    async function obtenerData() {
+      setLoading(true);
+      var dataNew = await Promise.all(
+        list.map(async (request) => {
+          const picture = await obtenerImageUser(request.id_user_requesting);
+          return { ...request, picture };
+        })
+      );
+      setInvitationsSent(dataNew);
+      setLoading(false);
+    }
   }, [list]);
 
   if (invitationsSent.length)
@@ -77,10 +126,13 @@ const InvitacionListSent = ({ list }) => {
               <List.Item key={item._id}>
                 <List.Item.Meta
                   avatar={
-                    <Avatar>
-                      {item.user_name_requesting
+                    <Avatar src={item?.picture ? item.picture : null}>
+                      {item?.picture
+                        ? null
+                        : item.user_name_requesting
                         ? item.user_name_requesting.charAt(0).toUpperCase()
                         : item._id.charAt(0).toUpperCase()}
+                      {console.log('ITEM===>', item)}
                     </Avatar>
                   }
                   title={item.user_name_requesting || item._id}
@@ -100,10 +152,12 @@ const InvitacionListSent = ({ list }) => {
       </Col>
     );
 
-  return (
+  return !loading ? (
     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
       <Card>No ha enviado ninguna solicitud</Card>
     </Col>
+  ) : (
+    <Spin />
   );
 };
 
@@ -141,6 +195,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       // Servicio que trae las invitaciones / solicitudes enviadas
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
         if (data.length > 0) {
+          console.log('DATA===>', data);
           setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
           setLoading(false);
         }

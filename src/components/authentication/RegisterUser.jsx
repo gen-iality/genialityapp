@@ -7,6 +7,7 @@ import { app } from '../../helpers/firebase';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@/context/MessageService';
+import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
@@ -62,13 +63,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   let [imageAvatar, setImageAvatar] = useState(null);
   let [modalInfo, setModalInfo] = useState(null);
   let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
-
-  /** request para no mostrar el error que genera el component upload de antd */
-  const dummyRequest = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess('ok');
-    }, 0);
-  };
 
   function resetFields() {
     form.resetFields();
@@ -178,7 +172,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                   setImageAvatar(null);
                 }
               }}
-              customRequest={dummyRequest}
+              customRequest={uploadImagedummyRequest}
               multiple={false}
               listType='picture'
               maxCount={1}

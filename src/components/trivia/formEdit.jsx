@@ -12,6 +12,7 @@ import {
 import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DispatchMessageService } from '../../context/MessageService';
+import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
 const { Option } = Select;
 
@@ -67,13 +68,6 @@ const FormEdit = (
       unmountForm();
     };
   }, []);
-
-  /** request para no mostrar el error que genera el component upload de antd */
-  const dummyRequest = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess('ok');
-    }, 0);
-  };
 
   /**
    * * This function is used to upload an image to the firebase Blob Storage.
@@ -414,7 +408,7 @@ const FormEdit = (
                         setDefaultImgValue(null);
                       }
                     }}
-                    customRequest={dummyRequest}
+                    customRequest={uploadImagedummyRequest}
                     fileList={defaultImgValue}
                     onRemove={handleRemoveImg}>
                     <Button icon={<UploadOutlined />}>Cargar imagen</Button>

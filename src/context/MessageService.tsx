@@ -4,7 +4,7 @@ import { message } from 'antd';
 
 const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho', 'Exito'];
 const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry'];
-const LoadingAnswer = ['Cargando', 'Espera por favor', 'Procesando'];
+const LoadingAnswer = ['Cargando', 'Procesando'];
 
 interface PropsOptions {
   type: 'success' | 'error' | 'warning' | 'info' | 'loading';

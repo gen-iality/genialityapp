@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from 'react';
 import { HelperContext } from './helperContext';
 import { useState } from 'react';
-import { firestore, fireRealtime, app } from '../../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../../helpers/request';
+import { firestore, fireRealtime } from '../../helpers/firebase';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../../helpers/request';
 import { UseEventContext } from '../eventContext';
 import { UseCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
@@ -10,16 +10,11 @@ import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
-import { getGender } from 'gender-detection-from-name';
-import { maleIcons, femaleicons } from '../../helpers/constants';
-import Logout from '@2fd/ant-design-icons/lib/Logout';
+import { maleIcons, femaleicons, imageforDefaultProfile } from '../../helpers/constants';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { helperReducer, helperInitialState } from './helperReducer';
-
-export function knowMaleOrFemale(nombre) {
-  return getGender(nombre, 'es');
-}
+import { remoteLogOutValidator } from './hooks/remoteLogOutValidator';
 
 const initialStateNotification = {
   notify: false,
@@ -27,10 +22,9 @@ const initialStateNotification = {
   type: 'none',
 };
 
-let initialStateEvenUserContext = { status: 'LOADING', value: null };
-let initialStateUserContext = { status: 'LOADING', value: undefined };
-
 export const HelperContextProvider = ({ children }) => {
+  const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
+
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventuser = UseUserEvent();
@@ -43,7 +37,6 @@ export const HelperContextProvider = ({ children }) => {
   const [totalSolicitudAmistad, setTotalSolicitudAmistad] = useState(0);
   const [totalsolicitudAgenda, setTotalsolicitudAgenda] = useState(0);
   const [totalsolicitudes, setTotalsolicitudes] = useState(0);
-  const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
   const [propertiesProfile, setpropertiesProfile] = useState();
   const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null);
   const [activitiesEvent, setactivitiesEvent] = useState(null);
@@ -62,215 +55,36 @@ export const HelperContextProvider = ({ children }) => {
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
-  const imageforDefaultProfile = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
-  const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
   const [gameData, setGameData] = useState('');
-  const [currentActivity, setcurrenActivity] = useState(null);
   const [gameRanking, setGameRanking] = useState([]);
   const [myScore, setMyScore] = useState([{ name: '', score: 0 }]);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
-  const [tabsGenerals, settabsGenerals] = useState();
   const [updateEventUser, setUpdateEventUser] = useState(false);
   const [register, setRegister] = useState(null);
-
-  const [controllerLoginVisible, setcontrollerLoginVisible] = useState({
-    visible: false,
-    idOrganization: '',
-    organization: '',
-    logo: '',
-  });
-
-  const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
-
-  const initialState = {
-    currentAuthScreen: 'login',
-  };
-
-  /**
-   * The authModalReducer function takes in a state and an action.
-   * It then checks the action type and returns a new modalAuth state depending on the action type
-   * @param {object} state - The current state of the reducer.
-   * @param {string} state.currentAuthScreen - login or register.
-   * @param {object} action - The action object that was dispatched.
-   * @param {String} action.type - showLogin or showRegister.
-   * @returns The state of the authModalReducer.
-   */
-  const authModalReducer = (state, action) => {
-    switch (action.type) {
-      case 'showLogin':
-        return { ...state, currentAuthScreen: 'login' };
-
-      case 'showRegister':
-        return { ...state, currentAuthScreen: 'register' };
-
-      default:
-        return state;
-    }
-  };
-
-  const [authModalState, authModalDispatch] = useReducer(authModalReducer, initialState);
-
-  const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
-    setcontrollerLoginVisible({
-      visible,
-      idOrganization,
-      organization,
-      logo,
-    });
-  };
-
-  function handleReloadTemplatesCms() {
-    setreloadTemplatesCms(!reloadTemplatesCms);
-  }
-
-  const handleChangeTabs = (tabs) => {
-    settabsGenerals(tabs);
-  };
-
-  const handleChangeCurrentActivity = (activity) => {
-    setcurrenActivity(activity);
-  };
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
   }
 
-  /**
-   * Get the permissions for a role in a given event.
-   * @param rolId - The id of the role you want to check permissions for.
-   * @returns The array of permissions for this role.
-   */
-  async function rolHasPermissions(rolId) {
-    if (!rolId) return;
-    let permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId);
-    return permissionsForThisRole;
-  }
-
-  /**
-   * Validate the existence of a specific role
-   * @param rolId - The id of the role you want to validate exists
-   * @returns The role object data.
-   */
-  async function theRoleExists(rolId) {
-    if (!rolId) return;
-    let ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
-
-    return ifTheRoleExists;
-  }
-
-  /**
-   * Get the user details for a member of an organization
-   * @param orgId - The ID of the organization.
-   * @param memberId - The ID of the user you want to get.
-   * @returns The OrganizationUser object.
-   */
-  async function getOrganizationUser(orgId) {
-    if (!orgId) return;
-    let { data } = await OrganizationApi.getMeUser(orgId);
-
-    return data;
-  }
-
-  /**
-   * @function remoteLogoutNotification - Show notification after logging out remotely the user is notified why their current session has been logged out
-   * @param {string} type Type of notification, success - info - warning - error
-   */
-  const remoteLogoutNotification = (type) => {
-    notification[type]({
-      duration: 0,
-      icon: (
-        <Logout
-          className='animate__animated animate__heartBeat animate__infinite animate__slower'
-          style={{ color: '#FF4E50' }}
-        />
-      ),
-      message: (
-        <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{cUser.value?.names}</b>
-      ),
-      description: intl.formatMessage({
-        id: 'notification.log_out',
-        defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
-      }),
-      style: {
-        borderRadius: '10px',
-      },
-    });
-  };
-
-  /* Creating a reference to the connection object. */
-  const conectionRef = firestore.collection(`connections`);
-
-  /**
-   * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states
-   * @param {boolean} showNotification If the value is true the remote logout notification is displayed
-   */
-  const logout = async (showNotification) => {
-    const user = app.auth()?.currentUser;
-    const lastSignInTime = (await user.getIdTokenResult()).authTime;
-
-    app
-      .auth()
-      .signOut()
-      .then(async () => {
-        const currentUserConnect = await conectionRef.doc(cUser.value?.uid).get();
-
-        if (currentUserConnect?.data()?.lastSignInTime === lastSignInTime)
-          await conectionRef.doc(cUser.value?.uid).delete();
-        const routeUrl = window.location.href;
-        const weAreOnTheLanding = routeUrl.includes('landing');
-        handleChangeTypeModal(null);
-        cEventuser.setuserEvent(initialStateEvenUserContext);
-        cUser.setCurrentUser(initialStateUserContext);
-        if (showNotification) remoteLogoutNotification('info');
-        if (!weAreOnTheLanding) {
-          history.push('/');
-        }
-      })
-      .catch(function(error) {
-        console.error('error', error);
-      });
-  };
-
-  /**
-   * It gets the last sign in time of the user.
-   * @returns The last sign user time.
-   */
-  async function getlastSignInTime() {
-    const user = app.auth().currentUser;
-    const lastSignInTime = (await user.getIdTokenResult()).authTime;
-    return lastSignInTime;
-  }
-
-  /**
-   * *If the change type is not an add and the email in the change is diferent as the current user's
-   * email, return true.*
-   * @param {object} change - The change object.
-   * @returns a boolean value.
-   */
-  function docChangesTypeAndEmailValidation(change) {
-    if (change.type !== 'added' && change?.doc?.data()?.email == cUser.value?.email) return true;
-    return false;
-  }
-
+  /** useEffect usado para validar la desconexion remota*/
   useEffect(() => {
     if (!cUser.value) return;
 
-    const unsubscribe = conectionRef.onSnapshot((snapshot) => {
-      const changes = snapshot.docChanges();
-      if (changes) {
-        changes.forEach((change) => {
-          if (docChangesTypeAndEmailValidation(change)) {
-            getlastSignInTime().then((userlastSignInTime) => {
-              if (change?.doc?.data()?.lastSignInTime !== userlastSignInTime && change.type == 'modified') logout(true);
-              if (change.type == 'removed') logout(true);
-            });
-          }
-        });
-      }
-    });
+    const params = {
+      user: cUser.value,
+      setCurrentUser: cUser.setCurrentUser,
+      setuserEvent: cEventuser.setuserEvent,
+      formatMessage: intl.formatMessage,
+      handleChangeTypeModal,
+      history,
+      helperDispatch,
+    };
+
+    const unsubscribe = remoteLogOutValidator(params);
+
     return () => {
       unsubscribe();
     };
@@ -511,10 +325,6 @@ export const HelperContextProvider = ({ children }) => {
       setAttendeeListPresence(attendeeListClone);
     });
     return true;
-  };
-
-  const HandleChangeDrawerProfile = () => {
-    setisOpenDrawerProfile(!isOpenDrawerProfile);
   };
 
   const GetInfoAgenda = async () => {
@@ -769,7 +579,6 @@ export const HelperContextProvider = ({ children }) => {
         totalSolicitudAmistad,
         totalsolicitudAgenda,
         totalsolicitudes,
-        HandleChangeDrawerProfile,
         propertiesProfile,
         getPropertiesUserWithId,
         propertiesOtherprofile,
@@ -791,43 +600,26 @@ export const HelperContextProvider = ({ children }) => {
         seteventPrivate,
         GetPermissionsEvent,
         totalPrivateMessages,
-        imageforDefaultProfile,
         requestSend,
         obtenerContactos,
         typeModal,
         handleChangeTypeModal,
-        authModalState,
-        authModalDispatch,
         visibleLoginEvents,
         visibilityLoginEvents,
-        reloadTemplatesCms,
-        handleReloadTemplatesCms,
         gameData,
         setGameData,
         theUserHasPlayed,
         setTheUserHasPlayed,
-        knowMaleOrFemale,
         femaleicons,
         maleIcons,
-        handleChangeCurrentActivity,
-        currentActivity,
         gameRanking,
         setGameRanking,
         myScore,
         setMyScore,
-        tabsGenerals,
-        handleChangeTabs,
         updateEventUser,
         setUpdateEventUser,
         register,
         setRegister,
-        HandleControllerLoginVisible,
-        controllerLoginVisible,
-        rolHasPermissions,
-        theRoleExists,
-        setcurrenActivity,
-        getOrganizationUser,
-        logout,
       }}>
       {children}
     </HelperContext.Provider>

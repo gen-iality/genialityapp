@@ -28,15 +28,7 @@ const RenderComponent = (props) => {
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
   let { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
-  let {
-    currentActivity,
-    chatAttendeChats,
-    handleChangeTabs,
-    handleChangeCurrentActivity,
-    setcurrenActivity,
-    HandleChatOrAttende,
-    HandlePublicPrivate,
-  } = useHelper();
+  let { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     if (!fnCiclo) {
@@ -66,10 +58,11 @@ const RenderComponent = (props) => {
             HandleChatOrAttende('4');
           }
 
-          handleChangeTabs(tabs);
+          // handleChangeTabs(tabs);
+          helperDispatch({ type: 'changeTabs', tabs: tabs });
           tempactivty.habilitar_ingreso = habilitar_ingreso;
           tempactivty.avalibleGames = avalibleGames;
-          setcurrenActivity(tempactivty);
+          helperDispatch({ type: 'currentActivity', currentActivity: tempactivty });
           setFnCiclo(true);
           console.log('tempactivty', tempactivty);
         });
@@ -197,20 +190,20 @@ const RenderComponent = (props) => {
             {
               console.log('100. TYPE ACTIVITY==>', typeActivity);
             }
-            return typeActivity === 'url' ? (
+            return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : (
               <ImageComponentwithContext willStartSoon={true} />
             );
 
           case 'ended_meeting_room':
-            return typeActivity === 'url' ? (
+            return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : (
               <VideoActivity />
             );
           case '':
-            return typeActivity === 'url' ? (
+            return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : currentActivity?.video ? (
               <VideoActivity />

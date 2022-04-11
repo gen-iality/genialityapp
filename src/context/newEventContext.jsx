@@ -19,7 +19,6 @@ const initialState = {
 };
 //REDUCERS
 function reducer(state, action) {
-  console.log('🚀 debug ~ reducer ~ action', action);
   const organizationSelect = action.payload?.organization || null;
   const organizationIdURL = action.payload?.orgId || null;
   let organizationSelected;
@@ -83,7 +82,6 @@ export const NewEventProvider = ({ children }) => {
   async function OrganizationsList() {
     dispatch({ type: 'LOADING' });
     const organizations = await OrganizationApi.mine();
-    console.log('🚀 debug ~ OrganizationsList ~ organizations', organizations);
     const organizationsFilter = organizations.filter((orgData) => orgData.id);
     dispatch({ type: 'ORGANIZATIONS', payload: { organizationList: organizationsFilter } });
     dispatch({ type: 'COMPLETE' });

@@ -3,6 +3,7 @@ import { firestore } from '../../helpers/firebase';
 import { Avatar, List, Card, Spin, Row, Comment, Tooltip, Typography, Divider } from 'antd';
 import Moment from 'moment';
 import withContext from '../../context/withContext';
+import { UsersApi } from '@/helpers/request';
 
 class CommentsList extends Component {
   constructor(props) {
@@ -18,17 +19,12 @@ class CommentsList extends Component {
     };
   }
   async getDataUser(iduser) {
-    let user = await firestore
-      .collection(`${this.props.eventId}_event_attendees`)
-      .where('account_id', '==', iduser)
-      .get();
-    if (user.docs.length > 0 && this.props.cEvent.value.user_properties) {
-      let fieldAvatar = this.props.cEvent.value.user_properties.filter((field) => field.type == 'avatar');
-      if (fieldAvatar.length > 0) {
-        return user.docs[0].data().user?.picture;
-      }
+    let user = await UsersApi.getProfile(iduser);
+    if (user) {
+      return user.picture;
+    } else {
+      return undefined;
     }
-    return undefined;
   }
   // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
   async getComments(postId, eventId) {
@@ -90,10 +86,9 @@ class CommentsList extends Component {
               <List.Item key={item.id}>
                 <Comment
                   avatar={
-                    item.authorName ? (
+                    item?.picture ? (
                       <Avatar src={item.picture ? item.picture : null}>
                         {!item.picture &&
-                          item.authorName &&
                           item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
                       </Avatar>
                     ) : (

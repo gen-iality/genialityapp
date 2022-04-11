@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import Moment from 'moment';
-import ImageInput from '../shared/imageInput';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
 import ErrorServe from '../modal/serverError';
@@ -36,6 +35,7 @@ import BackTop from '../../antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -91,6 +91,7 @@ class General extends Component {
         permissions: 'public',
       },
       typeEvent: 0,
+      image: this.props.event.picture,
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -295,104 +296,6 @@ class General extends Component {
       });
     } else this.setState({ event: { ...this.state.event, [name]: value } });
   };
-  //Cambio en el input de imagen
-  changeImg = (files) => {
-    const file = files[0];
-    const url = '/api/files/upload',
-      path = [],
-      self = this;
-    if (file) {
-      this.setState({
-        imageFile: file,
-        event: { ...this.state.event, picture: null },
-      });
-
-      //envia el archivo de imagen como POST al API
-      const uploaders = files.map((file) => {
-        let data = new FormData();
-        data.append('file', file);
-        return Actions.post(url, data).then((image) => {
-          if (image) path.push(image);
-        });
-      });
-
-      //cuando todaslas promesas de envio de imagenes al servidor se completan
-
-      // eslint-disable-next-line no-unused-vars
-      axios.all(uploaders).then((data) => {
-        self.setState({
-          event: {
-            ...self.state.event,
-            picture: path[0],
-          },
-          fileMsg: 'Imagen subida con exito',
-          imageFile: null,
-          path,
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: this.props.intl.formatMessage({
-            id: 'toast.img',
-            defaultMessage: 'Ok!',
-          }),
-          action: 'show',
-        });
-      });
-    } else {
-      this.setState({
-        errImg: 'Solo se permiten imágenes. Intentalo de nuevo',
-      });
-    }
-  };
-
-  banner_image = (files) => {
-    const file = files;
-    const url = '/api/files/upload',
-      banner_image = [],
-      self = this;
-    if (file) {
-      this.setState({
-        imageFileBannerImage: file,
-        event: { ...this.state.event, bannerImage: null },
-      });
-
-      //envia el archivo de imagen como POST al API
-      const uploaders = files.map((file) => {
-        let data = new FormData();
-        data.append('file', file);
-        return Actions.post(url, data).then((image) => {
-          if (image) banner_image.push(image);
-        });
-      });
-
-      //cuando todaslas promesas de envio de imagenes al servidor se completan
-
-      // eslint-disable-next-line no-unused-vars
-      axios.all(uploaders).then((data) => {
-        self.setState({
-          event: {
-            ...self.state.event,
-            bannerImage: banner_image,
-          },
-          fileMsgBanner: 'Imagen subida con exito',
-          imageFileBannerImage: null,
-          banner_image,
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: this.props.intl.formatMessage({
-            id: 'toast.img',
-            defaultMessage: 'Ok!',
-          }),
-          action: 'show',
-        });
-      });
-    } else {
-      this.setState({
-        errImg: 'Solo se permiten imágenes. Intentalo de nuevo',
-      });
-    }
-  };
 
   /* ZONA SOCIAL */
 
@@ -492,6 +395,10 @@ class General extends Component {
     });
   };
 
+  handleImage(imageUrl) {
+    this.setState({ image: imageUrl });
+  }
+
   //*********** FIN FUNCIONES DEL FORMULARIO
 
   //Envío de datos
@@ -499,11 +406,17 @@ class General extends Component {
     const { intl } = this.props;
     /* e.preventDefault();
     e.stopPropagation(); */
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere miestras se guarda la información...',
+      action: 'show',
+    });
 
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs();
 
-    const { event, path } = this.state;
+    const { event, path, image } = this.state;
     const self = this;
     //this.setState({loading:true});
     const hour_start = Moment(event.hour_start).format('HH:mm');
@@ -522,7 +435,7 @@ class General extends Component {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
-      picture: path.length > 1 ? path : event.picture,
+      picture: image,
       video: event.video || null,
       video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
       venue: event.venue,
@@ -541,7 +454,6 @@ class General extends Component {
         this.state.selectedOrganizer && this.state.selectedOrganizer.value ? this.state.selectedOrganizer.value : null,
       event_type_id: this.state.selectedType?.value,
       app_configuration: this.state.info.app_configuration,
-      banner_image: this.state.banner_image,
       banner_image_link: this.state.banner_image_link,
       adminContenido: event.adminContenido,
       type_event: event.type_event,
@@ -753,7 +665,9 @@ class General extends Component {
       serverError,
       specificDates,
       registerForm,
+      image,
     } = this.state;
+
     return (
       <React.Fragment>
         <Form onFinish={this.submit} {...formLayout}>
@@ -1027,47 +941,16 @@ class General extends Component {
 
                   <div>
                     <label style={{ marginTop: '2%' }}>Imagen General (para el listado)</label>
-                    <ImageInput
-                      picture={event.picture}
-                      imageFile={this.state.imageFile}
-                      divClass={'drop-img'}
-                      content={<img src={event.picture} alt={'Imagen Perfil'} />}
-                      classDrop={'dropzone'}
-                      contentDrop={
-                        <Button
-                          type='primary'
-                          onClick={(e) => {
-                            e.preventDefault();
-                          }}
-                          /* loading={this.state.imageFile} */
-                        >
-                          Cambiar foto
-                        </Button>
-                      }
-                      contentZone={
-                        <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                          <span>Subir foto</span>
-                          <br />
-                          <small>(Tamaño recomendado: 1280px x 960px)</small>
-                        </div>
-                      }
-                      changeImg={this.changeImg}
-                      errImg={this.state.errImg}
-                      style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'relative',
-                        height: 250,
-                        width: '100%',
-                        borderWidth: 2,
-                        borderColor: '#b5b5b5',
-                        borderStyle: 'dashed',
-                        borderRadius: 10,
-                      }}
-                    />
-                    {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
+                    <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                      <Form.Item noStyle>
+                        <ImageUploaderDragAndDrop
+                          imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
+                          imageUrl={image}
+                          width='1080'
+                          height='1080'
+                        />
+                      </Form.Item>
+                    </Card>
                   </div>
 
                   <Form.Item label={'Vídeo'}>

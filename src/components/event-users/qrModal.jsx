@@ -7,10 +7,13 @@ import { firestore } from '../../helpers/firebase';
 import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@/context/MessageService';
+import axios from 'axios';
+import { useRequest } from '@/services/useRequest';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { Title } = Typography;
+const ApiUrl = process.env.VITE_API_URL;
 
 const html = document.querySelector('html');
 class QrModal extends Component {
@@ -72,6 +75,36 @@ class QrModal extends Component {
     this.props.clearOption(); // Clear dropdown to options scanner
   };
 
+  handleSearchByCc = (cedula, usersRef) => {
+    axios.get(`${ApiUrl}${useRequest.EventUsers.getEventUserByCedula(cedula, this.props.eventID)}`).then((res) => {
+      console.log('res', res);
+      let idUser = res.data.data[0]?._id || null;
+      usersRef
+        .where('_id', '==', `${idUser}`)
+        .get()
+        .then((querySnapshot) => {
+          const qrData = {};
+          if (querySnapshot.empty) {
+            qrData.msg = 'User not found';
+            qrData.another = true;
+            qrData.user = null;
+            this.setState({ qrData });
+          } else {
+            querySnapshot.forEach((doc) => {
+              qrData.msg = 'User found';
+              qrData.user = doc.data();
+              console.log('docdata', doc.data());
+              qrData.another = !!qrData.user.checked_in;
+              this.setState({ qrData });
+            });
+          }
+        })
+        .catch(() => {
+          this.setState({ found: 0 });
+        });
+    });
+  };
+
   searchCC = (Scanner) => {
     const usersRef = firestore.collection(`${this.props.eventID}_event_attendees`);
     let value = String(this.state.newCC).toLowerCase();
@@ -102,33 +135,13 @@ class QrModal extends Component {
           this.setState({ found: 0 });
         });
     } else {
-      usersRef
-        .where('documento', '==', `${value}`)
-        .get()
-        .then((querySnapshot) => {
-          const qrData = {};
-          if (querySnapshot.empty) {
-            qrData.msg = 'User not found';
-            qrData.another = true;
-            qrData.user = null;
-            this.setState({ qrData });
-          } else {
-            querySnapshot.forEach((doc) => {
-              qrData.msg = 'User found';
-              qrData.user = doc.data();
-              qrData.another = !!qrData.user.checked_in;
-              this.setState({ qrData });
-            });
-          }
-        })
-        .catch(() => {
-          this.setState({ found: 0 });
-        });
+      this.handleSearchByCc(value, usersRef);
     }
   };
 
   changeCC = (e) => {
-    this.setState({ newCC: '' });
+    //this.setState({ newCC: '' });
+    e.preventDefault();
     const { value } = e.target;
     let acumulador = '';
     let contador = 0;
@@ -137,7 +150,6 @@ class QrModal extends Component {
       cedula = value;
       contador++;
     }
-    console.log('valueQR', value);
     for (let i = 0; i < value.length; i++) {
       if (value[i] != ' ') {
         acumulador = acumulador + value[i];
@@ -148,12 +160,8 @@ class QrModal extends Component {
         contador++;
       }
 
-      if (contador == 11 && this.state.nextreadcc) {
-        this.setState({ nextreadcc: false });
-        var cedulaOnlynumbers = cedula.match(/(\d+)/);
-        this.setState({ newCC: cedulaOnlynumbers[0] });
-        sessionStorage.setItem('dato', cedulaOnlynumbers[0]);
-      }
+      var cedulaOnlynumbers = cedula.match(/(\d+)/);
+      this.setState({ newCC: Number(cedulaOnlynumbers[0]) });
     }
   };
 
@@ -287,12 +295,12 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   }
                   key='2'>
                   <Form.Item label={'Id Usuario'}>
-                    <input
-                      placeholder='type here '
-                      onKeyDown={(e) => {
-                        e.preventDefault();
-                        console.log('key', e);
-                      }}
+                    <Input
+                      allowClear
+                      value={this.state.newCC}
+                      onChange={(value) => this.changeCC(value)}
+                      name={'searchCC'}
+                      autoFocus
                     />
                   </Form.Item>
                   <Row justify='center' wrap gutter={8}>
@@ -302,7 +310,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                       </Button>
                     </Col>
                     <Col>
-                      <Button type='ghost' onClick={this.cleanInputSearch}>
+                      <Button type='ghost' onClick={() => this.cleanInputSearch()}>
                         Limpiar
                       </Button>
                     </Col>
@@ -313,17 +321,23 @@ will show the checkIn information in the popUp. If not, it will show an error me
           ) : (
             <React.Fragment>
               <Form.Item label={'Cédula'}>
-                <input
-                  placeholder='type here '
-                  onKeyDown={(e) => {
-                    console.log('key', e);
-                  }}
+                <Input
+                  allowClear
+                  value={this.state.newCC}
+                  onChange={(value) => this.changeCC(value)}
+                  name={'searchCC'}
+                  autoFocus
                 />
               </Form.Item>
               <Row justify='center' wrap gutter={8}>
                 <Col>
                   <Button type='primary' onClick={this.searchCC}>
                     Buscar
+                  </Button>
+                </Col>
+                <Col>
+                  <Button type='ghost' onClick={() => this.cleanInputSearch()}>
+                    Limpiar
                   </Button>
                 </Col>
               </Row>

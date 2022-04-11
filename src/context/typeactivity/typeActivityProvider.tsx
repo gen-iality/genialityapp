@@ -92,7 +92,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         typeActivityDispatch({ type: 'selectUrl', payload: { id, sendData } });
         break;
       case 'cargarvideo':
-        typeActivityDispatch({ type: 'selectCargarVideo', payload: { id } });
+        typeActivityDispatch({ type: 'selectCargarVideo', payload: { id, sendData } });
         break;
       case 'eviusStreaming':
         typeActivityDispatch({ type: 'selectEviusStreaming', payload: { id } });
@@ -225,10 +225,16 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         //Type:reunión
         break;
       case 'cargarvideo':
-        resp = await saveConfig({ platformNew: '', type: 'url', data: typeActivityState?.data });
-        setTypeActivity('url');
-        setPlatform('wowza');
-        //Type:url
+        const data = typeActivityState?.data.split('-');
+        const urlVideo = data[0];
+        const videoId = data[1];
+        const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent?.value?._id);
+        if (respUrlVideo) {
+          resp = await saveConfig({ platformNew: '', type: 'video', data: urlVideo, habilitar_ingreso: '' });
+          setTypeActivity('video');
+          setPlatform('wowza');
+          setMeetingId(urlVideo);
+        }
         break;
 
       default:

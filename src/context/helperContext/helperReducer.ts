@@ -1,32 +1,80 @@
+import { logout } from './hooks/logOut';
 import { HelperState } from './interfaces/interfaces';
 import { HelperAction } from './types/types';
 
 export const helperInitialState: HelperState = {
-  helperOptions: {},
+  reloadTemplatesCms: false,
+  tabsGenerals: {},
+  currentAuthScreen: 'login',
+  controllerLoginVisible: { visible: false, idOrganization: '', organization: '', logo: '' },
+  currentActivity: null,
+  showNotification: false,
+  params: {},
 };
 
-export const helperReducer = (state: HelperState, action: HelperAction): HelperState => {
-  console.log('🚀 REDUCER ACTIONTYPE ', action.type);
+export const helperReducer = (state: HelperState, action: HelperAction) => {
+  // console.log(`🚀 REDUCER ACTION ${action?.type}`, action);
 
-  return { ...state };
-  // switch (action.type) {
-  //   case 'type':
-  //     return {
-  //       ...state,
-  //     };
+  switch (action.type) {
+    case 'reloadTemplatesCms':
+      return {
+        ...state,
+        reloadTemplatesCms: true,
+      };
 
-  //   case 'toggleType':
-  //     return {
-  //       ...state,
-  //     };
+    case 'changeTabs':
+      return {
+        ...state,
+        tabsGenerals: action.tabs,
+      };
 
-  //   case 'selectLiveBroadcast':
-  //     return {
-  //       ...state,
-  //     };
+    case 'showLogin':
+      return {
+        ...state,
+        currentAuthScreen: 'login',
+        controllerLoginVisible: {
+          visible: action?.visible,
+          idOrganization: action.idOrganization,
+          organization: action.organization,
+          logo: action.logo,
+        },
+      };
 
-  //   default:
-  //     console.log('🚀 FUERA DEL REDUCER');
-  //     break;
-  // }
+    case 'showRegister':
+      return {
+        ...state,
+        currentAuthScreen: 'register',
+        controllerLoginVisible: {
+          visible: action?.visible,
+          idOrganization: action.idOrganization,
+          organization: action.organization,
+          logo: action.logo,
+        },
+      };
+
+    case 'currentActivity':
+      return {
+        ...state,
+        currentActivity: action.currentActivity,
+      };
+
+    case 'logout':
+      const params = {
+        showNotification: action.showNotification,
+        params: action.params,
+      };
+
+      logout(params);
+
+      return { ...state };
+
+    //   case 'selectLiveBroadcast':
+    //     return {
+    //       ...state,
+    //     };
+
+    default:
+      console.log('🚀 FUERA DEL REDUCER');
+      return state;
+  }
 };

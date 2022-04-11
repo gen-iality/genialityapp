@@ -571,10 +571,11 @@ class ListEventUser extends Component {
                           bordered={true}>
                           <Meta
                             avatar={
-                              <Avatar size={65} src={users.properties['picture'] ? users.properties['picture'] : ''}>
-                                {!users.properties['picture'] && users.properties.names
+                              <Avatar size={65} src={users?.user?.picture ? users?.user?.picture : ''}>
+                                {!users?.user?.picture && users.properties.names
                                   ? users.properties.names.charAt(0).toUpperCase()
                                   : users.properties.names}
+                                {console.log('USER ACA===>', users)}
                               </Avatar>
                             }
                             title={users.properties.names ? users.properties.names : 'No registra Nombre'}

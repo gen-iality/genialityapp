@@ -11,6 +11,8 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Loading from '../profile/loading';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -27,6 +29,7 @@ class Styles extends Component {
       loading: true,
       styles: {},
       isLoading: false,
+      stylesIsLoading: true,
       editIsVisible: false,
       //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
       colorDrawer: [
@@ -277,72 +280,17 @@ class Styles extends Component {
           hideDatesAgendaItem: dataStyles.hideDatesAgendaItem || false,
           hideHoursAgenda: dataStyles.hideHoursAgenda || false,
         },
+        stylesIsLoading: false,
       });
     }
   }
 
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
-  async saveEventImage(files, imageFieldName) {
-    const file = files[0];
-    let imageUrl = null;
-    const url = '/api/files/upload',
-      self = this;
-    if (file) {
-      this.setState({
-        imageFile: file,
-        event: { ...this.state.event, picture: null },
-      });
+  async saveEventImage(imageUrl, imageFieldName) {
+    let styles = { ...this.state.styles };
+    styles[imageFieldName] = imageUrl;
 
-      //envia el archivo de imagen como POST al API
-      const uploaders = files.map((file) => {
-        let data = new FormData();
-        data.append('file', file);
-        return Actions.post(url, data).then((image) => {
-          if (image) imageUrl = image;
-        });
-      });
-      this.setState({ isLoading: true });
-
-      //cuando todaslas promesas de envio de imagenes al servidor se completan
-      axios.all(uploaders).then(async () => {
-        let temp = { ...this.state.styles };
-        temp[imageFieldName] = imageUrl;
-
-        //Si estamos subiendo el banner_image generamos una más pequena de 600px para usar en los correos
-        if (imageFieldName === 'banner_image') {
-          let imageObject = {
-            banner_image_email: imageUrl,
-            type: 'email',
-          };
-          let image_event_name = 'banner_image_email';
-          let imageUrl_email = await Actions.post(`/api/files/uploadbase/${image_event_name}`, imageObject);
-          temp[image_event_name] = imageUrl_email;
-        }
-
-        if (imageFieldName === 'banner_footer') {
-          let imageObject = {
-            banner_footer_email: imageUrl,
-            type: 'email',
-          };
-          let image_event_name = 'banner_footer_email';
-          let imageFooter_email = await Actions.post(`/api/files/uploadbase/${image_event_name}`, imageObject);
-          temp[image_event_name] = imageFooter_email;
-        }
-
-        this.setState({ styles: temp, isLoading: false });
-
-        self.setState({
-          fileMsg: 'Imagen subida con exito',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
-          action: 'show',
-        });
-      });
-    } else {
-      this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
-    }
+    this.setState({ styles: styles });
   }
 
   // banner_image  BackgroundImage  FooterImage event_image
@@ -457,35 +405,6 @@ class Styles extends Component {
     this.setState({ colorDrawer: newColorDrawer });
   };
 
-  async deleteInfoBanner(value) {
-    let styles = { ...this.state.styles };
-    let empty = null;
-    styles[value] = empty;
-
-    const stylesToSave = { styles };
-
-    this.setState({ styles: styles });
-
-    const info = await Actions.put(`/api/events/${this.state.eventId}`, stylesToSave);
-
-    this.setState({ loading: false });
-
-    if (info._id) {
-      DispatchMessageService({
-        type: 'success',
-        msj: this.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
-        action: 'show',
-      });
-    } else {
-      DispatchMessageService({
-        type: 'warning',
-        msj: this.props.intl.formatMessage({ id: 'toast.warning', defaultMessage: 'Idk' }),
-        action: 'show',
-      });
-      this.setState({ msg: 'Cant Create', create: false });
-    }
-  }
-
   hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
@@ -517,160 +436,139 @@ class Styles extends Component {
   } */
 
   render() {
+    const { stylesIsLoading } = this.state;
     return (
       <React.Fragment>
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Configuración de Estilos'} save form />
 
           <Row justify='center' wrap gutter={[8, 8]}>
-            <Col span={12}>
-              {this.state.colorDrawer.map((item, key) => (
-                <div key={key}>
-                  {item.editIsVisible && (
-                    <Modal
-                      closable={false}
-                      footer={[
-                        <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
-                          Aceptar
-                        </Button>,
-                      ]}
-                      title={<Title level={5}>{item.title}</Title>}
-                      visible={item.editIsVisible}>
-                      <Space wrap size='large' align='start'>
-                        <SketchPicker
-                          color={this.state.styles[item.fieldColorName]}
-                          onChangeComplete={(color) => {
-                            this.onColorChange(color, item.fieldColorName);
-                          }}
-                        />
-                        <Space direction='vertical'>
-                          <Text
-                            style={{ fontSize: '20px' }}
-                            code
-                            copyable={{
-                              text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
-                              onCopy: () =>
-                                DispatchMessageService({
-                                  type: 'success',
-                                  msj: 'Color hexadecimal copiado',
-                                  action: 'show',
-                                }),
-                            }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
-                          <Text
-                            style={{ fontSize: '20px' }}
-                            code
-                            copyable={{
-                              text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
-                                this.hexToRgb(this.state.styles[item.fieldColorName])?.g
-                              },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
-                              onCopy: () =>
-                                DispatchMessageService({
-                                  type: 'success',
-                                  msj: 'Color rgb copiado',
-                                  action: 'show',
-                                }),
-                            }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
-                            this.hexToRgb(this.state.styles[item.fieldColorName])?.g
-                          },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
-                        </Space>
-                      </Space>
-                    </Modal>
-                  )}
-
-                  <Form.Item
-                    label={item.title}
-                    help={item.description}
-                    onClick={() => this.handleClickSelectColor(key)}>
-                    {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
-                    <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
-                      {this.state.styles[item.fieldColorName]}
-                    </Tag>
-                  </Form.Item>
-                </div>
-              ))}
-
-              {this.selectsDrawer.map((item, key) => (
-                <div key={key}>
-                  <Form.Item label={item.label}>
-                    <Select
-                      defaultValue={this.state.styles[item.name] /* item.defaultValue */}
-                      value={this.state.styles[item.name]}
-                      name={item.name}
-                      onChange={(e) => this.handleChange(e, item.name)}
-                      style={{ width: 120 }}>
-                      {item.options.map((item2, key2) => (
-                        <Option key={key2} value={item2.value}>
-                          {item2.label}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-
-                  {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
-                    <Form.Item label={'Link de video'}>
-                      <Input
-                        defaultValue={this.state.styles['data_loader_page']}
-                        value={this.state.styles['data_loader_page']}
-                        type='text'
-                        onChange={(e) => this.getDataLoaderPage(e.target.value)}
-                      />
-                    </Form.Item>
-                  )}
-                  {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
-                    <Form.Item>
-                      <ReactQuill
-                        id={item.name}
-                        onChange={this.getDataLoaderPage}
-                        defaultValue={this.state.styles.data_loader_page}
-                        style={{ marginTop: '5%' }}
-                        modules={toolbarEditor}
-                      />
-                    </Form.Item>
-                  )} */}
-                </div>
-              ))}
-
-              <Space direction='vertical' wrap>
-                {this.imageDrawer.map((item, key) => (
+            {stylesIsLoading ? (
+              <Loading />
+            ) : (
+              <Col span={12}>
+                {this.state.colorDrawer.map((item, key) => (
                   <div key={key}>
-                    <Form.Item label={item.title} help={item.description}>
-                      {/* <label className='label'>{item.title}</label> */}
+                    {item.editIsVisible && (
+                      <Modal
+                        closable={false}
+                        footer={[
+                          <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
+                            Aceptar
+                          </Button>,
+                        ]}
+                        title={<Title level={5}>{item.title}</Title>}
+                        visible={item.editIsVisible}>
+                        <Space wrap size='large' align='start'>
+                          <SketchPicker
+                            color={this.state.styles[item.fieldColorName]}
+                            onChangeComplete={(color) => {
+                              this.onColorChange(color, item.fieldColorName);
+                            }}
+                          />
+                          <Space direction='vertical'>
+                            <Text
+                              style={{ fontSize: '20px' }}
+                              code
+                              copyable={{
+                                text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
+                                onCopy: () =>
+                                  DispatchMessageService({
+                                    type: 'success',
+                                    msj: 'Color hexadecimal copiado',
+                                    action: 'show',
+                                  }),
+                              }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
+                            <Text
+                              style={{ fontSize: '20px' }}
+                              code
+                              copyable={{
+                                text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                                  this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                                },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
+                                onCopy: () =>
+                                  DispatchMessageService({
+                                    type: 'success',
+                                    msj: 'Color rgb copiado',
+                                    action: 'show',
+                                  }),
+                              }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                              this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                            },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
+                          </Space>
+                        </Space>
+                      </Modal>
+                    )}
+
+                    <Form.Item
+                      label={item.title}
+                      help={item.description}
+                      onClick={() => this.handleClickSelectColor(key)}>
                       {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
-
-                      <Spin tip='Cargando...' spinning={this.state.isLoading}>
-                        <ImageInput
-                          picture={this.state.styles[item.imageFieldName]}
-                          width={item.width}
-                          height={item.height}
-                          changeImg={(files) => {
-                            this.saveEventImage(files, item.imageFieldName);
-                          }}
-                          errImg={this.state.errImg}
-                          btnRemove={<></>}
-                          /* btnRemove={
-                            this.state.styles[item.imageFieldName] && (
-                              <button
-                                onClick={async (e) => {
-                                  e.stopPropagation();
-                                  this.deleteInfoBanner(item.imageFieldName);
-                                }}
-                                className={`button is-primary is-inverted is-outlined`}>
-                                Eliminar Imagen
-                              </button>
-                            )
-                          } */
-                        />
-                        {this.state.styles[item.imageFieldName] && (
-                          <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
-                        )}
-                      </Spin>
+                      <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
+                        {this.state.styles[item.fieldColorName]}
+                      </Tag>
                     </Form.Item>
-
-                    {/* {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>} */}
                   </div>
                 ))}
-              </Space>
-            </Col>
+
+                {this.selectsDrawer.map((item, key) => (
+                  <div key={key}>
+                    <Form.Item label={item.label}>
+                      <Select
+                        defaultValue={this.state.styles[item.name] /* item.defaultValue */}
+                        value={this.state.styles[item.name]}
+                        name={item.name}
+                        onChange={(e) => this.handleChange(e, item.name)}
+                        style={{ width: 120 }}>
+                        {item.options.map((item2, key2) => (
+                          <Option key={key2} value={item2.value}>
+                            {item2.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+
+                    {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
+                              <Form.Item label={'Link de video'}>
+                                <Input
+                                  defaultValue={this.state.styles['data_loader_page']}
+                                  value={this.state.styles['data_loader_page']}
+                                  type='text'
+                                  onChange={(e) => this.getDataLoaderPage(e.target.value)}
+                                />
+                              </Form.Item>
+                            )}
+                            {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
+                              <Form.Item>
+                                <ReactQuill
+                                  id={item.name}
+                                  onChange={this.getDataLoaderPage}
+                                  defaultValue={this.state.styles.data_loader_page}
+                                  style={{ marginTop: '5%' }}
+                                  modules={toolbarEditor}
+                                />
+                              </Form.Item>
+                            )} */}
+                  </div>
+                ))}
+
+                <Space direction='vertical' wrap>
+                  {this.imageDrawer.map((item, key) => (
+                    <div key={key}>
+                      <Form.Item label={item.title} help={item.description}>
+                        <ImageUploaderDragAndDrop
+                          imageDataCallBack={(imageUrl) => this.saveEventImage(imageUrl, item.imageFieldName)}
+                          imageUrl={this.state.styles[item.imageFieldName]}
+                          width={item.width}
+                          height={item.height}
+                        />
+                      </Form.Item>
+                    </div>
+                  ))}
+                </Space>
+              </Col>
+            )}
           </Row>
           <BackTop />
         </Form>
