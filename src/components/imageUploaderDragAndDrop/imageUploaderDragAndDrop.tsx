@@ -4,6 +4,7 @@ import { FileImageOutlined } from '@ant-design/icons';
 import { uploadImagedummyRequest, readUrlImg, handleImageName } from '../../Utilities/imgUtils';
 import { ImageUploaderDragAndDropType } from '../../Utilities/types/types';
 import { uploadImageData } from '@/Utilities/uploadImageData';
+import { fireStorage } from '@/helpers/firebase';
 
 const ImageUploaderDragAndDrop = ({
   imageDataCallBack,
@@ -52,6 +53,7 @@ const ImageUploaderDragAndDrop = ({
           setImage(imagenUrl);
           imageDataCallBack(imagenUrl);
           setIsUploading(false);
+          console.log('IMAGEURL===>', imagenUrl);
           break;
 
         case 'error':
@@ -59,6 +61,11 @@ const ImageUploaderDragAndDrop = ({
           break;
 
         case 'removed':
+          //ELIMINAR DE FIREBASE
+          const imageUrlRefArr = image?.split('/');
+          const imageRef = `${imageUrlRefArr[4]}/${imageUrlRefArr[5]}/${imageUrlRefArr[6]}`;
+          var removeRef = fireStorage.ref().child(imageRef as string);
+          await removeRef.delete();
           setImage(null);
           setIsUploading(false);
           imageDataCallBack(null);
