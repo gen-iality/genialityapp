@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
-import Dropzone from 'react-dropzone';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
-import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, Tooltip, Select } from 'antd';
+import { Button, Typography, Row, Col, Form, Input, Image, Empty, Switch, Modal, Tooltip, Select } from 'antd';
 import {
   LeftOutlined,
   UserOutlined,
@@ -19,6 +18,8 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { areaCode } from '../../helpers/constants';
 import { DispatchMessageService } from '../../context/MessageService';
+import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Loading from '../profile/loading';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -45,7 +46,7 @@ function Speaker(props) {
     description_activity: false,
     profession: '',
     published: true,
-    image: '',
+    image: null,
     order: 0,
     category_id: '',
     index: 0,
@@ -59,6 +60,7 @@ function Speaker(props) {
   const [isloadingSelect, setIsloadingSelect] = useState({ types: true, categories: true });
   const [event, setEvent] = useState();
   const [areacodeselected, setareacodeselected] = useState(57);
+  const [editDataIsLoading, setEditDataIsLoading] = useState(true);
 
   useEffect(() => {
     dataTheLoaded();
@@ -76,6 +78,7 @@ function Speaker(props) {
     categoriesData = handleSelect(categoriesData);
 
     if (state.edit) {
+      setEditDataIsLoading(true);
       const info = await SpeakersApi.getOne(state.edit, eventID);
 
       info ? setData({ ...info, newItem: false }) : '';
@@ -96,6 +99,7 @@ function Speaker(props) {
 
     setCategories(categoriesData);
     setIsloadingSelect(isloadingSelectChanged);
+    setEditDataIsLoading(false);
   }
 
   function handleChange(e) {
@@ -105,23 +109,6 @@ function Speaker(props) {
       ...data,
       [name]: value,
     });
-  }
-
-  async function handleImage(files) {
-    try {
-      const file = files[0];
-      if (file) {
-        const imageData = await uploadImage(file);
-        setData({
-          ...data,
-          image: imageData,
-        });
-      } else {
-        setErrorImage('Solo se permiten archivos de imágenes. Inténtalo de nuevo :)');
-      }
-    } catch (e) {
-      sweetAlert.showError(handleRequestError(e));
-    }
   }
 
   function chgTxt(content) {
@@ -135,6 +122,13 @@ function Speaker(props) {
     });
   }
 
+  async function handleImage(imageUrl) {
+    setData({
+      ...data,
+      image: imageUrl,
+    });
+  }
+
   async function submit(values) {
     if (values.name) {
       DispatchMessageService({
@@ -143,7 +137,8 @@ function Speaker(props) {
         msj: 'Por favor espere mientras guarda la información...',
         action: 'show',
       });
-      const { name, profession, description, image, order, published } = values;
+
+      const { name, profession, description, order, published, image } = values;
 
       const body = {
         name,
@@ -268,6 +263,7 @@ function Speaker(props) {
   );
 
   if (!props.location.state || redirect) return <Redirect to={matchUrl} />;
+
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>
       <Header
@@ -296,139 +292,130 @@ function Speaker(props) {
       />
 
       <Row justify='center' wrap gutter={12}>
-        <Col span={12}>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }} className='label'>
-                Nombre <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}>
-            <Input
-              value={data.name}
-              placeholder='Nombre del conferencista'
-              name={'name'}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Item>
-
-          <Form.Item label={'Ocupación'}>
-            <Input
-              value={data.profession}
-              placeholder='Ocupación del conferencista'
-              name={'profession'}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Item>
-          <Form.Item label={'Carga de imagen'}>
-            <Card style={{ textAlign: 'center' }}>
-              <Form.Item noStyle>
-                <p>Dimensiones: 1080px x 1080px</p>
-                <Dropzone
-                  style={{ fontSize: '21px', fontWeight: 'bold' }}
-                  onDrop={handleImage}
-                  accept='image/*'
-                  className='zone'>
-                  <Button type='dashed' danger id='btnImg'>
-                    {data.image ? 'Cambiar imagen' : 'Subir imagen'}
-                  </Button>
-                </Dropzone>
-                <div style={{ marginTop: '10px' }}>
-                  {data.image ? (
-                    <Image src={data.image} height={250} width={300} />
-                  ) : (
-                    <Empty image={<UserOutlined style={{ fontSize: '100px' }} />} description='No hay Imagen' />
-                  )}
-                </div>
-              </Form.Item>
-            </Card>
-          </Form.Item>
-
-          {event && event?.organizer?.type_event == 'Misiones' && (
-            <Form.Item label={'Teléfono'} name={'phone'}>
+        {state.edit && editDataIsLoading ? (
+          <Loading />
+        ) : (
+          <Col span={12}>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }} className='label'>
+                  Nombre <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'El nombre es requerido' }]}>
               <Input
-                addonBefore={prefixSelector}
-                //onChange={(e) => setnumberareacode(e.target.value)}
-                value={data?.phone || ''}
-                //required={mandatory}
-                type='number'
-                key={'tel'}
-                style={{ width: '100%' }}
-                placeholder='Numero de telefono'
+                value={data.name}
+                placeholder='Nombre del conferencista'
+                name={'name'}
+                onChange={(e) => handleChange(e)}
               />
             </Form.Item>
-          )}
 
-          <Form.Item label={'Descripción'}>
-            <>
-              {!showDescription_activity ? (
-                <Button
-                  id='btnDescription'
-                  type='link'
-                  onClick={() => setShowDescription_activity(true)}
-                  style={{ color: 'blue' }}>
-                  {!showDescription_activity && !data.newItem ? (
-                    <div>
-                      {' '}
-                      <EditOutlined style={{ marginRight: '5px' }} /> Editar/mostrar descripción{' '}
-                    </div>
-                  ) : (
-                    <div>
-                      {' '}
-                      <PlusCircleOutlined style={{ marginRight: '5px' }} /> Agregar/mostrar descripción{' '}
-                    </div>
-                  )}
-                </Button>
-              ) : (
-                <Tooltip
-                  placement='top'
-                  text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
-                  <Button type='link' onClick={() => setShowDescription_activity(false)} style={{ color: 'blue' }}>
-                    <div>
-                      <UpOutlined style={{ marginRight: '5px' }} />
-                      Ocultar descripción{' '}
-                    </div>
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-            {showDescription_activity && (
-              <EviusReactQuill
-                id='description'
-                name={'description'}
-                data={data.description}
-                handleChange={chgTxt}
-                style={{ marginTop: '5px' }}
+            <Form.Item label={'Ocupación'}>
+              <Input
+                value={data.profession}
+                placeholder='Ocupación del conferencista'
+                name={'profession'}
+                onChange={(e) => handleChange(e)}
               />
-            )}
-          </Form.Item>
-
-          <Form.Item label='Categoría'>
-            <Row wrap gutter={16}>
-              <Col span={22}>
-                <Creatable
-                  isClearable
-                  styles={catStyles}
-                  onChange={selectCategory}
-                  isDisabled={isloadingSelect.categories}
-                  isLoading={isloadingSelect.categories}
-                  options={categories}
-                  placeholder={'Sin categoría....'}
-                  value={selectedCategories}
+            </Form.Item>
+            <Form.Item label={'Carga de imagen'}>
+              <Form.Item noStyle>
+                <ImageUploaderDragAndDrop
+                  imageDataCallBack={handleImage}
+                  imageUrl={data.image}
+                  width='1080'
+                  height='1080'
                 />
-              </Col>
-              <Col span={2}>
-                <Form.Item>
+              </Form.Item>
+            </Form.Item>
+
+            {event && event?.organizer?.type_event == 'Misiones' && (
+              <Form.Item label={'Teléfono'} name={'phone'}>
+                <Input
+                  addonBefore={prefixSelector}
+                  //onChange={(e) => setnumberareacode(e.target.value)}
+                  value={data?.phone || ''}
+                  //required={mandatory}
+                  type='number'
+                  key={'tel'}
+                  style={{ width: '100%' }}
+                  placeholder='Numero de telefono'
+                />
+              </Form.Item>
+            )}
+
+            <Form.Item label={'Descripción'}>
+              <>
+                {!showDescription_activity ? (
                   <Button
-                    id='goToCategory'
-                    onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)}
-                    icon={<SettingOutlined />}
+                    id='btnDescription'
+                    type='link'
+                    onClick={() => setShowDescription_activity(true)}
+                    style={{ color: 'blue' }}>
+                    {!showDescription_activity && !data.newItem ? (
+                      <div>
+                        {' '}
+                        <EditOutlined style={{ marginRight: '5px' }} /> Editar/mostrar descripción{' '}
+                      </div>
+                    ) : (
+                      <div>
+                        {' '}
+                        <PlusCircleOutlined style={{ marginRight: '5px' }} /> Agregar/mostrar descripción{' '}
+                      </div>
+                    )}
+                  </Button>
+                ) : (
+                  <Tooltip
+                    placement='top'
+                    text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
+                    <Button type='link' onClick={() => setShowDescription_activity(false)} style={{ color: 'blue' }}>
+                      <div>
+                        <UpOutlined style={{ marginRight: '5px' }} />
+                        Ocultar descripción{' '}
+                      </div>
+                    </Button>
+                  </Tooltip>
+                )}
+              </>
+              {showDescription_activity && (
+                <EviusReactQuill
+                  id='description'
+                  name={'description'}
+                  data={data.description}
+                  handleChange={chgTxt}
+                  style={{ marginTop: '5px' }}
+                />
+              )}
+            </Form.Item>
+
+            <Form.Item label='Categoría'>
+              <Row wrap gutter={16}>
+                <Col span={22}>
+                  <Creatable
+                    isClearable
+                    styles={catStyles}
+                    onChange={selectCategory}
+                    isDisabled={isloadingSelect.categories}
+                    isLoading={isloadingSelect.categories}
+                    options={categories}
+                    placeholder={'Sin categoría....'}
+                    value={selectedCategories}
                   />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
-        </Col>
+                </Col>
+                <Col span={2}>
+                  <Form.Item>
+                    <Button
+                      id='goToCategory'
+                      onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)}
+                      icon={<SettingOutlined />}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+          </Col>
+        )}
       </Row>
       <BackTop />
     </Form>

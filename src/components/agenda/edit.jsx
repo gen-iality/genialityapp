@@ -43,7 +43,6 @@ import {
   // getCurrentUser,
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
-import Dropzone from 'react-dropzone';
 import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import { firestore } from '../../helpers/firebase';
@@ -53,6 +52,7 @@ import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
 import TipeOfActivity from './typeActivity';
 import { deleteLiveStream } from '@/adaptors/gcoreStreamingApi';
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -624,39 +624,43 @@ class AgendaEdit extends Component {
       msj: 'Por favor espere mientras carga la imagen...',
       action: 'show',
     });
-    try {
-      const file = files[0];
-      if (file) {
-        const image = await uploadImage(file);
-        this.setState({ image }, async () => this.valideChangesInActivityData());
-      } else {
-        this.setState(
-          {
-            errImg: 'Only images files allowed. Please try again :)',
-          },
-          async () => this.valideChangesInActivityData()
-        );
-      }
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Imagen cargada correctamente!',
-        action: 'show',
-      });
-    } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      });
-    }
+    this.setState({
+      image: files,
+    });
+    // try {
+    //   const file = files[0];
+    //   console.log('🚀 ~ file: edit.jsx ~ line 630 ~ AgendaEdit ~ changeImg= ~ file', file);
+    //   if (file) {
+    //     const image = await uploadImage(file);
+    //     this.setState({ image }, async () => this.valideChangesInActivityData());
+    //   } else {
+    //     this.setState(
+    //       {
+    //         errImg: 'Only images files allowed. Please try again :)',
+    //       },
+    //       async () => this.valideChangesInActivityData()
+    //     );
+    //   }
+    //   DispatchMessageService({
+    //     key: 'loading',
+    //     action: 'destroy',
+    //   });
+    //   DispatchMessageService({
+    //     type: 'success',
+    //     msj: 'Imagen cargada correctamente!',
+    //     action: 'show',
+    //   });
+    // } catch (e) {
+    //   DispatchMessageService({
+    //     key: 'loading',
+    //     action: 'destroy',
+    //   });
+    //   DispatchMessageService({
+    //     type: 'error',
+    //     msj: handleRequestError(e).message,
+    //     action: 'show',
+    //   });
+    // }
   };
 
   //FN para el editor enriquecido
@@ -1467,7 +1471,7 @@ class AgendaEdit extends Component {
                       />
                     </Form.Item>
                     <Form.Item label={'Imagen'}>
-                      <Card style={{ textAlign: 'center' }}>
+                      <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
                         <Form.Item noStyle>
                           <p>
                             Dimensiones:{' '}
@@ -1484,37 +1488,12 @@ class AgendaEdit extends Component {
                           <p>
                             <small>La imagen tarda unos segundos en cargar</small>
                           </p>
-                          <Dropzone
-                            style={{ fontSize: '21px', fontWeight: 'bold' }}
-                            onDrop={this.changeImg}
-                            onChange={this.changeImg}
-                            accept='image/*'
-                            className='zone'>
-                            <Row wrap gutter={[8, 8]} justify='center'>
-                              <Col>
-                                <Button type='dashed' danger id='btnImg'>
-                                  {image ? 'Cambiar imagen' : 'Subir imagen'}
-                                </Button>
-                              </Col>
-                              <Col>
-                                {image && (
-                                  <Button danger id='btnRemImg' onClick={() => this.setState({ image: '' })}>
-                                    {'Eliminar imagen'}
-                                  </Button>
-                                )}
-                              </Col>
-                            </Row>
-                          </Dropzone>
-                          <div style={{ marginTop: '10px' }}>
-                            {image ? (
-                              <Image src={image} alt={`activity_${name}`} height={300} width={450} />
-                            ) : (
-                              <Empty
-                                image={<UserOutlined style={{ fontSize: '100px' }} />}
-                                description='No hay Imagen'
-                              />
-                            )}
-                          </div>
+                          <ImageUploaderDragAndDrop
+                            imageDataCallBack={(file) => this.changeImg(file)}
+                            imageUrl={image}
+                            width='1080'
+                            height='1080'
+                          />
                         </Form.Item>
                       </Card>
                     </Form.Item>

@@ -11,7 +11,6 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import { toolbarEditor } from '../../helpers/constants';
 import moment from 'moment';
 import { firestore } from '../../helpers/firebase';
-import Dropzone from 'react-dropzone';
 import { withRouter } from 'react-router-dom';
 import { DispatchMessageService } from '../../context/MessageService';
 
