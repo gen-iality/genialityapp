@@ -1,15 +1,25 @@
+import { useState } from 'react';
 import { Col, Row, Typography, Badge, Skeleton, Spin, Space, Divider, Image } from 'antd';
 import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
+const { Title, Text, Paragraph } = Typography;
+
 function feriaInformation(props) {
-  const { Title, Text, Paragraph } = Typography;
+  const [loading, setloading] = useState(true);
 
   return (
     <>
       <div className='feriaInformation'>
         <Row gutter={[20, 20]} className='row'>
           <Col xxl={4} xl={5} lg={6} md={24} sm={24} xs={24} className='container-img'>
-            <Image src={props.ImgCompany} width={200} height={200} className='image' />
+            <Image
+              loading={loading}
+              onLoad={() => setloading(false)}
+              src={props.ImgCompany}
+              width={200}
+              height={200}
+              className='image'
+            />
           </Col>
           <Col xxl={20} xl={19} lg={18} md={24} sm={24} xs={24}>
             <Row className='container-information'>

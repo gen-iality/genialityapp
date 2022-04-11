@@ -10,10 +10,10 @@
 .react-player > div {
   position: absolute; // Scaling will occur since parent is relative now
 }
-.container-bannerEvent{
+.container-bannerEvent {
   width: 100%;
   overflow: hidden;
-  height: 540px;
+  height: 410px;
   @media only screen and (max-width: $breakpoint-mobile) {
     height: auto;
   }

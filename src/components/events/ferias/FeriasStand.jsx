@@ -18,7 +18,7 @@ function FeriasStand(props) {
     </div> */}
 
       <div
-        style={{ position: 'relative' }}
+        style={{ position: 'relative', cursor: 'pointer' }}
         onClick={() => {
           history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
         }}>
