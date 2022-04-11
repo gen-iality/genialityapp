@@ -123,10 +123,10 @@ function Speaker(props) {
     });
   }
 
-  async function handleImage(files) {
+  async function handleImage(imageUrl) {
     setData({
       ...data,
-      image: files,
+      image: imageUrl,
     });
   }
 
@@ -139,13 +139,11 @@ function Speaker(props) {
         action: 'show',
       });
 
-      const imagenUrl = await uploadImageData(data.image);
-
-      const { name, profession, description, order, published } = values;
+      const { name, profession, description, order, published, image } = values;
 
       const body = {
         name,
-        image: imagenUrl,
+        image,
         description_activity: showDescription_activity,
         description,
         profession,

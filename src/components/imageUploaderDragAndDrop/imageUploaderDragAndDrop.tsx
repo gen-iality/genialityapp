@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Upload, Spin, Image } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
-import { uploadImagedummyRequest, readUrlImg } from '../../Utilities/imgUtils';
+import { uploadImagedummyRequest, readUrlImg, handleImageName } from '../../Utilities/imgUtils';
 import { ImageUploaderDragAndDropType } from '../../Utilities/types/types';
+import { uploadImageData } from '@/Utilities/uploadImageData';
 
 const ImageUploaderDragAndDrop = ({
   imageDataCallBack,
@@ -14,26 +15,21 @@ const ImageUploaderDragAndDrop = ({
   let [image, setImage] = useState<any>(null);
   let [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const imageName = () => {
-    if (imageUrl && typeof imageUrl === 'string') {
-      var imageIndex = imageUrl.indexOf('/events');
-      var name = imageUrl.substring(imageIndex + 8, imageUrl.length);
-      return name;
-    }
-  };
   const fileList = [
     {
       url: imageUrl,
-      name: imageName(),
+      name: handleImageName(imageUrl),
     },
   ];
 
   useEffect(() => {
+    /** Seteamos la imagen cuando ya vien una desde la base de datos, para ver la previa */
     if (imageUrl) {
       setImage(imageUrl);
     }
   }, []);
 
+  /** props para el dragger */
   const draggerprops: any = {
     listType: 'picture',
     accept: 'image/png,image/jpeg',
@@ -42,13 +38,19 @@ const ImageUploaderDragAndDrop = ({
     maxCount: 1,
     customRequest: uploadImagedummyRequest,
     defaultFileList: imageUrl && [...fileList],
-    onChange: ({ file }: any) => {
+    onChange: async ({ file }: any) => {
       const { status } = file;
 
       switch (status) {
         case 'done':
-          readUrlImg({ files: file.originFileObj, setImage });
-          imageDataCallBack(file.originFileObj);
+          /** url para previa de la imagen, esta funcion nos servira para cuando se saque el guardado en base de datos de este componente */
+          // readUrlImg({ files: file.originFileObj, setImage });
+          /** este callback nos servira para cuando se saque el guardado en base de datos de este componente */
+          // imageDataCallBack(file.originFileObj);
+
+          const imagenUrl = await uploadImageData(file.originFileObj);
+          setImage(imagenUrl);
+          imageDataCallBack(imagenUrl);
           setIsUploading(false);
           break;
 
@@ -75,6 +77,7 @@ const ImageUploaderDragAndDrop = ({
       return <FileImageOutlined style={{ color: '#009fd9' }} />;
     },
     onPreview(file: any) {},
+    /**------------------------------------------------- */
   };
 
   return (
