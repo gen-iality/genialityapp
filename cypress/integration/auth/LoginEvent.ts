@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('Login User in Event', () => {
   const eventToTest = '/landing/624362c612e3604d37212ed3/evento';
   const stagingUrl = 'https://staging.evius.co';

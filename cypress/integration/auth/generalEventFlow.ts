@@ -114,7 +114,7 @@ describe('Register User in Event', () => {
     cy.wait(3000);
     cy.get('.ant-alert-message').should('exist');
   });
-  it.only('it should change the password and log in with the new password', () => {
+  it('it should change the password and log in with the new password', () => {
     cy.request({
       method: 'PUT',
       url: `https://devapi.evius.co/api/changeuserpassword`,
