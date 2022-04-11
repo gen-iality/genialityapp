@@ -43,7 +43,6 @@ import {
   // getCurrentUser,
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
-import Dropzone from 'react-dropzone';
 import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import { firestore } from '../../helpers/firebase';
@@ -1495,38 +1494,6 @@ class AgendaEdit extends Component {
                             width='1080'
                             height='1080'
                           />
-
-                          {/* <Dropzone
-                            style={{ fontSize: '21px', fontWeight: 'bold' }}
-                            onDrop={this.changeImg}
-                            onChange={this.changeImg}
-                            accept='image/*'
-                            className='zone'>
-                            <Row wrap gutter={[8, 8]} justify='center'>
-                              <Col>
-                                <Button type='dashed' danger id='btnImg'>
-                                  {image ? 'Cambiar imagen' : 'Subir imagen'}
-                                </Button>
-                              </Col>
-                              <Col>
-                                {image && (
-                                  <Button danger id='btnRemImg' onClick={() => this.setState({ image: '' })}>
-                                    {'Eliminar imagen'}
-                                  </Button>
-                                )}
-                              </Col>
-                            </Row>
-                          </Dropzone>
-                          <div style={{ marginTop: '10px' }}>
-                            {image ? (
-                              <Image src={image} alt={`activity_${name}`} height={300} width={450} />
-                            ) : (
-                              <Empty
-                                image={<UserOutlined style={{ fontSize: '100px' }} />}
-                                description='No hay Imagen'
-                              />
-                            )}
-                          </div> */}
                         </Form.Item>
                       </Card>
                     </Form.Item>
