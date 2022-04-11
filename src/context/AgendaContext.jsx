@@ -103,7 +103,13 @@ export const AgendaContextProvider = ({ children }) => {
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
-        setRoomStatus(configuration?.habilitar_ingreso == null ? '' : configuration.habilitar_ingreso);
+        setRoomStatus(
+          configuration?.habilitar_ingreso == null
+            ? ''
+            : configuration.habilitar_ingreso
+            ? configuration.habilitar_ingreso
+            : ''
+        );
         setTransmition(configuration.transmition || null);
         setAvailableGames(configuration.avalibleGames || []);
         setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
@@ -126,7 +132,7 @@ export const AgendaContextProvider = ({ children }) => {
     setIsPublished(true);
     setPlatform('wowza');
     setMeetingId(null);
-    setRoomStatus(null);
+    setRoomStatus('');
     setTransmition('EviusMeet');
     setAvailableGames([]);
     setChat(false);
