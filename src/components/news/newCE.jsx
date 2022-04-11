@@ -15,6 +15,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Loading from '../profile/loading';
 
 const { confirm } = Modal;
 
@@ -27,6 +28,7 @@ const NewCE = (props) => {
   const history = useHistory();
   const locationState = props.location.state;
   const [notice, setNotice] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (locationState.edit) {
@@ -37,7 +39,7 @@ const NewCE = (props) => {
   const getNew = async () => {
     const data = await NewsFeed.getOne(props.eventId, locationState.edit);
     setNotice(data);
-    setNotice(data);
+    setIsLoading(false);
   };
 
   const handleChange = (e) => {
@@ -224,89 +226,93 @@ const NewCE = (props) => {
       <Header title={'Noticia'} back save form edit={locationState?.edit} remove={remove} />
 
       <Row justify='center' wrap gutter={12}>
-        <Col span={16}>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Título <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'El título es requerido' }]}>
-            <Input
-              name={'title'}
-              value={notice && notice.title}
-              placeholder={'Título de la noticia'}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Subtítulo <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'El subtítulo es requerido' }]}>
-            <EviusReactQuill
-              id='description_short'
-              name={'description_short'}
-              data={notice && notice.description_short ? notice.description_short : ''}
-              handleChange={(e) => changeDescription(e, 'description_short')}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Noticia <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'La noticia es requerida' }]}>
-            <EviusReactQuill
-              id='description_complete'
-              name={'description_complete'}
-              data={(notice && notice.description_complete) || ''}
-              //modules={toolbarEditor}
-              handleChange={(e) => changeDescription(e, 'description_complete')}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Imagen <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'La imagen es requerida' }]}>
-            <Form.Item noStyle>
-              <ImageUploaderDragAndDrop
-                imageDataCallBack={handleImage}
-                imageUrl={notice && notice?.image}
-                width='1080'
-                height='1080'
+        {locationState.edit && isLoading ? (
+          <Loading />
+        ) : (
+          <Col span={16}>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Título <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'El título es requerido' }]}>
+              <Input
+                name={'title'}
+                value={notice && notice.title}
+                placeholder={'Título de la noticia'}
+                onChange={(e) => handleChange(e)}
               />
             </Form.Item>
-          </Form.Item>
 
-          <Form.Item label='Link del video'>
-            <Input
-              name={'linkYoutube'}
-              value={notice && notice.linkYoutube}
-              type='url'
-              placeholder={'www.video.com'}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Item>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Subtítulo <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'El subtítulo es requerido' }]}>
+              <EviusReactQuill
+                id='description_short'
+                name={'description_short'}
+                data={notice && notice.description_short ? notice.description_short : ''}
+                handleChange={(e) => changeDescription(e, 'description_short')}
+              />
+            </Form.Item>
 
-          <Form.Item label={'Fecha'}>
-            <DatePicker
-              name={'time'}
-              format='YYYY-DD-MM'
-              value={notice && moment(notice.time)}
-              onChange={onChangeDate}
-            />
-          </Form.Item>
-        </Col>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Noticia <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'La noticia es requerida' }]}>
+              <EviusReactQuill
+                id='description_complete'
+                name={'description_complete'}
+                data={(notice && notice.description_complete) || ''}
+                //modules={toolbarEditor}
+                handleChange={(e) => changeDescription(e, 'description_complete')}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Imagen <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'La imagen es requerida' }]}>
+              <Form.Item noStyle>
+                <ImageUploaderDragAndDrop
+                  imageDataCallBack={handleImage}
+                  imageUrl={notice && notice?.image}
+                  width='1080'
+                  height='1080'
+                />
+              </Form.Item>
+            </Form.Item>
+
+            <Form.Item label='Link del video'>
+              <Input
+                name={'linkYoutube'}
+                value={notice && notice.linkYoutube}
+                type='url'
+                placeholder={'www.video.com'}
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Item>
+
+            <Form.Item label={'Fecha'}>
+              <DatePicker
+                name={'time'}
+                format='YYYY-DD-MM'
+                value={notice && moment(notice.time)}
+                onChange={onChangeDate}
+              />
+            </Form.Item>
+          </Col>
+        )}
       </Row>
       <BackTop />
     </Form>
