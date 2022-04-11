@@ -36,7 +36,6 @@ import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import { uploadImageData } from '@/Utilities/uploadImageData';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -396,8 +395,8 @@ class General extends Component {
     });
   };
 
-  handleImage(files) {
-    this.setState({ image: files });
+  handleImage(imageUrl) {
+    this.setState({ image: imageUrl });
   }
 
   //*********** FIN FUNCIONES DEL FORMULARIO
@@ -413,11 +412,11 @@ class General extends Component {
       msj: 'Por favor espere miestras se guarda la información...',
       action: 'show',
     });
-    const imagenUrl = await uploadImageData(this.state.image);
+
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs();
 
-    const { event, path } = this.state;
+    const { event, path, image } = this.state;
     const self = this;
     //this.setState({loading:true});
     const hour_start = Moment(event.hour_start).format('HH:mm');
@@ -436,7 +435,7 @@ class General extends Component {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
-      picture: imagenUrl,
+      picture: image,
       video: event.video || null,
       video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
       venue: event.venue,
@@ -945,7 +944,7 @@ class General extends Component {
                     <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
                       <Form.Item noStyle>
                         <ImageUploaderDragAndDrop
-                          imageDataCallBack={(file) => this.handleImage(file)}
+                          imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                           imageUrl={image}
                           width='1080'
                           height='1080'
