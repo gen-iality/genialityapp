@@ -278,16 +278,14 @@ const NewCE = (props) => {
               </label>
             }
             rules={[{ required: true, message: 'La imagen es requerida' }]}>
-            <Card style={{ textAlign: 'center' }}>
-              <Form.Item noStyle>
-                <ImageUploaderDragAndDrop
-                  imageDataCallBack={handleImage}
-                  imageUrl={notice && notice?.image}
-                  width='1080'
-                  height='1080'
-                />
-              </Form.Item>
-            </Card>
+            <Form.Item noStyle>
+              <ImageUploaderDragAndDrop
+                imageDataCallBack={handleImage}
+                imageUrl={notice && notice?.image}
+                width='1080'
+                height='1080'
+              />
+            </Form.Item>
           </Form.Item>
 
           <Form.Item label='Link del video'>

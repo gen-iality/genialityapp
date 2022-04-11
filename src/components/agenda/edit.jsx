@@ -1489,14 +1489,12 @@ class AgendaEdit extends Component {
                           <p>
                             <small>La imagen tarda unos segundos en cargar</small>
                           </p>
-                          <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
-                            <ImageUploaderDragAndDrop
-                              imageDataCallBack={(file) => this.changeImg(file)}
-                              imageUrl={image}
-                              width='1080'
-                              height='1080'
-                            />
-                          </Card>
+                          <ImageUploaderDragAndDrop
+                            imageDataCallBack={(file) => this.changeImg(file)}
+                            imageUrl={image}
+                            width='1080'
+                            height='1080'
+                          />
 
                           {/* <Dropzone
                             style={{ fontSize: '21px', fontWeight: 'bold' }}
