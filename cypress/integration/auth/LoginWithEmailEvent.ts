@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 describe('Login with Email in Event', () => {
   const eventToTest = '/landing/624362c612e3604d37212ed3/evento';
   const stagingUrl = 'https://staging.evius.co';
@@ -5,15 +6,8 @@ describe('Login with Email in Event', () => {
   const email = 'cristian.florez@mocionsoft.com';
   const emailCypress = 'pruebasCypress01@mocionsoft.com';
   const nombre = 'Mario Montero';
-  var linkLogin: string;
+  let linkLogin: string;
 
-  beforeEach(() => {
-    if (process.env.NODE_ENV === 'production') {
-      cy.visit(`${stagingUrl}${eventToTest}`);
-    } else {
-      cy.visit(`${localUrl}${eventToTest}`);
-    }
-  });
   it('It should show the login modal and switch to the login form', () => {
     cy.wait(5000);
     cy.get('.ant-modal-body').should('exist');
@@ -42,7 +36,8 @@ describe('Login with Email in Event', () => {
     cy.wait(1000);
     cy.contains('Ingrese un correo válido').should('exist');
   });
-  it.only('I should not send the access to my email because the input is not an email', () => {
+  it('I should not send the access to my email because the input is not an email', () => {
+    cy.visit(`${localUrl}${eventToTest}`);
     cy.wait(5000);
     cy.get('.ant-modal-body').should('exist');
     cy.contains('Registrarme').should('exist');
@@ -53,30 +48,32 @@ describe('Login with Email in Event', () => {
       .eq(4)
       .type(email);
     cy.wait(1000);
-    // cy.get('button[type=submit]')
-    //   .eq(3)
-    //   .click();
-    // cy.wait(3000);
-    // cy.get('.ant-alert-message').should('exist');
-    // cy.request({
-    //   method: 'POST',
-    //   url: 'https://devapi.evius.co/api/getloginlink',
-    //   body: {
-    //     email: email,
-    //   },
-    //   headers: {
-    //     accept: 'application/json',
-    //   },
-    // }).then((response) => {
-    //   linkLogin = response.body;
-    // });
-  });
-  it.only('Deberia hacer el login usando el correo', () => {
-    cy.forceVisit('https://apple.com');
+    cy.get('button[type=submit]')
+      .eq(3)
+      .click();
+    cy.wait(3000);
+    cy.get('.ant-alert-message').should('exist');
+
     //   cy.get('.ant-dropdown-trigger')
     //   .eq(0)
     //   .trigger('mouseover');
     // cy.contains('Administración').should('exist');
     // cy.wait(10000);
+  });
+  it.only('Deberia hacer el login usando el correo', () => {
+    cy.request({
+      method: 'POST',
+      url: 'https://devapi.evius.co/api/getloginlink',
+      body: {
+        email: email,
+      },
+      headers: {
+        accept: 'application/json',
+      },
+    }).then((response) => {
+      linkLogin = response.body;
+      cy.visit(linkLogin);
+      cy.contains('button', 'Continuar').click();
+    });
   });
 });
