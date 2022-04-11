@@ -7,7 +7,7 @@ export type TypeActivityAction =
   | { type: 'toggleLiveBroadcast'; payload: { id: string } }
   | { type: 'toggleMeeting'; payload: { id: string } }
   | { type: 'toggleVideo'; payload: { id: string } }
-  | { type: 'toggleCargarvideo'; payload: { id: string } }
+  | { type: 'toggleCargarvideo'; payload: { id: string; sendData: any } }
   | { type: 'toggleUrl'; payload: { id: string } }
   | { type: 'toggleEviusStreaming'; payload: { id: string } }
   | { type: 'toggleVimeo'; payload: { id: string } }
@@ -18,7 +18,7 @@ export type TypeActivityAction =
   | { type: 'selectLiveBroadcast'; payload: { id: string } }
   | { type: 'selectMeeting'; payload: { id: string } }
   | { type: 'selectVideo'; payload: { id: string } }
-  | { type: 'selectCargarVideo'; payload: { id: string } }
+  | { type: 'selectCargarVideo'; payload: { id: string; sendData: any } }
   | { type: 'selectUrl'; payload: { id: string; sendData: any } }
   | { type: 'selectEviusStreaming'; payload: { id: string } }
   | { type: 'selectVimeo'; payload: { id: string; sendData: any } }

@@ -298,11 +298,14 @@ export const AgendaContextProvider = ({ children }) => {
           ? 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
           : dataLive.iframe_url;
         break;
+      case 'Video':
+        urlVideo = data.split('-')[0];
+        break;
       default:
         urlVideo = data;
     }
     const visibleReactPlayer =
-      ((type == 'Video' || type == 'Youtube' || type == 'vimeo') && urlVideo) ||
+      ((type == 'Youtube' || type == 'vimeo') && urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
         (type === 'Transmisión' || type === 'EviusMeet'))
         ? true

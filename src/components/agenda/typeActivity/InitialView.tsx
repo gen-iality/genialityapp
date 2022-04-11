@@ -17,6 +17,8 @@ const objecKeys: object = {
   youTube: 'Youtube',
   eviusMeet: 'EviusMeet',
   RTMP: 'Transmisión',
+  cargarvideo: 'Video',
+  video: 'Video',
 };
 
 const InitialView = (props: any) => {
@@ -46,7 +48,7 @@ const InitialView = (props: any) => {
     let urlVideo;
     if (typeActivity === 'url') {
       const dataActivity = await obtainUrlVideo();
-      urlVideo = dataActivity.video;
+      urlVideo = dataActivity.video || meeting_id;
     }
     toggleActivitySteps('initial', {
       openModal: false,
@@ -93,7 +95,7 @@ const InitialView = (props: any) => {
   return (
     <>
       <ModalPreviewVideo />
-      <ModalStepByStep />
+      <ModalStepByStep activityName={props.activityName} />
       {!loading ? renderComponet() : <Spin />}
     </>
   );

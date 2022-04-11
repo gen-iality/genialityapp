@@ -36,7 +36,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
     }
     console.log('100. typeActivity=>', typeActivity, conected, meeting_id);
     if (!meeting_id) return;
-    if (!thereIsConnection && (typeActivity !== 'youTube' || !typeActivity)) {
+    if (!thereIsConnection && ((typeActivity !== 'youTube' && typeActivity !== 'video') || !typeActivity)) {
       console.log('100. INGRESA ACA 1===>');
       setConected('Yes');
       setLoopBackGround(false);
@@ -69,7 +69,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
       setPlatformurl('https://youtu.be/' + meeting_id);
     } else {
       setPlatformurl(meeting_id);
-      setVisibleReactPlayer(true);
+      setVisibleReactPlayer(false);
       setLoopBackGround(false);
       setConected('Yes');
     }
