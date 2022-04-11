@@ -56,12 +56,16 @@ function AddProduct(props) {
         setCreator(product.by);
         setDescription(product.description || '');
         setPicture(product.image && product.image[0] ? product.image[0] : null);
+        setImgFile([
+          { name: 'Imagen', file: product.image[0] },
+          { name: 'img_optional', file: product.image[1] },
+        ]);
         setOptionalPicture(product.image && product.image[1] ? product.image[1] : null);
         setPrice(product.price);
         setIsLoading(false);
       });
     }
-  }, []);
+  }, [props.match.params.id]);
 
   const goBack = () => props.history.goBack();
 
@@ -84,13 +88,22 @@ function AddProduct(props) {
   };
 
   const changeImg = (file, name) => {
-    console.log(file);
     let temp = imageFile;
+    let ImagenSearch = imageFile.filter((img) => img.name === name);
+    if (ImagenSearch.length > 0) {
+      let newtemp = imageFile.filter((img) => img.name !== name);
+      temp = newtemp;
+      temp.push({ name, file });
+      setImgFile(temp);
+      return;
+    }
+
     if (file) {
       temp.push({ name, file });
       setImgFile(temp);
     } else {
       removeObjectFromArray(name, temp, setImgFile);
+      temp.push({ name, file: '' });
     }
   };
 
@@ -121,7 +134,8 @@ function AddProduct(props) {
     // } else {
     //   validators.picture = false;
     // }
-    if (imageFile.length === 0) {
+    let ImagenFilled = imageFile.filter((img) => img.name === 'Imagen');
+    if (ImagenFilled.length === 0) {
       validators.picture = true;
     } else {
       validators.picture = false;
@@ -144,7 +158,7 @@ function AddProduct(props) {
               by: creator,
               description,
               price,
-              image: [picture, optionalPicture],
+              image: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
             },
             props.eventId,
             product._id
