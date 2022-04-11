@@ -28,7 +28,7 @@ const ImageUploaderDragAndDrop = ({
     if (imageUrl) {
       setImage(imageUrl);
     }
-  }, []);
+  }, [imageUrl]);
 
   /** props para el dragger */
   const draggerprops: any = {

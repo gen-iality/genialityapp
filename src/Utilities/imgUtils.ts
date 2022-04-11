@@ -36,3 +36,15 @@ export const handleImageName = (imageUrl: string) => {
     return name[name.length - 1];
   }
 };
+
+export const renderTypeImage = (name: string, imageFile: []): any => {
+  const imageFilter: any = imageFile && imageFile.filter((image: any) => image.name === name);
+  if (imageFilter.length > 0) {
+    return imageFilter[0].file;
+  }
+};
+
+export const removeObjectFromArray = (name: string, array: [], callback: (data: any) => void) => {
+  let filtered = array.filter((item: any) => item.name !== name);
+  callback(filtered);
+};

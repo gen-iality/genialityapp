@@ -62,6 +62,7 @@ export function fieldNameEmailFirst(array) {
 }
 
 export function handleRequestError(error) {
+  console.log('error', error);
   const info = {};
   if (error.response) {
     info.status = error.response.status;
