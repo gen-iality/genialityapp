@@ -20,7 +20,6 @@ import { areaCode } from '../../helpers/constants';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
-import { uploadImageData } from '@/Utilities/uploadImageData';
 
 const { Title } = Typography;
 const { confirm } = Modal;

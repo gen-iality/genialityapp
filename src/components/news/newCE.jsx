@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { DispatchMessageService } from '../../context/MessageService';
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 
 const { confirm } = Modal;
 
@@ -57,47 +58,11 @@ const NewCE = (props) => {
     }
   };
 
-  const changeImg = (files) => {
-    const file = files[0];
-    const url = '/api/files/upload',
-      path = [],
-      self = this;
-    if (file) {
-      setNotice({
-        ...notice,
-        image: file,
-      });
-
-      //envia el archivo de imagen como POST al API
-      const uploaders = files.map((file) => {
-        let data = new FormData();
-        data.append('file', file);
-        return Actions.post(url, data).then((image) => {
-          if (image) path.push(image);
-        });
-      });
-
-      //cuando todaslas promesas de envio de imagenes al servidor se completan
-      Axios.all(uploaders).then(() => {
-        setNotice({
-          ...notice,
-          image: null,
-          picture: path[0],
-        });
-
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Se anexo la imagen correctamente',
-          action: 'show',
-        });
-      });
-    } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      });
-    }
+  const handleImage = (imageUrl) => {
+    setNotice({
+      ...notice,
+      image: imageUrl,
+    });
   };
 
   const onChangeDate = (date, dateString) => {
@@ -116,7 +81,11 @@ const NewCE = (props) => {
     } else {
       values.title = true;
     }
-    if (notice.description_complete === '' || notice.description_complete === '<p><br></p>' || !notice.description_complete) {
+    if (
+      notice.description_complete === '' ||
+      notice.description_complete === '<p><br></p>' ||
+      !notice.description_complete
+    ) {
       DispatchMessageService({
         type: 'error',
         msj: 'La noticia es requerida',
@@ -136,15 +105,15 @@ const NewCE = (props) => {
     } else {
       values.description_short = true;
     }
-    if (notice.picture === null || !notice.picture) {
+    if (notice.image === null || !notice.image) {
       DispatchMessageService({
         type: 'error',
         msj: 'La imagen es requerida',
         action: 'show',
       });
-      values.picture = false;
+      values.image = false;
     } else {
-      values.picture = true;
+      values.image = true;
     }
     if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
       DispatchMessageService({
@@ -162,16 +131,16 @@ const NewCE = (props) => {
       values.title &&
       values.description_complete &&
       values.description_short &&
-      values.picture &&
-      values.fecha) 
-    {
+      values.image &&
+      values.fecha
+    ) {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
         msj: ' Por favor espere mientras se guarda la información...',
         action: 'show',
       });
-      
+
       try {
         if (locationState.edit) {
           await NewsFeed.editOne(notice, locationState.edit, props.eventId);
@@ -311,45 +280,11 @@ const NewCE = (props) => {
             rules={[{ required: true, message: 'La imagen es requerida' }]}>
             <Card style={{ textAlign: 'center' }}>
               <Form.Item noStyle>
-                <ImageInput
-                  picture={notice && notice.picture}
-                  imageFile={notice && notice.image}
-                  divClass={'drop-img'}
-                  content={<img src={notice && notice?.picture} alt={'Imagen Perfil'} />}
-                  classDrop={'dropzone'}
-                  contentDrop={
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                      type='primary'
-                      /* loading={notice && notice.image} */
-                    >
-                      Cambiar foto
-                    </Button>
-                  }
-                  contentZone={
-                    <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                      <span>Subir foto</span>
-                      <br />
-                      <small>(Tamaño recomendado: 1280px x 960px)</small>
-                    </div>
-                  }
-                  changeImg={changeImg}
-                  /* errImg={errImg} */
-                  style={{
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'relative',
-                    height: '200px',
-                    width: '100%',
-                    borderWidth: 2,
-                    borderColor: '#b5b5b5',
-                    borderStyle: 'dashed',
-                    borderRadius: 10,
-                  }}
+                <ImageUploaderDragAndDrop
+                  imageDataCallBack={handleImage}
+                  imageUrl={notice && notice?.image}
+                  width='1080'
+                  height='1080'
                 />
               </Form.Item>
             </Card>
