@@ -51,7 +51,7 @@ function DetailsProduct(props) {
       {product && !loading && (
         <Row style={{ padding: '24px' }} gutter={[8, 8]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Card style={{ width: '100%', height: '450pxs', display: 'grid', justifyContent: 'center' }}>
+            <Card style={{ width: '100%', display: 'grid', justifyContent: 'center' }}>
               <Carousel
                 showThumbs={
                   product && product.image && product.image.filter((img) => img != null).length === 1 ? false : true
@@ -63,7 +63,7 @@ function DetailsProduct(props) {
                     .map((image, index) => (
                       <img
                         key={'image' + index}
-                        style={{ width: '56vh', objectFit: 'contain' }}
+                        /* style={{ objectFit: 'contain' }} */
                         src={product.image[index]}
                         alt='arte'
                       />
@@ -87,11 +87,11 @@ function DetailsProduct(props) {
                 {product && product.by && (
                   <Divider orientation='left'>
                     <Title style={{ marginBottom: '0px' }} level={5}>
-                      Artista
+                      Autor
                     </Title>
                   </Divider>
                 )}
-                {product && product.by && <Text>{product && product.by ? product.by : 'Sin Artista'} </Text>}
+                {product && product.by && <Text>{product && product.by ? product.by : 'Sin Autor'} </Text>}
                 <Divider orientation='left'>
                   <Title level={5}>Descripción</Title>
                 </Divider>

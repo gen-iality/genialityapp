@@ -6,7 +6,9 @@ function feriaBanner(props) {
         src={props.imagen}
         style={{
           width: '100%',
-          // height:'50vh'
+          backgroundColor: '#F2F2F2',
+          height: '100%',
+          objectFit: 'cover',
         }}
       />
     </div>

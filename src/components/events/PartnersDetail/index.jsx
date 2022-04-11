@@ -29,7 +29,7 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
         </Col>
       </Row>
       <Row gutter={[8, 8]} justify='center' wrap>
-        <Col>
+        <Col span={24}>
           {company.video_url && (
             <div style={{ marginTop: '5vh', fontSize: '120%', fontWeight: 'bold' }}>
               <div className='mediaplayer'>
