@@ -53,7 +53,6 @@ const ImageUploaderDragAndDrop = ({
           setImage(imagenUrl);
           imageDataCallBack(imagenUrl);
           setIsUploading(false);
-          console.log('IMAGEURL===>', imagenUrl);
           break;
 
         case 'error':
