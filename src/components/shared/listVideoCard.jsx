@@ -30,9 +30,10 @@ const ListVideoCard = () => {
 
   return (
     <>
-      {existActivity == 1 && (
+      {existActivity === 1 && (
         <Row gutter={[20, 20]} style={{ margin: '25px' }}>
           {activitiesEvent &&
+            //activitiesEvent.sort((a, b) => a.updated_at - b.updated_at)&&
             activitiesEvent.map((activity, index) => {
               if (countactivityToShow < 3) {
                 if (activity.video) {

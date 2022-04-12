@@ -66,7 +66,7 @@ class Service {
                 transmition: roomInfo.transmition || null,
                 avalibleGames: roomInfo?.avalibleGames || [],
               })
-              .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }))
+              .then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }))
               .catch((err) => console.log('11. ERROR==>', err));
           } else {
             this.firestore
@@ -86,7 +86,7 @@ class Service {
                 avalibleGames: roomInfo?.avalibleGames || [],
                 roomState: roomState || null,
               })
-              .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }))
+              .then(() => resolve({ message: 'Configuración Creada', state: 'created' }))
               .catch((err) => console.log('11. ERROR==>', err));
           }
         });
