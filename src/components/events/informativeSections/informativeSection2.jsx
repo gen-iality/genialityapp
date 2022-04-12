@@ -35,7 +35,7 @@ class InformativeSection2 extends Component {
                     }
                     bordered={false} /* style={{ width: 1000 }} */
                   >
-                    {markup != null && Parser(markup)}
+                    <div id='img-informative'>{markup != null && Parser(markup)}</div>
                   </Card>
                 )}
 

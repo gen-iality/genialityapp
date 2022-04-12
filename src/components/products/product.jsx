@@ -251,7 +251,7 @@ class Product extends Component {
               key='_id'
               title='Imagen'
               align='center'
-              width='90px'
+              /* width='90px' */
               render={(data, index) => (
                 <Space key={index} size='small'>
                   {data.image &&

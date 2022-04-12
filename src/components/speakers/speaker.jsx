@@ -4,7 +4,7 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
-import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, Tooltip, Select } from 'antd';
+import { Button, Typography, Row, Col, Form, Input, Image, Empty, Switch, Modal, Tooltip, Select } from 'antd';
 import {
   LeftOutlined,
   UserOutlined,
@@ -20,7 +20,6 @@ import { areaCode } from '../../helpers/constants';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
-import { uploadImageData } from '@/Utilities/uploadImageData';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -321,16 +320,14 @@ function Speaker(props) {
               />
             </Form.Item>
             <Form.Item label={'Carga de imagen'}>
-              <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
-                <Form.Item noStyle>
-                  <ImageUploaderDragAndDrop
-                    imageDataCallBack={handleImage}
-                    imageUrl={data.image}
-                    width='1080'
-                    height='1080'
-                  />
-                </Form.Item>
-              </Card>
+              <Form.Item noStyle>
+                <ImageUploaderDragAndDrop
+                  imageDataCallBack={handleImage}
+                  imageUrl={data.image}
+                  width='1080'
+                  height='1080'
+                />
+              </Form.Item>
             </Form.Item>
 
             {event && event?.organizer?.type_event == 'Misiones' && (

@@ -2,7 +2,7 @@ import { createContext } from 'react';
 export const MessageController = createContext({});
 import { message } from 'antd';
 
-const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho', 'Exito'];
+const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho', 'Éxito'];
 const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry'];
 const LoadingAnswer = ['Cargando', 'Procesando'];
 

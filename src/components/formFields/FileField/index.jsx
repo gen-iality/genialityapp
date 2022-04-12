@@ -1,23 +1,17 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import FormItem from 'antd/es/form/FormItem';
-import { concat, omit, pick } from 'ramda';
+import { pick } from 'ramda';
 import { Field } from 'formik';
-import FileInput from '../../shared/fileInput';
-import axios from 'axios/index';
-import { Actions } from '../../../helpers/request';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { Upload, Spin, Card } from 'antd';
+import { FileImageOutlined } from '@ant-design/icons';
+import { uploadImagedummyRequest, handleImageName } from '@/Utilities/imgUtils';
+import { uploadImageData } from '@/Utilities/uploadImageData';
 
-const FORMIK_PROPS_KEYS = ['form', 'field', 'meta'];
 const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
-const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS);
 
 function FileField(rawProps) {
-  let ancho = '200';
-  let alto = '200';
-  let errorMsg = '';
-  const props = omit(NOT_PROPS_KEYS, rawProps);
   const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps);
+  let [isUploading, setIsUploading] = useState(false);
 
   const { name } = rawProps;
 
@@ -33,34 +27,49 @@ function FileField(rawProps) {
   const validate = useCallback(() => {
     return undefined;
   });
-  let saveEventImage = (form, field, files) => {
-    const file = files[0];
-    const url = '/api/files/upload';
+  let saveEventImage = async (files, form, field) => {
+    const { status, originFileObj } = files.file;
+    switch (status) {
+      case 'done':
+        const imagenUrl = await uploadImageData(originFileObj);
+        handleChange(imagenUrl, form, field);
+        handleBlur(form, field);
+        setIsUploading(false);
+        break;
 
-    if (file) {
-      //envia el archivo de imagen como POST al API
-      const uploaders = files.map((file) => {
-        let data = new FormData();
-        data.append('file', file);
-        return Actions.post(url, data).then((image) => {
-          if (image) {
-            handleChange(image, form, field);
-            handleBlur(form, field);
-          }
-        });
-      });
+      case 'error':
+        break;
 
-      //cuando todaslas promesas de envio de imagenes al servidor se completan
-      axios.all(uploaders).then(async () => {
-        DispatchMessageService({
-          type: 'success',
-          msj: this.props.intl.formatMessage({id: 'toast.img', defaultMessage: 'Ok!'}),
-          action: 'show',
-        });
-      });
-    } else {
-      //this.setState( { errImg: "Solo se permiten imágenes. Intentalo de nuevo" } );
+      case 'removed':
+        setIsUploading(false);
+        break;
+
+      default:
+        setIsUploading(true);
+        break;
     }
+    /* DispatchMessageService({
+      type: 'success',
+      msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
+      action: 'show',
+    }); */
+  };
+
+  const draggerprops = {
+    listType: 'picture',
+    name: 'file',
+    multiple: false,
+    maxCount: 1,
+    customRequest: uploadImagedummyRequest,
+    /** props para no mostrar la mini previa de antDesing */
+    isImageUrl(file) {
+      return;
+    },
+    iconRender(file) {
+      return <FileImageOutlined style={{ color: '#009fd9' }} />;
+    },
+    onPreview(file) {},
+    /**------------------------------------------------- */
   };
 
   return (
@@ -74,17 +83,26 @@ function FileField(rawProps) {
             required={formItemProps.required}
             help={fieldError}
             validateStatus={fieldError ? 'error' : undefined}>
-            {/* <Input value={field.value} /> */}
-            <FileInput
-              picture={field.value}
-              width={ancho}
-              height={alto}
-              changeImg={(files) => {
-                saveEventImage(form, field, files, 'nombre');
-              }}
-              errImg={errorMsg}
-              {...props}
-            />
+            <Spin tip='Cargando imagen...' spinning={isUploading}>
+              <Card
+                hoverable
+                style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}>
+                <Upload.Dragger
+                  {...draggerprops}
+                  defaultFileList={[{ name: handleImageName(field.value), url: field.value }]}
+                  onChange={(files) => {
+                    saveEventImage(files, form, field);
+                  }}>
+                  <>
+                    <p className='ant-upload-drag-icon'>
+                      <FileImageOutlined style={{ color: '#009fd9' }} />
+                    </p>
+                    <p className='ant-upload-text'>Haga clic o arrastre el archivo a esta área para cargarlo</p>
+                    <p className='ant-upload-hint'>Tipos de archivos: pdf, excel, word, entre otros.</p>
+                  </>
+                </Upload.Dragger>
+              </Card>
+            </Spin>
           </FormItem>
         );
       }}

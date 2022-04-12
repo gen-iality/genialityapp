@@ -30,7 +30,7 @@ export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs)
             habilitar_ingreso: activityInfo,
             tabs: tabs,
           })
-          .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
+          .then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }));
       } else {
         refActivity
           .doc(event_id)
@@ -40,7 +40,7 @@ export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs)
             habilitar_ingreso: activityInfo,
             tabs: tabsSchema,
           })
-          .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
+          .then(() => resolve({ message: 'Configuracioón Creada', state: 'created' }));
       }
     });
   });

@@ -409,7 +409,7 @@ class General extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Por favor espere miestras se guarda la información...',
+      msj: 'Por favor espere mientras se guarda la información...',
       action: 'show',
     });
 
@@ -941,16 +941,14 @@ class General extends Component {
 
                   <div>
                     <label style={{ marginTop: '2%' }}>Imagen General (para el listado)</label>
-                    <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
-                      <Form.Item noStyle>
-                        <ImageUploaderDragAndDrop
-                          imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
-                          imageUrl={image}
-                          width='1080'
-                          height='1080'
-                        />
-                      </Form.Item>
-                    </Card>
+                    <Form.Item noStyle>
+                      <ImageUploaderDragAndDrop
+                        imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
+                        imageUrl={image}
+                        width='1080'
+                        height='1080'
+                      />
+                    </Form.Item>
                   </div>
 
                   <Form.Item label={'Vídeo'}>

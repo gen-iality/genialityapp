@@ -1,4 +1,4 @@
-import { Row, Col, Button, Typography, Modal, Space } from 'antd';
+import { Row, Col, Button, Typography, Modal, Space, Card } from 'antd';
 import { PhoneOutlined, MailOutlined, CopyOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../../context/MessageService';
 
@@ -61,8 +61,8 @@ function Contact(props) {
   }
 
   return (
-    <div className='contact-company'>
-      <Row className='container' gutter={[10, 10]}>
+    <Card className='contact-company' style={{ borderRadius: '8px' }}>
+      <Row className='container' gutter={[10, 10]} align='stretch'>
         <Col xs={24} sm={24} md={24} lg={6} xl={6} className='col'>
           <div className='img-contact'>
             <img
@@ -120,7 +120,7 @@ function Contact(props) {
           </Button>
         </Col>
       </Row>
-    </div>
+    </Card>
   );
 }
 

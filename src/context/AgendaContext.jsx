@@ -103,7 +103,13 @@ export const AgendaContextProvider = ({ children }) => {
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
-        setRoomStatus(configuration?.habilitar_ingreso == null ? '' : configuration.habilitar_ingreso);
+        setRoomStatus(
+          configuration?.habilitar_ingreso == null
+            ? ''
+            : configuration.habilitar_ingreso
+            ? configuration.habilitar_ingreso
+            : ''
+        );
         setTransmition(configuration.transmition || null);
         setAvailableGames(configuration.avalibleGames || []);
         setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
@@ -126,7 +132,7 @@ export const AgendaContextProvider = ({ children }) => {
     setIsPublished(true);
     setPlatform('wowza');
     setMeetingId(null);
-    setRoomStatus(null);
+    setRoomStatus('');
     setTransmition('EviusMeet');
     setAvailableGames([]);
     setChat(false);
@@ -299,13 +305,20 @@ export const AgendaContextProvider = ({ children }) => {
           : dataLive.iframe_url;
         break;
       case 'Video':
-        urlVideo = data.split('-')[0];
+        const dataSplit = data.split('-');
+        console.log('dataSplit', dataSplit);
+        urlVideo = data.includes('youtube')
+          ? data
+          : dataSplit.length > 2
+          ? dataSplit[0] + '-' + dataSplit[1]
+          : dataSplit[0];
         break;
       default:
         urlVideo = data;
     }
+    //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
-      ((type == 'Youtube' || type == 'vimeo') && urlVideo) ||
+      ((type == 'Youtube' || type == 'vimeo' || (type == 'Video' && data.includes('youtube'))) && urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
         (type === 'Transmisión' || type === 'EviusMeet'))
         ? true
