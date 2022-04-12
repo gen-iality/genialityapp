@@ -1,11 +1,8 @@
 /// <reference types="cypress" />
 
 describe('Register User in Event', () => {
-  const eventToTest = '/landing/624362c612e3604d37212ed3/evento';
-  const stagingUrl = 'https://staging.evius.co';
-  const localUrl = 'http://localhost:3000';
   const event_id = '624362c612e3604d37212ed3';
-  const email = 'pruebacypress136@mocionsoft.com';
+  const email = 'pruebacypress138@mocionsoft.com';
   const clave = 'mocion.2040';
   const newPassword = 'mocion.2041';
   const nombre = 'Cyprees';
@@ -23,11 +20,7 @@ describe('Register User in Event', () => {
         cy.log('it should login using email');
         break;
       default:
-        if (process.env.NODE_ENV === 'production') {
-          cy.visit(`${stagingUrl}${eventToTest}`);
-        } else {
-          cy.visit(`${localUrl}${eventToTest}`);
-        }
+        cy.visitEvent();
         break;
     }
   });
@@ -120,7 +113,7 @@ describe('Register User in Event', () => {
     cy.wait(3000);
     cy.get('.ant-alert-message').should('exist');
   });
-  it('it should login using email', () => {
+  it.only('it should login using email', () => {
     cy.request({
       method: 'POST',
       url: 'https://devapi.evius.co/api/getloginlink',

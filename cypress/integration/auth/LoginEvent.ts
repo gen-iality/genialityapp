@@ -1,20 +1,13 @@
 /// <reference types="cypress" />
 
 describe('Login User in Event', () => {
-  const eventToTest = '/landing/624362c612e3604d37212ed3/evento';
-  const stagingUrl = 'https://staging.evius.co';
-  const localUrl = 'http://localhost:3000';
   const email = 'pruebascypress@mocionsoft.com';
-  const emailCypress = 'pruebasCypressNoFound@mocionsoft.com';
+  const emailCypress = 'pruebascypressnofoundtest@mocionsoft.com';
   const clave = 'mocion.2040';
   const nombre = 'Cypreess Prueba';
 
   beforeEach(() => {
-    if (process.env.NODE_ENV === 'production') {
-      cy.visit(`${stagingUrl}${eventToTest}`);
-    } else {
-      cy.visit(`${localUrl}${eventToTest}`);
-    }
+    cy.visitEvent();
   });
   it('It should show the login modal and switch to the login form', () => {
     cy.changeLogin();

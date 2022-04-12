@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 describe('Register User in Event', () => {
-  const email = 'pruebascypress133@mocionsoft.com';
+  const email = 'pruebascypress137@mocionsoft.com';
   const usedEmail = 'pruebascypress131@mocionsoft.com';
   const clave = 'mocion.2041';
   const nombre = 'Pruebas';
@@ -129,10 +129,12 @@ describe('Register User in Event', () => {
     cy.contains('¡Registro exitoso!').should('exist');
     cy.contains('Iniciando sesión con tu cuenta!').should('exist');
     cy.wait(15000);
-    // cy.get('.ant-modal-body') Si aparce el modal de insicirbir al evento
-    //   .contains('Inscribirme al evento')
-    //   .click();
-
+    //este prueba puede falla si no aparece el modal de incripcopn
+    if (cy.get('.ant-modal-body')) {
+      cy.get('.ant-modal-body') // Si aparce el modal de insicirbir al evento
+        .contains('Inscribirme al evento')
+        .click();
+    }
     cy.logout();
   });
   it('should log in with the new user', () => {

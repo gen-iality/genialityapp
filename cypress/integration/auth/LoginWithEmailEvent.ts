@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 describe('Login with Email in Event', () => {
   const email = 'pruebascypress@mocionsoft.com';
-  const emailNoFound = 'pruebasCypressNoFound@mocionsoft.com';
+  const emailNoFound = 'pruebascypressnofound443@mocionsoft.com';
 
   const nombre = 'Cypreess Prueba';
   let linkLogin: string;
@@ -78,7 +78,11 @@ describe('Login with Email in Event', () => {
       linkLogin = response.body;
       cy.visit(linkLogin);
       cy.wait(10000);
-
+      // Esta condicional es por si el usuario esta loqueado en otro equipo
+      if (cy.contains('Ya has iniciado la sesión en otro dispositivo').should('exist')) {
+        cy.contains('button', 'Continuar').click();
+      }
+      //este prueba puede fallar si el usuario no esta loqueado en otro equipo
       cy.wait(5000);
       cy.logout();
     });
