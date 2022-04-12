@@ -94,7 +94,8 @@ const ManagerView = (props: any) => {
                     description={'Esta es la url cargada'}
                   />
                   <br />
-                  <strong>Url:</strong> {props.type == 'Video' ? data?.split('-')[0] : data}
+                  <strong>Url:</strong>{' '}
+                  {props.type == 'Video' ? (data?.includes('youtube') ? data : data?.split('-')[0]) : data}
                 </Card>
               </Col>
             )}
