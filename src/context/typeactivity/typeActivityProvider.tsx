@@ -226,8 +226,8 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
       case 'cargarvideo':
         const data = typeActivityState?.data.split('-');
-        const urlVideo = data[0];
-        const videoId = data[1];
+        const urlVideo = data.length > 2 ? data[0] + '-' + data[1] : data[0];
+        const videoId = data.length > 2 ? data[2] : data[1];
         const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent?.value?._id);
         if (respUrlVideo) {
           resp = await saveConfig({ platformNew: '', type: 'video', data: urlVideo, habilitar_ingreso: '' });

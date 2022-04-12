@@ -305,13 +305,20 @@ export const AgendaContextProvider = ({ children }) => {
           : dataLive.iframe_url;
         break;
       case 'Video':
-        urlVideo = data.split('-')[0];
+        const dataSplit = data.split('-');
+        console.log('dataSplit', dataSplit);
+        urlVideo = data.includes('youtube')
+          ? data
+          : dataSplit.length > 2
+          ? dataSplit[0] + '-' + dataSplit[1]
+          : dataSplit[0];
         break;
       default:
         urlVideo = data;
     }
+    //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
-      ((type == 'Youtube' || type == 'vimeo') && urlVideo) ||
+      ((type == 'Youtube' || type == 'vimeo' || (type == 'Video' && data.includes('youtube'))) && urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
         (type === 'Transmisión' || type === 'EviusMeet'))
         ? true
