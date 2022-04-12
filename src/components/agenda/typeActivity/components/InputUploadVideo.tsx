@@ -1,30 +1,49 @@
-import { message, Result, Upload } from 'antd';
-import React from 'react';
+import { message, Result, Spin, Upload } from 'antd';
+import React, { useState } from 'react';
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline';
 import { RcFile } from 'antd/lib/upload';
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
+import { deleteVideo } from '@/adaptors/gcoreStreamingApi';
 
 const InputUploadVideo = (props: any) => {
   const { selectOption, typeOptions } = useTypeActivity();
+  const [loading, setLoading] = useState(false);
   const beforeUpload = (file: any) => {
     return file;
   };
-  console.log('KEY==>', typeOptions.key);
+  const urlUploadVideoGcore = 'https://webhook.evius.co/upload-video';
   return (
     <Upload.Dragger
       beforeUpload={beforeUpload}
-      action={`http://143.110.230.98:3000?nameActivity=${props.activityName}`}
+      action={`${urlUploadVideoGcore}?nameActivity=${props.activityName}`}
       maxCount={1}
       accept='video/*'
       name='video'
       onRemove={() => {}}
-      onChange={(info) => {
+      onChange={async (info) => {
         const { status, response } = info.file;
-        if (status == 'done') {
-          selectOption(typeOptions.key, response.video.iframe_url + '-' + response.video.id);
+        switch (status) {
+          case 'done':
+            selectOption(typeOptions.key, `${response.video.iframe_url}-${response.video.id}`);
+            setLoading(false);
+            break;
+          case 'error':
+            message.error('Error al cargar el video');
+            setLoading(false);
+            break;
+          case 'removed':
+            //ELIMINAR VIDEO DE GCORE
+            if (response?.video) {
+              await deleteVideo(response.video.id);
+            }
+            setLoading(false);
+            break;
+          default:
+            setLoading(true);
+            break;
         }
+
         if (status == 'error') {
-          message.error('Error al cargar el video');
         }
       }}>
       <Result
@@ -32,6 +51,7 @@ const InputUploadVideo = (props: any) => {
         title='Haga clic o arrastre el video a esta área para cargarlo'
         subTitle='Solamente ogm, wmv, mpg, webm, ogv, mov, asx, mpeg, mp4, m4v y avi  '
       />
+      {loading && <Spin />}
     </Upload.Dragger>
   );
 };
