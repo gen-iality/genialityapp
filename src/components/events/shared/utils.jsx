@@ -3,7 +3,6 @@ import {
   SolutionOutlined,
   IdcardOutlined,
   NotificationOutlined,
-  ApartmentOutlined,
   EditOutlined,
   BarChartOutlined,
 } from '@ant-design/icons';
