@@ -5,7 +5,7 @@ import { setTopBanner } from '../../../redux/topBanner/actions';
 import withContext from '../../../context/withContext';
 import { useLocation, withRouter } from 'react-router-dom';
 import { NewsFeed } from '../../../helpers/request';
-import { Card, Row, Spin, Col, Space, Tag, Grid, Image, Typography } from 'antd';
+import { Card, Row, Spin, Col, Space, Tag, Grid, Image, Typography, Divider } from 'antd';
 import NoticiaList from './NoticiasList';
 import ReactPlayer from 'react-player';
 import ReactQuill from 'react-quill';
@@ -122,9 +122,9 @@ const NoticiasDetails = (props) => {
                   />
                 </Card>
                 <br />
-                <Title level={3} style={{ textAlign: 'center', textDecoration: 'underline' }}>
-                  Ver más Noticias
-                </Title>
+                <Divider orientation='left' style={{ fontWeight: 'bold' }}>
+                  Otras noticias que te pueden interesar
+                </Divider>
                 {/* <br /> */}
                 <NoticiaList size={screens.xs ? 1 : screens.lg ? 3 : 2} newId={noticia._id} />
               </Card>

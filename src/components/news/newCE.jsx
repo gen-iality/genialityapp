@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Actions, NewsFeed } from '../../helpers/request';
+import { NewsFeed } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { toolbarEditor } from '../../helpers/constants';
-import { Col, Row, Input, Form, DatePicker, Modal, Card, Button } from 'antd';
-import ReactQuill from 'react-quill';
-import ImageInput from '../shared/imageInput';
-import Axios from 'axios';
-import { FormattedMessage } from 'react-intl';
+import { Col, Row, Input, Form, DatePicker, Modal } from 'antd';
 import moment from 'moment';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -14,6 +9,8 @@ import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { DispatchMessageService } from '../../context/MessageService';
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Loading from '../profile/loading';
 
 const { confirm } = Modal;
 
@@ -26,6 +23,7 @@ const NewCE = (props) => {
   const history = useHistory();
   const locationState = props.location.state;
   const [notice, setNotice] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (locationState.edit) {
@@ -36,7 +34,7 @@ const NewCE = (props) => {
   const getNew = async () => {
     const data = await NewsFeed.getOne(props.eventId, locationState.edit);
     setNotice(data);
-    setNotice(data);
+    setIsLoading(false);
   };
 
   const handleChange = (e) => {
@@ -57,47 +55,11 @@ const NewCE = (props) => {
     }
   };
 
-  const changeImg = (files) => {
-    const file = files[0];
-    const url = '/api/files/upload',
-      path = [],
-      self = this;
-    if (file) {
-      setNotice({
-        ...notice,
-        image: file,
-      });
-
-      //envia el archivo de imagen como POST al API
-      const uploaders = files.map((file) => {
-        let data = new FormData();
-        data.append('file', file);
-        return Actions.post(url, data).then((image) => {
-          if (image) path.push(image);
-        });
-      });
-
-      //cuando todaslas promesas de envio de imagenes al servidor se completan
-      Axios.all(uploaders).then(() => {
-        setNotice({
-          ...notice,
-          image: null,
-          picture: path[0],
-        });
-
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Se anexo la imagen correctamente',
-          action: 'show',
-        });
-      });
-    } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      });
-    }
+  const handleImage = (imageUrl) => {
+    setNotice({
+      ...notice,
+      image: imageUrl,
+    });
   };
 
   const onChangeDate = (date, dateString) => {
@@ -116,7 +78,11 @@ const NewCE = (props) => {
     } else {
       values.title = true;
     }
-    if (notice.description_complete === '' || notice.description_complete === '<p><br></p>' || !notice.description_complete) {
+    if (
+      notice.description_complete === '' ||
+      notice.description_complete === '<p><br></p>' ||
+      !notice.description_complete
+    ) {
       DispatchMessageService({
         type: 'error',
         msj: 'La noticia es requerida',
@@ -136,15 +102,15 @@ const NewCE = (props) => {
     } else {
       values.description_short = true;
     }
-    if (notice.picture === null || !notice.picture) {
+    if (notice.image === null || !notice.image) {
       DispatchMessageService({
         type: 'error',
         msj: 'La imagen es requerida',
         action: 'show',
       });
-      values.picture = false;
+      values.image = false;
     } else {
-      values.picture = true;
+      values.image = true;
     }
     if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
       DispatchMessageService({
@@ -162,16 +128,16 @@ const NewCE = (props) => {
       values.title &&
       values.description_complete &&
       values.description_short &&
-      values.picture &&
-      values.fecha) 
-    {
+      values.image &&
+      values.fecha
+    ) {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
         msj: ' Por favor espere mientras se guarda la información...',
         action: 'show',
       });
-      
+
       try {
         if (locationState.edit) {
           await NewsFeed.editOne(notice, locationState.edit, props.eventId);
@@ -255,125 +221,93 @@ const NewCE = (props) => {
       <Header title={'Noticia'} back save form edit={locationState?.edit} remove={remove} />
 
       <Row justify='center' wrap gutter={12}>
-        <Col span={16}>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Título <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'El título es requerido' }]}>
-            <Input
-              name={'title'}
-              value={notice && notice.title}
-              placeholder={'Título de la noticia'}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Item>
+        {locationState.edit && isLoading ? (
+          <Loading />
+        ) : (
+          <Col span={16}>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Título <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'El título es requerido' }]}>
+              <Input
+                name={'title'}
+                value={notice && notice.title}
+                placeholder={'Título de la noticia'}
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Item>
 
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Subtítulo <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'El subtítulo es requerido' }]}>
-            <EviusReactQuill
-              id='description_short'
-              name={'description_short'}
-              data={notice && notice.description_short ? notice.description_short : ''}
-              handleChange={(e) => changeDescription(e, 'description_short')}
-            />
-          </Form.Item>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Subtítulo <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'El subtítulo es requerido' }]}>
+              <EviusReactQuill
+                id='description_short'
+                name={'description_short'}
+                data={notice && notice.description_short ? notice.description_short : ''}
+                handleChange={(e) => changeDescription(e, 'description_short')}
+              />
+            </Form.Item>
 
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Noticia <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'La noticia es requerida' }]}>
-            <EviusReactQuill
-              id='description_complete'
-              name={'description_complete'}
-              data={(notice && notice.description_complete) || ''}
-              //modules={toolbarEditor}
-              handleChange={(e) => changeDescription(e, 'description_complete')}
-            />
-          </Form.Item>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Noticia <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'La noticia es requerida' }]}>
+              <EviusReactQuill
+                id='description_complete'
+                name={'description_complete'}
+                data={(notice && notice.description_complete) || ''}
+                //modules={toolbarEditor}
+                handleChange={(e) => changeDescription(e, 'description_complete')}
+              />
+            </Form.Item>
 
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Imagen <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'La imagen es requerida' }]}>
-            <Card style={{ textAlign: 'center' }}>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Imagen <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'La imagen es requerida' }]}>
               <Form.Item noStyle>
-                <ImageInput
-                  picture={notice && notice.picture}
-                  imageFile={notice && notice.image}
-                  divClass={'drop-img'}
-                  content={<img src={notice && notice?.picture} alt={'Imagen Perfil'} />}
-                  classDrop={'dropzone'}
-                  contentDrop={
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                      type='primary'
-                      /* loading={notice && notice.image} */
-                    >
-                      Cambiar foto
-                    </Button>
-                  }
-                  contentZone={
-                    <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                      <span>Subir foto</span>
-                      <br />
-                      <small>(Tamaño recomendado: 1280px x 960px)</small>
-                    </div>
-                  }
-                  changeImg={changeImg}
-                  /* errImg={errImg} */
-                  style={{
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'relative',
-                    height: '200px',
-                    width: '100%',
-                    borderWidth: 2,
-                    borderColor: '#b5b5b5',
-                    borderStyle: 'dashed',
-                    borderRadius: 10,
-                  }}
+                <ImageUploaderDragAndDrop
+                  imageDataCallBack={handleImage}
+                  imageUrl={notice && notice?.image}
+                  width='1080'
+                  height='1080'
                 />
               </Form.Item>
-            </Card>
-          </Form.Item>
+            </Form.Item>
 
-          <Form.Item label='Link del video'>
-            <Input
-              name={'linkYoutube'}
-              value={notice && notice.linkYoutube}
-              type='url'
-              placeholder={'www.video.com'}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Item>
+            <Form.Item label='Link del video'>
+              <Input
+                name={'linkYoutube'}
+                value={notice && notice.linkYoutube}
+                type='url'
+                placeholder={'www.video.com'}
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Item>
 
-          <Form.Item label={'Fecha'}>
-            <DatePicker
-              name={'time'}
-              format='YYYY-DD-MM'
-              value={notice && moment(notice.time)}
-              onChange={onChangeDate}
-            />
-          </Form.Item>
-        </Col>
+            <Form.Item label={'Fecha'}>
+              <DatePicker
+                name={'time'}
+                format='YYYY-DD-MM'
+                value={notice && moment(notice.time)}
+                onChange={onChangeDate}
+              />
+            </Form.Item>
+          </Col>
+        )}
       </Row>
       <BackTop />
     </Form>

@@ -2,8 +2,7 @@ import { Component } from 'react';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import 'moment/locale/es-us';
-import { Actions, EventsApi } from '../../helpers/request';
-import ImageInput from '../shared/imageInput';
+import { EventsApi } from '../../helpers/request';
 /* import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; */
 import { FormattedMessage } from 'react-intl';
@@ -15,6 +14,8 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Loading from '../profile/loading';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -30,6 +31,7 @@ class SendRsvp extends Component {
       selection: [],
       showimgDefault: true,
       loading_image: false,
+      isLoading: true,
     };
     this.submit = this.submit.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
@@ -56,73 +58,35 @@ class SendRsvp extends Component {
             : this.props.event.picture,
       },
       selection: this.props.selection === undefined ? 'Todos' : this.props.selection,
+      isLoading: false,
     });
   }
 
-  changeImg = (files) => {
-    const file = files[0];
-    if (file) {
-      this.setState({ imageFile: file });
-      this.uploadImg('imageFile', 'image');
-    } else {
-      this.setState({ errImg: 'Only images files allowed. Please try again :)' });
-    }
+  changeImg = (imageUrl) => {
+    this.setState({
+      rsvp: {
+        ...this.state.rsvp,
+        image: imageUrl,
+      },
+    });
   };
 
-  changeImgHeader = (files) => {
-    const file = files[0];
-    if (file) {
-      this.setState({ imageFileHeader: file });
-      this.uploadImg('imageFileHeader', 'image_header');
-    } else {
-      this.setState({ errImg: 'Only images files allowed. Please try again :)' });
-    }
+  changeImgHeader = (imageUrl) => {
+    this.setState({
+      rsvp: {
+        ...this.state.rsvp,
+        image_header: imageUrl,
+      },
+    });
   };
 
-  changeImgFooter = (files) => {
-    const file = files[0];
-    if (file) {
-      this.setState({ imageFileFooter: file });
-      this.uploadImg('imageFileFooter', 'image_footer');
-    } else {
-      this.setState({ errImg: 'Only images files allowed. Please try again :)' });
-    }
-  };
-
-  uploadImg = (imageFieldName, imageStateName) => {
-    this.setState({ loading_image: true });
-    let data = new FormData();
-    const url = '/api/files/upload',
-      self = this;
-    data.append('file', this.state[imageFieldName]);
-    Actions.post(url, data)
-      .then((image) => {
-        self.setState({
-          rsvp: {
-            ...self.state.rsvp,
-            [imageStateName]: image,
-          },
-          [imageFieldName]: false,
-          loading_image: false,
-        });
-      })
-      .catch((error) => {
-        if (error.response) {
-          const { status, data } = error.response;
-          if (status === 401)
-            DispatchMessageService({
-              type: 'error',
-              msj: `Error : ${data?.message || status}`,
-              action: 'show',
-            });
-        } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Error Subiendo la imagen',
-            action: 'show',
-          });
-        }
-      });
+  changeImgFooter = (imageUrl) => {
+    this.setState({
+      rsvp: {
+        ...this.state.rsvp,
+        image_footer: imageUrl,
+      },
+    });
   };
 
   handleChange = (e) => {
@@ -185,6 +149,7 @@ class SendRsvp extends Component {
           include_date: include_date,
         };
       }
+
       /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
@@ -231,7 +196,7 @@ class SendRsvp extends Component {
   }
 
   render() {
-    const { disabled, include_date } = this.state;
+    const { disabled, include_date, isLoading } = this.state;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <>
@@ -246,145 +211,91 @@ class SendRsvp extends Component {
           />
 
           <Row justify='center' wrap gutter={8}>
-            <Col span={14}>
-              <Form.Item label={`Asunto del correo (Por defecto será el nombre del evento)`}>
-                <Input
-                  name={'subject'}
-                  placeholder={'Escribe aquí el asunto del correo'}
-                  onChange={(e) => this.handleChange(e)}
-                  value={this.state.rsvp.subject}
-                />
-              </Form.Item>
-
-              <Form.Item>
-                <label>
-                  Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small>
-                </label>
-
-                <Spin tip='Cargando...' spinning={this.state.loading_image}>
-                  <ImageInput
-                    picture={this.state.rsvp?.image_header}
-                    imageFile={this.state.imageFileHeader}
-                    changeImg={this.changeImgHeader}
-                    errImg={this.state.errImg}
-                    btnRemove={<></>}
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <Col span={14}>
+                <Form.Item label={`Asunto del correo (Por defecto será el nombre del evento)`}>
+                  <Input
+                    name={'subject'}
+                    placeholder={'Escribe aquí el asunto del correo'}
+                    onChange={(e) => this.handleChange(e)}
+                    value={this.state.rsvp.subject}
                   />
-                </Spin>
-              </Form.Item>
+                </Form.Item>
 
-              {/* <div className='rsvp-pic'>
-                <p className='rsvp-pic-txt'>
-                  Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small>
-                </p>
-                <ImageInput
-                  picture={this.state.rsvp.image_header}
-                  imageFile={this.state.imageFileHeader}
-                  divClass={'rsvp-pic-img'}
-                  content={<img src={this.state.rsvp.image_header} alt={'Imagen Perfil'} />}
-                  classDrop={'dropzone'}
-                  contentDrop={
-                    <button
-                      className={`button is-primary is-inverted is-outlined ${
-                        this.state.imageFileHeader ? 'is-loading' : ''
-                      }`}>
-                      Cambiar foto
-                    </button>
-                  }
-                  contentZone={<div>Subir foto</div>}
-                  changeImg={this.changeImgHeader}
-                  errImg={this.state.errImg}
-                />
-              </div> */}
+                <Form.Item>
+                  <label>
+                    Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small>
+                  </label>
 
-              <Form.Item label={'Cabecera del correo'}>
-                <EviusReactQuill
-                  name='content_header'
-                  data={this.state.rsvp.content_header}
-                  handleChange={(e) => this.QuillComplement1(e)}
-                />
-                {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
-              </Form.Item>
+                  <ImageUploaderDragAndDrop
+                    imageDataCallBack={(imageUrl) => this.changeImgHeader(imageUrl)}
+                    imageUrl={this.state.rsvp?.image_header}
+                    width='1080'
+                    height='1080'
+                  />
+                </Form.Item>
 
-              <Form.Item label={'Específicar fecha del evento'}>
-                <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
-              </Form.Item>
+                <Form.Item label={'Cabecera del correo'}>
+                  <EviusReactQuill
+                    name='content_header'
+                    data={this.state.rsvp.content_header}
+                    handleChange={(e) => this.QuillComplement1(e)}
+                  />
+                  {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
+                </Form.Item>
 
-              {include_date && (
-                <Row gutter={[8, 8]} wrap>
-                  <Col span={12}>
-                    <p>
-                      {' '}
-                      <CalendarOutlined /> Fecha Inicio
-                    </p>
-                    <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
-                  </Col>
-                  <Col span={12}>
-                    <p>
-                      {' '}
-                      <FieldTimeOutlined /> Hora
-                    </p>
-                    <p className='date'>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
-                  </Col>
-                  <Col span={12}>
-                    <p>
-                      {' '}
-                      <CalendarOutlined /> Fecha Fin
-                    </p>
-                    <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
-                  </Col>
-                  <Col span={12}>
-                    <p>
-                      {' '}
-                      <FieldTimeOutlined /> Hora
-                    </p>
-                    <p className='date'>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
-                  </Col>
-                </Row>
-              )}
-              <Row justify='center'>
-                <Col>
-                  <EnvironmentOutlined />
-                  Ubicación del evento
-                  <br />
-                  <span className='rsvp-location'>
-                    {this.props.event.location !== null && this.props.event.location.FormattedAddress}
-                  </span>
-                </Col>
-              </Row>
-              <Form.Item>
-                <label>
-                  Sube una imagen <br /> <small>(Por defecto será la del evento)</small>
-                </label>
+                <Form.Item label={'Específicar fecha del evento'}>
+                  <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
+                </Form.Item>
 
-                <Row style={{ margin: 10 }}>
-                  {!this.state.showimgDefault ? (
-                    <Button onClick={() => this.setState({ showimgDefault: true })} type='success'>
-                      Mostrar imagen por defecto
-                    </Button>
-                  ) : (
-                    <Button onClick={() => this.setState({ showimgDefault: false })} danger>
-                      Quitar imagen por defecto
-                    </Button>
-                  )}
-                </Row>
-
-                {this.state.showimgDefault && (
-                  <Spin tip='Cargando...' spinning={this.state.loading_image}>
-                    <ImageInput
-                      picture={this.state.rsvp?.image}
-                      imageFile={this.state.imageFile}
-                      changeImg={this.changeImg}
-                      errImg={this.state.errImg}
-                      btnRemove={<></>}
-                    />
-                  </Spin>
+                {include_date && (
+                  <Row gutter={[8, 8]} wrap>
+                    <Col span={12}>
+                      <p>
+                        {' '}
+                        <CalendarOutlined /> Fecha Inicio
+                      </p>
+                      <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
+                    </Col>
+                    <Col span={12}>
+                      <p>
+                        {' '}
+                        <FieldTimeOutlined /> Hora
+                      </p>
+                      <p className='date'>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
+                    </Col>
+                    <Col span={12}>
+                      <p>
+                        {' '}
+                        <CalendarOutlined /> Fecha Fin
+                      </p>
+                      <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
+                    </Col>
+                    <Col span={12}>
+                      <p>
+                        {' '}
+                        <FieldTimeOutlined /> Hora
+                      </p>
+                      <p className='date'>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
+                    </Col>
+                  </Row>
                 )}
-              </Form.Item>
-              {/* <div className='rsvp-pic'>
-                <Space direction='vertical'>
-                  <p className='rsvp-pic-txt'>
+                <Row justify='center'>
+                  <Col>
+                    <EnvironmentOutlined />
+                    Ubicación del evento
+                    <br />
+                    <span className='rsvp-location'>
+                      {this.props.event.location !== null && this.props.event.location.FormattedAddress}
+                    </span>
+                  </Col>
+                </Row>
+                <Form.Item>
+                  <label>
                     Sube una imagen <br /> <small>(Por defecto será la del evento)</small>
-                  </p>
+                  </label>
 
                   <Row style={{ margin: 10 }}>
                     {!this.state.showimgDefault ? (
@@ -397,115 +308,78 @@ class SendRsvp extends Component {
                       </Button>
                     )}
                   </Row>
-                </Space>
 
-                {this.state.showimgDefault && (
-                  <Row>
-                    <ImageInput
-                      picture={this.state.rsvp?.image}
-                      imageFile={this.state.imageFile}
-                      divClass={'rsvp-pic-img'}
-                      content={<img src={this.state.rsvp?.image} alt={'Imagen Perfil'} />}
-                      classDrop={'dropzone'}
-                      contentDrop={<Button type='primary'>Cambiar foto</Button>}
-                      contentZone={<div>Subir foto</div>}
-                      changeImg={this.changeImg}
-                      errImg={this.state.errImg}
+                  {this.state.showimgDefault && (
+                    <ImageUploaderDragAndDrop
+                      imageDataCallBack={(imageUrl) => this.changeImg(imageUrl)}
+                      imageUrl={this.state.rsvp?.image}
+                      width='1080'
+                      height='1080'
                     />
-                  </Row> 
-                )}
-              </div> */}
-
-              <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del evento)'}>
-                <EviusReactQuill
-                  name='message'
-                  data={this.state.rsvp.message}
-                  handleChange={(e) => this.QuillComplement2(e)}
-                />
-                {/* <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' /> */}
-              </Form.Item>
-
-              <Form.Item>
-                <label>
-                  Sube una imagen <br />{' '}
-                  <small>
-                    (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
-                  </small>
-                </label>
-                <Spin tip='Cargando...' spinning={this.state.loading_image}>
-                  <ImageInput
-                    picture={this.state.rsvp.image_footer}
-                    imageFile={this.state.imageFileFooter}
-                    changeImg={this.changeImgFooter}
-                    errImg={this.state.errImg}
-                    btnRemove={<></>}
-                  />
-                </Spin>
-              </Form.Item>
-
-              {/* <div className='rsvp-pic'>
-                <p className='rsvp-pic-txt'>
-                  Sube una imagen <br />{' '}
-                  <small>
-                    (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
-                  </small>
-                </p>
-                <ImageInput
-                  picture={this.state.rsvp.image_footer}
-                  imageFile={this.state.imageFileFooter}
-                  divClass={'rsvp-pic-img'}
-                  content={<img src={this.state.rsvp.image_footer} alt={'Imagen Perfil'} />}
-                  classDrop={'dropzone'}
-                  contentDrop={
-                    <button
-                      className={`button is-primary is-inverted is-outlined ${
-                        this.state.imageFileFooter ? 'is-loading' : ''
-                      }`}>
-                      Cambiar foto
-                    </button>
-                  }
-                  contentZone={<div>Subir foto</div>}
-                  changeImg={this.changeImgFooter}
-                  errImg={this.state.errImg}
-                />
-              </div> */}
-
-              <Card>
-                <Row gutter={[8, 8]} wrap justify='center'>
-                  <Col span={24}>
-                    <Typography.Paragraph>
-                      Seleccionados{' '}
-                      <span>{this.state.selection === 'Todos' ? 'Todos' : this.state.selection.length}</span>
-                    </Typography.Paragraph>
-                  </Col>
-                  <Typography.Paragraph>
-                    {this.state.selection === 'Todos'
-                      ? null
-                      : this.state.selection?.map((el) => {
-                          return el.properties.email + ', ';
-                        })}
-                  </Typography.Paragraph>
-                </Row>
-                <Row gutter={8} wrap>
-                  {this.state.selection === 'Todos' ? (
-                    <p>{this.state.selection}</p>
-                  ) : (
-                    this.state.selection?.map((item, key) => {
-                      return (
-                        <p key={key} className='selection'>
-                          {item.email}
-                        </p>
-                      );
-                    })
                   )}
-                </Row>
-                <Row justify='center' gutter={8} wrap>
-                  <Link to={{ pathname: `${this.props.matchUrl}` }}>
-                    <Button type='primary'>Editar Seleccionados</Button>
-                  </Link>
-                </Row>
-              </Card>
-            </Col>
+                </Form.Item>
+
+                <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del evento)'}>
+                  <EviusReactQuill
+                    name='message'
+                    data={this.state.rsvp.message}
+                    handleChange={(e) => this.QuillComplement2(e)}
+                  />
+                  {/* <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' /> */}
+                </Form.Item>
+
+                <Form.Item>
+                  <label>
+                    Sube una imagen <br />{' '}
+                    <small>
+                      (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
+                    </small>
+                  </label>
+                  <ImageUploaderDragAndDrop
+                    imageDataCallBack={(imageUrl) => this.changeImgFooter(imageUrl)}
+                    imageUrl={this.state.rsvp?.image_footer}
+                    width='1080'
+                    height='1080'
+                  />
+                </Form.Item>
+
+                <Card>
+                  <Row gutter={[8, 8]} wrap justify='center'>
+                    <Col span={24}>
+                      <Typography.Paragraph>
+                        Seleccionados{' '}
+                        <span>{this.state.selection === 'Todos' ? 'Todos' : this.state.selection.length}</span>
+                      </Typography.Paragraph>
+                    </Col>
+                    <Typography.Paragraph>
+                      {this.state.selection === 'Todos'
+                        ? null
+                        : this.state.selection?.map((el) => {
+                            return el.properties.email + ', ';
+                          })}
+                    </Typography.Paragraph>
+                  </Row>
+                  <Row gutter={8} wrap>
+                    {this.state.selection === 'Todos' ? (
+                      <p>{this.state.selection}</p>
+                    ) : (
+                      this.state.selection?.map((item, key) => {
+                        return (
+                          <p key={key} className='selection'>
+                            {item.email}
+                          </p>
+                        );
+                      })
+                    )}
+                  </Row>
+                  <Row justify='center' gutter={8} wrap>
+                    <Link to={{ pathname: `${this.props.matchUrl}` }}>
+                      <Button type='primary'>Editar Seleccionados</Button>
+                    </Link>
+                  </Row>
+                </Card>
+              </Col>
+            )}
           </Row>
           <Modal
             visible={this.state.modal}
