@@ -296,7 +296,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-      <Steps current={current}>
+      <Steps current={current} responsive={false}>
         {steps.map((item) => (
           <Step key={item.title} icon={item.icon} />
         ))}

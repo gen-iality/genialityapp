@@ -105,12 +105,14 @@ class eventLanding extends Component {
                 </>
               ) : (
                 <Row justify='center'>
-                  <ReactQuill
-                    value={this.props.cEvent.value.description}
-                    readOnly={true}
-                    modules={{ toolbar: false }}
-                    theme='bubble'
-                  />
+                  <Col span={24} id='img-informative'>
+                    <ReactQuill
+                      value={this.props.cEvent.value.description}
+                      readOnly={true}
+                      className='hide-toolbar ql-toolbar'
+                      theme='bubble'
+                    />
+                  </Col>
                 </Row>
               )}
 
