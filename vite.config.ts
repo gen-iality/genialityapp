@@ -19,8 +19,8 @@ export default defineConfig({
     EnvironmentPlugin(
       {
         VITE_AUTH_URL: 'http://localhost:3010',
-        VITE_API_URL: 'https://api.evius.co',
-        VITE_API_DEV_URL: 'https://api.evius.co',
+        VITE_API_URL: 'https://devapi.evius.co',
+        VITE_API_DEV_URL: 'https://devapi.evius.co',
         REACT_APP_SENTRY: 'https://d22c22662dfe45ab806c3bea19c1017b@o1156387.ingest.sentry.io/6237649',
         EVIUS_GOOGLE_MAPS_KEY: 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk',
         VITE_API_EVIUS_ZOOM_SERVER: 'https://apimeetings.evius.co:6490/crearroom',
@@ -28,8 +28,8 @@ export default defineConfig({
         VITE_API_EVIUS_ZOOM_SURVEY: 'https://apimeetings.evius.co:6490/obtenerMeetingsPoll',
         TSC_WATCHFILE: 'UseFsEventsWithFallbackDynamicPolling',
         REACT_EDITOR: 'code',
-        NODE_ENV: 'production',
-        DEBUG: '*',
+        NODE_ENV: 'development',
+        DEBUG: 'true',
         //FIREBASE CONFIG CHATEVIUS
         VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyD4_AiJFGf1nIvn9BY_rZeoITinzxfkl70',
         VITE_FB_AUTHDOMAIN_CHATEVIUS: 'chatevius.firebaseapp.com',
@@ -39,6 +39,7 @@ export default defineConfig({
         VITE_MESSAGINGSENDER_CHATEVIUS: '114050756597',
         VITE_APPID_CHATEVIUS: '1:114050756597:web:53eada24e6a5ae43fffabc',
         VITE_MEASURENTID_CHATEVIUS: 'G-5V3L65YQKP',
+
         //FIREBASE CONFIG EVIUSAUTH
         VITE_FB_APIKEY_EVIUSAUTH: 'AIzaSyDDnc9WHXf4CWwXCVggeiarYGu_xBgibJY',
         VITE_FB_AUTHDOMAIN_EVIUSAUTH: 'eviusauth.firebaseapp.com',
@@ -51,6 +52,41 @@ export default defineConfig({
       },
       { loadEnvFiles: true }
     ),
+    // EnvironmentPlugin(
+    //   {
+    //     VITE_AUTH_URL: 'http://localhost:3010',
+    //     VITE_API_URL: 'https://api.evius.co',
+    //     VITE_API_DEV_URL: 'https://api.evius.co',
+    //     REACT_APP_SENTRY: 'https://d22c22662dfe45ab806c3bea19c1017b@o1156387.ingest.sentry.io/6237649',
+    //     EVIUS_GOOGLE_MAPS_KEY: 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk',
+    //     VITE_API_EVIUS_ZOOM_SERVER: 'https://apimeetings.evius.co:6490/crearroom',
+    //     VITE_API_GOOGLE_API_DOCUMENTS: 'http://docs.google.com/gview?embedded:true&url:',
+    //     VITE_API_EVIUS_ZOOM_SURVEY: 'https://apimeetings.evius.co:6490/obtenerMeetingsPoll',
+    //     TSC_WATCHFILE: 'UseFsEventsWithFallbackDynamicPolling',
+    //     REACT_EDITOR: 'code',
+    //     NODE_ENV: 'production',
+    //     DEBUG: '*',
+    //     //FIREBASE CONFIG CHATEVIUS
+    //     VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyD4_AiJFGf1nIvn9BY_rZeoITinzxfkl70',
+    //     VITE_FB_AUTHDOMAIN_CHATEVIUS: 'chatevius.firebaseapp.com',
+    //     VITE_FB_DB_CHATEVIUS: 'https://chatevius.firebaseio.com',
+    //     VITE_PROJECTID_CHATEVIUS: 'chatevius',
+    //     VITE_STORAGEBUCKET_CHATEVIUS: 'chatevius.appspot.com',
+    //     VITE_MESSAGINGSENDER_CHATEVIUS: '114050756597',
+    //     VITE_APPID_CHATEVIUS: '1:114050756597:web:53eada24e6a5ae43fffabc',
+    //     VITE_MEASURENTID_CHATEVIUS: 'G-5V3L65YQKP',
+    //     //FIREBASE CONFIG EVIUSAUTH
+    //     VITE_FB_APIKEY_EVIUSAUTH: 'AIzaSyDDnc9WHXf4CWwXCVggeiarYGu_xBgibJY',
+    //     VITE_FB_AUTHDOMAIN_EVIUSAUTH: 'eviusauth.firebaseapp.com',
+    //     VITE_FB_DB_EVIUSAUTH: 'https://eviusauth.firebaseio.com',
+    //     VITE_PROJECTID_EVIUSAUTH: 'eviusauth',
+    //     VITE_STORAGEBUCKET_EVIUSAUTH: 'eviusauth.appspot.com',
+    //     VITE_MESSAGINGSENDER_EVIUSAUTH: '400499146867',
+    //     VITE_MEASUREMENTID_EVIUSAUTH: '',
+    //     VITE_APPID_EVIUSAUTH: '1:400499146867:web:5d0021573a43a1df',
+    //   },
+    //   { loadEnvFiles: true }
+    // ),
   ],
   css: {
     preprocessorOptions: {
