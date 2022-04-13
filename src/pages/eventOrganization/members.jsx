@@ -126,7 +126,7 @@ function OrgMembers(props) {
         rowKey='index'
         pagination={false}
         loading={isLoading}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 'auto' }}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>

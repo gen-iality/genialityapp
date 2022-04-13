@@ -82,7 +82,7 @@ const Report = (props) => {
       search
       setColumnsData={setColumnsData}
       fileName={'Employees'}
-      scroll={{x: 1200}}
+      scroll={{x: 'auto'}}
     />
   );
 }

@@ -292,7 +292,7 @@ class eventUsersList extends Component {
         </div>
 
         <Table
-          scroll={{ x: 3200 }}
+          scroll={{ x: 'auto' }}
           size='small'
           rowSelection={rowSelection}
           columns={columnsTable}

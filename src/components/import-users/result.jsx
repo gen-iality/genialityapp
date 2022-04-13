@@ -179,7 +179,7 @@ class Result extends Component {
                     rowKey='index'
                     dataSource={data[1]}
                     pagination
-                    /* scroll={{ x: 2500 }} */
+                    /* scroll={{ x: 2500 }} auto*/
                   >
                     <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis={true} />
                     <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis={true} />
@@ -194,7 +194,7 @@ class Result extends Component {
                   rowKey='index'
                   dataSource={data[0]}
                   pagination
-                  /* scroll={{ x: 2500 }} */
+                  /* scroll={{ x: 2500 }}  auto*/
                 >
                   <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis={true} />
                   <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis={true} />
