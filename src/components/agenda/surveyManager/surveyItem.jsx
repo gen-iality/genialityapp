@@ -18,12 +18,12 @@ export default function SurveyItem({ survey, onChange }) {
           onChange={(checked) => onChange(survey.survey_id, { isOpened: checked ? 'true' : 'false' })}
         />
       </Col>
-      <Col xs={4} lg={2}>
+      {/* <Col xs={4} lg={2}>
         <Switch
           checked={survey.freezeGame === 'true' || survey.freezeGame === true}
           onChange={(checked) => onChange(survey.survey_id, { freezeGame: checked ? 'true' : 'false' })}
         />
-      </Col>
+      </Col> */}
     </Row>
   );
 }

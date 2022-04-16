@@ -91,9 +91,9 @@ export default class SurveyManager extends Component {
               <Col xs={4} lg={2}>
                 <label className='label'>Abrir</label>
               </Col>
-              <Col xs={4} lg={2}>
+              {/* <Col xs={4} lg={2}>
                 <label className='label'>Pausar</label>
-              </Col>
+              </Col> */}
             </Row>
             {publishedSurveys.map((survey) => {
               return <SurveyItem key={`survey-${survey.survey_id}`} survey={survey} onChange={this.handleChange} />;

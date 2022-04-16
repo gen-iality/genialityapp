@@ -76,7 +76,7 @@ export const getAnswersByQuestion = (surveyId, questionId) => {
         }
         result.forEach((infoDoc) => {
           let creation_date_text = Moment.unix(infoDoc.data().created.seconds).format('DD MMM YYYY hh:mm a');
-          docs.push({ ...infoDoc.data(), _id: infoDoc.id, creation_date_text });
+          docs.push({ ...infoDoc.data(), creation_date_text });
         });
         resolve(docs);
       })
@@ -99,7 +99,7 @@ export const getTriviaRanking = (surveyId) => {
           result.forEach((item) => {
             let registerDate = Moment.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm:ss a');
 
-            list.push({ ...item.data(), _id: item.id, registerDate });
+            list.push({ ...item.data(), registerDate });
           });
 
           resolve(list);

@@ -942,97 +942,78 @@ class triviaEdit extends Component {
                         <Switch
                           name={'allow_gradable_survey'}
                           checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
-                          onChange={(checked) => this.toggleSwitch('allow_gradable_survey', checked)}
-                        />
-                      </Form.Item>
-                      <Form.Item label={'Habilitar ranking'}>
-                        <Switch
-                          name={'ranking'}
-                          checked={ranking === 'true' || ranking === true}
-                          onChange={(checked) => this.toggleSwitch('ranking', checked)}
+                          onChange={(checked) => {
+                            this.toggleSwitch('allow_gradable_survey', checked);
+                            if (ranking === 'true' || ranking === true) {
+                              this.toggleSwitch('ranking', checked);
+                            }
+                          }}
                         />
                       </Form.Item>
                       {(allow_gradable_survey === 'true' || allow_gradable_survey === true) && (
-                        <Form.Item label={'Requiere puntaje mínimo para aprobar'}>
-                          <Switch
-                            name={'hasMinimumScore'}
-                            checked={hasMinimumScore === 'true' || hasMinimumScore === true}
-                            onChange={(checked) => this.setState({ hasMinimumScore: checked ? 'true' : 'false' })}
-                          />
-                        </Form.Item>
-                      )}
-                      {(hasMinimumScore === true || hasMinimumScore === 'true') && (
-                        <Form.Item label={'Puntaje mínimo para aprobar'}>
-                          <Input name={'minimumScore'} value={minimumScore} onChange={this.changeInput} />
-                        </Form.Item>
-                      )}
-
-                      {allow_gradable_survey === 'true' && (
                         <>
-                          <Form.Item
-                            /* label={'Texto de muestra para la pantalla inicial de la encuesta'} */
-                            label={
-                              <label style={{ marginTop: '2%' }}>
-                                {'Texto de muestra para la pantalla inicial de la encuesta'}{' '}
-                                <label style={{ color: 'red' }}>*</label>
-                              </label>
-                            }>
-                            <ReactQuill
-                              name={'initialMessage'}
-                              id={'initialMessage'}
-                              value={this.state.initialMessage}
-                              modules={toolbarEditor}
-                              onChange={this.onChange}
+                          <Form.Item label={'Habilitar ranking'}>
+                            <Switch
+                              name={'ranking'}
+                              checked={ranking === 'true' || ranking === true}
+                              onChange={(checked) => this.toggleSwitch('ranking', checked)}
                             />
                           </Form.Item>
-                          <Form.Item
-                            label={'Mensaje al ganar'}
-                            /* label={
-                        <label style={{ marginTop: '2%' }}>
-                          {'Mensaje al ganar'} <label style={{ color: 'red' }}>*</label>
-                        </label>
-                      } */
-                          >
-                            <ReactQuill
-                              name={'win_Message'}
-                              id={'win_Message'}
-                              value={this.state.win_Message}
-                              modules={toolbarEditor}
-                              onChange={this.onChangeWin}
+                          <Form.Item label={'Requiere puntaje mínimo para aprobar'}>
+                            <Switch
+                              name={'hasMinimumScore'}
+                              checked={hasMinimumScore === 'true' || hasMinimumScore === true}
+                              onChange={(checked) => this.setState({ hasMinimumScore: checked ? 'true' : 'false' })}
                             />
                           </Form.Item>
-                          <Form.Item
-                            label={'Mensaje neutral'}
-                            /* label={
-                        <label style={{ marginTop: '2%' }}>
-                          {'Mensaje neutral'} <label style={{ color: 'red' }}>*</label>
-                        </label>
-                      } */
-                          >
-                            <ReactQuill
-                              name={'neutral_Message'}
-                              id={'neutral_Message'}
-                              value={this.state.neutral_Message}
-                              modules={toolbarEditor}
-                              onChange={this.onChangeNeutral}
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            label={'Mensaje al perder'}
-                            /* label={
-                        <label style={{ marginTop: '2%' }}>
-                          {'Mensaje al perder'} <label style={{ color: 'red' }}>*</label>
-                        </label>
-                      } */
-                          >
-                            <ReactQuill
-                              name={'lose_Message'}
-                              id={'lose_Message'}
-                              value={this.state.lose_Message}
-                              modules={toolbarEditor}
-                              onChange={this.onChangeLose}
-                            />
-                          </Form.Item>
+                          {(hasMinimumScore === true || hasMinimumScore === 'true') && (
+                            <Form.Item label={'Puntaje mínimo para aprobar'}>
+                              <Input name={'minimumScore'} value={minimumScore} onChange={this.changeInput} />
+                            </Form.Item>
+                          )}
+                          <>
+                            <Form.Item
+                              label={
+                                <label style={{ marginTop: '2%' }}>
+                                  {'Mensaje pantalla inicial de la encuesta'} <label style={{ color: 'red' }}>*</label>
+                                </label>
+                              }>
+                              <ReactQuill
+                                name={'initialMessage'}
+                                id={'initialMessage'}
+                                value={this.state.initialMessage}
+                                modules={toolbarEditor}
+                                onChange={this.onChange}
+                              />
+                            </Form.Item>
+                            <Form.Item label={'Mensaje pantalla final de la encuesta'}>
+                              <ReactQuill
+                                name={'neutral_Message'}
+                                id={'neutral_Message'}
+                                value={this.state.neutral_Message}
+                                modules={toolbarEditor}
+                                onChange={this.onChangeNeutral}
+                              />
+                            </Form.Item>
+                            <Form.Item label={'Mensaje al ganar'}>
+                              <ReactQuill
+                                name={'win_Message'}
+                                id={'win_Message'}
+                                value={this.state.win_Message}
+                                modules={toolbarEditor}
+                                onChange={this.onChangeWin}
+                              />
+                            </Form.Item>
+                            <Form.Item label={'Mensaje al perder'}>
+                              <ReactQuill
+                                name={'lose_Message'}
+                                id={'lose_Message'}
+                                value={this.state.lose_Message}
+                                modules={toolbarEditor}
+                                onChange={this.onChangeLose}
+                              />
+                            </Form.Item>
+                          </>
                         </>
                       )}
                     </>

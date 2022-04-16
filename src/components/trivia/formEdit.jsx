@@ -1,7 +1,22 @@
 import { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, Alert, Space, Typography, Tooltip } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Spin,
+  Radio,
+  Checkbox,
+  Upload,
+  Alert,
+  Space,
+  Typography,
+  Tooltip,
+  Table,
+  Divider,
+} from 'antd';
 import {
   MinusCircleOutlined,
   PlusOutlined,
@@ -32,6 +47,32 @@ const validateMessages = {
     range: '${label} must be between ${min} and ${max}',
   },
 };
+
+const dataSource = [
+  {
+    key: '1',
+    width: '500px',
+    height: '300px',
+  },
+  {
+    key: '2',
+    width: '600px',
+    height: '300px',
+  },
+];
+
+const columns = [
+  {
+    title: 'Ancho',
+    dataIndex: 'width',
+    key: 'width',
+  },
+  {
+    title: 'Alto',
+    dataIndex: 'height',
+    key: 'height',
+  },
+];
 
 const FormEdit = (
   { valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading, gradableSurvey, unmountForm },
@@ -413,38 +454,46 @@ const FormEdit = (
                     onRemove={handleRemoveImg}>
                     <Button icon={<UploadOutlined />}>Cargar imagen</Button>
                   </Upload>
-                  {wrongDimensions && (
-                    <Alert
-                      showIcon
-                      closable
-                      className='animate__animated animate__bounceIn'
-                      style={{
-                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                        backgroundColor: '#FFFFFF',
-                        color: '#000000',
-                        borderLeft: '5px solid #FF4E50',
-                        fontSize: '14px',
-                        textAlign: 'start',
-                        borderRadius: '5px',
-                      }}
-                      type='error'
-                      message={
-                        <p>
-                          Las dimensiones de la imagen actual son:{' '}
-                          <strong>
-                            {dimensions.width}*{dimensions.height}
-                          </strong>
-                          .
-                        </p>
-                      }
-                    />
-                  )}
                   <Tooltip
-                    title={'Tenga en cuenta que la dimensión de la imagen debe ser 500px * 300px ó 600px * 300px'}>
+                    title={
+                      <div style={{ background: 'white', padding: '10px' }}>
+                        <Text type='secondary'>
+                          Tenga en cuenta que la dimensión de la imagen deben coincidir con la siguiente tabla.
+                        </Text>
+                        <Divider />
+                        <Table dataSource={dataSource} columns={columns} pagination={false} size='small' />
+                      </div>
+                    }>
                     <QuestionCircleOutlined style={{ color: '#faad14', marginRight: '10px' }} />
                   </Tooltip>
                 </Space>
               </Form.Item>
+              {wrongDimensions && (
+                <Alert
+                  showIcon
+                  closable
+                  className='animate__animated animate__bounceIn'
+                  style={{
+                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                    backgroundColor: '#FFFFFF',
+                    color: '#000000',
+                    borderLeft: '5px solid #FF4E50',
+                    fontSize: '14px',
+                    textAlign: 'start',
+                    borderRadius: '5px',
+                  }}
+                  type='error'
+                  message={
+                    <p>
+                      Las dimensiones de la imagen actual son:{' '}
+                      <strong>
+                        {dimensions.width}*{dimensions.height}
+                      </strong>
+                      .
+                    </p>
+                  }
+                />
+              )}
             </>
 
             <Form.List name={`choices`}>
