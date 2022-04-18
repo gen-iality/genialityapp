@@ -51,6 +51,7 @@ const ModalOrgListCreate = ({ modalListOrgIsVisible, orgId }) => {
       dispatch({ type: 'ORGANIZATIONS', payload: { organizationList: [createOrganizationR] } });
       dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: orgId, organization: createOrganizationR } });
     } else {
+      //dispatch({ type: 'ORGANIZATIONS', payload: { organizationList: organizations } });
       dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: orgId } });
     }
   }

@@ -121,6 +121,7 @@ export const AgendaContextProvider = ({ children }) => {
         setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
         setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
         setTypeActivity(configuration.typeActivity || null);
+        setDataLive(null);
       } else {
         initializeState();
       }
@@ -144,6 +145,7 @@ export const AgendaContextProvider = ({ children }) => {
     setHabilitarIngreso('');
     setSelect_host_manual(false);
     setTypeActivity(null);
+    setDataLive(null);
   };
 
   const getRequestByActivity = (refActivity) => {

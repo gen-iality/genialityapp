@@ -37,4 +37,5 @@ export type TypeActivityContextProps = {
   loadingStop: boolean;
   videoObject: { created_at: string; name: string; url: string } | null;
   visualizeVideo: (url: string | null, created_at: string | null, name: string | null) => void;
+  loadingCreate: boolean;
 };

@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { useContext, useReducer, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
@@ -32,6 +33,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   const [loadingStop, setLoadingStop] = useState(false);
   const queryClient = useQueryClient();
   const [videoObject, setVideoObject] = useState<any | null>(null);
+  const [loadingCreate, setLoadingCreate] = useState(false);
 
   const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
     switch (id) {
@@ -152,6 +154,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     saveTypeActivity();
     switch (typeActivityState.selectedKey) {
       case 'url':
+        setLoadingCreate(true);
         const respUrl = await AgendaApi.editOne({ video: typeActivityState.data }, activityEdit, cEvent?.value?._id);
         if (respUrl) {
           resp = await saveConfig({
@@ -164,22 +167,25 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
           setPlatform('wowza');
           setMeetingId(typeActivityState.data);
         } else {
-          console.error('ERROR AL GUARDAR URL');
+          message.error('Error al guardar video');
         }
+        setLoadingCreate(false);
         //setMeetingId(typeActivityState?.data);
         ////Type:url
         break;
       case 'vimeo':
         //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
+        setLoadingCreate(true);
         let newDataVimeo = typeActivityState.data;
         resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
         setTypeActivity('vimeo');
         setPlatform('vimeo');
         setMeetingId(typeActivityState?.data);
-
+        setLoadingCreate(false);
         break;
       case 'youTube':
         //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
+        setLoadingCreate(true);
         let newData = typeActivityState.data.includes('https://youtu.be/')
           ? typeActivityState.data
           : 'https://youtu.be/' + typeActivityState.data;
@@ -187,9 +193,11 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         setTypeActivity('youTube');
         setPlatform('wowza');
         setMeetingId(typeActivityState?.data);
+        setLoadingCreate(false);
         //Type:youTube
         break;
       case 'eviusMeet':
+        setLoadingCreate(true);
         !meeting_id && executer_createStream.mutate();
         meeting_id &&
           (await saveConfig({
@@ -200,20 +208,24 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         setTypeActivity('eviusMeet');
         setPlatform('wowza');
         toggleActivitySteps('finish');
+        setLoadingCreate(false);
 
         //type:eviusMeet
         break;
       case 'RTMP':
+        setLoadingCreate(true);
         !meeting_id && executer_createStream.mutate();
         meeting_id &&
           (await saveConfig({ platformNew: 'wowza', type: typeActivityState.selectedKey, data: meeting_id }));
         setTypeActivity('RTMP');
         setPlatform('wowza');
         toggleActivitySteps('finish');
+        setLoadingCreate(false);
 
         //type:RTMP
         break;
       case 'meeting':
+        setLoadingCreate(true);
         resp = await saveConfig({
           platformNew: '',
           type: 'meeting',
@@ -222,9 +234,11 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         });
         setTypeActivity('meeting');
         setPlatform('wowza');
+        setLoadingCreate(false);
         //Type:reunión
         break;
       case 'cargarvideo':
+        setLoadingCreate(true);
         const data = typeActivityState?.data.split('-');
         const urlVideo = data.length > 2 ? data[0] + '-' + data[1] : data[0];
         const videoId = data.length > 2 ? data[2] : data[1];
@@ -235,6 +249,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
           setPlatform('wowza');
           setMeetingId(urlVideo);
         }
+        setLoadingCreate(false);
         break;
 
       default:
@@ -242,6 +257,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     }
     if (resp?.state === 'created' || resp?.state === 'updated') {
       toggleActivitySteps('finish');
+      setLoadingCreate(false);
     }
   };
 
@@ -265,6 +281,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         loadingStop,
         videoObject,
         visualizeVideo,
+        loadingCreate,
       }}>
       {children}
     </TypeActivityContext.Provider>

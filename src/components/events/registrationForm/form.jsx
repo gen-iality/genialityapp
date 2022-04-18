@@ -210,7 +210,12 @@ const FormRegister = ({
     }
     setinitialValues(
       organization
-        ? initialOtherValue
+        ? {
+            ...initialOtherValue?.properties,
+            rol_id: initialOtherValue.rol_id,
+            checked_in: initialOtherValue.checked_in,
+            checkedin_at: initialOtherValue.checkedin_at,
+          }
         : cEventUser?.value != null && cEventUser?.value != undefined
         ? cEventUser?.value?.properties
         : cUser.value
