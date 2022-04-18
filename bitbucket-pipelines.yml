@@ -1,0 +1,30 @@
+image: cypress/browsers:node14.17.0-chrome88-ff89
+
+ui-chrome-tests: &ui-chrome-tests
+  name: 'UI Tests - Chrome'
+  caches:
+    - cypress
+    - node
+  script:
+    - npx cypress run --record --key 0e92a938-6e98-47df-a5ad-96d80927613f
+
+pipelines:
+  default:
+    - step:
+        name: Install dependencies and build frontend application
+        caches:
+         - yarn
+         - cypress
+         - node
+       script:
+         - yarn add cypress
+       artifacts:
+         - build/**
+    - parallel:
+        - step:
+            <<: *ui-chrome-tests
+
+definitions:
+  caches:
+    yarn: $HOME/.cache
+    cypress: $HOME/.cache/Cypress
