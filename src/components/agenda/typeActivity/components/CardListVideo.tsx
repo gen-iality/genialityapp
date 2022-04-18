@@ -150,7 +150,7 @@ const CardListVideo = (props: any) => {
                     preview={false}
                     width={150}
                     height={100}
-                    src={item.image}
+                    src={item.image || 'error'}
                     alt='Miniatura del video'
                     fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
                   />
