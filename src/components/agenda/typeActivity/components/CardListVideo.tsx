@@ -15,7 +15,7 @@ import {
   ClockCircleOutlined,
   CalendarOutlined,
 } from '@ant-design/icons';
-import { Card, List, Button, Image, Tooltip, Typography, message, Spin, Popconfirm, Tag, Space } from 'antd';
+import { Card, List, Button, Image, Tooltip, Typography, message, Spin, Popconfirm, Tag, Space, Skeleton } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 
@@ -155,12 +155,14 @@ const CardListVideo = (props: any) => {
                     fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
                   />
                 }
-                title={item.name}
+                title={item?.status === 'ready' ? item.name : <Skeleton loading paragraph={{ rows: 1 }} />}
                 description={
-                  <Space direction='vertical'>
-                    <Tag icon={<ClockCircleOutlined />}>{milisegundosTohour(item?.duration)}</Tag>
-                    <Tag icon={<CalendarOutlined />}>{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</Tag>
-                  </Space>
+                  item?.status === 'ready' && (
+                    <Space direction='vertical'>
+                      <Tag icon={<ClockCircleOutlined />}>{milisegundosTohour(item?.duration)}</Tag>
+                      <Tag icon={<CalendarOutlined />}>{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</Tag>
+                    </Space>
+                  )
                 }
               />
             </List.Item>
