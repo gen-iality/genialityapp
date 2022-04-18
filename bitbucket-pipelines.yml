@@ -13,16 +13,16 @@ pipelines:
     - step:
         name: Install dependencies and build frontend application
         caches:
-         - yarn
-         - cypress
-         - node
-       script:
-         - yarn add cypress
-       artifacts:
-         - build/**
-    - parallel:
-        - step:
-            <<: *ui-chrome-tests
+          - yarn
+          - cypress
+          - node
+  script:
+    - yarn add cypress
+  artifacts:
+    - build/**
+  -parallel:
+    - step:
+        <<: *ui-chrome-tests
 
 definitions:
   caches:
