@@ -113,6 +113,7 @@
     "url-loader": "^4.1.1",
     "vite-tsconfig-paths": "^3.4.1",
     "xlsx": "^0.18.4",
+    "yarnpkg": "^0.15.1",
     "yup": "^0.29.2"
   },
   "devDependencies": {
