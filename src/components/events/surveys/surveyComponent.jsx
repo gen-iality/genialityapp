@@ -20,10 +20,6 @@ import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 // import { firestore, fireRealtime } from '../../../helpers/firebase';
 
-let myCss = {
-  navigationButton: 'color-btn-survey',
-};
-
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
 
@@ -246,7 +242,6 @@ function SurveyComponent(props) {
                 onCurrentPageChanged={(surveyModel, options) =>
                   setOnCurrentPageChanged({ surveyModel, options }, setShowOrHideSurvey(true))
                 }
-                css={myCss}
               />
             </div>
           )}
