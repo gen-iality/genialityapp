@@ -73,11 +73,12 @@ Cypress.Commands.add('login', (email, password) => {
   cy.get('#loginButton').click();
 });
 Cypress.Commands.add('visitEvent', () => {
-  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-    cy.visit(`${stagingUrl}${eventToTest}`);
-  } else {
-    cy.visit(`${localUrl}${eventToTest}`);
-  }
+  // if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+  //   cy.visit(`${stagingUrl}${eventToTest}`);
+  // } else if (process.env.NODE_ENV === 'development') {
+  //   cy.visit(`${localUrl}${eventToTest}`);
+  // }
+  cy.visit(`${stagingUrl}${eventToTest}`);
 });
 
 /// agregar este comando de eliminar

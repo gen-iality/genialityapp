@@ -133,6 +133,10 @@ iframe {
   }
 }
 
+.sv-btn--navigation {
+  float: none !important;
+}
+
 .sv-progress__text {
   left: 50%;
   transform: translateX(-50%);
