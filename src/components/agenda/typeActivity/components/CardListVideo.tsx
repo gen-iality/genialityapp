@@ -155,7 +155,7 @@ const CardListVideo = (props: any) => {
                     fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
                   />
                 }
-                title={item?.status === 'ready' ? item.name : <Skeleton loading paragraph={{ rows: 1 }} />}
+                title={item?.status === 'ready' ? item.name : <Skeleton active paragraph={{ rows: 1 }} />}
                 description={
                   item?.status === 'ready' && (
                     <Space direction='vertical'>
