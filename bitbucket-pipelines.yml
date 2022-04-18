@@ -1,22 +1,35 @@
-image: cypress/browsers:node14.17.0-chrome88-ff89
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
 
-ui-chrome-tests: &ui-chrome-tests
-  name: 'UI Tests - Chrome'
-  caches:
-    - cypress
-    - node
-  script:
-    - npx cypress run --record --key 0e92a938-6e98-47df-a5ad-96d80927613f
+image: atlassian/default-image:3
 
 pipelines:
   default:
+    - parallel:
+        - step:
+            name: 'Build and Test'
+            script:
+              - npx cypress run --record --key 0e92a938-6e98-47df-a5ad-96d80927613f
+        - step:
+            name: 'Lint'
+            script:
+              - echo "Your linting goes here..."
+        - step:
+            name: 'Security scan'
+            script:
+              - echo "Your security scan goes here..."
+
+    # The following deployment steps will be executed for each pipeline run. To configure your steps and conditionally deploy see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
     - step:
-        name: Install dependencies and build frontend application
-        caches:
-          - yarn
-          - cypress
-          - node
-  script:
-    - yarn add cypress
-  artifacts:
-    - build/**
+        name: 'Deployment to Staging'
+        deployment: staging
+        script:
+          - echo "Your deployment to staging script goes here..."
+    - step:
+        name: 'Deployment to Production'
+        deployment: production
+        trigger: 'manual'
+        script:
+          - echo "Your deployment to production script goes here..."
