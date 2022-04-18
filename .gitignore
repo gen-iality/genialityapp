@@ -29,7 +29,6 @@ dist-ssr
 .env.test
 .env.production
 .env.dev
-vite.config.js
-vite.config.ts
+
 
 

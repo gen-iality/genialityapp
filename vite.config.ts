@@ -30,7 +30,6 @@ export default defineConfig({
         REACT_EDITOR: 'code',
         NODE_ENV: 'development',
         DEBUG: 'true',
-
         //FIREBASE CONFIG CHATEVIUS
         VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyDaQI5E1P6mIhcNfDdRq8oSGpJ13Qllv00',
         VITE_FB_AUTHDOMAIN_CHATEVIUS: 'chateviusdev.firebaseapp.com',
@@ -40,7 +39,6 @@ export default defineConfig({
         VITE_MESSAGINGSENDER_CHATEVIUS: '520741764660',
         VITE_APPID_CHATEVIUS: '1:520741764660:web:7da078ca925a34c7db5461',
         VITE_MEASURENTID_CHATEVIUS: '',
-
         //FIREBASE CONFIG EVIUSAUTH
         VITE_FB_APIKEY_EVIUSAUTH: 'AIzaSyAohyXq3R4t3ao7KFzLDY7W6--g6kOuS7Q',
         VITE_FB_AUTHDOMAIN_EVIUSAUTH: 'eviusauthdev.firebaseapp.com',
