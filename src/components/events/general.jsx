@@ -542,7 +542,7 @@ class General extends Component {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+      msj: self.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
       action: 'show',
     });
     confirm({

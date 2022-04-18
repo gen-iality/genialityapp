@@ -19,7 +19,6 @@ const messages = localeData[languageWithoutRegionCode] || localeData[language] |
 
 /* A helper function that will send errors to Sentry.io. */
 sentry();
-
 ReactDOM.render(
   <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale='es'>
     <QueryClientProvider client={queryClient}>
