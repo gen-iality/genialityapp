@@ -75,7 +75,7 @@ Cypress.Commands.add('login', (email, password) => {
 Cypress.Commands.add('visitEvent', () => {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
     cy.visit(`${stagingUrl}${eventToTest}`);
-  } else {
+  } else if (process.env.NODE_ENV === 'development') {
     cy.visit(`${localUrl}${eventToTest}`);
   }
 });
