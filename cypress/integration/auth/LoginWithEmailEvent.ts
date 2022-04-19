@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 describe('Login with Email in Event', () => {
   const email = 'pruebascypress@mocionsoft.com';
-  const emailNoFound = 'pruebascypressnofound443@mocionsoft.com';
+  const emailNoFound = 'pruebascypressnofound44tr3@mocionsoft.com';
 
   const nombre = 'Cypreess Prueba';
   let linkLogin: string;
@@ -19,26 +19,26 @@ describe('Login with Email in Event', () => {
 
   it('It should show the login modal and switch to the login form', () => {
     cy.changeLogin();
-    cy.contains('Iniciar sesión solo con mi correo').should('exist');
+    cy.get('.ant-btn.ant-btn-primary.ant-btn-lg.ant-btn-block').should('exist');
   });
   it('It should show the modal to login with mail', () => {
     cy.changeLogin();
-    cy.contains('Iniciar sesión solo con mi correo').click();
+    cy.get('.ant-btn.ant-btn-primary.ant-btn-lg.ant-btn-block').click();
     cy.get('#submitButton').should('exist');
   });
   it('I should not send the access to my email because the input is not an email', () => {
     cy.changeLogin();
-    cy.contains('Iniciar sesión solo con mi correo').click();
+    cy.get('.ant-btn.ant-btn-primary.ant-btn-lg.ant-btn-block').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
       .type(nombre);
     cy.wait(1000);
-    cy.contains('Ingrese un correo válido').should('exist');
+    cy.get('.ant-form-item-explain-error').should('exist');
   });
   it('I should not send the access to my email because  email no exist', () => {
     cy.changeLogin();
-    cy.contains('Iniciar sesión solo con mi correo').click();
+    cy.get('.ant-btn.ant-btn-primary.ant-btn-lg.ant-btn-block').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
@@ -52,7 +52,7 @@ describe('Login with Email in Event', () => {
   });
   it('I should  send the access to my email', () => {
     cy.changeLogin();
-    cy.contains('Iniciar sesión solo con mi correo').click();
+    cy.get('.ant-btn.ant-btn-primary.ant-btn-lg.ant-btn-block').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
@@ -79,12 +79,12 @@ describe('Login with Email in Event', () => {
       cy.visit(linkLogin);
       cy.wait(10000);
       // Esta condicional es por si el usuario esta loqueado en otro equipo
-      if (cy.contains('Ya has iniciado la sesión en otro dispositivo').should('exist')) {
-        cy.contains('button', 'Continuar').click();
-      }
+      // if (cy.contains('Ya has iniciado la sesión en otro dispositivo').should('exist')) {
+      //   cy.contains('button', 'Continuar').click();
+      // }
       //este prueba puede fallar si el usuario no esta loqueado en otro equipo
       cy.wait(5000);
-      cy.logout();
+      cy.logoutWithOutEvent();
     });
   });
 });
