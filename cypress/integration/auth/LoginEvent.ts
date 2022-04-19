@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 describe('Login User in Event', () => {
-  const email = 'pruebascypress@mocionsoft.com';
+  const email = 'pruebascypress1@mocionsoft.com';
   const emailCypress = 'pruebascypressnofoundtest@mocionsoft.com';
   const clave = 'mocion.2040';
   const nombre = 'Cypreess Prueba';
@@ -18,8 +18,7 @@ describe('Login User in Event', () => {
     cy.get('#password').should('be.empty');
     cy.get('#loginButton').click();
     cy.wait(1000);
-    cy.contains('Ingrese un correo').should('exist');
-    cy.contains('Ingrese una contraseña').should('exist');
+    cy.get('.ant-form-item-explain-error').should('have.length', 2);
   });
   it('It should not allow the login, because the email field does not comply with the format and the password field is empty', () => {
     cy.changeLogin();
@@ -33,19 +32,19 @@ describe('Login User in Event', () => {
     cy.get('#email').type(email);
     cy.get('#password').should('be.empty');
     cy.get('#loginButton').click();
-    cy.contains('Ingrese una contraseña').should('exist');
+    cy.get('.ant-form-item-explain-error').should('exist');
   });
   it('An alert should appear, because the email does not exist', () => {
     cy.changeLogin();
     cy.login(emailCypress, clave);
     cy.wait(1000);
-    cy.contains('este email no esta registrado').should('exist');
+    cy.get('.ant-alert-message').should('exist');
   });
   it('An alert should appear, because the password is incorrect', () => {
     cy.changeLogin();
     cy.login(email, '123456');
     cy.wait(1000);
-    cy.contains('La contraseña es incorrecta').should('exist');
+    cy.get('.ant-alert-message').should('exist');
   });
   it('You should log in to the platform', () => {
     cy.changeLogin();

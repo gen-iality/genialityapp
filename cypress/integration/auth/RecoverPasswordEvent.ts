@@ -17,30 +17,30 @@ describe('Recover Password in Event', () => {
   });
   it('It should show the login modal and switch to the login form and open modal recover ', () => {
     cy.changeLogin();
-    cy.contains('Olvidé mi contraseña').click();
+    cy.get('#forgotpassword').click();
   });
   it('it should not send the reset email because the field is empty', () => {
     cy.changeLogin();
-    cy.contains('Olvidé mi contraseña').click();
+    cy.get('#forgotpassword').click();
     cy.get('#email').should('be.empty');
     cy.get('button[type=submit]')
       .eq(3)
       .click();
-    cy.contains('El correo es requerido').should('exist');
+    cy.get('.ant-form-item-explain-error').should('exist');
   });
   it('it should not send the reset email because the email field does not meet the parameters of type email', () => {
     cy.changeLogin();
-    cy.contains('Olvidé mi contraseña').click();
+    cy.get('#forgotpassword').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
       .type(nombre);
     cy.wait(1000);
-    cy.contains('Ingrese un correo válido').should('exist');
+    cy.get('.ant-form-item-explain-error').should('exist');
   });
   it('The unregistered mail alert should appear', () => {
     cy.changeLogin();
-    cy.contains('Olvidé mi contraseña').click();
+    cy.get('#forgotpassword').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
@@ -53,7 +53,7 @@ describe('Recover Password in Event', () => {
   });
   it('The email sent alert should appear', () => {
     cy.changeLogin();
-    cy.contains('Olvidé mi contraseña').click();
+    cy.get('#forgotpassword').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)

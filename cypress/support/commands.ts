@@ -36,6 +36,7 @@ declare global {
       login(email: string, password: string): Cypress.Chainable<Element>;
       changeLogin(): Cypress.Chainable<Element>;
       visitEvent(): Cypress.Chainable<Element>;
+      logoutWithOutEvent(): Cypress.Chainable<Element>;
     }
   }
 }
@@ -53,17 +54,42 @@ Cypress.Commands.add('logout', () => {
   cy.get('.ant-dropdown-trigger')
     .eq(0)
     .trigger('mouseover');
-  cy.contains('Administración').should('exist');
-  cy.contains('Cerrar sesión').click();
+  cy.get('.ant-dropdown-menu-item-group-title').should('exist');
   cy.wait(2000);
-  cy.contains('Si, cerrar la sesión').click();
+
+  cy.get('.ant-dropdown-menu-title-content')
+    .eq(6)
+    .click();
+  cy.wait(2000);
+  cy.get('button')
+    .should('have.class', 'ant-btn ant-btn-default ant-btn-dangerous')
+    .eq(5)
+    .click();
+  cy.wait(5000);
+});
+Cypress.Commands.add('logoutWithOutEvent', () => {
+  cy.wait(1000);
+  cy.get('.ant-dropdown-trigger')
+    .eq(0)
+    .trigger('mouseover');
+  cy.get('.ant-dropdown-menu-item-group-title').should('exist');
+  cy.wait(2000);
+
+  cy.get('.ant-dropdown-menu-title-content')
+    .eq(5)
+    .click();
+  cy.wait(2000);
+  cy.get('button')
+    .should('have.class', 'ant-btn ant-btn-default ant-btn-dangerous')
+    .eq(5)
+    .click();
   cy.wait(5000);
 });
 
 Cypress.Commands.add('changeLogin', () => {
   cy.wait(4000);
   cy.get('.ant-modal-body').should('exist');
-  cy.contains('Registrarme').should('exist');
+  cy.get('#rc-tabs-0-tab-register').should('exist');
   cy.get('#rc-tabs-0-tab-login').click();
 });
 

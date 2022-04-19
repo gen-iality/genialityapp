@@ -2,7 +2,7 @@
 
 describe('Register User in Event', () => {
   const event_id = '624362c612e3604d37212ed3';
-  const email = 'pruebacypress138@mocionsoft.com';
+  const email = 'pruebacypress160@mocionsoft.com';
   const clave = 'mocion.2040';
   const newPassword = 'mocion.2041';
   const nombre = 'Cyprees';
@@ -29,28 +29,20 @@ describe('Register User in Event', () => {
     cy.get("input[type='file']").attachFile(filePath);
     cy.contains('OK').click();
     cy.wait(1000);
-    cy.get('input[type=email]')
-      .eq(1)
-      .type(email);
-    cy.get('input[type=password]')
-      .eq(1)
-      .type(clave);
+    cy.get('input[type=email]').type(email);
+    cy.get('input[type=password]').type(clave);
     cy.get('#names').type(nombre + ' ' + apellido);
     cy.get('#btnnextRegister').should('not.be.disabled');
     cy.get('#btnnextRegister').click();
     cy.wait(1000);
-    cy.contains('Datos del usuario').should('exist');
+    //cy.contains('Datos del usuario').should('exist');
     cy.contains(nombre + ' ' + apellido).should('exist');
     cy.contains(email).should('exist');
     cy.get('#btnnextRegister').click();
     cy.wait(4000);
-    cy.contains('¡Registro exitoso!').should('exist');
-    cy.contains('Iniciando sesión con tu cuenta!').should('exist');
+    cy.get('.ant-result-title').should('exist');
+    cy.get('.ant-typography.ant-typography-secondary').should('exist');
     cy.wait(15000);
-    // cy.get('.ant-modal-body')
-    //   .contains('Inscribirme al evento')
-    //   .click();
-    cy.wait(12000);
     cy.logout();
   });
 
@@ -61,7 +53,7 @@ describe('Register User in Event', () => {
   });
   it('The email sent alert should appear', () => {
     cy.changeLogin();
-    cy.contains('Olvidé mi contraseña').click();
+    cy.get('#forgotpassword').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
@@ -101,7 +93,7 @@ describe('Register User in Event', () => {
   });
   it('It should send the access to the mail', () => {
     cy.changeLogin();
-    cy.contains('Iniciar sesión solo con mi correo').click();
+    cy.get('.ant-btn.ant-btn-primary.ant-btn-lg.ant-btn-block').click();
     cy.wait(1000);
     cy.get('input[type=email]')
       .eq(4)
@@ -113,7 +105,7 @@ describe('Register User in Event', () => {
     cy.wait(3000);
     cy.get('.ant-alert-message').should('exist');
   });
-  it.only('it should login using email', () => {
+  it('it should login using email', () => {
     cy.request({
       method: 'POST',
       url: 'https://devapi.evius.co/api/getloginlink',
@@ -128,11 +120,11 @@ describe('Register User in Event', () => {
       cy.visit(linkLogin);
       cy.wait(10000);
       // Esta condicional es por si el usuario esta loqueado en otro equipo
-      if (cy.contains('Ya has iniciado la sesión en otro dispositivo').should('exist')) {
-        cy.contains('button', 'Continuar').click();
-      }
+      // if (cy.contains('Ya has iniciado la sesión en otro dispositivo').should('exist')) {
+      //   cy.contains('button', 'Continuar').click();
+      // }
       cy.wait(8000);
-      cy.logout();
+      cy.logoutWithOutEvent();
     });
   });
   it('it should log in to the platform', () => {
