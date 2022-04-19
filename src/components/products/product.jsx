@@ -218,7 +218,7 @@ class Product extends Component {
             rowKey='index'
             dataSource={this.state.list}
             pagination={false} //pageSize: 6, position: ['bottomCenter'] }}
-            /* scroll={{ x: 1300 }} */
+            /* scroll={{ x: 1300 }} auto*/
             components={{
               body: {
                 wrapper: this.DraggableContainer,

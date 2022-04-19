@@ -194,7 +194,7 @@ const CMS = (props) => {
         extraPathType={extraPathType}
         extraPathId={extraPathId}
         extraPathStateName={extraPathStateName}
-        scroll={scroll}
+        scroll={scroll} //Bien se puede pasar un auto, y toma el scroll de ser necesario
         widthAction={widthAction}
         extraPathUpdate={extraPathUpdate}
         extraPathUpdateTitle={extraPathUpdateTitle}

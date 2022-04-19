@@ -97,7 +97,7 @@ const Agenda = (props) => {
       actions
       search
       setColumnsData={setColumnsData}
-      scroll={{ x: 1200 }}
+      scroll={{ x: 'auto' }}
     />
   );
 };

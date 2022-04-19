@@ -830,7 +830,7 @@ class ListEventUser extends Component {
           list={users.length > 0 && users}
           header={this.state.columns}
           takeOriginalHeader
-          scroll={{ x: 3200 }}
+          scroll={{ x: 'max-content' }} //auto funciona de la misma forma, para ajustar el contenido
           loading={this.state.loading}
           titleTable={
             <Row gutter={[8, 8]}>

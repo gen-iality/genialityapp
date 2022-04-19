@@ -566,7 +566,7 @@ class CheckAgenda extends Component {
           header={columnsTable}
           list={usersData}
           pagination
-          scroll={{ x: 3200 }}
+          scroll={{ x: 'auto' }}
           titleTable={
             <Row gutter={[8, 8]} wrap justify='end'>
               {/* <Col>
