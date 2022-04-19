@@ -32,7 +32,7 @@ const AditionalInformation = (props) => {
   }
 
   return (
-    <Card bordered={false} bodyStyle={{ margin: '20px' }}>
+    <Card bordered={false} bodyStyle={{ margin: '0', padding: '0px' }}>
       <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
         {
           <TabPane
