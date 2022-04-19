@@ -115,7 +115,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           />
         ) : conected == 'Yes' ? (
           <iframe
-            style={screens.xs ? { aspectRatio: '10/20' } : { aspectRatio: '16/9' }}
+            style={screens.xs && typeActivity == 'meeting' ? { aspectRatio: '10/20' } : { aspectRatio: '16/9' }}
             width='100%'
             height={'100%'}
             src={platformurl}
