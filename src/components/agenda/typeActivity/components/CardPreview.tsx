@@ -37,6 +37,7 @@ const CardPreview = (props: any) => {
   const renderPlayer = () => {
     //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
     let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+    console.log('URL VIDEO==>', urlVideo, visibleReactPlayer);
     //RENDERIZAR COMPONENTE
     return (
       <>

@@ -33,8 +33,8 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   }, [transmition, request, evetUserContext.value]);
 
   const executer_startMonitorStatus = async () => {
-    console.log('executer_startMonitorStatus==>', meeting_id);
-    if (meeting_id === null || meeting_id === '') return;
+    console.log('executer_startMonitorStatus==>', meeting_id, typeActivity);
+    if (meeting_id === null || meeting_id === '' || typeActivity === 'url' || typeActivity === 'video') return;
     let live_stream_status = null;
     try {
       //console.log('meeting_id INGRESA ACA==>', meeting_id == null, meeting_id == undefined, typeof meeting_id);

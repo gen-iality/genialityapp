@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Card, Result, Space, Button, Spin, Popconfirm, Modal } from 'antd';
+import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd';
 import LoadingTypeActivity from './LoadingTypeActivity';
 import AgendaContext from '../../../../context/AgendaContext';
 import { useEffect } from 'react';
@@ -18,6 +18,7 @@ const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
   const [loadingComponent, setloadingComponent] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [blockedButton, setBlockedButton] = useState(false);
   const {
     meeting_id,
     setDataLive,
@@ -42,13 +43,16 @@ const CardStartTransmition = (props: any) => {
       stopInterval();
     }
     async function initializeStream() {
-      const status = await getLiveStream(meeting_id);
-      setDataLive(status);
       try {
+        const status = await getLiveStream(meeting_id);
+        setDataLive(status);
         // await saveConfig(1);
         await executer_startMonitorStatus();
       } catch (e) {
         await executer_startMonitorStatus();
+        setloading(false);
+        setBlockedButton(true);
+        message.error('El id de la transmisión no existe!');
         // console.log('AL TRAER EL MEETING==>', e);
         // let livestreamInitial = { state: 'Finished' };
         // setLiveStreamStatus(livestreamInitial);
@@ -59,7 +63,7 @@ const CardStartTransmition = (props: any) => {
 
   const deleteStreaming = async () => {
     setLoadingDelete(true);
-    deleteAllVideos(dataLive.name, meeting_id); // verificar sis eva aelimnar los videos cuando se elimana la transmision
+    deleteAllVideos(dataLive?.name, meeting_id); // verificar sis eva aelimnar los videos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
     await removeAllRequest(refActivity);
     await deleteTypeActivity();
@@ -69,27 +73,33 @@ const CardStartTransmition = (props: any) => {
 
   const executer_startStream = async () => {
     setloading(true);
-    const liveStreamresponse = await startLiveStream(meeting_id);
-    if (liveStreamresponse) {
-      setDataLive(liveStreamresponse);
-      setRoomStatus('');
-      saveConfig({ habilitar_ingreso: '' }, 1);
-      executer_startMonitorStatus();
+    try {
+      const liveStreamresponse = await startLiveStream(meeting_id);
+      if (liveStreamresponse) {
+        setDataLive(liveStreamresponse);
+        setRoomStatus('');
+        saveConfig({ habilitar_ingreso: '' }, 1);
+        executer_startMonitorStatus();
+        setloading(false);
+      } else {
+        confirm({
+          title: 'Error',
+          icon: <ExclamationCircleOutlined />,
+          content: 'Ha ocurrido un error al iniciar la trasnmisión',
+          onOk() {
+            window.location.reload();
+          },
+          onCancel() {},
+          cancelButtonProps: {
+            disabled: true,
+          },
+        });
+      }
+    } catch (error) {
+      console.log('ENTRA ACA');
       setloading(false);
-    } else {
-      confirm({
-        title: 'Error',
-        icon: <ExclamationCircleOutlined />,
-        content: 'Ha ocurrido un error al iniciar la trasnmisión',
-        onOk() {
-          window.location.reload();
-        },
-        onCancel() {},
-        cancelButtonProps: {
-          disabled: true,
-        },
-      });
     }
+
     //inicia el monitoreo
   };
 
@@ -133,7 +143,11 @@ const CardStartTransmition = (props: any) => {
               }
 
               {!dataLive?.active && (
-                <Button loading={loading} onClick={() => executer_startStream()} type='primary'>
+                <Button
+                  disabled={blockedButton}
+                  loading={loading}
+                  onClick={() => executer_startStream()}
+                  type='primary'>
                   Iniciar transmisión
                 </Button>
               )}

@@ -24,11 +24,16 @@ const InputUploadVideo = (props: any) => {
         const { status, response } = info.file;
         switch (status) {
           case 'done':
-            selectOption(typeOptions.key, `${response.video.iframe_url}-${response.video.id}`);
+            console.log('RESPONSE ACA===>', response);
+            selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
             setLoading(false);
             break;
           case 'error':
-            message.error('Error al cargar el video');
+            if (response.message == 'ERROR: Invalid format') {
+              message.error('Formato de video inválido');
+            } else {
+              message.error('Error al cargar el video');
+            }
             setLoading(false);
             break;
           case 'removed':
