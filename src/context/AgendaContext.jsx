@@ -287,11 +287,10 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const obtainUrl = (type, data) => {
-    console.log('DATA===>', data, type);
     let urlVideo;
     switch (type) {
       case 'vimeo':
-        urlVideo = data?.includes('https://vimeo.com/') ? data : 'https://vimeo.com/' + data;
+        urlVideo = data?.includes('https://player.vimeo.com/video/') ? data : 'https://player.vimeo.com/video/' + data;
         break;
       case 'Youtube':
         urlVideo = data?.includes('https://youtu.be/') ? data : 'https://youtu.be/' + data;
@@ -318,7 +317,6 @@ export const AgendaContextProvider = ({ children }) => {
     //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
       ((type == 'Youtube' ||
-        type == 'vimeo' ||
         (type == 'Video' && data.includes('youtube')) ||
         (type == 'Video' && data.includes('vimeo'))) &&
         urlVideo) ||

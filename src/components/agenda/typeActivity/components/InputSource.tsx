@@ -7,6 +7,7 @@ import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeA
 interface propsOptions {
   addonBefore: React.ReactNode;
   placeholder?: string;
+  type: string;
 }
 
 const rules = {
@@ -34,22 +35,24 @@ const rules = {
   vimeo: [
     {
       required: true,
-      message: 'Por favor ingrese el ID o la URL valido de Vimeo .',
+      message: 'Por favor ingrese un ID de Vimeo.',
     },
-    () => ({
-      validator(_: any, value: string) {
-        //Aqui validamos si el ID es valido o si la url es validad si cualquiera de los dos es valido entonces retornamos true si no  retornamos el error
-        let regUrl = new RegExp(
-          /(?:http:|https:|)\/\/(?:player.|www.)?vimeo\.com\/(?:.|event\/|embed\/|watch\?\S*v=|v\/)?(\d*)/
-        );
-        // este regex validad las las urls de vimeo
-        let regId = new RegExp(/^[0-9]{1,}$/);
-        if (regUrl.test(value) || regId.test(value)) {
-          return Promise.resolve();
-        }
-        return Promise.reject(new Error('Por favor ingrese un ID o URL valido de Vimeo.'));
-      },
-    }),
+    { type: 'string', min: 8, max: 10, message: 'El ID debe tener entre 8 a 10 dígitos.' },
+
+    // () => ({
+    //   validator(_: any, value: string) {
+    //     //Aqui validamos si el ID es valido o si la url es validad si cualquiera de los dos es valido entonces retornamos true si no  retornamos el error
+    //     // let regUrl = new RegExp(
+    //     //   /(?:http:|https:|)\/\/(?:player.|www.)?vimeo\.com\/(?:.|event\/|embed\/|watch\?\S*v=|v\/)?(\d*)/
+    //     // );
+    //     // este regex validad las las urls de vimeo
+    //     let regId = new RegExp(/^[0-9]{1,}$/);
+    //     if (regId.test(value)) {
+    //       return Promise.resolve();
+    //     }
+    //     return Promise.reject(new Error('Por favor ingrese un ID valido de Vimeo.'));
+    //   },
+    // }),
   ],
   url: [
     { required: true, message: 'Por favor ingrese la URL del video.' },
@@ -78,12 +81,13 @@ const onChange = {
   },
 };
 
-const InputSource = ({ addonBefore, placeholder }: propsOptions) => {
+const InputSource = ({ type, addonBefore, placeholder }: propsOptions) => {
   const { selectOption, typeOptions } = useTypeActivity();
   return (
     <Form>
       <Form.Item name='url' rules={rules[typeOptions.key] || [{ required: true }]}>
         <Input
+          type={type === 'vimeo' ? 'number' : 'text'}
           addonBefore={addonBefore}
           placeholder={placeholder}
           size='large'
