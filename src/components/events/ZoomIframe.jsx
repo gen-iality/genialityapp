@@ -78,7 +78,9 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
           allow='autoplay; fullscreen; camera *;microphone *'
           allowFullScreen
           allowusermedia
-          className='video'></iframe>
+          width='100%'
+          height='100%'
+          style={{ aspectRatio: '16/9' }}></iframe>
       )}
     </>
   );

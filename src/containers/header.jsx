@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
@@ -9,7 +9,6 @@ import MenuOld from '../components/events/shared/menu';
 import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 import withContext from '../context/withContext';
-import { UseCurrentUserContext, logout } from './../context/userContext';
 import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { FormattedMessage } from 'react-intl';
@@ -46,9 +45,9 @@ const initialDataGeneral = {
 };
 
 const Headers = (props) => {
-  const { showMenu, loginInfo, cHelper, cEvent, cEventUser } = props;
+  const { showMenu, loginInfo, cHelper, cEvent, cEventUser, cUser } = props;
+  const { helperDispatch } = cHelper;
 
-  const cUser = UseCurrentUserContext();
   const [headerIsLoading, setHeaderIsLoading] = useState(true);
   const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
   const [showButtons, setshowButtons] = useState({
@@ -57,6 +56,7 @@ const Headers = (props) => {
   });
   const [fixed, setFixed] = useState(false);
   const screens = useBreakpoint();
+  let history = useHistory();
   const intl = useIntl();
   const openMenu = () => {
     setdataGeneral({
@@ -108,18 +108,35 @@ const Headers = (props) => {
     return containtorganization ? 'organization' : 'landing';
   };
 
+  const userLogOut = (callBack) => {
+    const params = {
+      user: cUser.value,
+      setCurrentUser: cUser.setCurrentUser,
+      setuserEvent: cEventUser.setuserEvent,
+      formatMessage: intl.formatMessage,
+      handleChangeTypeModal: cHelper.handleChangeTypeModal,
+      history,
+    };
+
+    helperDispatch({
+      type: 'logout',
+      showNotification: callBack,
+      params,
+    });
+  };
+
   const MenuMobile = (
     <Menu>
       <Menu.Item
         onClick={() => {
-          cHelper.helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
+          helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
         }}>
         <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
       </Menu.Item>
 
       <Menu.Item
         onClick={() => {
-          cHelper.helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
+          helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
         }}>
         <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
       </Menu.Item>
@@ -242,7 +259,7 @@ const Headers = (props) => {
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                       size='large'
                       onClick={() => {
-                        cHelper.helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
+                        helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
                       }}>
                       {intl.formatMessage({
                         id: 'modal.title.login',
@@ -270,7 +287,7 @@ const Headers = (props) => {
                     <Button
                       size='large'
                       onClick={() => {
-                        cHelper.helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
+                        helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
                       }}>
                       {intl.formatMessage({
                         id: 'modal.title.register',
@@ -292,7 +309,7 @@ const Headers = (props) => {
                 name={dataGeneral.name ? dataGeneral.name : ''}
                 userEvent={dataGeneral.userEvent}
                 eventId={dataGeneral.eventId}
-                logout={(calback) => logout(calback)}
+                logout={(callBack) => userLogOut(callBack)}
                 openMenu={() => openMenu()}
                 loginInfo={loginInfo}
               />
@@ -306,7 +323,7 @@ const Headers = (props) => {
                   name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}
                   eventId={dataGeneral.eventId}
-                  logout={(calback) => logout(calback)}
+                  logout={(callBack) => userLogOut(callBack)}
                   openMenu={() => console.log('openMenu')}
                   loginInfo={loginInfo}
                   anonimususer={true}

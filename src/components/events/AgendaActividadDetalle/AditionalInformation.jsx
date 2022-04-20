@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row } from 'antd';
+import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space } from 'antd';
 import WithEviusContext from '../../../context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
@@ -10,12 +10,14 @@ import DocumentsList from '../../documents/documentsList';
 import { UserOutlined } from '@ant-design/icons';
 const { TabPane } = Tabs;
 const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
 const AditionalInformation = (props) => {
   let { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
   let [idSpeaker, setIdSpeaker] = useState(false);
+  const screens = useBreakpoint();
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -30,7 +32,7 @@ const AditionalInformation = (props) => {
   }
 
   return (
-    <Card bordered={false} bodyStyle={{ margin: '20px' }}>
+    <Card bordered={false} bodyStyle={{ margin: '0', padding: '0px' }}>
       <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
         {
           <TabPane
@@ -56,8 +58,9 @@ const AditionalInformation = (props) => {
                     <Row>
                       <Col span={24}>
                         <Card style={{ textAlign: 'left' }}>
+                          {console.log(screens)}
                           <List
-                            itemLayout='horizontal'
+                            itemLayout={screens.xs ? 'vertical' : 'horizontal'}
                             dataSource={props.orderedHost}
                             renderItem={(item) => (
                               <List.Item style={{ padding: 16 }}>
@@ -77,7 +80,7 @@ const AditionalInformation = (props) => {
                                   title={<strong>{item.name}</strong>}
                                   description={item.profession}
                                 />
-                                <div className='btn-list-confencista'>
+                                <Space wrap>
                                   {item.description !== '<p><br></p>' &&
                                     item.description !== null &&
                                     item.description !== undefined && (
@@ -87,7 +90,7 @@ const AditionalInformation = (props) => {
                                         })}
                                       </Button>
                                     )}
-                                </div>
+                                </Space>
                               </List.Item>
                             )}
                           />

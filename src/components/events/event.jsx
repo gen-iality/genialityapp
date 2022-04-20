@@ -1,11 +1,10 @@
 import { Component } from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { Route, Redirect, Switch, Link } from 'react-router-dom';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Loading from '../loaders/loading';
 import { EventsApi } from '../../helpers/request';
 import ListEventUser from '../event-users';
-import LogOut from '../shared/logOut';
 import { fetchRol } from '../../redux/rols/actions';
 import { fetchPermissions } from '../../redux/permissions/actions';
 import connect from 'react-redux/es/connect/connect';
@@ -29,11 +28,13 @@ import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
-import { Layout, Space, Row, Col, Button } from 'antd';
+import { Layout, Space, Row, Col, Button, Result } from 'antd';
 import { AdminUsers } from '../../components/AdminUsers/AdminUsers';
 import loadable from '@loadable/component';
 import NoMatchPage from '../notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms';
+import { DispatchMessageService } from '@/context/MessageService';
+import { handleRequestError } from '@/helpers/utils';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -96,8 +97,12 @@ class Event extends Component {
       const eventWithExtraFields = this.addNewFieldsToEvent(event);
       this.setState({ event: eventWithExtraFields, loading: false });
     } catch (e) {
-      console.error(e.response);
-      this.setState({ timeout: true, loading: false });
+      DispatchMessageService({
+        type: 'error',
+        msj: handleRequestError(e).message,
+        action: 'show',
+      });
+      this.setState({ loading: false, error: e });
     }
   }
 
@@ -168,10 +173,25 @@ class Event extends Component {
 
   render() {
     const { match, permissions, showMenu } = this.props;
-    const { timeout } = this.state;
+    const { error } = this.state;
     if (this.state.loading || this.props.loading || permissions.loading) return <Loading />;
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
-    if (timeout) return <LogOut />;
+    if (error)
+      return (
+        <Result
+          status='error'
+          title='Error inesperado'
+          subTitle={`Lo sentimos, hubo un error de tipo: ${handleRequestError(error).message}`}
+          extra={[
+            <Link to={`/`}>
+              <Button type='primary' key='eventData'>
+                Ver más eventos
+              </Button>
+            </Link>,
+          ]}
+        />
+      );
+
     return (
       <Layout style={{ minHeight: '100vh' }} className='columns'>
         <Sider

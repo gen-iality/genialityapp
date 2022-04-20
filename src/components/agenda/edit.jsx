@@ -1212,6 +1212,7 @@ class AgendaEdit extends Component {
           <Header
             title={`Actividad - ${this.state.name}`}
             back
+            customBack={this.props.matchUrl}
             save
             form
             remove={this.remove}

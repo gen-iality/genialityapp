@@ -28,7 +28,7 @@ export default defineConfig({
     //     VITE_API_EVIUS_ZOOM_SURVEY: 'https://apimeetings.evius.co:6490/obtenerMeetingsPoll',
     //     TSC_WATCHFILE: 'UseFsEventsWithFallbackDynamicPolling',
     //     REACT_EDITOR: 'code',
-    //     NODE_ENV: 'development',
+    //     NODE_ENV: 'production',
     //     DEBUG: 'true',
     //     //FIREBASE CONFIG CHATEVIUS
     //     VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyDaQI5E1P6mIhcNfDdRq8oSGpJ13Qllv00',

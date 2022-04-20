@@ -22,14 +22,19 @@ const Header = (props) => {
     description,
     loadingSave,
     saveNameIcon,
+    customBack,
   } = props;
 
   return (
     <>
       <Title level={4}>
-        {back && (
+        {(back || customBack) && (
           <Tooltip placement='bottomLeft' title={'Atrás'}>
-            <ArrowLeftOutlined id='goBack' onClick={() => history.goBack()} style={{ marginRight: '10px' }} />
+            <ArrowLeftOutlined
+              id='goBack'
+              onClick={() => (customBack ? history.push(customBack) : history.goBack())}
+              style={{ marginRight: '10px' }}
+            />
           </Tooltip>
         )}
         <Tooltip placement='bottomLeft' title={titleTooltip}>

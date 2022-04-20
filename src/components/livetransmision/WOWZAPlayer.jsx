@@ -5,8 +5,12 @@ import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button, Spin } from 'antd';
 import AgendaContext from '@/context/AgendaContext';
 import { CurrentUserContext } from '@/context/userContext';
+import { Grid } from 'antd';
+
+const { useBreakpoint } = Grid;
 
 function WOWZAPlayer({ meeting_id, thereIsConnection }) {
+  const screens = useBreakpoint();
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
 
@@ -111,8 +115,9 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           />
         ) : conected == 'Yes' ? (
           <iframe
-            style={{ aspectRatio: '16/9' }}
+            style={screens.xs && typeActivity == 'meeting' ? { aspectRatio: '10/20' } : { aspectRatio: '16/9' }}
             width='100%'
+            height={'100%'}
             src={platformurl}
             frameborder='0'
             allow={typeActivity == 'meeting' ? 'camera *;microphone *' : 'autoplay; encrypted-media'}

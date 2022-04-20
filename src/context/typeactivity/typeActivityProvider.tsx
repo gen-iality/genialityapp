@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { useContext, useReducer, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
@@ -32,6 +33,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   const [loadingStop, setLoadingStop] = useState(false);
   const queryClient = useQueryClient();
   const [videoObject, setVideoObject] = useState<any | null>(null);
+  const [loadingCreate, setLoadingCreate] = useState(false);
 
   const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
     switch (id) {
@@ -149,92 +151,127 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
 
   const createTypeActivity = async () => {
     let resp;
+    setLoadingCreate(true);
     saveTypeActivity();
     switch (typeActivityState.selectedKey) {
       case 'url':
-        const respUrl = await AgendaApi.editOne({ video: typeActivityState.data }, activityEdit, cEvent?.value?._id);
-        if (respUrl) {
-          resp = await saveConfig({
-            platformNew: '',
-            type: 'url',
-            habilitar_ingreso: '',
-            data: typeActivityState.data,
-          });
-          setTypeActivity('url');
-          setPlatform('wowza');
-          setMeetingId(typeActivityState.data);
-        } else {
-          console.error('ERROR AL GUARDAR URL');
+        try {
+          const respUrl = await AgendaApi.editOne({ video: typeActivityState.data }, activityEdit, cEvent?.value?._id);
+          if (respUrl) {
+            resp = await saveConfig({
+              platformNew: '',
+              type: 'url',
+              habilitar_ingreso: '',
+              data: typeActivityState.data,
+            });
+            setTypeActivity('url');
+            setPlatform('wowza');
+            setMeetingId(typeActivityState.data);
+          } else {
+            message.error('Error al guardar video');
+          }
+        } catch (error) {
+          message.error('Error al guardar video');
         }
+
+        setLoadingCreate(false);
         //setMeetingId(typeActivityState?.data);
         ////Type:url
         break;
       case 'vimeo':
-        //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
-        let newDataVimeo = typeActivityState.data;
-        resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
-        setTypeActivity('vimeo');
-        setPlatform('vimeo');
-        setMeetingId(typeActivityState?.data);
-
+        //PERMITE AGREGAR ID O URL COMPLETA DE VIMEO
+        try {
+          let newDataVimeo = typeActivityState.data;
+          resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
+          setTypeActivity('vimeo');
+          setPlatform('vimeo');
+          setMeetingId(typeActivityState?.data);
+        } catch (error) {
+          message.error('Error al asignar id vimeo');
+        }
+        setLoadingCreate(false);
         break;
       case 'youTube':
         //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
-        let newData = typeActivityState.data.includes('https://youtu.be/')
-          ? typeActivityState.data
-          : 'https://youtu.be/' + typeActivityState.data;
-        resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: newData });
-        setTypeActivity('youTube');
-        setPlatform('wowza');
-        setMeetingId(typeActivityState?.data);
+        try {
+          let newData = typeActivityState.data.includes('https://youtu.be/')
+            ? typeActivityState.data
+            : 'https://youtu.be/' + typeActivityState.data;
+          resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: newData });
+          setTypeActivity('youTube');
+          setPlatform('wowza');
+          setMeetingId(typeActivityState?.data);
+        } catch (error) {
+          message.error('Error al asignar video de youtube');
+        }
+        setLoadingCreate(false);
         //Type:youTube
         break;
       case 'eviusMeet':
-        !meeting_id && executer_createStream.mutate();
-        meeting_id &&
-          (await saveConfig({
-            platformNew: 'wowza',
-            type: typeActivityState.selectedKey,
-            data: meeting_id,
-          }));
-        setTypeActivity('eviusMeet');
-        setPlatform('wowza');
-        toggleActivitySteps('finish');
+        try {
+          !meeting_id && executer_createStream.mutate();
+          meeting_id &&
+            (await saveConfig({
+              platformNew: 'wowza',
+              type: typeActivityState.selectedKey,
+              data: meeting_id,
+            }));
+          setTypeActivity('eviusMeet');
+          setPlatform('wowza');
+          toggleActivitySteps('finish');
+        } catch (error) {
+          message.error('Error al crear transmisión');
+        }
+        setLoadingCreate(false);
 
         //type:eviusMeet
         break;
       case 'RTMP':
-        !meeting_id && executer_createStream.mutate();
-        meeting_id &&
-          (await saveConfig({ platformNew: 'wowza', type: typeActivityState.selectedKey, data: meeting_id }));
-        setTypeActivity('RTMP');
-        setPlatform('wowza');
-        toggleActivitySteps('finish');
-
+        try {
+          !meeting_id && executer_createStream.mutate();
+          meeting_id &&
+            (await saveConfig({ platformNew: 'wowza', type: typeActivityState.selectedKey, data: meeting_id }));
+          setTypeActivity('RTMP');
+          setPlatform('wowza');
+          toggleActivitySteps('finish');
+        } catch (error) {
+          message.error('Error al crear Rtmp');
+        }
+        setLoadingCreate(false);
         //type:RTMP
         break;
       case 'meeting':
-        resp = await saveConfig({
-          platformNew: '',
-          type: 'meeting',
-          data: typeActivityState?.data,
-          habilitar_ingreso: 'only',
-        });
-        setTypeActivity('meeting');
-        setPlatform('wowza');
+        try {
+          resp = await saveConfig({
+            platformNew: '',
+            type: 'meeting',
+            data: typeActivityState?.data,
+            habilitar_ingreso: 'only',
+          });
+          setTypeActivity('meeting');
+          setPlatform('wowza');
+        } catch (error) {
+          message.error('Error al crear reunión');
+        }
+        setLoadingCreate(false);
         //Type:reunión
         break;
       case 'cargarvideo':
-        const data = typeActivityState?.data.split('-');
-        const urlVideo = data.length > 2 ? data[0] + '-' + data[1] : data[0];
-        const videoId = data.length > 2 ? data[2] : data[1];
-        const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent?.value?._id);
-        if (respUrlVideo) {
-          resp = await saveConfig({ platformNew: '', type: 'video', data: urlVideo, habilitar_ingreso: '' });
-          setTypeActivity('video');
-          setPlatform('wowza');
-          setMeetingId(urlVideo);
+        try {
+          const data = typeActivityState?.data.split('*');
+          const urlVideo = data[0];
+          const videoId = data[1];
+          const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent?.value?._id);
+          if (respUrlVideo) {
+            resp = await saveConfig({ platformNew: '', type: 'video', data: urlVideo, habilitar_ingreso: '' });
+            setTypeActivity('video');
+            setPlatform('wowza');
+            setMeetingId(urlVideo);
+          }
+        } catch (error) {
+          message.error('Error al cargar el video');
         }
+        setLoadingCreate(false);
         break;
 
       default:
@@ -242,6 +279,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     }
     if (resp?.state === 'created' || resp?.state === 'updated') {
       toggleActivitySteps('finish');
+      setLoadingCreate(false);
     }
   };
 
@@ -265,6 +303,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         loadingStop,
         videoObject,
         visualizeVideo,
+        loadingCreate,
       }}>
       {children}
     </TypeActivityContext.Provider>

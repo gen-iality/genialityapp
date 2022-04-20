@@ -10,7 +10,6 @@ interface propsOptions {
 }
 
 const LayoutTypeActivity = ({ title, children }: propsOptions) => {
-  const [loading, setLoading] = useState(false);
   const {
     closeModal,
     selectedKey,
@@ -20,6 +19,7 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
     buttonsTextNextOrCreate,
     buttonTextPreviousOrCancel,
     disableNextButton,
+    loadingCreate,
     createTypeActivity,
   } = useTypeActivity();
 
@@ -36,9 +36,7 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
     } else if (selectedKey === 'initial') {
       closeModal();
     } else {
-      setLoading(true);
-      createTypeActivity();
-      setLoading(false);
+      await createTypeActivity();
     }
   };
 
@@ -54,12 +52,14 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
             <Button onClick={previousOrCancel}>{buttonTextPreviousOrCancel}</Button>
           </Col>
           <Col>
-            {!loading ? (
+            {!loadingCreate ? (
               <Button disabled={disableNextButton} onClick={nextOrCreate} type='primary'>
                 {buttonsTextNextOrCreate}
               </Button>
             ) : (
-              <Spin />
+              <div style={{ width: 60 }}>
+                <Spin />
+              </div>
             )}
           </Col>
         </Row>

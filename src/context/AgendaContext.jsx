@@ -121,6 +121,7 @@ export const AgendaContextProvider = ({ children }) => {
         setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
         setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
         setTypeActivity(configuration.typeActivity || null);
+        setDataLive(null);
       } else {
         initializeState();
       }
@@ -144,6 +145,7 @@ export const AgendaContextProvider = ({ children }) => {
     setHabilitarIngreso('');
     setSelect_host_manual(false);
     setTypeActivity(null);
+    setDataLive(null);
   };
 
   const getRequestByActivity = (refActivity) => {
@@ -305,20 +307,21 @@ export const AgendaContextProvider = ({ children }) => {
           : dataLive.iframe_url;
         break;
       case 'Video':
-        const dataSplit = data.split('-');
+        const dataSplit = data.split('*');
         console.log('dataSplit', dataSplit);
-        urlVideo = data.includes('youtube')
-          ? data
-          : dataSplit.length > 2
-          ? dataSplit[0] + '-' + dataSplit[1]
-          : dataSplit[0];
+        urlVideo = dataSplit[0];
         break;
       default:
         urlVideo = data;
     }
+    console.log('TYPE==>', type);
     //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
-      ((type == 'Youtube' || type == 'vimeo' || (type == 'Video' && data.includes('youtube'))) && urlVideo) ||
+      ((type == 'Youtube' ||
+        type == 'vimeo' ||
+        (type == 'Video' && data.includes('youtube')) ||
+        (type == 'Video' && data.includes('vimeo'))) &&
+        urlVideo) ||
       (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
         (type === 'Transmisión' || type === 'EviusMeet'))
         ? true
