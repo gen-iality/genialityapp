@@ -1,9 +1,9 @@
 import { fireStorage } from '@/helpers/firebase';
 
-export const deleteFireStorageData = async (image: string) => {
+export const deleteFireStorageData = async (fileUrl: string) => {
   let theFileWasDeleted = '';
   // Create a reference to the file to delete
-  let fileRef = fireStorage.refFromURL(image);
+  let fileRef = fireStorage.refFromURL(fileUrl);
 
   // Delete the file using the delete() method
   await fileRef
