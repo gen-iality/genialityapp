@@ -8,15 +8,6 @@ let initUserPresence = async (event_id) => {
   initUserPresenceInner(user.uid, event_id);
 };
 
-// auth.onAuthStateChanged(function(user) {
-//   if (user) {
-//     // User is signed in.
-//
-//   } else {
-//     // No user is signed in.
-//
-//   }
-// });
 let initUserPresenceInner = (uid, event_id) => {
   // Create a reference to this user's specific status node.
   // This is where we will store data about being online/offline.
