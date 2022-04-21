@@ -22,7 +22,11 @@ const App = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <AlertGlobal message={'No tienes internet'} icon={<GlobalOutlined />} type={'warning'} />
+      <AlertGlobal
+        message={{ warning: 'Conexión a internet perdida.', success: 'Conexión a internet restablecida.' }}
+        icon={<GlobalOutlined />}
+        type={'warning'}
+      />
       {/* <Header /> */}
       {/* <MainRouter /> */}
       <ContentContainer />

@@ -1,17 +1,28 @@
-const controllerInternetConnection = () => {
-  let theUserIsOffline: string | boolean = 'initial';
+type controllerInternetConnectionProps = {
+  setConnectionStatus: (status: boolean) => void;
+};
 
-  window.addEventListener('offline', () => {
-    theUserIsOffline = true;
-    console.log('🚀 debug ~ window.addEventListener ~ offline');
+const controllerInternetConnection = ({ setConnectionStatus }: controllerInternetConnectionProps) => {
+  async function updateConnectionStatus() {
+    if (navigator.onLine) {
+      setConnectionStatus(navigator.onLine);
+    } else {
+      setConnectionStatus(navigator.onLine);
+    }
+  }
+
+  // Attaching event handler for the load event
+  //   window.addEventListener('load', updateConnectionStatus);
+
+  // Attaching event handler for the online event
+  window.addEventListener('online', function(e) {
+    updateConnectionStatus();
   });
 
-  window.addEventListener('online', () => {
-    theUserIsOffline = false;
-    console.log('🚀 debug ~ window.addEventListener ~ online');
+  // Attaching event handler for the offline event
+  window.addEventListener('offline', function(e) {
+    updateConnectionStatus();
   });
-
-  return theUserIsOffline;
 };
 
 export default controllerInternetConnection;

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert } from 'antd';
+import controllerInternetConnection from '@/Utilities/controllerInternetConnection';
 
+interface messageOptions {
+  warning?: string;
+  success?: string;
+}
 interface propsOptions {
   icon?: React.ReactNode;
-  message: string | React.ReactNode;
+  message?: messageOptions | React.ReactNode;
   type: 'success' | 'info' | 'warning' | 'error';
   description?: string | React.ReactNode;
   placement?: 'top' | 'bottom';
@@ -25,19 +30,53 @@ const positionBotton: React.CSSProperties = {
 };
 
 const AlertGlobal = ({ icon, message, type, description, placement = 'top', action }: propsOptions) => {
+  const [connectionStatus, setConnectionStatus] = useState<boolean | string>('initial');
+
+  controllerInternetConnection({ setConnectionStatus });
+
+  useEffect(() => {
+    if (connectionStatus === 'initial') return;
+    if (connectionStatus === true) {
+      setTimeout(() => {
+        setConnectionStatus('initial');
+      }, 3000);
+    }
+  }, [connectionStatus]);
+
   return (
-    <Alert
-      className='animate__animated animate__fadeInDown'
-      style={placement === 'top' ? positionTop : positionBotton}
-      icon={icon}
-      message={message}
-      type={type}
-      description={description}
-      banner
-      showIcon
-      closable
-      action={action}
-    />
+    <>
+      {typeof connectionStatus === 'boolean' && (
+        <>
+          {connectionStatus ? (
+            <Alert
+              key={'success'}
+              className='animate__animated animate__fadeInDown'
+              style={placement === 'top' ? positionTop : positionBotton}
+              icon={icon}
+              message={message!.success}
+              type={'success'}
+              description={description}
+              showIcon
+              // closable
+              action={action}
+            />
+          ) : (
+            <Alert
+              key={'warning'}
+              className='animate__animated animate__fadeInDown'
+              style={placement === 'top' ? positionTop : positionBotton}
+              icon={icon}
+              message={message!.warning}
+              type={type}
+              description={description}
+              showIcon
+              // closable
+              action={action}
+            />
+          )}
+        </>
+      )}
+    </>
   );
 };
 
