@@ -8,6 +8,8 @@ import ContentContainer from '@/containers/content';
 //import MainRouter from '../containers/router';
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 import { Layout } from 'antd';
+import AlertGlobal from '@/components/alertGlobal/AlertGlobal';
+import { GlobalOutlined } from '@ant-design/icons';
 
 const { Footer, Sider, Content } = Layout;
 
@@ -20,6 +22,7 @@ const App = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <AlertGlobal message={'No tienes internet'} icon={<GlobalOutlined />} type={'warning'} />
       {/* <Header /> */}
       {/* <MainRouter /> */}
       <ContentContainer />
