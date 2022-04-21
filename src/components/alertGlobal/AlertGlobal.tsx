@@ -27,6 +27,7 @@ const positionBotton: React.CSSProperties = {
 const AlertGlobal = ({ icon, message, type, description, placement = 'top', action }: propsOptions) => {
   return (
     <Alert
+      className='animate__animated animate__fadeInDown'
       style={placement === 'top' ? positionTop : positionBotton}
       icon={icon}
       message={message}
