@@ -153,7 +153,7 @@ describe('Create event', () => {
     cy.registerUser(emailRegister, clave);
     cy.editRegistryInformation(emailRegister);
   });
-  it('must register in the event with the parameters when it is a user is already registered', () => {
+  it('it must register in the event with the parameters when it is a user is already registered', () => {
     cy.wait(4000);
     cy.changeLoginEvent();
     cy.wait(1000);
@@ -170,58 +170,31 @@ describe('Create event', () => {
     cy.get("button[type='submit']").click();
     cy.editRegistryInformation(emailNoRegister);
   });
-});
-/*
-
-//Telefono
-    cy.get('.ant-btn.ant-btn-primary')
+  it('it should i remove the event', () => {
+    cy.visitEvent();
+    cy.changeLogin();
+    cy.login(email, clave);
+    cy.wait(2000);
+    cy.openUserMenu();
+    cy.get('.ant-dropdown-menu-title-content')
       .eq(2)
       .click();
-    cy.wait(2000);
-    cy.get('input[name="label"]')
-      .eq(1)
-      .type('Telefono');
-    cy.get('.ant-select-selector').click();
-    cy.wait(2000);
-    cy.get('.ant-select-item.ant-select-item-option')
-      .eq(6)
-      .click();
-    cy.get('#mandatoryModal').click();
-    cy.get('#visibleByAdminModal').click();
-    cy.get('#btnSave').click();
-    cy.wait(3000);
-    //Pais
-    cy.get('.ant-btn.ant-btn-primary')
-      .eq(2)
-      .click();
-    cy.wait(2000);
-    cy.get('input[name="label"]')
-      .eq(1)
-      .type('Pais');
-    cy.get('.ant-select-selector').click();
-    cy.wait(2000);
-    cy.get('.ant-select-item.ant-select-item-option')
-      .eq(3)
-      .click();
-    cy.get('#mandatoryModal').click();
-    cy.get('#visibleByAdminModal').click();
-    cy.get('#btnSave').click();
-    cy.wait(3000);
-    //Ciudad
-    cy.get('.ant-btn.ant-btn-primary')
-      .eq(2)
-      .click();
-    cy.wait(2000);
-    cy.get('input[name="label"]')
-      .eq(1)
-      .type('Ciudad');
-    cy.get('.ant-select-selector').click();
-    cy.wait(2000);
-    cy.get('.ant-select-item.ant-select-item-option')
+    cy.wait(6000);
+    cy.get('.ant-card-actions')
       .eq(4)
       .click();
-    cy.get('#mandatoryModal').click();
-    cy.get('#visibleByAdminModal').click();
-    cy.get('#btnSave').click();
+    cy.wait(5000);
+    cy.scrollTo('top');
+    cy.get('#removeHeader').click();
+    cy.wait(2000);
+    cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();
+    cy.wait(5000);
+    cy.openUserMenu();
+    cy.get('.ant-dropdown-menu-title-content')
+      .eq(5)
+      .click();
+    cy.wait(1000);
+    cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();
     cy.wait(3000);
-*/
+  });
+});
