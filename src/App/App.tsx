@@ -8,8 +8,7 @@ import ContentContainer from '@/containers/content';
 //import MainRouter from '../containers/router';
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 import { Layout } from 'antd';
-import AlertGlobal from '@/components/alertGlobal/AlertGlobal';
-import { GlobalOutlined } from '@ant-design/icons';
+import InternetConnectionAlert from '@/components/InternetConnectionAlert/InternetConnectionAlert';
 
 const { Footer, Sider, Content } = Layout;
 
@@ -22,11 +21,7 @@ const App = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <AlertGlobal
-        message={{ warning: 'Conexión a internet perdida.', success: 'Conexión a internet restablecida.' }}
-        icon={<GlobalOutlined />}
-        type={'warning'}
-      />
+      <InternetConnectionAlert />
       {/* <Header /> */}
       {/* <MainRouter /> */}
       <ContentContainer />

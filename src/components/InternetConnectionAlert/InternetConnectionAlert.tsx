@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert } from 'antd';
 import controllerInternetConnection from '@/Utilities/controllerInternetConnection';
+import { GlobalOutlined } from '@ant-design/icons';
 
-interface messageOptions {
-  warning?: string;
-  success?: string;
-}
 interface propsOptions {
-  icon?: React.ReactNode;
-  message?: messageOptions | React.ReactNode;
-  type: 'success' | 'info' | 'warning' | 'error';
   description?: string | React.ReactNode;
   placement?: 'top' | 'bottom';
   action?: React.ReactNode;
@@ -29,7 +23,7 @@ const positionBotton: React.CSSProperties = {
   zIndex: '2000',
 };
 
-const AlertGlobal = ({ icon, message, type, description, placement = 'top', action }: propsOptions) => {
+const InternetConnectionAlert = ({ description, placement = 'top', action }: propsOptions) => {
   const [connectionStatus, setConnectionStatus] = useState<boolean | string>('initial');
 
   controllerInternetConnection({ setConnectionStatus });
@@ -52,9 +46,9 @@ const AlertGlobal = ({ icon, message, type, description, placement = 'top', acti
               key={'success'}
               className='animate__animated animate__fadeInDown'
               style={placement === 'top' ? positionTop : positionBotton}
-              icon={icon}
-              message={message!.success}
-              type={'success'}
+              icon={<GlobalOutlined />}
+              message='Conexión a internet restablecida.'
+              type='success'
               description={description}
               showIcon
               // closable
@@ -65,9 +59,9 @@ const AlertGlobal = ({ icon, message, type, description, placement = 'top', acti
               key={'warning'}
               className='animate__animated animate__fadeInDown'
               style={placement === 'top' ? positionTop : positionBotton}
-              icon={icon}
-              message={message!.warning}
-              type={type}
+              icon={<GlobalOutlined />}
+              message='Conexión a internet perdida.'
+              type='error'
               description={description}
               showIcon
               // closable
@@ -80,4 +74,4 @@ const AlertGlobal = ({ icon, message, type, description, placement = 'top', acti
   );
 };
 
-export default AlertGlobal;
+export default InternetConnectionAlert;
