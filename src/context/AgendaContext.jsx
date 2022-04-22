@@ -282,11 +282,14 @@ export const AgendaContextProvider = ({ children }) => {
     const timer_id = setTimeout(executer_startMonitorStatus, 5000);
     setTimerId(timer_id);
     if (!live_stream_status?.active) {
+      setDataLive(null);
       clearTimeout(timer_id);
     }
   };
 
   const obtainUrl = (type, data) => {
+    const previewBaseUrlVideo =
+      'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
     let urlVideo;
     switch (type) {
       case 'vimeo':
@@ -296,14 +299,10 @@ export const AgendaContextProvider = ({ children }) => {
         urlVideo = data?.includes('https://youtu.be/') ? data : 'https://youtu.be/' + data;
         break;
       case 'Transmisión':
-        urlVideo = !dataLive?.live
-          ? 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-          : dataLive.iframe_url;
+        urlVideo = !dataLive?.live ? previewBaseUrlVideo : dataLive.iframe_url;
         break;
       case 'EviusMeet':
-        urlVideo = urlVideo = !dataLive?.live
-          ? 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
-          : dataLive.iframe_url;
+        urlVideo = !dataLive?.live ? previewBaseUrlVideo : dataLive.iframe_url;
         break;
       case 'Video':
         const dataSplit = data.split('*');

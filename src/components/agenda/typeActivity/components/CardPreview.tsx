@@ -55,6 +55,7 @@ const CardPreview = (props: any) => {
   const renderPlayer = () => {
     //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
     let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+    // console.log('🚀 debug ~ renderPlayer ~ visibleReactPlayer', visibleReactPlayer, urlVideo);
 
     //RENDERIZAR COMPONENTE
     return (
@@ -87,8 +88,11 @@ const CardPreview = (props: any) => {
                 //   setErrorMessage('');
                 // }}
                 onError={(e) => {
-                  setErrorOcurred(true);
-                  setErrorMessage(e?.message);
+                  // console.log('🚀 debug ~ renderPlayer ~ e', props.type);
+                  if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
+                    setErrorOcurred(true);
+                    setErrorMessage(e?.message);
+                  }
                 }}
               />
             )}
@@ -104,7 +108,9 @@ const CardPreview = (props: any) => {
             allow='autoplay; encrypted-media'
             allowFullScreen
             onLoad={(e) => {
-              setErrorOcurred(urlErrorCodeValidation(e.target?.src));
+              if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
+                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
+              }
             }}></iframe>
         )}
       </>
