@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Alert } from 'antd';
+import { Alert, Space, Typography } from 'antd';
 import controllerInternetConnection from '@/Utilities/controllerInternetConnection';
-import { GlobalOutlined } from '@ant-design/icons';
+import WebRemoveIcon from '@2fd/ant-design-icons/lib/WebRemove';
+import WebCheckIcon from '@2fd/ant-design-icons/lib/WebCheck';
 
 interface propsOptions {
   description?: string | React.ReactNode;
@@ -14,6 +15,7 @@ const positionTop: React.CSSProperties = {
   top: '0',
   width: '100vw',
   zIndex: '2000',
+  textAlign: 'center',
 };
 
 const positionBotton: React.CSSProperties = {
@@ -21,6 +23,7 @@ const positionBotton: React.CSSProperties = {
   bottom: '0',
   width: '100vw',
   zIndex: '2000',
+  textAlign: 'center',
 };
 
 const InternetConnectionAlert = ({ description, placement = 'top', action }: propsOptions) => {
@@ -33,7 +36,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
     if (connectionStatus === true) {
       setTimeout(() => {
         setConnectionStatus('initial');
-      }, 3000);
+      }, 3500);
     }
   }, [connectionStatus]);
 
@@ -46,12 +49,14 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
               key={'success'}
               className='animate__animated animate__fadeInDown'
               style={placement === 'top' ? positionTop : positionBotton}
-              icon={<GlobalOutlined />}
-              message='Conexión a internet restablecida.'
+              message={
+                <Space>
+                  <WebCheckIcon style={{ fontSize: '30px', color: '#52c41a' }} />{' '}
+                  <Typography.Text>Conexión a internet restablecida.</Typography.Text>{' '}
+                </Space>
+              }
               type='success'
               description={description}
-              showIcon
-              // closable
               action={action}
             />
           ) : (
@@ -59,12 +64,14 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
               key={'warning'}
               className='animate__animated animate__fadeInDown'
               style={placement === 'top' ? positionTop : positionBotton}
-              icon={<GlobalOutlined />}
-              message='Conexión a internet perdida.'
+              message={
+                <Space>
+                  <WebRemoveIcon style={{ fontSize: '30px', color: '#ff4d4f' }} />{' '}
+                  <Typography.Text>Conexión a internet perdida.</Typography.Text>{' '}
+                </Space>
+              }
               type='error'
               description={description}
-              showIcon
-              // closable
               action={action}
             />
           )}
