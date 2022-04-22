@@ -11,6 +11,7 @@ import { useCheckinUser } from '../../../helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import withContext from '../../../context/withContext';
+import { UseCurrentUser } from '@/context/userContext';
 
 //Code spliting
 const DocumentsForm = loadable(() => import('../../documents/front/documentsLanding'));
@@ -44,6 +45,7 @@ const EventSectionRoutes = (props) => {
   let { event_id, event_name } = useParams();
   let { GetPermissionsEvent } = useHelper();
   let cEventUser = UseUserEvent();
+  let cUser = UseCurrentUser();
 
   //redirigir a evento Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -73,9 +75,12 @@ const EventSectionRoutes = (props) => {
     }
   };
 
-  useEffect(async () => {
-    props.cEvent.value && (await initUserPresence(props.cEvent.value._id));
-  }, [props.cEvent.value]);
+  useEffect(() => {
+    //presencia de usuario
+    if (props.cEvent.value && cUser.value) {
+      initUserPresence(props.cEvent.value._id);
+    }
+  }, [props.cEvent.value, cUser.value]);
 
   useEffect(() => {
     GetPermissionsEvent();

@@ -64,7 +64,7 @@ export default defineConfig({
     //     TSC_WATCHFILE: 'UseFsEventsWithFallbackDynamicPolling',
     //     REACT_EDITOR: 'code',
     //     NODE_ENV: 'production',
-    //     DEBUG: '*',
+    //     DEBUG: 'true',
     //     //FIREBASE CONFIG CHATEVIUS
     //     VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyD4_AiJFGf1nIvn9BY_rZeoITinzxfkl70',
     //     VITE_FB_AUTHDOMAIN_CHATEVIUS: 'chatevius.firebaseapp.com',

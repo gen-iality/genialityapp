@@ -96,7 +96,8 @@ const NoticiasDetails = (props) => {
                   <Meta
                     title={
                       noticia && (
-                        <div /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */
+                        <div
+                          id='img-informative' /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */
                         >
                           <ReactQuill
                             value={noticia.description_short}
@@ -109,7 +110,9 @@ const NoticiasDetails = (props) => {
                     }
                     description={
                       noticia && (
-                        <div /* dangerouslySetInnerHTML={{ __html: noticia.description_complete }} */>
+                        <div
+                          id='img-informative' /* dangerouslySetInnerHTML={{ __html: noticia.description_complete }} */
+                        >
                           <ReactQuill
                             value={noticia.description_complete}
                             readOnly={true}

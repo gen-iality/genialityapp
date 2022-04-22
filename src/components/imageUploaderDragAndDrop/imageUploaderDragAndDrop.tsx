@@ -5,6 +5,7 @@ import { uploadImagedummyRequest, readUrlImg, handleImageName } from '../../Util
 import { ImageUploaderDragAndDropType } from '../../Utilities/types/types';
 import { uploadImageData } from '@/Utilities/uploadImageData';
 import { fireStorage } from '@/helpers/firebase';
+import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 
 const ImageUploaderDragAndDrop = ({
   imageDataCallBack,
@@ -61,10 +62,7 @@ const ImageUploaderDragAndDrop = ({
 
         case 'removed':
           //ELIMINAR DE FIREBASE
-          const imageUrlRefArr = image?.split('/');
-          const imageRef = `${imageUrlRefArr[4]}/${imageUrlRefArr[5]}/${imageUrlRefArr[6]}`;
-          var removeRef = fireStorage.ref().child(imageRef as string);
-          await removeRef.delete();
+          await deleteFireStorageData(image);
           setImage(null);
           setIsUploading(false);
           imageDataCallBack(null);
