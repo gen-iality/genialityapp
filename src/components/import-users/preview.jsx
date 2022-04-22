@@ -41,6 +41,20 @@ class Preview extends Component {
   renderHead = (llaves, list) => {
     const a = llaves;
     const b = this.state.headers; //campos de evius
+    const addPassword = a.filter((x) => x === 'password');
+    if (addPassword) {
+      b.push({
+        created_at: new Date(),
+        label: 'Password',
+        mandatory: false,
+        name: 'password',
+        tag: 'password',
+        type: 'password',
+        unique: true,
+        updated_at: new Date(),
+        used: false,
+      });
+    }
 
     //Se compara los headers con las llaves para realizar la validaciòn de campos
     const comparer = (otherArray) => {
@@ -49,7 +63,6 @@ class Preview extends Component {
           otherArray.filter((other) => {
             if (other === current.tag) {
               current.used = true;
-
               return true;
             } else {
               return false;
