@@ -3,6 +3,9 @@
 describe('Register User in Event', () => {
   const event_id = '624362c612e3604d37212ed3';
   const email = 'pruebacypress160@mocionsoft.com';
+  const uuid = () => Cypress._.random(0, 1e6);
+  const id = uuid();
+  const emailNew = 'pruebascypress' + id + '@mocionsoft.com';
   const clave = 'mocion.2040';
   const newPassword = 'mocion.2041';
   const nombre = 'Cyprees';
@@ -29,7 +32,7 @@ describe('Register User in Event', () => {
     cy.get("input[type='file']").attachFile(filePath);
     cy.contains('OK').click();
     cy.wait(1000);
-    cy.get('input[type=email]').type(email);
+    cy.get('input[type=email]').type(emailNew);
     cy.get('input[type=password]').type(clave);
     cy.get('#names').type(nombre + ' ' + apellido);
     cy.get('#btnnextRegister').should('not.be.disabled');
@@ -37,7 +40,7 @@ describe('Register User in Event', () => {
     cy.wait(1000);
     //cy.contains('Datos del usuario').should('exist');
     cy.contains(nombre + ' ' + apellido).should('exist');
-    cy.contains(email).should('exist');
+    cy.contains(emailNew).should('exist');
     cy.get('#btnnextRegister').click();
     cy.wait(4000);
     cy.get('.ant-result-title').should('exist');
@@ -48,7 +51,7 @@ describe('Register User in Event', () => {
 
   it('You should log in to the platform', () => {
     cy.changeLogin();
-    cy.login(email, clave);
+    cy.login(emailNew, clave);
     cy.logout();
   });
   it('The email sent alert should appear', () => {

@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 describe('Register User in Event', () => {
-  const email = 'pruebascypress901@mocionsoft.com';
+  const uuid = () => Cypress._.random(0, 1e6);
+  const id = uuid();
+  const email = 'pruebascypress' + id + '@mocionsoft.com';
   const usedEmail = 'pruebascypress131@mocionsoft.com';
   const clave = 'mocion.2041';
   const nombre = 'Pruebas';
