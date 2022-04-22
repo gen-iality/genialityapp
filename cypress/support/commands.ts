@@ -195,7 +195,7 @@ Cypress.Commands.add('openUserMenu', () => {
   cy.wait(2000);
 });
 
-Cypress.Commands.add('editRegistryInformation', (emailNoRegister) => {
+Cypress.Commands.add('editRegistryInformation', (email) => {
   cy.wait(2000);
   cy.openUserMenu();
   cy.get('.ant-dropdown-menu-title-content')
@@ -203,7 +203,7 @@ Cypress.Commands.add('editRegistryInformation', (emailNoRegister) => {
     .click();
   cy.wait(2000);
   cy.get('.ant-btn.ant-btn-text').click();
-  cy.contains(emailNoRegister).should('exist');
+  cy.contains(email).should('exist');
   cy.correctFields();
   cy.openUserMenu();
   cy.get('.ant-dropdown-menu-title-content')
@@ -215,42 +215,3 @@ Cypress.Commands.add('editRegistryInformation', (emailNoRegister) => {
     .eq(6)
     .click();
 });
-
-/// agregar este comando de eliminar
-
-/* 
-
- it.only('Deberia obtener el token del usuario', () => {
-    cy.request({
-      method: 'POST',
-      url:
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAohyXq3R4t3ao7KFzLDY7W6--g6kOuS7Q',
-      body: {
-        email: emailCypress,
-        password: clave,
-        returnSecureToken: true,
-      },
-      headers: {
-        accept: 'application/json',
-      },
-    }).then((response) => {
-      token = response.body.idToken;
-    });
-  });
-
-  it.only('Deberia obtener el id del usuario', () => {
-    cy.request({
-      method: 'GET',
-      url: `https://devapi.evius.co/auth/currentUser?evius_token=${token}`,
-
-      headers: {
-        accept: 'application/json',
-      },
-    }).then((response) => {
-      id = response.body._id;
-      console.log(response.body._id);
-      cy.log(id);
-    });
-  });
-
-*/
