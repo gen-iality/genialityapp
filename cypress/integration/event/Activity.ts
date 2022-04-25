@@ -88,10 +88,7 @@ describe('Create event activity', () => {
       .eq(8)
       .click();
     cy.wait(5000);
-    cy.get('#removeAction1').click();
-    cy.wait(2000);
-    cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();
-    cy.wait(5000);
+
     cy.get('button.ant-btn.ant-btn-primary.ant-btn-sm.ant-btn-icon-only')
       .eq(0)
       .click();
