@@ -8,6 +8,7 @@ import ContentContainer from '@/containers/content';
 //import MainRouter from '../containers/router';
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 import { Layout } from 'antd';
+import InternetConnectionAlert from '@/components/InternetConnectionAlert/InternetConnectionAlert';
 
 const { Footer, Sider, Content } = Layout;
 
@@ -20,6 +21,7 @@ const App = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <InternetConnectionAlert />
       {/* <Header /> */}
       {/* <MainRouter /> */}
       <ContentContainer />
