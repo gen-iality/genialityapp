@@ -59,7 +59,7 @@ const Importacion = (props) => {
             setErrMsg('Excel en blanco, o algún problema con el archivo o el formato');
             return;
           }
-          props.handleXls(fields, password);
+          props.handleXls(fields);
           return;
         } else {
           DispatchMessageService({
