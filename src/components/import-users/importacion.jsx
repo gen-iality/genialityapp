@@ -1,9 +1,9 @@
-import { Component, useState } from 'react';
+import { useState } from 'react';
 import { utils, writeFileXLSX, read } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import { Row, Col, Button, Divider, Upload, Modal, Form, Input, Checkbox, Space, Alert, Typography } from 'antd';
-import { UploadOutlined, DownloadOutlined, InboxOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Row, Col, Button, Divider, Upload } from 'antd';
+import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
 import content from '@/containers/content';
 
@@ -11,72 +11,7 @@ Moment.locale('es');
 momentLocalizer();
 
 const Importacion = (props) => {
-  const [showMsg, setShowMsg] = useState(false);
   const [errMsg, setErrMsg] = useState('');
-  const [genericPassword, setGenericPassword] = useState(false);
-  const [showModal, setShowModal] = useState(true);
-  const [password, setPassword] = useState(null);
-
-  const savePassword = (value) => {
-    setPassword(value.password);
-    setShowModal(false);
-  };
-
-  const content = () => {
-    return (
-      <Form onFinish={savePassword} preserve={false}>
-        <Form.Item
-          name='password'
-          label='Contraseña'
-          rules={[
-            {
-              required: true,
-              message: '¡Por favor ingresa la contraseña!',
-            },
-          ]}
-          hasFeedback>
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          name='confirm'
-          label='Confirmar contraseña'
-          dependencies={['password']}
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: '¡Por favor confirma la contraseña!',
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('¡Las constraseñas no coinciden!'));
-              },
-            }),
-          ]}>
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item style={{ textAlign: 'right' }}>
-          <Space>
-            <Button
-              onClick={() => {
-                Modal.destroyAll();
-                setShowModal(false);
-              }}>
-              Cancelar
-            </Button>
-            <Button type='primary' htmlType='submit' onClick={() => Modal.destroyAll()}>
-              Continuar
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    );
-  };
 
   const handleXlsFile = (files) => {
     DispatchMessageService({
@@ -225,56 +160,6 @@ const Importacion = (props) => {
           </Button>
         </Col>
       </Row>
-
-      <Modal
-        title='¿Desea crear una contraseña genérica?'
-        icon={<ExclamationCircleOutlined />}
-        footer={null}
-        destroyOnClose={true}
-        closable={false}
-        visible={showModal}>
-        <Alert
-          message={
-            genericPassword ? (
-              <Typography.Paragraph>
-                En el caso aceptar "SÍ deseo una contraseña genérica", se aplicará una contraseña genérica "sólo" a
-                usuarios nuevos dentro de la plataforma, en caso de ya tener una cuenta, el mismo continuará con su
-                antigua contraseña.
-              </Typography.Paragraph>
-            ) : (
-              <Typography.Paragraph>
-                En el caso de continuar con "NO deseo una contraseña genérica", se continuará con el proceso de
-                importación de usuarios habitual, y la contraseña asignada sería el mismo correo electrónico (aplica
-                para los nuevos usuarios), los usuarios antiguos continuarán con su misma contraseña.
-              </Typography.Paragraph>
-            )
-          }
-          type='info'
-          showIcon
-        />{' '}
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            setGenericPassword(e.target.checked);
-          }}>
-          {genericPassword ? 'Sí' : 'No'}
-        </Checkbox>{' '}
-        <br />
-        {genericPassword ? (
-          content()
-        ) : (
-          <div style={{ textAlign: 'right' }}>
-            <Button
-              type='primary'
-              onClick={() => {
-                Modal.destroyAll();
-                setShowModal(false);
-              }}>
-              Continuar
-            </Button>
-          </div>
-        )}
-      </Modal>
     </React.Fragment>
   );
 };
