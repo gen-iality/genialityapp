@@ -174,17 +174,18 @@ describe('Create event', () => {
     cy.visitEvent();
     cy.changeLogin();
     cy.login(email, clave);
-    cy.wait(2000);
+    cy.wait(5000);
     cy.openUserMenu();
     cy.get('.ant-dropdown-menu-title-content')
       .eq(2)
       .click();
     cy.wait(6000);
     cy.get('.ant-card-actions')
-      .eq(4)
+      .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(8000);
     cy.scrollTo('top');
+    cy.wait(10000);
     cy.get('#removeHeader').click();
     cy.wait(2000);
     cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();

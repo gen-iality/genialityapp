@@ -74,7 +74,7 @@ Cypress.Commands.add('logout', () => {
   cy.wait(2000);
   cy.get('button')
     .should('have.class', 'ant-btn ant-btn-default ant-btn-dangerous')
-    .eq(5)
+    .eq(6)
     .click();
   cy.wait(5000);
 });

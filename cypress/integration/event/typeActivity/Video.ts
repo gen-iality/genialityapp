@@ -5,20 +5,65 @@ describe('Video activity', () => {
   const uuid = () => Cypress._.random(0, 1e6);
   const id = uuid();
 
-  it('it should create video activity', () => {
+  it('it should create the event activity', () => {
     cy.visitEvent();
     cy.changeLogin();
     cy.login(email, clave);
     cy.wait(2000);
     cy.openUserMenu();
     cy.get('.ant-dropdown-menu-title-content')
+      .eq(4)
+      .click();
+    cy.wait(2000);
+    cy.get('.ant-steps-item-title').should('have.css', 'color', 'rgba(0, 0, 0, 0.85)');
+    cy.get('input[name="name"]').type('Activity Cypress ' + id);
+    cy.get('input[type="text"]')
+      .eq(1)
+      .click();
+    cy.wait(2000);
+    cy.get('.ant-modal-body').should('exist');
+    cy.get('.DayPicker-Day')
+      .eq(22)
+      .click();
+    cy.get('.ant-btn.ant-btn-primary')
+      .eq(1)
+      .click();
+    cy.wait(2000);
+    cy.get('.ant-btn.ant-btn-primary')
+      .eq(0)
+      .click();
+    cy.wait(2000);
+    cy.get('.ant-btn.ant-btn-primary')
+      .eq(0)
+      .click();
+    cy.wait(10000);
+    cy.scrollTo('top');
+    cy.get('.ant-menu-submenu-title')
+      .eq(2)
+      .trigger('mouseover');
+    cy.wait(2000);
+    cy.get('li')
+      .eq(8)
+      .click();
+    cy.wait(5000);
+    cy.get('#removeAction0').click();
+    cy.wait(1000);
+    cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();
+    cy.wait(5000);
+  });
+
+  it('it should create video activity', () => {
+    cy.visitEvent();
+
+    cy.openUserMenu();
+    cy.get('.ant-dropdown-menu-title-content')
       .eq(2)
       .click();
     cy.wait(6000);
     cy.get('.ant-card-actions')
-      .eq(4)
+      .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(9000);
     cy.scrollTo('top');
     cy.get('.ant-menu-submenu-title')
       .eq(2)
@@ -38,8 +83,10 @@ describe('Video activity', () => {
     cy.wait(1000);
     cy.scrollTo('top');
     cy.get('button.ant-btn.ant-btn-primary').click();
-    cy.wait(5000);
-    cy.get('#rc-tabs-2-tab-2').click();
+    cy.wait(8000);
+    cy.get('.ant-tabs-tab-btn')
+      .eq(1)
+      .click();
     cy.get('button.ant-btn.ant-btn-primary')
       .eq(1)
       .click();
@@ -70,11 +117,12 @@ describe('Video activity', () => {
       .eq(0)
       .invoke('attr', 'target', '')
       .click();
-    cy.wait(5000);
+    cy.wait(8000);
     cy.get('.ant-page-header-heading-title').should('exist');
   });
 
   it('it should see the activity on the landing page', () => {
+    cy.wait(2000);
     cy.get('.ant-btn.ant-btn-default.ant-btn-block').click();
     cy.get('.menuEvent_section-text')
       .eq(1)
@@ -97,9 +145,9 @@ describe('Video activity', () => {
       .click();
     cy.wait(6000);
     cy.get('.ant-card-actions')
-      .eq(4)
+      .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(9000);
     cy.scrollTo('top');
     cy.get('.ant-menu-submenu-title')
       .eq(2)
@@ -113,35 +161,27 @@ describe('Video activity', () => {
       .eq(0)
       .click();
     cy.wait(4000);
-    cy.get('#rc-tabs-2-tab-2').click();
+    cy.get('.ant-tabs-tab-btn')
+      .eq(1)
+      .click();
     cy.get('#removeHeader').click();
     cy.wait(2000);
     cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous')
       .eq(1)
       .click();
     cy.wait(5000);
-    cy.openUserMenu();
-    cy.get('.ant-dropdown-menu-title-content')
-      .eq(5)
-      .click();
-    cy.wait(1000);
-    cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();
-    cy.wait(3000);
   });
   it('it should create upload video activity', () => {
     cy.visitEvent();
-    cy.changeLogin();
-    cy.login(email, clave);
-    cy.wait(2000);
     cy.openUserMenu();
     cy.get('.ant-dropdown-menu-title-content')
       .eq(2)
       .click();
     cy.wait(6000);
     cy.get('.ant-card-actions')
-      .eq(4)
+      .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(9000);
     cy.scrollTo('top');
     cy.get('.ant-menu-submenu-title')
       .eq(2)
@@ -161,8 +201,10 @@ describe('Video activity', () => {
     cy.wait(1000);
     cy.scrollTo('top');
     cy.get('button.ant-btn.ant-btn-primary').click();
-    cy.wait(7000);
-    cy.get('#rc-tabs-2-tab-2').click();
+    cy.wait(8000);
+    cy.get('.ant-tabs-tab-btn')
+      .eq(1)
+      .click();
     cy.get('button.ant-btn.ant-btn-primary')
       .eq(1)
       .click();
@@ -209,6 +251,7 @@ describe('Video activity', () => {
   });
 
   it('it should see the activity on the landing page', () => {
+    cy.wait(2000);
     cy.get('.ant-btn.ant-btn-default.ant-btn-block').click();
     cy.get('.menuEvent_section-text')
       .eq(1)
@@ -231,9 +274,9 @@ describe('Video activity', () => {
       .click();
     cy.wait(6000);
     cy.get('.ant-card-actions')
-      .eq(4)
+      .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(8000);
     cy.scrollTo('top');
     cy.get('.ant-menu-submenu-title')
       .eq(2)
@@ -247,12 +290,30 @@ describe('Video activity', () => {
       .eq(0)
       .click();
     cy.wait(4000);
-    cy.get('#rc-tabs-2-tab-2').click();
+    cy.get('.ant-tabs-tab-btn')
+      .eq(1)
+      .click();
     cy.get('#removeHeader').click();
     cy.wait(2000);
     cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous')
       .eq(1)
       .click();
+    cy.wait(5000);
+  });
+  it('it should i remove the event', () => {
+    cy.openUserMenu();
+    cy.get('.ant-dropdown-menu-title-content')
+      .eq(1)
+      .click();
+    cy.wait(6000);
+    cy.get('.ant-card-actions')
+      .eq(2)
+      .click();
+    cy.wait(9000);
+    cy.scrollTo('top');
+    cy.get('#removeHeader').click();
+    cy.wait(2000);
+    cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();
     cy.wait(5000);
     cy.openUserMenu();
     cy.get('.ant-dropdown-menu-title-content')
