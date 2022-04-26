@@ -1,4 +1,4 @@
-describe('Video activity', () => {
+describe('EviusMeet activity', () => {
   const email = 'pruebascypress1@mocionsoft.com';
 
   const clave = 'mocion.2040';
@@ -161,7 +161,7 @@ describe('Video activity', () => {
     cy.get('.ant-card-actions')
       .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(9000);
     cy.scrollTo('top');
     cy.get('.ant-menu-submenu-title')
       .eq(2)
@@ -194,7 +194,7 @@ describe('Video activity', () => {
     cy.get('.ant-card-actions')
       .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(9000);
     cy.scrollTo('top');
     cy.get('#removeHeader').click();
     cy.wait(2000);

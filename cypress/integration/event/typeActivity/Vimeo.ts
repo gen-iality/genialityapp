@@ -1,4 +1,4 @@
-describe('Meeting activity', () => {
+describe('Vimeo activity', () => {
   const email = 'pruebascypress1@mocionsoft.com';
 
   const clave = 'mocion.2040';
@@ -51,8 +51,7 @@ describe('Meeting activity', () => {
     cy.get('button.ant-btn.ant-btn-default.ant-btn-dangerous').click();
     cy.wait(5000);
   });
-
-  it('it should create meeting activity', () => {
+  it('it should create vimeo activity', () => {
     cy.visitEvent();
     cy.openUserMenu();
     cy.get('.ant-dropdown-menu-title-content')
@@ -76,7 +75,7 @@ describe('Meeting activity', () => {
       .eq(0)
       .click();
     cy.wait(2000);
-    cy.get('input[name="name"]').type('Actividad  Meeting Cypress ' + id);
+    cy.get('input[name="name"]').type('Actividad  Vimeo Cypress ' + id);
     const filePath = 'cypress.jpg';
     cy.get("input[type='file']").attachFile(filePath);
     cy.wait(1000);
@@ -92,19 +91,38 @@ describe('Meeting activity', () => {
     cy.wait(1000);
     cy.get('h3.ant-typography').should('exist');
     cy.get('.ant-ribbon-wrapper')
-      .eq(1)
+      .eq(0)
       .click();
     cy.wait(1000);
     cy.get('.ant-btn.ant-btn-primary')
       .eq(3)
       .click();
     cy.wait(1000);
+    cy.get('.ant-ribbon-wrapper')
+      .eq(1)
+      .click();
+    cy.wait(1000);
+
     cy.get('.ant-btn.ant-btn-primary')
       .eq(3)
       .click();
     cy.wait(3000);
+    cy.get('#url').type('212834362');
+    cy.get('.ant-btn.ant-btn-primary')
+      .eq(3)
+      .click();
+    cy.wait(12000);
+
+    cy.get('.ant-select-selector')
+      .eq(2)
+      .click();
+    cy.get('.ant-select-item.ant-select-item-option')
+      .eq(2)
+      .click();
+    cy.wait(2000);
     cy.get('.ant-btn.ant-btn-primary')
       .eq(0)
+
       .invoke('attr', 'target', '')
       .click();
     cy.wait(8000);
@@ -122,7 +140,7 @@ describe('Meeting activity', () => {
       });
     cy.wait(10000);
     cy.get('.ant-card-body').should('exist');
-    cy.get('.titulo').should('contain', 'Actividad  Meeting Cypress ' + id);
+    cy.get('.titulo');
     cy.get('.ant-ribbon-wrapper')
       .eq(1)
       .click();
@@ -170,7 +188,7 @@ describe('Meeting activity', () => {
     cy.get('.ant-card-actions')
       .eq(2)
       .click();
-    cy.wait(5000);
+    cy.wait(8000);
     cy.scrollTo('top');
     cy.get('#removeHeader').click();
     cy.wait(2000);

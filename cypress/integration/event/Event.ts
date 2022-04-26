@@ -181,7 +181,7 @@ describe('Create event', () => {
       .click();
     cy.wait(6000);
     cy.get('.ant-card-actions')
-      .eq(4)
+      .eq(2)
       .click();
     cy.wait(8000);
     cy.scrollTo('top');
