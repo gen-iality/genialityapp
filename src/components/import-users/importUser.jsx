@@ -17,11 +17,22 @@ class ImportUsers extends Component {
       step: 0,
       list: [],
       toImport: [],
+      password: '',
     };
   }
 
   handleXls = (list) => {
+    /*  let genericPassword = [];
+    if (password) {
+      for (let i = 0; i < list[0].list.length; i++) {
+        genericPassword.push(password);
+      }
+      this.setState({ password: password });
+    } */
     if (list.length >= 2) {
+      /* if (password) {
+        list.push({ key: 'password', list: genericPassword, used: false });
+      } */
       this.setState((prevState) => {
         return { list, step: prevState.step + 1 };
       });
@@ -38,15 +49,13 @@ class ImportUsers extends Component {
     });
 
     try {
-      /* Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde */
+      // Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde
       users = users.map((column) => {
         if (column.key === 'ticket_id') {
           column.used = true;
         }
         return column;
       });
-
-      /* console.log('USERS COLUMNS==>', users); */
 
       //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos
       //al componente result que realiza la importación uno a uno usando el api

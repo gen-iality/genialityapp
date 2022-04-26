@@ -1,26 +1,19 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { utils, writeFileXLSX, read } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { Row, Col, Button, Divider, Upload } from 'antd';
-import { UploadOutlined, DownloadOutlined, InboxOutlined } from '@ant-design/icons';
+import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
+import content from '@/containers/content';
 
 Moment.locale('es');
 momentLocalizer();
 
-class Importacion extends Component {
-  constructor(props) {
-    super(props);
+const Importacion = (props) => {
+  const [errMsg, setErrMsg] = useState('');
 
-    this.state = {
-      showMsg: false,
-    };
-    this.handleXlsFile = this.handleXlsFile.bind(this);
-  }
-
-  handleXlsFile(files) {
-    /* console.log(files, 'files'); */
+  const handleXlsFile = (files) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -29,7 +22,6 @@ class Importacion extends Component {
     });
     const f = files;
     const reader = new FileReader();
-    const self = this;
     try {
       reader.onload = (e) => {
         const data = e.target.result;
@@ -64,10 +56,10 @@ class Importacion extends Component {
 
           //por si no pudimos agregar ningún dato
           if (!fields.length) {
-            this.setState({ errMsg: 'Excel en blanco, o algún problema con el archivo o el formato' });
+            setErrMsg('Excel en blanco, o algún problema con el archivo o el formato');
             return;
           }
-          self.props.handleXls(fields);
+          props.handleXls(fields);
           return;
         } else {
           DispatchMessageService({
@@ -79,7 +71,7 @@ class Importacion extends Component {
             msj: 'Excel en blanco',
             action: 'show',
           });
-          this.setState({ errMsg: 'Excel en blanco' });
+          setErrMsg('Excel en blanco');
         }
       };
       reader.readAsBinaryString(f);
@@ -98,75 +90,78 @@ class Importacion extends Component {
         action: 'show',
       });
     }
-  }
+  };
 
-  downloadExcel = () => {
+  const downloadExcel = () => {
     let data = [{}];
-    this.props.extraFields.map((extra) => {
+    props.extraFields.map((extra) => {
       return (data[0][extra.name] = '');
     });
 
-    data[0]['tiquete'] = '';
+    //data[0]['tiquete'] = '';
     /** Se agrega campo requerido que no viene en la consulta de la base de datos */
     data[0]['rol'] = '';
+    /* if (password) {
+      data[0]['password'] = password;
+    } */
     const ws = utils.json_to_sheet(data);
     const wb = utils.book_new();
-    let name = this.props.organization ? 'usersorganization_template' : 'attendees_template';
-    name = this.props.event ? name + '_' + this.props.event.name : name;
+    let name = props.organization ? 'usersorganization_template' : 'attendees_template';
+    name = props.event ? name + '_' + props.event.name : name;
 
     utils.book_append_sheet(wb, ws, 'Template');
     writeFileXLSX(wb, `${name}${Moment().format('DDMMYY')}.xls`);
   };
 
   /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */
-  addMoreItemsToExtraFields = () => {
-    let modifiedExtraFields = [...this.props.extraFields, { name: 'rol', type: 'rol' }];
+  const addMoreItemsToExtraFields = () => {
+    let modifiedExtraFields = [...props.extraFields, { name: 'rol', type: 'rol' }];
+    /* if (password) {
+      modifiedExtraFields = [...props.extraFields, { name: 'password', type: 'password' }];
+    } */
     return modifiedExtraFields;
   };
 
-  render() {
-    /* console.log('debug this.props.extraFields', this.addMoreItemsToExtraFields()); */
-    return (
-      <React.Fragment>
-        <div className='importacion-txt'>
-          <p>
-            Para importar los usuarios de tu evento, debes cargar un archivo excel (.xls) con las columnas organizadas
-            (como se muestra abajo). Para mayor facilidad, <strong>descarga nuestro template</strong> para organizar los
-            datos de tus asistentes.
-          </p>
-        </div>
-        <h2 className='has-text-grey has-text-weight-bold'>CAMPOS REQUERIDOS</h2>
-        <Row wrap gutter={[8, 8]}>
-          {this.addMoreItemsToExtraFields().map((extra, key) => (
-            <Col key={key}>
-              <span className='has-text-grey-light'>{extra?.label || extra?.name}</span>
-              <Divider type='vertical' />
-            </Col>
-          ))}
-        </Row>
-        <br />
-        <Row justify='center' align='middle' wrap gutter={[16, 16]}>
-          <Col>
-            <Upload.Dragger
-              onChange={(e) => this.handleXlsFile(e.fileList[0].originFileObj)}
-              onDrop={(e) => this.handleXlsFile(e.fileList[0].originFileObj)}
-              multiple={false}
-              accept='.xls,.xlsx'
-              style={{ margin: '0 15px', padding: '0 !important' }}>
-              <p style={{ textAlign: 'center' }}>
-                <InboxOutlined /> <span>Importar Excel</span>
-              </p>
-            </Upload.Dragger>
+  return (
+    <React.Fragment>
+      <div className='importacion-txt'>
+        <p>
+          Para importar los usuarios de tu evento, debes cargar un archivo excel (.xls) con las columnas organizadas
+          (como se muestra abajo). Para mayor facilidad, <strong>descarga nuestro template</strong> para organizar los
+          datos de tus asistentes.
+        </p>
+      </div>
+      <h2 className='has-text-grey has-text-weight-bold'>CAMPOS REQUERIDOS</h2>
+      <Row wrap gutter={[8, 8]}>
+        {addMoreItemsToExtraFields().map((extra, key) => (
+          <Col key={key}>
+            <span className='has-text-grey-light'>{extra?.label || extra?.name}</span>
+            <Divider type='vertical' />
           </Col>
-          <Col>
-            <Button type='link' icon={<DownloadOutlined />} onClick={this.downloadExcel}>
-              Descargar Template
-            </Button>
-          </Col>
-        </Row>
-      </React.Fragment>
-    );
-  }
-}
+        ))}
+      </Row>
+      <br />
+      <Row justify='center' align='middle' wrap gutter={[16, 16]}>
+        <Col>
+          <Upload.Dragger
+            onChange={(e) => handleXlsFile(e.fileList[0].originFileObj)}
+            onDrop={(e) => handleXlsFile(e.fileList[0].originFileObj)}
+            multiple={false}
+            accept='.xls,.xlsx'
+            style={{ margin: '0 15px', padding: '0 !important' }}>
+            <p style={{ textAlign: 'center' }}>
+              <InboxOutlined /> <span>Importar Excel</span>
+            </p>
+          </Upload.Dragger>
+        </Col>
+        <Col>
+          <Button type='link' icon={<DownloadOutlined />} onClick={downloadExcel}>
+            Descargar Template
+          </Button>
+        </Col>
+      </Row>
+    </React.Fragment>
+  );
+};
 
 export default Importacion;
