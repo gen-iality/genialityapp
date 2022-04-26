@@ -848,13 +848,15 @@ const FormRegister = ({
               });
             }
           }
-          input = m.options.map((o, key) => {
-            return (
-              <Option key={key} value={o.value}>
-                {o.label}
-              </Option>
-            );
-          });
+          input = m.options
+            ? m.options.map((o, key) => {
+                return (
+                  <Option key={key} value={o.value}>
+                    {o.label}
+                  </Option>
+                );
+              })
+            : [];
           input = (
             <Select style={{ width: '100%' }} name={name} defaultValue={value}>
               <Option value={''}>Seleccione...</Option>

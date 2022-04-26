@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "vite:start": "vite",
     "vite:build": "vite build",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@2fd/ant-design-icons": "^2.4.1",

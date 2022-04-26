@@ -1,14 +1,32 @@
-import { Card, Typography, Space, Select, Avatar, Button, Spin, Comment, Row, Col, Badge, Popconfirm } from 'antd';
+import {
+  Card,
+  Typography,
+  Space,
+  Select,
+  Avatar,
+  Button,
+  Spin,
+  Comment,
+  Row,
+  Col,
+  Badge,
+  Popconfirm,
+  Result,
+} from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../../context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
+import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
 import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
+import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
 
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
+  const [errorOcurred, setErrorOcurred] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { data } = useTypeActivity();
   const {
     roomStatus,
@@ -37,31 +55,63 @@ const CardPreview = (props: any) => {
   const renderPlayer = () => {
     //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
     let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
-    console.log('URL VIDEO==>', urlVideo, visibleReactPlayer);
+    // console.log('🚀 debug ~ renderPlayer ~ visibleReactPlayer', visibleReactPlayer, urlVideo);
+
     //RENDERIZAR COMPONENTE
     return (
       <>
-        {visibleReactPlayer && (
-          <ReactPlayer
-            playing={true}
-            loop={true}
-            onDuration={props.type === 'Video' ? handleDuration : undefined}
-            style={{ objectFit: 'cover', aspectRatio: '16/9' }}
-            width='100%'
-            height='100%'
-            url={urlVideo}
-            controls={true}
-            onError={(e) => console.log('Error ==>', e)}
+        {errorOcurred ? (
+          <Result
+            status='info'
+            title='Lo sentimos'
+            subTitle={
+              errorMessage === 'An error occurred.'
+                ? errorMessage
+                : `Hubo un error al procesar el video, posiblemente se ha movido el recurso o ha sido borrado.`
+            }
+            icon={<EmoticonSadOutline />}
           />
+        ) : (
+          <>
+            {visibleReactPlayer && (
+              <ReactPlayer
+                playing={true}
+                loop={true}
+                onDuration={props.type === 'Video' ? handleDuration : undefined}
+                style={{ objectFit: 'cover', aspectRatio: '16/9' }}
+                width='100%'
+                height='100%'
+                url={urlVideo}
+                controls={true}
+                // onStart={() => {
+                //   setErrorOcurred(false);
+                //   setErrorMessage('');
+                // }}
+                onError={(e) => {
+                  // console.log('🚀 debug ~ renderPlayer ~ e', props.type);
+                  if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
+                    setErrorOcurred(true);
+                    setErrorMessage(e?.message);
+                  }
+                }}
+              />
+            )}
+          </>
         )}
-        {!visibleReactPlayer && (
+
+        {!visibleReactPlayer && !errorOcurred && (
           <iframe
             style={{ aspectRatio: '16/9' }}
             width='100%'
             src={urlVideo + '?muted=1&autoplay=1'}
             frameBorder='0'
             allow='autoplay; encrypted-media'
-            allowFullScreen></iframe>
+            allowFullScreen
+            onLoad={(e) => {
+              if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
+                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
+              }
+            }}></iframe>
         )}
       </>
     );

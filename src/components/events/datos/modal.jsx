@@ -2,6 +2,7 @@ import { Component, createRef, Fragment } from 'react';
 import { typeInputs } from '../../../helpers/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const html = document.querySelector('html');
 const formLayout = {
@@ -132,6 +133,18 @@ class DatosModal extends Component {
   //Guardar campo en el evento
   saveField = async (values) => {
     const info = Object.assign({}, this.state.info);
+
+    if (
+      info?.options.length === 0 &&
+      (info?.type === 'list' || info?.type === 'multiplelist' || info?.type === 'multiplelisttable')
+    ) {
+      DispatchMessageService({
+        type: 'error',
+        msj: `El campo de tipo ${info.type} debe tener al menos una opción válida`,
+        action: 'show',
+      });
+      return;
+    }
     info.name = toCapitalizeLower(info.name);
     values.mandatory = info?.mandatory;
     values.options = info?.options;
@@ -140,6 +153,7 @@ class DatosModal extends Component {
     values.description = info.description;
     this.setState({ loading: true });
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
+
     await this.props.action(values, this.state.event?._id);
     const initModal = {
       name: '',
@@ -221,7 +235,7 @@ class DatosModal extends Component {
               }}
               placeholder='Escribe la opción y presiona Enter o Tab...x'
               value={info?.options}
-              //required={true}
+              required={true}
             />
           )}
 

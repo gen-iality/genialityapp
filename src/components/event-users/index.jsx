@@ -848,7 +848,9 @@ class ListEventUser extends Component {
                   style={{ width: 220 }}>
                   <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
-                  <Option value='scanner-document'>Escanear Documento</Option>
+                  {this.state.fieldsForm.map((item) => {
+                    if (item.name === 'cedula') return <Option value='scanner-document'>Escanear Documento</Option>;
+                  })}
                 </Select>
               </Col>
               <Col>
