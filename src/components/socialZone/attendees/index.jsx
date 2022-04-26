@@ -76,6 +76,12 @@ const AttendeList = function(props) {
     setmyattendelist(removeCurrentUserFromList);
     setfilteredlist(removeCurrentUserFromList.slice(0, pag));
     setPage(1);
+    const AttendeesOnline = removeCurrentUserFromList.filter((user) => {
+      if (user.status === 'online') {
+        return user;
+      }
+    });
+    props.SetCountAttendeesOnline(AttendeesOnline);
   }, [attendeeListPresence, attendeeList]);
 
   useEffect(() => {

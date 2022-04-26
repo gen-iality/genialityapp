@@ -47,6 +47,7 @@ let SocialZone = function(props) {
   let busquedaRef = useRef();
   let history = useHistory();
   const [typeEvent, settypeEvent] = useState();
+  const [countAttendeesOnline, SetCountAttendeesOnline] = useState(0);
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -121,7 +122,8 @@ let SocialZone = function(props) {
               <>
                 {props.generalTabs?.attendees && (
                   <div style={{ color: cEvent.value.styles.textMenu }}>
-                    <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
+                    <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />{' '}
+                    {countAttendeesOnline.length > 0 && <>({countAttendeesOnline.length})</>}
                   </div>
                 )}
               </>
@@ -180,6 +182,7 @@ let SocialZone = function(props) {
                       section={props.section}
                       containNetWorking={props.containNetWorking}
                       busqueda={strAttende}
+                      SetCountAttendeesOnline={SetCountAttendeesOnline}
                     />
                   )}
                 </div>
