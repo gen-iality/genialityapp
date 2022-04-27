@@ -208,10 +208,12 @@ const FormRegister = ({
         ...dataEventUser,
       };
     }
+
     setinitialValues(
       organization
         ? {
             ...initialOtherValue?.properties,
+            _id: initialOtherValue._id,
             rol_id: initialOtherValue.rol_id,
             checked_in: initialOtherValue.checked_in,
             checkedin_at: initialOtherValue.checkedin_at,
