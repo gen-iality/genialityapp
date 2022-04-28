@@ -38,7 +38,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         }&photo=${userContext.value?.picture || urlDefault}`
       );
     }
-    console.log('100. typeActivity=>', typeActivity, conected, meeting_id);
+    //console.log('100. typeActivity=>', typeActivity, conected, meeting_id);
     if (!meeting_id) return;
     if (!thereIsConnection && ((typeActivity !== 'youTube' && typeActivity !== 'video') || !typeActivity)) {
       console.log('100. INGRESA ACA 1===>');
