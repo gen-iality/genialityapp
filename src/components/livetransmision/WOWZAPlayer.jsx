@@ -43,7 +43,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
     if (!thereIsConnection && ((typeActivity !== 'youTube' && typeActivity !== 'video') || !typeActivity)) {
       console.log('100. INGRESA ACA 1===>');
       setConected('Yes');
-      setLoopBackGround(false);
+      setLoopBackGround(typeActivity === 'url' ? true : false);
       setPlatformurl(typeActivity !== 'url' ? defaultVideo : meeting_id);
       setMuted(typeActivity !== 'url' ? true : false);
       setVisibleReactPlayer(true);
