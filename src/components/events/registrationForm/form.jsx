@@ -212,6 +212,7 @@ const FormRegister = ({
       organization
         ? {
             ...initialOtherValue?.properties,
+            _id: initialOtherValue._id,
             rol_id: initialOtherValue.rol_id,
             checked_in: initialOtherValue.checked_in,
             checkedin_at: initialOtherValue.checkedin_at,
@@ -286,6 +287,8 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
+    values = { ...initialValues, ...values };
+
     if (Object.keys(basicDataUser).length > 0) {
       setvalidateEventUser({
         statusFields: true,
@@ -724,6 +727,7 @@ const FormRegister = ({
         }
 
         let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
+
         if (type === 'multiplelisttable') {
           input = <ReactSelect options={m.options} isMulti name={name} />;
         }
@@ -939,6 +943,11 @@ const FormRegister = ({
               }
             : rule;
 
+        if (type === 'number') {
+          input = (
+            <Input type={type} rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />
+          );
+        }
         return (
           type !== 'boolean' && (
             <div key={'g' + key} name='field'>

@@ -76,33 +76,33 @@ class QrModal extends Component {
   };
 
   handleSearchByCc = (cedula, usersRef) => {
-    axios.get(`${ApiUrl}${useRequest.EventUsers.getEventUserByCedula(cedula, this.props.eventID)}`).then((res) => {
-      console.log('res', res);
-      let idUser = res.data.data[0]?._id || null;
-      usersRef
-        .where('_id', '==', `${idUser}`)
-        .get()
-        .then((querySnapshot) => {
-          const qrData = {};
-          if (querySnapshot.empty) {
-            qrData.msg = 'User not found';
-            qrData.another = true;
-            qrData.user = null;
+    console.log('🚀 debug ~ QrModal ~ cedula', cedula);
+    usersRef
+      .where('cedula', '==', `${cedula}`)
+      .get()
+      .then((querySnapshot) => {
+        const qrData = {};
+        if (querySnapshot.empty) {
+          console.log('🚀 debug ~ QrModal ~ .then ~ querySnapshot.empty', querySnapshot.empty);
+          qrData.msg = 'User not found';
+          qrData.another = true;
+          qrData.user = null;
+          this.setState({ qrData });
+        } else {
+          querySnapshot.forEach((doc) => {
+            qrData.msg = 'User found';
+            qrData.user = doc.data();
+            console.log('docdata', doc.data());
+            qrData.another = !!qrData.user.checked_in;
+            console.log('🚀 debug ~ QrModal ~ querySnapshot.forEach ~ qrData', qrData);
             this.setState({ qrData });
-          } else {
-            querySnapshot.forEach((doc) => {
-              qrData.msg = 'User found';
-              qrData.user = doc.data();
-              console.log('docdata', doc.data());
-              qrData.another = !!qrData.user.checked_in;
-              this.setState({ qrData });
-            });
-          }
-        })
-        .catch(() => {
-          this.setState({ found: 0 });
-        });
-    });
+          });
+        }
+      })
+      .catch((e) => {
+        console.log('🚀 debug ~ QrModal ~ e', e);
+        this.setState({ found: 0 });
+      });
   };
 
   searchCC = (Scanner) => {
@@ -238,14 +238,14 @@ will show the checkIn information in the popUp. If not, it will show an error me
           </Title>
           {qrData.user ? (
             <div>
-              {qrData.user.checked_in && (
+              {qrData.user.checked_in && qrData?.user?.checked_at && (
                 <div>
                   <Title level={3} type='secondary'>
                     Usuario Chequeado
                   </Title>
                   <Title level={5}>
-                    El checkIn se llevó a cabo el día: <FormattedDate value={qrData.user.checked_at.toDate()} /> a las{' '}
-                    <FormattedTime value={qrData.user.checked_at.toDate()} /> horas
+                    El checkIn se llevó a cabo el día: <FormattedDate value={qrData?.user?.checked_at?.toDate()} /> a
+                    las <FormattedTime value={qrData?.user?.checked_at?.toDate()} /> horas
                   </Title>
                 </div>
               )}
