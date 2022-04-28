@@ -208,6 +208,7 @@ const FormRegister = ({
         ...dataEventUser,
       };
     }
+
     setinitialValues(
       organization
         ? {
