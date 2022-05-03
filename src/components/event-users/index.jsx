@@ -414,6 +414,8 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
+          updatedAttendees.sort((a, b) => b.checkedin_at - a.checkedin_at);
+
           // console.log("ATTENDESSTWO==>",updatedAttendees)
           this.setState({
             users: updatedAttendees,
@@ -849,7 +851,8 @@ class ListEventUser extends Component {
                   <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
                   {this.state.fieldsForm.map((item) => {
-                    if (item.name === 'cedula') return <Option value='scanner-document'>Escanear Documento</Option>;
+                    if (item.type === 'checkInField')
+                      return <Option value='scanner-document'>Escanear {item.label}</Option>;
                   })}
                 </Select>
               </Col>

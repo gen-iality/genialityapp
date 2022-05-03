@@ -105,7 +105,8 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
 }
 
 function isRegister(initialValues, cEventUser) {
-  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null ? true : false;
+  if (!initialValues?._id || cEventUser.value === null ? true : false) return 'Button.signup';
+  if (initialValues?._id) return 'registration.button.update';
 }
 
 function fieldsAditional(extraFields) {
@@ -157,6 +158,7 @@ const FormRegister = ({
   HandleHookForm = () => {},
   setvalidateEventUser = () => {},
   validateEventUser,
+  usedInCms,
 }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
@@ -622,8 +624,8 @@ const FormRegister = ({
   const renderForm = useCallback(() => {
     if (!extraFields) return '';
     let formUI = extraFields.map((m, key) => {
-      /* console.log(m, key) */
-      if (m.visibleByAdmin == true) {
+      if (m.visibleByAdmin == true && !usedInCms) {
+        /* console.log(m, key) */
         return;
       }
       //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
@@ -1202,12 +1204,7 @@ const FormRegister = ({
                         }}
                         type='primary'
                         htmlType='submit'>
-                        {}
-                        {isRegister(initialValues, cEventUser)
-                          ? intl.formatMessage({ id: 'Button.signup' })
-                          : intl.formatMessage({
-                              id: 'registration.button.update',
-                            })}
+                        {intl.formatMessage({ id: isRegister(initialValues, cEventUser) })}
                       </Button>
 
                       {options &&

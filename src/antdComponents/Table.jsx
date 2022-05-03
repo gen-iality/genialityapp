@@ -203,15 +203,14 @@ const Table = (props) => {
     }
   }, [header]);
 
-  if (list && list.length) {
-    list.map((list, index) => {
-      if (!list.index) {
-        list.index = index;
-      }
-    });
-  }
-
   useEffect(() => {
+    if (list && list.length) {
+      list.map((list, index) => {
+        if (!list.index) {
+          list.index = index;
+        }
+      });
+    }
     if (draggable) {
       draggableFn();
     }

@@ -28,7 +28,7 @@ export default defineConfig({
         VITE_API_EVIUS_ZOOM_SURVEY: 'https://apimeetings.evius.co:6490/obtenerMeetingsPoll',
         TSC_WATCHFILE: 'UseFsEventsWithFallbackDynamicPolling',
         REACT_EDITOR: 'code',
-        NODE_ENV: 'production',
+        NODE_ENV: 'staging',
         DEBUG: 'true',
         //FIREBASE CONFIG CHATEVIUS
         VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyDaQI5E1P6mIhcNfDdRq8oSGpJ13Qllv00',
@@ -63,8 +63,8 @@ export default defineConfig({
     //     VITE_API_EVIUS_ZOOM_SURVEY: 'https://apimeetings.evius.co:6490/obtenerMeetingsPoll',
     //     TSC_WATCHFILE: 'UseFsEventsWithFallbackDynamicPolling',
     //     REACT_EDITOR: 'code',
-    //     NODE_ENV: 'production',
-    //     DEBUG: '*',
+    //     NODE_ENV: 'prod',
+    //     DEBUG: 'true',
     //     //FIREBASE CONFIG CHATEVIUS
     //     VITE_FB_APIKEY_CHATEVIUS: 'AIzaSyD4_AiJFGf1nIvn9BY_rZeoITinzxfkl70',
     //     VITE_FB_AUTHDOMAIN_CHATEVIUS: 'chatevius.firebaseapp.com',
@@ -84,7 +84,7 @@ export default defineConfig({
     //     VITE_MEASUREMENTID_EVIUSAUTH: '',
     //     VITE_APPID_EVIUSAUTH: '1:400499146867:web:5d0021573a43a1df',
     //   },
-    //   { loadEnvFiles: true }
+    //   { loadEnvFiles: false }
     // ),
   ],
   css: {

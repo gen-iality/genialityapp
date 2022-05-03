@@ -27,9 +27,13 @@ function updateAttendees(currentAttendees, snapshot) {
         change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
         break;
       case 'modified':
-        newItems.splice(change.oldIndex, 1);
+        newItems = newItems.map((item) => {
+          if (item._id === user._id) return user;
+          else return item;
+        });
+        // newItems.splice(change.oldIndex, 1);
         // Added the information of user of newItems array
-        newItems.splice(change.newIndex, 0, user);
+        // newItems.splice(change.newIndex, 0, user);
         break;
       case 'removed':
         newItems.splice(change.oldIndex, 1);

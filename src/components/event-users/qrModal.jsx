@@ -4,11 +4,12 @@ import { FaCamera } from 'react-icons/fa';
 import { IoIosQrScanner, IoIosCamera } from 'react-icons/io';
 import QrReader from 'react-qr-reader';
 import { firestore } from '../../helpers/firebase';
-import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert } from 'antd';
+import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, InputNumber } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@/context/MessageService';
 import axios from 'axios';
 import { useRequest } from '@/services/useRequest';
+import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -61,12 +62,12 @@ class QrModal extends Component {
     const { qrData } = this.state;
     if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
     this.setState({ qrData: { ...this.state.qrData, msg: '', user: null } });
-    this.setState({ newCC: '' });
+    this.setState({ documentOrId: '' });
   };
 
   closeQr = () => {
     this.setState(
-      { qrData: { ...this.state.qrData, msg: '', user: null }, qrModal: false, newCC: '', tabActive: 'camera' },
+      { qrData: { ...this.state.qrData, msg: '', user: null }, qrModal: false, documentOrId: '', tabActive: 'camera' },
       () => {
         this.props.closeModal();
       }
@@ -75,15 +76,16 @@ class QrModal extends Component {
     this.props.clearOption(); // Clear dropdown to options scanner
   };
 
-  handleSearchByCc = (cedula, usersRef) => {
-    console.log('🚀 debug ~ QrModal ~ cedula', cedula);
+  handleSearchByCc = (documento, usersRef) => {
+    const { fields } = this.props;
+    const { name } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
+
     usersRef
-      .where('cedula', '==', `${cedula}`)
+      .where(`properties.${name}`, '==', `${documento}`)
       .get()
       .then((querySnapshot) => {
         const qrData = {};
         if (querySnapshot.empty) {
-          console.log('🚀 debug ~ QrModal ~ .then ~ querySnapshot.empty', querySnapshot.empty);
           qrData.msg = 'User not found';
           qrData.another = true;
           qrData.user = null;
@@ -94,20 +96,18 @@ class QrModal extends Component {
             qrData.user = doc.data();
             console.log('docdata', doc.data());
             qrData.another = !!qrData.user.checked_in;
-            console.log('🚀 debug ~ QrModal ~ querySnapshot.forEach ~ qrData', qrData);
             this.setState({ qrData });
           });
         }
       })
       .catch((e) => {
-        console.log('🚀 debug ~ QrModal ~ e', e);
         this.setState({ found: 0 });
       });
   };
 
   searchCC = (Scanner) => {
     const usersRef = firestore.collection(`${this.props.eventID}_event_attendees`);
-    let value = String(this.state.newCC).toLowerCase();
+    let value = String(this.state.documentOrId).toLowerCase();
 
     // Conditional to show modal (QR or Document scanner)
     if (Scanner === 'qr') {
@@ -139,29 +139,21 @@ class QrModal extends Component {
     }
   };
 
-  changeCC = (e) => {
-    //this.setState({ newCC: '' });
-    e.preventDefault();
+  setDocumentOrId = (e, isId) => {
+    // capturar toda la data el lector de documento
+    // if (e.keyCode === 9) {
+    //   e.preventDefault();
+    //   return false;
+    // }
+    // return;
+    //this.setState({ documentOrId: '' });
+    // e.preventDefault();d
     const { value } = e.target;
-    let acumulador = '';
-    let contador = 0;
-    let cedula = 0;
-    if (contador == 0) {
-      cedula = value;
-      contador++;
-    }
-    for (let i = 0; i < value.length; i++) {
-      if (value[i] != ' ') {
-        acumulador = acumulador + value[i];
-        contador++;
-      } else if (value[i] == ' ') {
-        cedula = acumulador;
-        acumulador = '';
-        contador++;
-      }
-
-      var cedulaOnlynumbers = cedula.match(/(\d+)/);
-      this.setState({ newCC: Number(cedulaOnlynumbers[0]) });
+    if (isId) {
+      this.setState({ documentOrId: value });
+    } else {
+      let cedulaOnlynumbers = value.match(/(\d+)/);
+      this.setState({ documentOrId: Number(cedulaOnlynumbers[0]) });
     }
   };
 
@@ -172,7 +164,7 @@ class QrModal extends Component {
 
   // Limpia el input al escanear un codigo que no esta registrado
   cleanInputSearch = () => {
-    this.setState({ newCC: '' });
+    this.setState({ documentOrId: '' });
   };
 
   /* function that saves the user's checkIn. If the user's checkIn was successful,
@@ -197,6 +189,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
   render() {
     const { qrData, facingMode, tabActive } = this.state;
     const { fields, typeScanner } = this.props;
+    const { label } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
 
     return (
       <div>
@@ -294,37 +287,42 @@ will show the checkIn information in the popUp. If not, it will show an error me
                     </>
                   }
                   key='2'>
-                  <Form.Item label={'Id Usuario'}>
-                    <Input
-                      allowClear
-                      value={this.state.newCC}
-                      onChange={(value) => this.changeCC(value)}
-                      name={'searchCC'}
-                      autoFocus
-                    />
-                  </Form.Item>
-                  <Row justify='center' wrap gutter={8}>
-                    <Col>
-                      <Button type='primary' onClick={(e) => this.searchCC('qr', e)}>
-                        Buscar
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button type='ghost' onClick={() => this.cleanInputSearch()}>
-                        Limpiar
-                      </Button>
-                    </Col>
-                  </Row>
+                  <Form layout='vertical'>
+                    <Form.Item label={'Id Usuario'}>
+                      <Input
+                        // allowClear
+                        value={this.state.documentOrId}
+                        onChange={(value) => this.setDocumentOrId(value, true)}
+                        name={'searchCC'}
+                        autoFocus
+                      />
+                    </Form.Item>
+                    <Row justify='center' wrap gutter={8}>
+                      <Col>
+                        <Button type='primary' onClick={(e) => this.searchCC('qr', e)}>
+                          Buscar
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button type='ghost' onClick={() => this.cleanInputSearch()}>
+                          Limpiar
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
                 </TabPane>
               </Tabs>
             </React.Fragment>
           ) : (
-            <React.Fragment>
-              <Form.Item label={'Cédula'}>
+            <Form layout='vertical'>
+              <Form.Item label={label}>
                 <Input
-                  allowClear
-                  value={this.state.newCC}
-                  onChange={(value) => this.changeCC(value)}
+                  // allowClear
+                  value={this.state.documentOrId}
+                  onChange={(value) => this.setDocumentOrId(value, false)}
+                  // capturar toda la data del lector de documentos
+                  // onKeyDown={(value) => this.setDocumentOrId(value, false)}
+                  onK
                   name={'searchCC'}
                   autoFocus
                 />
@@ -341,7 +339,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   </Button>
                 </Col>
               </Row>
-            </React.Fragment>
+            </Form>
           )}
           {qrData?.msg === 'User not found' && (
             <Alert
