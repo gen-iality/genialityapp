@@ -334,6 +334,7 @@ class ListEventUser extends Component {
         (snapshot) => {
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
+
           let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
           let totalCheckedInWithWeight =
@@ -732,7 +733,7 @@ class ListEventUser extends Component {
       nameActivity,
       columns,
     } = this.state;
-    const { event, type } = this.props;
+    const { event, type, loading, componentKey } = this.props;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -882,7 +883,7 @@ class ListEventUser extends Component {
           <Loading />
         )} */}
 
-        {!this.props.loading && editUser && (
+        {!loading && editUser && (
           <UserModal
             handleModal={this.modalUser}
             modal={editUser}
@@ -896,6 +897,7 @@ class ListEventUser extends Component {
             spacesEvent={spacesEvent}
             edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}
+            componentKey={componentKey}
           />
         )}
 

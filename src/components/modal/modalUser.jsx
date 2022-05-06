@@ -16,6 +16,7 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
+import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
 
 const { confirm } = Modal;
 
@@ -130,6 +131,7 @@ class UserModal extends Component {
           msj: ' Por favor espere mientras se borra la información...',
           action: 'show',
         });
+        self.setState({ loadingregister: true });
         const onHandlerRemove = async () => {
           try {
             let token = await GetTokenUserFirebase();
@@ -174,12 +176,13 @@ class UserModal extends Component {
                 //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
                 //substractSyncQuantity();
               });
-
             setTimeout(() => {
               messages.class = messages.content = '';
+              self.setState({ loadingregister: false });
               self.closeModal();
             }, 500);
           } catch (e) {
+            self.setState({ loadingregister: false });
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
@@ -356,7 +359,7 @@ class UserModal extends Component {
 
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
-    const { modal } = this.props;
+    const { modal, componentKey } = this.props;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
@@ -369,17 +372,28 @@ class UserModal extends Component {
             paddingBottom: '0px',
             marginTop: '30px',
           }}>
-          <FormComponent
-            conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
-            initialOtherValue={this.props.value || {}}
-            eventUserOther={user || {}}
-            fields={this.props.extraFields}
-            organization={true}
-            options={this.options}
-            callback={this.saveUser}
-            loadingregister={this.state.loadingregister}
-            usedInCms={true}
-          />
+          {componentKey === 'event-checkin' ? (
+            <FormEnrollUserToEvent
+              fields={this.props.extraFields}
+              editUser={this.props.value}
+              options={this.options}
+              saveUser={this.saveUser}
+              loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
+              visibleInCms
+            />
+          ) : (
+            <FormComponent
+              conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
+              initialOtherValue={this.props.value || {}}
+              eventUserOther={user || {}}
+              fields={this.props.extraFields}
+              organization={true}
+              options={this.options}
+              callback={this.saveUser}
+              loadingregister={this.state.loadingregister}
+              usedInCms={true}
+            />
+          )}
         </div>
       </Modal>
     );

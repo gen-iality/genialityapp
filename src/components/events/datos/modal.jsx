@@ -136,7 +136,7 @@ class DatosModal extends Component {
     const info = Object.assign({}, this.state.info);
 
     if (
-      info?.options?.length === 0 &&
+      (!info?.options || info?.options?.length === 0) &&
       (info?.type === 'list' || info?.type === 'multiplelist' || info?.type === 'multiplelisttable')
     ) {
       DispatchMessageService({
