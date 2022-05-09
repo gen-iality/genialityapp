@@ -100,6 +100,7 @@ class ListEventUser extends Component {
       fieldsForm: [],
       typeScanner: 'options',
       nameActivity: props.location.state?.item?.name || '',
+      qrModalOpen: false,
     };
   }
 
@@ -474,13 +475,16 @@ class ListEventUser extends Component {
   };
 
   checkModal = () => {
+    // this.setState((prevState) => {
+    //   return { qrModal: !prevState.qrModal };
+    // });
     this.setState((prevState) => {
-      return { qrModal: !prevState.qrModal };
+      return { qrModalOpen: !prevState.qrModalOpen };
     });
   };
   closeQRModal = () => {
     this.setState((prevState) => {
-      return { qrModal: !prevState.qrModal };
+      return { qrModalOpen: !prevState.qrModalOpen };
     });
   };
 
@@ -732,7 +736,9 @@ class ListEventUser extends Component {
       disabledPersistence,
       nameActivity,
       columns,
+      fieldsForm,
     } = this.state;
+
     const { event, type, loading, componentKey } = this.props;
 
     const inscritos =
@@ -771,15 +777,16 @@ class ListEventUser extends Component {
           </Row>
         )}
 
-        {this.state.qrModal && (
+        {this.state.qrModalOpen && (
           <QrModal
-            fields={extraFields}
+            fields={fieldsForm}
             usersReq={usersReq}
             typeScanner={this.state.typeScanner}
             clearOption={this.clearOption}
             checkIn={this.checkIn}
             eventID={this.props.event._id}
             closeModal={this.closeQRModal}
+            openModal={this.state.qrModalOpen}
             openEditModalUser={this.openEditModalUser}
           />
         )}
@@ -851,7 +858,7 @@ class ListEventUser extends Component {
                   style={{ width: 220 }}>
                   <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
-                  {this.state.fieldsForm.map((item) => {
+                  {fieldsForm.map((item) => {
                     if (item.type === 'checkInField')
                       return <Option value='scanner-document'>Escanear {item.label}</Option>;
                   })}
@@ -893,7 +900,7 @@ class ListEventUser extends Component {
             value={this.state.selectedUser}
             checkIn={this.checkIn}
             badgeEvent={this.state.badgeEvent}
-            extraFields={this.state.fieldsForm}
+            extraFields={fieldsForm}
             spacesEvent={spacesEvent}
             edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}

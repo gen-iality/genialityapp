@@ -28,6 +28,9 @@ export const alertStyles: {} = {
   fontSize: '14px',
   borderRadius: '5px',
 };
+
+type editUser = { _id: string } | null;
+
 export const thereAreExtraFields = (fields: []) => {
   if (fields) {
     const countFields = fields.filter(
@@ -39,12 +42,12 @@ export const thereAreExtraFields = (fields: []) => {
   return 0;
 };
 
-export const validateButtonText = (editUser: boolean, visibleInCms: boolean) => {
+export const validateButtonText = (editUser: editUser, visibleInCms: boolean) => {
   switch (visibleInCms) {
     case true:
-      return editUser ? 'Actualizar usuario' : 'Agregar usuario';
+      return editUser?._id ? 'Actualizar usuario' : 'Agregar usuario';
     case false:
-      return editUser ? 'Actualizar información' : 'Incribirme al evento';
+      return editUser?._id ? 'Actualizar información' : 'Incribirme al evento';
 
     default:
       return 'Aceptar';

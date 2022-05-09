@@ -4,12 +4,13 @@ import { FaCamera } from 'react-icons/fa';
 import { IoIosQrScanner, IoIosCamera } from 'react-icons/io';
 import QrReader from 'react-qr-reader';
 import { firestore } from '../../helpers/firebase';
-import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, InputNumber } from 'antd';
+import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, InputNumber, Spin } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@/context/MessageService';
 import axios from 'axios';
 import { useRequest } from '@/services/useRequest';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
+import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -26,6 +27,8 @@ class QrModal extends Component {
       qrData: {},
       nextreadcc: true,
       saveqrsscanner: [],
+      formVisible: false,
+      checkInLoader: false,
     };
   }
 
@@ -42,14 +45,12 @@ class QrModal extends Component {
 
     const qrData = {};
     if (pos >= 0) {
-      qrData.msg = 'User found';
-      qrData.user = this.props.usersReq[pos];
-      qrData.another = !!qrData.user.checked_in;
-      this.setState({ qrData });
+      this.setState({ documentOrId: data });
+      this.searchCC('qr');
     } else {
       qrData.msg = 'User not found';
       qrData.another = true;
-      qrData.user = null;
+      qrData.formVisible = true;
       this.setState({ qrData });
     }
   };
@@ -61,13 +62,20 @@ class QrModal extends Component {
   readQr = () => {
     const { qrData } = this.state;
     if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
-    this.setState({ qrData: { ...this.state.qrData, msg: '', user: null } });
+    this.setState({
+      qrData: {
+        ...this.state.qrData,
+        msg: '',
+        user: null,
+        formVisible: false,
+      },
+    });
     this.setState({ documentOrId: '' });
   };
 
   closeQr = () => {
     this.setState(
-      { qrData: { ...this.state.qrData, msg: '', user: null }, qrModal: false, documentOrId: '', tabActive: 'camera' },
+      { qrData: { ...this.state.qrData, msg: '', user: null }, documentOrId: '', tabActive: 'camera' },
       () => {
         this.props.closeModal();
       }
@@ -88,15 +96,28 @@ class QrModal extends Component {
         if (querySnapshot.empty) {
           qrData.msg = 'User not found';
           qrData.another = true;
-          qrData.user = null;
+          qrData.user = {
+            properties: {
+              names: 'Jhon Doe',
+              email: `${documento}@evius.co`,
+              checkInField: documento,
+              bloodtype: 'S',
+              birthdate: '2022-05-02',
+              gender: 'M',
+              rol_id: '60e8a7e74f9fb74ccd00dc22',
+              checked_in: true,
+            },
+          };
+          qrData.formVisible = true;
           this.setState({ qrData });
         } else {
           querySnapshot.forEach((doc) => {
+            console.log('🚀CC-----', doc.data());
             qrData.msg = 'User found';
             qrData.user = doc.data();
-            console.log('docdata', doc.data());
+            qrData.formVisible = true;
             qrData.another = !!qrData.user.checked_in;
-            this.setState({ qrData });
+            this.setState({ qrData, checkInLoader: false });
           });
         }
       })
@@ -120,14 +141,16 @@ class QrModal extends Component {
             qrData.msg = 'User not found';
             qrData.another = true;
             qrData.user = null;
-            this.setState({ qrData });
+            qrData.formVisible = true;
+            this.setState({ qrData, checkInLoader: false });
           } else {
             querySnapshot.forEach((doc) => {
-              const user = { ...doc.data(), checked_in: doc.data().properties?.checked_in };
+              console.log('🚀QR-----', doc.data());
               qrData.msg = 'User found';
-              qrData.user = user;
-              qrData.another = !!qrData.user.checked_in;
-              this.setState({ qrData });
+              qrData.user = doc.data();
+              qrData.another = !!qrData?.user?.checked_in;
+              qrData.formVisible = true;
+              this.setState({ qrData, checkInLoader: false });
             });
           }
         })
@@ -157,6 +180,11 @@ class QrModal extends Component {
     }
   };
 
+  // con esto puedo validar la data del lector con ant
+  searchDocument = (value) => {
+    console.log('🚀 debug ~ QrModal ~ value', value);
+  };
+
   editQRUser = (user) => {
     this.closeQr();
     this.props.openEditModalUser(user);
@@ -164,7 +192,7 @@ class QrModal extends Component {
 
   // Limpia el input al escanear un codigo que no esta registrado
   cleanInputSearch = () => {
-    this.setState({ documentOrId: '' });
+    this.setState({ documentOrId: '', qrData: {} });
   };
 
   /* function that saves the user's checkIn. If the user's checkIn was successful,
@@ -173,9 +201,18 @@ will show the checkIn information in the popUp. If not, it will show an error me
     const theUserWasChecked = await this.props.checkIn(user._id, user);
 
     if (theUserWasChecked) {
-      setTimeout(() => {
-        this.handleScan(user._id);
-      }, 500);
+      this.setState(
+        {
+          qrData: { ...this.state.qrData, msg: '', formVisible: true, user: {} },
+          documentOrId: '',
+          checkInLoader: true,
+        },
+        () => {
+          setTimeout(() => {
+            this.handleScan(user._id);
+          }, 1000);
+        }
+      );
       return;
     }
 
@@ -187,62 +224,33 @@ will show the checkIn information in the popUp. If not, it will show an error me
   };
 
   render() {
-    const { qrData, facingMode, tabActive } = this.state;
-    const { fields, typeScanner } = this.props;
+    const { qrData, facingMode, tabActive, checkInLoader } = this.state;
+    // console.log('🚀 -+-+-+-+-+-', qrData);
+
+    const { fields, typeScanner, openModal } = this.props;
+
     const { label } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
 
     return (
-      <div>
-        <Modal
-          visible={qrData}
-          onCancel={this.closeQr}
-          footer={[
-            <>
-              {qrData.user && !qrData.another && (
-                <Button
-                  type='primary'
-                  onClick={() => {
-                    this.userCheckIn(qrData.user);
-                  }}>
-                  Check User
-                </Button>
-              )}
-            </>,
-            <>
-              {qrData.user && (
-                <Button
-                  onClick={() => {
-                    this.editQRUser(qrData.user);
-                  }}>
-                  Edit User
-                </Button>
-              )}
-            </>,
-            <>
-              {qrData.user && (
-                <Button className='button' onClick={this.readQr}>
-                  Read Other
-                </Button>
-              )}
-            </>,
-          ]}>
+      <div style={{ textAlign: 'center' }}>
+        <Modal visible={openModal} onCancel={this.closeQr} footer={null}>
           <Title level={4} type='secondary'>
             {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
           </Title>
           {qrData.user ? (
             <div>
-              {qrData.user.checked_in && qrData?.user?.checked_at && (
+              {qrData.user?.checked_in && qrData?.user?.checkedin_at && (
                 <div>
                   <Title level={3} type='secondary'>
                     Usuario Chequeado
                   </Title>
                   <Title level={5}>
-                    El checkIn se llevó a cabo el día: <FormattedDate value={qrData?.user?.checked_at?.toDate()} /> a
-                    las <FormattedTime value={qrData?.user?.checked_at?.toDate()} /> horas
+                    El checkIn se llevó a cabo el día: <FormattedDate value={qrData?.user?.checkedin_at?.toDate()} /> a
+                    las <FormattedTime value={qrData?.user?.checkedin_at?.toDate()} /> horas
                   </Title>
                 </div>
               )}
-              {fields.map((obj, key) => {
+              {/* {fields.map((obj, key) => {
                 let val = qrData.user.properties[obj.name];
                 if (obj.type === 'boolean') val = qrData.user.properties[obj.name] ? 'SI' : 'NO';
                 return (
@@ -250,7 +258,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                     {obj.label}: {val}
                   </p>
                 );
-              })}
+              })} */}
             </div>
           ) : typeScanner === 'scanner-qr' ? (
             <React.Fragment>
@@ -314,22 +322,21 @@ will show the checkIn information in the popUp. If not, it will show an error me
               </Tabs>
             </React.Fragment>
           ) : (
-            <Form layout='vertical'>
-              <Form.Item label={label}>
+            <Form layout='vertical' onFinish={this.buscar}>
+              <Form.Item label={label} name='document'>
                 <Input
                   // allowClear
                   value={this.state.documentOrId}
                   onChange={(value) => this.setDocumentOrId(value, false)}
                   // capturar toda la data del lector de documentos
                   // onKeyDown={(value) => this.setDocumentOrId(value, false)}
-                  onK
                   name={'searchCC'}
                   autoFocus
                 />
               </Form.Item>
               <Row justify='center' wrap gutter={8}>
                 <Col>
-                  <Button type='primary' onClick={this.searchCC}>
+                  <Button type='primary' htmlType='submit' onClick={this.searchCC}>
                     Buscar
                   </Button>
                 </Col>
@@ -360,6 +367,38 @@ will show the checkIn information in the popUp. If not, it will show an error me
               }}
             />
           )}
+          <Spin tip='checkIn en progreso' spinning={checkInLoader}>
+            {qrData?.formVisible && (
+              <FormEnrollUserToEvent
+                fields={fields}
+                editUser={qrData?.user && qrData?.user}
+                // options={}
+                // saveUser={}
+                // loaderWhenSavingUpdatingOrDelete={}
+                visibleInCms
+              />
+            )}
+            <Row justify='center' wrap gutter={8}>
+              <Col>
+                {qrData.user && !qrData.another && (
+                  <Button
+                    type='primary'
+                    onClick={() => {
+                      this.userCheckIn(qrData.user);
+                    }}>
+                    Check User
+                  </Button>
+                )}
+              </Col>
+              <Col>
+                {qrData.user && (
+                  <Button className='button' onClick={this.readQr}>
+                    Read Other
+                  </Button>
+                )}
+              </Col>
+            </Row>
+          </Spin>
         </Modal>
       </div>
     );

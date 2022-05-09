@@ -261,8 +261,10 @@ class UserModal extends Component {
     if (values) {
       if (values?.checked_in) {
         values.checkedin_at = new Date();
+        values.checked_in = true;
       } else {
         values.checkedin_at = '';
+        values.checked_in = false;
       }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };

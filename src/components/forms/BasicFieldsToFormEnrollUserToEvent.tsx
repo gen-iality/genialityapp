@@ -4,13 +4,12 @@ import { useIntl } from 'react-intl';
 const { Title, Text } = Typography;
 
 const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
-  // console.log('🚀 BasicFieldsToFormEnrollUserToEvent ', basicFields);
   const intl = useIntl();
   const { names, email } = editUser?.properties || {};
 
   return (
     <>
-      {editUser && (
+      {names && email && (
         <Card style={{ borderRadius: '8px', marginBottom: '20px' }} bodyStyle={{ padding: '20px' }} hoverable>
           <Title level={5}>
             {intl.formatMessage({
@@ -24,7 +23,7 @@ const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
           />
         </Card>
       )}
-      <div style={{ display: editUser ? 'none' : 'block' }}>
+      <div style={{ display: names && email ? 'none' : 'block' }}>
         {basicFields?.length > 0 &&
           basicFields.map((field: any) => {
             return field;

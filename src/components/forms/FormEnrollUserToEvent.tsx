@@ -48,8 +48,9 @@ const FormEnrollUserToEvent = ({
   };
 
   useEffect(() => {
+    form.resetFields();
     componentLoad();
-  }, []);
+  }, [editUser]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);

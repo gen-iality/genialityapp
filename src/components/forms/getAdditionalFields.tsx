@@ -40,7 +40,8 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       let description = field.description;
       let labelPosition = field.labelPosition;
       let target = name;
-      let value = userProperties ? userProperties[target] : '';
+
+      let value = userProperties.email || userProperties.names ? userProperties[target] : null;
 
       //esogemos el tipo de validación para email
       rule = type === 'email' ? { ...rule, type: 'email' } : rule;
@@ -123,10 +124,9 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       }
 
       if (type === 'multiplelisttable') {
-        let defaultValue;
-        if (value) {
-          defaultValue = JSON.parse(value);
-        }
+        let defaultValue = value;
+        if (typeof value === 'string') defaultValue = JSON.parse(value);
+
         input = field.options
           ? field.options.map((option: any, key: any) => {
               return (
@@ -139,11 +139,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
 
         input = (
           <Form.Item initialValue={defaultValue} name={name} noStyle>
-            <Select
-              mode='multiple'
-              placeholder='Selecciona una o mas opciones'
-              defaultValue={defaultValue}
-              style={{ width: '100%' }}>
+            <Select mode='multiple' placeholder='Selecciona una o mas opciones' style={{ width: '100%' }}>
               {input}
             </Select>
           </Form.Item>
@@ -166,6 +162,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
                 : Promise.reject(textoError),
           };
         }
+
         return (
           <div key={'g' + key}>
             {
@@ -177,7 +174,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
                   key={'l' + key}
                   htmlFor={key}
                   initialValue={value}>
-                  <Checkbox key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
+                  <Checkbox key={key} name={name}>
                     {mandatory ? (
                       <span>
                         <span style={{ color: 'red' }}>* </span>
@@ -217,7 +214,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       if (type === 'longtext') {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
-            <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />
+            <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} />
           </Form.Item>
         );
       }
@@ -227,7 +224,6 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
           <Form.Item initialValue={value} name={name} noStyle>
             <Checkbox.Group
               options={field.options}
-              defaultValue={value}
               onChange={(checkedValues) => {
                 value = JSON.stringify(checkedValues);
               }}

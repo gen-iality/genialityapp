@@ -1,6 +1,4 @@
 const AdditionalFieldsToFormEnrollUserToEvent = ({ aditionalFields }: any) => {
-  // console.log('🚀 AdditionalFieldsToFormEnrollUserToEvent ', aditionalFields);
-
   return (
     <>
       {aditionalFields?.length > 0 &&
