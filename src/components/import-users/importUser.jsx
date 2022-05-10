@@ -43,7 +43,7 @@ class ImportUsers extends Component {
       for (let i = 0; i < users[0].list.length; i++) {
         genericPassword.push(password);
       }
-      users.push({ key: 'password', list: genericPassword, used: true });
+      users.push({ key: 'password', list: genericPassword, used: false });
     }
 
     try {

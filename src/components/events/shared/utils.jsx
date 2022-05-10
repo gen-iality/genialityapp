@@ -133,7 +133,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Confirmación registro',
+        name: 'Confirmación de inscripción',
         path: '/confirmacion-registro',
         key: 'confirmacion-registro',
         onClick: handleClick,
