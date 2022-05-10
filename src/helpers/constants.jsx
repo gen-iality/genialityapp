@@ -491,7 +491,7 @@ export const configEventsTemplate = {
   banner_footer:
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Ffooter.png?alt=media&token=363b3aab-b149-43f1-9173-622d0b8128f9',
   event_image:
-    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Flogo.jpg?alt=media&token=861af09c-f6d0-4934-b56e-ddb83c3cb7a1',
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2FLogoEvius.jpeg?alt=media&token=8633227f-74d2-4798-ae48-3f1b74d38d9c',
   banner_image:
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Fbanner.jpg?alt=media&token=8642d0ed-61e2-4fed-97fa-1cdd5687aeaf',
 };
