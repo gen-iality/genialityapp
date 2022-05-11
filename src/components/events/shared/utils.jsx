@@ -189,7 +189,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Enviar información a asistentes',
+        name: 'Enviar Correos a Asistentes',
         path: '/invitados',
         key: 'enviar-informacion-asistentes',
         onClick: handleClick,
