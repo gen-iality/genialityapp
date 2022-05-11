@@ -54,7 +54,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                     Aceptar
                   </Button>,
                   <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
-                    No Aceptar
+                    Rechazar
                   </Button>,
                 ]}>
                 <List.Item.Meta
