@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import QrReader from 'react-qr-reader';
-import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, Spin } from 'antd';
+import { Modal, Row, Tabs, Select, Input, Form, Typography, Alert, Spin } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
@@ -14,7 +14,7 @@ const { Title } = Typography;
 
 const html = document.querySelector('html');
 
-const QrModal = ({ fields, usersReq, typeScanner, clearOption, checkIn, eventID, closeModal, openModal }) => {
+const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModal, openModal }) => {
   const [form] = Form.useForm();
   const [facingMode, setFacingMode] = useState('user');
   const [qrData, setQrData] = useState({});
@@ -30,22 +30,7 @@ const QrModal = ({ fields, usersReq, typeScanner, clearOption, checkIn, eventID,
     if (!data) {
       return;
     }
-
-    let pos = usersReq
-      .map((e) => {
-        return e._id;
-      })
-      .indexOf(data);
-
-    if (pos >= 0) {
-      searchUserByParameter({ qr: data });
-    } else {
-      let newData = {};
-      newData.msg = 'User not found';
-      newData.another = true;
-      newData.formVisible = true;
-      setQrData(newData);
-    }
+    searchUserByParameter({ qr: data });
   };
 
   const handleError = (err) => {

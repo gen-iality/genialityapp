@@ -788,7 +788,6 @@ class ListEventUser extends Component {
         {this.state.qrModalOpen && (
           <QrModal
             fields={fieldsForm}
-            usersReq={usersReq}
             typeScanner={this.state.typeScanner}
             clearOption={this.clearOption}
             checkIn={this.checkIn}
