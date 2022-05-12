@@ -11,9 +11,13 @@ export type fieldsData = {
   type: string;
 };
 
+export type searchValue = {
+  document: string;
+  qr: string;
+};
 export type searchDocumentOrIdPropsTypes = {
   key: string;
-  documentOrId: string;
+  searchValue: searchValue;
   fields: any;
   eventID: string;
   setQrData: (data: any) => void;
@@ -27,8 +31,9 @@ export type newData = {
   formVisible: boolean;
 };
 export type userCheckInPropsTypes = {
-  user: {} | any;
-  qrData: {};
+  qrData: {
+    user: {} | any;
+  };
   setQrData: (data: any) => void;
   handleScan: (data: any) => void;
   setCheckInLoader: (data: any) => void;

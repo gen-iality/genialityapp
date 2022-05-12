@@ -3,28 +3,42 @@ import { firestore } from '@/helpers/firebase';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import { newData, searchDocumentOrIdPropsTypes, userCheckInPropsTypes } from './types/types';
 
+export const alertUserNotFoundStyles = {
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+  backgroundColor: '#FFFFFF',
+  color: '#000000',
+  borderLeft: `5px solid #FF4E50`,
+  fontSize: '14px',
+  textAlign: 'start',
+  borderRadius: '5px',
+  marginTop: '10px',
+  marginBottom: '10px',
+};
+
 /**allows you to search by ID or document number for an eventuser in firebase */
 export const getEventUserByParameter = ({
   key,
-  documentOrId,
+  searchValue,
   fields,
   eventID,
   setQrData,
   setCheckInLoader,
 }: searchDocumentOrIdPropsTypes) => {
   let parameterName: string = '';
+  let valueName: string = '';
   const { name } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
 
   const usersRef = firestore.collection(`${eventID}_event_attendees`);
-  let value = String(documentOrId).toLowerCase();
 
   switch (key) {
     case 'document':
       parameterName = `properties.${name}`;
+      valueName = String(searchValue.document).toLowerCase();
       break;
 
     case 'qr':
       parameterName = '_id';
+      valueName = String(searchValue.qr).toLowerCase();
       break;
 
     default:
@@ -40,7 +54,7 @@ export const getEventUserByParameter = ({
   };
 
   usersRef
-    .where(parameterName, '==', value)
+    .where(parameterName, '==', valueName)
     .get()
     .then((querySnapshot) => {
       if (querySnapshot.empty) {
@@ -51,8 +65,8 @@ export const getEventUserByParameter = ({
           newData.user = {
             properties: {
               names: 'Jhon Doe',
-              email: `${value}@evius.co`,
-              checkInField: value,
+              email: `${valueName}@evius.co`,
+              checkInField: valueName,
               bloodtype: 'S',
               birthdate: '2022-05-02',
               gender: 'M',
@@ -88,14 +102,14 @@ export const getEventUserByParameter = ({
 /* function that saves the user's checkIn. If the user's checkIn was successful,
 will show the checkIn information in the popUp. If not, it will show an error message.*/
 export const userCheckIn = async ({
-  user,
   qrData,
   setQrData,
   handleScan,
   setCheckInLoader,
   checkIn,
 }: userCheckInPropsTypes) => {
-  const theUserWasChecked: any = await checkIn(user._id, user);
+  const theUserWasChecked: any = await checkIn(qrData.user._id, qrData.user);
+  console.log('🚀 debug ~ qrData', qrData);
 
   if (theUserWasChecked) {
     setQrData({
@@ -104,7 +118,7 @@ export const userCheckIn = async ({
       formVisible: true,
       user: {},
     });
-    handleScan(user._id);
+    handleScan(qrData.user._id);
 
     setCheckInLoader(true);
     return;
