@@ -332,7 +332,7 @@ class Preview extends Component {
         </Button>
 
         <Modal
-          title='Por favor ingrese la contraseña genérica'
+          title='Por favor ingrese la contraseña para los asistentes'
           icon={<ExclamationCircleOutlined />}
           footer={null}
           destroyOnClose={true}
