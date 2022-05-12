@@ -787,7 +787,6 @@ class ListEventUser extends Component {
             eventID={this.props.event._id}
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
-            openEditModalUser={this.openEditModalUser}
           />
         )}
 

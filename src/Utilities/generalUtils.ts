@@ -1,3 +1,5 @@
+import { fieldsData } from './types/types';
+
 export const getFieldDataFromAnArrayOfFields = (fields: [], nameOfTheLabelToGet: string) => {
   let defaultData = {
     label: '',
@@ -5,7 +7,9 @@ export const getFieldDataFromAnArrayOfFields = (fields: [], nameOfTheLabelToGet:
     type: '',
   };
 
-  let fieldsData: {} | undefined = fields?.find((field: { type: string }) => field.type === nameOfTheLabelToGet);
+  let fieldsData: fieldsData | undefined = fields?.find(
+    (field: { type: string }) => field.type === nameOfTheLabelToGet
+  );
 
   fieldsData = fieldsData ? fieldsData : defaultData;
 

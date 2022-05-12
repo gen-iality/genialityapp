@@ -1,102 +1,85 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import { FaCamera } from 'react-icons/fa';
-import { IoIosQrScanner, IoIosCamera } from 'react-icons/io';
 import QrReader from 'react-qr-reader';
 import { firestore } from '../../helpers/firebase';
-import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, InputNumber, Spin } from 'antd';
+import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, Spin } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@/context/MessageService';
-import axios from 'axios';
-import { useRequest } from '@/services/useRequest';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
+import { getEventUserByParameter } from '@/Utilities/checkInUtils';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { Title } = Typography;
-const ApiUrl = process.env.VITE_API_URL;
 
 const html = document.querySelector('html');
-class QrModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tabActive: 'camera',
-      facingMode: 'user',
-      qrData: {},
-      nextreadcc: true,
-      saveqrsscanner: [],
-      formVisible: false,
-      checkInLoader: false,
-    };
-  }
 
-  handleScan = (data) => {
+const QrModal = ({ fields, usersReq, typeScanner, clearOption, checkIn, eventID, closeModal, openModal }) => {
+  const [facingMode, setFacingMode] = useState('user');
+  const [qrData, setQrData] = useState({});
+  const [checkInLoader, setCheckInLoader] = useState(false);
+  const [label, setLabel] = useState('');
+
+  useEffect(() => {
+    const { label } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
+    setLabel(label);
+  }, []);
+
+  const handleScan = (data) => {
     if (!data) {
       return;
     }
 
-    let pos = this.props.usersReq
+    let pos = usersReq
       .map((e) => {
         return e._id;
       })
       .indexOf(data);
 
-    const qrData = {};
     if (pos >= 0) {
-      this.setState({ documentOrId: data });
-      this.searchCC('qr');
+      searchDocumentOrId('qr', data);
     } else {
-      qrData.msg = 'User not found';
-      qrData.another = true;
-      qrData.formVisible = true;
-      this.setState({ qrData });
+      let newData = {};
+      newData.msg = 'User not found';
+      newData.another = true;
+      newData.formVisible = true;
+      setQrData(newData);
     }
   };
 
-  handleError = (err) => {
+  const handleError = (err) => {
     console.error(err);
   };
 
-  readQr = () => {
-    const { qrData } = this.state;
-    if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
-    this.setState({
-      qrData: {
-        ...this.state.qrData,
-        msg: '',
-        user: null,
-        formVisible: false,
-      },
+  const readQr = () => {
+    if (qrData.user && !qrData.user.checked_in) checkIn(qrData.user);
+    setQrData({
+      ...qrData,
+      msg: '',
+      user: null,
+      formVisible: false,
     });
-    this.setState({ documentOrId: '' });
   };
 
-  closeQr = () => {
-    this.setState(
-      { qrData: { ...this.state.qrData, msg: '', user: null }, documentOrId: '', tabActive: 'camera' },
-      () => {
-        this.props.closeModal();
-      }
-    );
+  const closeQr = () => {
+    setQrData({ ...qrData, msg: '', user: null });
     html.classList.remove('is-clipped');
-    this.props.clearOption(); // Clear dropdown to options scanner
+    clearOption(); // Clear dropdown to options scanner
+    closeModal();
   };
 
-  handleSearchByCc = (documento, usersRef) => {
-    const { fields } = this.props;
+  const handleSearchByCc = (documento, usersRef) => {
     const { name } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
-
+    let newData = {};
     usersRef
       .where(`properties.${name}`, '==', `${documento}`)
       .get()
       .then((querySnapshot) => {
-        const qrData = {};
         if (querySnapshot.empty) {
-          qrData.msg = 'User not found';
-          qrData.another = true;
-          qrData.user = {
+          newData.msg = 'User not found';
+          newData.another = true;
+          newData.user = {
             properties: {
               names: 'Jhon Doe',
               email: `${documento}@evius.co`,
@@ -108,111 +91,69 @@ class QrModal extends Component {
               checked_in: true,
             },
           };
-          qrData.formVisible = true;
-          this.setState({ qrData });
+          newData.formVisible = true;
+          console.log('🚀 debug ~ .then ~ qrData', newData);
+          setQrData(newData);
         } else {
           querySnapshot.forEach((doc) => {
             console.log('🚀CC-----', doc.data());
-            qrData.msg = 'User found';
-            qrData.user = doc.data();
-            qrData.formVisible = true;
-            qrData.another = !!qrData.user.checked_in;
-            this.setState({ qrData, checkInLoader: false });
+            newData.msg = 'User found';
+            newData.user = doc.data();
+            newData.formVisible = true;
+            newData.another = !!qrData?.user?.checked_in;
+            console.log('🚀 debug ~ querySnapshot.forEach ~ qrData', newData);
+            setQrData(newData);
+            setCheckInLoader(false);
           });
         }
       })
       .catch((e) => {
-        this.setState({ found: 0 });
+        console.error('Error getting documents', e);
       });
   };
 
-  searchCC = (Scanner) => {
-    const usersRef = firestore.collection(`${this.props.eventID}_event_attendees`);
-    let value = String(this.state.documentOrId).toLowerCase();
-
-    // Conditional to show modal (QR or Document scanner)
-    if (Scanner === 'qr') {
-      usersRef
-        .where('_id', '==', `${value}`)
-        .get()
-        .then((querySnapshot) => {
-          const qrData = {};
-          if (querySnapshot.empty) {
-            qrData.msg = 'User not found';
-            qrData.another = true;
-            qrData.user = null;
-            qrData.formVisible = true;
-            this.setState({ qrData, checkInLoader: false });
-          } else {
-            querySnapshot.forEach((doc) => {
-              console.log('🚀QR-----', doc.data());
-              qrData.msg = 'User found';
-              qrData.user = doc.data();
-              qrData.another = !!qrData?.user?.checked_in;
-              qrData.formVisible = true;
-              this.setState({ qrData, checkInLoader: false });
-            });
-          }
-        })
-        .catch(() => {
-          this.setState({ found: 0 });
-        });
-    } else {
-      this.handleSearchByCc(value, usersRef);
-    }
-  };
-
-  setDocumentOrId = (e, isId) => {
-    // capturar toda la data el lector de documento
-    // if (e.keyCode === 9) {
-    //   e.preventDefault();
-    //   return false;
-    // }
-    // return;
-    //this.setState({ documentOrId: '' });
-    // e.preventDefault();d
-    const { value } = e.target;
-    if (isId) {
-      this.setState({ documentOrId: value });
-    } else {
-      let cedulaOnlynumbers = value.match(/(\d+)/);
-      this.setState({ documentOrId: Number(cedulaOnlynumbers[0]) });
-    }
+  const searchDocumentOrId = (key, documentOrId) => {
+    const parameters = {
+      key,
+      documentOrId,
+      fields,
+      eventID,
+      setQrData,
+      setCheckInLoader,
+    };
+    getEventUserByParameter(parameters);
   };
 
   // con esto puedo validar la data del lector con ant
-  searchDocument = (value) => {
-    console.log('🚀 debug ~ QrModal ~ value', value);
-  };
-
-  editQRUser = (user) => {
-    this.closeQr();
-    this.props.openEditModalUser(user);
+  const searchDocument = (value) => {
+    //id para pruebas 6273e9633e7bb2310a5125d2
+    const { document, qr } = value;
+    Object.keys(value).map((key) => {
+      if (key === 'document') searchDocumentOrId(key, document);
+      if (key === 'qr') searchDocumentOrId(key, qr);
+    });
   };
 
   // Limpia el input al escanear un codigo que no esta registrado
-  cleanInputSearch = () => {
-    this.setState({ documentOrId: '', qrData: {} });
+  const cleanInputSearch = () => {
+    setQrData({});
   };
 
   /* function that saves the user's checkIn. If the user's checkIn was successful,
 will show the checkIn information in the popUp. If not, it will show an error message.*/
-  userCheckIn = async (user) => {
-    const theUserWasChecked = await this.props.checkIn(user._id, user);
+  const userCheckIn = async (user) => {
+    const theUserWasChecked = await checkIn(user._id, user);
 
     if (theUserWasChecked) {
-      this.setState(
-        {
-          qrData: { ...this.state.qrData, msg: '', formVisible: true, user: {} },
-          documentOrId: '',
-          checkInLoader: true,
-        },
-        () => {
-          setTimeout(() => {
-            this.handleScan(user._id);
-          }, 1000);
-        }
-      );
+      setQrData({
+        ...qrData,
+        msg: '',
+        formVisible: true,
+        user: {},
+      });
+      handleScan(user._id);
+
+      setCheckInLoader(true);
       return;
     }
 
@@ -223,20 +164,13 @@ will show the checkIn information in the popUp. If not, it will show an error me
     });
   };
 
-  render() {
-    const { qrData, facingMode, tabActive, checkInLoader } = this.state;
-    // console.log('🚀 -+-+-+-+-+-', qrData);
-
-    const { fields, typeScanner, openModal } = this.props;
-
-    const { label } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
-
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <Modal visible={openModal} onCancel={this.closeQr} footer={null}>
-          <Title level={4} type='secondary'>
-            {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
-          </Title>
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <Modal visible={openModal} onCancel={closeQr} footer={null}>
+        <Title level={4} type='secondary'>
+          {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
+        </Title>
+        <Form layout='vertical' onFinish={searchDocument}>
           {qrData.user ? (
             <div>
               {qrData.user?.checked_in && qrData?.user?.checkedin_at && (
@@ -250,15 +184,6 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   </Title>
                 </div>
               )}
-              {/* {fields.map((obj, key) => {
-                let val = qrData.user.properties[obj.name];
-                if (obj.type === 'boolean') val = qrData.user.properties[obj.name] ? 'SI' : 'NO';
-                return (
-                  <p key={key}>
-                    {obj.label}: {val}
-                  </p>
-                );
-              })} */}
             </div>
           ) : typeScanner === 'scanner-qr' ? (
             <React.Fragment>
@@ -272,7 +197,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   }
                   key='1'>
                   <Form.Item>
-                    <Select value={facingMode} onChange={(e) => this.setState({ facingMode: e })}>
+                    <Select value={facingMode} onChange={(e) => setFacingMode(e)}>
                       <Option value='user'>Selfie</Option>
                       <Option value='environment'>Rear</Option>
                     </Select>
@@ -281,8 +206,8 @@ will show the checkIn information in the popUp. If not, it will show an error me
                     <QrReader
                       delay={500}
                       facingMode={facingMode}
-                      onError={this.handleError}
-                      onScan={this.handleScan}
+                      onError={handleError}
+                      onScan={handleScan}
                       style={{ width: '80%' }}
                     />
                   </Row>
@@ -295,114 +220,108 @@ will show the checkIn information in the popUp. If not, it will show an error me
                     </>
                   }
                   key='2'>
-                  <Form layout='vertical'>
-                    <Form.Item label={'Id Usuario'}>
-                      <Input
-                        // allowClear
-                        value={this.state.documentOrId}
-                        onChange={(value) => this.setDocumentOrId(value, true)}
-                        name={'searchCC'}
-                        autoFocus
-                      />
+                  <>
+                    <Form.Item label={'Id Usuario'} name='qr'>
+                      <Input autoFocus />
                     </Form.Item>
                     <Row justify='center' wrap gutter={8}>
                       <Col>
-                        <Button type='primary' onClick={(e) => this.searchCC('qr', e)}>
+                        <Button type='primary' htmlType='submit'>
                           Buscar
                         </Button>
                       </Col>
                       <Col>
-                        <Button type='ghost' onClick={() => this.cleanInputSearch()}>
+                        <Button type='ghost' onClick={() => cleanInputSearch()}>
                           Limpiar
                         </Button>
                       </Col>
                     </Row>
-                  </Form>
+                  </>
                 </TabPane>
               </Tabs>
             </React.Fragment>
           ) : (
-            <Form layout='vertical' onFinish={this.buscar}>
+            <>
               <Form.Item label={label} name='document'>
                 <Input
                   // allowClear
-                  value={this.state.documentOrId}
-                  onChange={(value) => this.setDocumentOrId(value, false)}
+                  // value={documentOrId}
+                  // onChange={(value) => captureDocumentOrId(value, false)}
                   // capturar toda la data del lector de documentos
-                  // onKeyDown={(value) => this.setDocumentOrId(value, false)}
-                  name={'searchCC'}
+                  // onKeyDown={(value) => captureDocumentOrId(value, false)}
+                  // name={'searchCC'}
                   autoFocus
                 />
               </Form.Item>
               <Row justify='center' wrap gutter={8}>
                 <Col>
-                  <Button type='primary' htmlType='submit' onClick={this.searchCC}>
+                  <Button type='primary' htmlType='submit'>
                     Buscar
                   </Button>
                 </Col>
                 <Col>
-                  <Button type='ghost' onClick={() => this.cleanInputSearch()}>
+                  <Button type='ghost' onClick={() => cleanInputSearch()}>
                     Limpiar
                   </Button>
                 </Col>
               </Row>
-            </Form>
+            </>
           )}
-          {qrData?.msg === 'User not found' && (
-            <Alert
-              type={qrData?.msg === 'User found' ? 'success' : 'error'}
-              message={'Usuario no encontrado'}
-              showIcon
-              closable
-              className='animate__animated animate__pulse'
-              style={{
-                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                backgroundColor: '#FFFFFF',
-                color: '#000000',
-                borderLeft: `5px solid ${qrData?.msg === 'User found' ? '#52C41A' : '#FF4E50'}`,
-                fontSize: '14px',
-                textAlign: 'start',
-                borderRadius: '5px',
-                marginTop: '10px',
-              }}
+        </Form>
+        {qrData?.msg === 'User not found' && (
+          <Alert
+            type={qrData?.msg === 'User found' ? 'success' : 'error'}
+            message={'Usuario no encontrado'}
+            showIcon
+            closable
+            className='animate__animated animate__pulse'
+            style={{
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              backgroundColor: '#FFFFFF',
+              color: '#000000',
+              borderLeft: `5px solid ${qrData?.msg === 'User found' ? '#52C41A' : '#FF4E50'}`,
+              fontSize: '14px',
+              textAlign: 'start',
+              borderRadius: '5px',
+              marginTop: '10px',
+            }}
+          />
+        )}
+        <Spin tip='checkIn en progreso' spinning={checkInLoader}>
+          {qrData?.formVisible && (
+            <FormEnrollUserToEvent
+              fields={fields}
+              editUser={qrData?.user && qrData?.user}
+              // options={}
+              // saveUser={}
+              // loaderWhenSavingUpdatingOrDelete={}
+              visibleInCms
             />
           )}
-          <Spin tip='checkIn en progreso' spinning={checkInLoader}>
-            {qrData?.formVisible && (
-              <FormEnrollUserToEvent
-                fields={fields}
-                editUser={qrData?.user && qrData?.user}
-                // options={}
-                // saveUser={}
-                // loaderWhenSavingUpdatingOrDelete={}
-                visibleInCms
-              />
-            )}
-            <Row justify='center' wrap gutter={8}>
-              <Col>
-                {qrData.user && !qrData.another && (
-                  <Button
-                    type='primary'
-                    onClick={() => {
-                      this.userCheckIn(qrData.user);
-                    }}>
-                    Check User
-                  </Button>
-                )}
-              </Col>
-              <Col>
-                {qrData.user && (
-                  <Button className='button' onClick={this.readQr}>
-                    Read Other
-                  </Button>
-                )}
-              </Col>
-            </Row>
-          </Spin>
-        </Modal>
-      </div>
-    );
-  }
-}
+          <Row justify='center' wrap gutter={8}>
+            <Col>
+              {qrData.user && !qrData.user?.checked_in && !qrData?.user?.checkedin_at && !qrData.another && (
+                <Button
+                  type='primary'
+                  onClick={() => {
+                    userCheckIn(qrData.user);
+                  }}>
+                  Check User
+                </Button>
+              )}
+            </Col>
+            <Col>
+              {qrData.user && (
+                <Button className='button' onClick={readQr}>
+                  Read Other
+                </Button>
+              )}
+            </Col>
+          </Row>
+        </Spin>
+      </Modal>
+    </div>
+  );
+};
 
 export default QrModal;
