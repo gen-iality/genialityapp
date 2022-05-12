@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import QrReader from 'react-qr-reader';
-import { firestore } from '../../helpers/firebase';
 import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, Spin } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '@/context/MessageService';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
-import { getEventUserByParameter } from '@/Utilities/checkInUtils';
+import { getEventUserByParameter, userCheckIn } from '@/Utilities/checkInUtils';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -16,6 +14,7 @@ const { Title } = Typography;
 const html = document.querySelector('html');
 
 const QrModal = ({ fields, usersReq, typeScanner, clearOption, checkIn, eventID, closeModal, openModal }) => {
+  const [form] = Form.useForm();
   const [facingMode, setFacingMode] = useState('user');
   const [qrData, setQrData] = useState({});
   const [checkInLoader, setCheckInLoader] = useState(false);
@@ -60,6 +59,7 @@ const QrModal = ({ fields, usersReq, typeScanner, clearOption, checkIn, eventID,
       user: null,
       formVisible: false,
     });
+    form.resetFields();
   };
 
   const closeQr = () => {
@@ -67,49 +67,6 @@ const QrModal = ({ fields, usersReq, typeScanner, clearOption, checkIn, eventID,
     html.classList.remove('is-clipped');
     clearOption(); // Clear dropdown to options scanner
     closeModal();
-  };
-
-  const handleSearchByCc = (documento, usersRef) => {
-    const { name } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
-    let newData = {};
-    usersRef
-      .where(`properties.${name}`, '==', `${documento}`)
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          newData.msg = 'User not found';
-          newData.another = true;
-          newData.user = {
-            properties: {
-              names: 'Jhon Doe',
-              email: `${documento}@evius.co`,
-              checkInField: documento,
-              bloodtype: 'S',
-              birthdate: '2022-05-02',
-              gender: 'M',
-              rol_id: '60e8a7e74f9fb74ccd00dc22',
-              checked_in: true,
-            },
-          };
-          newData.formVisible = true;
-          console.log('🚀 debug ~ .then ~ qrData', newData);
-          setQrData(newData);
-        } else {
-          querySnapshot.forEach((doc) => {
-            console.log('🚀CC-----', doc.data());
-            newData.msg = 'User found';
-            newData.user = doc.data();
-            newData.formVisible = true;
-            newData.another = !!qrData?.user?.checked_in;
-            console.log('🚀 debug ~ querySnapshot.forEach ~ qrData', newData);
-            setQrData(newData);
-            setCheckInLoader(false);
-          });
-        }
-      })
-      .catch((e) => {
-        console.error('Error getting documents', e);
-      });
   };
 
   const searchDocumentOrId = (key, documentOrId) => {
@@ -137,31 +94,7 @@ const QrModal = ({ fields, usersReq, typeScanner, clearOption, checkIn, eventID,
   // Limpia el input al escanear un codigo que no esta registrado
   const cleanInputSearch = () => {
     setQrData({});
-  };
-
-  /* function that saves the user's checkIn. If the user's checkIn was successful,
-will show the checkIn information in the popUp. If not, it will show an error message.*/
-  const userCheckIn = async (user) => {
-    const theUserWasChecked = await checkIn(user._id, user);
-
-    if (theUserWasChecked) {
-      setQrData({
-        ...qrData,
-        msg: '',
-        formVisible: true,
-        user: {},
-      });
-      handleScan(user._id);
-
-      setCheckInLoader(true);
-      return;
-    }
-
-    DispatchMessageService({
-      type: 'error',
-      msj: 'Lo sentimos, hubo un error al registrar el checkIn del usuario',
-      action: 'show',
-    });
+    form.resetFields();
   };
 
   return (
@@ -170,7 +103,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
         <Title level={4} type='secondary'>
           {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
         </Title>
-        <Form layout='vertical' onFinish={searchDocument}>
+        <Form layout='vertical' form={form} onFinish={searchDocument}>
           {qrData.user ? (
             <div>
               {qrData.user?.checked_in && qrData?.user?.checkedin_at && (
@@ -222,7 +155,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   key='2'>
                   <>
                     <Form.Item label={'Id Usuario'} name='qr'>
-                      <Input autoFocus />
+                      <Input autoFocus allowClear />
                     </Form.Item>
                     <Row justify='center' wrap gutter={8}>
                       <Col>
@@ -243,15 +176,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
           ) : (
             <>
               <Form.Item label={label} name='document'>
-                <Input
-                  // allowClear
-                  // value={documentOrId}
-                  // onChange={(value) => captureDocumentOrId(value, false)}
-                  // capturar toda la data del lector de documentos
-                  // onKeyDown={(value) => captureDocumentOrId(value, false)}
-                  // name={'searchCC'}
-                  autoFocus
-                />
+                <Input allowClear autoFocus />
               </Form.Item>
               <Row justify='center' wrap gutter={8}>
                 <Col>
@@ -279,7 +204,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               backgroundColor: '#FFFFFF',
               color: '#000000',
-              borderLeft: `5px solid ${qrData?.msg === 'User found' ? '#52C41A' : '#FF4E50'}`,
+              borderLeft: `5px solid #FF4E50`,
               fontSize: '14px',
               textAlign: 'start',
               borderRadius: '5px',
@@ -304,7 +229,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                 <Button
                   type='primary'
                   onClick={() => {
-                    userCheckIn(qrData.user);
+                    userCheckIn({ user: qrData.user, qrData, setQrData, handleScan, setCheckInLoader, checkIn });
                   }}>
                   Check User
                 </Button>

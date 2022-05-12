@@ -535,11 +535,19 @@ class ListEventUser extends Component {
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
-        DispatchMessageService({
-          type: 'error',
-          msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
-          action: 'show',
-        });
+        if (this.props.intl) {
+          DispatchMessageService({
+            type: 'error',
+            msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+            action: 'show',
+          });
+        } else {
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Algo salió mal. Intentalo de nuevo',
+            action: 'show',
+          });
+        }
         checkInStatus = false;
       });
     return checkInStatus;

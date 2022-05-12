@@ -1,7 +1,9 @@
+import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
-import { newData, searchDocumentOrIdPropsTypes } from './types/types';
+import { newData, searchDocumentOrIdPropsTypes, userCheckInPropsTypes } from './types/types';
 
+/**allows you to search by ID or document number for an eventuser in firebase */
 export const getEventUserByParameter = ({
   key,
   documentOrId,
@@ -11,9 +13,7 @@ export const getEventUserByParameter = ({
   setCheckInLoader,
 }: searchDocumentOrIdPropsTypes) => {
   let parameterName: string = '';
-  let valueName: string = '';
   const { name } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
-  console.log('🚀 debug ~ datos', name);
 
   const usersRef = firestore.collection(`${eventID}_event_attendees`);
   let value = String(documentOrId).toLowerCase();
@@ -21,17 +21,14 @@ export const getEventUserByParameter = ({
   switch (key) {
     case 'document':
       parameterName = `properties.${name}`;
-      valueName = value;
       break;
 
     case 'qr':
       parameterName = '_id';
-      valueName = value;
       break;
 
     default:
       parameterName = '_id';
-      valueName = value;
       break;
   }
 
@@ -41,12 +38,9 @@ export const getEventUserByParameter = ({
     user: {},
     formVisible: false,
   };
-  console.log('🚀 debug ~ newData', newData);
-
-  // Conditional to show modal (QR or Document scanner)
 
   usersRef
-    .where(parameterName, '==', valueName)
+    .where(parameterName, '==', value)
     .get()
     .then((querySnapshot) => {
       if (querySnapshot.empty) {
@@ -66,10 +60,11 @@ export const getEventUserByParameter = ({
               checked_in: true,
             },
           };
+          newData.formVisible = true;
         } else {
           newData.user = null;
+          newData.formVisible = false;
         }
-        newData.formVisible = true;
         setQrData(newData);
         setCheckInLoader(false);
       } else {
@@ -78,7 +73,6 @@ export const getEventUserByParameter = ({
           const userData = doc.data();
           newData.msg = 'User found';
           newData.user = userData;
-          // newData.another = !!qrData?.user?.checked_in;
           newData.another = userData.checked_in && userData.checkedin_at ? true : false;
           newData.formVisible = true;
           setQrData(newData);
@@ -89,4 +83,36 @@ export const getEventUserByParameter = ({
     .catch((e) => {
       console.error('Error getting documents', e);
     });
+};
+
+/* function that saves the user's checkIn. If the user's checkIn was successful,
+will show the checkIn information in the popUp. If not, it will show an error message.*/
+export const userCheckIn = async ({
+  user,
+  qrData,
+  setQrData,
+  handleScan,
+  setCheckInLoader,
+  checkIn,
+}: userCheckInPropsTypes) => {
+  const theUserWasChecked: any = await checkIn(user._id, user);
+
+  if (theUserWasChecked) {
+    setQrData({
+      ...qrData,
+      msg: '',
+      formVisible: true,
+      user: {},
+    });
+    handleScan(user._id);
+
+    setCheckInLoader(true);
+    return;
+  }
+
+  DispatchMessageService({
+    type: 'error',
+    msj: 'hubo un error al registrar el checkIn del usuario',
+    action: 'show',
+  });
 };

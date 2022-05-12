@@ -7,6 +7,8 @@ export type ImageUploaderDragAndDropType = {
 
 export type fieldsData = {
   name: string;
+  label: string;
+  type: string;
 };
 
 export type searchDocumentOrIdPropsTypes = {
@@ -23,4 +25,12 @@ export type newData = {
   another: boolean;
   user: {} | any;
   formVisible: boolean;
+};
+export type userCheckInPropsTypes = {
+  user: {} | any;
+  qrData: {};
+  setQrData: (data: any) => void;
+  handleScan: (data: any) => void;
+  setCheckInLoader: (data: any) => void;
+  checkIn: (id: any, user: any) => any;
 };
