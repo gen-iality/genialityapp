@@ -170,7 +170,6 @@ class Preview extends Component {
       return (item.used = this.headExist(item.key));
     });
     let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
-
     this.setState({ list, loading: false, auxList });
   };
 
@@ -305,7 +304,7 @@ class Preview extends Component {
           icon={<UploadOutlined />}
           disabled={this.state.genericPassword && (this.state.password === '' || this.state.password === null)}
           onClick={() => {
-            this.props.importUsers(list);
+            this.props.importUsers(list, this.state.password);
           }}>
           Finalizar
         </Button>

@@ -22,24 +22,14 @@ class ImportUsers extends Component {
   }
 
   handleXls = (list) => {
-    /*  let genericPassword = [];
-    if (password) {
-      for (let i = 0; i < list[0].list.length; i++) {
-        genericPassword.push(password);
-      }
-      this.setState({ password: password });
-    } */
     if (list.length >= 2) {
-      /* if (password) {
-        list.push({ key: 'password', list: genericPassword, used: false });
-      } */
       this.setState((prevState) => {
         return { list, step: prevState.step + 1 };
       });
     }
   };
 
-  importUsers = (users) => {
+  importUsers = (users, password) => {
     const self = this;
     DispatchMessageService({
       type: 'loading',
@@ -47,6 +37,14 @@ class ImportUsers extends Component {
       msj: ' Por favor espere mientras se envía la información...',
       action: 'show',
     });
+
+    if (password) {
+      let genericPassword = [];
+      for (let i = 0; i < users[0].list.length; i++) {
+        genericPassword.push(password);
+      }
+      users.push({ key: 'password', list: genericPassword, used: true });
+    }
 
     try {
       // Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde
