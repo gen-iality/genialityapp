@@ -215,25 +215,28 @@ class General extends Component {
 
   //Cambio en los input
   handleChange = (e, name) => {
+    const valueData = e?.target?.value;
+
+    const targetData = e?.target;
     // console.log(e.target);
-    if (e.target !== null || e.target !== undefined || e.target !== '') {
+    if (targetData !== null || targetData !== undefined || targetData !== '') {
       let value = e;
-      if (e.target.value !== null || e.target.value !== undefined || e.target.value !== '') {
-        value = e.target.value;
+      if (typeof valueData === 'string') {
+        value = valueData;
       }
 
       if (name === 'visibility') {
-        value = e.target.checked ? 'PUBLIC' : 'PRIVATE';
+        value = targetData.checked ? 'PUBLIC' : 'PRIVATE';
       } else if (name === 'allow_register' || name === 'has_payment') {
-        value = e.target.checked;
+        value = targetData.checked;
       }
 
       this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
     }
-    // if (e.target != null) {
-    //   // value = e.target;
-    //   if (e.target.value) {
-    //     value = e.target.value;
+    // if (targetData != null) {
+    //   // value = targetData;
+    //   if (valueData) {
+    //     value = valueData;
     //   }
     // }
 
@@ -456,7 +459,7 @@ class General extends Component {
       app_configuration: this.state.info.app_configuration,
       banner_image_link: this.state.banner_image_link,
       adminContenido: event.adminContenido,
-      type_event: event.type_event,
+      type_event: this.state.event.type_event,
       event_platform: event.event_platform || 'zoom',
       loader_page: event.loader_page || 'no',
       initial_page: event.initial_page || '',
