@@ -12,7 +12,7 @@ const handleClick = (e) => {
 
 export const MenuItems = [
   {
-    name: 'Configuración General',
+    name: 'Configuración general',
     icon: <SettingOutlined />,
     key: 'main',
     items: [
@@ -90,7 +90,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Preguntas Frecuentes',
+        name: 'Preguntas frecuentes',
         path: '/faqs',
         key: 'preguntas-frecuentes',
         onClick: handleClick,
@@ -102,13 +102,13 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: ' Contenido Informativo',
+        name: ' Contenido informativo',
         path: '/informativesection',
         key: 'contenido-informativo',
         onClick: handleClick,
       },
       {
-        name: '  Reporte de Networking',
+        name: '  Reporte de networking',
         path: '/reportNetworking',
         key: 'reporte-networking',
         onClick: handleClick,
@@ -122,7 +122,7 @@ export const MenuItems = [
     ],
   },
   {
-    name: 'Configuración Asistentes',
+    name: 'Configuración de asistentes',
     icon: <SolutionOutlined />,
     key: 'attende-config',
     items: [
@@ -158,19 +158,19 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: ' Check In por Actividad',
+        name: ' Check in por actividad',
         path: '/checkin-actividad',
         key: 'checkin-actividad',
         onClick: handleClick,
       },
       {
-        name: ' Gestión de Chats',
+        name: ' Gestión de chats',
         path: '/chatexport',
         key: 'gestion-chats',
         onClick: handleClick,
       },
       {
-        name: '  Enviar Correos a Asistentes',
+        name: '  Enviar correos a asistentes',
         path: '/invitados',
         key: 'enviar-correos-asistentes',
         onClick: handleClick,
@@ -183,21 +183,21 @@ export const MenuItems = [
     key: 'Comunicaciones',
     items: [
       {
+        name: 'Enviar correos a asistentes',
+        path: '/invitados',
+        key: 'enviar-informacion-asistentes',
+        onClick: handleClick,
+      },
+      {
         name: 'Comunicaciones enviadas',
         path: '/messages',
         key: 'comunicaciones-enviadas',
         onClick: handleClick,
       },
-      {
-        name: 'Enviar información a asistentes',
-        path: '/invitados',
-        key: 'enviar-informacion-asistentes',
-        onClick: handleClick,
-      },
     ],
   },
   {
-    name: 'Estadisticas',
+    name: 'Estadísticas',
     icon: <BarChartOutlined />,
     key: 'estadisticas',
     items: [

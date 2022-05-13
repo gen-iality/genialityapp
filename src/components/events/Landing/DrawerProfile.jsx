@@ -73,7 +73,11 @@ const DrawerProfile = (props) => {
                 backgroundColor: cEvent.value.styles.toolbarDefaultBg,
               }}
             />
-            <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el evento' />
+            {isMe ? (
+              <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el evento' />
+            ) : (
+              <FormattedMessage id='header.my_data_event2' defaultMessage='Perfil del participante en el evento' />
+            )}
           </Space>
         }
         zIndex={5000}
