@@ -56,7 +56,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
         </>
       ) : (
         <>
-          <Result status='success' title='¡Registro exitoso!' />
+          <Result status='success' title='Inscripción exitosa!' />
           <RedirectUser basicDataUser={basicDataUser} />
         </>
       )}
