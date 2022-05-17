@@ -75,7 +75,7 @@ function AgendaActivityItem(props) {
 
   return (
     <>
-      {console.log('%c🆗 - item', 'color: #00A6ED;', typeActivity)}
+      {/* {console.log('%c🆗 - item', 'color: #00A6ED;', typeActivity)} */}
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           className='agendaHover ' /* efect-scale */
@@ -268,9 +268,9 @@ function AgendaActivityItem(props) {
                     <div>
                       {!props.hasDate && item.datetime_end ? (
                         <Timeline>
-                          <Timeline.Item color={event.styles.toolbarDefaultBg}>
+                          <Timeline.Item color={typeActivity === 'url' ? 'transparent' : event.styles.toolbarDefaultBg}>
                             <div>
-                              {!props.hasDate && item.datetime_start && typeActivity !== 'url' && typeActivity !== null
+                              {!props.hasDate && item.datetime_start && typeActivity !== 'url'
                                 ? Moment.tz(
                                     item.datetime_start,
                                     'YYYY-MM-DD h:mm',
@@ -279,23 +279,20 @@ function AgendaActivityItem(props) {
                                     .tz(timeZone)
                                     .format('h:mm a')
                                 : ''}
-                              {!props.hasDate &&
-                                item.datetime_start &&
-                                typeActivity !== 'url' &&
-                                typeActivity !== null && (
-                                  <p className='ultrasmall'>
-                                    {Moment.tz(
-                                      item.datetime_start,
-                                      'YYYY-MM-DD HH:mm',
-                                      props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                                    )
-                                      .tz(timeZone)
-                                      .format(' (Z') +
-                                      ' ' +
-                                      timeZone +
-                                      ') '}
-                                  </p>
-                                )}
+                              {!props.hasDate && item.datetime_start && typeActivity !== 'url' && (
+                                <p className='ultrasmall'>
+                                  {Moment.tz(
+                                    item.datetime_start,
+                                    'YYYY-MM-DD HH:mm',
+                                    props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                                  )
+                                    .tz(timeZone)
+                                    .format(' (Z') +
+                                    ' ' +
+                                    timeZone +
+                                    ') '}
+                                </p>
+                              )}
                               {item.platform && (
                                 <div style={{ textAlign: 'center' }} className='contenedor-estado-agenda'>
                                   {meetingState == 'open_meeting_room' ? (
@@ -351,7 +348,7 @@ function AgendaActivityItem(props) {
                               )}
                             </div>
                           </Timeline.Item>
-                          {typeActivity !== 'url' && typeActivity !== null && (
+                          {typeActivity !== 'url' && (
                             <Timeline.Item color={event.styles.toolbarDefaultBg} style={{ paddingBottom: '5px' }}>
                               {!props.hasDate &&
                                 item.datetime_end &&

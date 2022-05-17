@@ -69,7 +69,7 @@ class eventLanding extends Component {
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
         {/* {console.log(this.props.cEvent.value.styles)} */}
-        {this.isVisible() && (
+        {this.isVisible() ? (
           <Card
             className='event-description'
             bodyStyle={{ padding: '25px 5px' }}
@@ -408,6 +408,8 @@ class eventLanding extends Component {
                 </div>
               )}
           </Card>
+        ) : (
+          <div style={{ height: '150px' }} />
         )}
       </div>
     );
