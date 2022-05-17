@@ -17,6 +17,7 @@ import {
   Spin,
   Comment,
   Typography,
+  Avatar,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -1063,6 +1064,7 @@ const FormRegister = ({
                       })}
                     </Typography.Title>
                     <Comment
+                      avatar={initialValues.picture && <Avatar src={initialValues?.picture} />}
                       author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
                       content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
                     />
