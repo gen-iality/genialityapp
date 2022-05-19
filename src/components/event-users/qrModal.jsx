@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import QrReader from 'react-qr-reader';
-import { Modal, Row, Tabs, Select, Input, Form, Typography, Alert, Spin } from 'antd';
-import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
+import { Modal, Row, Form, Typography, Alert, Spin } from 'antd';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
 import { alertUserNotFoundStyles, getEventUserByParameter } from '@/Utilities/checkInUtils';
-import { CheckinAndReadOtherButtons, SearchAndCleanButtons } from './buttonsQrModal';
+import { CheckinAndReadOtherButtons } from './buttonsQrModal';
+import { saveOrUpdateUserInAEvent } from '@/Utilities/formUtils';
+import QrAndDocumentForm from './qrAndDocumentForm';
 
-const { TabPane } = Tabs;
-const { Option } = Select;
 const { Title } = Typography;
 
 const html = document.querySelector('html');
@@ -20,6 +18,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
   const [qrData, setQrData] = useState({});
   const [checkInLoader, setCheckInLoader] = useState(false);
   const [label, setLabel] = useState('');
+  const [loadingregister, setLoadingregister] = useState(false);
 
   useEffect(() => {
     const { label } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
@@ -73,6 +72,19 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
     });
   };
 
+  /** function to create or edit an eventuser from the cms */
+  const saveOrUpdateUser = (values) => {
+    const shouldBeEdited = qrData?.user?._id ? true : false;
+    const eventUserId = qrData?.user?._id;
+    saveOrUpdateUserInAEvent({
+      values,
+      shouldBeEdited,
+      setLoadingregister,
+      eventID,
+      eventUserId,
+    });
+  };
+
   /** When the user clicks the button, the form is reset and the QR code is cleared.*/
   const cleanInputSearch = () => {
     setQrData({});
@@ -95,7 +107,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
             style={alertUserNotFoundStyles}
           />
         )}
-        <Form layout='vertical' form={form} onFinish={searchUserByParameter}>
+        <>
           {qrData.user ? (
             <div>
               {qrData.user?.checked_in && qrData?.user?.checkedin_at && (
@@ -114,9 +126,8 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
                   <FormEnrollUserToEvent
                     fields={fields}
                     editUser={qrData?.user && qrData?.user}
-                    // options={}
-                    // saveUser={}
-                    // loaderWhenSavingUpdatingOrDelete={}
+                    saveUser={saveOrUpdateUser}
+                    loaderWhenSavingUpdatingOrDelete={loadingregister}
                     visibleInCms
                   />
                 )}
@@ -131,61 +142,19 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
               </Spin>
             </div>
           ) : (
-            <>
-              {typeScanner === 'scanner-qr' ? (
-                <React.Fragment>
-                  <Tabs defaultValue='1'>
-                    <TabPane
-                      tab={
-                        <>
-                          <CameraOutlined />
-                          {'Camara'}
-                        </>
-                      }
-                      key='1'>
-                      <Form.Item>
-                        <Select value={facingMode} onChange={(e) => setFacingMode(e)}>
-                          <Option value='user'>Selfie</Option>
-                          <Option value='environment'>Rear</Option>
-                        </Select>
-                      </Form.Item>
-                      <Row justify='center' wrap gutter={8}>
-                        <QrReader
-                          delay={500}
-                          facingMode={facingMode}
-                          onError={handleError}
-                          onScan={handleScan}
-                          style={{ width: '80%', marginBottom: '20px' }}
-                        />
-                      </Row>
-                    </TabPane>
-                    <TabPane
-                      tab={
-                        <>
-                          <ExpandOutlined />
-                          {'Pistola'}
-                        </>
-                      }
-                      key='2'>
-                      <>
-                        <Form.Item label={'Id Usuario'} name='qr'>
-                          <Input autoFocus allowClear />
-                        </Form.Item>
-                      </>
-                    </TabPane>
-                  </Tabs>
-                </React.Fragment>
-              ) : (
-                <>
-                  <Form.Item label={label} name='document'>
-                    <Input allowClear autoFocus />
-                  </Form.Item>
-                </>
-              )}
-              <SearchAndCleanButtons cleanInputSearch={cleanInputSearch} />
-            </>
+            <QrAndDocumentForm
+              form={form}
+              facingMode={facingMode}
+              setFacingMode={setFacingMode}
+              label={label}
+              handleScan={handleScan}
+              handleError={handleError}
+              searchUserByParameter={searchUserByParameter}
+              cleanInputSearch={cleanInputSearch}
+              typeScanner={typeScanner}
+            />
           )}
-        </Form>
+        </>
       </Modal>
     </Row>
   );

@@ -83,7 +83,6 @@ export const getEventUserByParameter = ({
         setCheckInLoader(false);
       } else {
         querySnapshot.forEach((doc) => {
-          console.log('🚀QR-----', doc.data());
           const userData = doc.data();
           newData.msg = 'User found';
           newData.user = userData;
@@ -109,7 +108,6 @@ export const userCheckIn = async ({
   checkIn,
 }: userCheckInPropsTypes) => {
   const theUserWasChecked: any = await checkIn(qrData.user._id, qrData.user);
-  console.log('🚀 debug ~ qrData', qrData);
 
   if (theUserWasChecked) {
     setQrData({

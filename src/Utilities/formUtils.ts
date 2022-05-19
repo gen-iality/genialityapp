@@ -1,5 +1,6 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import getAdditionalFields from '@/components/forms/getAdditionalFields';
+import { UsersApi } from '@/helpers/request';
 
 export const textLeft: {} = {
   textAlign: 'left',
@@ -137,5 +138,93 @@ export const saveOrUpdateUser = (values: any, fields: any, saveUser: (values: an
   } else {
     // se deja el else para cuando re reemplaze el form original 'FormRegister' por este
     console.log('saveUser not exist');
+  }
+};
+
+/** function to create or edit an eventuser from the cms */
+export const saveOrUpdateUserInAEvent = async ({
+  values,
+  shouldBeEdited,
+  handleModal = false,
+  setLoadingregister,
+  updateView,
+  eventID,
+  eventUserId,
+}: any) => {
+  setLoadingregister(true);
+
+  let resp;
+  let respActivity = true;
+  if (values) {
+    if (values?.checked_in) {
+      values.checkedin_at = new Date();
+      values.checked_in = true;
+    } else {
+      values.checkedin_at = '';
+      values.checked_in = false;
+    }
+
+    const body = { properties: values };
+    // if (organizationId && !shouldBeEdited) {
+    //   resp = await OrganizationApi.saveUser(this.props.organizationId, body);
+    //   /* console.log("10. resp ", resp) */
+    // } else {
+    if (!shouldBeEdited) {
+      try {
+        resp = await UsersApi.createOne(body, eventID);
+      } catch (e) {
+        DispatchMessageService({
+          type: 'error',
+          msj: 'Usuario ya registrado en el evento',
+          action: 'show',
+        });
+        respActivity = false;
+      }
+    } else {
+      try {
+        resp = await UsersApi.editEventUser(body, eventID, eventUserId);
+      } catch (e) {
+        resp = false;
+        respActivity = false;
+      }
+    }
+
+    // }
+
+    // if (this.props.byActivity && (resp?.data?._id || resp?._id) && !shouldBeEdited) {
+    //   respActivity = await Activity.Register(
+    //     eventID,
+    //     resp?.data?.user?._id || resp?.user?._id,
+    //     this.props.activityId
+    //   );
+    // }
+
+    // if (this.props.byActivity && shouldBeEdited) {
+    //   resp = await AttendeeApi.update(eventID, body, value._id);
+    //   if (resp) {
+    //     resp = { ...resp, data: { _id: resp._id } };
+    //   }
+    // }
+
+    if (updateView) {
+      updateView();
+    }
+  }
+
+  if (resp || respActivity) {
+    setLoadingregister(false);
+    DispatchMessageService({
+      type: 'success',
+      msj: shouldBeEdited ? 'Usuario editado correctamente' : 'Usuario agregado correctamente',
+      action: 'show',
+    });
+    if (handleModal) handleModal();
+  } else {
+    setLoadingregister(false);
+    DispatchMessageService({
+      type: 'error',
+      msj: 'Error al guardar el usuario',
+      action: 'show',
+    });
   }
 };
