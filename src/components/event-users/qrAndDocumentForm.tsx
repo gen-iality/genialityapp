@@ -1,5 +1,9 @@
+import { useEffect } from 'react';
+import { Form, Row, Select, Tabs, Input, Button, Col } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
-import { Form, Row, Select, Tabs, Input } from 'antd';
+import CameraFrontVariantIcon from '@2fd/ant-design-icons/lib/CameraFrontVariant';
+import CameraRearVariantIcon from '@2fd/ant-design-icons/lib/CameraRearVariant';
+import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline';
 import { SearchAndCleanButtons } from './buttonsQrModal';
 import QrReader from 'react-qr-reader';
 
@@ -17,8 +21,29 @@ function QrAndDocumentForm({
   cleanInputSearch,
   typeScanner,
 }: any) {
+  /** We listen to the event of the document input to divide the captured information and be able to continue using the form of ant desing */
+  useEffect(() => {
+    const codigo: any = window.document.getElementById('document');
+
+    if (codigo)
+      codigo.addEventListener('keydown', (evento: any) => {
+        if (evento.keyCode === 9) {
+          evento.preventDefault();
+          // Split items by space
+          codigo.value = codigo.value + ' ';
+          return false;
+        }
+        return;
+      });
+  }, []);
+
   return (
-    <Form layout='vertical' form={form} onFinish={searchUserByParameter}>
+    <Form
+      layout='vertical'
+      form={form}
+      onFinish={searchUserByParameter}
+      // autoComplete='off'
+    >
       {typeScanner === 'scanner-qr' ? (
         <>
           <Tabs defaultValue='1'>
@@ -31,10 +56,20 @@ function QrAndDocumentForm({
               }
               key='1'>
               <Form.Item>
-                <Select value={facingMode} onChange={(e) => setFacingMode(e)}>
+                {/* <Select value={facingMode} onChange={(e) => setFacingMode(e)}>
                   <Option value='user'>Selfie</Option>
                   <Option value='environment'>Rear</Option>
-                </Select>
+                </Select> */}
+                <Row justify='center' wrap gutter={8}>
+                  <Col>
+                    <Button
+                      type='primary'
+                      icon={<CameraFlipOutlineIcon />}
+                      onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}>
+                      {facingMode === 'user' ? ' Front' : 'Rear'} Camera
+                    </Button>
+                  </Col>
+                </Row>
               </Form.Item>
               <Row justify='center' wrap gutter={8}>
                 <QrReader
@@ -68,7 +103,7 @@ function QrAndDocumentForm({
       ) : (
         <>
           <Form.Item label={label} name='document'>
-            <Input allowClear autoFocus />
+            <Input id='document' allowClear autoFocus />
           </Form.Item>
         </>
       )}

@@ -20,7 +20,7 @@ export type searchDocumentOrIdPropsTypes = {
   searchValue: searchValue;
   fields: any;
   eventID: string;
-  setQrData: (data: any) => void;
+  setScannerData: (data: any) => void;
   setCheckInLoader: (data: any) => void;
 };
 
@@ -31,10 +31,10 @@ export type newData = {
   formVisible: boolean;
 };
 export type userCheckInPropsTypes = {
-  qrData: {
+  scannerData: {
     user: {} | any;
   };
-  setQrData: (data: any) => void;
+  setScannerData: (data: any) => void;
   handleScan: (data: any) => void;
   setCheckInLoader: (data: any) => void;
   checkIn: (id: any, user: any) => any;

@@ -15,7 +15,7 @@ const html = document.querySelector('html');
 const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModal, openModal }) => {
   const [form] = Form.useForm();
   const [facingMode, setFacingMode] = useState('user');
-  const [qrData, setQrData] = useState({});
+  const [scannerData, setScannerData] = useState({});
   const [checkInLoader, setCheckInLoader] = useState(false);
   const [label, setLabel] = useState('');
   const [loadingregister, setLoadingregister] = useState(false);
@@ -40,8 +40,8 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
    * If the user exists and hasn't checked in, check them in, then reset the form.
    */
   const findAnotherUser = async () => {
-    setQrData({
-      ...qrData,
+    setScannerData({
+      ...scannerData,
       msg: '',
       user: null,
       formVisible: false,
@@ -50,7 +50,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
   };
 
   const closeQr = () => {
-    setQrData({ ...qrData, msg: '', user: null });
+    setScannerData({ ...scannerData, msg: '', user: null });
     html.classList.remove('is-clipped');
     clearOption(); // Clear dropdown to options scanner
     closeModal();
@@ -65,7 +65,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
         searchValue,
         fields,
         eventID,
-        setQrData,
+        setScannerData,
         setCheckInLoader,
       };
       getEventUserByParameter(parameters);
@@ -74,8 +74,8 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
 
   /** function to create or edit an eventuser from the cms */
   const saveOrUpdateUser = (values) => {
-    const shouldBeEdited = qrData?.user?._id ? true : false;
-    const eventUserId = qrData?.user?._id;
+    const shouldBeEdited = scannerData?.user?._id ? true : false;
+    const eventUserId = scannerData?.user?._id;
     saveOrUpdateUserInAEvent({
       values,
       shouldBeEdited,
@@ -87,7 +87,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
 
   /** When the user clicks the button, the form is reset and the QR code is cleared.*/
   const cleanInputSearch = () => {
-    setQrData({});
+    setScannerData({});
     form.resetFields();
   };
 
@@ -97,7 +97,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
         <Title level={4} type='secondary'>
           {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
         </Title>
-        {qrData?.msg === 'User not found' && (
+        {scannerData?.msg === 'User not found' && (
           <Alert
             type='error'
             message={'Usuario no encontrado'}
@@ -108,32 +108,33 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
           />
         )}
         <>
-          {qrData.user ? (
+          {scannerData?.user ? (
             <div>
-              {qrData.user?.checked_in && qrData?.user?.checkedin_at && (
+              {scannerData.user?.checked_in && scannerData?.user?.checkedin_at && (
                 <div>
                   <Title level={3} type='secondary'>
                     Usuario Chequeado
                   </Title>
                   <Title level={5}>
-                    El checkIn se llevó a cabo el día: <FormattedDate value={qrData?.user?.checkedin_at?.toDate()} /> a
-                    las <FormattedTime value={qrData?.user?.checkedin_at?.toDate()} /> horas
+                    El checkIn se llevó a cabo el día:{' '}
+                    <FormattedDate value={scannerData?.user?.checkedin_at?.toDate()} /> a las{' '}
+                    <FormattedTime value={scannerData?.user?.checkedin_at?.toDate()} /> horas
                   </Title>
                 </div>
               )}
               <Spin tip='checkIn en progreso' spinning={checkInLoader}>
-                {qrData?.formVisible && (
+                {scannerData?.formVisible && (
                   <FormEnrollUserToEvent
                     fields={fields}
-                    editUser={qrData?.user && qrData?.user}
+                    editUser={scannerData?.user && scannerData?.user}
                     saveUser={saveOrUpdateUser}
                     loaderWhenSavingUpdatingOrDelete={loadingregister}
                     visibleInCms
                   />
                 )}
                 <CheckinAndReadOtherButtons
-                  qrData={qrData}
-                  setQrData={setQrData}
+                  scannerData={scannerData}
+                  setScannerData={setScannerData}
                   handleScan={handleScan}
                   setCheckInLoader={setCheckInLoader}
                   checkIn={checkIn}

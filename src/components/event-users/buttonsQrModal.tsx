@@ -5,11 +5,11 @@ type SearchAndCleanButtonsPropTypes = {
   cleanInputSearch: () => void;
 };
 type CheckinAndReadOtherButtons = {
-  qrData: {
+  scannerData: {
     user: {} | any;
     another: boolean;
   };
-  setQrData: (data: any) => void;
+  setScannerData: (data: any) => void;
   handleScan: (data: any) => void;
   setCheckInLoader: (data: any) => void;
   checkIn: (id: any, user: any) => any;
@@ -34,8 +34,8 @@ export const SearchAndCleanButtons = ({ cleanInputSearch }: SearchAndCleanButton
 };
 
 export const CheckinAndReadOtherButtons = ({
-  qrData,
-  setQrData,
+  scannerData,
+  setScannerData,
   handleScan,
   setCheckInLoader,
   checkIn,
@@ -44,11 +44,11 @@ export const CheckinAndReadOtherButtons = ({
   return (
     <Row justify='center' wrap gutter={8}>
       <Col>
-        {!qrData.user?.checked_in && !qrData?.user?.checkedin_at && !qrData.another && (
+        {!scannerData.user?.checked_in && !scannerData?.user?.checkedin_at && !scannerData.another && (
           <Button
             type='primary'
             onClick={() => {
-              userCheckIn({ qrData, setQrData, handleScan, setCheckInLoader, checkIn });
+              userCheckIn({ scannerData, setScannerData, handleScan, setCheckInLoader, checkIn });
             }}>
             Check User
           </Button>
