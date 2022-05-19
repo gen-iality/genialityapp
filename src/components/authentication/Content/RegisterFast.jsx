@@ -53,6 +53,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         name: 'avatar.png',
         status: 'done',
         url: dataUri,
+        thumbUrl: dataUri,
       },
     ];
     HandleHookForm(null, 'picture', pic);
