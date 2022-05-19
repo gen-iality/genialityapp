@@ -72,7 +72,7 @@ class eventLanding extends Component {
         {this.isVisible() ? (
           <Card
             className='event-description'
-            bodyStyle={{ padding: '25px 5px' }}
+            /* bodyStyle={{ padding: '25px 5px' }} */
             bordered={true}
             style={
               (this.props.cEvent.value.styles &&
@@ -98,10 +98,10 @@ class eventLanding extends Component {
               <div className='mediaplayer'>
                 <ReactPlayer
                   width={'100%'}
-                  height={'35vw'}
+                  height={'100%'}
                   style={{
-                    display: 'block',
-                    margin: '0 auto',
+                    aspectRatio: '16/9',
+                    objectFit: 'cover',
                   }}
                   url={this.props.cEvent.value.video}
                   controls
@@ -117,7 +117,11 @@ class eventLanding extends Component {
                 </h3>
                 <h3 style={{ fontWeight: 700, color: '#2cd237' }}> #JuntosSaldremosAdelante</h3>
               </>
-            ) : (
+            ) : this.props.cEvent.value.description !== '<p><br></p>' &&
+              this.props.cEvent.value.description !== null &&
+              this.props.cEvent.value.description !== `<p class="ql-align-center"><br></p>` &&
+              this.props.cEvent.value.description !== `<p class="ql-align-right"><br></p>` &&
+              this.props.cEvent.value.description !== `<p class="ql-align-justify"><br></p>` ? (
               <Row justify='center'>
                 <Col span={24} id='img-informative'>
                   <ReactQuill
@@ -128,6 +132,8 @@ class eventLanding extends Component {
                   />
                 </Col>
               </Row>
+            ) : (
+              <></>
             )}
 
             {/*Contenedor personalizado FENALCO*/}
@@ -397,10 +403,10 @@ class eventLanding extends Component {
                 <div className='mediaplayer'>
                   <ReactPlayer
                     width={'100%'}
-                    height={'35vw'}
+                    height={'100%'}
                     style={{
-                      display: 'block',
-                      margin: '0 auto',
+                      aspectRatio: '16/9',
+                      objectFit: 'cover',
                     }}
                     url={this.props.cEvent.value.video}
                     controls

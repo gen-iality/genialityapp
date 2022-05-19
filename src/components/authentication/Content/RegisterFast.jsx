@@ -1,15 +1,65 @@
-import { useState } from 'react';
-import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined, IdcardOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload } from 'antd';
+import { useState, useEffect } from 'react';
+import {
+  PictureOutlined,
+  MailOutlined,
+  LockOutlined,
+  UserOutlined,
+  IdcardOutlined,
+  CameraOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
+import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { useEventArkmed } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import Camera from 'react-html5-camera-photo';
+import 'react-html5-camera-photo/build/css/index.css';
+import './RegisterFast.css';
+
+//import styles from './ReigsterFast.less';
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
 
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
+  const [takingPhoto, setTakingPhoto] = useState(false);
+  const [imageAvatar, setImageAvatar] = useState(null);
+  const [form] = Form.useForm();
+
+  /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
+   y no se ve la imagen en el preview
+  */
+  useEffect(() => {
+    if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].originFileObj) {
+      getBase64(basicDataUser.picture[0].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+    } else if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].url) {
+      setImageAvatar(basicDataUser.picture[0].url);
+    } else {
+      setImageAvatar(null);
+    }
+  }, [basicDataUser.picture]);
+
+  const handleTakePhotoAnimationDone = (dataUri) => {
+    let pic = [
+      {
+        uid: '1',
+        name: 'avatar.png',
+        status: 'done',
+        url: dataUri,
+        thumbUrl: dataUri,
+      },
+    ];
+    HandleHookForm(null, 'picture', pic);
+    setImageAvatar(dataUri);
+    setTakingPhoto(false);
+  };
 
   const ruleEmail = [
     {
@@ -66,9 +116,6 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
     },
   ];
 
-  const [form] = Form.useForm();
-  let [imageAvatar, setImageAvatar] = useState(null);
-
   function onFinish(values) {
     console.log('values', values);
     handleNext(values);
@@ -89,40 +136,65 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         <Form.Item>
           <ImgCrop rotate shape='round'>
             <Upload
+              fileList={basicDataUser.picture || []}
               accept='image/png,image/jpeg'
-              onChange={(file) => {
-                if (file.fileList.length > 0) {
-                  setImageAvatar(file.fileList);
-                  HandleHookForm(null, 'picture', file.fileList);
+              onChange={(info) => {
+                if (info.fileList.length > 0) {
+                  getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+                  HandleHookForm(null, 'picture', info.fileList);
                 } else {
+                  HandleHookForm(null, 'picture', null);
                   setImageAvatar(null);
                 }
+              }}
+              onRemove={() => {
+                HandleHookForm(null, 'picture', null);
               }}
               customRequest={uploadImagedummyRequest}
               multiple={false}
               listType='picture'
-              maxCount={1}
-              fileList={basicDataUser.picture ? basicDataUser.picture : imageAvatar}>
-              {
-                <Button
-                  type='primary'
-                  shape='circle'
-                  style={{
-                    height: !imageAvatar ? '150px' : '95px',
-                    width: !imageAvatar ? '150px' : '95px',
-                  }}>
-                  <Space direction='vertical'>
-                    <PictureOutlined style={{ fontSize: '40px' }} />
+              maxCount={1}>
+              {!takingPhoto && (
+                <Space direction='vertical'>
+                  <Button
+                    type='primary'
+                    shape='circle'
+                    style={{
+                      height: !imageAvatar ? '120px' : '95px',
+                      width: !imageAvatar ? '120px' : '95px',
+                    }}>
+                    {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
+                    {imageAvatar && <Avatar src={imageAvatar} size={90} />}
+                  </Button>
+                  <>
                     {intl.formatMessage({
                       id: 'modal.label.photo',
                       defaultMessage: 'Subir foto',
                     })}
-                  </Space>
-                </Button>
-              }
+                  </>
+                </Space>
+              )}
             </Upload>
           </ImgCrop>
         </Form.Item>
+
+        {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
+        <Form.Item>
+          {takingPhoto && (
+            <div className='avatarCamera'>
+              <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
+            </div>
+          )}
+          <Button
+            type='primary'
+            icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
+            onClick={() => {
+              //setImageAvatar(null);
+              setTakingPhoto(!takingPhoto);
+            }}
+          />
+        </Form.Item>
+
         <Form.Item
           label={intl.formatMessage({
             id: 'modal.label.email',

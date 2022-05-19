@@ -70,17 +70,17 @@ function ConfirmacionRegistro(props) {
     <>
       <Form onFinish={saveData} {...formLayout}>
         <Header
-          title={'Confirmación de Registro'}
-          description={'El siguiente mensaje le llegara a las personas luego de haberse registrado al evento'}
+          title={'Confirmación de Inscripción'}
+          description={'El siguiente mensaje le llegará a las personas luego de haberse inscrito al evento'}
           save
           form
         />
         <Row justify='center' wrap gutter={[8, 8]}>
           <Col span={18}>
-            <Form.Item label={'Mensaje de Registro'}>
+            <Form.Item label={'Mensaje de Inscripción'}>
               <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
             </Form.Item>
-            <Form.Item label={'Requerir la validación del correo antes de completar el registro'}>
+            <Form.Item label={'Requerir la validación del correo antes de completar la inscripción'}>
               <Checkbox defaultChecked={validateEmail} onChange={(e) => setValidateEmail(e.target.checked)} />
             </Form.Item>
           </Col>

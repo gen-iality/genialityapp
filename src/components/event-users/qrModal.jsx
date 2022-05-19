@@ -4,7 +4,7 @@ import { FaCamera } from 'react-icons/fa';
 import { IoIosQrScanner, IoIosCamera } from 'react-icons/io';
 import QrReader from 'react-qr-reader';
 import { firestore } from '../../helpers/firebase';
-import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert } from 'antd';
+import { Modal, Row, Col, Tabs, Button, Select, Input, Form, Typography, Alert, Card, Comment, Avatar } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@/context/MessageService';
 import axios from 'axios';
@@ -25,6 +25,7 @@ class QrModal extends Component {
       qrData: {},
       nextreadcc: true,
       saveqrsscanner: [],
+      querytext: '',
     };
   }
 
@@ -33,6 +34,8 @@ class QrModal extends Component {
       return;
     }
 
+    console.log('datauser', data);
+    console.log('datauser', this.props.usersReq);
     let pos = this.props.usersReq
       .map((e) => {
         return e._id;
@@ -243,12 +246,37 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   <Title level={3} type='secondary'>
                     Usuario Chequeado
                   </Title>
-                  <Title level={5}>
-                    El checkIn se llevó a cabo el día: <FormattedDate value={qrData.user.checked_at.toDate()} /> a las{' '}
-                    <FormattedTime value={qrData.user.checked_at.toDate()} /> horas
-                  </Title>
+                  {qrData.user.checked_at && (
+                    <Title level={5}>
+                      El checkIn se llevó a cabo el día: <FormattedDate value={qrData.user.checked_at.toDate()} /> a las{' '}
+                      <FormattedTime value={qrData.user.checked_at.toDate()} /> horas
+                    </Title>
+                  )}
                 </div>
               )}
+              {/*628668dd2e793a1c65412732 */}
+              {console.log('userss', qrData.user.user)}
+              {qrData.user?.user && (
+                <Card
+                  style={{ borderRadius: '8px' }}
+                  bodyStyle={{ padding: '20px' }}
+                  size={128}
+                  cover={qrData.user?.user?.picture && <img src={qrData.user?.user?.picture} size={128} />}>
+                  <Comment
+                    size={64}
+                    // avatar={qrData.user?.user?.picture && <Avatar src={qrData.user?.user?.picture} size={64} />}
+                    author={<Typography.Text style={{ fontSize: '18px' }}>{qrData.user?.user?.names}</Typography.Text>}
+                    content={<Typography.Text style={{ fontSize: '18px' }}>{qrData.user?.user?.email}</Typography.Text>}
+                  />
+                  <Typography.Title level={5}>
+                    {/* {intl.formatMessage({
+                      id: 'title.user_data',
+                      defaultMessage: 'Datos del usuario',
+                    })} */}
+                  </Typography.Title>
+                </Card>
+              )}
+
               {fields.map((obj, key) => {
                 let val = qrData.user.properties[obj.name];
                 if (obj.type === 'boolean') val = qrData.user.properties[obj.name] ? 'SI' : 'NO';
@@ -297,15 +325,20 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   <Form.Item label={'Id Usuario'}>
                     <Input
                       allowClear
-                      value={this.state.newCC}
-                      onChange={(value) => this.changeCC(value)}
+                      value={this.state.querytext}
+                      onChange={(e) => {
+                        this.setState({ querytext: e.target.value });
+                      }}
+                      //onChange={(value) => this.changeCC(value)}
+
                       name={'searchCC'}
                       autoFocus
                     />
                   </Form.Item>
                   <Row justify='center' wrap gutter={8}>
                     <Col>
-                      <Button type='primary' onClick={(e) => this.searchCC('qr', e)}>
+                      {/* <Button type='primary' onClick={(e) => this.searchCC('qr', e)}> */}
+                      <Button type='primary' onClick={(e) => this.handleScan(this.state.querytext)}>
                         Buscar
                       </Button>
                     </Col>

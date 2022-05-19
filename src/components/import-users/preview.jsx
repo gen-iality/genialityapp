@@ -31,6 +31,7 @@ class Preview extends Component {
       showModal: false,
       password: null,
       genericPassword: false,
+      showMessage: false,
     };
   }
 
@@ -60,7 +61,7 @@ class Preview extends Component {
 
   content = () => {
     return (
-      <Form onFinish={this.savePassword} preserve={false}>
+      <Form onFinish={this.savePassword} preserve={false} layout='vertical'>
         <Form.Item
           name='password'
           label='Contraseña'
@@ -113,11 +114,17 @@ class Preview extends Component {
             <Button
               onClick={() => {
                 Modal.destroyAll();
-                this.setState({ showModal: false });
+                this.setState({ showModal: false, showMessage: true });
               }}>
               Cancelar
             </Button>
-            <Button type='primary' htmlType='submit' onClick={() => Modal.destroyAll()}>
+            <Button
+              type='primary'
+              htmlType='submit'
+              onClick={() => {
+                Modal.destroyAll();
+                this.setState({ showMessage: false });
+              }}>
               Continuar
             </Button>
           </Space>
@@ -170,7 +177,6 @@ class Preview extends Component {
       return (item.used = this.headExist(item.key));
     });
     let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
-
     this.setState({ list, loading: false, auxList });
   };
 
@@ -255,7 +261,7 @@ class Preview extends Component {
                   style={{ cursor: 'pointer' }}
                   onClick={() => this.setState({ genericPassword: false, password: null })}>
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
-                    Deseo continuar sin contraseña genérica
+                    Deseo que la plataforma genere una contraseña para mis asistentes.
                   </Typography.Text>
                   <br />
                   <br />
@@ -284,7 +290,7 @@ class Preview extends Component {
                   style={{ cursor: 'pointer' }}
                   onClick={() => this.setState({ genericPassword: true, showModal: true })}>
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
-                    Deseo continuar con contraseña genérica
+                    Deseo específicar una contraseña para mis asistentes
                   </Typography.Text>
                   <br />
                   <br />
@@ -292,6 +298,21 @@ class Preview extends Component {
                     En este proceso aparecerá un modal confirmando la contraseña que desee aplicar para los usuarios a
                     importar, éste procedimiento aplicará "sólo" a usuarios nuevos dentro de la plataforma, en caso de
                     ya tener una cuenta existente, dicha cuenta continuará con su actual contraseña.
+                    <br />
+                    {this.state.genericPassword &&
+                      (this.state.password === '' || this.state.password === null) &&
+                      this.state.showMessage && (
+                        <Typography.Text type='secondary'>
+                          No tienes una contraseña asignada para tus asistentes, si deseas asignarla{' '}
+                          <strong>haz clic aquí</strong>
+                        </Typography.Text>
+                      )}
+                    {this.state.genericPassword && this.state.password && !this.state.showMessage && (
+                      <Typography.Text type='secondary'>
+                        Tienes una contraseña asignada para tus asistentes, si deseas cambiarla{' '}
+                        <strong>haz clic aquí</strong>, ten en cuenta que por seguridad mostrará los campos vacíos.
+                      </Typography.Text>
+                    )}
                   </Typography.Paragraph>
                 </Card>
               </div>
@@ -305,13 +326,13 @@ class Preview extends Component {
           icon={<UploadOutlined />}
           disabled={this.state.genericPassword && (this.state.password === '' || this.state.password === null)}
           onClick={() => {
-            this.props.importUsers(list);
+            this.props.importUsers(list, this.state.password);
           }}>
           Finalizar
         </Button>
 
         <Modal
-          title='Por favor ingrese la contraseña genérica'
+          title='Por favor ingrese la contraseña para los asistentes'
           icon={<ExclamationCircleOutlined />}
           footer={null}
           destroyOnClose={true}

@@ -17,6 +17,7 @@ import {
   Spin,
   Comment,
   Typography,
+  Avatar,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -208,7 +209,7 @@ const FormRegister = ({
         ...dataEventUser,
       };
     }
-
+    console.log('initialValues2', initialValuesGeneral, cUser, cEventUser);
     setinitialValues(
       organization
         ? {
@@ -1056,13 +1057,31 @@ const FormRegister = ({
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
                   <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
+                    {console.log('avatar', initialValues)}
                     <Typography.Title level={5}>
                       {intl.formatMessage({
                         id: 'title.user_data',
                         defaultMessage: 'Datos del usuario',
                       })}
                     </Typography.Title>
+                    {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido
+deberia ser solo la url de la imagen 
+*/}{' '}
+                    {console.log('initialValues', initialValues, cUser)}
                     <Comment
+                      avatar={
+                        initialValues.picture ? (
+                          <Avatar
+                            src={
+                              initialValues?.picture[0]?.thumbUrl ||
+                              initialValues?.picture[0]?.url ||
+                              initialValues?.picture
+                            }
+                          />
+                        ) : cUser?.value?.picture ? (
+                          cUser?.value?.picture
+                        ) : null
+                      }
                       author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
                       content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
                     />

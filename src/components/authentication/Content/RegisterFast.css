@@ -1,0 +1,6 @@
+.avatarCamera .react-html5-camera-photo > video {
+  width: 100%;
+}
+.avatarCamera img {
+  width: 100%;
+}

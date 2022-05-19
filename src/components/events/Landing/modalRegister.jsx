@@ -3,7 +3,7 @@ import { CheckCircleTwoTone } from '@ant-design/icons';
 import { ButtonPayment } from '../registrationForm/payRegister';
 
 const ModalRegister = ({ register, setRegister, event }) => {
-  let titleModal = register == 4 ? `¡Información Actualizada!` : `¡Registro Exitoso!`;
+  let titleModal = register == 4 ? `¡Información Actualizada!` : `Inscripción Exitosa!`;
 
   let message =
     register == 1

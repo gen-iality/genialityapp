@@ -207,7 +207,7 @@ class SendRsvp extends Component {
             form
             save
             saveMethod={() => this.setState({ modal: true })}
-            saveName={'Envíar'}
+            saveName={'Enviar'}
           />
 
           <Row justify='center' wrap gutter={8}>
@@ -389,7 +389,7 @@ class SendRsvp extends Component {
             okButtonProps={{ disabled: this.state.disabled }}
             confirmLoading={this.state.disabled}
             cancelText={'Cancelar'}
-            okText={'Envíar'}>
+            okText={'Enviar'}>
             <p>
               Se van a enviar {this.state.selection === 'Todos' ? 'a todos las' : this.state.selection.length}{' '}
               {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}

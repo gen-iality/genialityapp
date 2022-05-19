@@ -78,8 +78,21 @@ class documentsDetail extends Component {
     return (
       <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
         <Tabs defaultActiveKey='1'>
+          <TabPane tab='Documentos del evento' key='1'>
+            <Col xs={24} sm={20} md={20} lg={20} xl={20} style={{ margin: '0 auto' }}>
+              {folders && folders.length > 0 && <DocumentsList data={folders} files={data} />}
+
+              {(!folders || !folders.length) && (
+                <div className='site-card-border-less-wrapper'>
+                  <Card title='' bordered={false}>
+                    <Result title='Aún no se han agregado archivos.' />
+                  </Card>
+                </div>
+              )}
+            </Col>
+          </TabPane>
           {this.props.cEventUser?.value && (
-            <TabPane tab={`Mis documentos`} key='1'>
+            <TabPane tab={`Mis documentos`} key='2'>
               {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
                 <List
                   style={{ padding: 10 }}
@@ -129,19 +142,6 @@ class documentsDetail extends Component {
               )}
             </TabPane>
           )}
-          <TabPane tab='Documentos del evento' key='2'>
-            <Col xs={24} sm={20} md={20} lg={20} xl={20} style={{ margin: '0 auto' }}>
-              {folders && folders.length > 0 && <DocumentsList data={folders} files={data} />}
-
-              {(!folders || !folders.length) && (
-                <div className='site-card-border-less-wrapper'>
-                  <Card title='' bordered={false}>
-                    <Result title='Aún no se han agregado archivos.' />
-                  </Card>
-                </div>
-              )}
-            </Col>
-          </TabPane>
         </Tabs>
       </div>
     );
