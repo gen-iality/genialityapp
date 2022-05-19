@@ -49,9 +49,9 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     setbuttonStatus(status);
   };
 
-  const HandleHookForm = (e, FieldName, picture, pictureDirectData) => {
+  const HandleHookForm = (e, FieldName, picture) => {
     let value = '';
-    if (FieldName === 'picture' || pictureDirectData) {
+    if (FieldName === 'picture') {
       value = picture;
     } else {
       value = e.target.value;

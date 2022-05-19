@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   PictureOutlined,
   MailOutlined,
@@ -6,8 +6,9 @@ import {
   UserOutlined,
   IdcardOutlined,
   CameraOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload } from 'antd';
+import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { useEventArkmed } from '../../../helpers/helperEvent';
@@ -16,19 +17,44 @@ import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
+  const [takingPhoto, setTakingPhoto] = useState(false);
+  const [imageAvatar, setImageAvatar] = useState(null);
+  const [form] = Form.useForm();
 
-  const [takePictureVisible, setTakePictureVisible] = useState(false);
-  const [imageinner, setImageinner] = useState(null);
+  /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
+   y no se ve la imagen en el preview
+  */
+  useEffect(() => {
+    if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].originFileObj) {
+      getBase64(basicDataUser.picture[0].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+    } else if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].url) {
+      setImageAvatar(basicDataUser.picture[0].url);
+    } else {
+      setImageAvatar(null);
+    }
+  }, [basicDataUser.picture]);
+
   const handleTakePhotoAnimationDone = (dataUri) => {
-    console.log(dataUri);
-    setImageinner(dataUri);
-    setTakePictureVisible(false);
-    HandleHookForm(null, 'picture', dataUri, true);
-    //setImageAvatar(dataUri);
-    //HandleHookForm(null, 'picture', dataUri);
+    let pic = [
+      {
+        uid: '1',
+        name: 'avatar.png',
+        status: 'done',
+        url: dataUri,
+      },
+    ];
+    HandleHookForm(null, 'picture', pic);
+    setImageAvatar(dataUri);
+    setTakingPhoto(false);
   };
 
   const ruleEmail = [
@@ -86,9 +112,6 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
     },
   ];
 
-  const [form] = Form.useForm();
-  let [imageAvatar, setImageAvatar] = useState(null);
-
   function onFinish(values) {
     console.log('values', values);
     handleNext(values);
@@ -108,62 +131,66 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         onFinish={onFinish}>
         <Form.Item>
           <ImgCrop rotate shape='round'>
-            <>
-              {!imageinner && takePictureVisible && (
-                <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
+            <Upload
+              fileList={basicDataUser.picture || []}
+              accept='image/png,image/jpeg'
+              onChange={(info) => {
+                if (info.fileList.length > 0) {
+                  getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+                  HandleHookForm(null, 'picture', info.fileList);
+                } else {
+                  HandleHookForm(null, 'picture', null);
+                  setImageAvatar(null);
+                }
+              }}
+              onRemove={() => {
+                HandleHookForm(null, 'picture', null);
+              }}
+              customRequest={uploadImagedummyRequest}
+              multiple={false}
+              listType='picture'
+              maxCount={1}>
+              {!takingPhoto && (
+                <Space direction='vertical'>
+                  <Button
+                    type='primary'
+                    shape='circle'
+                    style={{
+                      height: !imageAvatar ? '120px' : '95px',
+                      width: !imageAvatar ? '120px' : '95px',
+                    }}>
+                    {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
+                    {imageAvatar && <Avatar src={imageAvatar} size={90} />}
+                  </Button>
+                  <>
+                    {intl.formatMessage({
+                      id: 'modal.label.photo',
+                      defaultMessage: 'Subir foto',
+                    })}
+                  </>
+                </Space>
               )}
-              {imageinner && <img style={{ width: '100%' }} src={imageinner} />}
-              {!imageinner && (
-                <Upload
-                  showUploadList={false}
-                  capture='environment'
-                  accept='image/png,image/jpeg'
-                  onChange={(file) => {
-                    if (file.fileList.length > 0) {
-                      setImageAvatar(file.fileList);
-                      HandleHookForm(null, 'picture', file.fileList);
-                    } else {
-                      setImageAvatar(null);
-                    }
-                  }}
-                  customRequest={uploadImagedummyRequest}
-                  multiple={false}
-                  listType='picture'
-                  maxCount={1}
-                  fileList={basicDataUser.picture ? basicDataUser.picture : imageAvatar}>
-                  {
-                    <Button
-                      type='primary'
-                      shape='circle'
-                      style={{
-                        height: !imageAvatar ? '150px' : '95px',
-                        width: !imageAvatar ? '150px' : '95px',
-                      }}>
-                      <Space direction='vertical'>
-                        <PictureOutlined style={{ fontSize: '40px' }} />
-                        {intl.formatMessage({
-                          id: 'modal.label.photo',
-                          defaultMessage: 'Subir foto',
-                        })}
-                      </Space>
-                    </Button>
-                  }
-                </Upload>
-              )}
-
-              {
-                <Button
-                  type='primary'
-                  icon={<CameraOutlined />}
-                  onClick={() => {
-                    setImageinner(null);
-                    setTakePictureVisible(!takePictureVisible);
-                  }}
-                />
-              }
-            </>
+            </Upload>
           </ImgCrop>
         </Form.Item>
+
+        {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
+        <Form.Item>
+          {takingPhoto && (
+            <div style={{ width: '50%' }}>
+              <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
+            </div>
+          )}
+          <Button
+            type='primary'
+            icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
+            onClick={() => {
+              //setImageAvatar(null);
+              setTakingPhoto(!takingPhoto);
+            }}
+          />
+        </Form.Item>
+
         <Form.Item
           label={intl.formatMessage({
             id: 'modal.label.email',
