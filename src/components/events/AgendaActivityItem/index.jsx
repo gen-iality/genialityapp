@@ -29,6 +29,7 @@ function AgendaActivityItem(props) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
   const [meetingState, setMeetingState] = useState(null);
+  const [typeActivity, setTypeActivity] = useState(null);
   const intl = useIntl();
 
   const timeZone = Moment.tz.guess();
@@ -68,11 +69,13 @@ function AgendaActivityItem(props) {
         if (!infoActivity.exists) return;
         const { habilitar_ingreso } = infoActivity.data();
         setMeetingState(habilitar_ingreso);
+        infoActivity?.data()?.typeActivity && setTypeActivity(infoActivity.data().typeActivity);
       });
   }
 
   return (
     <>
+      {console.log('%c🆗 - item', 'color: #00A6ED;', typeActivity)}
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           className='agendaHover ' /* efect-scale */
@@ -267,7 +270,7 @@ function AgendaActivityItem(props) {
                         <Timeline>
                           <Timeline.Item color={event.styles.toolbarDefaultBg}>
                             <div>
-                              {!props.hasDate && item.datetime_start
+                              {!props.hasDate && item.datetime_start && typeActivity !== 'url' && typeActivity !== null
                                 ? Moment.tz(
                                     item.datetime_start,
                                     'YYYY-MM-DD h:mm',
@@ -276,20 +279,23 @@ function AgendaActivityItem(props) {
                                     .tz(timeZone)
                                     .format('h:mm a')
                                 : ''}
-                              {!props.hasDate && item.datetime_start && (
-                                <p className='ultrasmall'>
-                                  {Moment.tz(
-                                    item.datetime_start,
-                                    'YYYY-MM-DD HH:mm',
-                                    props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                                  )
-                                    .tz(timeZone)
-                                    .format(' (Z') +
-                                    ' ' +
-                                    timeZone +
-                                    ') '}
-                                </p>
-                              )}
+                              {!props.hasDate &&
+                                item.datetime_start &&
+                                typeActivity !== 'url' &&
+                                typeActivity !== null && (
+                                  <p className='ultrasmall'>
+                                    {Moment.tz(
+                                      item.datetime_start,
+                                      'YYYY-MM-DD HH:mm',
+                                      props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                                    )
+                                      .tz(timeZone)
+                                      .format(' (Z') +
+                                      ' ' +
+                                      timeZone +
+                                      ') '}
+                                  </p>
+                                )}
                               {item.platform && (
                                 <div style={{ textAlign: 'center' }} className='contenedor-estado-agenda'>
                                   {meetingState == 'open_meeting_room' ? (
@@ -345,31 +351,33 @@ function AgendaActivityItem(props) {
                               )}
                             </div>
                           </Timeline.Item>
-                          <Timeline.Item color={event.styles.toolbarDefaultBg} style={{ paddingBottom: '5px' }}>
-                            {!props.hasDate &&
-                              item.datetime_end &&
-                              Moment.tz(
-                                item.datetime_end,
-                                'YYYY-MM-DD HH:mm',
-                                props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                              )
-                                .tz(timeZone)
-                                .format('h:mm a')}
-                            {!props.hasDate && item.datetime_end && (
-                              <p className='ultrasmall'>
-                                {Moment.tz(
+                          {typeActivity !== 'url' && typeActivity !== null && (
+                            <Timeline.Item color={event.styles.toolbarDefaultBg} style={{ paddingBottom: '5px' }}>
+                              {!props.hasDate &&
+                                item.datetime_end &&
+                                Moment.tz(
                                   item.datetime_end,
                                   'YYYY-MM-DD HH:mm',
                                   props.event?.timezone ? props.event.timezone : 'America/Bogota'
                                 )
                                   .tz(timeZone)
-                                  .format(' (Z') +
-                                  ' ' +
-                                  timeZone +
-                                  ') '}
-                              </p>
-                            )}
-                          </Timeline.Item>
+                                  .format('h:mm a')}
+                              {!props.hasDate && item.datetime_end && (
+                                <p className='ultrasmall'>
+                                  {Moment.tz(
+                                    item.datetime_end,
+                                    'YYYY-MM-DD HH:mm',
+                                    props.event?.timezone ? props.event.timezone : 'America/Bogota'
+                                  )
+                                    .tz(timeZone)
+                                    .format(' (Z') +
+                                    ' ' +
+                                    timeZone +
+                                    ') '}
+                                </p>
+                              )}
+                            </Timeline.Item>
+                          )}
                         </Timeline>
                       ) : (
                         <div
