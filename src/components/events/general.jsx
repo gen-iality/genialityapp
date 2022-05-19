@@ -779,7 +779,7 @@ class General extends Component {
 
                   <Form.Item label={'Tipo de evento'}>
                     <Select
-                      value={event.type_event}
+                      defaultValue={event.type_event}
                       name={'type_event'}
                       onChange={(e) => this.handleChange(e, 'type_event')}>
                       <Option value=''>Seleccionar...</Option>
