@@ -16,6 +16,9 @@ import { UseEventContext } from '../../../context/eventContext';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
+import './RegisterFast.css';
+
+//import styles from './ReigsterFast.less';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -177,7 +180,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
         <Form.Item>
           {takingPhoto && (
-            <div style={{ width: '50%' }}>
+            <div className='avatarCamera'>
               <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
             </div>
           )}

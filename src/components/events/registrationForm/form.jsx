@@ -1057,14 +1057,28 @@ const FormRegister = ({
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
                   <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
+                    {console.log('avatar', initialValues)}
                     <Typography.Title level={5}>
                       {intl.formatMessage({
                         id: 'title.user_data',
                         defaultMessage: 'Datos del usuario',
                       })}
                     </Typography.Title>
+                    {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido
+deberia ser solo la url de la imagen 
+*/}
                     <Comment
-                      avatar={initialValues.picture && <Avatar src={initialValues?.picture} />}
+                      avatar={
+                        initialValues.picture && (
+                          <Avatar
+                            src={
+                              initialValues?.picture[0]?.thumbUrl ||
+                              initialValues?.picture[0]?.url ||
+                              initialValues?.picture
+                            }
+                          />
+                        )
+                      }
                       author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
                       content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
                     />
