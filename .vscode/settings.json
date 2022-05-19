@@ -18,5 +18,25 @@
   "docwriter.progress.trackTypes": true,
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#002c9f",
+    "activityBar.activeBorder": "#df003e",
+    "activityBar.background": "#002c9f",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#df003e",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "sash.hoverBorder": "#002c9f",
+    "statusBar.background": "#001e6c",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#002c9f",
+    "statusBarItem.remoteBackground": "#001e6c",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#001e6c",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#001e6c99",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#001E6C"
 }
