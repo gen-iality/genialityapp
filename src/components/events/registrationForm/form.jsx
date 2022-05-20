@@ -211,7 +211,7 @@ const FormRegister = ({
         ...dataEventUser,
       };
     }
-
+    console.log('initialValues2', initialValuesGeneral, cUser, cEventUser);
     setinitialValues(
       organization
         ? {
@@ -1075,10 +1075,11 @@ const FormRegister = ({
                     </Typography.Title>
                     {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido
 deberia ser solo la url de la imagen 
-*/}
+*/}{' '}
+                    {console.log('initialValues', initialValues, cUser)}
                     <Comment
                       avatar={
-                        initialValues.picture && (
+                        initialValues.picture ? (
                           <Avatar
                             src={
                               initialValues?.picture[0]?.thumbUrl ||
@@ -1086,7 +1087,9 @@ deberia ser solo la url de la imagen
                               initialValues?.picture
                             }
                           />
-                        )
+                        ) : cUser?.value?.picture ? (
+                          cUser?.value?.picture
+                        ) : null
                       }
                       author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
                       content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
