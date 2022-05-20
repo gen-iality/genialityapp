@@ -15,8 +15,9 @@ export const alertUserNotFoundStyles = {
   marginTop: '10px',
   marginBottom: '10px',
 };
-
+/** Structuring of the scanned information after dividing it into an array */
 export const structureScannedInformation = ({ split }: any) => {
+  /** Variables to store the information obtained when scanning the user's document and dividing to array */
   const email = `${split[0]}@evius.co`;
   const checkInField = split[0];
   let names: string = '';
