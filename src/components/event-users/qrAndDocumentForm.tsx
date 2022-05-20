@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { Form, Row, Select, Tabs, Input, Button, Col } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
-import CameraFrontVariantIcon from '@2fd/ant-design-icons/lib/CameraFrontVariant';
-import CameraRearVariantIcon from '@2fd/ant-design-icons/lib/CameraRearVariant';
 import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline';
 import { SearchAndCleanButtons } from './buttonsQrModal';
 import QrReader from 'react-qr-reader';
