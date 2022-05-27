@@ -20,7 +20,7 @@ class menuLanding extends Component {
     this.state = {
       menu: {
         evento: {
-          name: 'Evento',
+          name: 'Curso', // TODO: check where this prop is used
           position: 30,
           section: 'evento',
           icon: 'CalendarOutlined',
@@ -375,7 +375,7 @@ class menuLanding extends Component {
         <Form {...formLayout} onFinish={this.submit}>
           <Header
             title={
-              this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'
+              this.props.organization != 1 ? 'Habilitar secciones del curso' : 'Secciones a habilitar para cada curso'
             }
             description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
             save
@@ -416,7 +416,7 @@ class menuLanding extends Component {
                           this.changePermissions(key, e);
                         }}>
                         <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al evento</Option>
+                        <Option value='assistants'>Usuarios inscritos al curso</Option>
                       </Select>
                     </Form.Item>
                     <Form.Item label={'Posición en el menú'}>
@@ -436,7 +436,7 @@ class menuLanding extends Component {
         </Form>
 
         {/* <Title level={3}>
-          {this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'}
+          {this.props.organization != 1 ? 'Habilitar secciones del curso' : 'Secciones a habilitar para cada curso'}
         </Title>
         <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3> */}
         {/* <Row gutter={16}>
@@ -480,7 +480,7 @@ class menuLanding extends Component {
                           this.changePermissions(key, e);
                         }}>
                         <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al evento</Option>
+                        <Option value='assistants'>Usuarios inscritos al curso</Option>
                       </Select>
                     </div>
                     <div>

@@ -33,7 +33,7 @@ class Test extends Component {
         if (snapshot.empty) {
           DispatchMessageService({
             type: 'error',
-            msj: 'Usuario no inscrito a este evento, contacte al administrador',
+            msj: 'Usuario no inscrito a este curso, contacte al administrador',
             action: 'show',
           });
 

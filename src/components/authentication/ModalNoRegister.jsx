@@ -11,11 +11,11 @@ const ModalNoRegister = (props) => {
   const cEventUser = UseUserEvent();
   const intl = useIntl();
 
-  // Mensajes para evento privado
+  // Mensajes para curso privado
   const msgEventPrivate = intl.formatMessage({
     id: 'modal.no_register.msg_private',
     defaultMessage:
-      'Este evento es privado, solo se puede acceder por invitación,  contacte al administrador del evento.',
+      'Este curso es privado, solo se puede acceder por invitación,  contacte al administrador del curso.',
   });
 
   function whenToOpenTheModal() {
@@ -45,7 +45,7 @@ const ModalNoRegister = (props) => {
             <b>
               {intl.formatMessage({
                 id: 'modal.no_register.gotoevius',
-                defaultMessage: 'Ver más eventos',
+                defaultMessage: 'Ver más cursos',
               })}
             </b>
           </Button>

@@ -17,19 +17,19 @@ export const MenuItems = [
     key: 'main',
     items: [
       {
-        name: 'Datos del evento',
+        name: 'Datos del curso',
         path: '/main',
         key: 'datos-evento',
         onClick: handleClick,
       },
       {
-        name: '  Apariencia del evento',
+        name: '  Apariencia del curso',
         path: '/styles',
         key: 'apariencia-evento',
         onClick: handleClick,
       },
       {
-        name: 'Habilitar secciones del evento',
+        name: 'Habilitar secciones del curso',
         path: '/menuLanding',
         key: 'habilitar-secciones',
         onClick: handleClick,
@@ -43,7 +43,7 @@ export const MenuItems = [
     ],
   },
   {
-    name: 'Contenido del evento',
+    name: 'Contenido del curso',
     icon: <EditOutlined />,
     key: 'event-content',
     items: [
@@ -202,7 +202,7 @@ export const MenuItems = [
     key: 'estadisticas',
     items: [
       {
-        name: 'Estadísticas del evento',
+        name: 'Estadísticas del curso',
         path: '/dashboard',
         key: 'estadisticas-evento',
         onClick: handleClick,

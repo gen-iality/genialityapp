@@ -525,7 +525,7 @@ class ListEventUser extends Component {
                 <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
                   <Alert
                     message='Solicitudes'
-                    description='Para enviar solicitudes debes estar suscrito al evento'
+                    description='Para enviar solicitudes debes estar suscrito al curso'
                     type='info'
                     closable
                   />

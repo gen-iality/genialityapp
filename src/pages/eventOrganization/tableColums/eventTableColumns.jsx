@@ -4,7 +4,7 @@ import { CheckCircleOutlined, ExclamationCircleOutlined, CloseCircleOutlined } f
 const { Paragraph } = Typography;
 export const columns = (goToEvent) => [
   {
-    title: 'Nombre del evento',
+    title: 'Nombre del curso',
     dataIndex: 'name',
     ellipsis: 'true',
     sorter: (a, b) => a.name.localeCompare(b.name),

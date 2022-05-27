@@ -30,7 +30,7 @@ class Speakers extends Component {
     //Se hace la consulta a la api de speakers
     let speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
 
-    //consultamos las categorias del evento
+    //consultamos las categorias del curso
     let categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
 
     //Recorremos las categorias si tienen el campo orden

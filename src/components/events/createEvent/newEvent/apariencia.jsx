@@ -114,7 +114,7 @@
 //           <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
 //             <div>
 //               <span className='nota'>
-//                 Nota: estos campos son opcionales y se pueden llenar o editar en cualquier momento del evento
+//                 Nota: estos campos son opcionales y se pueden llenar o editar en cualquier momento del curso
 //               </span>
 //             </div>
 //           </Col>

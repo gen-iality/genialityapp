@@ -280,7 +280,7 @@ class RoomManager extends Component {
         return false;
       }
 
-      // Se utiliza solo cuando el usuario guarda de manera manual el id del evento en zoom o zoomExterno
+      // Se utiliza solo cuando el usuario guarda de manera manual el id del curso en zoom o zoomExterno
       if (platform === 'zoom' || platform === 'zoomExterno') {
         const data = {
           event_id,

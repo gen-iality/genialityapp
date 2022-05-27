@@ -139,7 +139,7 @@ const ModalAuth = (props) => {
     }
   };
 
-  //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
+  //Método ejecutado en el curso onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
     loginFirebase(values);
@@ -165,7 +165,7 @@ const ModalAuth = (props) => {
       });
   };
 
-  //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
+  //Se ejecuta en caso que haya un error en el formulario de login en el curso onSubmit
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };

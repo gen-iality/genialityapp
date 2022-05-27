@@ -432,7 +432,7 @@ const FormRegister = ({
                 organization == 1
                   ? ''
                   : event.registration_message ||
-                    `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
+                    `Fuiste registrado al curso  ${values.email || ''}, revisa tu correo para confirmar.`;
 
               setSuccessMessage($msg);
 
@@ -1101,7 +1101,7 @@ deberia ser solo la url de la imagen
                       <Typography.Title level={5}>
                         {intl.formatMessage({
                           id: 'modal.title.registerevent',
-                          defaultMessage: 'Información adicional para el evento',
+                          defaultMessage: 'Información adicional para el curso',
                         })}
                       </Typography.Title>
                     )}
@@ -1110,7 +1110,7 @@ deberia ser solo la url de la imagen
                       <div style={{ textAlign: 'center', width: '100%' }}>
                         {intl.formatMessage({
                           id: 'msg.no_fields_update',
-                          defaultMessage: 'No hay campos disponibles para actualizar en este evento',
+                          defaultMessage: 'No hay campos disponibles para actualizar en este curso',
                         })}
                       </div>
                     ) : (
@@ -1118,7 +1118,7 @@ deberia ser solo la url de la imagen
                         {fieldsAditional(extraFields) === 0 &&
                           intl.formatMessage({
                             id: 'msg.no_fields_create',
-                            defaultMessage: 'No hay campos adicionales en este evento',
+                            defaultMessage: 'No hay campos adicionales en este curso',
                           })}
                       </div>
                     )}

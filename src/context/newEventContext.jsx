@@ -292,7 +292,7 @@ export const NewEventProvider = ({ children }) => {
       const newMenu = {
         itemsMenu: {
           evento: {
-            name: 'evento',
+            name: 'curso', // TODO: check where this prop is used
             position: 1,
             section: 'evento',
             icon: 'CalendarOutlined',
@@ -310,7 +310,7 @@ export const NewEventProvider = ({ children }) => {
         },
       };
       console.log('DATA A VERIFICAR===>', state.selectOrganization?.itemsMenu, templateId, data);
-      //CREAR EVENTO
+      //CREAR CURSO
       try {
         let token = await GetTokenUserFirebase();
 
@@ -325,7 +325,7 @@ export const NewEventProvider = ({ children }) => {
           const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
-            //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
+            //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL CURSO
             const activity = {
               name: valueInputs.name,
               subtitle: null,
@@ -339,7 +339,7 @@ export const NewEventProvider = ({ children }) => {
             const agenda = await AgendaApi.create(result._id, activity);
             //console.log("RESPUESTA AGENDA==>",agenda)
             if (agenda._id) {
-              //CREAR TEMPLATE PARA EL EVENTO
+              //CREAR TEMPLATE PARA EL CURSO
               let template = !templateId && true;
               if (templateId) {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);
@@ -348,14 +348,14 @@ export const NewEventProvider = ({ children }) => {
                 // console.log("RESPUESTA TEMPLATE==>",template)
                 DispatchMessageService({
                   type: 'success',
-                  msj: 'Evento creado correctamente...',
+                  msj: 'Curso creado correctamente...',
                   action: 'show',
                 });
                 window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
               } else {
                 DispatchMessageService({
                   type: 'error',
-                  msj: 'Error al crear evento con su template',
+                  msj: 'Error al crear curso con su template',
                   action: 'show',
                 });
               }
@@ -364,7 +364,7 @@ export const NewEventProvider = ({ children }) => {
             //console.log('RESP API==>', result);
             DispatchMessageService({
               type: 'error',
-              msj: 'Error al crear el evento',
+              msj: 'Error al crear el curso',
               action: 'show',
             });
             dispatch({ type: 'COMPLETE' });
@@ -373,7 +373,7 @@ export const NewEventProvider = ({ children }) => {
           //console.log('RESP API==>', result);
           DispatchMessageService({
             type: 'error',
-            msj: 'Error al crear el evento',
+            msj: 'Error al crear el curso',
             action: 'show',
           });
           dispatch({ type: 'COMPLETE' });
@@ -382,7 +382,7 @@ export const NewEventProvider = ({ children }) => {
         console.log('CATCH==>', error);
         DispatchMessageService({
           type: 'error',
-          msj: 'Error al crear el evento catch',
+          msj: 'Error al crear el curso catch',
           action: 'show',
         });
         dispatch({ type: 'COMPLETE' });

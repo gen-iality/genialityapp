@@ -186,13 +186,13 @@ class General extends Component {
 
     //Esto es para la configuración de autenticación. Nuevo flujo de Login
     if (this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register) {
-      //Evento Público con Registro
+      //Cursos Público con Registro
       this.setState({ typeEvent: 0 });
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
-      //Evento Público sin Registro
+      //Cursos Público sin Registro
       this.setState({ typeEvent: 1 });
     } else {
-      //Evento Privado con Invitación
+      //Cursos Privado con Invitación
       this.setState({ typeEvent: 2 });
     }
   }
@@ -624,7 +624,7 @@ class General extends Component {
   changetypeEvent = (value) => {
     this.setState({ typeEvent: value });
     if (value === 0) {
-      //Evento Público con Registro
+      //Cursos Público con Registro
       this.setState({
         event: {
           ...this.state.event,
@@ -633,7 +633,7 @@ class General extends Component {
         },
       });
     } else if (value === 1) {
-      //Evento Público sin Registro
+      //Cursos Público sin Registro
       this.setState({
         event: {
           ...this.state.event,
@@ -642,7 +642,7 @@ class General extends Component {
         },
       });
     } else {
-      //Evento Privado con Invitación
+      //Cursos Privado con Invitación
       this.setState({
         event: {
           ...this.state.event,
@@ -674,7 +674,7 @@ class General extends Component {
     return (
       <React.Fragment>
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
+          <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1'>
             <Tabs.TabPane tab='General' key='1'>
               <Row justify='center' wrap gutter={[8, 8]}>
@@ -689,7 +689,7 @@ class General extends Component {
                     <Input
                       autoFocus={true}
                       name={'name'}
-                      placeholder={'Nombre del evento'}
+                      placeholder={'Nombre del curso'}
                       value={event.name}
                       onChange={(e) => this.handleChange(e, 'name')}
                     />
@@ -777,19 +777,19 @@ class General extends Component {
                     </Form.Item>
                   )}
 
-                  <Form.Item label={'Tipo de evento'}>
+                  <Form.Item label={'Tipo de curso'}>
                     <Select
                       defaultValue={event.type_event}
                       name={'type_event'}
                       onChange={(e) => this.handleChange(e, 'type_event')}>
                       <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Evento físico</Option>
-                      <Option value='onlineEvent'>Evento virtual</Option>
+                      <Option value='physicalEvent'>Cursos físico</Option>
+                      <Option value='onlineEvent'>Cursos virtual</Option>
                     </Select>
                   </Form.Item>
 
                   {/* {event.type_event === 'onlineEvent' && (
-                    <Form.Item label={'Plataforma Streaming del evento'}>
+                    <Form.Item label={'Plataforma Streaming del curso'}>
                       <Select
                         defaultValue={event.event_platform}
                         name={'event_platform'}
@@ -808,7 +808,7 @@ class General extends Component {
                       <Form.Item label={'Dirección'}>
                         <Input
                           name={'address'}
-                          placeholder={'¿Cuál es la dirección del evento?'}
+                          placeholder={'¿Cuál es la dirección del curso?'}
                           value={event.address}
                           onChange={(e) => this.handleChange(e, 'address')}
                         />
@@ -817,7 +817,7 @@ class General extends Component {
                       <Form.Item label={'Lugar'}>
                         <Input
                           name={'venue'}
-                          placeholder={'Nombre del lugar del evento'}
+                          placeholder={'Nombre del lugar del curso'}
                           value={event.venue}
                           onChange={(e) => this.handleChange(e, 'venue')}
                         />
@@ -919,7 +919,7 @@ class General extends Component {
                     <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   )}
 
-                  {/* <Form.Item label={'Idioma del evento'}>
+                  {/* <Form.Item label={'Idioma del curso'}>
                     <Select value={event.language} name={'language'} onChange={(e) => this.handleChange(e, 'language')}>
                       <option value='es'>Español</option>
                       <option value='en'>English</option>
@@ -957,7 +957,7 @@ class General extends Component {
                   <Form.Item label={'Vídeo'}>
                     <Input
                       name={'video'}
-                      placeholder={'¿El evento tiene video promocional?'}
+                      placeholder={'¿El curso tiene video promocional?'}
                       value={event.video}
                       onChange={(e) => this.handleChange(e, 'video')}
                     />
@@ -1117,7 +1117,7 @@ class General extends Component {
                               minHeight: '170px',
                             }}>
                             <Space direction='vertical'>
-                              <Text strong>Evento Público con Registro</Text>
+                              <Text strong>Cursos Público con Registro</Text>
                               <Divider />
                               <Text type='secondary'>
                                 <ul>
@@ -1150,7 +1150,7 @@ class General extends Component {
                               minHeight: '170px',
                             }}>
                             <Space direction='vertical'>
-                              <Text strong>Evento Público sin Registro</Text>
+                              <Text strong>Cursos Público sin Registro</Text>
                               <Divider />
                               <Text type='secondary'>
                                 {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
@@ -1184,7 +1184,7 @@ class General extends Component {
                               minHeight: '170px',
                             }}>
                             <Space direction='vertical'>
-                              <Text strong>Evento Privado por invitación</Text>
+                              <Text strong>Cursos Privado por invitación</Text>
                               <Divider />
                               <Text type='secondary'>
                                 {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}

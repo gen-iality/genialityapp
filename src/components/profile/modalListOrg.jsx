@@ -33,7 +33,7 @@ const ModalListOrg = (props) => {
           style={{ marginBottom: '10px' }}
           hasFeedback
           rules={[
-            { required: true, message: 'Por favor seleccione una organización bajo la cual se creara este evento!' },
+            { required: true, message: 'Por favor seleccione una organización bajo la cual se creara este curso!' },
           ]}>
           {props.org && props.org.length > 0 && (
             <Select placeholder='Por favor seleccione una organización'>
@@ -54,7 +54,7 @@ const ModalListOrg = (props) => {
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
             size='large'>
-            Crear Evento
+            Crear Curso
           </Button>
         </Form.Item>
       </Form>

@@ -7,23 +7,23 @@ const ModalRegister = ({ register, setRegister, event }) => {
 
   let message =
     register == 1
-      ? `Se ha mandado un correo de confirmación que te permitirá acceder al evento`
+      ? `Se ha mandado un correo de confirmación que te permitirá acceder al curso`
       : register == 2
       ? event?._id !== '617311a60cf67c7edd3d8022'
-        ? `Bienvenido al evento ${event?.name}.`.concat(
-            event?._id == '61a8443fa3023d1c117f9e13' ? ' Recibirá en su correo el link de acceso al evento' : ''
+        ? `Bienvenido al curso ${event?.name}.`.concat(
+            event?._id == '61a8443fa3023d1c117f9e13' ? ' Recibirá en su correo el link de acceso al curso' : ''
           )
         : `Estás listo para recargarte de ELECTRIC LOVE el próximo 10 de noviembre.`
       : register == 3 && `Su registro ha sido exitoso, click al siguiente enlace para realizar la donación`;
-  // Recibirá en su correo el link de acceso al evento
+  // Recibirá en su correo el link de acceso al curso
   let infoButton =
     register == 1
       ? 'Cerrar'
       : register == 2
-      ? `Disfrutar del evento`
+      ? `Disfrutar del curso`
       : register == 3
       ? `REGISTRO PAGO`
-      : `Disfrutar del evento`;
+      : `Disfrutar del curso`;
 
   return (
     <Modal

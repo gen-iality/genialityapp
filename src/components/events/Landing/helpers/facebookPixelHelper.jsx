@@ -12,7 +12,7 @@ export function EnableFacebookPixelByEVENT() {
     debug: false,
   };
   const data = {
-    NuevoIngreso: 'Nuevo ingreso al evento',
+    NuevoIngreso: 'Nuevo ingreso al curso',
   };
 
   if (!pixelId) return null;

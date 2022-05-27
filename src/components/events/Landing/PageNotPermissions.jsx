@@ -58,7 +58,7 @@ const PageNotPermissions = (props) => {
         <Card hoverable>
           <Result
             // status='403'
-            title='ESTE EVENTO ES PRIVADO'
+            title='ESTE CURSO ES PRIVADO'
             subTitle={
               <div>
                 <h1 style={{ fontSize: '20px' }}>Si estas incrito, ingresa tus datos</h1>
@@ -72,7 +72,7 @@ const PageNotPermissions = (props) => {
         <>
           {' '}
           {redirect !== null || (redirect !== undefined && <Redirect to={`${urlsection}${redirect}`} />)}
-          {/* Sección quemada para evento de subasta sileciosa FTDJ */}
+          {/* Sección quemada para curso de subasta sileciosa FTDJ */}
           {EventContext.value._id == '60cb7c70a9e4de51ac7945a2' && (
             <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
               {products.length > 0 && !loading && (
@@ -100,10 +100,10 @@ const PageNotPermissions = (props) => {
                       <>
                         Para poder ver la sección{' '}
                         <a style={{ fontWeight: 'bold' }}>{props.sectionPermissions.section}</a> tienes que estar
-                        registrado en este evento
+                        registrado en este curso
                       </>
                     ) : (
-                      <>Para poder ver esta sección tienes que estar registrado en este evento</>
+                      <>Para poder ver esta sección tienes que estar registrado en este curso</>
                     )}
                   </h1>
                 </Card>

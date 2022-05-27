@@ -34,7 +34,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
         borderRadius: '10px',
       }}>
       <TweenOne className='banner-user-text'>
-        {/* Fecha del evento */}
+        {/* Fecha del curso */}
         <div>
           {dates && dates.length > 0 ? (
             <>
@@ -81,7 +81,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
       </TweenOne>
 
       <TweenOne className='banner-user-title' animation={{ y: 30, opacity: 0, type: 'from' }}>
-        {/* Nombre del evento */}
+        {/* Nombre del curso */}
         <span>{title}</span>
       </TweenOne>
 
@@ -91,7 +91,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
           <span>Organizado por: {organizado}</span>
         </div>
 
-        {/* Lugar del evento */}
+        {/* Lugar del curso */}
         <div>
           {type_event === 'onlineEvent' ? (
             <div>

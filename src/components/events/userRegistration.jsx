@@ -67,7 +67,7 @@ class UserRegistration extends Component {
   };
 
   async componentDidMount() {
-    // Trae la informacion del evento
+    // Trae la informacion del curso
     const event = await EventsApi.getOne(this.props.cEvent.value._id);
 
     const properties = event.user_properties;

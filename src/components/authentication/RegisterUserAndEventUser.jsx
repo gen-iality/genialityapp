@@ -181,7 +181,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             loading: false,
             textError: intl.formatMessage({
               id: 'text_error.successfully_registered',
-              defaultMessage: 'Te has inscrito correctamente a este evento',
+              defaultMessage: 'Te has inscrito correctamente a este curso',
             }),
           });
           setbasicDataUser({});

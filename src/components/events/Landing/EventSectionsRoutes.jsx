@@ -47,7 +47,7 @@ const EventSectionRoutes = (props) => {
   let cEventUser = UseUserEvent();
   let cUser = UseCurrentUser();
 
-  //redirigir a evento Cancilleria
+  //redirigir a curso Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
     window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
   }

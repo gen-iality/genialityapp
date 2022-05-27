@@ -74,9 +74,9 @@ const DrawerProfile = (props) => {
               }}
             />
             {isMe ? (
-              <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el evento' />
+              <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el curso' />
             ) : (
-              <FormattedMessage id='header.my_data_event2' defaultMessage='Perfil del participante en el evento' />
+              <FormattedMessage id='header.my_data_event2' defaultMessage='Perfil del participante en el curso' />
             )}
           </Space>
         }
@@ -90,8 +90,8 @@ const DrawerProfile = (props) => {
           <Col span={24}>
             <Typography.Paragraph>
               {isMe
-                ? 'Esta es tu información suministrada para el evento'
-                : ' Esta es la información suministrada para el evento'}
+                ? 'Esta es tu información suministrada para el curso'
+                : ' Esta es la información suministrada para el curso'}
               <Typography.Text strong> {cEvent.value.name} </Typography.Text>
             </Typography.Paragraph>
           </Col>

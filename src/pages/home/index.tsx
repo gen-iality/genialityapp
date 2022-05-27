@@ -59,7 +59,7 @@ const Home = () => {
       <ModalFeedback />
       <Row gutter={[16, 16]} wrap>
         <Col span={24}>
-          <Typography.Title level={1}>Eventos</Typography.Title>
+          <Typography.Title level={1}>Cursos</Typography.Title>
         </Col>
         <Col span={24}>
           <Space wrap>
@@ -88,7 +88,7 @@ const Home = () => {
                 <Row gutter={[16, 16]}>
                   {isSuccess && useResponse(typeEvent)?.length <= 0 ? (
                     <Row justify='center' align='middle' style={{ width: '100%', height: '400px' }}>
-                      <Result title={'No hay eventos próximos'} />
+                      <Result title={'No hay cursos próximos'} />
                     </Row>
                   ) : (
                     useResponse(typeEvent)?.map((event, key) => {
@@ -119,7 +119,7 @@ const Home = () => {
                 isSuccess &&
                 useResponse(typeEvent)?.length > 0 && (
                   <Button disabled block>
-                    {isLoading ? 'Buscando...' : 'No hay más eventos por mostrar'}
+                    {isLoading ? 'Buscando...' : 'No hay más cursos por mostrar'}
                   </Button>
                 )
               )}

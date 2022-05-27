@@ -40,7 +40,7 @@ class Preview extends Component {
       headers = [];
     const { list, extraFields } = this.props;
 
-    //Promesa para recorrer las propiedades del evento/organizaciòn para crear el header de las listas
+    //Promesa para recorrer las propiedades del curso/organizaciòn para crear el header de las listas
     const results = extraFields.map(async (item) => {
       return headers.push({ ...item, tag: item.name, used: false });
     });

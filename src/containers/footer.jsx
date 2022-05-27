@@ -22,7 +22,7 @@ const Footer = () => {
             </List.Item>
             <List.Item style={{ border: 'none' }}>
               <a target='_blank' href='https://evius.co/tipos-de-eventos/' style={{ color: '#fff' }}>
-                Tipos de eventos
+                Tipos de cursos
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>

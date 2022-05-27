@@ -1,6 +1,6 @@
 import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 /** --------------------
- *  secciones del evento
+ *  secciones del curso
  * ---------------------*/
 import FeriasDetail from '../../events/ferias/FeriasDetail';
 import FeriasList from '../../events/ferias/FeriasList';

@@ -728,7 +728,7 @@ class AgendaEdit extends Component {
         });
 
         if (agenda?._id) {
-          /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
+          /** Si es un curso recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
           this.context.setActivityEdit(agenda._id);
           this.setState({
             idNewlyCreatedActivity: agenda._id,

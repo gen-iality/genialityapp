@@ -10,7 +10,7 @@ export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActu
   let currentUser = await GetTokenUserFirebase();
 
   if (currentUser) {
-    // Se valida si el usuario esta suscrito al evento
+    // Se valida si el usuario esta suscrito al curso
     if (eventUserId) {
       // Se usan los EventUserId
       const data = {

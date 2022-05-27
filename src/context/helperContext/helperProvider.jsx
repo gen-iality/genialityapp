@@ -546,7 +546,7 @@ export const HelperContextProvider = ({ children }) => {
     }
   }, [cEventuser.value, cEvent.value]);
 
-  /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
+  /*VALIDACION DE CURSO TOTALMENTE PRIVADO*/
   function GetPermissionsEvent() {
     if (cEvent.value != null) {
       let routePermissions =

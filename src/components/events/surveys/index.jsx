@@ -32,15 +32,15 @@ class SurveyForm extends Component {
         permissions: 'public',
       },
 
-      // luego de cargar el componente este estado permanece escuchando todas las encuestas del evento
-      eventSurveys: [], // Todas las encuestas de un evento, este estado va a estar escuchando
+      // luego de cargar el componente este estado permanece escuchando todas las encuestas del curso
+      eventSurveys: [], // Todas las encuestas de un curso, este estado va a estar escuchando
       anonymousSurveys: [], // Solo encuestas que permiten usuarios anónimos
       publishedSurveys: [], // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
     };
   }
 
   async componentDidMount() {
-    // Método para escuchar todas las encuestas relacionadas con el evento
+    // Método para escuchar todas las encuestas relacionadas con el curso
     await this.listenSurveysData();
 
     let eventUser = await this.getCurrentEvenUser(this.props.cEvent.value._id);
@@ -56,13 +56,13 @@ class SurveyForm extends Component {
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let $query = firestore.collection('surveys');
 
-    //Le agregamos el filtro por evento
+    //Le agregamos el filtro por curso
     if (this.props.cEvent.value && this.props.cEvent.value._id) {
       $query = $query.where('eventId', '==', this.props.cEvent.value._id);
     }
 
     $query.onSnapshot(async (surveySnapShot) => {
-      // Almacena el Snapshot de todas las encuestas del evento
+      // Almacena el Snapshot de todas las encuestas del curso
 
       const eventSurveys = [];
       let publishedSurveys = [];
@@ -80,7 +80,7 @@ class SurveyForm extends Component {
         eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 
-      // Listado de encuestas publicadas del evento
+      // Listado de encuestas publicadas del curso
       publishedSurveys = eventSurveys.filter(
         (survey) =>
           (survey.isPublished === 'true' || survey.isPublished === true) &&

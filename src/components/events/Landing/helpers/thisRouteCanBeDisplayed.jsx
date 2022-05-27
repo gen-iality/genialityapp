@@ -34,7 +34,7 @@ function ThisRouteCanBeDisplayed({ children }) {
   let { handleChangeTypeModal } = useHelper();
 
   useEffect(() => {
-    /** Abrir modal de registro al evento automaticamente para eventos con registro obligatorio */
+    /** Abrir modal de registro al curso automaticamente para cursos con registro obligatorio */
     recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
       iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' &&
       handleChangeTypeModal('registerForTheEvent');

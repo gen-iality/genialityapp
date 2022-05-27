@@ -82,12 +82,12 @@ class DashboardEvent extends Component {
       metricsRegister: [],
       //Descripciones de Tooltip
       desc1: 'Cantidad de usuarios registrados por día',
-      desc2: 'Total de usuarios registrados en el evento',
-      desc3: 'Duración promedio de un usuario en el evento',
-      desc4: 'Total de usuarios que visitan el evento por día',
+      desc2: 'Total de usuarios registrados en el curso',
+      desc3: 'Duración promedio de un usuario en el curso',
+      desc4: 'Total de usuarios que visitan el curso por día',
       desc5: 'Visitas totales de los usuarios',
-      desc6: 'Visitas realizadas al evento',
-      desc7: 'Impresiones totales del evento',
+      desc6: 'Visitas realizadas al curso',
+      desc7: 'Impresiones totales del curso',
       loadingMetrics: true,
       //TRUE:MUESTRA UI
       //FALSE: PARA IMPRIMIR
@@ -261,7 +261,7 @@ class DashboardEvent extends Component {
       //this.graficPrintouts();
     }
   }
-  //Función que permite obtener las métricas generales del evento
+  //Función que permite obtener las métricas generales del curso
   obtenerMetricas = async (data) => {
     const { eventId } = this.props;
     let metricsgnal = await queryReportGnal(eventId);
@@ -320,7 +320,7 @@ class DashboardEvent extends Component {
       attendesDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Número de usuarios que visitan el evento (últimos 7 días)'
+        'Número de usuarios que visitan el curso (últimos 7 días)'
       ),
     });
   }
@@ -340,7 +340,7 @@ class DashboardEvent extends Component {
       printoutsDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Número de visitas del evento (últimos 7 días)'
+        'Número de visitas del curso (últimos 7 días)'
       ),
     });
   }
@@ -537,7 +537,7 @@ class DashboardEvent extends Component {
                   <Statistic
                     groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                     valueStyle={{ fontSize: '38px' }}
-                    title='Total usuarios que visitan el evento'
+                    title='Total usuarios que visitan el curso'
                     value={this.state.metricsGnal ? this.state.metricsGnal.total_checkIn : 0}
                     prefix={<UserOutlined />}
                   />
@@ -578,7 +578,7 @@ class DashboardEvent extends Component {
                   <Statistic
                     groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                     valueStyle={{ fontSize: '38px' }}
-                    title='Visitas totales del evento'
+                    title='Visitas totales del curso'
                     value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
                     prefix={<EyeOutlined />}
                   />
@@ -590,7 +590,7 @@ class DashboardEvent extends Component {
             <Col span={24}>
               <Card
                 headStyle={{ border: 'none' }}
-                title={'Métricas por actividades del evento'}
+                title={'Métricas por actividades del curso'}
                 extra={<MoreOutlined />}>
                 <Table
                   dataSource={this.state.metricsActivity}
@@ -705,7 +705,7 @@ class DashboardEvent extends Component {
           pageStyle={pageStyle}
           onBeforeGetContent={() => this.displayButton(this)}
           onAfterPrint={() => this.visibleButton(this)}
-          documentTitle={'Métricas del evento ' + this.props.eventName}
+          documentTitle={'Métricas del curso ' + this.props.eventName}
           trigger={() => {
             return (
               <Row justify='end' style={{ paddingTop: '10px' }}>

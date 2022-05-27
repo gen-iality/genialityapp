@@ -47,7 +47,7 @@ const InteractiveZone = () => {
           publishedSurveys={this.state.publishedSurveys}
         />
       </Drawer>
-      {/* aqui empieza el chat del evento desktop */}
+      {/* aqui empieza el chat del curso desktop */}
       {(this.state.generalTabs?.attendees ||
         this.state.generalTabs?.publicChat ||
         this.state.generalTabs?.privateChat) && (

@@ -126,7 +126,7 @@ const Importacion = (props) => {
     <React.Fragment>
       <div className='importacion-txt'>
         <p>
-          Para importar los usuarios de tu evento, debes cargar un archivo excel (.xls) con las columnas organizadas
+          Para importar los usuarios de tu curso, debes cargar un archivo excel (.xls) con las columnas organizadas
           (como se muestra abajo). Para mayor facilidad, <strong>descarga nuestro template</strong> para organizar los
           datos de tus asistentes.
         </p>

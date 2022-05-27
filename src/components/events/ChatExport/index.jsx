@@ -107,7 +107,7 @@ const ChatExport = ({ eventId, event }) => {
     const ws = utils.json_to_sheet(datamsjevent);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Chat');
-    writeFileXLSX(wb, `chatEVENTO ${event.name}.xls`);
+    writeFileXLSX(wb, `chatCURSO ${event.name}.xls`);
   };
 
   useEffect(() => {
@@ -346,8 +346,8 @@ const ChatExport = ({ eventId, event }) => {
 
   return (
     <Tabs defaultActiveKey='1' onChange={(getChat, getBlocketdUsers)}>
-      <TabPane tab='Gestión de chats del evento' key='1'>
-        {/* <Header title={'Gestión de chats del evento'} /> */}
+      <TabPane tab='Gestión de chats del curso' key='1'>
+        {/* <Header title={'Gestión de chats del curso'} /> */}
 
         <Table
           header={columns}

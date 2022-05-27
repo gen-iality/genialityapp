@@ -55,7 +55,7 @@ function AnonymousEvenUserForm() {
           <Text type='secondary'>
             <FormattedMessage
               id='form.message.socialzone'
-              defaultMessage='Registrate para participar en el chat de este evento'
+              defaultMessage='Registrate para participar en el chat de este curso'
             />
           </Text>
         </Col>

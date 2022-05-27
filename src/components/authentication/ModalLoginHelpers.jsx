@@ -80,7 +80,7 @@ const ModalLoginHelpers = (props) => {
     setLoading(true);
     setRegisterUser(false);
     setSendRecovery(null);
-    // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
+    // SI EL CURSO ES PARA RECUPERAR CONTRASEÑA
     if (typeModal == 'recover') {
       handleRecoveryPass(values);
       setLoading(false);
@@ -109,7 +109,7 @@ const ModalLoginHelpers = (props) => {
           setSendRecovery(
             `${values.email} ${intl.formatMessage({
               id: 'modal.send.notregistered',
-              defaultMessage: 'no se encuentra registrado en este evento',
+              defaultMessage: 'no se encuentra registrado en este curso',
             })}`
           );
           setresul('noRegister');
@@ -119,7 +119,7 @@ const ModalLoginHelpers = (props) => {
         setSendRecovery(
           `${intl.formatMessage({
             id: 'modal.send.alert.error',
-            defaultMessage: 'Error al solicitar acceso al evento',
+            defaultMessage: 'Error al solicitar acceso al curso',
           })}`
         );
         setStatus('error');
@@ -253,7 +253,7 @@ const ModalLoginHelpers = (props) => {
             type='error'
             message={intl.formatMessage({
               id: 'modal.message.notregistered',
-              defaultMessage: 'Este email no se encuentra registrado en este evento',
+              defaultMessage: 'Este email no se encuentra registrado en este curso',
             })}
             closable
             className='animate__animated animate__bounceIn animate__faster'

@@ -66,8 +66,8 @@ class DetailTickets extends Component {
             }
             {item.author && <Descriptions.Item label='Organizador'>{item.author}</Descriptions.Item>}
             {item.properties && (
-              <Descriptions.Item title='Tu información en el evento' span={4}>
-                <Title level={4}>Tu información en el evento</Title>
+              <Descriptions.Item title='Tu información en el curso' span={4}>
+                <Title level={4}>Tu información en el curso</Title>
               </Descriptions.Item>
             )}
             {item.properties &&

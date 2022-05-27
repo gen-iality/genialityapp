@@ -44,7 +44,7 @@ const trivia = (props) => {
   return (
     <>
       {typeEvent == "UN_REGISTERED_PUBLIC_EVENT" ? (
-        <Result title="Este modulo no esta habilitado para eventos publicos sin registro" />
+        <Result title="Este modulo no esta habilitado para cursos publicos sin registro" />
       ) : (
         <CMS
           API={SurveysApi}

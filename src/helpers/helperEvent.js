@@ -2,7 +2,7 @@ import { firestore } from './firebase';
 import { EventFieldsApi } from './request';
 
 
-//METODO PARA SABER SI ESTA EN EL HOME DE EVIUS O EN UN EVENTO
+//METODO PARA SABER SI ESTA EN EL HOME DE GENIALITY O EN UN CURSO
 export function isHome() {
   let isHome = window.location.pathname.includes('/landing');
   if (isHome) {
@@ -61,7 +61,7 @@ function changeInSurveyDocChanges(docChanges) {
 export function publishedSurveysByActivity(currentActivity, eventSurveys, currentUser) {
   let publishedSurveys = [];
   if (currentActivity !== null) {
-    // Listado de encuestas publicadas del evento
+    // Listado de encuestas publicadas del curso
     publishedSurveys = eventSurveys.filter(
       (survey) =>
         (survey.isPublished === 'true' || survey.isPublished === true) &&
@@ -95,7 +95,7 @@ export let monitorNewChatMessages = (event, user) => {
   return totalNewMessages;
 };
 
-//obtener propiedades del evento
+//obtener propiedades del curso
 export let getProperties = async (event) => {
   let properties = await EventFieldsApi.getAll(event._id);
   let propertiesdata;
@@ -137,7 +137,7 @@ export const zoomExternoHandleOpen = (activity, eventUser, isMobile, TicketsApi,
   }
 };
 
-//obtener las generaltabs del evento
+//obtener las generaltabs del curso
 
 export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
   firestore

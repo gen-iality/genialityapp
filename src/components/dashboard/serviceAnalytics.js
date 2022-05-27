@@ -102,7 +102,7 @@ export const queryReportGnal = async (eventID) => {
     sortOrder: "ASCENDING",
   };
   //paveview=impresiones
-  //Usuarios totales del evento ga:sessions
+  //Usuarios totales del curso ga:sessions
   let resp = await fetch(devEvius, {
     headers: {
       "content-type": "application/json",

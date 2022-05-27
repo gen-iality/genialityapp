@@ -8,7 +8,7 @@ import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import Tranmitir from './newEvent/transmitir';
-/*vista de resultado de la creacion de un evento */
+/*vista de resultado de la creacion de un curso */
 import { cNewEventContext } from '../../context/newEventContext';
 import Service from '../../components/agenda/roomManager/service';
 import { firestore } from '../../helpers/firebase';
@@ -171,7 +171,7 @@ class NewEvent extends Component {
       };
 
       //console.log('EVENT TO CREATE==>', data);
-      //CREAR EVENTO
+      //CREAR CURSO
       try {
         let token = await GetTokenUserFirebase();
 
@@ -186,7 +186,7 @@ class NewEvent extends Component {
           const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
-            //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
+            //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL CURSO
             const activity = {
               name: eventNewContext.valueInputs.name,
               subtitle: null,
@@ -205,7 +205,7 @@ class NewEvent extends Component {
                 if (sala) {
                   DispatchMessageService({
                     type: 'success',
-                    msj: 'Evento creado correctamente...',
+                    msj: 'Cursos creado correctamente...',
                     action: 'show',
                   });
                   alert('ACA');
@@ -218,7 +218,7 @@ class NewEvent extends Component {
                   });
                 }
               } else {
-                //CREAR TEMPLATE PARA EL EVENTO
+                //CREAR TEMPLATE PARA EL CURSO
                 let template = !eventNewContext.templateId && true;
                 if (eventNewContext.templateId) {
                   template = await EventsApi.createTemplateEvent(result._id, eventNewContext.templateId);
@@ -227,14 +227,14 @@ class NewEvent extends Component {
                   // console.log("RESPUESTA TEMPLATE==>",template)
                   DispatchMessageService({
                     type: 'success',
-                    msj: 'Evento creado correctamente...',
+                    msj: 'Cursos creado correctamente...',
                     action: 'show',
                   });
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
                   DispatchMessageService({
                     type: 'error',
-                    msj: 'Error al crear evento con su template',
+                    msj: 'Error al crear curso con su template',
                     action: 'show',
                   });
                 }
@@ -244,7 +244,7 @@ class NewEvent extends Component {
             //console.log('RESP API==>', result);
             DispatchMessageService({
               type: 'error',
-              msj: 'Error al crear el evento',
+              msj: 'Error al crear el curso',
               action: 'show',
             });
           }
@@ -252,7 +252,7 @@ class NewEvent extends Component {
           //console.log('RESP API==>', result);
           DispatchMessageService({
             type: 'error',
-            msj: 'Error al crear el evento',
+            msj: 'Error al crear el curso',
             action: 'show',
           });
         }
@@ -260,7 +260,7 @@ class NewEvent extends Component {
         //console.log(error);
         DispatchMessageService({
           type: 'error',
-          msj: 'Error al crear el evento',
+          msj: 'Error al crear el curso',
           action: 'show',
         });
       }
@@ -438,7 +438,7 @@ class NewEvent extends Component {
               )}
               {current === this.state.steps.length - 1 && (
                 <Button className='button' type='primary' size='large' onClick={() => this.saveEvent()}>
-                  Crear evento
+                  Crear curso
                 </Button>
               )}
             </div>

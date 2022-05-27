@@ -71,7 +71,7 @@ function ConfirmacionRegistro(props) {
       <Form onFinish={saveData} {...formLayout}>
         <Header
           title={'Confirmación de Inscripción'}
-          description={'El siguiente mensaje le llegará a las personas luego de haberse inscrito al evento'}
+          description={'El siguiente mensaje le llegará a las personas luego de haberse inscrito al curso'}
           save
           form
         />
@@ -87,7 +87,7 @@ function ConfirmacionRegistro(props) {
         </Row>
       </Form>
       {/* <h1>Mensaje Confirmacion Registro</h1>
-      <p>El siguiente mensaje le llegara a las personas luego de haberse registrado al evento</p>
+      <p>El siguiente mensaje le llegara a las personas luego de haberse registrado al curso</p>
       <Row gutter={[0, 24]}>
         <Col span={12}>
           <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />

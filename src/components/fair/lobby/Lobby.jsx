@@ -31,7 +31,7 @@ class Lobby extends Component {
         time_from: '26 de Agosto 1:00 pm',
         time_to: '28 de Agosto 7:00 pm',
         city: 'Bogotá',
-        type: 'EVENTO VIRTUAL',
+        type: 'CURSO VIRTUAL',
         organizer: 'Prhopio',
         logo: logoImg,
         logoFeria: logoFeriaImg,
@@ -41,7 +41,7 @@ class Lobby extends Component {
       },
       virtual_events: [
         {
-          name: 'Nombre Evento',
+          name: 'Nombre Curso',
           date: 'Junio 19',
           hour_from: '6:00AM',
           hour_to: '9:00AM',
@@ -52,7 +52,7 @@ class Lobby extends Component {
           },
         },
         {
-          name: 'Nombre Evento',
+          name: 'Nombre Curso',
           date: 'Junio 19',
           hour_from: '6:00AM',
           hour_to: '9:00AM',

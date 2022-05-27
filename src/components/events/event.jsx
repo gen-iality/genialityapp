@@ -185,7 +185,7 @@ class Event extends Component {
           extra={[
             <Link to={`/`}>
               <Button type='primary' key='eventData'>
-                Ver más eventos
+                Ver más cursos
               </Button>
             </Link>,
           ]}
@@ -210,7 +210,7 @@ class Event extends Component {
                 size='small'
                 target='_blank'
                 href={`${window.location.origin}/landing/${this.state.event._id}`}>
-                Ir al evento
+                Ir al curso
               </Button>
             </Col>
           </Row>

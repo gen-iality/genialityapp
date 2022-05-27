@@ -36,7 +36,7 @@ function OrgEvents(props) {
 
   return (
     <>
-      <Header title='Eventos' />
+      <Header title='Cursos' />
       <Table
         columns={columns(goToEvent)}
         dataSource={eventData}

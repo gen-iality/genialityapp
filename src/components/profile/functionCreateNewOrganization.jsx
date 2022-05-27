@@ -43,7 +43,7 @@ const functionCreateNewOrganization = (props) => {
     key: 'loading',
     msj: !props.newEventWithoutOrganization
       ? 'Estamos creando la organización.'
-      : 'Redirigiendo al creador de eventos rápidos',
+      : 'Redirigiendo al creador de cursos rápidos',
     duration: 90,
     action: 'show',
   });
@@ -80,7 +80,7 @@ const functionCreateNewOrganization = (props) => {
 
     const response = await OrganizationApi.createOrganization(body);
 
-    /** si el usuario no tiene una org, primero se crea y despues se redirige al creador de eventos sencillo */
+    /** si el usuario no tiene una org, primero se crea y despues se redirige al creador de cursos sencillo */
     if (props.newEventWithoutOrganization) {
       if (response?._id) {
         sendDataFinished();
@@ -89,7 +89,7 @@ const functionCreateNewOrganization = (props) => {
         sendDataFinished();
         DispatchMessageService({
           type: 'error',
-          msj: 'Error al redirigir al creador de eventos rápidos',
+          msj: 'Error al redirigir al creador de cursos rápidos',
           action: 'show',
         });
       }

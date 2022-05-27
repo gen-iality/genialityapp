@@ -42,7 +42,7 @@ function SurveyComponent(props) {
   let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
 
   useEffect(() => {
-    // asigna los colores del evento para la UI de la encuesta
+    // asigna los colores del curso para la UI de la encuesta
     InternarlSurveyStyles(eventStyles);
 
     //listener que nos permite saber los cambios de la encuesta en tiempo real

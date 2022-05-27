@@ -63,7 +63,7 @@ function OrganizationInformation(props) {
               <Input.TextArea />
             </Form.Item>
             <Form.Item
-              label='Tipo de eventos'
+              label='Tipo de cursos'
               initialValue={type_event || 'Corporativo'}
               name={['organization', 'type_event']}>
               <Select onChange={null}>

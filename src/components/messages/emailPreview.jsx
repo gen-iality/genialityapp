@@ -47,7 +47,7 @@ const EmailPrev = (props) => {
         </Row>
         <p className='has-text-primary'>
           <EnvironmentOutlined />
-          Ubicación del evento
+          Ubicación del curso
           <br />
           {props?.event?.location?.FormattedAddress}
           <Tag color='#1cdcb7' style={{ fontSize: '14px' }}>

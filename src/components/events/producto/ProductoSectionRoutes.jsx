@@ -1,6 +1,6 @@
 import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 /** --------------------
- *  secciones del evento
+ *  secciones del curso
  * ---------------------*/
 import { UseEventContext } from '../../../context/eventContext';
 import DetailsProduct from './productDetails';

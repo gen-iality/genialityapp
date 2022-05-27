@@ -34,7 +34,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
   dataSurvey.title = dataSurvey.survey;
   // Se muestra una barra de progreso en la parte inferior
   dataSurvey.showProgressBar = 'top';
-  // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
+  // Esto permite que se envie los datos al pasar cada pagina con el curso onPartialSend
   dataSurvey.sendResultOnPageNext = true;
   // Esto permite ocultar el boton de devolver en la encuesta
   dataSurvey.showPrevButton = false;
