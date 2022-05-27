@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { PlanesApi } from '../../../helpers/request';
+import PlanCard from './planCard';
 import { Row, Col, Card, Typography, List, Divider, Tabs, Space, Table, Statistic } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import CashIcon from '@2fd/ant-design-icons/lib/Cash';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
@@ -44,8 +44,8 @@ const myPlan = ({ cUser }) => {
   const getPlanes = async () => {
     let plans = await PlanesApi.getAll();
     setPlanes(plans);
-    console.log(plans, 'planes');
-    console.log(plans[0]._id, plans[1]._id, plan._id);
+    /* console.log(plans, 'planes');
+    console.log(plans[0]._id, plans[1]._id, plan._id); */
     //const p = await PlanesApi.getOne('62864ad118aa6b4b0f5820a2');
   };
 
@@ -54,40 +54,28 @@ const myPlan = ({ cUser }) => {
       <Tabs.TabPane tab={'Mi plan'} key={'plan'}>
         <Row gutter={[12, 12]}>
           <Col span={6}>
-            <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
-              <Statistic
-                title={<Typography.Text strong>Plan {plan.name}</Typography.Text>}
-                value={`US $ ${plan.price}`}
-                //prefix={<CashIcon style={{ fontSize: '24px' }} />}
-              />
-            </Card>
+            <PlanCard title={`Plan ${plan.name}`} value={`US $ ${plan.price}`} />
           </Col>
           <Col span={6}>
-            <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
-              <Statistic
-                title={<Typography.Text strong>Horas de transmisión</Typography.Text>}
-                value={`${plan.availables.streaming_hours / 60}h`}
-                prefix={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
-              />
-            </Card>
+            <PlanCard
+              title={'Horas de transmisión'}
+              value={`${plan.availables.streaming_hours / 60}h`}
+              icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
+            />
           </Col>
           <Col span={6}>
-            <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
-              <Statistic
-                title={<Typography.Text strong>Usuarios</Typography.Text>}
-                value={plan.availables.users}
-                prefix={<AccountGroupIcon style={{ fontSize: '24px' }} />}
-              />
-            </Card>
+            <PlanCard
+              title={'Usuarios'}
+              value={plan.availables.users}
+              icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
+            />
           </Col>
           <Col span={6}>
-            <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
-              <Statistic
-                title={<Typography.Text strong>Eventos</Typography.Text>}
-                value={plan.availables.events}
-                prefix={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
-              />
-            </Card>
+            <PlanCard
+              title={'Eventos'}
+              value={plan.availables.events}
+              icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
+            />
           </Col>
           <Col span={24}>
             <Card style={{ borderRadius: '15px' }}>
@@ -321,10 +309,6 @@ const myPlan = ({ cUser }) => {
         <Table dataSource={dataSource} columns={columns} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Más planes'} key={'plan2'}>
-        {console.log(
-          planes.filter((plan1) => plan1._id !== plan._id),
-          '1'
-        )}
         {planes
           .filter((plan1) => plan1._id !== plan._id)
           .map((plan2) => (
