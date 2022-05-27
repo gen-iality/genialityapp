@@ -89,7 +89,7 @@ class Privacy extends Component {
           podrás acudir a la Superintendencia de Industria y Comercio para hacer valer tus derechos como consumidor. 5.
           Vigencia de la Autorización de tratamiento de datos personales: El titular de los datos personales acepta y
           reconoce que esta autorización estará vigente a partir del momento en que la acepta y durante el tiempo en que
-          EVIUS. ejerza las actividades propias de su objeto social. 6. Aviso por cambios en Aviso de Privacidad
+          EVIUS. ejerza las lecciones propias de su objeto social. 6. Aviso por cambios en Aviso de Privacidad
           Cualquier cambio en los Términos y Condiciones y en el Aviso de Privacidad se notificará por medio de un
           correo electrónico al email que ingresaste en el formulario de registro; y será publicado en nuestro Sitio
           web; con acceso directo a los textos completos. Ahora, si el correo electrónico que usaste para registro no se
