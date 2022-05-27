@@ -1021,6 +1021,15 @@ export const SpeakersApi = {
   },
 };
 
+export const PlanesApi = {
+  getAll: async () => {
+    return await Actions.getAll(`api/planes`, true);
+  },
+  getOne: async (id) => {
+    return await Actions.getOne(`api/planes/`, id);
+  },
+};
+
 export const OrganizationPlantillaApi = {
   createTemplate: async (organization, data) => {
     let token = await GetTokenUserFirebase();
