@@ -61,15 +61,15 @@ const EventSectionRoutes = (props) => {
     if (firstroute && firstrouteValues) {
       if (firstroute.length > 0 && firstrouteValues.length > 0) {
         for (let i = 0; i < firstrouteValues.length; i++) {
-          if (firstrouteValues[i]?.position == '1') {
+          if (firstrouteValues[ i ]?.position == '1') {
             index = i;
             break;
           }
         }
         if (index > -1) {
-          return firstroute[index];
+          return firstroute[ index ];
         } else {
-          return firstroute[0];
+          return firstroute[ 0 ];
         }
       }
     }
@@ -80,7 +80,7 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value && cUser.value) {
       initUserPresence(props.cEvent.value._id);
     }
-  }, [props.cEvent.value, cUser.value]);
+  }, [ props.cEvent.value, cUser.value ]);
 
   useEffect(() => {
     GetPermissionsEvent();
@@ -92,9 +92,12 @@ const EventSectionRoutes = (props) => {
 
   useEffect(() => {
     if (cEventUser.value && props.cEvent.value) {
-      useCheckinUser(cEventUser.value, props.cEvent.value._id);
+      // console.log(props.cEvent.value.type_event)
+      if (props.cEvent.value.type_event === "onlineEvent") {
+        useCheckinUser(cEventUser.value, props.cEvent.value._id);
+      }
     }
-  }, [cEventUser.status, props.cEvent.value]);
+  }, [ cEventUser.status, props.cEvent.value ]);
 
   const validateTypeUrl = () => {
     let url;
