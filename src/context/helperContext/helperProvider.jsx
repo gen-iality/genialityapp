@@ -453,7 +453,7 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
-    /*NOTIFICACIONES POR ACTIVIDAD*/
+    /*NOTIFICACIONES POR LECCIÓN*/
 
     async function fetchActivityChange() {
       firestore

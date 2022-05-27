@@ -67,7 +67,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: false,
       allow_gradable_survey: false,
       hasMinimumScore: 'false', // Si la encuesta calificable requiere un puntaje minimo de aprobación
-      isGlobal: 'false', // determina si la encuesta esta disponible desde cualquier actividad
+      isGlobal: 'false', // determina si la encuesta esta disponible desde cualquier lección
       showNoVotos: 'false',
 
       // estado de la encuesta
@@ -119,7 +119,7 @@ class triviaEdit extends Component {
       //Consulta  a Mongo del información del curso
       const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
 
-      //Se obtiene el listado de actividades del curso para listarlas en la lista desplegable para relacionar la encuesta con una actividad
+      //Se obtiene el listado de lecciones del curso para listarlas en la lista desplegable para relacionar la encuesta con una lección
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
 
       //Se envian al estado para poderlos utilizar en el markup
@@ -903,7 +903,7 @@ class triviaEdit extends Component {
                           </>
                         ))}
 
-                      <Form.Item label={'Encuesta global (visible en todas las actividades)'}>
+                      <Form.Item label={'Encuesta global (visible en todas las lecciones)'}>
                         <Switch
                           name={'isGlobal'}
                           checked={isGlobal === 'true' || isGlobal === true}
@@ -913,7 +913,7 @@ class triviaEdit extends Component {
 
                       {(isGlobal === 'false' || isGlobal === false) && (
                         <>
-                          <Form.Item label={'Relacionar esta encuesta a una actividad'}>
+                          <Form.Item label={'Relacionar esta encuesta a una lección'}>
                             <Select
                               name={'activity_id'}
                               value={activity_id || ''}

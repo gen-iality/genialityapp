@@ -54,7 +54,7 @@ export const networks = [
 export const rolPermissions = {
   admin_activity: {
     _id: '60a5256e5f7827f40e29ff6a',
-    name: 'Administrar actividad/Anfitrión de la actividad',
+    name: 'Administrar lección/Anfitrión de la lección',
   },
   admin_ticket: {
     _id: '5c09261df33bd415e22dcdb2',

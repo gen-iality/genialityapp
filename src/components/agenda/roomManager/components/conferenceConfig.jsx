@@ -45,7 +45,7 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
                   setRoomStatus(value);
                 }}
                 style={{ width: '180px' }}>
-                <Option value=''>Actividad creada</Option>
+                <Option value=''>Lección creada</Option>
                 <Option value='closed_meeting_room'>Iniciará pronto</Option>
                 <Option value='open_meeting_room'>En vivo</Option>
                 <Option value='ended_meeting_room'>Finalizada</Option>

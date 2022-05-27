@@ -103,16 +103,16 @@ const videoActivity: ProviderOptions[] = [
   },
 ];
 
-/* esta data aparece al momento de escoger un tipo de actividad*/
+/* esta data aparece al momento de escoger un tipo de lección*/
 export const typeActivityData: TypeActivity = {
   key: 'type',
-  MainTitle: 'Escoge el tipo de actividad',
+  MainTitle: 'Escoge el tipo de lección',
   typeOptions: [
     {
       key: 'liveBroadcast',
       MainTitle: 'Escoge el tipo de transmisión',
       title: 'Transmisión en vivo',
-      description: 'Actividad en la que quieras presentar un en vivo para tus asistentes.',
+      description: 'Lección en la que quieras presentar un en vivo para tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Ftransmision.jpg?alt=media&token=92443401-db41-485f-a411-ae113186fd9c',
       typeOptions: liveBroadcastTransmissionType,
@@ -121,15 +121,15 @@ export const typeActivityData: TypeActivity = {
       key: 'meeting',
       MainTitle: 'Crear reuniones interactivas y personalizadas con todo el poder de evius',
       title: 'Reunión',
-      description: 'Actividad en la que quieras tener una reunión virtual con tus asistentes.',
+      description: 'Lección en la que quieras tener una reunión virtual con tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
     },
     {
       key: 'video',
-      MainTitle: 'Asignar video para la actividad',
+      MainTitle: 'Asignar video para la lección',
       title: 'Video',
-      description: 'Actividad en la que solo quieras mostrar un video para tus asistentes.',
+      description: 'Lección en la que solo quieras mostrar un video para tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
       typeOptions: videoActivity,

@@ -100,7 +100,7 @@ export default class SurveyManager extends Component {
             })}
           </>
         ) : (
-          <div>No hay encuestas publicadas para esta actividad</div>
+          <div>No hay encuestas publicadas para esta lección</div>
         )}
       </Card>
     );

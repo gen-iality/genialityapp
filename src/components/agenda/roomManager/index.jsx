@@ -87,7 +87,7 @@ class RoomManager extends Component {
   };
 
   /*componentDidUpdate = async (prevProps) => {
-    // Se escucha el cambio de activity_id esto sucede cuando se crea una actividad nueva
+    // Se escucha el cambio de activity_id esto sucede cuando se crea una lección nueva
     if (prevProps.activity_id !== this.context.activityEdit) {
       // Si valida si existe informacion en Firebase del espacio virtual
       const validation = await this.validationRoom();
@@ -240,7 +240,7 @@ class RoomManager extends Component {
     const { event_id } = this.props;
     const activity_id = this.context.activityEdit;
 
-    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
+    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la lección */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
     try {
@@ -266,7 +266,7 @@ class RoomManager extends Component {
   handleClickSaveConfig = async () => {
     const { event_id, activity_id, pendingChangesSave } = this.props;
 
-    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
+    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la lección */
     if (!pendingChangesSave) {
       const { service, platform, meeting_id } = this.state;
 
@@ -317,7 +317,7 @@ class RoomManager extends Component {
     } else {
       DispatchMessageService({
         type: 'warning',
-        msj: 'Cambios pendientes por guardar en la fecha y hora de la actividad',
+        msj: 'Cambios pendientes por guardar en la fecha y hora de la lección',
         action: 'show',
       });
     }
@@ -379,20 +379,20 @@ class RoomManager extends Component {
   validateForCreateZoomRoom = () => {
     const { pendingChangesSave } = this.props;
 
-    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
+    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la lección */
     if (pendingChangesSave) {
       DispatchMessageService({
         type: 'warning',
-        msj: 'Cambios pendientes por guardar en la fecha y hora de la actividad',
+        msj: 'Cambios pendientes por guardar en la fecha y hora de la lección',
         action: 'show',
       });
       return false;
     }
-    //Esta validacion aplcia para actividades creadas antes de el backend devolviera los campos date_start_zoom y date_end_zoom
+    //Esta validacion aplcia para lecciones creadas antes de el backend devolviera los campos date_start_zoom y date_end_zoom
     if (typeof this.props.date_start_zoom === 'undefined' || typeof this.props.date_end_zoom === 'undefined') {
       DispatchMessageService({
         type: 'error',
-        msj: 'Guarde primero la actividad antes de continuar',
+        msj: 'Guarde primero la lección antes de continuar',
         action: 'show',
       });
       return false;

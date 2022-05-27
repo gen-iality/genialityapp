@@ -30,7 +30,7 @@ class ZoomComponent extends Component {
       error_bigmarker: null,
       contentDisplayed: null,
 
-      //parametros de la actividad almacenados en firestore
+      //parametros de la lección almacenados en firestore
       habilitar_ingreso: 'close_metting_room',
       platform: null,
       chat: false,

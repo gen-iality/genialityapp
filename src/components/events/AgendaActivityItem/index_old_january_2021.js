@@ -415,7 +415,7 @@ function AgendaActivityItem(props) {
                         props.gotoActivity(item);
                       }}
                       className='space-align-block button-Agenda'>
-                      Detalle de actividad
+                      Detalle de lección
                     </Button>
                   )}
                   {Documents &&

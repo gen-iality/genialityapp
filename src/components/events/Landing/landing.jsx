@@ -91,7 +91,7 @@ const Landing = (props) => {
         onClick={() =>
           window.location.replace(`${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`)
         }>
-        Ir a la actividad
+        Ir a la lección
       </Button>
     ) : null;
   };

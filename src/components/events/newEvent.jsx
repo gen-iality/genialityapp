@@ -186,7 +186,7 @@ class NewEvent extends Component {
           const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
-            //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL CURSO
+            //CREAR LECCIÓN CON EL MISMO NOMBRE DEL CURSO
             const activity = {
               name: eventNewContext.valueInputs.name,
               subtitle: null,

@@ -182,7 +182,7 @@ const MainProfile = (props) => {
                 }}
                 key={'actividad'}
                 icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
-                Actividad en Evius
+                Lección en GEN.iality
               </Menu.Item>
               <Menu.Item
                 title={null}

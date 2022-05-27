@@ -176,7 +176,7 @@ class Styles extends Component {
         ],
       },
       {
-        label: 'Agrupar la actividades de la agenda en TABS ',
+        label: 'Agrupar la lecciones de la agenda en TABS ',
         name: 'hideDatesAgenda',
         defaultValue: false,
         options: [
@@ -191,7 +191,7 @@ class Styles extends Component {
         ],
       },
       {
-        label: 'Ocultar fechas de las actividades de la agenda',
+        label: 'Ocultar fechas de las lecciones de la agenda',
         name: 'hideDatesAgendaItem',
         defaultValue: false,
         options: [
@@ -273,7 +273,7 @@ class Styles extends Component {
           hideBtnDetailAgenda: dataStyles?.hideBtnDetailAgenda || false,
           loader_page: dataStyles.loader_page || 'no',
           data_loader_page: dataStyles.data_loader_page || '',
-          // Estilos de las actividades de la agenda
+          // Estilos de las lecciones de la agenda
           hideDatesAgendaItem: dataStyles.hideDatesAgendaItem || false,
           hideHoursAgenda: dataStyles.hideHoursAgenda || false,
         },

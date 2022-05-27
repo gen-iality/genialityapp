@@ -116,7 +116,7 @@ class menuLanding extends Component {
           permissions: 'public',
         },
         my_sesions: {
-          name: 'Mis Actividades',
+          name: 'Mis Lecciones',
           position: 30,
           section: 'my_sesions',
           icon: 'TeamOutlined',

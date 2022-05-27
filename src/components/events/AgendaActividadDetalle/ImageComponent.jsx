@@ -19,10 +19,10 @@ const ImageComponent = (props) => {
     //console.log('que llega', state);
     switch (state) {
       case 'closed_meeting_room':
-        return 'Esta actividad esta por iniciar';
+        return 'Esta lección esta por iniciar';
 
       case '':
-        return 'Esta actividad esta siendo configurada';
+        return 'Esta lección esta siendo configurada';
 
       default:
         break;

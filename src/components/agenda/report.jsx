@@ -29,7 +29,7 @@ const ReportList = (props) => {
       render: (text) => <>{Moment(text).format('YYYY-MM-DD HH:mm')}</>,
     },
     {
-      title: 'Actividad',
+      title: 'Lección',
       dataIndex: 'name',
       ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -54,7 +54,7 @@ const ReportList = (props) => {
       <CMS
         API={AgendaApi}
         eventId={props.event._id}
-        title={'CheckIn por Actividades'}
+        title={'CheckIn por Lecciones'}
         description={'Para actualizar valores, refrescar la página'}
         columns={columns}
         search

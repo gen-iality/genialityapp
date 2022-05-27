@@ -35,7 +35,7 @@ class SurveyForm extends Component {
       // luego de cargar el componente este estado permanece escuchando todas las encuestas del curso
       eventSurveys: [], // Todas las encuestas de un curso, este estado va a estar escuchando
       anonymousSurveys: [], // Solo encuestas que permiten usuarios anónimos
-      publishedSurveys: [], // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
+      publishedSurveys: [], // Encuestas relacionadas con la lección + globales para renderizar el listado de encuestas en componente de videoconferencia
     };
   }
 

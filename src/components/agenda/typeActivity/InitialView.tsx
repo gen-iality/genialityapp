@@ -29,7 +29,7 @@ const InitialView = (props: any) => {
 
   useEffect(() => {
     if (props.tab !== '2') return;
-    //OBTENER DETALLE DE ACTIVIDAD
+    //OBTENER DETALLE DE LECCIÓN
     setActivityName(props.activityName);
     if (typeActivity === null) {
       setLoading(false);
@@ -39,7 +39,7 @@ const InitialView = (props: any) => {
       //MIENTRAS CARGA LOS COMPONENTES
     }
   }, [props.tab]);
-  //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA ACTIVIDAD
+  //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA LECCIÓN
   useEffect(() => {
     saveConfig(null, 1);
   }, [roomStatus]);
@@ -80,10 +80,10 @@ const InitialView = (props: any) => {
             <Result
               icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
               status='info'
-              title='Todavía no has definido el tipo de actividad'
+              title='Todavía no has definido el tipo de lección'
               extra={
                 <Button onClick={() => toggleActivitySteps('type')} type='primary'>
-                  Escoge un tipo de actividad
+                  Escoge un tipo de lección
                 </Button>
               }
             />

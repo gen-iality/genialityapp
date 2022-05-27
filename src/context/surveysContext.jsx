@@ -253,7 +253,7 @@ function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
 //   }
 // }, [cUser]);
 
-/** Listener para obtener todas las encuestas por actividad */
+/** Listener para obtener todas las encuestas por lección */
 // useEffect(() => {
 //   if (currentActivity) {
 //     listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);

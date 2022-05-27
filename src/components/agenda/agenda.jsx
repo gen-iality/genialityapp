@@ -30,7 +30,7 @@ const Agenda = (props) => {
       },
     },
     {
-      title: 'Actividad',
+      title: 'Lección',
       dataIndex: 'name',
       ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),

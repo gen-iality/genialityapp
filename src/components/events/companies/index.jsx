@@ -64,7 +64,7 @@ class Company extends Component {
         .then(() => {
           DispatchMessageService({
             type: 'success',
-            msj: 'Asistente agregado a actividad',
+            msj: 'Asistente agregado a lección',
             action: 'show',
           });
           this.setState({ qrData: {} });

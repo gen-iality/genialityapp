@@ -406,7 +406,7 @@ class DashboardEvent extends Component {
 
     const columns = [
       {
-        title: 'Actividad',
+        title: 'Lección',
         dataIndex: 'name',
         key: 'name',
       },
@@ -590,7 +590,7 @@ class DashboardEvent extends Component {
             <Col span={24}>
               <Card
                 headStyle={{ border: 'none' }}
-                title={'Métricas por actividades del curso'}
+                title={'Métricas por lecciones del curso'}
                 extra={<MoreOutlined />}>
                 <Table
                   dataSource={this.state.metricsActivity}

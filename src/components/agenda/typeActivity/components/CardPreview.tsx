@@ -267,14 +267,14 @@ const CardPreview = (props: any) => {
         {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
           (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'reunión')) && (
           <Space direction='vertical' style={{ width: '100%' }}>
-            <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
+            <Typography.Text strong>Estado de la lección para tus asistentes: </Typography.Text>
             <Select
               value={roomStatus}
               onChange={(value) => {
                 setRoomStatus(value);
               }}
               style={{ width: '100%' }}>
-              <Select.Option value=''>Actividad creada</Select.Option>
+              <Select.Option value=''>Lección creada</Select.Option>
               <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
               <Select.Option value='open_meeting_room'>En vivo</Select.Option>
               <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>

@@ -48,7 +48,7 @@ export const MenuItems = [
     key: 'event-content',
     items: [
       {
-        name: 'Agenda/Actividades',
+        name: 'Agenda/Lecciones',
         path: '/agenda',
         key: 'agenda',
         onClick: handleClick,
@@ -158,7 +158,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: ' Check in por actividad',
+        name: ' Check in por lección',
         path: '/checkin-actividad',
         key: 'checkin-actividad',
         onClick: handleClick,
