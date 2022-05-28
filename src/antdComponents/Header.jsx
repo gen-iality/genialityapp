@@ -1,11 +1,13 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
+import { UseCurrentUser } from '../context/userContext';
 
 const { Title } = Typography;
 
 const Header = (props) => {
   const history = useHistory();
+  let cUser = UseCurrentUser();
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado

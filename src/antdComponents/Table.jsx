@@ -16,11 +16,13 @@ import { sortableHandle } from 'react-sortable-hoc';
 import moment from 'moment';
 import { Suspense } from 'react';
 import { ExportExcel } from '../components/newComponent/ExportExcel';
+import { UseCurrentUser } from '../context/userContext';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = (props) => {
+  let cUser = UseCurrentUser();
   let {
     header,
     list,

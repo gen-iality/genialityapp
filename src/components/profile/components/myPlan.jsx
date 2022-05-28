@@ -204,32 +204,34 @@ const myPlan = ({ cUser }) => {
         {planes
           .filter((plan1) => plan1._id !== plan._id)
           .map((plan2) => (
-            <Plan plan={plan2}>
-              <Col span={6}>
-                <PlanCard title={`Plan ${plan2.name}`} value={`US $ ${plan2.price}`} />
-              </Col>
-              <Col span={6}>
-                <PlanCard
-                  title={'Horas de transmisión'}
-                  value={`${plan2.availables.streaming_hours / 60}h`}
-                  icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
-                />
-              </Col>
-              <Col span={6}>
-                <PlanCard
-                  title={'Usuarios'}
-                  value={plan2.availables.users}
-                  icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
-                />
-              </Col>
-              <Col span={6}>
-                <PlanCard
-                  title={'Eventos'}
-                  value={plan2.availables.events}
-                  icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
-                />
-              </Col>
-            </Plan>
+            <div style={{ paddingBottom: '15px' }}>
+              <Plan plan={plan2}>
+                <Col span={6}>
+                  <PlanCard title={`Plan ${plan2.name}`} value={`US $ ${plan2.price}`} />
+                </Col>
+                <Col span={6}>
+                  <PlanCard
+                    title={'Horas de transmisión'}
+                    value={`${plan2.availables.streaming_hours / 60}h`}
+                    icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
+                  />
+                </Col>
+                <Col span={6}>
+                  <PlanCard
+                    title={'Usuarios'}
+                    value={plan2.availables.users}
+                    icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
+                  />
+                </Col>
+                <Col span={6}>
+                  <PlanCard
+                    title={'Eventos'}
+                    value={plan2.availables.events}
+                    icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
+                  />
+                </Col>
+              </Plan>
+            </div>
           ))}
       </Tabs.TabPane>
     </Tabs>
