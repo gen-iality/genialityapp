@@ -25,6 +25,7 @@ const Header = (props) => {
     loadingSave,
     saveNameIcon,
     customBack,
+    listLenght,
   } = props;
 
   return (
@@ -46,20 +47,22 @@ const Header = (props) => {
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
-        <Col>
-          {addUrl && (
-            <Link to={addUrl}>
-              <Button type='primary' icon={<PlusCircleOutlined />} size='middle'>
+        {listLenght !== cUser.value.plan.availables.speakers && (
+          <Col>
+            {addUrl && (
+              <Link to={addUrl}>
+                <Button type='primary' icon={<PlusCircleOutlined />} size='middle'>
+                  {'Agregar'}
+                </Button>
+              </Link>
+            )}
+            {addFn && (
+              <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={addFn}>
                 {'Agregar'}
               </Button>
-            </Link>
-          )}
-          {addFn && (
-            <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={addFn}>
-              {'Agregar'}
-            </Button>
-          )}
-        </Col>
+            )}
+          </Col>
+        )}
         <Col>
           {save && (
             <Button

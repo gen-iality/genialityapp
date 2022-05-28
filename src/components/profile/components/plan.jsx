@@ -2,7 +2,6 @@ import { Row, Col, Card, Typography, Divider, Space } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 
 const plan = ({ plan, mine, children }) => {
-  console.log(plan, mine, 'aqui');
   return (
     <Card style={{ borderRadius: '15px' }}>
       <Divider>
