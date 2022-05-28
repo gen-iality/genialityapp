@@ -69,7 +69,6 @@ const Table = (props) => {
       fixed: 'right',
       width: widthAction ? widthAction : 110,
       render(val, item) {
-        console.log(item);
         return (
           <Row wrap gutter={[8, 8]}>
             {extraFn && (

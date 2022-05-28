@@ -1,16 +1,15 @@
 import { Row, Col, Card, Typography, Divider, Space } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 
-const plan = ({ props, children }) => {
-  let { plan, mine } = props;
-  console.log(props, 'aqui');
+const plan = ({ plan, mine, children }) => {
+  console.log(plan, mine, 'aqui');
   return (
     <Card style={{ borderRadius: '15px' }}>
       <Divider>
         <strong>Disponible {mine ? 'en tu plan' : `para el plan ${plan.name}`}</strong>
       </Divider>
       <Row gutter={[12, 12]}>
-        {/* {props.children} */}
+        {children}
         <Col span={8}>
           <Space direction='vertical'>
             <Space>
