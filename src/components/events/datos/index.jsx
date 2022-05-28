@@ -120,7 +120,7 @@ class Datos extends Component {
   addField = () => {
     this.setState({ edit: false, modal: true });
   };
-  //Guardar campo en el evento
+  //Guardar campo en el curso
   saveField = async (field) => {
     /* console.log('FIELD==>', field); */
     DispatchMessageService({
@@ -632,7 +632,7 @@ class Datos extends Component {
                 <Header title={'Recopilación de datos'} />
                 <small>
                   {`Configure los datos que desea recolectar de los asistentes ${
-                    this.organization ? 'de la organización' : 'del evento'
+                    this.organization ? 'de la organización' : 'del curso'
                   }`}
                 </small>
 
@@ -712,7 +712,7 @@ class Datos extends Component {
                   />
                   <small>
                     {`Configure los datos que desea recolectar de los asistentes ${
-                      this.organization ? 'de la organización' : 'del evento'
+                      this.organization ? 'de la organización' : 'del curso'
                     }`}
                   </small>
 

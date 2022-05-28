@@ -67,7 +67,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: false,
       allow_gradable_survey: false,
       hasMinimumScore: 'false', // Si la encuesta calificable requiere un puntaje minimo de aprobación
-      isGlobal: 'false', // determina si la encuesta esta disponible desde cualquier actividad
+      isGlobal: 'false', // determina si la encuesta esta disponible desde cualquier lección
       showNoVotos: 'false',
 
       // estado de la encuesta
@@ -116,10 +116,10 @@ class triviaEdit extends Component {
       //Se obtiene el estado y la confiugracion de la encuesta de Firebase
       const firebaseSurvey = await getSurveyConfiguration(surveyId);
 
-      //Consulta  a Mongo del información del evento
+      //Consulta  a Mongo del información del curso
       const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
 
-      //Se obtiene el listado de actividades del evento para listarlas en la lista desplegable para relacionar la encuesta con una actividad
+      //Se obtiene el listado de lecciones del curso para listarlas en la lista desplegable para relacionar la encuesta con una lección
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
 
       //Se envian al estado para poderlos utilizar en el markup
@@ -223,7 +223,7 @@ class triviaEdit extends Component {
         minimumScore: 0,
       };
       try {
-        // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+        // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del curso que viene desde props
         const save = await SurveysApi.createOne(this.props.event._id, data);
         const idSurvey = save._id;
 
@@ -350,7 +350,7 @@ class triviaEdit extends Component {
         minimumScore: parseInt(this.state.minimumScore),
       };
 
-      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del curso que viene desde props
       SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id)
         .then(async () => {
           // Esto permite almacenar los estados en firebase
@@ -903,7 +903,7 @@ class triviaEdit extends Component {
                           </>
                         ))}
 
-                      <Form.Item label={'Encuesta global (visible en todas las actividades)'}>
+                      <Form.Item label={'Encuesta global (visible en todas las lecciones)'}>
                         <Switch
                           name={'isGlobal'}
                           checked={isGlobal === 'true' || isGlobal === true}
@@ -913,7 +913,7 @@ class triviaEdit extends Component {
 
                       {(isGlobal === 'false' || isGlobal === false) && (
                         <>
-                          <Form.Item label={'Relacionar esta encuesta a una actividad'}>
+                          <Form.Item label={'Relacionar esta encuesta a una lección'}>
                             <Select
                               name={'activity_id'}
                               value={activity_id || ''}

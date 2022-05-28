@@ -102,7 +102,7 @@ export const queryReportGnal = async (eventID) => {
     sortOrder: "ASCENDING",
   };
   //paveview=impresiones
-  //Usuarios totales del evento ga:sessions
+  //Usuarios totales del curso ga:sessions
   let resp = await fetch(devEvius, {
     headers: {
       "content-type": "application/json",
@@ -183,7 +183,7 @@ export const setDataGraphic = (labels, values, name) => {
   };
   return data;
 };
-//Función que permite obtener metricas por vistas de actividad
+//Función que permite obtener metricas por vistas de lección
 export const obtenerMetricasByView = (view, metricsGnal) => {
   let metrics = metricsGnal?.filter((m) => m.view == view)[0];
   return metrics;
@@ -219,7 +219,7 @@ export const exportDataReport = (datos, type) => {
   }
 };
 
-//Función que permite obtener las métricas por cada actividad
+//Función que permite obtener las métricas por cada lección
 export const updateMetricasActivity = (data, eventId, metricsGActivity) => {
   if (data.length > 0) {
     let metricsActivity = [];

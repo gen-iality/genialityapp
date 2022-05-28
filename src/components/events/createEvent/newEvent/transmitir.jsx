@@ -86,7 +86,7 @@ function Transmitir(props) {
               <div className='container-description'>
                 <div className='descriptions'>
                   <p>
-                    Tu evento será transmitido desde evius usando tus camara y teniendo la posibilidad de agregar
+                    Tu curso será transmitido desde evius usando tus camara y teniendo la posibilidad de agregar
                     efectos profesionales
                   </p>
                   {/*<a onClick={() => changeTransmision(true)}>Ver opciones de transmisión externas</a>*/}

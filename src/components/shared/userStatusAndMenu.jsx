@@ -48,7 +48,7 @@ const UserStatusAndMenu = (props) => {
         <Menu.ItemGroup
           title={intl.formatMessage({
             id: 'header.title.Event',
-            defaultMessage: 'Evento',
+            defaultMessage: 'Curso',
           })}>
           {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
             <Badge
@@ -67,7 +67,7 @@ const UserStatusAndMenu = (props) => {
                   });
                 }}
                 icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}>
-                <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el evento' />
+                <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el curso' />
               </Menu.Item>
             </Badge>
           )}
@@ -89,7 +89,7 @@ const UserStatusAndMenu = (props) => {
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
-            <FormattedMessage id='header.my_events' defaultMessage='Mis eventos' />
+            <FormattedMessage id='header.my_events' defaultMessage='Mis cursos' />
           </Menu.Item>
         )}
         {visible && (
@@ -98,7 +98,7 @@ const UserStatusAndMenu = (props) => {
             onClick={() => {
               linkToTheMenuRouteS(`/myprofile/organization`);
             }}>
-            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Eventos' />
+            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Cursos' />
           </Menu.Item>
         )}
         <Menu.Divider />
@@ -115,7 +115,7 @@ const UserStatusAndMenu = (props) => {
               )
             }>
             <Button block type='primary' size='medium'>
-              <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
+              <FormattedMessage id='header.create_event' defaultMessage='Crear Curso' />
             </Button>
           </Menu.Item>
         )}

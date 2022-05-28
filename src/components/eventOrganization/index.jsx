@@ -192,14 +192,14 @@ class EventOrganization extends Component {
                   </Col>
                 </Row>
               )}
-              {/* Lista de eventos próximos */}
+              {/* Lista de cursos próximos */}
               <div
                 style={{
                   backgroundColor: '#FFFFFF',
                   padding: '20px',
                   borderRadius: '20px',
                 }}>
-                <Badge offset={[60, 22]} count={`${this.state.events.length} Eventos`}>
+                <Badge offset={[60, 22]} count={`${this.state.events.length} Cursos`}>
                   <Title level={2}>Próximos</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
@@ -223,20 +223,20 @@ class EventOrganization extends Component {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      <Empty description='No hay eventos próximos agendados' />
+                      <Empty description='No hay cursos próximos agendados' />
                     </div>
                   )}
                 </Row>
               </div>
               <Divider />
-              {/* Lista de eventos pasados */}
+              {/* Lista de cursos pasados */}
               <div
                 style={{
                   backgroundColor: '#FFFFFF',
                   padding: '20px',
                   borderRadius: '20px',
                 }}>
-                <Badge offset={[60, 22]} count={`${this.state.eventsOld.length} Eventos`}>
+                <Badge offset={[60, 22]} count={`${this.state.eventsOld.length} Cursos`}>
                   <Title level={2}>Pasados</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
@@ -260,7 +260,7 @@ class EventOrganization extends Component {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      <Empty description='No hay eventos pasados' />
+                      <Empty description='No hay cursos pasados' />
                     </div>
                   )}
                 </Row>

@@ -84,7 +84,7 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (activityEdit) {
-      console.log('8. ACTIVIDAD ACA===>', activityEdit);
+      console.log('8. LECCIÓN ACA===>', activityEdit);
       obtenerDetalleActivity();
       setMeetingId(null);
     } else {
@@ -128,7 +128,7 @@ export const AgendaContextProvider = ({ children }) => {
     }
   }, [activityEdit]);
 
-  //FUNCION QUE PERMITE REINICIALIZAR LOS ESTADOS YA QUE AL AGREGAR O EDITAR OTRA ACTIVIDAD ESTOS TOMAN VALORES ANTERIORES
+  //FUNCION QUE PERMITE REINICIALIZAR LOS ESTADOS YA QUE AL AGREGAR O EDITAR OTRA LECCIÓN ESTOS TOMAN VALORES ANTERIORES
   const initializeState = () => {
     setIsPublished(true);
     setPlatform('wowza');
@@ -218,7 +218,7 @@ export const AgendaContextProvider = ({ children }) => {
   const prepareData = (datos) => {
     const roomInfo = {
       platform: datos?.platformNew || platform,
-      //VARIABLE QUE GUARDA LA DATA QUE SE GENERA AL CREAR UN TIPO DE ACTIVIDAD VALIDACIÓN QUE PERMITE CONSERVAR ESTADO O LIMPIARLO
+      //VARIABLE QUE GUARDA LA DATA QUE SE GENERA AL CREAR UN TIPO DE LECCIÓN VALIDACIÓN QUE PERMITE CONSERVAR ESTADO O LIMPIARLO
       meeting_id: datos?.data ? datos?.data : datos?.type !== 'delete' ? meeting_id : null,
       isPublished: isPublished ? isPublished : false,
       host_id,
@@ -227,7 +227,7 @@ export const AgendaContextProvider = ({ children }) => {
       habilitar_ingreso:
         datos?.type === 'delete' ? '' : datos?.habilitar_ingreso ? datos?.habilitar_ingreso : roomStatus,
       transmition: transmition || null,
-      //PERMITE REINICIALIZAR EL TIPO DE ACTIVIDAD O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
+      //PERMITE REINICIALIZAR EL TIPO DE LECCIÓN O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
       typeActivity:
         datos?.type && datos?.type !== 'delete' ? datos?.type : datos?.type == 'delete' ? null : typeActivity,
     };

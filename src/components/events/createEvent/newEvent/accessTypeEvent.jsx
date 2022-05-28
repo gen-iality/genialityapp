@@ -25,7 +25,7 @@ const AccessTypeEvent = () => {
               minHeight: '235px',
             }}>
             <Space direction='vertical'>
-              <Typography.Text strong>Evento público con registro obligatorio</Typography.Text>
+              <Typography.Text strong>Cursos público con registro obligatorio</Typography.Text>
               <Divider />
               <Typography.Text type='secondary'>
                 <ul>
@@ -51,7 +51,7 @@ const AccessTypeEvent = () => {
               minHeight: '235px',
             }}>
             <Space direction='vertical'>
-              <Typography.Text strong>Evento público sin registro obligatorio</Typography.Text>
+              <Typography.Text strong>Cursos público sin registro obligatorio</Typography.Text>
               <Divider />
               <Typography.Text type='secondary'>
                 {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
@@ -79,7 +79,7 @@ const AccessTypeEvent = () => {
               minHeight: '235px',
             }}>
             <Space direction='vertical'>
-              <Typography.Text strong>Evento privado por invitación</Typography.Text>
+              <Typography.Text strong>Cursos privado por invitación</Typography.Text>
               <Divider />
               <Typography.Text type='secondary'>
                 {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}

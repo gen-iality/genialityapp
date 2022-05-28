@@ -215,7 +215,7 @@ class SendRsvp extends Component {
               <Loading />
             ) : (
               <Col span={14}>
-                <Form.Item label={`Asunto del correo (Por defecto será el nombre del evento)`}>
+                <Form.Item label={`Asunto del correo (Por defecto será el nombre del curso)`}>
                   <Input
                     name={'subject'}
                     placeholder={'Escribe aquí el asunto del correo'}
@@ -246,7 +246,7 @@ class SendRsvp extends Component {
                   {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
                 </Form.Item>
 
-                <Form.Item label={'Específicar fecha del evento'}>
+                <Form.Item label={'Específicar fecha del curso'}>
                   <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
                 </Form.Item>
 
@@ -285,7 +285,7 @@ class SendRsvp extends Component {
                 <Row justify='center'>
                   <Col>
                     <EnvironmentOutlined />
-                    Ubicación del evento
+                    Ubicación del curso
                     <br />
                     <span className='rsvp-location'>
                       {this.props.event.location !== null && this.props.event.location.FormattedAddress}
@@ -294,7 +294,7 @@ class SendRsvp extends Component {
                 </Row>
                 <Form.Item>
                   <label>
-                    Sube una imagen <br /> <small>(Por defecto será la del evento)</small>
+                    Sube una imagen <br /> <small>(Por defecto será la del curso)</small>
                   </label>
 
                   <Row style={{ margin: 10 }}>
@@ -319,7 +319,7 @@ class SendRsvp extends Component {
                   )}
                 </Form.Item>
 
-                <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del evento)'}>
+                <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del curso)'}>
                   <EviusReactQuill
                     name='message'
                     data={this.state.rsvp.message}
@@ -332,7 +332,7 @@ class SendRsvp extends Component {
                   <label>
                     Sube una imagen <br />{' '}
                     <small>
-                      (Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)
+                      (Por defecto será la imagen footer del curso o la image del organizador, la que este disponible)
                     </small>
                   </label>
                   <ImageUploaderDragAndDrop

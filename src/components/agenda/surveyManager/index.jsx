@@ -20,13 +20,13 @@ export default class SurveyManager extends Component {
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let $query = firestore.collection('surveys');
 
-    //Le agregamos el filtro por evento
+    //Le agregamos el filtro por curso
     if (event_id) {
       $query = $query.where('eventId', '==', event_id);
     }
 
     $query.onSnapshot(async (surveySnapShot) => {
-      // Almacena el Snapshot de todas las encuestas del evento
+      // Almacena el Snapshot de todas las encuestas del curso
 
       const eventSurveys = [];
       let publishedSurveys = [];
@@ -40,7 +40,7 @@ export default class SurveyManager extends Component {
         eventSurveys.push({ ...doc.data(), survey_id: doc.id });
       });
 
-      // Listado de encuestas publicadas del evento
+      // Listado de encuestas publicadas del curso
       publishedSurveys = eventSurveys.filter(
         (survey) => survey.activity_id === activity_id || survey.isGlobal === 'true'
       );
@@ -100,7 +100,7 @@ export default class SurveyManager extends Component {
             })}
           </>
         ) : (
-          <div>No hay encuestas publicadas para esta actividad</div>
+          <div>No hay encuestas publicadas para esta lección</div>
         )}
       </Card>
     );

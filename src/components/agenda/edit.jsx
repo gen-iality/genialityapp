@@ -70,7 +70,7 @@ class AgendaEdit extends Component {
     super(props);
     this.state = {
       loading: true,
-      // Estado para la redireccion de navegacion interna al eliminar actividad o volver al listado de actividades.
+      // Estado para la redireccion de navegacion interna al eliminar lección o volver al listado de lecciones.
       redirect: false,
       isLoading: { categories: true },
       name: '',
@@ -115,14 +115,14 @@ class AgendaEdit extends Component {
       latitude: '',
       isPhysical: false,
       transmition: null,
-      //Estado para detectar cambios en la fecha/hora de la actividad sin guardar
+      //Estado para detectar cambios en la fecha/hora de la lección sin guardar
       pendingChangesSave: false,
 
-      // Fechas de la actividad con formato para la creacion de sala en zoom
+      // Fechas de la lección con formato para la creacion de sala en zoom
       date_start_zoom: null,
       date_end_zoom: null,
 
-      //Estado para determinar si una actividad requiere registro para ser accedida
+      //Estado para determinar si una lección requiere registro para ser accedida
       requires_registration: false,
       isPublished: this.context?.isPublished,
       avalibleGames: [],
@@ -305,7 +305,7 @@ class AgendaEdit extends Component {
       });
     } else {
       this.setState({ days });
-      //SE SETEA EN EL CONTEXTO LA ACTIVIDAD PARA QUE NO QUEDE CON UN ID ANTERIOR
+      //SE SETEA EN EL CONTEXTO LA LECCIÓN PARA QUE NO QUEDE CON UN ID ANTERIOR
       //this.context.setActivityEdit(null);
     }
 
@@ -707,7 +707,7 @@ class AgendaEdit extends Component {
         } else {
           agenda = await AgendaApi.create(event._id, info);
 
-          // Al crear una actividad de la agenda se inicializa el id de la actividad y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
+          // Al crear una lección de la agenda se inicializa el id de la lección y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
           this.setState({
             activity_id: agenda._id,
             date_start_zoom: agenda.date_start_zoom,
@@ -728,7 +728,7 @@ class AgendaEdit extends Component {
         });
 
         if (agenda?._id) {
-          /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
+          /** Si es un curso recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la lección para poder editar */
           this.context.setActivityEdit(agenda._id);
           this.setState({
             idNewlyCreatedActivity: agenda._id,
@@ -920,7 +920,7 @@ class AgendaEdit extends Component {
     };
   };
 
-  //FN para eliminar la actividad
+  //FN para eliminar la lección
   remove = async () => {
     let self = this;
     const { service } = this.state;
@@ -1210,7 +1210,7 @@ class AgendaEdit extends Component {
           />
 
           <Header
-            title={`Actividad - ${this.state.name}`}
+            title={`Lección - ${this.state.name}`}
             back
             customBack={this.props.matchUrl}
             save
@@ -1249,7 +1249,7 @@ class AgendaEdit extends Component {
                       rules={[
                         {
                           required: true,
-                          message: 'Nombre de la actividad requerida',
+                          message: 'Nombre de la lección requerida',
                         },
                       ]}>
                       <Input
@@ -1259,7 +1259,7 @@ class AgendaEdit extends Component {
                         name={'name'}
                         value={name}
                         onChange={(e) => this.handleChange(e)}
-                        placeholder={'Nombre de la actividad'}
+                        placeholder={'Nombre de la lección'}
                       />
                     </Form.Item>
                     <Form.Item
@@ -1467,7 +1467,7 @@ class AgendaEdit extends Component {
                       <Space>
                         <ExclamationCircleOutlined style={{ color: '#faad14' }} />
                         <Text type='secondary'>
-                          Esta información no es visible en la Agenda/Actividad en versión Mobile.
+                          Esta información no es visible en la Agenda/Lección en versión Mobile.
                         </Text>
                       </Space>
                       <EviusReactQuill
@@ -1509,7 +1509,7 @@ class AgendaEdit extends Component {
               </TabPane>
               {showAditionalTabs && (
                 <>
-                  <TabPane tab='Tipo de actividad' key='2'>
+                  <TabPane tab='Tipo de lección' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
                         <TipeOfActivity

@@ -124,7 +124,7 @@ export default function RoomController(props) {
                 showIcon
                 type='warning'
                 message={'El listado de juegos ha sido actualizado.'}
-                description='Por favor seleccione los juegos que desee visualizar en la zona social de su actividad'
+                description='Por favor seleccione los juegos que desee visualizar en la zona social de su lección'
                 className='animate__animated animate__bounceIn animate__faster'
                 style={{
                   boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',

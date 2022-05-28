@@ -29,7 +29,7 @@ class Graphics extends Component {
     this.setState({ dataGamification: data }, this.mountChart);
   };
 
-  //Funcion para calcular el pesovoto del evento, en caso de que exista
+  //Funcion para calcular el pesovoto del curso, en caso de que exista
   //Aun no se valida si existe peso voto po lo cual no se llama en nunguna funcion importante
   percentPesoVoto = async () => {
     const { eventId } = this.props;

@@ -58,24 +58,24 @@ const Informacion = (props) => {
       <Space direction='vertical' size='middle' style={{ marginBottom: '30px' }}>
         <div>
           <Text>
-            Nombre del evento <span className='text-color'>*</span>
+            Nombre del curso <span className='text-color'>*</span>
           </Text>
           <Input
             name={'name'}
             value={valueInputs['name'] || ''}
             onChange={(e) => handleInput(e, 'name')}
-            placeholder='Nombre del evento'
+            placeholder='Nombre del curso'
           />
           {containsError('name') && (
             <Col>
               {' '}
-              <small className='text-color'>Ingrese un nombre correcto para el evento</small>
+              <small className='text-color'>Ingrese un nombre correcto para el curso</small>
             </Col>
           )}
         </div>
         <div>
           <Text>
-            Fecha del evento <span className='text-color'>*</span>
+            Fecha del curso <span className='text-color'>*</span>
           </Text>
           <Input
             value={dateEvent || ''}
@@ -89,7 +89,7 @@ const Informacion = (props) => {
             {state.organizations.length > 0 && (
               <div>
                 <p>
-                  Este evento pertenecerá a la organización | <b>{state?.selectOrganization?.name}</b>
+                  Este curso pertenecerá a la organización | <b>{state?.selectOrganization?.name}</b>
                 </p>
                 <Button onClick={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } })} block>
                   Cambiar de organización
@@ -164,7 +164,7 @@ const Informacion = (props) => {
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              un día podrás ajustar las fechas en la sección <strong>Datos del evento</strong> una vez lo hayas creado.
+              un día podrás ajustar las fechas en la sección <strong>Datos del curso</strong> una vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>

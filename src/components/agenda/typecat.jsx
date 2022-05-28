@@ -38,7 +38,7 @@ const AgendaTypeCat = (props) => {
     <CMS
       API={apiURL}
       eventId={eventID}
-      title={`${subject === 'categorias' ? 'Categorías' : 'Tipos'} de Actividad`}
+      title={`${subject === 'categorias' ? 'Categorías' : 'Tipos'} de Lección`}
       //back
       titleTooltip={'Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación'}
       addUrl={{

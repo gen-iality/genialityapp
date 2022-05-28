@@ -34,25 +34,25 @@ function NoMatchPage(props) {
           (props?.path ? (
             <Link to={`${props.path}/main`}>
               <Button type='primary' key='eventData'>
-                Ir a datos del evento
+                Ir a datos del curso
               </Button>
             </Link>
           ) : (
             <>
               <Link to={`/`}>
                 <Button type='primary' key='eventData'>
-                  Ver más eventos
+                  Ver más cursos
                 </Button>
               </Link>
               <Link to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}>
-                <Button key='moreEvents'>Ir a la landing de este evento</Button>
+                <Button key='moreEvents'>Ir a la landing de este curso</Button>
               </Link>
             </>
           )),
         props.match.params.id === 'withoutPermissions' && (
           <Link to={`/`}>
             <Button type='primary' key='eventData'>
-              Ver más eventos
+              Ver más cursos
             </Button>
           </Link>
         ),

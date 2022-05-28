@@ -34,7 +34,7 @@ const InfoEvent = () => {
           <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
             {intl.formatMessage({
               id: 'Button.signup',
-              defaultMessage: 'Inscribirme al evento',
+              defaultMessage: 'Inscribirme al curso',
             })}
           </Button>
         )

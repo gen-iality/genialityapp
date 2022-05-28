@@ -33,7 +33,7 @@ Esta contiene las pruebas del inicio de sesión.
 - **_Prueba de login:_** En esta prueba se evalúa que se puede iniciar sesión
   si todos los campos estén correctos, además de iniciar sesión evalúa
   que se pueda salir de la sesión iniciada **(Esta prueba puede fallar
-  por la condicional del usuario no registrado en el evento)**
+  por la condicional del usuario no registrado en el curso)**
 
 ### LoginWithEmailEvent
 

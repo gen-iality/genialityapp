@@ -76,14 +76,14 @@ class DatosModal extends Component {
     }
     this.setState({ valid });
   };
-  //Cambiar mandatory del campo del evento o lista
+  //Cambiar mandatory del campo del curso o lista
   changeFieldjustonebyattendee = () => {
     this.setState((prevState) => {
       return { info: { ...this.state.info, justonebyattendee: !prevState.info.justonebyattendee } };
     });
   };
 
-  //Cambiar mandatory del campo del evento o lista
+  //Cambiar mandatory del campo del curso o lista
   changeFieldCheck = () => {
     this.setState((prevState) => {
       return { info: { ...this.state.info, mandatory: !prevState.info.mandatory } };
@@ -130,7 +130,7 @@ class DatosModal extends Component {
     }
   };
 
-  //Guardar campo en el evento
+  //Guardar campo en el curso
   saveField = async (values) => {
     const info = Object.assign({}, this.state.info);
 

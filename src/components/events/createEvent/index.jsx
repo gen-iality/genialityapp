@@ -9,7 +9,7 @@ import { DispatchMessageService } from '../../../context/MessageService';
 import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import AccessType from './newEvent/accessTypeEvent';
-/*vista de resultado de la creacion de un evento */
+/*vista de resultado de la creacion de un curso */
 import { cNewEventContext } from '../../../context/newEventContext';
 const { Step } = Steps;
 
@@ -196,7 +196,7 @@ class NewEvent extends Component {
                     type='primary'
                     size='large'
                     onClick={async () => await this.context.saveEvent()}>
-                    Crear evento
+                    Crear curso
                   </Button>
                 )}
               </div>

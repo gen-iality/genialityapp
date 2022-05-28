@@ -236,7 +236,7 @@ class eventLanding extends Component {
                 </div>
               </div>
             )}
-            {/*Contenedor personalizado COMPENSAR - Detalle del Evento*/}
+            {/*Contenedor personalizado COMPENSAR - Detalle del Curso*/}
             {this.props.cEvent.value._id === '5f4e41d5eae9886d464c6bf4' && !this.state.activityId && (
               <div>
                 <div className='containerGaming'>

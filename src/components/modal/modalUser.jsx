@@ -273,7 +273,7 @@ class UserModal extends Component {
           } catch (e) {
             DispatchMessageService({
               type: 'error',
-              msj: 'Usuario ya registrado en el evento',
+              msj: 'Usuario ya registrado en el curso',
               action: 'show',
             });
             respActivity = false;

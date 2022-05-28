@@ -1,4 +1,4 @@
-// Componente que se ejecuta antes del evento onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
+// Componente que se ejecuta antes del curso onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
 function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
   let totalQuestions = 0;
 

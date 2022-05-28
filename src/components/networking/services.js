@@ -43,7 +43,7 @@ export const getCurrentEventUser = (eventId, userId) => {
 
 // User services
 export const userRequest = {
-  //   Obtiene la lista de los asistentes al evento -------------------------------------------
+  //   Obtiene la lista de los asistentes al curso -------------------------------------------
   getEventUserList: async (eventId, token, currentUser) => {
     let docs = null;
     if (!currentUser) return null;

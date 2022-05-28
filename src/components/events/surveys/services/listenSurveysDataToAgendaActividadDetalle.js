@@ -4,13 +4,13 @@ function listenSurveysData(event, activity, currentUser, callback) {
    //Listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
    let $query = firestore.collection('surveys');
 
-   //Filtro por evento
+   //Filtro por curso
    if (event && event._id) {
       $query = $query.where('eventId', '==', event._id);
    }
 
    $query.onSnapshot((surveySnapShot) => {
-      const eventSurveys = []; // Almacena el Snapshot de todas las encuestas del evento
+      const eventSurveys = []; // Almacena el Snapshot de todas las encuestas del curso
       let publishedSurveys = [];
 
       if (surveySnapShot.size === 0) {
@@ -23,7 +23,7 @@ function listenSurveysData(event, activity, currentUser, callback) {
          eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 
-      // Listado de encuestas publicadas del evento
+      // Listado de encuestas publicadas del curso
       publishedSurveys = eventSurveys.filter(
          (survey) =>
             (survey.isPublished === 'true' || survey.isPublished === true) &&

@@ -136,7 +136,7 @@ describe('Create event', () => {
 
     cy.get('#btnSave').click();
     cy.wait(3000);
-    //guardar evento
+    //guardar curso
     cy.get('.ant-btn.ant-btn-primary')
       .eq(1)
       .click();

@@ -27,7 +27,7 @@ class Service {
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
-    //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
+    //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA LECCIÓN
     console.log('***SE EJECUTA LA ACTUALIZACION***');
     if (activity_id) {
       console.log(event_id, activity_id, roomInfo, tabs, 'service');

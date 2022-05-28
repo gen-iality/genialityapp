@@ -83,7 +83,7 @@ const CardListVideo = (props: any) => {
               actions={
                 item?.status === 'ready'
                   ? [
-                      <Tooltip color={'green'} title='Asignar a esta actividad'>
+                      <Tooltip color={'green'} title='Asignar a esta lección'>
                         <Button
                           size='large'
                           icon={

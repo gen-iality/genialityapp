@@ -30,7 +30,7 @@ class Speakers extends Component {
     //Se hace la consulta a la api de speakers
     let speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
 
-    //consultamos las categorias del evento
+    //consultamos las categorias del curso
     let categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
 
     //Recorremos las categorias si tienen el campo orden
@@ -99,7 +99,7 @@ class Speakers extends Component {
   }
 
   async activitySpeakers(eventId, id) {
-    //Se consulta la api para traer la informacion de actividades por conferencista
+    //Se consulta la api para traer la informacion de lecciones por conferencista
     let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
     //Se manda al estado la consulta
     this.setState({
@@ -108,7 +108,7 @@ class Speakers extends Component {
   }
 
   modal(eventId, id, image, name, profession, description, category) {
-    //Se llama esta funcion para cargar la consulta de actividades por conferencista
+    //Se llama esta funcion para cargar la consulta de lecciones por conferencista
     this.activitySpeakers(this.props.cEvent.value._id, id);
     // Se envian los datos al estado para mostrarlos en el modal, Esto para hacer el modal dinamico
     this.setState({
@@ -369,7 +369,7 @@ class Speakers extends Component {
         </Row>
         {/* </div> */}
 
-        {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
+        {/* Modal de Speakers para mostrar la información del conferencista junto con sus lecciones */}
 
         <Modal
           title={
@@ -417,7 +417,7 @@ class Speakers extends Component {
           {infoSpeaker.description_activity === 'true' && (
             <div>
               {/* Contenedor para descripcion 
-                            Se mapea tambien las actividades por Speaker 
+                            Se mapea tambien las lecciones por Speaker 
                         */}
               {activityesBySpeaker.map((activities, key) => (
                 <div key={key}>

@@ -35,7 +35,7 @@ class UserLoginContainer extends Component {
     this.setState({ successRecovery: false });
   }
 
-  //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
+  //Método ejecutado en el curso onSubmit (onFinish) del formulario de login
   handleLoginEmailPassword = async (values) => {
     this.setState({ loading: true });
     await this.loginEmailPassword(values);
@@ -58,7 +58,7 @@ class UserLoginContainer extends Component {
       });
   };
 
-  //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
+  //Se ejecuta en caso que haya un error en el formulario de login en el curso onSubmit
   onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };

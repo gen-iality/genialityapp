@@ -743,7 +743,7 @@ class ListEventUser extends Component {
     return (
       <React.Fragment>
         <Header
-          title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'}
+          title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de curso'}
           description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
           búsqueda.`}
         />
@@ -925,7 +925,7 @@ class ListEventUser extends Component {
                       <img
                         style={{ objectFit: 'cover', width: '100vw' }}
                         src={this.props.event.styles.event_image}
-                        alt='Logo evento'
+                        alt='Logo curso'
                       />
                     ) : (
                       ''

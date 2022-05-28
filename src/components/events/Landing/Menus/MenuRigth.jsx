@@ -72,7 +72,7 @@ const MenuRigth = (props) => {
               HandleChatOrAttende('1');
             }}></Menu.Item>
         )}
-        {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
+        {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una lección*/}
         {props.generalTabs?.attendees && typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
           <Menu.Item
             key='2'

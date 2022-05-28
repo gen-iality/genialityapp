@@ -40,14 +40,14 @@ class Privacy extends Component {
           transacción. 2. ¿Cómo utilizamos tu información personal? • Procesamiento y administración de sus
           transacciones como cliente de EVIUS. • Establecemos un canal de comunicación contigo a fin de informarte las
           novedades que con respecto a los productos y servicios ofrecidos puedan ocurrir, tales como cancelación de
-          eventos, cambio de fechas, cambio de programación, etc. • Conocer sus hábitos de consumo, gustos y
+          cursos, cambio de fechas, cambio de programación, etc. • Conocer sus hábitos de consumo, gustos y
           preferencias con la finalidad de ofrecerle aquellos productos que se adecuen a estos. • Enviarte promociones y
           publicidad. • Enviarte por correo electrónico los soportes de tu compra y transacción. 3. ¿Con quién
           compartimos tu información personal? EVIUS no vende información personal sin tu consentimiento, sin embargo,
           EVIUS podría divulgar tu información personal en ciertas circunstancias como: • EVIUS puede compartir tu
           información personal a terceros contratistas y proveedores de servicios que nos ayudan a operar nuestros
-          sistemas informáticos. • La transferencia de tus datos de contrato al promotor o promotores de los eventos de
-          los cuales adquiriste boletería para que ellos en calidad de responsables de la información y de los eventos
+          sistemas informáticos. • La transferencia de tus datos de contrato al promotor o promotores de los cursos de
+          los cuales adquiriste boletería para que ellos en calidad de responsables de la información y de los cursos
           puedan contactarte y recopilen esta información para realizar estadísticas y marketing. 4. ¿Cuáles son tus
           derechos como titular de esta información? • Según lo dispuesto en la Ley 1581 de 2012, tu o cualquier persona
           de las referidas en el Art. 20 del Decreto 1377 de 2.013, tienen derecho a: (i) Conocer, actualizar y
@@ -89,7 +89,7 @@ class Privacy extends Component {
           podrás acudir a la Superintendencia de Industria y Comercio para hacer valer tus derechos como consumidor. 5.
           Vigencia de la Autorización de tratamiento de datos personales: El titular de los datos personales acepta y
           reconoce que esta autorización estará vigente a partir del momento en que la acepta y durante el tiempo en que
-          EVIUS. ejerza las actividades propias de su objeto social. 6. Aviso por cambios en Aviso de Privacidad
+          EVIUS. ejerza las lecciones propias de su objeto social. 6. Aviso por cambios en Aviso de Privacidad
           Cualquier cambio en los Términos y Condiciones y en el Aviso de Privacidad se notificará por medio de un
           correo electrónico al email que ingresaste en el formulario de registro; y será publicado en nuestro Sitio
           web; con acceso directo a los textos completos. Ahora, si el correo electrónico que usaste para registro no se

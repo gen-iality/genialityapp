@@ -30,7 +30,7 @@ export const VideoActivity = () => {
           />
         </div>
       ) : (
-        <Result icon={<SmileOutlined />} title='Este evento ha terminado!' />
+        <Result icon={<SmileOutlined />} title='Este curso ha terminado!' />
       )}
     </>
   );

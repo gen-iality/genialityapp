@@ -143,18 +143,18 @@ const Informacion = (props) => {
       <Space direction='vertical' size='middle'>
         <div>
           <Text>
-            Nombre del evento <span className='text-color'>*</span>
+            Nombre del curso <span className='text-color'>*</span>
           </Text>
           <Input
             name={'name'}
             value={valueInputs['name'] || ''}
             onChange={(e) => handleInput(e, 'name')}
-            placeholder='Nombre del evento'
+            placeholder='Nombre del curso'
           />
           {containsError('name') && (
             <Col>
               {' '}
-              <small className='text-color'>Ingrese un nombre correcto para el evento</small>
+              <small className='text-color'>Ingrese un nombre correcto para el curso</small>
             </Col>
           )}
         </div>
@@ -189,7 +189,7 @@ const Informacion = (props) => {
         </div>
         <div>
           <Text>
-            Fecha del evento <span className='text-color'>*</span>
+            Fecha del curso <span className='text-color'>*</span>
           </Text>
           <Input
             value={dateEvent || ''}
@@ -203,7 +203,7 @@ const Informacion = (props) => {
             {organizations.length > 0 && (
               <div style={{ marginBottom: '30px' }}>
                 <p>
-                  Este evento pertenecerá a la organización | <b>{selectOrganization?.name}</b>
+                  Este curso pertenecerá a la organización | <b>{selectOrganization?.name}</b>
                 </p>
                 <Button
                   onClick={() => {
@@ -408,8 +408,8 @@ const Informacion = (props) => {
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              Si tu evento se extiende por más de un día podrás ajustar las fechas en la sección{' '}
-              <strong>Datos del evento</strong> una vez lo hayas creado.
+              Si tu curso se extiende por más de un día podrás ajustar las fechas en la sección{' '}
+              <strong>Datos del curso</strong> una vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>

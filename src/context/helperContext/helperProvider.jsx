@@ -453,7 +453,7 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
-    /*NOTIFICACIONES POR ACTIVIDAD*/
+    /*NOTIFICACIONES POR LECCIÓN*/
 
     async function fetchActivityChange() {
       firestore
@@ -546,7 +546,7 @@ export const HelperContextProvider = ({ children }) => {
     }
   }, [cEventuser.value, cEvent.value]);
 
-  /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
+  /*VALIDACION DE CURSO TOTALMENTE PRIVADO*/
   function GetPermissionsEvent() {
     if (cEvent.value != null) {
       let routePermissions =

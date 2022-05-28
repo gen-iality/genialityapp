@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-rou
 import { withRouter } from 'react-router-dom';
 
 /** --------------------
- *  secciones del evento
+ *  secciones del curso
  * ---------------------*/
 import Product from './product';
 import AddProduct from './addProduct';

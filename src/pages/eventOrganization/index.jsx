@@ -68,7 +68,7 @@ function Organization(props) {
               //inlineCollapsed={collapseMenu}
             >
               <Menu.Item key={'1'} icon={<ScheduleOutlined />}>
-                {'Eventos'}
+                {'Cursos'}
                 <NavLink to={`${props.match.url}/events`} />
               </Menu.Item>
               <Menu.Item key={'2'} icon={<BarsOutlined />}>

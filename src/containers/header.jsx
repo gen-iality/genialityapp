@@ -212,7 +212,7 @@ const Headers = (props) => {
         <Menu theme='light' mode='horizontal'>
           <Row justify='space-between' align='middle'>
             <Row className='logo-header' justify='space-between' align='middle'>
-              {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
+              {/* Menú de administrar un curso (esto debería aparecer en un curso no en todo lado) */}
               {dataGeneral?.showAdmin && (
                 <Col span={2} offset={3} data-target='navbarBasicExample'>
                   <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
@@ -342,7 +342,7 @@ const Headers = (props) => {
         <div id='navbarBasicExample'>
           <Drawer
             className='hiddenMenuMobile_Landing'
-            title='Administrar evento'
+            title='Administrar curso'
             maskClosable={true}
             bodyStyle={{ padding: '0px' }}
             placement='left'

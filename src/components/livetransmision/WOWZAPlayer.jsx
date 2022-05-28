@@ -20,7 +20,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [visibleReactPlayer, setVisibleReactPlayer] = useState(false);
   const { typeActivity, activityEdit } = useContext(AgendaContext);
   const userContext = useContext(CurrentUserContext);
-  //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA ACTIVIDAD
+  //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA LECCIÓN
   const [conected, setConected] = useState('No');
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';

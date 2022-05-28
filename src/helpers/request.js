@@ -179,7 +179,7 @@ export const EventsApi = {
     return eventUser;
   },
 
-  /* Según un nuevo modelo de los eventUsers un solo usuario puede tener varios eventUsers para un evento */
+  /* Según un nuevo modelo de los eventUsers un solo usuario puede tener varios eventUsers para un curso */
   getcurrentUserEventUsers: async (event_id) => {
     let token = await GetTokenUserFirebase();
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}?token=${token}`, false);
@@ -324,7 +324,7 @@ export const EventsApi = {
   requestLinkEmail: async (eventId, email) => {
     return await Actions.post(`/api/getloginlink`, { email: email, event_id: eventId });
   },
-  //ACCEDER POR LINK AL CORREO SIN EVENTO
+  //ACCEDER POR LINK AL CORREO SIN CURSO
   requestLinkEmailUSer: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email });
   },
@@ -332,7 +332,7 @@ export const EventsApi = {
   refreshLinkEmailUser: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true });
   },
-  //REFRESH URL LINK DE ACCESSO A EVENTO
+  //REFRESH URL LINK DE ACCESSO A CURSO
   refreshLinkEmailUserEvent: async (email, eventId) => {
     return await Actions.post(`/api/getloginlink`, {
       email: email,
@@ -1121,7 +1121,7 @@ export const ActivityBySpeaker = {
 };
 
 export const OrganizationFuction = {
-  // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
+  // OBTENER CURSOS PROXIMOS POR ORGANIZACION
   getEventsNextByOrg: async (orgId) => {
     const events = await Actions.getAll(`api/organizations/${orgId}/events`);
     return events.data;

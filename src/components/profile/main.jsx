@@ -106,10 +106,10 @@ const MainProfile = (props) => {
   };
 
   const fetchItem = async () => {
-    /* Eventos creados por el usuario    */
+    /* Cursos creados por el usuario    */
     eventsIHaveCreated();
     /* ----------------------------------*/
-    /* Eventos en los que esta registrado el usuario */
+    /* Cursos en los que esta registrado el usuario */
 
     eventsThatIHaveParticipated();
     /* ----------------------------------*/
@@ -182,7 +182,7 @@ const MainProfile = (props) => {
                 }}
                 key={'actividad'}
                 icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
-                Actividad en Evius
+                Lección en GEN.iality
               </Menu.Item>
               <Menu.Item
                 title={null}
@@ -274,7 +274,7 @@ const MainProfile = (props) => {
                           xxl={8}>
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
-                              title={<span style={{ fontSize: '16px' }}>Eventos creados</span>}
+                              title={<span style={{ fontSize: '16px' }}>Cursos creados</span>}
                               value={events.length && events.length > 0 ? events.length : 0}
                               // loading={events.length ? false : true}
                               precision={0}
@@ -292,7 +292,7 @@ const MainProfile = (props) => {
                           xxl={8}>
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
-                              title={<span style={{ fontSize: '16px' }}>Eventos en los que estoy registrado</span>}
+                              title={<span style={{ fontSize: '16px' }}>Cursos en los que estoy registrado</span>}
                               value={tickets.length && tickets.length > 0 ? tickets.length : 0}
                               // loading={tickets.length ? false : true}
                               precision={0}
@@ -303,7 +303,7 @@ const MainProfile = (props) => {
                       </Row>
                     </Col>
                     <Col span={24}>
-                      <Divider orientation='left'>Eventos creado</Divider>
+                      <Divider orientation='left'>Cursos creado</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsIHaveCreatedIsLoading ? (
                           <Loading />
@@ -347,7 +347,7 @@ const MainProfile = (props) => {
                     </Col>
 
                     <Col span={24}>
-                      <Divider orientation='left'>Eventos en los que estoy registrado</Divider>
+                      <Divider orientation='left'>Cursos en los que estoy registrado</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsThatIHaveParticipatedIsLoading ? (
                           <Loading />
@@ -421,7 +421,7 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab='Eventos creados' key='3'>
+              <TabPane tab='Cursos creados' key='3'>
                 {eventsIHaveCreatedIsLoading ? (
                   <Loading />
                 ) : (
@@ -458,7 +458,7 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab='Registros a eventos' key='4'>
+              <TabPane tab='Registros a cursos' key='4'>
                 {eventsThatIHaveParticipatedIsLoading ? (
                   <Loading />
                 ) : (

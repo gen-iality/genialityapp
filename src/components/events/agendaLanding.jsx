@@ -116,7 +116,7 @@ class Agenda extends Component {
   componentWillUnmount() {
     this.props.setVirtualConference(true);
   }
-  /** extraemos los días en los que pasan actividades */
+  /** extraemos los días en los que pasan lecciones */
   setDaysWithAllActivities = (data) => {
     const dayswithactivities = [];
     data.map((activity) => {
@@ -124,7 +124,7 @@ class Agenda extends Component {
         .tz(Moment.tz.guess())
         .format('YYYY-MM-DD');
 
-      //Revisamos que no hayamos extraido el día de otra actividad previa
+      //Revisamos que no hayamos extraido el día de otra lección previa
       const result = dayswithactivities.filter((item) => item === datestring);
       if (result.length === 0) {
         if (data.isPublished || data.isPublished == undefined) {
@@ -139,10 +139,10 @@ class Agenda extends Component {
     const { data } = this.state;
     //Cargamos solamente los espacios virtuales de la agenda
 
-    //Si aún no ha cargado el evento no podemos hacer nada más
+    //Si aún no ha cargado el curso no podemos hacer nada más
     if (!this.props.cEvent.value) return;
 
-    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
+    //Revisamos si el curso sigue siendo el mismo, no toca cargar nada
     if (prevProps.event && this.props.cEvent.value._id === prevProps.event._id) return;
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
@@ -334,7 +334,7 @@ class Agenda extends Component {
   //Fn para el resultado de la búsqueda
   searchResult = (data) => this.setState({ toShow: !data ? [] : data });
 
-  // Funcion para registrar usuario en la actividad
+  // Funcion para registrar usuario en la lección
   registerInActivity = async (activityId, eventId, userId, callback) => {
     Activity.Register(eventId, userId, activityId)
       .then(() => {
@@ -369,9 +369,9 @@ class Agenda extends Component {
     this.setState({ currentActivity: null });
   };
 
-  //Funcion survey para traer las encuestas de a actividad
+  //Funcion survey para traer las encuestas de a lección
   async survey(activity) {
-    //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese evento
+    //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese curso
     const survey = await SurveysApi.getByActivity(this.props.cEvent.value._id, activity._id);
     this.setState({ survey: survey });
   }
@@ -450,7 +450,7 @@ class Agenda extends Component {
     const hasPayment =
       this.props.cEvent.value.has_payment === true || this.props.cEvent.value.has_payment === 'true' ? true : false;
 
-    // Listado de eventos que requieren validación
+    // Listado de cursos que requieren validación
     if (hasPayment) {
       if (this.props.cUser === null) {
         this.handleOpenModal();
@@ -577,7 +577,7 @@ class Agenda extends Component {
     });
     return renderList;
   };
-  //FUNCION QUE PERMITE VERIFICAR SI EXISTEN ACTIVIDADES PUBLICADAS POR DIA
+  //FUNCION QUE PERMITE VERIFICAR SI EXISTEN LECCIONES PUBLICADAS POR DIA
   //SIRVE PARA MOSTRAR U OCULTAR FECHAS
   getActivitiesByDayVisibility = (date) => {
     const { toggleConference } = this.props;
@@ -714,7 +714,7 @@ class Agenda extends Component {
           <div className='container-calendar-section'>
             <Row justify='center'>
               <div className='container-calendar '>
-                {/* ACTIVIDADES SIN AGRUPAR */}
+                {/* LECCIONES SIN AGRUPAR */}
                 {this.props.cEvent.value &&
                   this.props.cEvent.value.styles &&
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'false' ||
@@ -743,7 +743,7 @@ class Agenda extends Component {
                       )}
                     </>
                   ))}
-                {/* AGRUPAR ACTIVIDADES POR FECHA*/}
+                {/* AGRUPAR LECCIONES POR FECHA*/}
 
                 {this.props.cEvent.value &&
                   this.props.cEvent.value.styles &&

@@ -45,7 +45,7 @@ function GameList(props) {
           </Card>
         )}
         locale={{
-          emptyText: <Result icon={<GoogleControllerOff />} title='No hay juegos disponibles para esta actividad' />,
+          emptyText: <Result icon={<GoogleControllerOff />} title='No hay juegos disponibles para esta lección' />,
         }}
       />
       {/* </div> */}

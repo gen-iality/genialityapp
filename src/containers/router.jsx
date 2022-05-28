@@ -46,8 +46,8 @@ const MainRouter = (props) => {
            organizaciones
            organizacion
            
-           evento
-           eventos
+           curso
+           cursos
 
            perfildeusuario
            notfound
