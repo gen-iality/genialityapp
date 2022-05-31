@@ -47,27 +47,7 @@ export const structureScannedInformation = ({ split }: any) => {
         gender,
         birthdate,
       };
-    case 9:
-      names = split[3];
-      bloodtype = split[6];
-      gender = split[4];
-      /** When a string arrives for the date of birth we do a destructuring */
-      birthdateString = split[5];
-      year = birthdateString?.substring(0, 4);
-      day = birthdateString?.substring(4, 6);
-      month = birthdateString?.substring(6, 8);
-      birthdate = `${year}-${day}-${month}`;
-      return {
-        names,
-        email,
-        checkInField,
-        bloodtype,
-        gender,
-        birthdate,
-      };
     default:
-      console.log('This document is not supported, information not obtained');
-      message.warning('This document is not supported, we could only obtain your document number');
       return {
         names,
         email,
@@ -105,7 +85,8 @@ export const getEventUserByParameter = ({
 
   switch (key) {
     case 'document':
-      let split: string[] = searchValue.document.split(' ');
+      let split: string[] = searchValue.document.split('<>');
+
       const documentInformation: any = structureScannedInformation({
         split,
       });
@@ -136,7 +117,6 @@ export const getEventUserByParameter = ({
     msg: '',
     another: false,
     user: {},
-    formVisible: false,
   };
 
   usersRef
@@ -160,10 +140,8 @@ export const getEventUserByParameter = ({
               checked_in: true,
             },
           };
-          newData.formVisible = true;
         } else {
           newData.user = null;
-          newData.formVisible = false;
         }
         setScannerData(newData);
         setCheckInLoader(false);
@@ -173,7 +151,6 @@ export const getEventUserByParameter = ({
           newData.msg = 'User found';
           newData.user = userData;
           newData.another = userData.checked_in && userData.checkedin_at ? true : false;
-          newData.formVisible = true;
           setScannerData(newData);
           setCheckInLoader(false);
         });
@@ -199,7 +176,6 @@ export const userCheckIn = async ({
     setScannerData({
       ...scannerData,
       msg: '',
-      formVisible: true,
       user: {},
     });
     handleScan(scannerData?.user?._id);
@@ -213,4 +189,14 @@ export const userCheckIn = async ({
     msj: 'hubo un error al registrar el checkIn del usuario',
     action: 'show',
   });
+};
+
+export const divideInformationObtainedByTheCodeReader = ({ event }: any) => {
+  if (event.keyCode === 9) {
+    event.preventDefault();
+    // Split items by -
+    event.target.value = event.target.value + '<>';
+    return false;
+  }
+  return;
 };

@@ -69,7 +69,7 @@ export const beforeUpload = (file: any) => {
   if (!isLt5M) {
     DispatchMessageService({
       type: 'error',
-      msj: 'Image must smaller than 5MB!',
+      msj: 'The file must be less than 5MB, delete it and upload again',
       action: 'show',
     });
   }
@@ -114,6 +114,9 @@ export const saveOrUpdateUser = (values: any, fields: any, saveUser: (values: an
   //OBTENER RUTA ARCHIVOS FILE
   Object.values(fields).map((field: any) => {
     if (field.type == 'file') {
+      if (values[field.name]?.file?.status === 'removed') {
+        values[field.name] = null;
+      }
       values[field.name] = values[field.name]?.fileList
         ? values[field.name]?.fileList[0]?.response.trim()
         : typeof values[field.name] == 'string'

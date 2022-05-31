@@ -1,16 +1,18 @@
-import { UploadOutlined } from '@ant-design/icons';
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { useIntl } from 'react-intl';
-import { areaCode } from '@/helpers/constants';
+import { ApiUrl, areaCode } from '@/helpers/constants';
 import { beforeUpload, getImagename } from '@/Utilities/formUtils';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
+import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea } = Input;
+const { Dragger } = Upload;
 
 const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
   const intl = useIntl();
@@ -237,12 +239,17 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       if (type === 'file') {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
-            <Upload
+            <Dragger
               accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
-              action='https://api.evius.co/api/files/upload/'
+              action={`${ApiUrl}/api/files/upload/`}
+              maxCount={1}
               multiple={false}
               listType='text'
               beforeUpload={beforeUpload}
+              onRemove={async (file: any) => {
+                const urlFile = file.url || file.response;
+                if (urlFile) await deleteFireStorageData(urlFile);
+              }}
               defaultFileList={
                 value
                   ? [
@@ -253,8 +260,13 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
                     ]
                   : []
               }>
-              <Button icon={<UploadOutlined />}>Upload</Button>
-            </Upload>
+              <>
+                <p className='ant-upload-drag-icon'>
+                  <InboxOutlined style={{ color: '#009fd9' }} />
+                </p>
+                <p>Haga clic o arrastre el archivo a esta área para cargarlo</p>
+              </>
+            </Dragger>
           </Form.Item>
         );
       }
@@ -365,7 +377,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
             initialValue={defaultValue}
             name={name}
             noStyle>
-            <DatePicker format={dateFormat} />
+            <DatePicker format={dateFormat} style={{ width: '100%' }} />
           </Form.Item>
         );
       }

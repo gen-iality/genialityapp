@@ -4,7 +4,7 @@ import { Button, Col, Row } from 'antd';
 type SearchAndCleanButtonsPropTypes = {
   cleanInputSearch: () => void;
 };
-type CheckinAndReadOtherButtons = {
+type CheckinAndReadOtherButtonsPropsTypes = {
   scannerData: {
     user: {} | any;
     another: boolean;
@@ -40,7 +40,7 @@ export const CheckinAndReadOtherButtons = ({
   setCheckInLoader,
   checkIn,
   findAnotherUser,
-}: CheckinAndReadOtherButtons) => {
+}: CheckinAndReadOtherButtonsPropsTypes) => {
   return (
     <Row justify='center' wrap gutter={8}>
       <Col>

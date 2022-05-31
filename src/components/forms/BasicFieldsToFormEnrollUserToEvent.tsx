@@ -1,29 +1,42 @@
-import { Card, Comment, Typography } from 'antd';
+import { imageforDefaultProfile } from '@/helpers/constants';
+import { Card, Comment, Divider, Image, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 
 const { Title, Text } = Typography;
 
 const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
+  console.log('🚀 debug ~ BasicFieldsToFormEnrollUserToEvent ~ { basicFields, editUser }', { basicFields, editUser });
   const intl = useIntl();
   const { names, email } = editUser?.properties || {};
+  const { picture } = editUser?.user || {};
 
   return (
     <>
-      {names && email && (
-        <Card style={{ borderRadius: '8px', marginBottom: '20px' }} bodyStyle={{ padding: '20px' }} hoverable>
-          <Title level={5}>
+      {editUser?._id && (
+        <Card
+          style={{ borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}
+          bodyStyle={{ padding: '20px' }}
+          hoverable>
+          <Title level={4}>
             {intl.formatMessage({
               id: 'title.user_data',
               defaultMessage: 'Datos del usuario',
             })}
           </Title>
+          <Image width={150} src={picture ? picture : imageforDefaultProfile} />
           <Comment
-            author={<Text style={{ fontSize: '18px' }}>{names}</Text>}
-            content={<Text style={{ fontSize: '18px' }}>{email}</Text>}
+            style={{ textAlign: 'start' }}
+            content={
+              <>
+                <Text style={{ fontSize: '18px' }}>{names}</Text>
+                <Divider style={{ margin: '5px' }} />
+                <Text style={{ fontSize: '18px' }}>{email}</Text>
+              </>
+            }
           />
         </Card>
       )}
-      <div style={{ display: names && email ? 'none' : 'block' }}>
+      <div style={{ display: editUser?._id ? 'none' : 'block' }}>
         {basicFields?.length > 0 &&
           basicFields.map((field: any) => {
             return field;

@@ -16,20 +16,22 @@ const getBasicFields = ({ fields, editUser }: any) => {
       let value = userProperties ? userProperties[target] : '';
 
       let input = (
-        <Input
-          addonBefore={
-            labelPosition === 'izquierda' && (
-              <span>
-                {mandatory && <span style={{ color: 'red' }}>* </span>}
-                <strong>{label}</strong>
-              </span>
-            )
-          }
-          type={type}
-          key={key}
-          name={name}
-          defaultValue={value}
-        />
+        <Form.Item initialValue={value} name={name} noStyle>
+          <Input
+            addonBefore={
+              labelPosition === 'izquierda' && (
+                <span>
+                  {mandatory && <span style={{ color: 'red' }}>* </span>}
+                  <strong>{label}</strong>
+                </span>
+              )
+            }
+            type={type}
+            key={key}
+            name={name}
+            defaultValue={value}
+          />
+        </Form.Item>
       );
 
       rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
@@ -49,7 +51,8 @@ const getBasicFields = ({ fields, editUser }: any) => {
           rules={[rule]}
           key={'l' + key}
           htmlFor={key}
-          initialValue={value}>
+          // initialValue={value}
+        >
           {input}
         </Form.Item>
       );

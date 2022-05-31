@@ -4,6 +4,7 @@ import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline';
 import { SearchAndCleanButtons } from './buttonsQrModal';
 import QrReader from 'react-qr-reader';
+import { divideInformationObtainedByTheCodeReader } from '@/Utilities/checkInUtils';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -20,20 +21,6 @@ function QrAndDocumentForm({
   typeScanner,
 }: any) {
   /** We listen to the event of the document input to divide the captured information and be able to continue using the form of ant desing */
-  useEffect(() => {
-    const codigo: any = window.document.getElementById('document');
-
-    if (codigo)
-      codigo.addEventListener('keydown', (evento: any) => {
-        if (evento.keyCode === 9) {
-          evento.preventDefault();
-          // Split items by space
-          codigo.value = codigo.value + ' ';
-          return false;
-        }
-        return;
-      });
-  }, []);
 
   return (
     <Form
@@ -54,10 +41,6 @@ function QrAndDocumentForm({
               }
               key='1'>
               <Form.Item>
-                {/* <Select value={facingMode} onChange={(e) => setFacingMode(e)}>
-                  <Option value='user'>Selfie</Option>
-                  <Option value='environment'>Rear</Option>
-                </Select> */}
                 <Row justify='center' wrap gutter={8}>
                   <Col>
                     <Button
@@ -101,7 +84,12 @@ function QrAndDocumentForm({
       ) : (
         <>
           <Form.Item label={label} name='document'>
-            <Input id='document' allowClear autoFocus />
+            <Input
+              onKeyDown={(event: any) => divideInformationObtainedByTheCodeReader({ event })}
+              id='document'
+              allowClear
+              autoFocus
+            />
           </Form.Item>
         </>
       )}

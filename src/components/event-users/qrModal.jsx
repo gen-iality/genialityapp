@@ -44,7 +44,6 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
       ...scannerData,
       msg: '',
       user: null,
-      formVisible: false,
     });
     form.resetFields();
   };
@@ -123,15 +122,13 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
                 </div>
               )}
               <Spin tip='checkIn en progreso' spinning={checkInLoader}>
-                {scannerData?.formVisible && (
-                  <FormEnrollUserToEvent
-                    fields={fields}
-                    editUser={scannerData?.user && scannerData?.user}
-                    saveUser={saveOrUpdateUser}
-                    loaderWhenSavingUpdatingOrDelete={loadingregister}
-                    visibleInCms
-                  />
-                )}
+                <FormEnrollUserToEvent
+                  fields={fields}
+                  editUser={scannerData?.user && scannerData?.user}
+                  saveUser={saveOrUpdateUser}
+                  loaderWhenSavingUpdatingOrDelete={loadingregister}
+                  visibleInCms
+                />
                 <CheckinAndReadOtherButtons
                   scannerData={scannerData}
                   setScannerData={setScannerData}

@@ -28,7 +28,6 @@ export type newData = {
   msg: string;
   another: boolean;
   user: {} | any;
-  formVisible: boolean;
 };
 export type userCheckInPropsTypes = {
   scannerData: {
