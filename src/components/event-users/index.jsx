@@ -267,15 +267,26 @@ class ListEventUser extends Component {
             sorter: (a, b) => a[item.name]?.length - b[item.name]?.length,
             ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
-              return item.type == 'file' ? (
-                <a target='__blank' download={item?.name} href={key[item?.name]}>
-                  {this.obtenerName(key[item?.name])}
-                </a>
-              ) : item.type == 'avatar' ? (
-                <Image width={40} height={40} src={key?.user?.picture} />
-              ) : (
-                key[item.name]
-              );
+              switch (item.type) {
+                /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
+                case 'date':
+                  const date = key[item.name];
+                  const dateSplit = date ? date.split('T') : '';
+                  return dateSplit[0];
+
+                case 'file':
+                  return (
+                    <a target='__blank' download={item?.name} href={key[item?.name]}>
+                      {this.obtenerName(key[item?.name])}
+                    </a>
+                  );
+
+                case 'avatar':
+                  return <Image width={40} height={40} src={key?.user?.picture} />;
+
+                default:
+                  return key[item.name];
+              }
             },
           };
         });

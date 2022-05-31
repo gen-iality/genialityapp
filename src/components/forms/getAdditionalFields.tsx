@@ -1,11 +1,12 @@
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload } from 'antd';
+import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { useIntl } from 'react-intl';
 import { areaCode } from '@/helpers/constants';
 import { beforeUpload, getImagename } from '@/Utilities/formUtils';
 import { useEffect, useState } from 'react';
+import moment from 'moment';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -16,6 +17,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
   let userProperties = editUser?.properties || {};
   const countryField = userProperties['pais'] || '';
   let areacodeselected = userProperties['code'] || 57;
+  const dateFormat = 'YYYY/MM/DD';
 
   const [country, setCountry] = useState('');
 
@@ -354,6 +356,20 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
           </Form.Item>
         );
       }
+
+      if (type === 'date') {
+        let defaultValue = value ? moment(value, dateFormat) : null;
+        input = (
+          <Form.Item
+            // initialValue={moment(value, dateFormat)}
+            initialValue={defaultValue}
+            name={name}
+            noStyle>
+            <DatePicker format={dateFormat} />
+          </Form.Item>
+        );
+      }
+
       return (
         type !== 'boolean' && (
           <div key={'g' + key}>

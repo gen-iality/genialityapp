@@ -66,6 +66,7 @@ const FormEnrollUserToEvent = ({
         <Card bordered={false}>
           <Form
             form={form}
+            scrollToFirstError={true}
             layout='vertical'
             onFinish={(values) => saveOrUpdateUser(values, fields, saveUser)}
             onFinishFailed={showGeneralMessage}>
