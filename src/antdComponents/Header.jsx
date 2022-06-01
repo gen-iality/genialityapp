@@ -30,7 +30,7 @@ const Header = (props) => {
 
   return (
     <>
-      {console.log(listLenght, 'listLenght')}
+      {/*  {console.log(listLenght, 'listLenght')} */}
       <Title level={4}>
         {(back || customBack) && (
           <Tooltip placement='bottomLeft' title={'Atrás'}>
