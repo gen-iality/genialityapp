@@ -208,7 +208,6 @@ function SpeakersList(props) {
 
   return (
     <div>
-      {console.log(sortAndIndexSpeakers())}
       <Header
         title={'Conferencistas'}
         titleTooltip={'Agregue o edite las personas que son conferencistas'}
@@ -216,7 +215,7 @@ function SpeakersList(props) {
           pathname: `${props.matchUrl}/speaker`,
           state: { new: true },
         }}
-        /* listLenght={sortAndIndexSpeakers().length} */
+        listLenght={sortAndIndexSpeakers()}
       />
 
       <Table

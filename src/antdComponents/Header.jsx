@@ -30,6 +30,7 @@ const Header = (props) => {
 
   return (
     <>
+      {console.log(listLenght, 'listLenght')}
       <Title level={4}>
         {(back || customBack) && (
           <Tooltip placement='bottomLeft' title={'Atrás'}>
@@ -47,7 +48,7 @@ const Header = (props) => {
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
-        {listLenght !== cUser.value.plan.availables.speakers && (
+        {listLenght?.length !== cUser.value.plan.availables.speakers && (
           <Col>
             {addUrl && (
               <Link to={addUrl}>
