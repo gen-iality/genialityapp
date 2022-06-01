@@ -61,6 +61,7 @@ function Speaker(props) {
   const [event, setEvent] = useState();
   const [areacodeselected, setareacodeselected] = useState(57);
   const [editDataIsLoading, setEditDataIsLoading] = useState(true);
+  const [messageHeaderAlert, setMessageHeaderAlert] = useState('');
 
   useEffect(() => {
     dataTheLoaded();
@@ -174,6 +175,8 @@ function Speaker(props) {
           msj: handleRequestError(e).message,
           action: 'show',
         });
+        if (handleRequestError(e).message === 'Speakers/host limit reached')
+          setMessageHeaderAlert(handleRequestError(e).message);
       }
     } else {
       DispatchMessageService({
@@ -289,6 +292,7 @@ function Speaker(props) {
             />
           </Form.Item>
         }
+        messageHeaderAlert={messageHeaderAlert}
       />
 
       <Row justify='center' wrap gutter={12}>

@@ -1023,10 +1023,10 @@ export const SpeakersApi = {
 
 export const PlanesApi = {
   getAll: async () => {
-    return await Actions.getAll(`api/planes`, true);
+    return await Actions.getAll(`api/plans`, true);
   },
   getOne: async (id) => {
-    return await Actions.getOne(`api/planes/`, id);
+    return await Actions.getOne(`api/plans/`, id);
   },
 };
 

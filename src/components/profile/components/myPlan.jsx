@@ -146,6 +146,7 @@ const columnsBills = [
 ];
 
 const myPlan = ({ cUser }) => {
+  console.log(cUser);
   const plan = cUser.value.plan;
   let [planes, setPlanes] = useState([]);
 
