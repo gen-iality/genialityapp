@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { PlanesApi } from '../../../helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
-import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag } from 'antd';
+import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card } from 'antd';
 import { DownloadOutlined, FileDoneOutlined } from '@ant-design/icons';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
@@ -165,7 +165,7 @@ const myPlan = ({ cUser }) => {
   return (
     <Tabs defaultActiveKey={'plan'}>
       <Tabs.TabPane tab={'Mi plan'} key={'plan'}>
-        <Row gutter={[12, 12]}>
+        <Row gutter={[12, 12]} wrap>
           <Col span={6}>
             <PlanCard title={`Plan ${plan.name}`} value={`US $ ${plan.price}`} />
           </Col>
@@ -206,7 +206,34 @@ const myPlan = ({ cUser }) => {
           .filter((plan1) => plan1._id !== plan._id)
           .map((plan2) => (
             <div style={{ paddingBottom: '15px' }}>
-              <Plan plan={plan2}>
+              <Card style={{ borderRadius: '15px' }}>
+                <Row gutter={[12, 12]} wrap>
+                  <Col span={6}>
+                    <PlanCard title={`Plan ${plan2.name}`} value={`US $ ${plan2.price}`} />
+                  </Col>
+                  <Col span={6}>
+                    <PlanCard
+                      title={'Horas de transmisión'}
+                      value={`${plan2.availables.streaming_hours / 60}h`}
+                      icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
+                    />
+                  </Col>
+                  <Col span={6}>
+                    <PlanCard
+                      title={'Usuarios'}
+                      value={plan2.availables.users}
+                      icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
+                    />
+                  </Col>
+                  <Col span={6}>
+                    <PlanCard
+                      title={'Eventos'}
+                      value={plan2.availables.events}
+                      icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
+                    />
+                  </Col>
+                </Row>
+                {/* <Plan plan={plan2}>
                 <Col span={6}>
                   <PlanCard title={`Plan ${plan2.name}`} value={`US $ ${plan2.price}`} />
                 </Col>
@@ -231,7 +258,8 @@ const myPlan = ({ cUser }) => {
                     icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
                   />
                 </Col>
-              </Plan>
+              </Plan> */}
+              </Card>
             </div>
           ))}
       </Tabs.TabPane>

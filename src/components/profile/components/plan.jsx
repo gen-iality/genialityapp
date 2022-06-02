@@ -7,8 +7,8 @@ const plan = ({ plan, mine, children }) => {
       <Divider>
         <strong>Disponible {mine ? 'en tu plan' : `para el plan ${plan.name}`}</strong>
       </Divider>
-      <Row gutter={[12, 12]}>
-        {children}
+      <Row gutter={[12, 12]} wrap>
+        {/* {children} */}
         <Col span={8}>
           <Space direction='vertical'>
             <Space>
