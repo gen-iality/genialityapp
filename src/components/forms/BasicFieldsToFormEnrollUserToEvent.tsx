@@ -1,11 +1,11 @@
 import { imageforDefaultProfile } from '@/helpers/constants';
-import { Card, Comment, Divider, Image, Typography } from 'antd';
+import { nameAndEmailBasicFieldsStyles } from '@/Utilities/checkInUtils';
+import { Card, Comment, Image, Space, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 
 const { Title, Text } = Typography;
 
 const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
-  console.log('🚀 debug ~ BasicFieldsToFormEnrollUserToEvent ~ { basicFields, editUser }', { basicFields, editUser });
   const intl = useIntl();
   const { names, email } = editUser?.properties || {};
   const { picture } = editUser?.user || {};
@@ -17,21 +17,20 @@ const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
           style={{ borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}
           bodyStyle={{ padding: '20px' }}
           hoverable>
-          <Title level={4}>
+          <Title level={4} style={{ marginBottom: '30px' }}>
             {intl.formatMessage({
               id: 'title.user_data',
               defaultMessage: 'Datos del usuario',
             })}
           </Title>
-          <Image width={150} src={picture ? picture : imageforDefaultProfile} />
+          <Image width={250} src={picture ? picture : imageforDefaultProfile} />
           <Comment
-            style={{ textAlign: 'start' }}
+            style={{ textAlign: 'center' }}
             content={
-              <>
-                <Text style={{ fontSize: '18px' }}>{names}</Text>
-                <Divider style={{ margin: '5px' }} />
-                <Text style={{ fontSize: '18px' }}>{email}</Text>
-              </>
+              <Space direction='vertical'>
+                <Text style={nameAndEmailBasicFieldsStyles}>{names}</Text>
+                <Text style={nameAndEmailBasicFieldsStyles}>{email}</Text>
+              </Space>
             }
           />
         </Card>

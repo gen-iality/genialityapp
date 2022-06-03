@@ -250,6 +250,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
                 const urlFile = file.url || file.response;
                 if (urlFile) await deleteFireStorageData(urlFile);
               }}
+              // @ts-ignore: Unreachable code error
               defaultFileList={
                 value
                   ? [
@@ -294,6 +295,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       if (type === 'country') {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
+            {/* @ts-ignore: Unreachable code error */}
             <CountryDropdown
               classes='countryCity-styles'
               priorityOptions={['CO']}
@@ -310,6 +312,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       if (type === 'city') {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
+            {/* @ts-ignore: Unreachable code error */}
             <RegionDropdown
               classes='countryCity-styles'
               disableWhenEmpty={true}
@@ -338,6 +341,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
                 multiple={false}
                 listType='picture'
                 maxCount={1}
+                // @ts-ignore: Unreachable code error
                 defaultFileList={
                   value
                     ? [
@@ -372,11 +376,8 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       if (type === 'date') {
         let defaultValue = value ? moment(value, dateFormat) : null;
         input = (
-          <Form.Item
-            // initialValue={moment(value, dateFormat)}
-            initialValue={defaultValue}
-            name={name}
-            noStyle>
+          <Form.Item initialValue={defaultValue} name={name} noStyle>
+            {/*  @ts-ignore: Unreachable code error */}
             <DatePicker format={dateFormat} style={{ width: '100%' }} />
           </Form.Item>
         );

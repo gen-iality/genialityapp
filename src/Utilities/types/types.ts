@@ -38,3 +38,12 @@ export type userCheckInPropsTypes = {
   setCheckInLoader: (data: any) => void;
   checkIn: (id: any, user: any) => any;
 };
+
+export type FormEnrollUserToEventPropsTypes = {
+  fields: any;
+  editUser: any;
+  options: any;
+  saveUser: (user: any) => void;
+  loaderWhenSavingUpdatingOrDelete: boolean;
+  visibleInCms: boolean;
+};

@@ -285,7 +285,7 @@ class ListEventUser extends Component {
                   return <Image width={40} height={40} src={key?.user?.picture} />;
 
                 default:
-                  return key[item.name];
+                  return 'key[item.name]';
               }
             },
           };

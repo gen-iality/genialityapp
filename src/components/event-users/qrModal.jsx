@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import { Modal, Row, Form, Typography, Alert, Spin } from 'antd';
+import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
 import { alertUserNotFoundStyles, getEventUserByParameter } from '@/Utilities/checkInUtils';
 import { CheckinAndReadOtherButtons } from './buttonsQrModal';
 import { saveOrUpdateUserInAEvent } from '@/Utilities/formUtils';
 import QrAndDocumentForm from './qrAndDocumentForm';
+import BadgeAccountAlertIcon from '@2fd/ant-design-icons/lib/BadgeAccountAlert';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const html = document.querySelector('html');
 
@@ -99,8 +100,12 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
         {scannerData?.msg === 'User not found' && (
           <Alert
             type='error'
-            message={'Usuario no encontrado'}
-            showIcon
+            message={
+              <Space>
+                <BadgeAccountAlertIcon style={{ fontSize: '28px', color: '#FF4E50' }} />{' '}
+                <Text>Usuario no encontrado.</Text>{' '}
+              </Space>
+            }
             closable
             className='animate__animated animate__pulse'
             style={alertUserNotFoundStyles}

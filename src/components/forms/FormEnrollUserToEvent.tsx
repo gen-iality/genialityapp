@@ -6,17 +6,9 @@ import { useIntl } from 'react-intl';
 import { LoadingOutlined } from '@ant-design/icons';
 import dispatchFormEnrollUserToEvent from './dispatchFormEnrollUserToEvent';
 import { aditionalFields, alertStyles, cardStyles, center, saveOrUpdateUser, textLeft } from '@/Utilities/formUtils';
+import { FormEnrollUserToEventPropsTypes } from '@/Utilities/types/types';
 
 const { Title } = Typography;
-
-type FormEnrollUserToEventPropsTypes = {
-  fields: any;
-  editUser: any;
-  options: any;
-  saveUser: (user: any) => void;
-  loaderWhenSavingUpdatingOrDelete: boolean;
-  visibleInCms: boolean;
-};
 
 const FormEnrollUserToEvent = ({
   fields = [],
@@ -76,7 +68,7 @@ const FormEnrollUserToEvent = ({
                   <BasicFieldsToFormEnrollUserToEvent basicFields={basicFields} editUser={editUser} />
                   <Divider />
                   {thereAreExtraFields > 0 && (
-                    <Title level={5}>
+                    <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>
                       {intl.formatMessage({
                         id: 'modal.title.registerevent..',
                         defaultMessage: 'Información adicional para el evento',

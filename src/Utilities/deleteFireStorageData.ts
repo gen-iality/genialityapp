@@ -2,7 +2,6 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { fireStorage } from '@/helpers/firebase';
 
 export const deleteFireStorageData = async (fileUrl: string) => {
-  console.log('🚀 debug ~ deleteFireStorageData ~ fileUrl', fileUrl);
   let theFileWasDeleted = '';
   try {
     // Create a reference to the file to delete

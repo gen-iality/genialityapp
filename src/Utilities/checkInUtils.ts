@@ -1,20 +1,25 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
-import { message } from 'antd';
 import { newData, searchDocumentOrIdPropsTypes, userCheckInPropsTypes } from './types/types';
 
 export const alertUserNotFoundStyles = {
   boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-  backgroundColor: '#FFFFFF',
-  color: '#000000',
+  backgroundColor: '#ffffff',
   borderLeft: `5px solid #FF4E50`,
-  fontSize: '14px',
-  textAlign: 'start',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  textAlign: 'center',
   borderRadius: '5px',
-  marginTop: '10px',
-  marginBottom: '10px',
+  zIndex: '1',
 };
+
+export const nameAndEmailBasicFieldsStyles: any = {
+  fontSize: '16px',
+  fontWeight: 'bold',
+  overflowWrap: 'anywhere',
+};
+
 /** Structuring of the scanned information after dividing it into an array */
 export const structureScannedInformation = ({ split }: any) => {
   /** Variables to store the information obtained when scanning the user's document and dividing to array */
@@ -23,22 +28,13 @@ export const structureScannedInformation = ({ split }: any) => {
   let names: string = '';
   let bloodtype: string = '';
   let gender: string = '';
-  let birthdateString: string = '';
   let birthdate: string = '';
-  let year: string = '';
-  let day: string = '';
-  let month: string = '';
   switch (split.length) {
     case 10:
-      names = split[3] + ' ' + split[4];
+      names = `${split[3]} ${split[4]} ${split[1]} ${split[2]}`;
       bloodtype = split[7];
       gender = split[5];
-      /** When a string arrives for the date of birth we do a destructuring */
-      birthdateString = split[6];
-      year = birthdateString?.substring(0, 4);
-      day = birthdateString?.substring(4, 6);
-      month = birthdateString?.substring(6, 8);
-      birthdate = `${year}-${day}-${month}`;
+      birthdate = split[6];
       return {
         names,
         email,
@@ -71,6 +67,7 @@ export const getEventUserByParameter = ({
   /** Variables to store the parameters to perform the search in firebase*/
   let searchParameter: string = '';
   let valueParameter: string = '';
+
   /** Variables to store the information obtained when scanning the user's document */
   let names: string = '';
   let email: string = '';
@@ -78,6 +75,7 @@ export const getEventUserByParameter = ({
   let bloodtype: string = '';
   let gender: string = '';
   let birthdate: string = '';
+
   /** We get the name of the field to be able to do the where in firebase */
   const { name } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
 
@@ -85,21 +83,21 @@ export const getEventUserByParameter = ({
 
   switch (key) {
     case 'document':
+      /** We divide the string taken with the scanner to be able to assign the values to their corresponding variable */
       let split: string[] = searchValue.document.split('<>');
 
       const documentInformation: any = structureScannedInformation({
         split,
       });
+
       searchParameter = `properties.${name}`;
       valueParameter = String(split[0]).toLowerCase();
-
       names = documentInformation.names;
       email = documentInformation.email;
       checkInField = documentInformation.checkInField;
       bloodtype = documentInformation.bloodtype;
       gender = documentInformation.gender;
       birthdate = documentInformation.birthdate;
-
       break;
 
     case 'qr':
@@ -179,7 +177,6 @@ export const userCheckIn = async ({
       user: {},
     });
     handleScan(scannerData?.user?._id);
-
     setCheckInLoader(true);
     return;
   }
@@ -191,6 +188,7 @@ export const userCheckIn = async ({
   });
 };
 
+/** Function that allows dividing the data captured with a pdf417 code reader by adding a <> after each tabulation to be able to split the text string */
 export const divideInformationObtainedByTheCodeReader = ({ event }: any) => {
   if (event.keyCode === 9) {
     event.preventDefault();
