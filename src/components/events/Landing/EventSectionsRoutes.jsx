@@ -12,6 +12,9 @@ import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import withContext from '../../../context/withContext';
 import { UseCurrentUser } from '@/context/userContext';
+import { Row, Col } from 'antd';
+
+import StudentSelfCourseProgress from '../../StudentProgress/StudentSelfCourseProgress';
 
 //Code spliting
 const DocumentsForm = loadable(() => import('../../documents/front/documentsLanding'));
@@ -111,6 +114,14 @@ const EventSectionRoutes = (props) => {
     <>
       {props.viewVirtualconference && (
         <>
+          <Row justify='start'>
+            <Col span={24}>
+              <div style={{ padding: '25px' }}>
+                <StudentSelfCourseProgress hasProgressLabel />
+              </div>
+            </Col>
+          </Row>
+
           {props.cEvent.value?.styles?.show_title &&
             (props.cEvent.value?.styles.show_title === true || props.cEvent.value?.styles?.show_title === 'true') && (
               <InfoEvent />

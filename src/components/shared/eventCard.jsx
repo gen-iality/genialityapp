@@ -3,7 +3,10 @@ import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Card, Space, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
+import StudentGeneralCourseProgress from '../../components/StudentProgress/StudentGeneralCourseProgress';
+
 const EventImage = imageUtils.EventImage;
+
 class EventCard extends Component {
   render() {
     const { event, bordered, right, loading, isAdmin } = this.props;
@@ -52,6 +55,7 @@ class EventCard extends Component {
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
                     alt='Evius.co'
                   />
+                  {event._id && <StudentGeneralCourseProgress eventId={event._id} />}
                 </Link>
               ) : (
                 <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
@@ -68,6 +72,7 @@ class EventCard extends Component {
                     }
                     alt='Evius.co'
                   />
+                  {event._id && <StudentGeneralCourseProgress eventId={event._id} />}
                 </Link>
               )
             }
