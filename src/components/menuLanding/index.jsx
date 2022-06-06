@@ -1,12 +1,12 @@
-import { Component, Fragment } from 'react';
+import { useEffect, useState } from 'react';
 import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber } from 'antd';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@/context/MessageService';
+import { UseCurrentUser } from '@/context/userContext';
 
-const { Title } = Typography;
 const { Option } = Select;
 const formLayout = {
   labelCol: { span: 24 },
@@ -14,225 +14,230 @@ const formLayout = {
   size: 'small',
 };
 
-class menuLanding extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menu: {
-        evento: {
-          name: 'Evento',
-          position: 30,
-          section: 'evento',
-          icon: 'CalendarOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        agenda: {
-          name: 'Agenda',
-          position: 30,
-          section: 'agenda',
-          icon: 'ReadOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        speakers: {
-          name: 'Conferencistas',
-          position: 30,
-          section: 'speakers',
-          icon: 'AudioOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        /* tickets: {
-          name: 'Registro',
-          position: 30,
-          section: 'tickets',
-          icon: 'CreditCardOutlined',
-          checked: false,
-          permissions: 'public',
-        }, */
-        certs: {
-          name: 'Certificados',
-          position: 30,
-          section: 'certs',
-          icon: 'FileDoneOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        documents: {
-          name: 'Documentos',
-          position: 30,
-          section: 'documents',
-          icon: 'FolderOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        wall: {
-          name: 'Muro',
-          position: 30,
-          section: 'wall',
-          icon: 'TeamOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        /* survey: {
-          name: 'Encuestas',
-          position: 30,
-          section: 'survey',
-          icon: 'FileUnknownOutlined',
-          checked: false,
-          permissions: 'public',
-        }, */
-        faqs: {
-          name: 'Preguntas Frecuentes',
-          position: 30,
-          section: 'faqs',
-          icon: 'QuestionOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        networking: {
-          name: 'Networking',
-          position: 30,
-          section: 'networking',
-          icon: 'LaptopOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        interviews: {
-          name: 'Citas',
-          position: 30,
-          section: 'interviews',
-          icon: 'UserOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        trophies: {
-          name: 'Trofeos',
-          position: 30,
-          section: 'trophies',
-          icon: 'TrophyOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        my_sesions: {
-          name: 'Mis Actividades',
-          position: 30,
-          section: 'my_sesions',
-          icon: 'TeamOutlined',
-          checked: false,
-          permissions: 'public',
-        },
+const menuLanding = (props) => {
+  const originalMenu = {
+    evento: {
+      name: 'Evento',
+      position: 30,
+      section: 'evento',
+      icon: 'CalendarOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    agenda: {
+      name: 'Agenda',
+      position: 30,
+      section: 'agenda',
+      icon: 'ReadOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    speakers: {
+      name: 'Conferencistas',
+      position: 30,
+      section: 'speakers',
+      icon: 'AudioOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    /* tickets: {
+      name: 'Registro',
+      position: 30,
+      section: 'tickets',
+      icon: 'CreditCardOutlined',
+      checked: false,
+      permissions: 'public',
+    }, */
+    certs: {
+      name: 'Certificados',
+      position: 30,
+      section: 'certs',
+      icon: 'FileDoneOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    documents: {
+      name: 'Documentos',
+      position: 30,
+      section: 'documents',
+      icon: 'FolderOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    wall: {
+      name: 'Muro',
+      position: 30,
+      section: 'wall',
+      icon: 'TeamOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    /* survey: {
+      name: 'Encuestas',
+      position: 30,
+      section: 'survey',
+      icon: 'FileUnknownOutlined',
+      checked: false,
+      permissions: 'public',
+    }, */
+    faqs: {
+      name: 'Preguntas Frecuentes',
+      position: 30,
+      section: 'faqs',
+      icon: 'QuestionOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    networking: {
+      name: 'Networking',
+      position: 30,
+      section: 'networking',
+      icon: 'LaptopOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    interviews: {
+      name: 'Citas',
+      position: 30,
+      section: 'interviews',
+      icon: 'UserOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    trophies: {
+      name: 'Trofeos',
+      position: 30,
+      section: 'trophies',
+      icon: 'TrophyOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    my_sesions: {
+      name: 'Mis Actividades',
+      position: 30,
+      section: 'my_sesions',
+      icon: 'TeamOutlined',
+      checked: false,
+      permissions: 'public',
+    },
 
-        informativeSection: {
-          name: 'Sección Informativa',
-          position: 30,
-          section: 'informativeSection',
-          icon: 'FileDoneOutlined',
-          markup: '',
-          checked: false,
-          permissions: 'public',
-        },
-        informativeSection1: {
-          name: 'Sección Informativa',
-          position: 30,
-          section: 'informativeSection1',
-          icon: 'FileDoneOutlined',
-          markup: '',
-          checked: false,
-          permissions: 'public',
-        },
-        /* login: {
-          name: 'Inicio de sesion',
-          position: '',
-          section: 'login',
-          icon: 'LoginOutlined',
-          checked: false,
-          permissions: 'public',
-        }, */
-        partners: {
-          name: 'Patrocinadores',
-          section: 'partners',
-          position: 30,
-          icon: 'DeploymentUnitOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        ferias: {
-          name: 'Ferias',
-          section: 'ferias',
-          position: 30,
-          icon: 'FundProjectionScreenOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        noticias: {
-          name: 'Noticias',
-          section: 'noticias',
-          position: 30,
-          icon: 'NotificationOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-        producto: {
-          name: 'Producto',
-          section: 'producto',
-          position: 30,
-          icon: 'ShopOutlined ',
-          checked: false,
-          permissions: 'public',
-        },
-        videos: {
-          name: 'Videos',
-          section: 'videos',
-          position: 30,
-          icon: 'PlaySquareOutlined',
-          checked: false,
-          permissions: 'public',
-        },
-      },
-      values: {},
-      itemsMenu: {},
-      keySelect: Date.now(),
-      isLoading: true,
-    };
-    this.submit = this.submit.bind(this);
-  }
+    informativeSection: {
+      name: 'Sección Informativa',
+      position: 30,
+      section: 'informativeSection',
+      icon: 'FileDoneOutlined',
+      markup: '',
+      checked: false,
+      permissions: 'public',
+    },
+    informativeSection1: {
+      name: 'Sección Informativa',
+      position: 30,
+      section: 'informativeSection1',
+      icon: 'FileDoneOutlined',
+      markup: '',
+      checked: false,
+      permissions: 'public',
+    },
+    /* login: {
+      name: 'Inicio de sesion',
+      position: '',
+      section: 'login',
+      icon: 'LoginOutlined',
+      checked: false,
+      permissions: 'public',
+    }, */
+    partners: {
+      name: 'Patrocinadores',
+      section: 'partners',
+      position: 30,
+      icon: 'DeploymentUnitOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    ferias: {
+      name: 'Ferias',
+      section: 'ferias',
+      position: 30,
+      icon: 'FundProjectionScreenOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    noticias: {
+      name: 'Noticias',
+      section: 'noticias',
+      position: 30,
+      icon: 'NotificationOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+    producto: {
+      name: 'Producto',
+      section: 'producto',
+      position: 30,
+      icon: 'ShopOutlined ',
+      checked: false,
+      permissions: 'public',
+    },
+    videos: {
+      name: 'Videos',
+      section: 'videos',
+      position: 30,
+      icon: 'PlaySquareOutlined',
+      checked: false,
+      permissions: 'public',
+    },
+  };
+  const [menu, setMenu] = useState(originalMenu);
+  const [values, setvalues] = useState({});
+  const [itemsMenu, setitemsMenu] = useState(originalMenu);
+  const [keySelect, setkeySelect] = useState(Date.now());
+  const [isLoading, setisLoading] = useState(true);
+  /* let cUser = UseCurrentUser(); */
 
-  async componentDidMount() {
-    const menuBase = this.state.menu;
+  useEffect(() => {
+    getMenu();
+  }, []);
+
+  const getMenu = async () => {
+    const menuBase = menu;
     let menuLanding = {};
-    if (this.props.organization != 1) {
+    if (props.organization != 1) {
       let token = await GetTokenUserFirebase();
-      menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}?token=${token}`);
+      menuLanding = await Actions.getAll(`/api/events/${props.event._id}?token=${token}`);
     } else {
       //OBTENER DE ORGANIZACIÓN
       // alert("ORGANIZATION")
 
-      menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
+      menuLanding.itemsMenu = props.organizationObj.itemsMenu || [];
       /* console.log('ITEMS==>', menuLanding.itemsMenu); */
-      this.state.itemsMenu = menuLanding.itemsMenu;
-      let items = menuLanding.itemsMenu;
     }
+    setitemsMenu(menuLanding?.itemsMenu);
+    setMenu(menuLanding?.itemsMenu);
+    console.log(itemsMenu, menu, 'asdasd');
+    //let items = itemsMenu;
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
         if (prop1 === prop) {
           /* console.log('INGRESO ACA'); */
-          this.mapActiveItemsToAvailable(prop);
-          this.changeNameMenu(prop, menuLanding.itemsMenu[prop1]?.name);
-          this.changePositionMenu(prop, menuLanding.itemsMenu[prop1].position);
-          if (menuLanding.itemsMenu[prop1].markup) {
-            this.changeMarkup(prop, menuLanding.itemsMenu[prop1].markup);
+          mapActiveItemsToAvailable(prop);
+          changeNameMenu(prop, menuLanding.itemsMenu[prop1]?.name);
+          changePositionMenu(prop, menuLanding.itemsMenu[prop1].position);
+          if (menuLanding.itemsMenu[prop1]?.markup) {
+            /* console.log(prop, menuLanding.itemsMenu[prop1].markup, 'aqui'); */
+            changeMarkup(prop, menuLanding.itemsMenu[prop1]?.markup);
           }
-          this.changePermissions(prop, menuLanding.itemsMenu[prop1].permissions);
+          changePermissions(prop, menuLanding.itemsMenu[prop1].permissions);
+          /* if (menuLanding.itemsMenu[prop1].section === 'networking') {
+            menuLanding.itemsMenu[prop1].disabled = cUser.value.plan.availables.networking;
+          } */
         }
       }
     }
+    setisLoading(false);
+  };
 
-    this.setState({ isLoading: false });
-  }
-
-  orderItemsMenu(itemsMenu) {
+  const orderItemsMenu = (itemsMenu) => {
     let itemsMenuData = {};
     let itemsMenuToSave = {};
     let items = Object.values(itemsMenu);
@@ -251,17 +256,17 @@ class menuLanding extends Component {
       itemsMenuToSave[itemsMenuData[item].section] = itemsMenuData[item];
     }
     return itemsMenuToSave;
-  }
+  };
 
-  async submit() {
+  const submit = async () => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: 'Por favor espere...',
       action: 'show',
     });
-    const { itemsMenu } = this.state;
-    let menu = this.orderItemsMenu(itemsMenu);
+    //const { itemsMenu } = this.state;
+    let menu = orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
 
     /*if (newMenu.itemsMenu.tickets) {
@@ -270,15 +275,15 @@ class menuLanding extends Component {
       newMenu.allow_register = false;
     }*/
 
-    if (this.props.organization !== 1) {
+    if (props.organization !== 1) {
       let token = await GetTokenUserFirebase();
-      const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
+      const resp = await Actions.put(`api/events/${props.event._id}?token=${token}`, newMenu);
     } else {
       //ACTUALIZAR ORGANIZACION
       // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
       //console.log(this.props.organizationObj)
       let updateOrganization = {
-        ...this.props.organizationObj,
+        ...props.organizationObj,
         itemsMenu: { ...menu },
       };
       let resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
@@ -295,11 +300,11 @@ class menuLanding extends Component {
       msj: 'Información guardada correctamente',
       action: 'show',
     });
-  }
+  };
 
-  async mapActiveItemsToAvailable(key) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+  const mapActiveItemsToAvailable = async (key) => {
+    let menuBase = { ...menu };
+    let itemsMenuDB = { ...itemsMenu };
     /* console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
     console.log('items menù', itemsMenuDB);
     console.log('primero=>', menuBase[key]); */
@@ -312,12 +317,14 @@ class menuLanding extends Component {
     } else {
       delete itemsMenuDB[key];
     }
-    this.setState({ itemsMenu: itemsMenuDB, values: menuBase });
-  }
+    setitemsMenu(itemsMenu);
+    setMenu(itemsMenu);
+    setvalues(menuBase);
+  };
 
-  changeNameMenu(key, name) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+  const changeNameMenu = (key, name) => {
+    let menuBase = { ...menu };
+    let itemsMenuDB = { ...itemsMenu };
     /* console.log('CHANGEMENU==>', key, name); */
     if (name !== '') {
       if (itemsMenuDB[key]) {
@@ -325,95 +332,102 @@ class menuLanding extends Component {
         menuBase[key].name = itemsMenuDB[key].name || name;
       }
     }
-    this.setState({ itemsMenu: itemsMenuDB });
-  }
+    setitemsMenu(itemsMenuDB);
+    setMenu(itemsMenuDB);
+  };
 
-  changePositionMenu(key, position) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+  const changePositionMenu = (key, position) => {
+    let menuBase = { ...menu };
+    let itemsMenuDB = { ...itemsMenu };
     if (position !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].position = position;
         menuBase[key].position = position || itemsMenuDB[key].position;
       }
     }
-    this.setState({ itemsMenu: itemsMenuDB });
-  }
+    setitemsMenu(itemsMenuDB);
+    setMenu(itemsMenuDB);
+  };
 
-  changeMarkup(key, markup) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+  const changeMarkup = (key, markup) => {
+    let menuBase = { ...menu };
+    let itemsMenuDB = { ...itemsMenu };
     if (markup !== '') {
       itemsMenuDB[key].markup = markup;
       menuBase[key].markup = itemsMenuDB[key].markup || markup;
     }
-    this.setState({ itemsMenu: itemsMenuDB });
-  }
+    setitemsMenu(itemsMenuDB);
+    setMenu(itemsMenuDB);
+  };
 
-  changePermissions(key, access) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+  const changePermissions = (key, access) => {
+    let menuBase = { ...menu };
+    let itemsMenuDB = { ...itemsMenu };
     /* console.log('itemsMenuDB', itemsMenuDB); */
     if (itemsMenuDB[key]) {
       itemsMenuDB[key].permissions = access;
       menuBase[key].permissions = itemsMenuDB[key].permissions || access;
     }
 
-    this.setState({ itemsMenu: itemsMenuDB, keySelect: Date.now() });
-  }
+    setitemsMenu(itemsMenuDB);
+    setMenu(itemsMenuDB);
+    setkeySelect(Date.now());
+  };
 
-  orderPosition(key, order) {
-    let itemsMenu = { ...this.state.menu };
-    let itemsMenuToOrder = { ...this.state.itemsMenu };
+  const orderPosition = (key, order) => {
+    let itemsMenu = { ...menu };
+    let itemsMenuToOrder = { ...itemsMenu };
     itemsMenuToOrder[key].position = order !== '' ? parseInt(order) : 0;
     itemsMenu[key].position = itemsMenuToOrder[key].position || order !== '' ? parseInt(order) : 0;
-    this.setState({ itemsMenu: itemsMenuToOrder });
-  }
-  render() {
-    return (
-      <Fragment>
-        <Form {...formLayout} onFinish={this.submit}>
-          <Header
-            title={
-              this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'
-            }
-            description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
-            save
-            form
-          />
+    setitemsMenu(itemsMenuToOrder);
+    setMenu(itemsMenuToOrder);
+  };
 
-          <Spin tip='Cargando...' size='large' spinning={this.state.isLoading}>
-            <Row gutter={[8, 8]} wrap>
-              {Object.keys(this.state.menu).map((key, index) => (
-                <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                  <Card title={this.state.menu[key].name} bordered={true}>
-                    <Form.Item name={this.state.menu[key].name}>
+  return (
+    <>
+      <Form {...formLayout} onFinish={submit}>
+        <Header
+          title={props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'}
+          description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
+          save
+          form
+        />
+
+        <Spin tip='Cargando...' size='large' spinning={isLoading}>
+          <Row gutter={[8, 8]} wrap>
+            {Object.keys(menu).map((key, index) => (
+              <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
+                {menu[key].disabled === true ? (
+                  <></>
+                ) : (
+                  <Card title={menu[key].name} bordered={true}>
+                    <Form.Item name={menu[key].name}>
                       <Button
                         onClick={() => {
-                          this.mapActiveItemsToAvailable(key);
+                          mapActiveItemsToAvailable(key);
                         }}>
-                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                        {menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
                       </Button>
                     </Form.Item>
                     <Form.Item label={'Cambiar nombre de la sección'}>
                       <Input
                         name={`name${index}`}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        //value={this.state.menu[key].name}
+                        disabled={menu[key].checked === true ? false : true}
+                        //value={menu[key].name}
                         onChange={(e) => {
-                          this.changeNameMenu(key, e.target.value);
+                          changeNameMenu(key, e.target.value);
                         }}
-                        placeholder={this.state.menu[key].name}
+                        placeholder={menu[key].name}
                       />
                     </Form.Item>
                     <Form.Item label={'Permisos para la sección'}>
                       <Select
                         name={`permissions${index}`}
-                        key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].permissions}
+                        key={keySelect}
+                        disabled={menu[key].checked === true ? false : true}
+                        value={menu[key].permissions}
                         onChange={(e) => {
-                          this.changePermissions(key, e);
+                          changePermissions(key, e);
                         }}>
                         <Option value='public'>Abierto para todos</Option>
                         <Option value='assistants'>Usuarios inscritos al evento</Option>
@@ -422,110 +436,21 @@ class menuLanding extends Component {
                     <Form.Item label={'Posición en el menú'}>
                       <InputNumber
                         name={`position${index}`}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].position}
-                        onChange={(e) => this.orderPosition(key, e)}
+                        disabled={menu[key].checked === true ? false : true}
+                        value={menu[key].position}
+                        onChange={(e) => orderPosition(key, e)}
                       />
                     </Form.Item>
                   </Card>
-                </Col>
-              ))}
-            </Row>
-          </Spin>
-          <BackTop />
-        </Form>
-
-        {/* <Title level={3}>
-          {this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'}
-        </Title>
-        <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3> */}
-        {/* <Row gutter={16}>
-          {console.log('MENU SECTIONS ', this.state.menu)}
-          {Object.keys(this.state.menu).map((key) => {
-            return (
-              <div key={key}>
-                <Col style={{ marginTop: '3%', marginRight: this.props.organization == 1 ? 20 : '' }} span={8}>
-                  <Card
-                    title={<Title level={4}>{this.state.menu[key].name}</Title>}
-                    bordered={true}
-                    style={{ width: this.props.organization == 1 ? 350 : 300, marginTop: '2%' }}>
-                    <div style={{ marginBottom: '3%' }}>
-                      <Button
-                        onClick={() => {
-                          this.mapActiveItemsToAvailable(key);
-                        }}>
-                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                      </Button>
-                    </div>
-
-                    <div style={{ marginTop: '4%' }}>
-                      <label>Cambiar nombre de la sección</label>
-                      <Input
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                       //value={this.state.menu[key].name}
-                        onChange={(e) => {
-                          this.changeNameMenu(key, e.target.value);
-                        }}
-                        placeholder={this.state.menu[key].name}
-                      />
-                    </div>
-                    <div style={{ marginTop: '4%' }}>
-                      <label>Permisos para la sección</label>
-                      <Select
-                        key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].permissions}
-                        style={{ width: 200 }}
-                        onChange={(e) => {
-                          this.changePermissions(key, e);
-                        }}>
-                        <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al evento</Option>
-                      </Select>
-                    </div>
-                    <div>
-                      <label>Posición en el menú</label>
-                      <Input
-                        type='number'
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].position}
-                        onChange={(e) => this.orderPosition(key, e.target.value)}
-                      />
-                    </div>
-                  </Card>
-                </Col>
-              </div>
-            );
-          })}
-        </Row> */}
-        {/* <Row>
-                    <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection"].checked && (
-                            <>
-                                <label>Información para insercion en {this.state.menu["informativeSection"].name}</label>
-                               
-                                <textarea type="textbox" defaultValue={this.state.menu["informativeSection"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection", e.target.value) }} />
-                            </>
-                        )}
-                    </div>
-                    <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection1"].checked && (
-                            <>
-                                <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
-                                <br/>
-                                <textarea defaultValue={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection1", e.target.value) }} />
-                            </>
-                        )}
-                    </div>
-                </Row> */}
-        {/* <Row>
-          <Button style={{ marginTop: '1%' }} type='primary' size='large' onClick={this.submit}>
-            Guardar
-          </Button>
-        </Row> */}
-      </Fragment>
-    );
-  }
-}
+                )}
+              </Col>
+            ))}
+          </Row>
+        </Spin>
+        <BackTop />
+      </Form>
+    </>
+  );
+};
 
 export default menuLanding;
