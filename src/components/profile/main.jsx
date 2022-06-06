@@ -218,7 +218,7 @@ const MainProfile = (props) => {
                 // bottom: `${screens.xs ? '4%' : '6%'}`,
                 // right: `${screens.xs ? '10%' : '22%'}`,
               }}
-              src={imageUtils.LogoSvg}
+              src={imageUtils.LogoSvgDark}
               alt='logo'
             />
           </Col>
