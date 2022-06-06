@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber } from 'antd';
+import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber, Result } from 'antd';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
@@ -193,7 +193,9 @@ const menuLanding = (props) => {
   const [itemsMenu, setitemsMenu] = useState(originalMenu);
   const [keySelect, setkeySelect] = useState(Date.now());
   const [isLoading, setisLoading] = useState(true);
-  /* let cUser = UseCurrentUser(); */
+  const [toDisable, settoDisable] = useState(false);
+  let mm = true;
+  let cUser = UseCurrentUser();
 
   useEffect(() => {
     getMenu();
@@ -212,6 +214,16 @@ const menuLanding = (props) => {
       menuLanding.itemsMenu = props.organizationObj.itemsMenu || [];
       /* console.log('ITEMS==>', menuLanding.itemsMenu); */
     }
+    if (menuLanding.itemsMenu['networking'].section === 'networking') {
+      let x = true;
+      settoDisable(x);
+      mm = true;
+      console.log(toDisable, '1', mm);
+      menuLanding.itemsMenu['networking'].disabled = true;
+      /*
+      console.log('entro', menuLanding.itemsMenu['networking'], menuLanding.itemsMenu.networking); */
+      //menuLanding.itemsMenu[prop1].disabled = cUser.value.plan.availables.networking;
+    }
     setitemsMenu(menuLanding?.itemsMenu);
     setMenu(menuLanding?.itemsMenu);
     console.log(itemsMenu, menu, 'asdasd');
@@ -228,9 +240,16 @@ const menuLanding = (props) => {
             changeMarkup(prop, menuLanding.itemsMenu[prop1]?.markup);
           }
           changePermissions(prop, menuLanding.itemsMenu[prop1].permissions);
-          /* if (menuLanding.itemsMenu[prop1].section === 'networking') {
-            menuLanding.itemsMenu[prop1].disabled = cUser.value.plan.availables.networking;
-          } */
+          if (menuLanding.itemsMenu[prop1].section === 'networking') {
+            let m = true;
+            settoDisable(m);
+            mm = true;
+            console.log(toDisable, '2', mm);
+            menuLanding.itemsMenu[prop1].disabled = true;
+            /* menuLanding.itemsMenu['networking'].disabled = true;
+            console.log('entro', menuLanding.itemsMenu['networking'], menuLanding.itemsMenu.networking); */
+            //menuLanding.itemsMenu[prop1].disabled = cUser.value.plan.availables.networking;
+          }
         }
       }
     }
@@ -392,57 +411,59 @@ const menuLanding = (props) => {
           save
           form
         />
-
+        {console.log(mm, '-')}
         <Spin tip='Cargando...' size='large' spinning={isLoading}>
           <Row gutter={[8, 8]} wrap>
             {Object.keys(menu).map((key, index) => (
               <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                {menu[key].disabled === true ? (
-                  <></>
-                ) : (
-                  <Card title={menu[key].name} bordered={true}>
-                    <Form.Item name={menu[key].name}>
-                      <Button
-                        onClick={() => {
-                          mapActiveItemsToAvailable(key);
-                        }}>
-                        {menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                      </Button>
-                    </Form.Item>
-                    <Form.Item label={'Cambiar nombre de la sección'}>
-                      <Input
-                        name={`name${index}`}
-                        disabled={menu[key].checked === true ? false : true}
-                        //value={menu[key].name}
-                        onChange={(e) => {
-                          changeNameMenu(key, e.target.value);
-                        }}
-                        placeholder={menu[key].name}
-                      />
-                    </Form.Item>
-                    <Form.Item label={'Permisos para la sección'}>
-                      <Select
-                        name={`permissions${index}`}
-                        key={keySelect}
-                        disabled={menu[key].checked === true ? false : true}
-                        value={menu[key].permissions}
-                        onChange={(e) => {
-                          changePermissions(key, e);
-                        }}>
-                        <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al evento</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item label={'Posición en el menú'}>
-                      <InputNumber
-                        name={`position${index}`}
-                        disabled={menu[key].checked === true ? false : true}
-                        value={menu[key].position}
-                        onChange={(e) => orderPosition(key, e)}
-                      />
-                    </Form.Item>
-                  </Card>
-                )}
+                <Card title={menu[key].name} bordered={true} style={{ maxHeight: '315px' }}>
+                  {menu[key].section === 'networking' && mm === true ? (
+                    <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
+                  ) : (
+                    <>
+                      <Form.Item name={menu[key].name}>
+                        <Button
+                          onClick={() => {
+                            mapActiveItemsToAvailable(key);
+                          }}>
+                          {menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                        </Button>
+                      </Form.Item>
+                      <Form.Item label={'Cambiar nombre de la sección'}>
+                        <Input
+                          name={`name${index}`}
+                          disabled={menu[key].checked === true ? false : true}
+                          //value={menu[key].name}
+                          onChange={(e) => {
+                            changeNameMenu(key, e.target.value);
+                          }}
+                          placeholder={menu[key].name}
+                        />
+                      </Form.Item>
+                      <Form.Item label={'Permisos para la sección'}>
+                        <Select
+                          name={`permissions${index}`}
+                          key={keySelect}
+                          disabled={menu[key].checked === true ? false : true}
+                          value={menu[key].permissions}
+                          onChange={(e) => {
+                            changePermissions(key, e);
+                          }}>
+                          <Option value='public'>Abierto para todos</Option>
+                          <Option value='assistants'>Usuarios inscritos al evento</Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item label={'Posición en el menú'}>
+                        <InputNumber
+                          name={`position${index}`}
+                          disabled={menu[key].checked === true ? false : true}
+                          value={menu[key].position}
+                          onChange={(e) => orderPosition(key, e)}
+                        />
+                      </Form.Item>
+                    </>
+                  )}
+                </Card>
               </Col>
             ))}
           </Row>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { PlanesApi } from '../../../helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
-import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card } from 'antd';
+import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Collapse } from 'antd';
 import { DownloadOutlined, FileDoneOutlined } from '@ant-design/icons';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
@@ -145,6 +145,62 @@ const columnsBills = [
   },
 ];
 
+const events = [
+  {
+    key: '1',
+    name: 'Evento 1',
+    users: '2/2',
+    time: '1h/1h',
+    status: 'Activo',
+    created_at: '20-08-2021',
+    expirate_date: '20-09-2021',
+  },
+  {
+    key: '2',
+    name: 'Evento 2',
+    users: '1/2',
+    time: '30m/1h',
+    status: 'Activo',
+    created_at: '20-03-2022',
+    expirate_date: '20-04-2022',
+  },
+];
+
+const columnsEvents = [
+  {
+    title: 'Nombre del evento',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Usuarios',
+    dataIndex: 'users',
+    key: 'users',
+    align: 'center',
+  },
+  {
+    title: 'Horas',
+    dataIndex: 'time',
+    key: 'time',
+    align: 'center',
+  },
+  {
+    title: 'Estado',
+    dataIndex: 'status',
+    key: 'status',
+  },
+  {
+    title: 'Fecha de creación',
+    dataIndex: 'created_at',
+    key: 'created_at',
+  },
+  {
+    title: 'Fecha final',
+    dataIndex: 'expirate_date',
+    key: 'expirate_date',
+  },
+];
+
 const myPlan = ({ cUser }) => {
   console.log(cUser);
   const plan = cUser.value.plan;
@@ -191,6 +247,9 @@ const myPlan = ({ cUser }) => {
             />
           </Col>
           <Col span={24}>
+            <Table dataSource={events} columns={columnsEvents} />
+          </Col>
+          <Col span={24}>
             <Plan plan={plan} mine />
           </Col>
         </Row>
@@ -207,6 +266,9 @@ const myPlan = ({ cUser }) => {
           .map((plan2) => (
             <div style={{ paddingBottom: '15px' }}>
               <Card style={{ borderRadius: '15px' }}>
+                <Divider>
+                  <strong>Disponible {plan2.name}</strong>
+                </Divider>
                 <Row gutter={[12, 12]} wrap>
                   <Col span={6}>
                     <PlanCard title={`Plan ${plan2.name}`} value={`US $ ${plan2.price}`} />
@@ -231,6 +293,13 @@ const myPlan = ({ cUser }) => {
                       value={plan2.availables.events}
                       icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
                     />
+                  </Col>
+                  <Col span={24}>
+                    <Collapse bordered={false} /* defaultActiveKey={['1']} */>
+                      <Collapse.Panel header='Adicional' key='1'>
+                        <Plan plan={plan2} />
+                      </Collapse.Panel>
+                    </Collapse>
                   </Col>
                 </Row>
                 {/* <Plan plan={plan2}>

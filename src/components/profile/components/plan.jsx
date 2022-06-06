@@ -4,9 +4,12 @@ import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 const plan = ({ plan, mine, children }) => {
   return (
     <Card style={{ borderRadius: '15px' }}>
-      <Divider>
-        <strong>Disponible {mine ? 'en tu plan' : `para el plan ${plan.name}`}</strong>
-      </Divider>
+      {mine && (
+        <Divider>
+          <strong>Disponible en tu plan {plan.name}</strong>
+        </Divider>
+      )}
+
       <Row gutter={[12, 12]} wrap>
         {/* {children} */}
         <Col span={8}>
