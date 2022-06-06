@@ -25,7 +25,7 @@ export const useCheckinUser = (attende, eventId, type = 'event') => {
   if (type == 'event') {
     userRef.onSnapshot(function(doc) {
       if (doc.exists) {
-        if (doc.data().checked_in === false) {
+        if (!doc.data().checked_in) {
           userRef.set(
             {
               properties: {
@@ -43,7 +43,7 @@ export const useCheckinUser = (attende, eventId, type = 'event') => {
   } else if (type == 'activity') {
     userRef.onSnapshot(function(doc) {
       if (doc.exists) {
-        if (doc.data().checked_in === false) {
+        if (!doc.data().checked_in) {
           userRef.set(
             {
               properties: {

@@ -44,6 +44,7 @@ import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
+import moment from 'moment';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -177,6 +178,19 @@ class ListEventUser extends Component {
     );
     return extraFields;
   };
+  /** Sort by checkIn field on outside or inside properties object */
+  sortUsersArray = async (users) => {
+    const sortedResult = users.sort((itemA, itemB) => {
+      const checkedinItemA = itemA?.checkedin_at ? itemA?.checkedin_at : itemA?.properties?.checkedin_at;
+      const checkedinAtItemB = itemB?.checkedin_at ? itemB?.checkedin_at : itemB?.properties?.checkedin_at;
+
+      const aParameter = new Date(checkedinItemA);
+      const bParameter = new Date(checkedinAtItemB);
+      return bParameter - aParameter;
+    });
+
+    return sortedResult;
+  };
 
   async componentDidMount() {
     let self = this;
@@ -285,7 +299,7 @@ class ListEventUser extends Component {
                   return <Image width={40} height={40} src={key?.user?.picture} />;
 
                 default:
-                  return 'key[item.name]';
+                  return key[item.name];
               }
             },
           };
@@ -343,11 +357,14 @@ class ListEventUser extends Component {
           // Listen for document metadata changes
           //includeMetadataChanges: true
         },
-        (snapshot) => {
+        async (snapshot) => {
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
 
-          let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
+          let totalCheckedIn = updatedAttendees.reduce(
+            (acc, item) => acc + (item.checkedin_at || item?.properties?.checkedin_at ? 1 : 0),
+            0
+          );
 
           let totalCheckedInWithWeight =
             Math.round(
@@ -427,13 +444,12 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-          updatedAttendees.sort((a, b) => b.checkedin_at - a.checkedin_at);
+          const sortedUsers = await this.sortUsersArray(updatedAttendees);
 
-          // console.log("ATTENDESSTWO==>",updatedAttendees)
           this.setState({
-            users: updatedAttendees,
-            usersReq: updatedAttendees,
-            auxArr: updatedAttendees,
+            users: sortedUsers,
+            usersReq: sortedUsers,
+            auxArr: sortedUsers,
             loading: false,
           });
         },
@@ -928,7 +944,12 @@ class ListEventUser extends Component {
         {timeout && <ErrorServe errorData={this.state.errorData} />}
 
         <Drawer
-          title='Estadísticas'
+          title={
+            <>
+              <Title level={3}>Estadísticas</Title>
+              {this.props.event.name ? <Title level={5}>{this.props.event.name}</Title> : ''}
+            </>
+          }
           visible={this.state.isModalVisible}
           closable={false}
           footer={[
@@ -941,31 +962,24 @@ class ListEventUser extends Component {
               </Title>
             </div>,
           ]}
-          style={{ top: 0 }}
+          style={{ top: 0, textAlign: 'center' }}
           width='100vw'>
-          <Row align='middle' justify='center' style={{}}>
+          <Row align='middle' justify='center' style={{ width: '80vw' }}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
               <Row align='middle'>
                 <Card
                   bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
-                  bordered={false}
                   cover={
                     this.props.event.styles.event_image ? (
                       <img
-                        style={{ objectFit: 'cover', width: '100vw' }}
+                        style={{ objectFit: 'cover', width: '96vw' }}
                         src={this.props.event.styles.event_image}
                         alt='Logo evento'
                       />
                     ) : (
                       ''
                     )
-                  }>
-                  {this.props.event.name ? (
-                    <Card.Meta description={<Title level={5}>{this.props.event.name}</Title>} />
-                  ) : (
-                    ''
-                  )}
-                </Card>
+                  }></Card>
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>

@@ -260,7 +260,8 @@ class UserModal extends Component {
     let respActivity = true;
     if (values) {
       if (values?.checked_in) {
-        values.checkedin_at = new Date();
+        const checkedinAt = Moment(new Date()).format('D/MMM/YY h:mm:ss A ');
+        values.checkedin_at = checkedinAt;
         values.checked_in = true;
       } else {
         values.checkedin_at = '';
@@ -268,6 +269,7 @@ class UserModal extends Component {
       }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };
+
       if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */
