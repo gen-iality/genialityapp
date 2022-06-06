@@ -46,7 +46,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
             bottom: `${screens.xs ? '4%' : '6%'}`,
             // right: `${screens.xs ? '10%' : '22%'}`,
           }}
-          src={imageUtils.LogoSvg}
+          src={imageUtils.LogoSvgDark}
           alt='logo'
         />
         <Result
