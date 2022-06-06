@@ -827,7 +827,7 @@ class ListEventUser extends Component {
         <Row gutter={8}>
           <Col>
             <p>
-              <strong> Última Sincronización </strong>: <FormattedDate value={lastUpdate} />{' '}
+              <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
               <FormattedTime value={lastUpdate} />
             </p>
           </Col>
@@ -836,20 +836,20 @@ class ListEventUser extends Component {
         <Row wrap gutter={[8, 8]}>
           <Col>
             <Tag
-              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
+              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: '4px' }}
               color='lightgrey'
               icon={<UsergroupAddOutlined />}>
-              Inscritos: <span style={{ fontSize: '13px' }}>{inscritos}</span>
+              <strong>Inscritos: </strong>
+              <span style={{ fontSize: '13px' }}>{inscritos}</span>
             </Tag>
           </Col>
           <Col>
             <Tag
-              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
+              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: '4px' }}
               color='lightgrey'
               icon={<StarOutlined />}>
-              Participantes:{' '}
+              <strong>Participantes: </strong>
               <span style={{ fontSize: '13px' }}>
-                {' '}
                 {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
               </span>
             </Tag>
