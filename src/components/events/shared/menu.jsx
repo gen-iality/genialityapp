@@ -1,11 +1,11 @@
 import { Fragment, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Divider, Menu, Row } from 'antd';
+import { Button, Divider, Menu, Row } from 'antd';
 import { EventsApi } from '../../../helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
-import { ApartmentOutlined } from '@ant-design/icons';
+import { ApartmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { imageUtils } from '../../../Utilities/ImageUtils';
 
 const { SubMenu } = Menu;
@@ -21,7 +21,7 @@ const MenuConfig = (props) => {
     stylesTab: true,
     guestTab: true,
     url: window.location.href,
-    collapsed: false,
+    collapsed: true,
     organizationId: '',
   });
 
@@ -40,44 +40,54 @@ const MenuConfig = (props) => {
   const handleClick = (e) => {
     if (!navigator.onLine) e.preventDefault();
   };
-
   return (
-    <Fragment>
-      <Menu
-        defaultSelectedKeys={['datos-evento']}
-        // defaultOpenKeys={['main']}
-        theme='dark'
-        style={{
-          overflow: 'auto',
-          background: '#1B1E28',
-        }}
-        inlineCollapsed={controller.collapsed}>
-        <Row justify='center' style={{ padding: 10 }}>
-          <img
-            style={{
-              width: '50%',
-            }}
-            src={`${imageUtils.LOGOEVIUS}`}
-          />
-          <Divider style={{ background: 'gray' }} />
-        </Row>
-        {renderMenuItems(controller, props)}
+    <Menu
+      defaultOpenKeys={['main']}
+      mode='inline'
+      theme='dark'
+      style={{
+        overflow: 'auto',
+        background: '#1B1E28',
+      }}
+      inlineCollapsed={props.collapsed}>
+      <div style={{ textAlign: 'end', marginBottom: '15px', marginTop: '15px' }}>
+        <Button
+          type='primary'
+          onClick={props.collapseMenu}
+          style={{ width: '100%', textAlign: 'end', background: '#1B1E28', border: 'none' }}>
+          {props.collapsed ? (
+            <RightOutlined style={{ fontSize: '20px' }} />
+          ) : (
+            <LeftOutlined style={{ fontSize: '20px' }} />
+          )}
+        </Button>
+      </div>
 
-        <SubMenu
-          key='sub9'
-          title={
-            <span>
-              <ApartmentOutlined />
-              <span>Administrar organizaciones</span>
-            </span>
-          }>
-          <Menu.Item key='30'>
-            Panel de administración
-            <NavLink onClick={handleClick} to={`/admin/organization/${controller.organizationId}`}></NavLink>
-          </Menu.Item>
-        </SubMenu>
-      </Menu>
-    </Fragment>
+      <Row justify='center' style={{ padding: 10 }}>
+        <img
+          style={{
+            width: '50%',
+          }}
+          src={`${imageUtils.LogoSvg}`}
+        />
+        <Divider style={{ background: 'gray' }} />
+      </Row>
+      {renderMenuItems(controller, props)}
+
+      <SubMenu
+        key='sub9'
+        title={
+          <span>
+            <ApartmentOutlined />
+            <span>Administrar organizaciones</span>
+          </span>
+        }>
+        <Menu.Item key='30'>
+          Panel de administración
+          <NavLink onClick={handleClick} to={`/admin/organization/${controller.organizationId}`}></NavLink>
+        </Menu.Item>
+      </SubMenu>
+    </Menu>
   );
 };
 
