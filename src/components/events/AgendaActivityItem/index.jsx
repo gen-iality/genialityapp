@@ -14,6 +14,7 @@ import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
+import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -289,6 +290,7 @@ function AgendaActivityItem(props) {
                 className='card-agenda-desktop agendaHover efect-scale'
                 bodyStyle={{ padding: '10px' }}>
                 <Row gutter={[8, 8]}>
+                  <LessonViewedCheck isTaken={isTaken} />
                   <Col md={4} lg={4} xl={4} className='agenda-hora'>
                     <div>
                       {!props.hasDate && item.datetime_end ? (
