@@ -44,7 +44,6 @@ function AgendaActivityItem(props) {
   // Take data
   useEffect(() => {
     if (!cEventUser || !cEventUser.value) return;
-    if (!props.data) return;
 
     const loadData = async () => {
       // Ask if that activity (item) is stored in <ID>_event_attendees
