@@ -12,6 +12,7 @@ import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
+import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -30,6 +31,7 @@ function AgendaActivityItem(props) {
   const [related_meetings, setRelatedMeetings] = useState();
   const [meetingState, setMeetingState] = useState(null);
   const [typeActivity, setTypeActivity] = useState(null);
+  const [isTaken, setIsTaken] = useState(null);
   const intl = useIntl();
 
   const timeZone = Moment.tz.guess();
@@ -266,6 +268,7 @@ function AgendaActivityItem(props) {
                 <Row gutter={[8, 8]}>
                   <Col md={4} lg={4} xl={4} className='agenda-hora'>
                     <div>
+                      <LessonViewedCheck isTaken={isTaken} />
                       {!props.hasDate && item.datetime_end ? (
                         <Timeline>
                           <Timeline.Item color={typeActivity === 'url' ? 'transparent' : event.styles.toolbarDefaultBg}>
