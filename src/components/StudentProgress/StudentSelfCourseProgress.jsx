@@ -8,10 +8,7 @@ import { UseEventContext } from '../../context/eventContext';
 import { UseUserEvent } from '../../context/eventUserContext';
 
 function StudentSelfCourseProgress(props) {
-  const {
-    progressType,
-    hasProgressLabel=false,
-  } = props;
+  const { progressType, hasProgressLabel = false } = props;
 
   const cEventContext = UseEventContext();
   const cEventUser = UseUserEvent();
@@ -28,15 +25,22 @@ function StudentSelfCourseProgress(props) {
     const loadData = async () => {
       const { data } = await AgendaApi.byEvent(cEventContext.value._id);
       setActivities(data);
-      data.map(async (activity) => {
+      const existentActivities = data.map(async (activity) => {
         let activity_attendee = await firestore
           .collection(`${activity._id}_event_attendees`)
           .doc(cEventUser.value._id)
           .get(); //checkedin_at
         if (activity_attendee.exists) {
-          setActivities_attendee((past) => [...past, activity_attendee.data()]);
+          return activity_attendee.data();
+          // setActivities_attendee((past) => [...past, activity_attendee.data()]);
         }
+        return null;
       });
+      // Filter existent activities and set the state
+      setActivities_attendee(
+        // Promises don't bite :)
+        (await Promise.all(existentActivities)).filter((item) => !!item)
+      );
     };
     loadData();
     return () => {};
@@ -47,7 +51,7 @@ function StudentSelfCourseProgress(props) {
   ), [activities_attendeex, activities]);
 
   const progressStats = useMemo(() => (
-    `${activities_attendeex.length || 0} / ${activities.length || 0}`
+    `${activities_attendeex.length || 0}/${activities.length || 0}`
   ), [activities_attendeex, activities]);
 
   return (
@@ -56,6 +60,7 @@ function StudentSelfCourseProgress(props) {
       progressStats={progressStats}
       progressPercentValue={progressPercentValue}
       progressType={progressType}
+      noProgressSymbol
     />
   );
 }
