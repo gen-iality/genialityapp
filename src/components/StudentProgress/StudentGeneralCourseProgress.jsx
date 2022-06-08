@@ -12,11 +12,7 @@ let initialContextState_EventContext = { error: null, status: 'LOADING', value: 
 let initialContextState_UserEvent = { status: 'LOADING', value: null };
 
 function StudentGeneralCourseProgress(props) {
-  const {
-    progressType,
-    hasProgressLabel=false,
-    eventId,
-  } = props;
+  const { progressType, hasProgressLabel = false, eventId } = props;
 
   let cUser = UseCurrentUser();
 
@@ -79,13 +75,15 @@ function StudentGeneralCourseProgress(props) {
     return () => {};
   }, [cEventContext.value, cEventUser.value]);
 
-  // const progressPercentValue = useMemo(() => (
-  //   Math.round(((activities_attendeex.length || 0) / (activities.length || 0)) * 100)
-  // ), [activities_attendeex, activities]);
+  const progressPercentValue = useMemo(
+    () => Math.round(((activities_attendeex.length || 0) / (activities.length || 0)) * 100),
+    [activities_attendeex, activities]
+  );
 
-  const progressStats = useMemo(() => (
-    `${activities_attendeex.length || 0} / ${activities.length || 0}`
-  ), [activities_attendeex, activities]);
+  const progressStats = useMemo(() => `${activities_attendeex.length || 0}/${activities.length || 0}`, [
+    activities_attendeex,
+    activities,
+  ]);
 
   if (cUser.value == null || cUser.value == undefined) {
     return <></>;
@@ -95,7 +93,7 @@ function StudentGeneralCourseProgress(props) {
     <CourseProgress
       hasProgressLabel={hasProgressLabel}
       progressStats={progressStats}
-      progressPercentValue={progressStats}
+      progressPercentValue={progressPercentValue}
       progressType={progressType}
       noProgressSymbol
     />

@@ -1,49 +1,45 @@
-import { Progress } from 'antd';
+import { Progress, Row, Col } from 'antd';
 
 function CourseProgress(props) {
   const {
     progressType,
-    hasProgressLabel=false,
+    hasProgressLabel = false,
     progressPercentValue,
-    noProgressSymbol=false,
+    noProgressSymbol = false,
     progressStats,
   } = props;
 
   return (
     <div style={{ color: '#AAA' }}>
-      {hasProgressLabel && (
-      <p style={{ color: 'black', fontWeight: 'bold' }}>
-        Progreso: {progressStats}
-      </p>
-      )}
+      {hasProgressLabel && <p style={{ color: 'black', fontWeight: 'bold' }}>Mi Progreso:</p>}
 
       {progressType === 'circle' && (
-      <Progress
-        type='circle'
-        percent={progressPercentValue}
-        format={noProgressSymbol ? (percent) => percent : null}
-      />
+        <Progress
+          type='circle'
+          percent={progressPercentValue}
+          format={noProgressSymbol ? (percent) => percent : null}
+        />
       )}
 
       {progressType === 'steps' && (
-      <Progress
-        percent={progressPercentValue}
-        steps={activities.length || 0}
-        format={noProgressSymbol ? (percent) => percent : null}
-      />
+        <Progress
+          percent={progressPercentValue}
+          steps={activities.length || 0}
+          format={noProgressSymbol ? (percent) => percent : null}
+        />
       )}
 
-      {progressType === 'block' || progressType === undefined && (
-      <Progress
-        strokeColor={{
-          from: '#108ee9',
-          to: '#87d068',
-        }}
-        percent={progressPercentValue}
-        status='active'
-        format={noProgressSymbol ? (percent) => percent : null}
-      />
-      )}
+      {progressType === 'block' ||
+        (progressType === undefined && (
+          <Row justify='space-between'>
+            <Col flex='auto'>
+              <Progress strokeColor='#f7981d' trailColor='#E6E6E6' percent={progressPercentValue} showInfo={false} />
+            </Col>
+            <Col flex='none' style={{ paddingLeft: '10px', color: 'black' }}>
+              {progressStats}
+            </Col>
+          </Row>
+        ))}
     </div>
   );
 }
