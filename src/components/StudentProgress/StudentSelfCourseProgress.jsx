@@ -42,19 +42,19 @@ function StudentSelfCourseProgress(props) {
     return () => {};
   }, [cEventContext.value, cEventUser.value]);
 
-  // const progressPercentValue = useMemo(() => (
-  //   Math.round(((activities_attendeex.length || 0) / (activities.length || 0)) * 100)
-  // ), [activities_attendeex, activities]);
+  const progressPercentValue = useMemo(() => (
+    Math.round(((activities_attendeex.length || 0) / (activities.length || 0)) * 100)
+  ), [activities_attendeex, activities]);
 
   const progressStats = useMemo(() => (
-    `${activities_attendeex.length || 0} / ${activities.length || 0}`
+    `${activities_attendeex.length || 0}/${activities.length || 0}`
   ), [activities_attendeex, activities]);
 
   return (
     <CourseProgress
       hasProgressLabel={hasProgressLabel}
       progressStats={progressStats}
-      progressPercentValue={progressStats}
+      progressPercentValue={progressPercentValue}
       progressType={progressType}
       noProgressSymbol
     />

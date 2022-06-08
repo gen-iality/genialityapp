@@ -21,7 +21,7 @@ function CourseProgress(props) {
       <Progress
         type='circle'
         percent={progressPercentValue}
-        format={noProgressSymbol ? (percent) => percent : null}
+        format={noProgressSymbol ? (percent) => progressStats : null}
       />
       )}
 
@@ -29,7 +29,7 @@ function CourseProgress(props) {
       <Progress
         percent={progressPercentValue}
         steps={activities.length || 0}
-        format={noProgressSymbol ? (percent) => percent : null}
+        format={noProgressSymbol ? (percent) => progressStats : null}
       />
       )}
 
@@ -41,7 +41,7 @@ function CourseProgress(props) {
         }}
         percent={progressPercentValue}
         status='active'
-        format={noProgressSymbol ? (percent) => percent : null}
+        format={noProgressSymbol ? (percent) => progressStats : null}
       />
       )}
     </div>
