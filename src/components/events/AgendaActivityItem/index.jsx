@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
+import { AgendaApi } from '../../../helpers/request';
 import { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -12,6 +13,8 @@ import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
+import { UseUserEvent } from '../../../context/eventUserContext';
+import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -31,9 +34,31 @@ function AgendaActivityItem(props) {
   const [meetingState, setMeetingState] = useState(null);
   const [typeActivity, setTypeActivity] = useState(null);
   const intl = useIntl();
+  const [isTaken, setIsTaken] = useState(false);
 
   const timeZone = Moment.tz.guess();
   let { item, event_image, registerStatus, event } = props;
+
+  const cEventUser = UseUserEvent();
+
+  // Take data
+  useEffect(() => {
+    if (!cEventUser || !cEventUser.value) return;
+
+    const loadData = async () => {
+      // Ask if that activity (item) is stored in <ID>_event_attendees
+      let activity_attendee = await firestore
+        .collection(`${item._id}_event_attendees`)
+        .doc(cEventUser.value._id)
+        .get(); //checkedin_at
+      if (activity_attendee.exists) {
+        // If this activity existes, then it means the lesson was taken
+        setIsTaken(true);
+      }
+    };
+    loadData();
+    return () => {};
+  }, [props.data, cEventUser.value]);
 
   useEffect(() => {
     if (registerStatus) {
@@ -551,6 +576,7 @@ function AgendaActivityItem(props) {
                       />
                     )}
                   </Col>
+                  <LessonViewedCheck isTaken={isTaken} />
                 </Row>
               </Card>
             </Badge.Ribbon>
