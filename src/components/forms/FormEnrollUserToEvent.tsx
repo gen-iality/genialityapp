@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import BasicFieldsToFormEnrollUserToEvent from './BasicFieldsToFormEnrollUserToEvent';
 import AdditionalFieldsToEnrollUserToEvent from './AdditionalFieldsToFormEnrollUserToEvent';
-import { Alert, Button, Card, Col, Divider, Form, Row, Typography } from 'antd';
+import { Alert, Button, Card, Col, Divider, Form, Row, Space, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { LoadingOutlined } from '@ant-design/icons';
 import dispatchFormEnrollUserToEvent from './dispatchFormEnrollUserToEvent';
@@ -106,8 +106,8 @@ const FormEnrollUserToEvent = ({
                 {loaderWhenSavingUpdatingOrDelete ? (
                   <LoadingOutlined style={{ fontSize: '50px' }} />
                 ) : (
-                  <>
-                    <Form.Item>
+                  <Form.Item>
+                    <Space direction='horizontal'>
                       <Button
                         htmlType='submit'
                         type='primary'
@@ -118,20 +118,20 @@ const FormEnrollUserToEvent = ({
                       >
                         {buttonText}
                       </Button>
-                    </Form.Item>
 
-                    {options &&
-                      editUser &&
-                      options.map((option: any) => (
-                        <Button
-                          key={'option-' + option.text}
-                          icon={option.icon}
-                          onClick={() => option.action(editUser._id)}
-                          type={option.type}>
-                          {option.text}
-                        </Button>
-                      ))}
-                  </>
+                      {options &&
+                        editUser &&
+                        options.map((option: any) => (
+                          <Button
+                            key={'option-' + option.text}
+                            icon={option.icon}
+                            onClick={() => option.action(editUser._id)}
+                            type={option.type}>
+                            {option.text}
+                          </Button>
+                        ))}
+                    </Space>
+                  </Form.Item>
                 )}
               </Col>
             </Row>
