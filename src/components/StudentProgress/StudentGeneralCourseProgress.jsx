@@ -61,15 +61,22 @@ function StudentGeneralCourseProgress(props) {
     const loadData = async () => {
       const { data } = await AgendaApi.byEvent(cEventContext.value._id);
       setActivities(data);
-      data.map(async (activity) => {
+      const existentActivities = data.map(async (activity) => {
         let activity_attendee = await firestore
           .collection(`${activity._id}_event_attendees`)
           .doc(cEventUser.value._id)
           .get(); //checkedin_at
         if (activity_attendee.exists) {
-          setActivities_attendee((past) => [...past, activity_attendee.data()]);
+          return activity_attendee.data();
+          // setActivities_attendee((past) => [...past, activity_attendee.data()]);
         }
+        return null;
       });
+      // Filter existent activities and set the state
+      setActivities_attendee(
+        // Promises don't bite :)
+        (await Promise.all(existentActivities))
+      );
     };
     loadData();
     return () => {};
