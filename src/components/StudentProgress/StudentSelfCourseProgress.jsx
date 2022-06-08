@@ -39,7 +39,7 @@ function StudentSelfCourseProgress(props) {
       // Filter existent activities and set the state
       setActivities_attendee(
         // Promises don't bite :)
-        (await Promise.all(existentActivities))
+        (await Promise.all(existentActivities)).filter((item) => !!item)
       );
     };
     loadData();
