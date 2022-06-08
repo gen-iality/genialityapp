@@ -289,7 +289,6 @@ function AgendaActivityItem(props) {
                 className='card-agenda-desktop agendaHover efect-scale'
                 bodyStyle={{ padding: '10px' }}>
                 <Row gutter={[8, 8]}>
-                  <LessonViewedCheck isTaken={isTaken} />
                   <Col md={4} lg={4} xl={4} className='agenda-hora'>
                     <div>
                       {!props.hasDate && item.datetime_end ? (
@@ -577,6 +576,7 @@ function AgendaActivityItem(props) {
                       />
                     )}
                   </Col>
+                  <LessonViewedCheck isTaken={isTaken} />
                 </Row>
               </Card>
             </Badge.Ribbon>
