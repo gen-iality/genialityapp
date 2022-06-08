@@ -12,11 +12,7 @@ let initialContextState_EventContext = { error: null, status: 'LOADING', value: 
 let initialContextState_UserEvent = { status: 'LOADING', value: null };
 
 function StudentGeneralCourseProgress(props) {
-  const {
-    progressType,
-    hasProgressLabel=false,
-    eventId,
-  } = props;
+  const { progressType, hasProgressLabel = false, eventId } = props;
 
   let cUser = UseCurrentUser();
 

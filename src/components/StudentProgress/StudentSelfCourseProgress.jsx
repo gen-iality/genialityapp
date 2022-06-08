@@ -8,10 +8,7 @@ import { UseEventContext } from '../../context/eventContext';
 import { UseUserEvent } from '../../context/eventUserContext';
 
 function StudentSelfCourseProgress(props) {
-  const {
-    progressType,
-    hasProgressLabel=false,
-  } = props;
+  const { progressType, hasProgressLabel = false } = props;
 
   const cEventContext = UseEventContext();
   const cEventUser = UseUserEvent();
