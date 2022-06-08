@@ -5,13 +5,13 @@ import { UseEventContext } from '../../context/eventContext';
 import { getLiveStreamStatus, getLiveStreamStats, ResetLiveStream } from '../../adaptors/wowzaStreamingAPI';
 
 const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, isHost }) => {
-  const [platformurl, setPlatformurl] = useState(null);
+  const [ platformurl, setPlatformurl ] = useState(null);
 
   useEffect(() => {
     if (!meeting_id) return;
     getMeetingPath(platform, name, email, meeting_id, generalTabs, isHost);
     checkStreamStatus();
-  }, [meeting_id]);
+  }, [ meeting_id ]);
 
   const checkStreamStatus = async () => {
     let live_stream_status = await getLiveStreamStatus(meeting_id);
@@ -46,7 +46,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
         url = `https://player.vimeo.com/video/${meeting_id}`;
         break;
       case 'dolby':
-        url = `https://eviusmeets.netlify.app/?username=${name}&email=${email}`;
+        url = `https://stagingeviusmeet.netlify.app/?username=${name}&email=${email}`;
         break;
       case 'streaming':
         break;
@@ -57,7 +57,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
         //console.log('resss', res.data.live_stream);
         //url = res.data.live_stream.player_embed_code;
         url = live_stream.player_hls_playback_url;
-      //url =  `https://eviusmeets.netlify.app/?username=${name}&email=${email}`;
+      //url =  `https://stagingeviusmeet.netlify.app/?username=${name}&email=${email}`;
       setWowsaplayer(live_stream.player_id)
     }
 
@@ -89,7 +89,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
   let cEventuser = UseUserEvent();
   let cEvent = UseEventContext();
-  const [userEvent, setuserEvent] = useState({});
+  const [ userEvent, setuserEvent ] = useState({});
   useEffect(() => {
     if (!cEventuser.value || !cEvent.value) return;
     let { displayName, email } = cEventuser.value.properties;
@@ -98,7 +98,7 @@ const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
       email: email,
       isHostuser: isHost(cEventuser.value, cEvent.value),
     });
-  }, [cEventuser.value, cEvent.value]);
+  }, [ cEventuser.value, cEvent.value ]);
 
   return (
     <IframeZoomComponent

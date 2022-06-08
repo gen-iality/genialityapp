@@ -11,15 +11,14 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
   const streamYardUrl =
     "https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts";
   //Link para eviusmeet dónde se origina el video
-  const eviusmeets = `https://eviusmeets.netlify.app/prepare`;
+  const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`;
   let cUser = UseCurrentUser();
   //   const eventContext = useContext(CurrentEventContext);
   const { transmition } = useContext(AgendaContext);
   const { names, email, picture } = cUser.value;
   let linkAdmin =
     eviusmeets +
-    `?meetingId=${activityEdit}&rol=1&username=${names}&email=${email}&photo=${
-      picture ? picture : ""
+    `?meetingId=${activityEdit}&rol=1&username=${names}&email=${email}&photo=${picture ? picture : ""
     }`;
 
   console.log("debug transmition ", transmition);
@@ -59,7 +58,7 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
     <>
       <br />
       <Card bordered style={{ borderRadius: "10px" }}>
-        <Row gutter={[16, 16]}>
+        <Row gutter={[ 16, 16 ]}>
           <Col span={24}>
             <Row justify="space-between">
               <Space>
@@ -76,7 +75,7 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
         <>
           <br />
           <Card bordered style={{ borderRadius: "10px" }}>
-            <Row gutter={[16, 16]}>
+            <Row gutter={[ 16, 16 ]}>
               <Col span={10}>
                 {/* {transmition !== 'EviusMeet' ? (
                   <> */}
