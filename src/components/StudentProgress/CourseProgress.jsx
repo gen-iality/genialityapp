@@ -12,7 +12,7 @@ function CourseProgress(props) {
   return (
     <div style={{ color: '#AAA' }}>
       {hasProgressLabel && (
-      <p style={{ color: '#AAA' }}>
+      <p style={{ color: 'black', fontWeight: 'bold' }}>
         Progreso: {progressStats}
       </p>
       )}
