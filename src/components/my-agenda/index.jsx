@@ -132,7 +132,7 @@ class MyAgenda extends Component {
     ];
     return (
       <Fragment>
-        <Title>Agenda Personal</Title>
+        <Title>Agenda personal</Title>
         <Table columns={columns} dataSource={data} />
       </Fragment>
     );

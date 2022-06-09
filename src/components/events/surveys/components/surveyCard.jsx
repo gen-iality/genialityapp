@@ -47,7 +47,7 @@ function SurveyCard(props) {
                           !currentSurveyStatus[survey._id].surveyCompleted ? (
                             <Col style={{ marginBottom: '3px' }}>
                               <Tag icon={<ExclamationCircleOutlined />} color='warning'>
-                                Sin Contestar
+                                Sin contestar
                               </Tag>
                             </Col>
                           ) : currentSurveyStatus[survey._id].surveyCompleted === 'running' ? (

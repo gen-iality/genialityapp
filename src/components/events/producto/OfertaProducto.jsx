@@ -188,7 +188,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Text type='secondary'>
-                Precio Inicial:{' '}
+                Precio inicial:{' '}
                 <Title level={4}>
                   {(product &&
                     product.start_price &&

@@ -214,7 +214,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   onClick={() => {
                     this.userCheckIn(qrData.user);
                   }}>
-                  Check User
+                  Check user
                 </Button>
               )}
             </>,
@@ -224,14 +224,14 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   onClick={() => {
                     this.editQRUser(qrData.user);
                   }}>
-                  Edit User
+                  Edit user
                 </Button>
               )}
             </>,
             <>
               {qrData.user && (
                 <Button className='button' onClick={this.readQr}>
-                  Read Other
+                  Read other
                 </Button>
               )}
             </>,
@@ -244,7 +244,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
               {qrData.user.checked_in && (
                 <div>
                   <Title level={3} type='secondary'>
-                    Usuario Chequeado
+                    Usuario chequeado
                   </Title>
                   {qrData.user.checked_at && (
                     <Title level={5}>
@@ -322,7 +322,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                     </>
                   }
                   key='2'>
-                  <Form.Item label={'Id Usuario'}>
+                  <Form.Item label={'Id usuario'}>
                     <Input
                       allowClear
                       value={this.state.querytext}

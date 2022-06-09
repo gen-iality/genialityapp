@@ -85,11 +85,11 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
     const key = 'registerUserService';
 
-    // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+    // message.loading({ content: !eventUserId ? "Registrando usuario" : "Realizando transferencia", key }, 10);
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
-      msj: 'Actualizando Usuario',
+      msj: 'Actualizando usuario',
       duration: 10,
       action: 'show',
     });
@@ -477,7 +477,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Form.Item>
                     <Button type='primary' htmlType='submit'>
-                      Actualizar Datos
+                      Actualizar datos
                     </Button>
                   </Form.Item>
                 </Col>
@@ -486,7 +486,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           </Card>
         ) : (
           <Card>
-            <Result status='success' title='Datos Actualizados!' subTitle={successMessage} />
+            <Result status='success' title='Datos actualizados!' subTitle={successMessage} />
           </Card>
         )}
       </Col>

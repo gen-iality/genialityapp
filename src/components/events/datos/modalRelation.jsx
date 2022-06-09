@@ -29,7 +29,7 @@ export default class ModalRelation extends Component {
   render() {
     return (
       <div>
-        <Modal title='Basic Modal' visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
+        <Modal title='Basic modal' visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
           <p>Some contents...</p>
           <p>Some contents...</p>
           <p>Some contents...</p>

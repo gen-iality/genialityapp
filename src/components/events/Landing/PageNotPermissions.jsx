@@ -64,7 +64,7 @@ const PageNotPermissions = (props) => {
                 <h1 style={{ fontSize: '20px' }}>Si estas incrito, ingresa tus datos</h1>
               </div>
             }
-            // extra={<Button type='primary'>Back Home</Button>}
+            // extra={<Button type='primary'>Back home</Button>}
           />
           <UserLoginContainer eventId={EventContext.value._id} />
         </Card>

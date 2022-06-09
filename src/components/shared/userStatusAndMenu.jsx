@@ -82,7 +82,7 @@ const UserStatusAndMenu = (props) => {
           <Menu.Item
             icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
-            <FormattedMessage id='header.my_tickets' defaultMessage='Mis Tiquetes' />
+            <FormattedMessage id='header.my_tickets' defaultMessage='Mis tiquetes' />
           </Menu.Item>
         )}
         {visible && (
@@ -98,7 +98,7 @@ const UserStatusAndMenu = (props) => {
             onClick={() => {
               linkToTheMenuRouteS(`/myprofile/organization`);
             }}>
-            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Cursos' />
+            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar mis cursos' />
           </Menu.Item>
         )}
         <Menu.Divider />
@@ -115,7 +115,7 @@ const UserStatusAndMenu = (props) => {
               )
             }>
             <Button block type='primary' size='medium'>
-              <FormattedMessage id='header.create_event' defaultMessage='Crear Curso' />
+              <FormattedMessage id='header.create_event' defaultMessage='Crear curso' />
             </Button>
           </Menu.Item>
         )}

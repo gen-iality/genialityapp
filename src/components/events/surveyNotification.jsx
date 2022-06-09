@@ -39,12 +39,12 @@ let surveyNotification = () => {
   return (
     <>
       <Button type='primary' onClick={openNotification}>
-        Open Notification
+        Open notification
       </Button>
 
       <Drawer
         zIndex={1000}
-        title='Basic Drawer'
+        title='Basic drawer'
         placement='right'
         closable={true}
         onClose={() => clearStates()}

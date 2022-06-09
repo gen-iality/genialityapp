@@ -90,7 +90,7 @@ class Styles extends Component {
       {
         title: 'Elige una imagen para tu logo: (Tamaño recomendado 320x180)',
         imageFieldName: 'event_image',
-        button: 'Eliminar Logo',
+        button: 'Eliminar logo',
         width: 320,
         height: 180,
       },
@@ -161,7 +161,7 @@ class Styles extends Component {
         ],
       },
       {
-        label: 'Habilitar Informacíon sobre el banner superior',
+        label: 'Habilitar informacíon sobre el banner superior',
         name: 'show_card_banner',
         defaultValue: false,
         options: [
@@ -329,7 +329,7 @@ class Styles extends Component {
           action: 'show',
         });
       } else {
-        this.setState({ msg: 'Cant Create', create: false });
+        this.setState({ msg: 'Can\'t create', create: false });
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',

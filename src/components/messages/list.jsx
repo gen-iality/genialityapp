@@ -62,7 +62,7 @@ function InvitationsList(props) {
       <CMS 
         API={MessageApi}
         eventId={props.eventId}
-        title={'Comunicaciones Enviadas'}
+        title={'Comunicaciones enviadas'}
         description={(
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />

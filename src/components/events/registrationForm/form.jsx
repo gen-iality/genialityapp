@@ -341,7 +341,7 @@ const FormRegister = ({
 
         const key = 'registerUserService';
 
-        // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+        // message.loading({ content: !eventUserId ? "Registrando usuario" : "Realizando transferencia", key }, 10);
         DispatchMessageService({
           type: 'loading',
           key: 'loading',
@@ -362,7 +362,7 @@ const FormRegister = ({
         if (eventUserId) {
           try {
             await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, registerBody);
-            // textMessage.content = "Transferencia Realizada";
+            // textMessage.content = "Transferencia realizada";
             textMessage.content = formMessage.successMessage;
             setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
@@ -379,7 +379,7 @@ const FormRegister = ({
             setTimeout(() => {
               closeModal({
                 status: 'sent_transfer',
-                message: 'Transferencia Hecha',
+                message: 'Transferencia hecha',
               });
             }, 4000);
           } catch (err) {

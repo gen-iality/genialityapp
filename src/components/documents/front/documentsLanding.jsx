@@ -107,7 +107,7 @@ class documentsDetail extends Component {
                         title={<a href={item.url}>{item.name}</a>}
                         description={
                           <Button onClick={() => window.open(item.url)} shape='round' type='primary'>
-                            Ver Documento
+                            Ver documento
                           </Button>
                         }
                       />
@@ -126,7 +126,7 @@ class documentsDetail extends Component {
                         onClick={(e) => this.exportFile(e)}
                         shape='round'
                         type='primary'>
-                        Descargar Lista de cartones
+                        Descargar lista de cartones
                       </Button>
                     </Row>
                   </Space>
@@ -135,7 +135,7 @@ class documentsDetail extends Component {
                 this.props.cEventUser?.value?.properties?.documents_user == undefined && (
                   <div className='site-card-border-less-wrapper'>
                     <Card title='' bordered={false}>
-                      <Result title={`Hola, No Tienes documentos asignados`} />
+                      <Result title={`Hola, No tienes documentos asignados`} />
                     </Card>
                   </div>
                 )

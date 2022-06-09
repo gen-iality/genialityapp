@@ -56,7 +56,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
     return userCurrentContext.value === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} xxl={15} style={{ margin: '0 auto' }}>
         <Alert
-          message='Iniciar Sesión'
+          message='Iniciar sesión'
           description='Para poder ver contactos es necesario iniciar sesión.'
           type='info'
           showIcon

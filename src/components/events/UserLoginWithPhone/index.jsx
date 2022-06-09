@@ -65,7 +65,7 @@ class UserLogin extends Component {
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
       .catch(function(error) {
-        // Handle Errors here.
+        // Handle errors here.
         console.error(error.code);
         console.error(error.message);
         // ...

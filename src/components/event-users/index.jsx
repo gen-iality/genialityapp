@@ -488,7 +488,7 @@ class ListEventUser extends Component {
     qrData.another = true;
     /*  try {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
-      //message.success('Usuario Chequeado');
+      //message.success('Usuario chequeado');
     } catch (e) {
       message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     } */
@@ -849,7 +849,7 @@ class ListEventUser extends Component {
                   <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
                   {this.state.fieldsForm.map((item) => {
-                    if (item.name === 'cedula') return <Option value='scanner-document'>Escanear Documento</Option>;
+                    if (item.name === 'cedula') return <Option value='scanner-document'>Escanear documento</Option>;
                   })}
                 </Select>
               </Col>
@@ -869,7 +869,7 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
-                  {'Agregar Usuario'}
+                  {'Agregar usuario'}
                 </Button>
               </Col>
             </Row>

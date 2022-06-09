@@ -148,7 +148,7 @@ class CheckSpace extends Component {
                 <div>
                   {qrData.user.checked_in && (
                     <div>
-                      <h1 className='title'>Usuario Chequeado</h1>
+                      <h1 className='title'>Usuario chequeado</h1>
                       <h2 className='subtitle'>
                         Fecha: <FormattedDate value={qrData.user.checked_at.toDate()} /> -{' '}
                         <FormattedTime value={qrData.user.checked_at.toDate()} />
@@ -236,7 +236,7 @@ class CheckSpace extends Component {
                     <div>
                       {qrData.user.checked_in && (
                         <div>
-                          <h1 className='title'>Usuario Chequeado</h1>
+                          <h1 className='title'>Usuario chequeado</h1>
                           <h2 className='subtitle'>
                             Fecha: <FormattedDate value={qrData.user.checked_at.toDate()} /> -{' '}
                             <FormattedTime value={qrData.user.checked_at.toDate()} />

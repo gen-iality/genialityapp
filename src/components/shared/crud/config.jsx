@@ -104,7 +104,7 @@ const configCrud = {
             {
                 name: "timeStart",
                 edit: false,
-                label: "Hora Inicio",
+                label: "Hora inicio",
                 mandatory: true,
                 type: "time",
                 unique: false
@@ -112,7 +112,7 @@ const configCrud = {
             {
                 name: "timeEnd",
                 edit: false,
-                label: "Hora Final",
+                label: "Hora final",
                 mandatory: true,
                 type: "time",
                 unique: false

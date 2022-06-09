@@ -255,7 +255,7 @@ class SendRsvp extends Component {
                     <Col span={12}>
                       <p>
                         {' '}
-                        <CalendarOutlined /> Fecha Inicio
+                        <CalendarOutlined /> Fecha inicio
                       </p>
                       <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
                     </Col>
@@ -269,7 +269,7 @@ class SendRsvp extends Component {
                     <Col span={12}>
                       <p>
                         {' '}
-                        <CalendarOutlined /> Fecha Fin
+                        <CalendarOutlined /> Fecha fin
                       </p>
                       <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
                     </Col>
@@ -374,7 +374,7 @@ class SendRsvp extends Component {
                   </Row>
                   <Row justify='center' gutter={8} wrap>
                     <Link to={{ pathname: `${this.props.matchUrl}` }}>
-                      <Button type='primary'>Editar Seleccionados</Button>
+                      <Button type='primary'>Editar seleccionados</Button>
                     </Link>
                   </Row>
                 </Card>

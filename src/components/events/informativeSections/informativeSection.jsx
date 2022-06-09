@@ -146,7 +146,7 @@ class InformativeSection extends Component {
                       marginTop: '15px',
                       margin: 'auto',
                     }}>
-                    Proyecto Casos Clínicos de Obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
+                    Proyecto casos clínicos de obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
                   </h2>
                   <br></br>
                   <ReactPlayer

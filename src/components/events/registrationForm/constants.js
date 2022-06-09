@@ -1,9 +1,9 @@
 const transferForm = {
-  titleModal: 'Transferir Ticket a Usuario',
-  formButton: 'Transferir Ticket',
+  titleModal: 'Transferir ticket a Usuario',
+  formButton: 'Transferir ticket',
   resultTitle: 'Transferencia realizada exitosamente!',
-  loadingMessage: 'Realizando Transferencia',
-  successMessage: 'Transferencia Realizada',
+  loadingMessage: 'Realizando transferencia',
+  successMessage: 'Transferencia realizada',
   errorMessage: 'Error... Intentalo mas tarde'
 };
 
@@ -11,7 +11,7 @@ const registerForm = {
   titleModal: 'Formulario de Registro',
   formButton: 'Registrarse',
   resultTitle: 'Ha sido registrado exitosamente!',
-  loadingMessage: 'Registrando Usuario',
+  loadingMessage: 'Registrando usuario',
   successMessage: '',
   errorMessage: 'Error... Intentalo mas tarde'
 };

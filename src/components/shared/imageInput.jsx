@@ -58,7 +58,7 @@
 //             }}
 //             /* className={`button is-primary is-inverted is-outlined`} */
 //           >
-//             Eliminar Imagen
+//             Eliminar imagen
 //           </Button>
 //         )}
 //       </Col>

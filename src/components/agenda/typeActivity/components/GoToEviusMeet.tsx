@@ -16,7 +16,7 @@ const GoToEviusMeet = (props: any) => {
       <Card.Meta
         title={
           <Typography.Text style={{ fontSize: '20px' }} strong>
-            Evius Meet
+            Evius meet
           </Typography.Text>
         }
         description={

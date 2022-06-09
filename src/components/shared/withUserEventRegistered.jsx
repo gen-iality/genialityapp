@@ -23,9 +23,9 @@ function WithUserEventRegistered(Component) {
       <div>
         {!currentUser && !usuarioRegistrado && (
           <div>
-            {/* <Tag color="geekblue">{event && event.allow_register ? "El Curso permite registro" : "Es Curso Privado"}</Tag>
-                        <Tag color="geekblue">{currentUser ? "Usuario Autenticado" : "Usuario Anónimo"}</Tag>
-                <Tag color="geekblue">{usuarioRegistrado ? "Usuario Registrado" : "Usuario sin Registrar"}</Tag> */}
+            {/* <Tag color="geekblue">{event && event.allow_register ? "El curso permite registro" : "Es curso privado"}</Tag>
+                        <Tag color="geekblue">{currentUser ? "Usuario autenticado" : "Usuario anónimo"}</Tag>
+                <Tag color="geekblue">{usuarioRegistrado ? "Usuario registrado" : "Usuario sin Registrar"}</Tag> */}
 
             {!currentUser && event && !event.allow_register && (
               <Alert
@@ -33,7 +33,7 @@ function WithUserEventRegistered(Component) {
                 message='Curso restringido. requiere usuario'
                 description={
                   <p>
-                    <b>Curso Restringido:</b>
+                    <b>Curso restringido:</b>
                     debes estar previamente registrado al curso para acceder al espacio en vivo, si estas registrado en
                     el curso ingresa al sistema con tu usuario para poder acceder al curso, &nbsp;&nbsp;
                     {/* <Button type="primary">
@@ -51,7 +51,7 @@ function WithUserEventRegistered(Component) {
                 message='Curso restringido. requiere registro previo'
                 description={
                   <p>
-                    <b>Curso Restringido:</b>
+                    <b>Curso restringido:</b>
                     debes estar previamente registrado al curso para acceder al espacio en vivo, si estas registrado y
                     no tienes acceso comunicate con el organizador &nbsp;&nbsp;
                   </p>

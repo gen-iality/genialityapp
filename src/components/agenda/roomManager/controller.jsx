@@ -106,7 +106,7 @@ export default function RoomController(props) {
       <Card>
         <Row style={{ padding: '8px 0px' }}>
           <Col span={24}>
-            <Form.Item label={'Habilitar Juegos'}>
+            <Form.Item label={'Habilitar juegos'}>
               <Switch
                 checked={games}
                 onChange={(checked) => {

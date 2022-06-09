@@ -176,7 +176,7 @@ const RenderComponent = (props) => {
               <>
                 {/* {webHookStreamStatus && (
                   <>
-                    <b>Evius Meets Status: </b>
+                    <b>Evius Meets status: </b>
                     {webHookStreamStatus}
                     <br />
                   </>

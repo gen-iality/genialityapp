@@ -286,7 +286,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             okText='Si'
             cancelText='No'>
             <Button type='text' danger disabled={loading} loading={loading}>
-              {'Cancelar Cita'}
+              {'Cancelar cita'}
             </Button>
           </Popconfirm>
         }

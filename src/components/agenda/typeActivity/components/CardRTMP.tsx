@@ -25,7 +25,7 @@ const CardRTMP = () => {
           </Typography.Text>
         }
         description={
-          'El Protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet. '
+          'El protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet. '
         }
       />{' '}
       <br />

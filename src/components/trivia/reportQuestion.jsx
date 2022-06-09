@@ -6,7 +6,7 @@ import { getAnswersByQuestion } from './services';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 
-let renderNombreUsuario = (name) => (!name ? <span>Usuario Invitado</span> : <span>{name}</span>);
+let renderNombreUsuario = (name) => (!name ? <span>Usuario invitado</span> : <span>{name}</span>);
 const columns = [
   {
     title: 'Creado',

@@ -37,7 +37,7 @@ export const AgendaContextProvider = ({ children }) => {
   const [roomStatus, setRoomStatus] = useState('');
   const [select_host_manual, setSelect_host_manual] = useState(false);
   const cEvent = useContext(CurrentEventContext);
-  const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet Para cuando se tenga terminada
+  const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet para cuando se tenga terminada
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
   const [request, setRequest] = useState({});
   const [requestList, setRequestList] = useState([]);

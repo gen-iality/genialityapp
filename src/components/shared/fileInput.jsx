@@ -31,7 +31,7 @@
 //         e.preventDefault();
 //       }}
 //       loading={stillOldImage}>
-//       Cambiar Archivo
+//       Cambiar archivo
 //     </Button>
 //   );
 //   // let divClass = props.divClass || "drop-img";
@@ -62,7 +62,7 @@
 //         <div>
 //           <Dropzone onDrop={props.changeImg} style={style}>
 //             <Typography.Text strong style={{ fontSize: '16px' }}>
-//               Subir Archivo
+//               Subir archivo
 //             </Typography.Text>
 //           </Dropzone>
 //           <span>{props.errImg}</span>

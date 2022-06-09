@@ -86,7 +86,7 @@ function ConfirmacionRegistro(props) {
           </Col>
         </Row>
       </Form>
-      {/* <h1>Mensaje Confirmacion Registro</h1>
+      {/* <h1>Mensaje confirmacion registro</h1>
       <p>El siguiente mensaje le llegara a las personas luego de haberse registrado al curso</p>
       <Row gutter={[0, 24]}>
         <Col span={12}>

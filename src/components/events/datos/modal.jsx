@@ -183,7 +183,7 @@ class DatosModal extends Component {
           <Form.Item
             initialValue={this.props.info?.label}
             //value={info?.label + 'h' || 'value'}
-            label={'Nombre Campo'}
+            label={'Nombre campo'}
             name={'label'}
             rules={[{ required: true }]}>
             <Input name={'label'} type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
@@ -313,7 +313,7 @@ class DatosModal extends Component {
           </Form.Item>
         </Form>
         {/* <div className='field'>
-            <label className='label required has-text-grey-light'>Nombre Campo </label>
+            <label className='label required has-text-grey-light'>Nombre campo </label>
             <div className='control'>
               <input
                 className='input'

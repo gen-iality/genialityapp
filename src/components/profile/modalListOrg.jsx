@@ -54,7 +54,7 @@ const ModalListOrg = (props) => {
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
             size='large'>
-            Crear Curso
+            Crear curso
           </Button>
         </Form.Item>
       </Form>

@@ -351,7 +351,7 @@ const WowzaStreamingPanel = ({
                   <br />
                 </Typography.Text>
                 <Typography.Text type='secondary'>
-                  Origin Conectado:
+                  Origin conectado:
                   <br />
                 </Typography.Text>
                 <Typography.Text>
@@ -576,14 +576,14 @@ const WowzaStreamingPanel = ({
       <br />
       {webHookStreamStatus && (
         <>
-          <b>Evius Meets Status: </b>
+          <b>Evius meets status: </b>
           {webHookStreamStatus}
           <br />
         </>
       )}
       {livestreamStatus && (
         <>
-          <b>Streaming Status: </b>
+          <b>Streaming status: </b>
           <Space>
             {livestreamStatus.state !== 'started' && livestreamStatus.state != 'stopped' && <Spin />}
             {livestreamStatus.state}
@@ -593,19 +593,19 @@ const WowzaStreamingPanel = ({
       )}
       {livestreamStats && livestreamStats.connected && (
         <>
-          <b>Origin Connected:</b> {livestreamStats?.connected.value}
+          <b>Origin connected:</b> {livestreamStats?.connected.value}
           <br />
         </>
       )}
       {livestreamStats && livestreamStats.connected && (
         <>
-          <b>Origin Status:</b> {livestreamStats?.connected.status}
+          <b>Origin status:</b> {livestreamStats?.connected.status}
           <br />
         </>
       )}
       {livestreamStats && livestreamStats.connected && (
         <>
-          <b>Origin Problem reason: </b>
+          <b>Origin problem reason: </b>
           {livestreamStats?.connected.text}
           <br />
         </>

@@ -41,7 +41,7 @@ class Lobby extends Component {
       },
       virtual_events: [
         {
-          name: 'Nombre Curso',
+          name: 'Nombre curso',
           date: 'Junio 19',
           hour_from: '6:00AM',
           hour_to: '9:00AM',

@@ -1057,7 +1057,7 @@ class triviaEdit extends Component {
                             }}
                             level={4}
                             type='secondary'>
-                            Gestionar Pregunta
+                            Gestionar pregunta
                           </Title>
                           <FormQuestionEdit
                             ref={this.formEditRef}

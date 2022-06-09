@@ -19,7 +19,7 @@ export const deleteFireStorageData = async (fileUrl: string) => {
         theFileWasDeleted = 'file deleted successfully';
       })
       .catch(function(error: any) {
-        // Some Error occurred
+        // Some error occurred
         theFileWasDeleted = 'error deleting file';
       });
   } catch (error) {
