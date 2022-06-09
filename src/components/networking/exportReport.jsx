@@ -24,8 +24,8 @@
 //           <ExcelColumn label='Usuario quien responde' value='user_name_requested' />
 //           <ExcelColumn label='Estado' value='state' />
 //           <ExcelColumn label='Respuesta' value='response' />
-//           <ExcelColumn label='Registro Creado' value='created_at' />
-//           <ExcelColumn label='Registro Actualizado' value='updated_at' />
+//           <ExcelColumn label='Registro creado' value='created_at' />
+//           <ExcelColumn label='Registro actualizado' value='updated_at' />
 //         </ExcelSheet>
 //       </ExcelFile>
 //     );

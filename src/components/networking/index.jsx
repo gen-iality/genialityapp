@@ -746,7 +746,7 @@ class ListEventUser extends Component {
 
                   {!this.state.loading && !this.props.cEventUser.value && (
                     <Alert
-                      message='Iniciar Sesión'
+                      message='Iniciar sesión'
                       description='Para poder ver los asistentes es necesario iniciar sesión.'
                       type='info'
                       showIcon

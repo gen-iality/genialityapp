@@ -30,9 +30,9 @@ const Faqs = (props) => {
     <CMS
       API={FaqsApi}
       eventId={props.event._id}
-      title={"Preguntas Frecuentes"}
+      title={"Preguntas frecuentes"}
       titleTooltip={
-        "Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación"
+        "Agregue o edite las Preguntas frecuentes que se muestran en la aplicación"
       }
       addUrl={{
         pathname: `${props.matchUrl}/faq`,

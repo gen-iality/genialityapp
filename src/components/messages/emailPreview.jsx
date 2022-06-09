@@ -19,7 +19,7 @@ const EmailPrev = (props) => {
           <Col span={12}>
             <p>
               {' '}
-              <CalendarOutlined /> Fecha Inicio
+              <CalendarOutlined /> Fecha inicio
             </p>
             <p>{Moment(props.event.datetime_from).format('DD MMM, YYYY')}</p>
           </Col>
@@ -33,7 +33,7 @@ const EmailPrev = (props) => {
           <Col span={12}>
             <p>
               {' '}
-              <CalendarOutlined /> Fecha Fin
+              <CalendarOutlined /> Fecha fin
             </p>
             <p>{Moment(props.event.datetime_to).format('DD MMM, YYYY')}</p>
           </Col>
@@ -55,7 +55,7 @@ const EmailPrev = (props) => {
           </Tag>
         </p>
         {props.item.image || props.event.image &&
-          <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt={'Imagen Perfil'} />
+          <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt={'Imagen perfil'} />
         }
         <div
           style={{ textAlign: 'center' }}

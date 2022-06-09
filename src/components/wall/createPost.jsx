@@ -41,7 +41,7 @@ const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, r
 
       {loadingsave && (
         <>
-          <Spin /> <span style={{ color: '#333F44' }}>Por Favor espere...</span>
+          <Spin /> <span style={{ color: '#333F44' }}>Por favor espere...</span>
         </>
       )}
     </Form.Item>
@@ -122,7 +122,7 @@ class CreatePost extends Component {
         this.formRef.current.resetFields();
         DispatchMessageService({
           type: 'success',
-          msj: 'Mensaje Publicado',
+          msj: 'Mensaje publicado',
           action: 'show',
         });
       } else {
@@ -220,7 +220,7 @@ class CreatePost extends Component {
         <div>
           {this.props.cUser && (
             <Button style={{ marginBottom: '3%', marginTop: '3%' }} type='primary' onClick={this.showModal}>
-              Crear Publicación
+              Crear publicación
             </Button>
           )}
 
@@ -251,7 +251,7 @@ class CreatePost extends Component {
                     showUploadList={false}
                     onChange={(e) => this.previewImage(e)}>
                     <Button type='primary' icon={<CloudUploadOutlined />}>
-                      Subir Foto
+                      Subir foto
                     </Button>
                   </Upload>
                   {/* <Space className='file-label ant-btn ant-btn-primary'>
@@ -263,7 +263,7 @@ class CreatePost extends Component {
                       type='file'
                       onChange={this.previewImage}
                     />
-                    <span style={{ paddingLeft: 2 }}>Subir Foto</span>
+                    <span style={{ paddingLeft: 2 }}>Subir foto</span>
                     <span>
                       <CloudUploadOutlined />
                     </span>
@@ -313,7 +313,7 @@ class CreatePost extends Component {
                       hoverable
                       style={{ marginRight: 'auto', marginLeft: 'auto', width: '100%' }}
                       cover={<img key={this.state.keyImage} src={image} />}>
-                      <Button onClick={this.cancelUploadImage}>Eliminar Foto</Button>
+                      <Button onClick={this.cancelUploadImage}>Eliminar foto</Button>
                     </Card>
                   )}
                 </div>

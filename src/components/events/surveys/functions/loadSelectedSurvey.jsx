@@ -52,7 +52,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
 
     // Permite usar la primera pagina como introduccion
     dataSurvey.firstPageIsStarted = true;
-    dataSurvey.startSurveyText = 'Iniciar Cuestionario';
+    dataSurvey.startSurveyText = 'Iniciar cuestionario';
     let textMessage = dataSurvey.initialMessage;
     dataSurvey['questions'].unshift({
       type: 'html',

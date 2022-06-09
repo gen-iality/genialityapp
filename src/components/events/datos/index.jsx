@@ -397,7 +397,7 @@ class Datos extends Component {
       });
       DispatchMessageService({
         type: 'error',
-        msj: 'El Campo no ha sido posible actualizarlo, intenta mas tarde',
+        msj: 'El campo no ha sido posible actualizarlo, intenta mas tarde',
         action: 'show',
       });
     }
@@ -670,7 +670,7 @@ class Datos extends Component {
                 {modal && (
                   <Modal
                     visible={modal}
-                    title={edit ? 'Editar Dato' : 'Agregar Dato'}
+                    title={edit ? 'Editar dato' : 'Agregar dato'}
                     footer={false}
                     onCancel={this.closeModal2}
                     okText={'Guardar'}>
@@ -682,7 +682,7 @@ class Datos extends Component {
           )}
 
           {/* {this.props.eventId && this.props.type != 'organization' && (
-            <TabPane tab='Campos Relacionados' key='2'>
+            <TabPane tab='Campos relacionados' key='2'>
               <RelationField eventId={this.props.eventId} fields={fields} />
             </TabPane>
           )} */}
@@ -750,7 +750,7 @@ class Datos extends Component {
                   {modal && (
                     <Modal
                       visible={modal}
-                      title={edit ? 'Editar Dato' : 'Agregar Dato'}
+                      title={edit ? 'Editar dato' : 'Agregar dato'}
                       footer={false}
                       onCancel={this.closeModal2}
                       cancelText={'Cancelar'}>

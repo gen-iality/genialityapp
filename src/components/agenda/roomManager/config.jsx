@@ -160,7 +160,7 @@ export default function RoomConfig(props) {
                     actions={[
                       <Radio checked={transmition === 'EviusMeet'} onChange={(e) => setTransmition('EviusMeet')} />,
                     ]}>
-                    <List.Item.Meta title={<b>Evius Meet</b>} />
+                    <List.Item.Meta title={<b>Evius meet</b>} />
                   </List.Item>
                   <List.Item
                     style={{

@@ -40,7 +40,7 @@ export default class SurveyExternal extends Component {
         .collection('surveys')
         .doc(survey_id)
         .update({ ...data })
-        .then(() => resolve({ message: 'Encuesta Actualizada', state: 'updated' }));
+        .then(() => resolve({ message: 'Encuesta actualizada', state: 'updated' }));
     });
   };
 

@@ -398,7 +398,7 @@ class DashboardEvent extends Component {
         key: 'status',
       },
       {
-        title: 'Correo Electronico',
+        title: 'Correo electronico',
         dataIndex: 'email',
         key: 'email',
       },

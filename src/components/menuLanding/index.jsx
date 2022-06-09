@@ -84,7 +84,7 @@ class menuLanding extends Component {
           permissions: 'public',
         }, */
         faqs: {
-          name: 'Preguntas Frecuentes',
+          name: 'Preguntas frecuentes',
           position: 30,
           section: 'faqs',
           icon: 'QuestionOutlined',
@@ -116,7 +116,7 @@ class menuLanding extends Component {
           permissions: 'public',
         },
         my_sesions: {
-          name: 'Mis Lecciones',
+          name: 'Mis lecciones',
           position: 30,
           section: 'my_sesions',
           icon: 'TeamOutlined',

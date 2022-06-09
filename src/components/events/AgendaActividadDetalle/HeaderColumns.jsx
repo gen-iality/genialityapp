@@ -142,7 +142,7 @@ const HeaderColumns = (props) => {
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Col>
             {props.activityState === 'open_meeting_room' || props.activityState === 'game' ? (
-              <img style={{ height: '4vh', width: '4vh' }} src={imageUtils.EnVivo} alt='React Logo' />
+              <img style={{ height: '4vh', width: '4vh' }} src={imageUtils.EnVivo} alt='React logo' />
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
               <CaretRightOutlined style={{ fontSize: '30px' }} />
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (

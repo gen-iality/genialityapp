@@ -376,7 +376,7 @@ const ChatExport = ({ eventId, event }) => {
               <Col>
                 {datamsjevent && datamsjevent.length > 0 && (
                   <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
-                    Eliminar Chat
+                    Eliminar chat
                   </Button>
                 )}
               </Col>
@@ -403,7 +403,7 @@ const ChatExport = ({ eventId, event }) => {
           extraFnType={'ghost'}
           extraFnIcon={<Account />}
           exportData
-          fileName={'Usuarios Bloqueados'}
+          fileName={'Usuarios bloqueados'}
           titleTable={
             <Row gutter={[8, 8]} wrap>
               <Col>

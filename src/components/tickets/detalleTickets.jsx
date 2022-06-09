@@ -55,13 +55,13 @@ class DetailTickets extends Component {
               </Descriptions.Item>
             )}
             {item.event_end && (
-              <Descriptions.Item label='Fecha Finalización'>
+              <Descriptions.Item label='Fecha finalización'>
                 <TimeStamp date={item.event_end} />
               </Descriptions.Item>
             )}
             {
               <Descriptions.Item label='Registro'>
-                {item.status === true ? 'Asistencia Confirmada' : 'Asistencia sin confirmar'}
+                {item.status === true ? 'Asistencia confirmada' : 'Asistencia sin confirmar'}
               </Descriptions.Item>
             }
             {item.author && <Descriptions.Item label='Organizador'>{item.author}</Descriptions.Item>}

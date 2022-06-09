@@ -69,7 +69,7 @@ export function handleRequestError(error) {
     info.message = error.response.data.message ? error.response.data.message : JSON.stringify(error.response.data);
   } else if (error.request) {
     info.status = 700;
-    info.message = 'Network Error';
+    info.message = 'Network error';
   } else {
     info.status = 800;
     info.message = error.message;

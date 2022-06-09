@@ -11,9 +11,9 @@ const AttendeeNotAllowedCheck = (props) => {
 
   return (
     <>
-      {/* <Tag color='geekblue'>{event && event.allow_register ? 'El Curso permite registro' : 'Es Curso Privado'}</Tag>
-      <Tag color='geekblue'>{currentUser ? 'Usuario Autenticado' : 'Usuario Anónimo'}</Tag>
-      <Tag color='geekblue'>{usuarioRegistrado ? 'Usuario Registrado' : 'Usuario sin Registrar'}</Tag> */}
+      {/* <Tag color='geekblue'>{event && event.allow_register ? 'El curso permite registro' : 'Es curso privado'}</Tag>
+      <Tag color='geekblue'>{currentUser ? 'Usuario autenticado' : 'Usuario anónimo'}</Tag>
+      <Tag color='geekblue'>{usuarioRegistrado ? 'Usuario registrado' : 'Usuario sin Registrar'}</Tag> */}
 
       {!currentUser && !event.allow_register && (
         <Alert
@@ -21,7 +21,7 @@ const AttendeeNotAllowedCheck = (props) => {
           message='Curso restringido. requiere usuario'
           description={
             <p>
-              <b>Curso Restringido: </b> Debes estar previamente registrado al curso para acceder al espacio en vivo,
+              <b>Curso restringido: </b> Debes estar previamente registrado al curso para acceder al espacio en vivo,
               si estas registrado en el curso ingresa al sistema con tu usuario para poder acceder al curso,
               &nbsp;&nbsp;
               {/* <Button type="primary">

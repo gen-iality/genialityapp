@@ -577,7 +577,7 @@ class CheckAgenda extends Component {
               </Col> */}
               <Col>
                 <Button onClick={this.goToSendMessage} type='primary' icon={<SendOutlined />}>
-                  {'Enviar Comunicación/Correo'}
+                  {'Enviar comunicación/correo'}
                 </Button>
               </Col>
               <Col>
@@ -592,12 +592,12 @@ class CheckAgenda extends Component {
                   }
                   type='primary'
                   icon={<UploadOutlined />}>
-                  {'Importar Usuario'}
+                  {'Importar usuario'}
                 </Button>
               </Col>
               <Col>
                 <Button onClick={this.addUser} type='primary' icon={<PlusCircleOutlined />}>
-                  {'Agregar Usuario'}
+                  {'Agregar usuario'}
                 </Button>
               </Col>
             </Row>

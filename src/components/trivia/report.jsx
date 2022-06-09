@@ -135,7 +135,7 @@ class TriviaReport extends Component {
                   )}
                 />
                 <Modal
-                  title='Basic Modal'
+                  title='Basic modal'
                   visible={this.state.visibleModal}
                   onOk={this.toggleModal}
                   onCancel={this.toggleModal}>

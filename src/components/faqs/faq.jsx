@@ -147,7 +147,7 @@ const Faq = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Pregunta Frecuente'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title={'Pregunta frecuente'} back save form remove={onRemoveId} edit={locationState.edit} />
 
       <Row justify='center' wrap gutter={12}>
         <Col>

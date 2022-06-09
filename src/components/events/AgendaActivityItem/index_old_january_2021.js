@@ -256,7 +256,7 @@ function AgendaActivityItem(props) {
                           {item.video ? (
                             item.video && (
                               <>
-                                <Alert message='Conferencia Terminada. Observa el video Aquí' type='success' />
+                                <Alert message='Conferencia terminada. Observa el video Aquí' type='success' />
                                 <ReactPlayer
                                   width={'100%'}
                                   style={{
@@ -276,7 +276,7 @@ function AgendaActivityItem(props) {
                             <>
                               <img src={item.image ? item.image : event_image} />
                               <Alert
-                                message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
+                                message={`La conferencia ha terminado: ${Moment(item.datetime_start).format(
                                   'DD MMMM YYYY h:mm a'
                                 )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
                                 type='info'
@@ -305,7 +305,7 @@ function AgendaActivityItem(props) {
                               }>
                               {item.meeting_id || item.vimeo_id
                                 ? 'Conéctate a la conferencia en vivo'
-                                : 'Aún no empieza Conferencia Virtual'}
+                                : 'Aún no empieza conferencia virtual'}
                             </Button>
                           </div>
                           <Row>

@@ -192,7 +192,7 @@ class General extends Component {
       //Cursos Público sin Registro
       this.setState({ typeEvent: 1 });
     } else {
-      //Cursos Privado con Invitación
+      //Cursos privado con Invitación
       this.setState({ typeEvent: 2 });
     }
   }
@@ -500,7 +500,7 @@ class General extends Component {
             }),
             action: 'show',
           });
-          this.setState({ msg: 'Cant Create', create: false });
+          this.setState({ msg: 'Can\'t create', create: false });
         }
       }
     } catch (error) {
@@ -642,7 +642,7 @@ class General extends Component {
         },
       });
     } else {
-      //Cursos Privado con Invitación
+      // Cursos privado con Invitación
       this.setState({
         event: {
           ...this.state.event,
@@ -789,7 +789,7 @@ class General extends Component {
                   </Form.Item>
 
                   {/* {event.type_event === 'onlineEvent' && (
-                    <Form.Item label={'Plataforma Streaming del curso'}>
+                    <Form.Item label={'Plataforma streaming del curso'}>
                       <Select
                         defaultValue={event.event_platform}
                         name={'event_platform'}
@@ -833,7 +833,7 @@ class General extends Component {
                     <div>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha Inicio'}>
+                          <Form.Item label={'Fecha inicio'}>
                             <DatePicker
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -852,7 +852,7 @@ class General extends Component {
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora Inicio'}>
+                          <Form.Item label={'Hora inicio'}>
                             <TimePicker
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -874,7 +874,7 @@ class General extends Component {
                       </Row>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha Fin'}>
+                          <Form.Item label={'Fecha fin'}>
                             <DatePicker
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -894,7 +894,7 @@ class General extends Component {
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora Fin'}>
+                          <Form.Item label={'Hora fin'}>
                             <TimePicker
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -943,7 +943,7 @@ class General extends Component {
                   </Form.Item>
 
                   <div>
-                    <label style={{ marginTop: '2%' }}>Imagen General (para el listado)</label>
+                    <label style={{ marginTop: '2%' }}>Imagen general (para el listado)</label>
                     <Form.Item noStyle>
                       <ImageUploaderDragAndDrop
                         imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
@@ -1030,9 +1030,9 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Card title='Zona Social'>
+                  <Card title='Zona social'>
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat General</Col>
+                      <Col xs={18}>Chat general</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.publicChat}
@@ -1051,7 +1051,7 @@ class General extends Component {
                       </Col>
                     </Row>
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat Privado</Col>
+                      <Col xs={18}>Chat privado</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.privateChat}
@@ -1184,7 +1184,7 @@ class General extends Component {
                               minHeight: '170px',
                             }}>
                             <Space direction='vertical'>
-                              <Text strong>Cursos Privado por invitación</Text>
+                              <Text strong>Cursos privado por invitación</Text>
                               <Divider />
                               <Text type='secondary'>
                                 {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}

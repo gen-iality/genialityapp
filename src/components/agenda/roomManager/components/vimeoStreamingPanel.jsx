@@ -119,7 +119,7 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
                       <br />
                     </Typography.Text>
                     <Typography.Text type="secondary">
-                      {/* Origin Conectado: */}
+                      {/* Origin conectado: */}
                       <br />
                     </Typography.Text>
                     <Typography.Text>

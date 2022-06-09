@@ -65,7 +65,7 @@ class CameraFeed extends Component {
     this.setState({ image, hidden: false, hiddeVideo: true });
     DispatchMessageService({
       type: 'success',
-      msj: 'Imagen Salvada',
+      msj: 'Imagen salvada',
       action: 'show',
     });
 
@@ -80,7 +80,7 @@ class CameraFeed extends Component {
 
     DispatchMessageService({
       type: 'error',
-      msj: 'Imagen Eliminada',
+      msj: 'Imagen eliminada',
       action: 'show',
     });
   }
@@ -131,7 +131,7 @@ class CameraFeed extends Component {
               onClick={() => {
                 this.renderingCode();
               }}>
-              Tomar Otra Foto
+              Tomar otra foto
             </Button>
           )}
         </div>

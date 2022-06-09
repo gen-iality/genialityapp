@@ -15,7 +15,7 @@ const urlVideoTypeOptions: OriginOptions[] = [
 const vimeoAndYotubeType: OriginOptions[] = [
   {
     key: 'vimeo',
-    title: 'Vimeo Icon',
+    title: 'Vimeo icon',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
     addonBefore: 'ID',
@@ -24,7 +24,7 @@ const vimeoAndYotubeType: OriginOptions[] = [
   },
   {
     key: 'youTube',
-    title: 'youTube Icon',
+    title: 'YouTube icon',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
     addonBefore: 'https://youtu.be/',
@@ -46,7 +46,7 @@ const liveBroadcastTransmissionOriginType: OriginOptions[] = [
     key: 'RTMP',
     title: 'RTMP',
     description:
-      'El Protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet.',
+      'El protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2FRTMP.jpg?alt=media&token=d0c74ddc-5ad6-49bf-ad57-c1d0c02a1ee6',
   },

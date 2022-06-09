@@ -96,7 +96,7 @@ class ActividadLanguage extends Component {
         .doc(activityId)
         .update({ event_id: eventId, activity_id: activityId, related_meetings });
       notification.open({
-        message: 'Dato Eliminado',
+        message: 'Dato eliminado',
       });
     } catch (e) {
       //
@@ -146,7 +146,7 @@ class ActividadLanguage extends Component {
         .doc(activityId)
         .update({ event_id: eventId, activity_id: activityId, related_meetings });
       notification.open({
-        message: 'Dato Actualizado',
+        message: 'Dato actualizado',
       });
     } catch (e) {
       //
@@ -187,11 +187,11 @@ class ActividadLanguage extends Component {
         dataIndex: 'state',
         render: (value) => {
           if (value === 'open_meeting_room') {
-            return <p>Conferencia Abierta</p>;
+            return <p>Conferencia abierta</p>;
           } else if (value === 'closed_meeting_room') {
             return <p>Conferencia no Iniciada</p>;
           } else if (value === 'ended_meeting_room') {
-            return <p>Conferencia Terminada</p>;
+            return <p>Conferencia terminada</p>;
           }
         },
         key: 'state',
@@ -209,7 +209,7 @@ class ActividadLanguage extends Component {
         },
       },
       {
-        title: 'Texto Informativo',
+        title: 'Texto informativo',
         dataIndex: 'informative_text',
         key: 'informative_text',
       },
@@ -266,9 +266,9 @@ class ActividadLanguage extends Component {
               name='state'
               rules={[{ required: true, message: 'Por favor seleccione un estado' }]}>
               <Select>
-                <Option value='open_meeting_room'>Conferencia Abierta</Option>
+                <Option value='open_meeting_room'>Conferencia abierta</Option>
                 <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
-                <Option value='ended_meeting_room'>Conferencia Terminada</Option>
+                <Option value='ended_meeting_room'>Conferencia terminada</Option>
               </Select>
             </Form.Item>
 

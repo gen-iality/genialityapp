@@ -102,7 +102,7 @@ export default function ListadoJuegos(props) {
       <Row justify='center'>
         {myName !== '' && myScore !== '' && (
           <>
-            <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
+            <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi puntaje</h3>
             <div className='card-games-ranking ranking-user'>
               <Row justify='space-between'>
                 <Col span={6}>

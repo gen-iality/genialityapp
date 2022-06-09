@@ -10,7 +10,7 @@ const Agenda = (props) => {
 
   const columns = [
     {
-      title: 'Fecha y Hora Inicio',
+      title: 'Fecha y hora inicio',
       dataIndex: 'datetime_start',
       ellipsis: true,
       sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
@@ -20,7 +20,7 @@ const Agenda = (props) => {
       },
     },
     {
-      title: 'Fecha y Hora Fin',
+      title: 'Fecha y hora fin',
       dataIndex: 'datetime_end',
       ellipsis: true,
       sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),

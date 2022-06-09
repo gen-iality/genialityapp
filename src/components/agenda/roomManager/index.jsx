@@ -323,7 +323,7 @@ class RoomManager extends Component {
     }
   };
 
-  // Create Room Zoom
+  // Create room zoom
   createZoomRoom = async () => {
     this.validateForCreateZoomRoom();
     const evius_token = await GetTokenUserFirebase();

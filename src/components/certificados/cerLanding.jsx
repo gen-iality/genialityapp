@@ -22,8 +22,8 @@ class CertificadoLanding extends Component {
     this.state = {
       tags: [
         { tag: 'event.name', label: 'Nombre del Cursos', value: 'name' },
-        { tag: 'event.start', label: 'Fecha Inicio del Cursos', value: 'datetime_from' },
-        { tag: 'event.end', label: 'Fecha Fin del Cursos', value: 'datetime_to' },
+        { tag: 'event.start', label: 'Fecha inicio del Cursos', value: 'datetime_from' },
+        { tag: 'event.end', label: 'Fecha fin del Cursos', value: 'datetime_to' },
         { tag: 'event.venue', label: 'Lugar del Cursos', value: 'venue' },
         { tag: 'event.address', label: 'Dirección del Cursos', value: 'location.FormattedAddress' },
         { tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names' },
@@ -93,7 +93,7 @@ class CertificadoLanding extends Component {
           const data = doc.data();
           data.ticket = data.ticket_id
             ? this.props.cEvent.value.tickets.find((ticket) => ticket._id === data.ticket_id).title
-            : 'Sin Tiquete';
+            : 'Sin tiquete';
           return data;
         });
         //Para generar el certificado el usuario tiene que estar checkqueado !!checked_in
@@ -180,7 +180,7 @@ class CertificadoLanding extends Component {
 
                       {/* Importacion del boton para descargar certificado */}
                       <IconText
-                        text='Descargar Certificado'
+                        text='Descargar certificado'
                         icon={DownloadOutlined}
                         onSubmit={() => this.generateCert(user)}
                       />
@@ -217,7 +217,7 @@ class CertificadoLanding extends Component {
 
         {this.props.cUser.value && this.props.cUser.value._id && checkedInUsers && checkedInUsers.length <= 0 && (
           <h1 style={{ justifyContent: 'center', fontSize: '27px', alignItems: 'center', display: 'flex' }}>
-            Debes Haber asistido para descargar el certificado
+            Debes haber asistido para descargar el certificado
           </h1>
         )}
       </>

@@ -11,7 +11,7 @@ function CourseProgress(props) {
 
   return (
     <div style={{ color: '#AAA' }}>
-      {hasProgressLabel && <p style={{ color: 'black', fontWeight: 'bold' }}>Mi Progreso:</p>}
+      {hasProgressLabel && <p style={{ color: 'black', fontWeight: 'bold' }}>Mi progreso:</p>}
 
       {progressType === 'circle' && (
       <Progress

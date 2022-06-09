@@ -78,7 +78,7 @@ export default function AdmininformativeSection1(props) {
   return (
     <section>
       <Form onFinish={() => onFinish()} autoComplete='off'>
-        <Header title={'Contenido Informativo'} save form />
+        <Header title={'Contenido informativo'} save form />
 
         <Row justify='center' gutter={8} wrap>
           <Col span={16}>

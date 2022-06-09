@@ -39,7 +39,7 @@ import { handleRequestError } from '@/helpers/utils';
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
 
-//Code Splitting
+// Code splitting
 const General = loadable(() => import('./general'));
 /* const Badge = loadable(() => import('../badge')); */
 const Informativesection = loadable(() => import('../events/informativeSections/adminInformativeSection'));

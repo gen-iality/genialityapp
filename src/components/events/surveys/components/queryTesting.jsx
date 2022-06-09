@@ -125,7 +125,7 @@ function QueryTesting() {
           </Form>
           <Card>
             <div style={{ marginBottom: '25px' }}>
-              <h1>Total Respuestas</h1>
+              <h1>Total respuestas</h1>
               {data !== null ? (
                 <Tag color='success'>
                   <h1>{data.length}</h1>

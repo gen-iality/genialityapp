@@ -42,8 +42,8 @@ const Certificado = (props) => {
   const [previewCert, setPreviewCert] = useState({});
   const tags = [
     { tag: 'event.name', label: 'Nombre del Cursos', value: 'name' },
-    { tag: 'event.start', label: 'Fecha Inicio del Cursos', value: 'datetime_from' },
-    { tag: 'event.end', label: 'Fecha Fin del Cursos', value: 'datetime_to' },
+    { tag: 'event.start', label: 'Fecha inicio del Cursos', value: 'datetime_from' },
+    { tag: 'event.end', label: 'Fecha fin del Cursos', value: 'datetime_to' },
     { tag: 'event.venue', label: 'Lugar del Cursos', value: 'venue' },
     { tag: 'event.address', label: 'Dirección del Cursos', value: 'location.FormattedAddress' },
     { tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names' },
@@ -247,10 +247,10 @@ const Certificado = (props) => {
           tags.map((item) => {
             let value;
             if (item.tag.includes('event.')) value = props.event[item.value];
-            else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin Tiquete';
+            else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin tiquete';
             else if (item.tag.includes('rol.')) {
               let rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
-              let rolName = rols ? rols.name.toUpperCase() : 'Sin Rol';
+              let rolName = rols ? rols.name.toUpperCase() : 'Sin rol';
               value = rolName;
             } else value = oneUser.properties[item.value];
             if (item.tag) {
@@ -362,7 +362,7 @@ const Certificado = (props) => {
                   onChange={(e) => {
                     onChangeRol(e);
                   }}
-                  placeholder={'Seleccione Rol'}
+                  placeholder={'Seleccione rol'}
                   value={certificado.rol?._id || rol?._id}>
                   {roles.map((rol) => (
                     <Option key={rol?._id} value={rol?._id}>
@@ -375,7 +375,7 @@ const Certificado = (props) => {
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={16}>
-              <Form.Item label={'Etiquetas Disponibles'}>
+              <Form.Item label={'Etiquetas disponibles'}>
                 <p>Use etiquetas para ingresar información referente al curso o los asistentes</p>
                 <Row wrap gutter={[18, 8]}>
                   {tags.map((item, key) => (
@@ -398,14 +398,14 @@ const Certificado = (props) => {
                       onClick={() =>
                         setCertificado({ ...certificado, imageFile: imageFile, imageData: imageFile, image: imageFile })
                       }>
-                      {'Cambiar a Imagen Original'}
+                      {'Cambiar a Imagen original'}
                     </Button>
                   </>
                 }
               />
               <Image
                 src={certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile}
-                alt={'Imagen Certificado'}
+                alt={'Imagen certificado'}
                 preview={previewCert}
               />
             </Col>

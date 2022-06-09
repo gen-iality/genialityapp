@@ -32,7 +32,7 @@ function RankingList(props) {
                 lineHeight: '3px',
                 color: `${styles && styles.textMenu}`,
               }}>
-              Mi Puntaje
+              Mi puntaje
             </h1>
             <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
           </Row>

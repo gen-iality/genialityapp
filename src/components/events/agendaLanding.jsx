@@ -254,7 +254,7 @@ class Agenda extends Component {
   };
 
   returnList() {
-    //con la lista previamente cargada en el estado se retorna a la constante toShow Para mostrar la lista completa
+    //con la lista previamente cargada en el estado se retorna a la constante to Show para mostrar la lista completa
     this.setState({ toShow: this.state.listDay, nameSpace: 'inicio' });
   }
 

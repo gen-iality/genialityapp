@@ -527,7 +527,7 @@ const FormEdit = (
                                     },
                                   ]}
                                   noStyle>
-                                  <Input placeholder='Asingar Respuesta' style={{ width: '100%' }} />
+                                  <Input placeholder='Asingar respuesta' style={{ width: '100%' }} />
                                 </Form.Item>
                                 {fields.length > 2 ? (
                                   <MinusCircleOutlined
@@ -567,7 +567,7 @@ const FormEdit = (
                                       },
                                     ]}
                                     noStyle>
-                                    <Input placeholder='Asingar Respuesta' style={{ width: '100%' }} />
+                                    <Input placeholder='Asingar respuesta' style={{ width: '100%' }} />
                                   </Form.Item>
                                   {fields.length > 2 ? (
                                     <MinusCircleOutlined
@@ -590,7 +590,7 @@ const FormEdit = (
                           onClick={() => {
                             add();
                           }}>
-                          <PlusOutlined /> Agregar Otra Respuesta
+                          <PlusOutlined /> Agregar otra respuesta
                         </Button>
                       </Form.Item>
                     )}

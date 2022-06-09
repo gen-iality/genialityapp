@@ -91,7 +91,7 @@ function DetailsProduct(props) {
                     </Title>
                   </Divider>
                 )}
-                {product && product.by && <Text>{product && product.by ? product.by : 'Sin Autor'} </Text>}
+                {product && product.by && <Text>{product && product.by ? product.by : 'Sin autor'} </Text>}
                 <Divider orientation='left'>
                   <Title level={5}>Descripción</Title>
                 </Divider>

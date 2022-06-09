@@ -17,13 +17,13 @@ const Report = (props) => {
       render(val, item) {
         return (
           <div>
-            {item.user_name_requesting ? item.user_name_requesting : 'Sin Datos'}
+            {item.user_name_requesting ? item.user_name_requesting : 'Sin datos'}
           </div>
         )
       },
     },
     {
-      title: 'Usuario Quien responde',
+      title: 'Usuario quien responde',
       dataIndex: 'user_name_requested',
       ellipsis: true,
       sorter: (a, b) => a.user_name_requested?.localeCompare(b.user_name_requested),
@@ -31,7 +31,7 @@ const Report = (props) => {
       render(val, item) {
         return (
           <div>
-            {item.user_name_requested ? item.user_name_requested : 'Sin Datos'}
+            {item.user_name_requested ? item.user_name_requested : 'Sin datos'}
           </div>
           )
       },
@@ -52,7 +52,7 @@ const Report = (props) => {
       render(val, item) {
         return (
           <div>
-            {item.response ? item.response : 'Sin Respuesta'}
+            {item.response ? item.response : 'Sin respuesta'}
           </div>
           )
       },

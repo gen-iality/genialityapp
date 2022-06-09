@@ -30,14 +30,14 @@ const InvitationDetail = (props) => {
       <Header title={'Detalle de la comunicación'} back />
 
       <Tabs defaultActiveKey='1'>
-        <TabPane tab='Reporte Envios' key='1'>
+        <TabPane tab='Reporte envios' key='1'>
           <Row justify='center' wrap gutter={[8, 8]}>
             <Col span={22}>
               {users.length ? <MessageUser key='users' users={users} /> : <Empty description={'Sin data'} />}
             </Col>
           </Row>
         </TabPane>
-        <TabPane tab='Mensaje Enviado' key='2'>
+        <TabPane tab='Mensaje enviado' key='2'>
           <Row justify='center' wrap gutter={[8, 8]}>
             <Col span={22}>
               {users.length ? (

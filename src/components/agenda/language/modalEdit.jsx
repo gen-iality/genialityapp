@@ -56,9 +56,9 @@ const ModalEdit = ({ visible, data, onFinish }) => {
 
         <Form.Item label='estado' name='state'>
           <Select>
-            <Option value='open_meeting_room'>Conferencia Abierta</Option>
+            <Option value='open_meeting_room'>Conferencia abierta</Option>
             <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
-            <Option value='ended_meeting_room'>Conferencia Terminada</Option>
+            <Option value='ended_meeting_room'>Conferencia terminada</Option>
           </Select>
         </Form.Item>
 

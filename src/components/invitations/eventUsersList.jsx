@@ -256,7 +256,7 @@ class eventUsersList extends Component {
     const menu = (
       <Menu>
         <Menu.Item key='1' icon={<UserOutlined />} onClick={this.modalUser}>
-          Crear Usuario
+          Crear usuario
         </Menu.Item>
         <Link className='dropdown-item' to={`${this.props.matchUrl}/importar-excel`}>
           <Menu.Item key='2' icon={<UserOutlined />}>
@@ -307,17 +307,17 @@ class eventUsersList extends Component {
               </Col>
               <Col>
                 <Button type='primary' onClick={this.exportFile} icon={<DownloadOutlined />}>
-                  Exportar Usuario
+                  Exportar usuario
                 </Button>
               </Col>
               <Col>
                 <Link to={`${this.props.matchUrl}/importar-excel`} icon={<UploadOutlined />}>
-                  <Button type='primary'>Importar Usuario</Button>
+                  <Button type='primary'>Importar usuario</Button>
                 </Link>
               </Col>
               <Col>
                 <Button type='primary' onClick={this.modalUser} icon={<PlusCircleOutlined />}>
-                  Agregar Usuario
+                  Agregar usuario
                 </Button>
               </Col>
             </Row>

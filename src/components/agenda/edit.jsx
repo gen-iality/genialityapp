@@ -1283,7 +1283,7 @@ class AgendaEdit extends Component {
                           style={{ width: '100%' }}
                           label={
                             <label style={{ marginTop: '2%' }}>
-                              Hora Inicio <label style={{ color: 'red' }}>*</label>
+                              Hora inicio <label style={{ color: 'red' }}>*</label>
                             </label>
                           }
                           rules={[
@@ -1318,7 +1318,7 @@ class AgendaEdit extends Component {
                           style={{ width: '100%' }}
                           label={
                             <label style={{ marginTop: '2%' }}>
-                              Hora Fin <label style={{ color: 'red' }}>*</label>
+                              Hora fin <label style={{ color: 'red' }}>*</label>
                             </label>
                           }
                           rules={[
