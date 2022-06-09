@@ -289,23 +289,23 @@ class ListEventUser extends Component {
         sorter: (a, b) => {
           return true; // console.log('>', a, b);
         },
-        // render: () => <p>prueba aquí / {allActivities.length}</p>
-        render: async (text, item, index) => {
-          // Get all existent activities, after will filter it
-          const existentActivities = await allActivities.map(async (activity) => {
-            const activity_attendee = await firestore
-              .collection(`${activity._id}_event_attendees`)
-              .doc(item._id)
-              .get();
-            if (activity_attendee.exists) {
-              return activity_attendee.data();
-            }
-            return null;
-          });
-          // Filter non-null result that means that the user attendees them
-          const attendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
-          return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>
-        },
+        render: () => <p>prueba aquí / {allActivities.length}</p>
+        // render: async (text, item, index) => {
+        //   // Get all existent activities, after will filter it
+        //   const existentActivities = await allActivities.map(async (activity) => {
+        //     const activity_attendee = await firestore
+        //       .collection(`${activity._id}_event_attendees`)
+        //       .doc(item._id)
+        //       .get();
+        //     if (activity_attendee.exists) {
+        //       return activity_attendee.data();
+        //     }
+        //     return null;
+        //   });
+        //   // Filter non-null result that means that the user attendees them
+        //   const attendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
+        //   return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>
+        // },
       };
 
       let rol = {
