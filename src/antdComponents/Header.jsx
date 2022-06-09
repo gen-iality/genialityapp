@@ -25,8 +25,8 @@ const Header = (props) => {
     loadingSave,
     saveNameIcon,
     customBack,
-    listLenght,
-    messageHeaderAlert,
+    /* listLenght,
+    messageHeaderAlert, */
   } = props;
 
   return (
@@ -45,14 +45,14 @@ const Header = (props) => {
           {title}
         </Tooltip>
       </Title>
-      <small>
+      {/* <small>
         {listLenght?.length === cUser.value.plan.availables.speakers && (
           <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
         )}
         {messageHeaderAlert && (
           <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
         )}
-      </small>
+      </small> */}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>

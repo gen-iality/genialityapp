@@ -215,7 +215,7 @@ function SpeakersList(props) {
           pathname: `${props.matchUrl}/speaker`,
           state: { new: true },
         }}
-        listLenght={sortAndIndexSpeakers()}
+        /* listLenght={sortAndIndexSpeakers()} */
       />
 
       <Table
