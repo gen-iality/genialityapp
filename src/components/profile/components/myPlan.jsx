@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlanesApi } from '../../../helpers/request';
+import { PlansApi, AlertsPlanApi } from '../../../helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
 import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Collapse } from 'antd';
@@ -211,11 +211,13 @@ const myPlan = ({ cUser }) => {
   }, []);
 
   const getPlanes = async () => {
-    let plans = await PlanesApi.getAll();
+    let plans = await PlansApi.getAll();
     setPlanes(plans);
+    let us = await AlertsPlanApi.getByUser(cUser.value._id);
+    console.log('us', us);
     /* console.log(plans, 'planes');
     console.log(plans[0]._id, plans[1]._id, plan._id); */
-    //const p = await PlanesApi.getOne('62864ad118aa6b4b0f5820a2');
+    //const p = await PlansApi.getOne('62864ad118aa6b4b0f5820a2');
   };
 
   return (
@@ -260,7 +262,7 @@ const myPlan = ({ cUser }) => {
       <Tabs.TabPane tab={'Notificaciones'} key={'notifications'}>
         <Table dataSource={dataSource} columns={columns} />
       </Tabs.TabPane>
-      <Tabs.TabPane tab={'Más planes'} key={'plan2'}>
+      <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
         {planes
           .filter((plan1) => plan1._id !== plan._id)
           .map((plan2) => (

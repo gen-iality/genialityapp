@@ -194,12 +194,11 @@ const menuLanding = (props) => {
   const [keySelect, setkeySelect] = useState(Date.now());
   const [isLoading, setisLoading] = useState(true);
   const [toDisable, settoDisable] = useState(false);
-  let mm = true;
   let cUser = UseCurrentUser();
 
   useEffect(() => {
     getMenu();
-  }, []);
+  }, [menu]);
 
   const getMenu = async () => {
     const menuBase = menu;
@@ -214,19 +213,13 @@ const menuLanding = (props) => {
       menuLanding.itemsMenu = props.organizationObj.itemsMenu || [];
       /* console.log('ITEMS==>', menuLanding.itemsMenu); */
     }
-    if (menuLanding.itemsMenu['networking'].section === 'networking') {
-      let x = true;
-      settoDisable(x);
-      mm = true;
-      console.log(toDisable, '1', mm);
-      menuLanding.itemsMenu['networking'].disabled = true;
-      /*
-      console.log('entro', menuLanding.itemsMenu['networking'], menuLanding.itemsMenu.networking); */
-      //menuLanding.itemsMenu[prop1].disabled = cUser.value.plan.availables.networking;
-    }
     setitemsMenu(menuLanding?.itemsMenu);
     setMenu(menuLanding?.itemsMenu);
-    console.log(itemsMenu, menu, 'asdasd');
+    if (menuLanding?.itemsMenu['networking']?.section === 'networking') {
+      settoDisable(cUser.value.plan.availables.networking);
+    }
+    console.log(toDisable);
+
     //let items = itemsMenu;
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
@@ -236,20 +229,9 @@ const menuLanding = (props) => {
           changeNameMenu(prop, menuLanding.itemsMenu[prop1]?.name);
           changePositionMenu(prop, menuLanding.itemsMenu[prop1].position);
           if (menuLanding.itemsMenu[prop1]?.markup) {
-            /* console.log(prop, menuLanding.itemsMenu[prop1].markup, 'aqui'); */
             changeMarkup(prop, menuLanding.itemsMenu[prop1]?.markup);
           }
           changePermissions(prop, menuLanding.itemsMenu[prop1].permissions);
-          if (menuLanding.itemsMenu[prop1].section === 'networking') {
-            let m = true;
-            settoDisable(m);
-            mm = true;
-            console.log(toDisable, '2', mm);
-            menuLanding.itemsMenu[prop1].disabled = true;
-            /* menuLanding.itemsMenu['networking'].disabled = true;
-            console.log('entro', menuLanding.itemsMenu['networking'], menuLanding.itemsMenu.networking); */
-            //menuLanding.itemsMenu[prop1].disabled = cUser.value.plan.availables.networking;
-          }
         }
       }
     }
@@ -411,13 +393,13 @@ const menuLanding = (props) => {
           save
           form
         />
-        {console.log(mm, '-')}
+
         <Spin tip='Cargando...' size='large' spinning={isLoading}>
           <Row gutter={[8, 8]} wrap>
             {Object.keys(menu).map((key, index) => (
               <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                <Card title={menu[key].name} bordered={true} style={{ maxHeight: '315px' }}>
-                  {menu[key].section === 'networking' && mm === true ? (
+                <Card title={menu[key].name} bordered={true} style={{ maxHeight: '320px' }}>
+                  {menu[key].section === 'networking' && !toDisable ? (
                     <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
                   ) : (
                     <>

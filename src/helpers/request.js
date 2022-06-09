@@ -1021,12 +1021,29 @@ export const SpeakersApi = {
   },
 };
 
-export const PlanesApi = {
+export const PlansApi = {
   getAll: async () => {
     return await Actions.getAll(`api/plans`, true);
   },
   getOne: async (id) => {
     return await Actions.getOne(`api/plans/`, id);
+  },
+};
+
+export const AlertsPlanApi = {
+  getAll: async () => {
+    return await Actions.getAll(`api/notfitications`, true);
+  },
+  getByUser: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/users/${userId}/notifications?token=${token}`, true);
+  },
+  getOne: async (id) => {
+    return await Actions.getOne(`api/notifications/`, id);
+  },
+  deleteOne: async (userId, eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/users/${userId}/notifications/${eventId}`, `${id}?token=${token}`);
   },
 };
 
