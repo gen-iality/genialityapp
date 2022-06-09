@@ -32,10 +32,9 @@ function CourseProgress(props) {
       {progressType === 'block' || progressType === undefined && (
       <Progress
         strokeColor={{
-          from: '#108ee9',
-          to: '#87d068',
+          from: '#f7981d', //'#108ee9',
+          to: '#FFB453', //'#87d068',
         }}
-        strokeColor='#f7981d'
         trailColor='#E6E6E6'
         percent={progressPercentValue}
         status='active'
