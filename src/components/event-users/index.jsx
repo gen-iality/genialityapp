@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
@@ -48,6 +48,25 @@ import Loading from '../profile/loading';
 
 const { Title } = Typography;
 const { Option } = Select;
+
+const ColumnProgreso = ({ item, allActivities, ...props }) => {
+  const [attendee, setAttendee] = useState([]);
+  useEffect(async () => {
+    // Get all existent activities, after will filter it
+    const existentActivities = await allActivities.map(async (activity) => {
+      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(item._id).get();
+      if (activity_attendee.exists) {
+        return activity_attendee.data();
+      }
+      return null;
+    });
+    // Filter non-null result that means that the user attendees them
+    const attendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
+    setAttendee (attendee);
+  }, []);
+
+  return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>;
+};
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -289,23 +308,7 @@ class ListEventUser extends Component {
         sorter: (a, b) => {
           return true; // console.log('>', a, b);
         },
-        render: () => <p>prueba aquí / {allActivities.length}</p>
-        // render: async (text, item, index) => {
-        //   // Get all existent activities, after will filter it
-        //   const existentActivities = await allActivities.map(async (activity) => {
-        //     const activity_attendee = await firestore
-        //       .collection(`${activity._id}_event_attendees`)
-        //       .doc(item._id)
-        //       .get();
-        //     if (activity_attendee.exists) {
-        //       return activity_attendee.data();
-        //     }
-        //     return null;
-        //   });
-        //   // Filter non-null result that means that the user attendees them
-        //   const attendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
-        //   return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>
-        // },
+        render: (text, item, index) => <ColumnProgreso item={item} index={index} allActivities={allActivities} />
       };
 
       let rol = {
