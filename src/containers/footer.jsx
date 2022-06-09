@@ -11,27 +11,27 @@ const Footer = () => {
           <List
             header={
               <Typography.Title style={{ color: '#fff' }} level={5}>
-                EVIUS
+                GENIALITY
               </Typography.Title>
             }
             bordered={false}>
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://evius.co/' style={{ color: '#fff' }}>
+              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Inicio
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://evius.co/tipos-de-eventos/' style={{ color: '#fff' }}>
+              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Tipos de cursos
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://evius.co/casos-de-exito/' style={{ color: '#fff' }}>
+              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Casos de éxito
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://evius.co/contacto/' style={{ color: '#fff' }}>
+              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Solicitar demo
               </a>
             </List.Item>
@@ -46,10 +46,7 @@ const Footer = () => {
             }
             bordered={false}>
             <List.Item style={{ border: 'none' }}>
-              <a
-                target='_blank'
-                href='https://drive.google.com/file/d/0B3lty2WUnoHtZXNNUzBIRENOTGM/view?ts=5c5b440c'
-                style={{ color: '#fff' }}>
+              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 ¿Quiénes somos?
               </a>
             </List.Item>
@@ -105,13 +102,22 @@ const Footer = () => {
           xl={{ order: 2 }}
           xxl={{ order: 2 }}>
           <Space wrap>
-            <a href='https://www.facebook.com/eviusco/' target='_blank' style={{ color: '#fff' }}>
+            <a
+              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              target='_blank'
+              style={{ color: '#fff' }}>
               <FacebookFilled style={{ fontSize: '35px' }} />
             </a>
-            <a href='https://www.instagram.com/eviusco/?utm_medium=copy_link' target='_blank' style={{ color: '#fff' }}>
+            <a
+              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              target='_blank'
+              style={{ color: '#fff' }}>
               <InstagramFilled style={{ fontSize: '35px' }} />
             </a>
-            <a href='https://www.linkedin.com/company/evius/' target='_blank' style={{ color: '#fff' }}>
+            <a
+              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              target='_blank'
+              style={{ color: '#fff' }}>
               <LinkedinFilled style={{ fontSize: '35px' }} />
             </a>
           </Space>
