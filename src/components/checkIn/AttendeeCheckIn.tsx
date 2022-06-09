@@ -10,8 +10,6 @@ const AttendeeCheckIn = ({ editUser, reloadComponent }: any) => {
   const { _id, checked_in, checkedin_at } = editUser || {};
   const { checked_in: checkedIn, checkedin_at: checkedinAt } = editUser?.properties || {};
 
-  // console.log('🚀 debug ~ AttemdeeCheckIn ~ attemdeeCheckIn', { attemdeeCheckIn, attemdeeCheckedinAt });
-
   useEffect(() => {
     setAttemdeeCheckIn(checked_in || checkedIn);
     setAttemdeeCheckedinAt(checkedin_at || checkedinAt);

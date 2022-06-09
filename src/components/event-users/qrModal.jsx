@@ -3,13 +3,13 @@ import { FormattedDate, FormattedTime } from 'react-intl';
 import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
-import { getEventUserByParameter } from '@/Utilities/checkInUtils';
+import { assignMessagesAndTypesToQrmodalAlert, getEventUserByParameter } from '@/Utilities/checkInUtils';
 // import { CheckinAndReadOtherButtons } from './buttonsQrModal';
 import { saveOrUpdateUserInAEvent } from '@/Utilities/formUtils';
 import QrAndDocumentForm from './qrAndDocumentForm';
 import PageNextOutlineIcon from '@2fd/ant-design-icons/lib/PageNextOutline';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const html = document.querySelector('html');
 
@@ -37,20 +37,8 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
     console.error(err);
   };
 
-  /**
-   * If the user exists and hasn't checked in, check them in, then reset the form.
-   */
-  // const findAnotherUser = async () => {
-  //   setScannerData({
-  //     ...scannerData,
-  //     msg: '',
-  //     user: null,
-  //   });
-  //   form.resetFields();
-  // };
-
   const closeQr = () => {
-    setScannerData({ ...scannerData, msg: '', user: null });
+    setScannerData({ ...scannerData, user: null });
     html.classList.remove('is-clipped');
     clearOption(); // Clear dropdown to options scanner
     closeModal();
@@ -58,7 +46,6 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
 
   /** allows us to search for an eventuser by a value, at the moment by id or document. */
   const searchUserByParameter = (searchValue) => {
-    //id para pruebas 6273e9633e7bb2310a5125d2
     Object.keys(searchValue).map((key) => {
       const parameters = {
         key,
@@ -73,23 +60,26 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
   };
 
   /** function to create or edit an eventuser from the cms */
-  const saveOrUpdateUser = (values) => {
+  const saveOrUpdateUser = async (values) => {
     const shouldBeEdited = scannerData?.user?._id ? true : false;
     const eventUserId = scannerData?.user?._id;
-    saveOrUpdateUserInAEvent({
+
+    const response = await saveOrUpdateUserInAEvent({
       values,
       shouldBeEdited,
       setLoadingregister,
       eventID,
       eventUserId,
     });
+    console.log('🚀 debug ~ saveOrUpdateUser ~ response', response);
+
+    if (response?._id) searchUserByParameter({ qr: response._id });
   };
 
   /** When the user clicks the button, the form is reset and the QR code is cleared.*/
   const cleanInputSearch = () => {
     setScannerData({
       ...scannerData,
-      msg: '',
       user: null,
     });
     form.resetFields();
@@ -110,27 +100,17 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
         <Title level={4} type='secondary'>
           {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
         </Title>
-        {scannerData?.msg === 'User not found' && (
-          <Alert
-            type='error'
-            message={<Text>Usuario no encontrado.</Text>}
-            showIcon
-            closable
-            className='animate__animated animate__pulse'
-          />
-        )}
         <>
           {scannerData?.user ? (
             <div>
-              {scannerData.user?.checked_in && scannerData?.user?.checkedin_at ? (
-                <Title level={5} type='success'>
-                  El checkIn se llevó a cabo el día: <FormattedDate value={scannerData?.user?.checkedin_at?.toDate()} />{' '}
-                  a las <FormattedTime value={scannerData?.user?.checkedin_at?.toDate()} /> horas
-                </Title>
-              ) : (
-                <Title level={5} type='primary'>
-                  Encontrado, aun no a ingresado
-                </Title>
+              {Object.keys(scannerData).length > 0 && (
+                <Alert
+                  type={assignMessagesAndTypesToQrmodalAlert({ scannerData }).type}
+                  message={assignMessagesAndTypesToQrmodalAlert({ scannerData }).message}
+                  showIcon
+                  closable
+                  className='animate__animated animate__pulse'
+                />
               )}
               <Spin tip='checkIn en progreso' spinning={checkInLoader}>
                 <FormEnrollUserToEvent

@@ -44,7 +44,7 @@ export const CheckinAndReadOtherButtons = ({
   return (
     <Row justify='center' wrap gutter={8}>
       <Col>
-        {!scannerData.user?.checked_in && !scannerData?.user?.checkedin_at && !scannerData.another && (
+        {!scannerData.user?.checked_in && !scannerData?.user?.checkedin_at && (
           <Button
             type='primary'
             onClick={() => {

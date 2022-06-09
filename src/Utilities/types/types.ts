@@ -27,7 +27,8 @@ export type searchDocumentOrIdPropsTypes = {
 };
 
 export type newData = {
-  msg: string;
+  userNotFound: boolean;
+  userFound: boolean;
   another: boolean;
   user: {} | any;
 };

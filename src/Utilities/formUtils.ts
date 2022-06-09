@@ -95,21 +95,9 @@ export const aditionalFields = (fields: [], editUser: any, visibleInCms: any) =>
 export const saveOrUpdateUser = (values: any, fields: any, saveUser: (values: any) => any) => {
   // values = { ...initialValues, ...values };
 
-  // if (Object.keys(basicDataUser).length > 0) {
-  //   setvalidateEventUser({
-  //     statusFields: true,
-  //     status: false,
-  //   });
-  //   return;
-  // }
-
   if (values['email']) {
     values['email'] = values['email'].toLowerCase();
   }
-
-  // if (areacodeselected) {
-  //   values['code'] = areacodeselected;
-  // }
 
   //OBTENER RUTA ARCHIVOS FILE
   Object.values(fields).map((field: any) => {
@@ -159,19 +147,9 @@ export const saveOrUpdateUserInAEvent = async ({
   let resp;
   let respActivity = true;
   if (values) {
-    if (values?.checked_in) {
-      values.checkedin_at = new Date();
-      values.checked_in = true;
-    } else {
-      values.checkedin_at = '';
-      values.checked_in = false;
-    }
-
+    console.log('🚀 debug ~ values', values);
     const body = { properties: values };
-    // if (organizationId && !shouldBeEdited) {
-    //   resp = await OrganizationApi.saveUser(this.props.organizationId, body);
-    //   /* console.log("10. resp ", resp) */
-    // } else {
+
     if (!shouldBeEdited) {
       try {
         resp = await UsersApi.createOne(body, eventID);
@@ -192,23 +170,6 @@ export const saveOrUpdateUserInAEvent = async ({
       }
     }
 
-    // }
-
-    // if (this.props.byActivity && (resp?.data?._id || resp?._id) && !shouldBeEdited) {
-    //   respActivity = await Activity.Register(
-    //     eventID,
-    //     resp?.data?.user?._id || resp?.user?._id,
-    //     this.props.activityId
-    //   );
-    // }
-
-    // if (this.props.byActivity && shouldBeEdited) {
-    //   resp = await AttendeeApi.update(eventID, body, value._id);
-    //   if (resp) {
-    //     resp = { ...resp, data: { _id: resp._id } };
-    //   }
-    // }
-
     if (updateView) {
       updateView();
     }
@@ -222,6 +183,7 @@ export const saveOrUpdateUserInAEvent = async ({
       action: 'show',
     });
     if (handleModal) handleModal();
+    return resp;
   } else {
     setLoadingregister(false);
     DispatchMessageService({
@@ -229,5 +191,6 @@ export const saveOrUpdateUserInAEvent = async ({
       msj: 'Error al guardar el usuario',
       action: 'show',
     });
+    return resp;
   }
 };

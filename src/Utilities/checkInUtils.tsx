@@ -2,13 +2,18 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
 import { TicketsApi } from '@/helpers/request';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
+import { Typography } from 'antd';
 import Moment from 'moment';
+import { ReactNode } from 'react';
+import { FormattedDate, FormattedTime } from 'react-intl';
 import {
   newData,
   saveCheckInAttendeePropsTypes,
   searchDocumentOrIdPropsTypes,
   userCheckInPropsTypes,
 } from './types/types';
+
+const { Text } = Typography;
 
 export const nameAndEmailBasicFieldsStyles: any = {
   fontSize: '16px',
@@ -108,7 +113,8 @@ export const getEventUserByParameter = ({
   }
 
   let newData: newData = {
-    msg: '',
+    userNotFound: false,
+    userFound: false,
     another: false,
     user: {},
   };
@@ -118,8 +124,7 @@ export const getEventUserByParameter = ({
     .get()
     .then((querySnapshot) => {
       if (querySnapshot.empty) {
-        newData.msg = 'User not found';
-        newData.another = true;
+        newData.userNotFound = true;
         if (key === 'document') {
           /** If we do not find the user by scanning a card, we add the basic parameters to create a user if required */
           newData.user = {
@@ -131,7 +136,7 @@ export const getEventUserByParameter = ({
               birthdate,
               gender,
               rol_id: '60e8a7e74f9fb74ccd00dc22',
-              checked_in: true,
+              checked_in: false,
             },
           };
         } else {
@@ -142,9 +147,8 @@ export const getEventUserByParameter = ({
       } else {
         querySnapshot.forEach((doc) => {
           const userData = doc.data();
-          newData.msg = 'User found';
+          newData.userFound = true;
           newData.user = userData;
-          newData.another = userData.checked_in && userData.checkedin_at ? true : false;
           setScannerData(newData);
           setCheckInLoader(false);
         });
@@ -169,7 +173,6 @@ export const userCheckIn = async ({
   if (theUserWasChecked) {
     setScannerData({
       ...scannerData,
-      msg: '',
       user: {},
     });
     handleScan(scannerData?.user?._id);
@@ -217,7 +220,7 @@ export const saveCheckInAttendee = async ({
   console.log('🚀 debug ~ body', body);
 
   try {
-    response = await TicketsApi.checkInAttendee(_id, body);
+    // response = await TicketsApi.checkInAttendee(_id, body);
     console.log('🚀 debug ~ response', response);
     if (response.checked_in) {
       /** If the component has a reload and sends it, we execute it */
@@ -253,9 +256,35 @@ export const saveCheckInAttendee = async ({
 export const divideInformationObtainedByTheCodeReader = ({ event }: any) => {
   if (event.keyCode === 9) {
     event.preventDefault();
-    // Split items by -
+    // Split items by <>
     event.target.value = event.target.value + '<>';
     return false;
   }
   return;
+};
+
+export const assignMessagesAndTypesToQrmodalAlert = ({ scannerData }: any) => {
+  let type = 'info';
+  let message: ReactNode = <></>;
+
+  if (scannerData?.userNotFound) {
+    type = 'error';
+    message = 'Usuario no encontrado';
+  }
+  if (scannerData?.userFound && !scannerData?.user?.checked_in) {
+    type = 'warning';
+    message = 'Usuario encontrado, pero sin registro de ingreso';
+  }
+  if (scannerData?.userFound && scannerData?.user?.checked_in) {
+    type = 'success';
+    message = (
+      <Text>
+        Usuario encontrado, el ingreso se llevó a cabo el día:{' '}
+        <FormattedDate value={scannerData?.user?.checkedin_at?.toDate() || scannerData?.user?.checkedin_at} /> a las{' '}
+        <FormattedTime value={scannerData?.user?.checkedin_at?.toDate() || scannerData?.user?.checkedin_at} /> horas
+      </Text>
+    );
+  }
+
+  return { type, message };
 };

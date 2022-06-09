@@ -21,7 +21,6 @@ function QrAndDocumentForm({
   cleanInputSearch,
   typeScanner,
 }: any) {
-  console.log('🚀 debug ~ label', label);
   /** We listen to the event of the document input to divide the captured information and be able to continue using the form of ant desing */
 
   return (
