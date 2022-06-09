@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
-import { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 import ReactPlayer from 'react-player';
@@ -72,6 +72,18 @@ function AgendaActivityItem(props) {
         infoActivity?.data()?.typeActivity && setTypeActivity(infoActivity.data().typeActivity);
       });
   }
+
+  const validateTypeActivity = (typeActivity) => {
+    switch (typeActivity) {
+      case 'url':
+        return false;
+      case 'video':
+        return false;
+
+      default:
+        return true;
+    }
+  };
 
   return (
     <>
@@ -268,9 +280,10 @@ function AgendaActivityItem(props) {
                     <div>
                       {!props.hasDate && item.datetime_end ? (
                         <Timeline>
-                          <Timeline.Item color={typeActivity === 'url' ? 'transparent' : event.styles.toolbarDefaultBg}>
+                          <Timeline.Item
+                            color={!validateTypeActivity(typeActivity) ? 'transparent' : event.styles.toolbarDefaultBg}>
                             <div>
-                              {!props.hasDate && item.datetime_start && typeActivity !== 'url'
+                              {!props.hasDate && item.datetime_start && validateTypeActivity(typeActivity)
                                 ? Moment.tz(
                                     item.datetime_start,
                                     'YYYY-MM-DD h:mm',
@@ -279,7 +292,7 @@ function AgendaActivityItem(props) {
                                     .tz(timeZone)
                                     .format('h:mm a')
                                 : ''}
-                              {!props.hasDate && item.datetime_start && typeActivity !== 'url' && (
+                              {!props.hasDate && item.datetime_start && validateTypeActivity(typeActivity) && (
                                 <p className='ultrasmall'>
                                   {Moment.tz(
                                     item.datetime_start,
@@ -314,7 +327,7 @@ function AgendaActivityItem(props) {
                                     <CaretRightOutlined
                                       style={{
                                         fontSize: '45px',
-                                        marginTop: '-8px',
+                                        marginTop: '10px',
                                       }}
                                     />
                                   ) : meetingState == 'ended_meeting_room' ? (
@@ -334,7 +347,7 @@ function AgendaActivityItem(props) {
                                       ? intl.formatMessage({ id: 'live' })
                                       : meetingState == 'ended_meeting_room' && item.video
                                       ? intl.formatMessage({
-                                          id: 'live.ended.video',
+                                          id: 'live.ended.video.modify',
                                         })
                                       : meetingState == 'ended_meeting_room'
                                       ? intl.formatMessage({ id: 'live.ended' })
@@ -348,7 +361,7 @@ function AgendaActivityItem(props) {
                               )}
                             </div>
                           </Timeline.Item>
-                          {typeActivity !== 'url' && (
+                          {validateTypeActivity(typeActivity) && (
                             <Timeline.Item color={event.styles.toolbarDefaultBg} style={{ paddingBottom: '5px' }}>
                               {!props.hasDate &&
                                 item.datetime_end &&
@@ -405,16 +418,8 @@ function AgendaActivityItem(props) {
                           <p style={{ fontSize: '16px' }}>
                             {meetingState == 'open_meeting_room'
                               ? intl.formatMessage({ id: 'live' })
-                              : meetingState == 'ended_meeting_room' &&
-                                item.video &&
-                                props.event._id != '618d3a983a90686a9016b5d3'
-                              ? intl.formatMessage({ id: 'live.ended.video' })
-                              : meetingState == 'ended_meeting_room' &&
-                                item.video &&
-                                props.event._id == '618d3a983a90686a9016b5d3'
-                              ? intl.formatMessage({
-                                  id: 'live.ended.video.modify',
-                                })
+                              : meetingState == 'ended_meeting_room' && item.video
+                              ? intl.formatMessage({ id: 'live.ended.video.modify' })
                               : meetingState == 'ended_meeting_room'
                               ? intl.formatMessage({ id: 'live.ended' })
                               : meetingState == 'closed_meeting_room'
@@ -528,27 +533,42 @@ function AgendaActivityItem(props) {
                     {(meetingState === 'ended_meeting_room' ||
                       meetingState === '' ||
                       meetingState === null ||
-                      meetingState === 'null') &&
-                    item.video ? (
-                      <div className='mediaplayer'>
-                        <ReactPlayer
-                          /* light={true} */
-                          width={'100%'}
-                          height={'100%'}
-                          url={item && item.video}
+                      meetingState === 'null') && (
+                      <>
+                        {item.video && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              alignItems: 'center',
+                              width: '100%',
+                              height: '100%',
+                              display: 'flex',
+                              justifyContent: 'center',
+                            }}>
+                            <Button
+                              style={{
+                                borderRadius: '10px',
+                                width: '100px',
+                                height: '60px',
+                                opacity: '0.6',
+                                border: 'none',
+                              }}
+                              icon={<PlayCircleOutlined style={{ fontSize: '50px' }} />}
+                            />
+                          </div>
+                        )}
+
+                        <img
+                          className='agenda-imagen'
+                          src={
+                            item.image
+                              ? item.image
+                              : event_image
+                              ? event_image
+                              : 'https://via.placeholder.com/150x100/FFFFFF/FFFFFF?text=imagen'
+                          }
                         />
-                      </div>
-                    ) : (
-                      <img
-                        className='agenda-imagen'
-                        src={
-                          item.image
-                            ? item.image
-                            : event_image
-                            ? event_image
-                            : 'https://via.placeholder.com/150x100/FFFFFF/FFFFFF?text=imagen'
-                        }
-                      />
+                      </>
                     )}
                   </Col>
                 </Row>
