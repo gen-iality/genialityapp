@@ -99,7 +99,7 @@ class ListEventUser extends Component {
       configfast: {},
       isModalVisible: false,
       fieldsForm: [],
-      typeScanner: 'options',
+      typeScanner: 'CheckIn options',
       nameActivity: props.location.state?.item?.name || '',
       qrModalOpen: false,
     };
@@ -675,7 +675,7 @@ class ListEventUser extends Component {
 
   // Set options in dropdown list
   clearOption = () => {
-    this.setState({ typeScanner: 'options' });
+    this.setState({ typeScanner: 'CheckIn options' });
   };
 
   showModal = () => {
@@ -889,7 +889,6 @@ class ListEventUser extends Component {
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
                   style={{ width: 220 }}>
-                  <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
                   {fieldsForm.map((item) => {
                     if (item.type === 'checkInField')

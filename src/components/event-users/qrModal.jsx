@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { FormattedDate, FormattedTime } from 'react-intl';
 import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
@@ -38,7 +37,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
   };
 
   const closeQr = () => {
-    setScannerData({ ...scannerData, user: null });
+    setScannerData({});
     html.classList.remove('is-clipped');
     clearOption(); // Clear dropdown to options scanner
     closeModal();
@@ -79,8 +78,10 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
   /** When the user clicks the button, the form is reset and the QR code is cleared.*/
   const cleanInputSearch = () => {
     setScannerData({
-      ...scannerData,
-      user: null,
+      // ...scannerData,
+      // userFound: false,
+      // userNotFound: false,
+      // user: null,
     });
     form.resetFields();
   };
@@ -100,18 +101,18 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
         <Title level={4} type='secondary'>
           {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
         </Title>
+        {Object.keys(scannerData).length > 0 && (
+          <Alert
+            type={assignMessagesAndTypesToQrmodalAlert({ scannerData }).type}
+            message={assignMessagesAndTypesToQrmodalAlert({ scannerData }).message}
+            showIcon
+            closable
+            className='animate__animated animate__pulse'
+          />
+        )}
         <>
           {scannerData?.user ? (
             <div>
-              {Object.keys(scannerData).length > 0 && (
-                <Alert
-                  type={assignMessagesAndTypesToQrmodalAlert({ scannerData }).type}
-                  message={assignMessagesAndTypesToQrmodalAlert({ scannerData }).message}
-                  showIcon
-                  closable
-                  className='animate__animated animate__pulse'
-                />
-              )}
               <Spin tip='checkIn en progreso' spinning={checkInLoader}>
                 <FormEnrollUserToEvent
                   fields={fields}

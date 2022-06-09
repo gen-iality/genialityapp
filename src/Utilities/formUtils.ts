@@ -147,7 +147,6 @@ export const saveOrUpdateUserInAEvent = async ({
   let resp;
   let respActivity = true;
   if (values) {
-    console.log('🚀 debug ~ values', values);
     const body = { properties: values };
 
     if (!shouldBeEdited) {
