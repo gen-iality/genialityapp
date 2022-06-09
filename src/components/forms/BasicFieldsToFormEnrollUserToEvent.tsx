@@ -14,7 +14,7 @@ const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
     <>
       {editUser?._id && (
         <Card
-          style={{ borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}
+          style={{ borderRadius: '8px', marginBottom: '20px', textAlign: 'center', cursor: 'auto' }}
           bodyStyle={{ padding: '20px' }}
           hoverable>
           <Title level={4} style={{ marginBottom: '30px' }}>

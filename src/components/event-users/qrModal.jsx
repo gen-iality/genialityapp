@@ -3,11 +3,11 @@ import { FormattedDate, FormattedTime } from 'react-intl';
 import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
-import { alertUserNotFoundStyles, getEventUserByParameter } from '@/Utilities/checkInUtils';
-import { CheckinAndReadOtherButtons } from './buttonsQrModal';
+import { getEventUserByParameter } from '@/Utilities/checkInUtils';
+// import { CheckinAndReadOtherButtons } from './buttonsQrModal';
 import { saveOrUpdateUserInAEvent } from '@/Utilities/formUtils';
 import QrAndDocumentForm from './qrAndDocumentForm';
-import BadgeAccountAlertIcon from '@2fd/ant-design-icons/lib/BadgeAccountAlert';
+import PageNextOutlineIcon from '@2fd/ant-design-icons/lib/PageNextOutline';
 
 const { Title, Text } = Typography;
 
@@ -40,14 +40,14 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
   /**
    * If the user exists and hasn't checked in, check them in, then reset the form.
    */
-  const findAnotherUser = async () => {
-    setScannerData({
-      ...scannerData,
-      msg: '',
-      user: null,
-    });
-    form.resetFields();
-  };
+  // const findAnotherUser = async () => {
+  //   setScannerData({
+  //     ...scannerData,
+  //     msg: '',
+  //     user: null,
+  //   });
+  //   form.resetFields();
+  // };
 
   const closeQr = () => {
     setScannerData({ ...scannerData, msg: '', user: null });
@@ -87,9 +87,22 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
 
   /** When the user clicks the button, the form is reset and the QR code is cleared.*/
   const cleanInputSearch = () => {
-    setScannerData({});
+    setScannerData({
+      ...scannerData,
+      msg: '',
+      user: null,
+    });
     form.resetFields();
   };
+
+  const optionsReadOtherButton = [
+    {
+      type: 'secondary',
+      text: 'Nueva búsqueda',
+      icon: <PageNextOutlineIcon />,
+      action: (data) => cleanInputSearch(),
+    },
+  ];
 
   return (
     <Row style={{ textAlign: 'center' }}>
@@ -100,31 +113,24 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
         {scannerData?.msg === 'User not found' && (
           <Alert
             type='error'
-            message={
-              <Space>
-                <BadgeAccountAlertIcon style={{ fontSize: '28px', color: '#FF4E50' }} />{' '}
-                <Text>Usuario no encontrado.</Text>{' '}
-              </Space>
-            }
+            message={<Text>Usuario no encontrado.</Text>}
+            showIcon
             closable
             className='animate__animated animate__pulse'
-            style={alertUserNotFoundStyles}
           />
         )}
         <>
           {scannerData?.user ? (
             <div>
-              {scannerData.user?.checked_in && scannerData?.user?.checkedin_at && (
-                <div>
-                  <Title level={3} type='secondary'>
-                    Usuario Chequeado
-                  </Title>
-                  <Title level={5}>
-                    El checkIn se llevó a cabo el día:{' '}
-                    <FormattedDate value={scannerData?.user?.checkedin_at?.toDate()} /> a las{' '}
-                    <FormattedTime value={scannerData?.user?.checkedin_at?.toDate()} /> horas
-                  </Title>
-                </div>
+              {scannerData.user?.checked_in && scannerData?.user?.checkedin_at ? (
+                <Title level={5} type='success'>
+                  El checkIn se llevó a cabo el día: <FormattedDate value={scannerData?.user?.checkedin_at?.toDate()} />{' '}
+                  a las <FormattedTime value={scannerData?.user?.checkedin_at?.toDate()} /> horas
+                </Title>
+              ) : (
+                <Title level={5} type='primary'>
+                  Encontrado, aun no a ingresado
+                </Title>
               )}
               <Spin tip='checkIn en progreso' spinning={checkInLoader}>
                 <FormEnrollUserToEvent
@@ -132,16 +138,17 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, eventID, closeModa
                   editUser={scannerData?.user && scannerData?.user}
                   saveUser={saveOrUpdateUser}
                   loaderWhenSavingUpdatingOrDelete={loadingregister}
+                  options={optionsReadOtherButton}
                   visibleInCms
                 />
-                <CheckinAndReadOtherButtons
+                {/* <CheckinAndReadOtherButtons
                   scannerData={scannerData}
                   setScannerData={setScannerData}
                   handleScan={handleScan}
                   setCheckInLoader={setCheckInLoader}
                   checkIn={checkIn}
-                  findAnotherUser={findAnotherUser}
-                />
+                  findAnotherUser={cleanInputSearch}
+                /> */}
               </Spin>
             </div>
           ) : (

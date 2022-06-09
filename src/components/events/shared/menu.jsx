@@ -42,8 +42,8 @@ const MenuConfig = (props) => {
   };
   return (
     <Menu
-      defaultOpenKeys={['main']}
-      mode='inline'
+      // defaultOpenKeys={['main']}
+      mode='vertical'
       theme='dark'
       style={{
         overflow: 'auto',

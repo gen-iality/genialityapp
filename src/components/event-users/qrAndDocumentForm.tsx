@@ -21,6 +21,7 @@ function QrAndDocumentForm({
   cleanInputSearch,
   typeScanner,
 }: any) {
+  console.log('🚀 debug ~ label', label);
   /** We listen to the event of the document input to divide the captured information and be able to continue using the form of ant desing */
 
   return (
@@ -75,7 +76,10 @@ function QrAndDocumentForm({
               }
               key='2'>
               <>
-                <Form.Item label={'Id Usuario'} name='qr'>
+                <Form.Item
+                  label={'Id Usuario'}
+                  name='qr'
+                  rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}>
                   <Input autoFocus allowClear />
                 </Form.Item>
               </>
@@ -84,7 +88,10 @@ function QrAndDocumentForm({
         </>
       ) : (
         <>
-          <Form.Item label={label} name='document'>
+          <Form.Item
+            label={label}
+            name='document'
+            rules={[{ required: true, message: 'El campo documentó no debe estar vacío!' }]}>
             <Input
               onKeyDown={(event: any) => divideInformationObtainedByTheCodeReader({ event })}
               id='document'

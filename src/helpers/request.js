@@ -496,12 +496,8 @@ export const TicketsApi = {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
   },
 
-  checkInAttendee: async (event_id, eventUser_id) => {
+  checkInAttendee: async (eventUser_id, data) => {
     let token = await GetTokenUserFirebase();
-    let data = {
-      event: event_id,
-      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
-    };
     return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, data);
   },
 };
@@ -1055,6 +1051,7 @@ export const Activity = {
       user_id,
       activity_id,
     };
+    console.log('🚀 INFOOOOO', info);
     return await Actions.create(`api/events/${event}/activities_attendees/?token=${token}`, info);
   },
   GetUserActivity: async (event, user_id) => {

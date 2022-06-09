@@ -295,6 +295,7 @@ class UserModal extends Component {
         /* console.log("10. USERADD==>",resp) */
       }
 
+      /**FIXME: No se esta guardando la informacion al actualizar un usuario desde el panel de checkIn por actividad*/
       if (this.props.byActivity && (resp?.data?._id || resp?._id) && !this.props.edit) {
         respActivity = await Activity.Register(
           this.props.cEvent?.value?._id,

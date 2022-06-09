@@ -7,6 +7,8 @@ import { LoadingOutlined } from '@ant-design/icons';
 import dispatchFormEnrollUserToEvent from './dispatchFormEnrollUserToEvent';
 import { aditionalFields, alertStyles, cardStyles, center, saveOrUpdateUser, textLeft } from '@/Utilities/formUtils';
 import { FormEnrollUserToEventPropsTypes } from '@/Utilities/types/types';
+import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
+import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 
 const { Title } = Typography;
 
@@ -17,6 +19,7 @@ const FormEnrollUserToEvent = ({
   saveUser,
   loaderWhenSavingUpdatingOrDelete,
   visibleInCms = false,
+  submitIcon = <BadgeAccountOutlineIcon />,
 }: FormEnrollUserToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -27,6 +30,7 @@ const FormEnrollUserToEvent = ({
   const { basicFields, thereAreExtraFields, buttonText } = formState;
 
   const componentLoad = () => {
+    form.resetFields();
     formDispatch({ type: 'getBasicFields', payload: { fields, editUser } });
     formDispatch({
       type: 'thereAreExtraFields',
@@ -40,7 +44,6 @@ const FormEnrollUserToEvent = ({
   };
 
   useEffect(() => {
-    form.resetFields();
     componentLoad();
   }, [editUser]);
 
@@ -106,32 +109,38 @@ const FormEnrollUserToEvent = ({
                 {loaderWhenSavingUpdatingOrDelete ? (
                   <LoadingOutlined style={{ fontSize: '50px' }} />
                 ) : (
-                  <Form.Item>
-                    <Space direction='horizontal'>
-                      <Button
-                        htmlType='submit'
-                        type='primary'
-                        ref={buttonSubmit}
-                        // style={{
-                        //   display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
-                        // }}
-                      >
-                        {buttonText}
-                      </Button>
+                  <>
+                    <Form.Item>
+                      <AttendeeCheckIn editUser={editUser} reloadComponent={componentLoad} />
+                    </Form.Item>
+                    <Form.Item>
+                      <Space direction='horizontal'>
+                        <Button
+                          htmlType='submit'
+                          type='primary'
+                          ref={buttonSubmit}
+                          icon={submitIcon}
+                          // style={{
+                          //   display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
+                          // }}
+                        >
+                          {buttonText}
+                        </Button>
 
-                      {options &&
-                        editUser &&
-                        options.map((option: any) => (
-                          <Button
-                            key={'option-' + option.text}
-                            icon={option.icon}
-                            onClick={() => option.action(editUser._id)}
-                            type={option.type}>
-                            {option.text}
-                          </Button>
-                        ))}
-                    </Space>
-                  </Form.Item>
+                        {options &&
+                          editUser &&
+                          options.map((option: any) => (
+                            <Button
+                              key={'option-' + option.text}
+                              icon={option.icon}
+                              onClick={() => option.action(editUser._id)}
+                              type={option.type}>
+                              {option.text}
+                            </Button>
+                          ))}
+                      </Space>
+                    </Form.Item>
+                  </>
                 )}
               </Col>
             </Row>

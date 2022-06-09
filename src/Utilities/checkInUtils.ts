@@ -1,18 +1,14 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
+import { TicketsApi } from '@/helpers/request';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
-import { newData, searchDocumentOrIdPropsTypes, userCheckInPropsTypes } from './types/types';
-
-export const alertUserNotFoundStyles = {
-  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-  backgroundColor: '#ffffff',
-  borderLeft: `5px solid #FF4E50`,
-  fontSize: '16px',
-  fontWeight: 'bold',
-  textAlign: 'center',
-  borderRadius: '5px',
-  zIndex: '1',
-};
+import Moment from 'moment';
+import {
+  newData,
+  saveCheckInAttendeePropsTypes,
+  searchDocumentOrIdPropsTypes,
+  userCheckInPropsTypes,
+} from './types/types';
 
 export const nameAndEmailBasicFieldsStyles: any = {
   fontSize: '16px',
@@ -186,6 +182,71 @@ export const userCheckIn = async ({
     msj: 'hubo un error al registrar el checkIn del usuario',
     action: 'show',
   });
+};
+
+/* function that saves the user's checkIn. If the user's checkIn was successful,
+will show the checkIn information in the popUp. If not, it will show an error message.*/
+export const saveCheckInAttendee = async ({
+  _id,
+  checked,
+  reloadComponent,
+  setAttemdeeCheckIn,
+}: saveCheckInAttendeePropsTypes) => {
+  const checkedinAt: any = Moment(new Date()).format('D/MMM/YY h:mm:ss A ');
+  const checkedIn: boolean = checked;
+  let checkedInAttendeeAt: any = '';
+  let response: any;
+
+  if (checked) {
+    checkedInAttendeeAt = checkedinAt;
+  } else {
+    checkedInAttendeeAt = null;
+  }
+
+  console.log('🚀 debug ~ saveCheckInAttendee ~ checkedin_at', {
+    checkedIn,
+    checkedInAttendeeAt,
+    _id,
+    response,
+    reloadComponent,
+  });
+  const body = {
+    checkedin_at: checkedInAttendeeAt,
+    checked_in: checkedIn,
+  };
+  console.log('🚀 debug ~ body', body);
+
+  try {
+    response = await TicketsApi.checkInAttendee(_id, body);
+    console.log('🚀 debug ~ response', response);
+    if (response.checked_in) {
+      /** If the component has a reload and sends it, we execute it */
+      if (reloadComponent) reloadComponent();
+
+      setAttemdeeCheckIn(true);
+
+      DispatchMessageService({
+        type: 'success',
+        msj: 'El checkIn fue registrado correctamente',
+        action: 'show',
+      });
+      return;
+    }
+
+    DispatchMessageService({
+      type: 'error',
+      msj: 'El checkIn del usuario, no pudo ser registrado',
+      action: 'show',
+    });
+    setAttemdeeCheckIn(false);
+  } catch (error) {
+    setAttemdeeCheckIn(false);
+    DispatchMessageService({
+      type: 'error',
+      msj: 'Hubo un error al registrar el checkIn del usuario',
+      action: 'show',
+    });
+  }
 };
 
 /** Function that allows dividing the data captured with a pdf417 code reader by adding a <> after each tabulation to be able to split the text string */

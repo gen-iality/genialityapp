@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export type ImageUploaderDragAndDropType = {
   imageDataCallBack: (file: object | null) => void;
   imageUrl: string;
@@ -46,4 +48,11 @@ export type FormEnrollUserToEventPropsTypes = {
   saveUser: (user: any) => void;
   loaderWhenSavingUpdatingOrDelete: boolean;
   visibleInCms: boolean;
+  submitIcon: ReactNode;
+};
+export type saveCheckInAttendeePropsTypes = {
+  _id: string;
+  checked: boolean;
+  reloadComponent: () => void;
+  setAttemdeeCheckIn: (state: any) => void;
 };

@@ -79,7 +79,7 @@ export const beforeUpload = (file: any) => {
 export const aditionalFields = (fields: [], editUser: any, visibleInCms: any) => {
   // the email and the names are discriminated so that they are not shown in the form when it is in the edit
   const aditionalFieldsFiltered = fields.filter((field: any) => {
-    return field.name !== 'email' && field.name !== 'names';
+    return field.name !== 'email' && field.name !== 'names' && field.name !== 'checked_in';
   });
 
   //the additionalFields are removed from the componentLoad and the dispatchFormEnrollUserToEvent to make use of the useState within the getAdditionalFields
