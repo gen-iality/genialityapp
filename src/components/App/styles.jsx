@@ -55,7 +55,8 @@ class Styles extends Component {
 
     this.imageDrawer = [
       {
-        title: 'Elige una imagen para el banner superior desde el escritorio o una carpeta. Tamaño recomendado 1920x540 px',
+        title:
+          'Elige una imagen para el banner superior desde el escritorio o una carpeta. Tamaño recomendado 1920x540 px',
         description: `Por defecto en el baner superior se muestra la imagen prinicpal ${
           this.props.org?._id ? 'de la organización' : 'del curso'
         } aqui la puedes cambiar`,
@@ -65,7 +66,8 @@ class Styles extends Component {
         height: 540,
       },
       {
-        title: 'Elige una imagen para el banner del correo electrónico desde el escritorio o una carpeta. Tamaño recomendado 600x280 px',
+        title:
+          'Elige una imagen para el banner del correo electrónico desde el escritorio o una carpeta. Tamaño recomendado 600x280 px',
         description: 'Por defecto se reduce la imagen automaticamente del banner superior',
         imageFieldName: 'banner_image_email',
         button: 'Eliminar banner de email',
@@ -104,7 +106,8 @@ class Styles extends Component {
         height: 280,
       },
       {
-        title: 'Elige una imagen para el footer del correo electrónico desde el escritorio o una carpteta. Tamaño recomendado 600x220 px',
+        title:
+          'Elige una imagen para el footer del correo electrónico desde el escritorio o una carpteta. Tamaño recomendado 600x220 px',
         description: `Por defecto se reduce la imagen automaticamente del footer ${
           this.props.org?._id ? 'de la organización' : 'del curso'
         }`,
@@ -175,7 +178,7 @@ class Styles extends Component {
           },
         ],
       },
-      {
+      /* {
         label: 'Agrupar la lecciones de la agenda en TABS ',
         name: 'hideDatesAgenda',
         defaultValue: false,
@@ -189,7 +192,7 @@ class Styles extends Component {
             value: false,
           },
         ],
-      },
+      }, */
       {
         label: 'Ocultar fechas de las lecciones de la agenda',
         name: 'hideDatesAgendaItem',
@@ -329,7 +332,7 @@ class Styles extends Component {
           action: 'show',
         });
       } else {
-        this.setState({ msg: 'Can\'t create', create: false });
+        this.setState({ msg: "Can't create", create: false });
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
