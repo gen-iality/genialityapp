@@ -39,7 +39,7 @@ export const columns = (goToEvent) => [
     sorter: (a, b) => a.count - b.count,
   },
   {
-    title: 'Usuarios sin checkIn',
+    title: 'Usuarios sin inscripción',
     dataIndex: 'checked_in_not',
     align: 'center',
     ellipsis: 'true',
@@ -49,7 +49,7 @@ export const columns = (goToEvent) => [
       }, */
   },
   {
-    title: 'Usuarios con checkIn',
+    title: 'Usuarios con inscripción',
     dataIndex: 'checked_in',
     align: 'center',
     ellipsis: 'true',

@@ -192,7 +192,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
 
     DispatchMessageService({
       type: 'error',
-      msj: 'Lo sentimos, hubo un error al registrar el checkIn del usuario',
+      msj: 'Lo sentimos, hubo un error al registrar la inscripción del usuario',
       action: 'show',
     });
   };
@@ -248,7 +248,7 @@ will show the checkIn information in the popUp. If not, it will show an error me
                   </Title>
                   {qrData.user.checked_at && (
                     <Title level={5}>
-                      El checkIn se llevó a cabo el día: <FormattedDate value={qrData.user.checked_at.toDate()} /> a las{' '}
+                      La inscripción se llevó a cabo el día: <FormattedDate value={qrData.user.checked_at.toDate()} /> a las{' '}
                       <FormattedTime value={qrData.user.checked_at.toDate()} /> horas
                     </Title>
                   )}
