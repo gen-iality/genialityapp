@@ -54,7 +54,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Empresas',
+        name: 'Nuestra Organización',
         path: '/empresas',
         key: 'empresas',
         onClick: handleClick,
