@@ -158,7 +158,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: ' Inscripción por lección',
+        name: ' Inscripción a la lección',
         path: '/checkin-actividad',
         key: 'checkin-actividad',
         onClick: handleClick,
