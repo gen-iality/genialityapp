@@ -122,7 +122,7 @@ export const MenuItems = [
     ],
   },
   {
-    name: 'Configuración de asistentes',
+    name: 'Configuración de colaboradores',
     icon: <SolutionOutlined />,
     key: 'attende-config',
     items: [
