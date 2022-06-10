@@ -65,12 +65,12 @@ export const MenuItems = [
       //   key: 'speakers',
       //   onClick: handleClick,
       // },
-      {
-        name: 'Espacios',
-        path: '/espacios',
-        key: 'espacios',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Espacios',
+      //   path: '/espacios',
+      //   key: 'espacios',
+      //   onClick: handleClick,
+      // },
       {
         name: 'Certificados',
         path: '/certificados',
