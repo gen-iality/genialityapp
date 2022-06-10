@@ -777,7 +777,7 @@ class ListEventUser extends Component {
       <React.Fragment>
         <Header
           title={type == 'activity' ? 'Inscripción de ' + nameActivity : 'Inscripción de curso'}
-          description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
+          description={`Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una
           búsqueda.`}
         />
 
