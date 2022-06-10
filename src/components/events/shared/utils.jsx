@@ -169,12 +169,12 @@ export const MenuItems = [
         key: 'gestion-chats',
         onClick: handleClick,
       },
-      {
-        name: '  Enviar correos a asistentes',
-        path: '/invitados',
-        key: 'enviar-correos-asistentes',
-        onClick: handleClick,
-      },
+      // {
+      //   name: '  Enviar correos a asistentes',
+      //   path: '/invitados',
+      //   key: 'enviar-correos-asistentes',
+      //   onClick: handleClick,
+      // },
     ],
   },
   {
