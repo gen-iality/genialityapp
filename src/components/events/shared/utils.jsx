@@ -202,7 +202,7 @@ export const MenuItems = [
     key: 'estadisticas',
     items: [
       {
-        name: 'Estadísticas del curso',
+        name: 'Accede a las estadisticas del curso / lecciones',
         path: '/dashboard',
         key: 'estadisticas-evento',
         onClick: handleClick,
