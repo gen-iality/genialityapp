@@ -32,7 +32,7 @@ class Styles extends Component {
       colorDrawer: [
         {
           title: `Color de fondo para ${this.props.org?._id ? 'la organización' : 'el curso'}`,
-          description: 'Si escoges luego una imagen de fondo, esa imagen reemplazara este color.',
+          description: 'Si escoges después una imagen de fondo, esa imagen reemplazara este color.',
           fieldColorName: 'containerBgColor',
           editIsVisible: false,
         },
