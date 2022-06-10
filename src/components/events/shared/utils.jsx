@@ -101,12 +101,12 @@ export const MenuItems = [
         key: 'documentos',
         onClick: handleClick,
       },
-      {
-        name: ' Contenido informativo',
-        path: '/informativesection',
-        key: 'contenido-informativo',
-        onClick: handleClick,
-      },
+      // {
+      //   name: ' Contenido informativo',
+      //   path: '/informativesection',
+      //   key: 'contenido-informativo',
+      //   onClick: handleClick,
+      // },
       {
         name: '  Reporte de networking',
         path: '/reportNetworking',
