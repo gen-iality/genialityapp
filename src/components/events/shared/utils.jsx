@@ -113,12 +113,12 @@ export const MenuItems = [
       //   key: 'reporte-networking',
       //   onClick: handleClick,
       // },
-      {
-        name: 'Producto',
-        path: '/product',
-        key: 'producto',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Producto',
+      //   path: '/product',
+      //   key: 'producto',
+      //   onClick: handleClick,
+      // },
     ],
   },
   {
