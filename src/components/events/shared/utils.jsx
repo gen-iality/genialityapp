@@ -34,12 +34,12 @@ export const MenuItems = [
         key: 'habilitar-secciones',
         onClick: handleClick,
       },
-      {
-        name: 'Configuración de tickets',
-        path: '/ticketsEvent',
-        key: 'configuracion-tickets',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Configuración de tickets',
+      //   path: '/ticketsEvent',
+      //   key: 'configuracion-tickets',
+      //   onClick: handleClick,
+      // },
     ],
   },
   {
