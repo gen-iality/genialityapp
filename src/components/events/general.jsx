@@ -500,7 +500,7 @@ class General extends Component {
             }),
             action: 'show',
           });
-          this.setState({ msg: 'Can\'t create', create: false });
+          this.setState({ msg: "Can't create", create: false });
         }
       }
     } catch (error) {
@@ -783,8 +783,8 @@ class General extends Component {
                       name={'type_event'}
                       onChange={(e) => this.handleChange(e, 'type_event')}>
                       <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Cursos físico</Option>
-                      <Option value='onlineEvent'>Cursos virtual</Option>
+                      <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO */}
+                      <Option value='onlineEvent'>Actualización </Option> {/* TODO */}
                     </Select>
                   </Form.Item>
 
