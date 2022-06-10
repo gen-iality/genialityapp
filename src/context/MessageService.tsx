@@ -25,7 +25,7 @@ export const DispatchMessageService = ({ type, msj, duration, action, key }: Pro
         message.open({
           content: MessageReducer({ type, msj, action }),
           key: key || '',
-          duration: duration || 3,
+          duration: duration || 5,
           type: null as any,
         });
         break;
