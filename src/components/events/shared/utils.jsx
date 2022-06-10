@@ -152,7 +152,7 @@ export const MenuItems = [
     key: 'attendesCms',
     items: [
       {
-        name: ' Asistentes / Checkin',
+        name: ' Inscritos',
         path: '/assistants',
         key: 'asistentes-checkin',
         onClick: handleClick,
