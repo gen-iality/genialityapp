@@ -59,12 +59,12 @@ export const MenuItems = [
         key: 'empresas',
         onClick: handleClick,
       },
-      {
-        name: 'Host/Anfitriones',
-        path: '/speakers',
-        key: 'speakers',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Host/Anfitriones',
+      //   path: '/speakers',
+      //   key: 'speakers',
+      //   onClick: handleClick,
+      // },
       {
         name: 'Espacios',
         path: '/espacios',
