@@ -826,7 +826,7 @@ class General extends Component {
                   )}
 
                   <Form.Item label={'Especificar fechas'}>
-                    <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                    {/* <Switch defaultChecked onChange={this.specificDates} checked={specificDates} /> */}
                   </Form.Item>
 
                   {specificDates === false ? (
