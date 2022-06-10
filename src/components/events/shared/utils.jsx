@@ -138,12 +138,12 @@ export const MenuItems = [
         key: 'confirmacion-registro',
         onClick: handleClick,
       },
-      {
+      /* {
         name: ' Organizadores',
         path: '/tipo-asistentes',
         key: 'organizadores',
         onClick: handleClick,
-      },
+      }, */
     ],
   },
   {
