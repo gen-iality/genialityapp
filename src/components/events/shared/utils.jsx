@@ -189,7 +189,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Comunicaciones enviadas',
+        name: 'Correos enviados',
         path: '/messages',
         key: 'comunicaciones-enviadas',
         onClick: handleClick,
