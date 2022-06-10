@@ -107,12 +107,12 @@ export const MenuItems = [
       //   key: 'contenido-informativo',
       //   onClick: handleClick,
       // },
-      {
-        name: '  Reporte de networking',
-        path: '/reportNetworking',
-        key: 'reporte-networking',
-        onClick: handleClick,
-      },
+      // {
+      //   name: '  Reporte de networking',
+      //   path: '/reportNetworking',
+      //   key: 'reporte-networking',
+      //   onClick: handleClick,
+      // },
       {
         name: 'Producto',
         path: '/product',
