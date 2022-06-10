@@ -629,7 +629,7 @@ class Datos extends Component {
           {this.props.type !== 'organization' && (
             <TabPane tab='Configuración General' key='1'>
               <Fragment>
-                <Header title={'Recopilación de datos'} />
+                <Header title={'Interacción con la plataforma'} />
                 <small>
                   {`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del curso'
