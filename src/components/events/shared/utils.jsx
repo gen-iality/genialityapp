@@ -89,12 +89,12 @@ export const MenuItems = [
         key: 'noticias',
         onClick: handleClick,
       },
-      {
-        name: 'Preguntas frecuentes',
-        path: '/faqs',
-        key: 'preguntas-frecuentes',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Preguntas frecuentes',
+      //   path: '/faqs',
+      //   key: 'preguntas-frecuentes',
+      //   onClick: handleClick,
+      // },
       {
         name: 'Documentos',
         path: '/documents',
