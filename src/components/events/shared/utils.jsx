@@ -84,7 +84,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Noticias',
+        name: 'Lo último en...',
         path: '/news',
         key: 'noticias',
         onClick: handleClick,
