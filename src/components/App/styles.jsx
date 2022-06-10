@@ -206,7 +206,7 @@ class Styles extends Component {
         ],
       },
       {
-        label: 'Mostrar boton de detalle de la agenda',
+        label: 'Mostrar el botón del detalle de los cursos o lecciones',
         name: 'hideBtnDetailAgenda',
         defaultValue: false,
         options: [
