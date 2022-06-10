@@ -82,6 +82,7 @@ const AgendaActividadDetalle = (props) => {
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
       useCheckinUser(cEventUser.value, props.match.params.activity_id, 'activity');
+      // TODO: update total_activites_checkedin to EventUser
     }
   }, [currentActivity, cEventUser.status]);
 

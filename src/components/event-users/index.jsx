@@ -1,7 +1,8 @@
-import { Component } from 'react';
+import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
+import { AgendaApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -47,6 +48,25 @@ import Loading from '../profile/loading';
 
 const { Title } = Typography;
 const { Option } = Select;
+
+const ColumnProgreso = ({ item, allActivities, ...props }) => {
+  const [attendee, setAttendee] = useState([]);
+  useEffect(async () => {
+    // Get all existent activities, after will filter it
+    const existentActivities = await allActivities.map(async (activity) => {
+      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(item._id).get();
+      if (activity_attendee.exists) {
+        return activity_attendee.data();
+      }
+      return null;
+    });
+    // Filter non-null result that means that the user attendees them
+    const attendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
+    setAttendee (attendee);
+  }, []);
+
+  return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>;
+};
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -279,6 +299,18 @@ class ListEventUser extends Component {
           };
         });
       columns = [...columns, ...extraColumns];
+      const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
+      const progressing = {
+        title: 'Progreso',
+        dataIndex: 'progress_id',
+        key: 'progress_id',
+        ellipsis: true,
+        sorter: (a, b) => {
+          return true; // console.log('>', a, b);
+        },
+        render: (text, item, index) => <ColumnProgreso item={item} index={index} allActivities={allActivities} />
+      };
+
       let rol = {
         title: 'Rol',
         dataIndex: 'rol_id',
@@ -309,6 +341,7 @@ class ListEventUser extends Component {
         ...self.getColumnSearchProps('updated_at'),
         render: self.updated_at_component,
       };
+      columns.push(progressing);
       columns.push(rol);
       columns.push(created_at);
       columns.push(updated_at);
