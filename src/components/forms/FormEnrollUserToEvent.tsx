@@ -5,7 +5,15 @@ import { Alert, Button, Card, Col, Divider, Form, Row, Space, Typography } from 
 import { useIntl } from 'react-intl';
 import { LoadingOutlined } from '@ant-design/icons';
 import dispatchFormEnrollUserToEvent from './dispatchFormEnrollUserToEvent';
-import { aditionalFields, alertStyles, cardStyles, center, saveOrUpdateUser, textLeft } from '@/Utilities/formUtils';
+import {
+  aditionalFields,
+  alertStyles,
+  cardStyles,
+  center,
+  saveOrUpdateUser,
+  textLeft,
+  assignmentOfConditionsToAdditionalFields,
+} from '@/Utilities/formUtils';
 import { FormEnrollUserToEventPropsTypes } from '@/Utilities/types/types';
 import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
@@ -14,6 +22,7 @@ const { Title } = Typography;
 
 const FormEnrollUserToEvent = ({
   fields = [],
+  conditionalFields = [],
   editUser,
   options,
   saveUser,
@@ -24,10 +33,16 @@ const FormEnrollUserToEvent = ({
   const [form] = Form.useForm();
   const intl = useIntl();
   const buttonSubmit = useRef(null);
-  const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
+  const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState<boolean>(false);
+  const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
 
   const { formDispatch, formState } = dispatchFormEnrollUserToEvent();
   const { basicFields, thereAreExtraFields, buttonText } = formState;
+
+  /** Restructuring of fields which contain conditions or not */
+  const assigningConditionsToFields = (changedValues: {}, allValues: {}) => {
+    assignmentOfConditionsToAdditionalFields({ conditionalFields, allValues, fields, setValidatedFields });
+  };
 
   const componentLoad = () => {
     form.resetFields();
@@ -41,6 +56,9 @@ const FormEnrollUserToEvent = ({
       },
     });
     formDispatch({ type: 'buttonText', payload: { visibleInCms, editUser } });
+    const allValues = editUser ? editUser.properties : [];
+
+    assigningConditionsToFields({}, allValues);
   };
 
   useEffect(() => {
@@ -57,14 +75,14 @@ const FormEnrollUserToEvent = ({
   return (
     <div style={center}>
       <Col xs={24} sm={22} md={24} lg={24} xl={24}>
-        {/* {!submittedForm ? ( */}
         <Card bordered={false}>
           <Form
             form={form}
             scrollToFirstError={true}
             layout='vertical'
             onFinish={(values) => saveOrUpdateUser(values, fields, saveUser)}
-            onFinishFailed={showGeneralMessage}>
+            onFinishFailed={showGeneralMessage}
+            onValuesChange={assigningConditionsToFields}>
             <Row style={textLeft} gutter={[8, 8]}>
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
@@ -84,7 +102,7 @@ const FormEnrollUserToEvent = ({
                       defaultMessage: 'No hay campos adicionales en este evento',
                     })}
                   <AdditionalFieldsToEnrollUserToEvent
-                    aditionalFields={aditionalFields(fields, editUser, visibleInCms)}
+                    aditionalFields={aditionalFields({ validatedFields, editUser, visibleInCms })}
                   />
                 </Card>
               </Col>

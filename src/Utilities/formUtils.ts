@@ -1,6 +1,7 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import getAdditionalFields from '@/components/forms/getAdditionalFields';
 import { UsersApi } from '@/helpers/request';
+import { aditionalFieldsPropsTypes, updateFieldsVisibilityPropsTypes } from './types/types';
 
 export const textLeft: {} = {
   textAlign: 'left',
@@ -76,9 +77,9 @@ export const beforeUpload = (file: any) => {
   return isLt5M ? true : false;
 };
 
-export const aditionalFields = (fields: [], editUser: any, visibleInCms: any) => {
+export const aditionalFields = ({ validatedFields, editUser, visibleInCms }: aditionalFieldsPropsTypes) => {
   // the email and the names are discriminated so that they are not shown in the form when it is in the edit
-  const aditionalFieldsFiltered = fields.filter((field: any) => {
+  const aditionalFieldsFiltered = validatedFields.filter((field: any) => {
     return field.name !== 'email' && field.name !== 'names' && field.name !== 'checked_in';
   });
 
@@ -90,6 +91,37 @@ export const aditionalFields = (fields: [], editUser: any, visibleInCms: any) =>
   });
 
   return aditionalsFields;
+};
+
+export const assignmentOfConditionsToAdditionalFields = ({
+  conditionalFields,
+  allValues,
+  fields,
+  setValidatedFields,
+}: updateFieldsVisibilityPropsTypes) => {
+  let validatingConditionalFields: Array<any> = [...fields];
+
+  validatingConditionalFields = validatingConditionalFields.filter((field) => {
+    let fieldShouldBeDisplayed = false;
+    let fieldHasCondition = false;
+
+    conditionalFields.map((conditional: any) => {
+      /** We verify if a field is within the conditions */
+      const theFieldHasNoCondition: boolean = conditional.fields.indexOf(field.name) === -1;
+
+      if (theFieldHasNoCondition) return;
+      fieldHasCondition = true;
+
+      /** We validate if the conditioned field has information */
+      const valueToValidate = allValues[conditional.fieldToValidate];
+
+      /** We check if the conditions of the field have the appropriate values for it to be displayed */
+      fieldShouldBeDisplayed = conditional.value === valueToValidate;
+    });
+    return fieldShouldBeDisplayed || !fieldHasCondition;
+  });
+
+  setValidatedFields(validatingConditionalFields);
 };
 
 export const saveOrUpdateUser = (values: any, fields: any, saveUser: (values: any) => any) => {

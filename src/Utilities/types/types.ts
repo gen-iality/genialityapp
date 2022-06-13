@@ -44,6 +44,7 @@ export type userCheckInPropsTypes = {
 
 export type FormEnrollUserToEventPropsTypes = {
   fields: any;
+  conditionalFields: any;
   editUser: any;
   options: any;
   saveUser: (user: any) => void;
@@ -56,4 +57,16 @@ export type saveCheckInAttendeePropsTypes = {
   checked: boolean;
   reloadComponent: () => void;
   setAttemdeeCheckIn: (state: any) => void;
+};
+
+export type aditionalFieldsPropsTypes = {
+  validatedFields: Array<any>;
+  editUser: any;
+  visibleInCms: any;
+};
+export type updateFieldsVisibilityPropsTypes = {
+  conditionalFields: any;
+  allValues: any;
+  fields: [];
+  setValidatedFields: (state: any) => any;
 };

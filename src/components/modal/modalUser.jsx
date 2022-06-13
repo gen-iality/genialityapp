@@ -380,6 +380,7 @@ class UserModal extends Component {
           {componentKey === 'event-checkin' ? (
             <FormEnrollUserToEvent
               fields={this.props.extraFields}
+              conditionalFields={this.props.cEvent?.value?.fields_conditions}
               editUser={this.props.value}
               options={this.options}
               saveUser={this.saveUser}

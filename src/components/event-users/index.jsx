@@ -818,7 +818,6 @@ class ListEventUser extends Component {
             typeScanner={this.state.typeScanner}
             clearOption={this.clearOption}
             checkIn={this.checkIn}
-            eventID={this.props.event._id}
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
           />
