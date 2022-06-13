@@ -193,8 +193,8 @@ const menuLanding = (props) => {
   const [itemsMenu, setitemsMenu] = useState(originalMenu);
   const [keySelect, setkeySelect] = useState(Date.now());
   const [isLoading, setisLoading] = useState(true);
-  const [toDisable, settoDisable] = useState(false);
   let cUser = UseCurrentUser();
+  const toDisable = cUser.value.plan.availables.networking;
 
   useEffect(() => {
     getMenu();
@@ -215,10 +215,6 @@ const menuLanding = (props) => {
     }
     setitemsMenu(menuLanding?.itemsMenu);
     setMenu(menuLanding?.itemsMenu);
-    if (menuLanding?.itemsMenu['networking']?.section === 'networking') {
-      settoDisable(cUser.value.plan.availables.networking);
-    }
-    console.log(toDisable);
 
     //let items = itemsMenu;
     for (const prop in menuBase) {
@@ -398,7 +394,7 @@ const menuLanding = (props) => {
           <Row gutter={[8, 8]} wrap>
             {Object.keys(menu).map((key, index) => (
               <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                <Card title={menu[key].name} bordered={true} style={{ maxHeight: '320px' }}>
+                <Card title={menu[key].name} bordered={true} style={{ maxHeight: '350px' }}>
                   {menu[key].section === 'networking' && !toDisable ? (
                     <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
                   ) : (

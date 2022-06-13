@@ -1035,6 +1035,7 @@ export const AlertsPlanApi = {
     return await Actions.getAll(`api/notfitications`, true);
   },
   getByUser: async (userId) => {
+    //1ra objeto es el ultimo que se creo
     let token = await GetTokenUserFirebase();
     return await Actions.getAll(`api/users/${userId}/notifications?token=${token}`, true);
   },
