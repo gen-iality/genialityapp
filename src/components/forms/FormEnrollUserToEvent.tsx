@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import BasicFieldsToFormEnrollUserToEvent from './BasicFieldsToFormEnrollUserToEvent';
 import AdditionalFieldsToEnrollUserToEvent from './AdditionalFieldsToFormEnrollUserToEvent';
-import { Alert, Button, Card, Col, Divider, Form, Row, Space, Typography } from 'antd';
+import { Alert, Button, Card, Col, Divider, Form, Row, Space, Spin, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { LoadingOutlined } from '@ant-design/icons';
 import dispatchFormEnrollUserToEvent from './dispatchFormEnrollUserToEvent';
@@ -26,7 +26,8 @@ const FormEnrollUserToEvent = ({
   editUser,
   options,
   saveUser,
-  loaderWhenSavingUpdatingOrDelete,
+  loaderWhenSavingUpdatingOrDelete = false,
+  checkInUserCallbak = () => {},
   visibleInCms = false,
   submitIcon = <BadgeAccountOutlineIcon />,
 }: FormEnrollUserToEventPropsTypes) => {
@@ -86,24 +87,26 @@ const FormEnrollUserToEvent = ({
             <Row style={textLeft} gutter={[8, 8]}>
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
-                  <BasicFieldsToFormEnrollUserToEvent basicFields={basicFields} editUser={editUser} />
-                  <Divider />
-                  {thereAreExtraFields > 0 && (
-                    <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>
-                      {intl.formatMessage({
-                        id: 'modal.title.registerevent..',
-                        defaultMessage: 'Información adicional para el evento',
+                  <Spin tip='Guardando cambios' spinning={loaderWhenSavingUpdatingOrDelete}>
+                    <BasicFieldsToFormEnrollUserToEvent basicFields={basicFields} editUser={editUser} />
+                    <Divider />
+                    {thereAreExtraFields > 0 && (
+                      <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>
+                        {intl.formatMessage({
+                          id: 'modal.title.registerevent..',
+                          defaultMessage: 'Información adicional para el evento',
+                        })}
+                      </Title>
+                    )}
+                    {thereAreExtraFields === 0 &&
+                      intl.formatMessage({
+                        id: 'msg.no_fields_create',
+                        defaultMessage: 'No hay campos adicionales en este evento',
                       })}
-                    </Title>
-                  )}
-                  {thereAreExtraFields === 0 &&
-                    intl.formatMessage({
-                      id: 'msg.no_fields_create',
-                      defaultMessage: 'No hay campos adicionales en este evento',
-                    })}
-                  <AdditionalFieldsToEnrollUserToEvent
-                    aditionalFields={aditionalFields({ validatedFields, editUser, visibleInCms })}
-                  />
+                    <AdditionalFieldsToEnrollUserToEvent
+                      aditionalFields={aditionalFields({ validatedFields, editUser, visibleInCms })}
+                    />
+                  </Spin>
                 </Card>
               </Col>
             </Row>
@@ -129,7 +132,11 @@ const FormEnrollUserToEvent = ({
                 ) : (
                   <>
                     <Form.Item>
-                      <AttendeeCheckIn editUser={editUser} reloadComponent={componentLoad} />
+                      <AttendeeCheckIn
+                        editUser={editUser}
+                        reloadComponent={componentLoad}
+                        checkInUserCallbak={checkInUserCallbak}
+                      />
                     </Form.Item>
                     <Form.Item>
                       <Space direction='horizontal'>

@@ -28,10 +28,6 @@ export const useCheckinUser = (attende, eventId, type = 'event') => {
         if (!doc.data().checked_in) {
           userRef.set(
             {
-              properties: {
-                checked_in: true,
-                checkedin_at: new Date(),
-              },
               checked_in: true,
               checkedin_at: new Date(),
             },
@@ -46,10 +42,6 @@ export const useCheckinUser = (attende, eventId, type = 'event') => {
         if (!doc.data().checked_in) {
           userRef.set(
             {
-              properties: {
-                checked_in: true,
-                checkedin_at: new Date(),
-              },
               checked_in: true,
               checkedin_at: new Date(),
             },

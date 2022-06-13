@@ -3,15 +3,9 @@ import { firestore } from '@/helpers/firebase';
 import { TicketsApi } from '@/helpers/request';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import { Typography } from 'antd';
-import Moment from 'moment';
 import { ReactNode } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import {
-  newData,
-  saveCheckInAttendeePropsTypes,
-  searchDocumentOrIdPropsTypes,
-  userCheckInPropsTypes,
-} from './types/types';
+import { newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from './types/types';
 
 const { Text } = Typography;
 
@@ -63,7 +57,7 @@ export const getEventUserByParameter = ({
   fields,
   eventID,
   setScannerData,
-  setCheckInLoader,
+  setLoadingregister,
 }: searchDocumentOrIdPropsTypes) => {
   /** Variables to store the parameters to perform the search in firebase*/
   let searchParameter: string = '';
@@ -119,6 +113,8 @@ export const getEventUserByParameter = ({
     user: {},
   };
 
+  setLoadingregister(true);
+
   usersRef
     .where(searchParameter, '==', valueParameter)
     .get()
@@ -143,14 +139,14 @@ export const getEventUserByParameter = ({
           newData.user = null;
         }
         setScannerData(newData);
-        setCheckInLoader(false);
+        setLoadingregister(false);
       } else {
         querySnapshot.forEach((doc) => {
           const userData = doc.data();
           newData.userFound = true;
           newData.user = userData;
           setScannerData(newData);
-          setCheckInLoader(false);
+          setLoadingregister(false);
         });
       }
     })
@@ -161,92 +157,42 @@ export const getEventUserByParameter = ({
 
 /* function that saves the user's checkIn. If the user's checkIn was successful,
 will show the checkIn information in the popUp. If not, it will show an error message.*/
-export const userCheckIn = async ({
-  scannerData,
-  setScannerData,
-  handleScan,
-  setCheckInLoader,
-  checkIn,
-}: userCheckInPropsTypes) => {
-  const theUserWasChecked: any = await checkIn(scannerData?.user?._id, scannerData?.user);
-
-  if (theUserWasChecked) {
-    setScannerData({
-      ...scannerData,
-      user: {},
-    });
-    handleScan(scannerData?.user?._id);
-    setCheckInLoader(true);
-    return;
-  }
-
-  DispatchMessageService({
-    type: 'error',
-    msj: 'hubo un error al registrar el checkIn del usuario',
-    action: 'show',
-  });
-};
-
-/* function that saves the user's checkIn. If the user's checkIn was successful,
-will show the checkIn information in the popUp. If not, it will show an error message.*/
 export const saveCheckInAttendee = async ({
   _id,
   checked,
   reloadComponent,
   setAttemdeeCheckIn,
+  checkInUserCallbak,
 }: saveCheckInAttendeePropsTypes) => {
-  const checkedinAt: any = Moment(new Date()).format('D/MMM/YY h:mm:ss A ');
-  const checkedIn: boolean = checked;
-  let checkedInAttendeeAt: any = '';
   let response: any;
 
-  if (checked) {
-    checkedInAttendeeAt = checkedinAt;
-  } else {
-    checkedInAttendeeAt = null;
-  }
-
-  console.log('🚀 debug ~ saveCheckInAttendee ~ checkedin_at', {
-    checkedIn,
-    checkedInAttendeeAt,
-    _id,
-    response,
-    reloadComponent,
-  });
-  const body = {
-    checkedin_at: checkedInAttendeeAt,
-    checked_in: checkedIn,
-  };
-  console.log('🚀 debug ~ body', body);
-
   try {
-    // response = await TicketsApi.checkInAttendee(_id, body);
-    console.log('🚀 debug ~ response', response);
-    if (response.checked_in) {
-      /** If the component has a reload and sends it, we execute it */
-      if (reloadComponent) reloadComponent();
-
-      setAttemdeeCheckIn(true);
+    if (checked) {
+      response = await TicketsApi.addCheckIn(_id);
 
       DispatchMessageService({
         type: 'success',
-        msj: 'El checkIn fue registrado correctamente',
+        msj: 'CheckIn agregado correctamente',
         action: 'show',
       });
-      return;
-    }
+    } else {
+      response = await TicketsApi.deleteCheckIn(_id);
 
-    DispatchMessageService({
-      type: 'error',
-      msj: 'El checkIn del usuario, no pudo ser registrado',
-      action: 'show',
-    });
-    setAttemdeeCheckIn(false);
+      DispatchMessageService({
+        type: 'success',
+        msj: 'CheckIn eliminado correctamente',
+        action: 'show',
+      });
+    }
+    setAttemdeeCheckIn(response?.checked_in);
+    checkInUserCallbak(response);
+    /** If the component has a reload and sends it, we execute it */
+    if (reloadComponent) reloadComponent();
   } catch (error) {
-    setAttemdeeCheckIn(false);
+    setAttemdeeCheckIn(checked);
     DispatchMessageService({
       type: 'error',
-      msj: 'Hubo un error al registrar el checkIn del usuario',
+      msj: 'Hubo un error con el checkIn',
       action: 'show',
     });
   }
@@ -263,9 +209,12 @@ export const divideInformationObtainedByTheCodeReader = ({ event }: any) => {
   return;
 };
 
-export const assignMessagesAndTypesToQrmodalAlert = ({ scannerData }: any) => {
+/* A function that returns an object with message and type as appropriate. */
+export const assignMessageAndTypeToQrmodalAlert = ({ scannerData }: any) => {
   let type = 'info';
   let message: ReactNode = <></>;
+  const checkedinAt: any = scannerData?.user?.checkedin_at;
+  const dateAndTime: any = checkedinAt && checkedinAt?.toDate();
 
   if (scannerData?.userNotFound) {
     type = 'error';
@@ -279,9 +228,8 @@ export const assignMessagesAndTypesToQrmodalAlert = ({ scannerData }: any) => {
     type = 'success';
     message = (
       <Text>
-        Usuario encontrado, el ingreso se llevó a cabo el día:{' '}
-        <FormattedDate value={scannerData?.user?.checkedin_at?.toDate() || scannerData?.user?.checkedin_at} /> a las{' '}
-        <FormattedTime value={scannerData?.user?.checkedin_at?.toDate() || scannerData?.user?.checkedin_at} /> horas
+        Usuario encontrado, el ingreso se llevó a cabo el día: <FormattedDate value={dateAndTime} /> a las{' '}
+        <FormattedTime value={dateAndTime} /> horas
       </Text>
     );
   }

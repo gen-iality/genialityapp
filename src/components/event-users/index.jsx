@@ -181,11 +181,9 @@ class ListEventUser extends Component {
   /** Sort by checkIn field on outside or inside properties object */
   sortUsersArray = async (users) => {
     const sortedResult = users.sort((itemA, itemB) => {
-      const checkedinItemA = itemA?.checkedin_at ? itemA?.checkedin_at : itemA?.properties?.checkedin_at;
-      const checkedinAtItemB = itemB?.checkedin_at ? itemB?.checkedin_at : itemB?.properties?.checkedin_at;
+      const aParameter = new Date(itemA?.checkedin_at);
+      const bParameter = new Date(itemB?.checkedin_at);
 
-      const aParameter = new Date(checkedinItemA);
-      const bParameter = new Date(checkedinAtItemB);
       return bParameter - aParameter;
     });
 
@@ -544,12 +542,6 @@ class ListEventUser extends Component {
         ...item,
         updated_at: new Date(),
         checkedin_at: new Date(),
-        checked_at: new Date(),
-        properties: {
-          ...item.properties,
-          checkedin_at: new Date(),
-          checked_in: true,
-        },
         checked_in: true,
       })
       .then(() => {

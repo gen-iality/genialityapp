@@ -259,14 +259,14 @@ class UserModal extends Component {
     let resp;
     let respActivity = true;
     if (values) {
-      if (values?.checked_in) {
-        const checkedinAt = Moment(new Date()).format('D/MMM/YY h:mm:ss A ');
-        values.checkedin_at = checkedinAt;
-        values.checked_in = true;
-      } else {
-        values.checkedin_at = '';
-        values.checked_in = false;
-      }
+      // if (values?.checked_in) {
+      //   const checkedinAt = Moment(new Date()).format('D/MMM/YY h:mm:ss A ');
+      //   values.checkedin_at = checkedinAt;
+      //   values.checked_in = true;
+      // } else {
+      //   values.checkedin_at = '';
+      //   values.checked_in = false;
+      // }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };
 

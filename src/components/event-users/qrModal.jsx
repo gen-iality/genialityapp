@@ -2,8 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
-import { assignMessagesAndTypesToQrmodalAlert, getEventUserByParameter } from '@/Utilities/checkInUtils';
-// import { CheckinAndReadOtherButtons } from './buttonsQrModal';
+import { assignMessageAndTypeToQrmodalAlert, getEventUserByParameter } from '@/Utilities/checkInUtils';
 import { saveOrUpdateUserInAEvent } from '@/Utilities/formUtils';
 import QrAndDocumentForm from './qrAndDocumentForm';
 import PageNextOutlineIcon from '@2fd/ant-design-icons/lib/PageNextOutline';
@@ -21,7 +20,6 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, closeModal, openMo
   const [form] = Form.useForm();
   const [facingMode, setFacingMode] = useState('user');
   const [scannerData, setScannerData] = useState({});
-  const [checkInLoader, setCheckInLoader] = useState(false);
   const [label, setLabel] = useState('');
   const [loadingregister, setLoadingregister] = useState(false);
 
@@ -50,7 +48,7 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, closeModal, openMo
         fields,
         eventID: _id,
         setScannerData,
-        setCheckInLoader,
+        setLoadingregister,
       };
       getEventUserByParameter(parameters);
     });
@@ -65,10 +63,9 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, closeModal, openMo
       values,
       shouldBeEdited,
       setLoadingregister,
-      eventID,
+      eventID: _id,
       eventUserId,
     });
-    console.log('🚀 debug ~ saveOrUpdateUser ~ response', response);
 
     if (response?._id) searchUserByParameter({ qr: response._id });
   };
@@ -101,10 +98,10 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, closeModal, openMo
         <Title level={4} type='secondary'>
           {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
         </Title>
-        {Object.keys(scannerData).length > 0 && (
+        {!loadingregister && Object.keys(scannerData).length > 0 && (
           <Alert
-            type={assignMessagesAndTypesToQrmodalAlert({ scannerData }).type}
-            message={assignMessagesAndTypesToQrmodalAlert({ scannerData }).message}
+            type={assignMessageAndTypeToQrmodalAlert({ scannerData }).type}
+            message={assignMessageAndTypeToQrmodalAlert({ scannerData }).message}
             showIcon
             closable
             className='animate__animated animate__pulse'
@@ -112,27 +109,16 @@ const QrModal = ({ fields, typeScanner, clearOption, checkIn, closeModal, openMo
         )}
         <>
           {scannerData?.user ? (
-            <div>
-              <Spin tip='checkIn en progreso' spinning={checkInLoader}>
-                <FormEnrollUserToEvent
-                  fields={fields}
-                  conditionalFields={fields_conditions}
-                  editUser={scannerData?.user && scannerData?.user}
-                  saveUser={saveOrUpdateUser}
-                  loaderWhenSavingUpdatingOrDelete={loadingregister}
-                  options={optionsReadOtherButton}
-                  visibleInCms
-                />
-                {/* <CheckinAndReadOtherButtons
-                  scannerData={scannerData}
-                  setScannerData={setScannerData}
-                  handleScan={handleScan}
-                  setCheckInLoader={setCheckInLoader}
-                  checkIn={checkIn}
-                  findAnotherUser={cleanInputSearch}
-                /> */}
-              </Spin>
-            </div>
+            <FormEnrollUserToEvent
+              fields={fields}
+              conditionalFields={fields_conditions}
+              editUser={scannerData?.user && scannerData?.user}
+              saveUser={saveOrUpdateUser}
+              loaderWhenSavingUpdatingOrDelete={loadingregister}
+              checkInUserCallbak={(user) => searchUserByParameter({ qr: user._id })}
+              options={optionsReadOtherButton}
+              visibleInCms
+            />
           ) : (
             <QrAndDocumentForm
               form={form}
