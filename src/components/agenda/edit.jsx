@@ -84,7 +84,6 @@ class AgendaEdit extends Component {
       hour_end: '',
       key: new Date(),
       image: '',
-      video: '',
       locale: 'en',
       capacity: 0,
       type_id: '',
@@ -277,7 +276,6 @@ class AgendaEdit extends Component {
         platform: info.platform /*  || event.event_platform */,
         info: info,
         space_id: info.space_id || '',
-        video: info.video || '',
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
@@ -405,7 +403,6 @@ class AgendaEdit extends Component {
         platform: info.platform /*  || event.event_platform */,
         info: info,
         space_id: info.space_id || '',
-        video: info.video || '',
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
@@ -629,7 +626,6 @@ class AgendaEdit extends Component {
     });
     // try {
     //   const file = files[0];
-    //   console.log('🚀 ~ file: edit.jsx ~ line 630 ~ AgendaEdit ~ changeImg= ~ file', file);
     //   if (file) {
     //     const image = await uploadImage(file);
     //     this.setState({ image }, async () => this.valideChangesInActivityData());
@@ -857,7 +853,6 @@ class AgendaEdit extends Component {
       selected_document,
       image,
       meeting_id,
-      video,
       selectedTicket,
       vimeo_id,
       platform,
@@ -905,7 +900,6 @@ class AgendaEdit extends Component {
       selected_document,
       meeting_id: meeting_id,
       vimeo_id: vimeo_id,
-      video,
       selectedTicket,
       platform,
       start_url,
@@ -1175,7 +1169,6 @@ class AgendaEdit extends Component {
       space_id,
       selectedHosts,
       selectedCategories,
-      video,
       //meeting_id,
       hosts,
       spaces,
@@ -1448,17 +1441,17 @@ class AgendaEdit extends Component {
                       </>
                     )}
                     {/* <Form.Item label={'Documentos'}>
-                <Select
-                  id={'nameDocuments'}
-                  isClearable
-                  isMulti
-                  styles={creatableStyles}
-                  onChange={this.selectDocuments}
-                  options={nameDocuments}
-                  value={selected_document}
-                />
-              </Form.Item> */}
-                    {/* <Form.Item label={'Link del vídeo'}>
+                      <Select
+                        id={'nameDocuments'}
+                        isClearable
+                        isMulti
+                        styles={creatableStyles}
+                        onChange={this.selectDocuments}
+                        options={nameDocuments}
+                        value={selected_document}
+                      />
+                    </Form.Item>
+                    <Form.Item label={'Link del vídeo'}>
                       <ExclamationCircleOutlined style={{ color: '#faad14' }} />
                       <Text type='secondary'>Este video solo se vera cuando la transmisión no está en vivo.</Text>
                       <Input name='video' type='text' value={video} onChange={this.handleChange} />

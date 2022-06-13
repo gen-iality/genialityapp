@@ -14,14 +14,14 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
 
-  const [platformurl, setPlatformurl] = useState(defaultVideo);
-  const [muted, setMuted] = useState(false);
-  const [loopBackGround, setLoopBackGround] = useState(false);
-  const [visibleReactPlayer, setVisibleReactPlayer] = useState(false);
+  const [ platformurl, setPlatformurl ] = useState(defaultVideo);
+  const [ muted, setMuted ] = useState(false);
+  const [ loopBackGround, setLoopBackGround ] = useState(false);
+  const [ visibleReactPlayer, setVisibleReactPlayer ] = useState(false);
   const { typeActivity, activityEdit } = useContext(AgendaContext);
   const userContext = useContext(CurrentUserContext);
   //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA LECCIÓN
-  const [conected, setConected] = useState('No');
+  const [ conected, setConected ] = useState('No');
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
   //console.log('DATOOS PLAYER===>', meeting_id, thereIsConnection);
@@ -33,8 +33,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
       setVisibleReactPlayer(false);
       setConected('Yes');
       setPlatformurl(
-        `https://eviusmeets.netlify.app/?meetingId=${activityEdit}&rol=0&username=${userContext.value?.names}&email=${
-          userContext.value?.email
+        `https://stagingeviusmeet.netlify.app/?meetingId=${activityEdit}&rol=0&username=${userContext.value?.names}&email=${userContext.value?.email
         }&photo=${userContext.value?.picture || urlDefault}`
       );
     }
@@ -82,7 +81,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
       setPlatformurl(null);
       setMuted(false);
     };
-  }, [meeting_id, thereIsConnection, typeActivity]);
+  }, [ meeting_id, thereIsConnection, typeActivity ]);
 
   return (
     <>
