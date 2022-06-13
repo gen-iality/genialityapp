@@ -84,7 +84,7 @@ const FormEnrollUserToEvent = ({
             onFinish={(values) => saveOrUpdateUser(values, fields, saveUser)}
             onFinishFailed={showGeneralMessage}
             onValuesChange={assigningConditionsToFields}>
-            <Row style={textLeft} gutter={[8, 8]}>
+            <Row style={textLeft}>
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
                   <Spin tip='Guardando cambios' spinning={loaderWhenSavingUpdatingOrDelete}>

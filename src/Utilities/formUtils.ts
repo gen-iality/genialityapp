@@ -6,7 +6,6 @@ import { aditionalFieldsPropsTypes, updateFieldsVisibilityPropsTypes } from './t
 export const textLeft: {} = {
   textAlign: 'left',
   width: '100%',
-  padding: '20px',
 };
 
 export const center: {} = {

@@ -9,11 +9,12 @@ const AttendeeCheckIn = ({ editUser, reloadComponent, checkInUserCallbak }: Atte
   const [attemdeeCheckIn, setAttemdeeCheckIn] = useState<boolean>(false);
   const [attemdeeCheckedinAt, setAttemdeeCheckedinAt] = useState<any>('');
   const { _id, checked_in, checkedin_at } = editUser || {};
-  const { checked_in: checkedIn, checkedin_at: checkedinAt } = editUser?.properties || {};
 
   useEffect(() => {
-    setAttemdeeCheckIn(checked_in || checkedIn);
-    setAttemdeeCheckedinAt(checkedin_at || checkedinAt);
+    const dateAndTime: any = checkedin_at && checkedin_at?.toDate();
+
+    setAttemdeeCheckIn(checked_in);
+    setAttemdeeCheckedinAt(dateAndTime?.toDate());
   }, []);
 
   const saveAttemdeeCheckIn = async (e: CheckboxChangeEvent) => {

@@ -3,6 +3,7 @@ import { firestore } from '@/helpers/firebase';
 import { TicketsApi } from '@/helpers/request';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import { Typography } from 'antd';
+import moment from 'moment';
 import { ReactNode } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from './types/types';
@@ -228,8 +229,7 @@ export const assignMessageAndTypeToQrmodalAlert = ({ scannerData }: any) => {
     type = 'success';
     message = (
       <Text>
-        Usuario encontrado, el ingreso se llevó a cabo el día: <FormattedDate value={dateAndTime} /> a las{' '}
-        <FormattedTime value={dateAndTime} /> horas
+        Usuario encontrado, el ingreso se llevó a cabo el día: {moment(dateAndTime).format('D/MMM/YY H:mm:ss')}
       </Text>
     );
   }
