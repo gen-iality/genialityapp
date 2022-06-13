@@ -239,7 +239,7 @@ class ListEventUser extends Component {
       fieldsForm.push({
         author: null,
         categories: [],
-        label: 'Checkin',
+        label: 'Inscripto',
         mandatory: false,
         name: 'checked_in',
         organizer: null,
@@ -776,8 +776,8 @@ class ListEventUser extends Component {
     return (
       <React.Fragment>
         <Header
-          title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de curso'}
-          description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
+          title={type == 'activity' ? 'Inscripción de ' + nameActivity : 'Inscripción de curso'}
+          description={`Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una
           búsqueda.`}
         />
 

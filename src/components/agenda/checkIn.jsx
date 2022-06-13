@@ -126,7 +126,7 @@ class CheckAgenda extends Component {
       arrayFields.push({
         author: null,
         categories: [],
-        label: 'Checkin',
+        label: 'Inscripción',
         mandatory: false,
         name: 'checked_in',
         organizer: null,
@@ -557,7 +557,7 @@ class CheckAgenda extends Component {
           </Col>
           <Col>
             <Tag>
-              <small>Ingresados: {checkIn}</small>
+              <small>Inscriptos: {checkIn}</small>
             </Tag>
           </Col>
         </Row>

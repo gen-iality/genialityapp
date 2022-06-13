@@ -71,7 +71,7 @@ function ConfirmacionRegistro(props) {
       <Form onFinish={saveData} {...formLayout}>
         <Header
           title={'Confirmación de Inscripción'}
-          description={'El siguiente mensaje le llegará a las personas luego de haberse inscrito al curso'}
+          description={'El siguiente mensaje le llegará a las personas inscritas en el curso o lección'}
           save
           form
         />
@@ -80,14 +80,15 @@ function ConfirmacionRegistro(props) {
             <Form.Item label={'Mensaje de Inscripción'}>
               <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
             </Form.Item>
-            <Form.Item label={'Requerir la validación del correo antes de completar la inscripción'}>
+            {/* Removed by geniality/requirement-of-content: 'Configuración de inscripción' */}
+            {/* <Form.Item label={'Requerir la validación del correo antes de completar la inscripción'}>
               <Checkbox defaultChecked={validateEmail} onChange={(e) => setValidateEmail(e.target.checked)} />
-            </Form.Item>
+            </Form.Item> */}
           </Col>
         </Row>
       </Form>
       {/* <h1>Mensaje confirmacion registro</h1>
-      <p>El siguiente mensaje le llegara a las personas luego de haberse registrado al curso</p>
+      <p>El siguiente mensaje le llegará a las personas inscritas en el curso o lección</p>
       <Row gutter={[0, 24]}>
         <Col span={12}>
           <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />

@@ -500,7 +500,7 @@ class General extends Component {
             }),
             action: 'show',
           });
-          this.setState({ msg: 'Can\'t create', create: false });
+          this.setState({ msg: "Can't create", create: false });
         }
       }
     } catch (error) {
@@ -783,8 +783,8 @@ class General extends Component {
                       name={'type_event'}
                       onChange={(e) => this.handleChange(e, 'type_event')}>
                       <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Cursos físico</Option>
-                      <Option value='onlineEvent'>Cursos virtual</Option>
+                      <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO */}
+                      <Option value='onlineEvent'>Actualización </Option> {/* TODO */}
                     </Select>
                   </Form.Item>
 
@@ -826,7 +826,7 @@ class General extends Component {
                   )}
 
                   <Form.Item label={'Especificar fechas'}>
-                    <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                    {/* <Switch defaultChecked onChange={this.specificDates} checked={specificDates} /> */}
                   </Form.Item>
 
                   {specificDates === false ? (
@@ -980,7 +980,7 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Form.Item>
+                  {/* <Form.Item>
                     <SelectInput
                       name={'Categorías:'}
                       isMulti={true}
@@ -988,47 +988,47 @@ class General extends Component {
                       selectedOptions={selectedCategories}
                       selectOption={this.selectCategory}
                       options={categories}
-                      /* required={true} */
+                      / * required={true} * /
                     />
-                  </Form.Item>
+                  </Form.Item> */}
 
-                  <Form.Item>
+                  {/* <Form.Item>
                     <SelectInput
                       name={'Tipo'}
                       isMulti={false}
                       selectedOptions={selectedType}
                       selectOption={this.selectType}
                       options={types}
-                      /* required={true} */
+                      / * required={true} * /
                     />
-                  </Form.Item>
+                  </Form.Item> */}
 
-                  <Form.Item label={'Id Google Analytics'}>
+                  {/* <Form.Item label={'Id Google Analytics'}>
                     <Input
                       name={'googleanlyticsid'}
                       placeholder={'UA-XXXXXX-X | G-XXXXXX'}
                       value={event.googleanlyticsid}
                       onChange={this.googleanlyticsid}
                     />
-                  </Form.Item>
+                  </Form.Item> */}
 
-                  <Form.Item label={'Id Google Tag Manager'}>
+                  {/* <Form.Item label={'Id Google Tag Manager'}>
                     <Input
                       name={'googletagmanagerid'}
                       placeholder={'GTM-XXXXXX'}
                       value={event.googletagmanagerid}
                       onChange={this.googletagmanagerid}
                     />
-                  </Form.Item>
+                  </Form.Item> */}
 
-                  <Form.Item label={'Id Facebook Pixel'}>
+                  {/* <Form.Item label={'Id Facebook Pixel'}>
                     <Input
                       name={'facebookpixelid'}
                       placeholder='014180041516129'
                       value={event.facebookpixelid}
                       onChange={this.facebookpixelid}
                     />
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Card title='Zona social'>
                     <Row style={{ padding: '8px 0px' }}>
@@ -1069,7 +1069,7 @@ class General extends Component {
                         />
                       </Col>
                     </Row>
-                    <Row style={{ padding: '8px 0px' }}>
+                    {/* <Row style={{ padding: '8px 0px' }}>
                       <Col xs={18}>Asistentes</Col>
                       <Col xs={6}>
                         <Switch
@@ -1087,7 +1087,7 @@ class General extends Component {
                           }
                         />
                       </Col>
-                    </Row>
+                    </Row> */}
                   </Card>
                 </Col>
               </Row>

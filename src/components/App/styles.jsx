@@ -32,7 +32,7 @@ class Styles extends Component {
       colorDrawer: [
         {
           title: `Color de fondo para ${this.props.org?._id ? 'la organización' : 'el curso'}`,
-          description: 'Si escoges luego una imagen de fondo, esa imagen reemplazara este color.',
+          description: 'Si escoges después una imagen de fondo, esa imagen reemplazara este color.',
           fieldColorName: 'containerBgColor',
           editIsVisible: false,
         },
@@ -55,7 +55,8 @@ class Styles extends Component {
 
     this.imageDrawer = [
       {
-        title: 'Elige una imagen para el banner superior en desktop: (Tamaño recomendado 1920x540)',
+        title:
+          'Elige una imagen para el banner superior desde el escritorio o una carpeta. Tamaño recomendado 1920x540 px',
         description: `Por defecto en el baner superior se muestra la imagen prinicpal ${
           this.props.org?._id ? 'de la organización' : 'del curso'
         } aqui la puedes cambiar`,
@@ -65,7 +66,8 @@ class Styles extends Component {
         height: 540,
       },
       {
-        title: 'Elige una imagen para el banner del email: (Tamaño recomendado 600x280)',
+        title:
+          'Elige una imagen para el banner del correo electrónico desde el escritorio o una carpeta. Tamaño recomendado 600x280 px',
         description: 'Por defecto se reduce la imagen automaticamente del banner superior',
         imageFieldName: 'banner_image_email',
         button: 'Eliminar banner de email',
@@ -81,14 +83,14 @@ class Styles extends Component {
         height: 556,
       }, */
       {
-        title: 'Elige una imagen(textura) para el fondo: (Tamaño recomendado 1920x2160)',
+        title: 'Si lo deseas, elige una imagen para el fondo del curso o la lección. Tamaño recomendado 1920x2160 px',
         imageFieldName: 'BackgroundImage',
         button: 'Eliminar textura de fondo',
         width: 1920,
         height: 2160,
       },
       {
-        title: 'Elige una imagen para tu logo: (Tamaño recomendado 320x180)',
+        title: 'Elige una imagen para tu logo desde el escritorio o una carpeta. Tamaño recomendado 320x180 px',
         imageFieldName: 'event_image',
         button: 'Eliminar logo',
         width: 320,
@@ -96,15 +98,16 @@ class Styles extends Component {
       },
       {
         title: `Elige una imagen para el footer ${
-          this.props.org?._id ? 'de la organización' : 'del curso'
-        }: (Tamaño recomendado 1920x280)`,
+          this.props.org?._id ? 'de la organización' : 'del curso o de la lección'
+        }. Tamaño recomendado 1920x280 px`,
         imageFieldName: 'banner_footer',
         button: 'Eliminar pie de pagina',
         width: 1920,
         height: 280,
       },
       {
-        title: 'Elige una imagen para el footer del email: (Tamaño recomendado 600x220)',
+        title:
+          'Elige una imagen para el footer del correo electrónico desde el escritorio o una carpteta. Tamaño recomendado 600x220 px',
         description: `Por defecto se reduce la imagen automaticamente del footer ${
           this.props.org?._id ? 'de la organización' : 'del curso'
         }`,
@@ -175,7 +178,7 @@ class Styles extends Component {
           },
         ],
       },
-      {
+      /* {
         label: 'Agrupar la lecciones de la agenda en TABS ',
         name: 'hideDatesAgenda',
         defaultValue: false,
@@ -189,7 +192,7 @@ class Styles extends Component {
             value: false,
           },
         ],
-      },
+      }, */
       {
         label: 'Ocultar fechas de las lecciones de la agenda',
         name: 'hideDatesAgendaItem',
@@ -206,7 +209,7 @@ class Styles extends Component {
         ],
       },
       {
-        label: 'Mostrar boton de detalle de la agenda',
+        label: 'Mostrar el botón del detalle de los cursos o lecciones',
         name: 'hideBtnDetailAgenda',
         defaultValue: false,
         options: [
@@ -329,7 +332,7 @@ class Styles extends Component {
           action: 'show',
         });
       } else {
-        this.setState({ msg: 'Can\'t create', create: false });
+        this.setState({ msg: "Can't create", create: false });
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',

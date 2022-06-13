@@ -54,7 +54,7 @@ const ReportList = (props) => {
       <CMS
         API={AgendaApi}
         eventId={props.event._id}
-        title={'CheckIn por Lecciones'}
+        title={'Inscripción a la lecciones'}
         description={'Para actualizar valores, refrescar la página'}
         columns={columns}
         search

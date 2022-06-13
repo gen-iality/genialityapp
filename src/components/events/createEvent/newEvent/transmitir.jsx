@@ -69,7 +69,7 @@ function Transmitir(props) {
     <>
       {optTransmitir == false ? (
         <div className='step-transmision'>
-          <h1 className='title-step'>Transmitir desde Evius</h1>
+          <h1 className='title-step'>Transmitir desde GEN.iality</h1>
           <Row>
             <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
               <div className='container'>

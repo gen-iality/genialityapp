@@ -34,12 +34,12 @@ export const MenuItems = [
         key: 'habilitar-secciones',
         onClick: handleClick,
       },
-      {
-        name: 'Configuración de tickets',
-        path: '/ticketsEvent',
-        key: 'configuracion-tickets',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Configuración de tickets',
+      //   path: '/ticketsEvent',
+      //   key: 'configuracion-tickets',
+      //   onClick: handleClick,
+      // },
     ],
   },
   {
@@ -54,23 +54,23 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Empresas',
+        name: 'Nuestra Organización',
         path: '/empresas',
         key: 'empresas',
         onClick: handleClick,
       },
-      {
-        name: 'Host/Anfitriones',
-        path: '/speakers',
-        key: 'speakers',
-        onClick: handleClick,
-      },
-      {
-        name: 'Espacios',
-        path: '/espacios',
-        key: 'espacios',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Host/Anfitriones',
+      //   path: '/speakers',
+      //   key: 'speakers',
+      //   onClick: handleClick,
+      // },
+      // {
+      //   name: 'Espacios',
+      //   path: '/espacios',
+      //   key: 'espacios',
+      //   onClick: handleClick,
+      // },
       {
         name: 'Certificados',
         path: '/certificados',
@@ -78,51 +78,51 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Encuestas',
+        name: 'Evaluación',
         path: '/trivia',
         key: 'encuestas',
         onClick: handleClick,
       },
       {
-        name: 'Noticias',
+        name: 'Lo último en...',
         path: '/news',
         key: 'noticias',
         onClick: handleClick,
       },
-      {
-        name: 'Preguntas frecuentes',
-        path: '/faqs',
-        key: 'preguntas-frecuentes',
-        onClick: handleClick,
-      },
+      // {
+      //   name: 'Preguntas frecuentes',
+      //   path: '/faqs',
+      //   key: 'preguntas-frecuentes',
+      //   onClick: handleClick,
+      // },
       {
         name: 'Documentos',
         path: '/documents',
         key: 'documentos',
         onClick: handleClick,
       },
-      {
-        name: ' Contenido informativo',
-        path: '/informativesection',
-        key: 'contenido-informativo',
-        onClick: handleClick,
-      },
-      {
-        name: '  Reporte de networking',
-        path: '/reportNetworking',
-        key: 'reporte-networking',
-        onClick: handleClick,
-      },
-      {
-        name: 'Producto',
-        path: '/product',
-        key: 'producto',
-        onClick: handleClick,
-      },
+      // {
+      //   name: ' Contenido informativo',
+      //   path: '/informativesection',
+      //   key: 'contenido-informativo',
+      //   onClick: handleClick,
+      // },
+      // {
+      //   name: '  Reporte de networking',
+      //   path: '/reportNetworking',
+      //   key: 'reporte-networking',
+      //   onClick: handleClick,
+      // },
+      // {
+      //   name: 'Producto',
+      //   path: '/product',
+      //   key: 'producto',
+      //   onClick: handleClick,
+      // },
     ],
   },
   {
-    name: 'Configuración de asistentes',
+    name: 'Configuración de colaboradores',
     icon: <SolutionOutlined />,
     key: 'attende-config',
     items: [
@@ -138,12 +138,12 @@ export const MenuItems = [
         key: 'confirmacion-registro',
         onClick: handleClick,
       },
-      {
+      /* {
         name: ' Organizadores',
         path: '/tipo-asistentes',
         key: 'organizadores',
         onClick: handleClick,
-      },
+      }, */
     ],
   },
   {
@@ -152,13 +152,13 @@ export const MenuItems = [
     key: 'attendesCms',
     items: [
       {
-        name: ' Asistentes / Checkin',
+        name: ' Inscritos',
         path: '/assistants',
         key: 'asistentes-checkin',
         onClick: handleClick,
       },
       {
-        name: ' Check in por lección',
+        name: ' Inscripción a la lección',
         path: '/checkin-actividad',
         key: 'checkin-actividad',
         onClick: handleClick,
@@ -169,12 +169,12 @@ export const MenuItems = [
         key: 'gestion-chats',
         onClick: handleClick,
       },
-      {
-        name: '  Enviar correos a asistentes',
-        path: '/invitados',
-        key: 'enviar-correos-asistentes',
-        onClick: handleClick,
-      },
+      // {
+      //   name: '  Enviar correos a asistentes',
+      //   path: '/invitados',
+      //   key: 'enviar-correos-asistentes',
+      //   onClick: handleClick,
+      // },
     ],
   },
   {
@@ -189,7 +189,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Comunicaciones enviadas',
+        name: 'Correos enviados',
         path: '/messages',
         key: 'comunicaciones-enviadas',
         onClick: handleClick,
@@ -202,7 +202,7 @@ export const MenuItems = [
     key: 'estadisticas',
     items: [
       {
-        name: 'Estadísticas del curso',
+        name: 'Accede a las estadisticas del curso / lecciones',
         path: '/dashboard',
         key: 'estadisticas-evento',
         onClick: handleClick,

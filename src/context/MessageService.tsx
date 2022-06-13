@@ -25,7 +25,7 @@ export const DispatchMessageService = ({ type, msj, duration, action, key }: Pro
         message.open({
           content: MessageReducer({ type, msj, action }),
           key: key || '',
-          duration: duration || 3,
+          duration: duration || 5,
           type: null as any,
         });
         break;
@@ -66,12 +66,23 @@ const MessageReducer = ({ type, msj }: PropsOptions) => {
       iconRender = '🤷‍♂️';
   }
 
+  // Convert captioncase to lowercase
+  const formatUpperCaseMissing = (text: string) => {
+    if (text.length === 0) return text;
+
+    if (text[0] === text[0].toUpperCase()) {
+      return text[0].toLowerCase() + text.slice(1)
+    } else {
+      return text;
+    }
+  }
+
   if (type === 'success') {
-    finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${msj}`;
+    finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${formatUpperCaseMissing(msj)}`;
   } else if (type === 'loading') {
-    finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${msj}`;
+    finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${formatUpperCaseMissing(msj)}`;
   } else {
-    finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${msj}`;
+    finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${formatUpperCaseMissing(msj)}`;
   }
 
   return finalMsj;
