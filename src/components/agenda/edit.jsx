@@ -1203,7 +1203,7 @@ class AgendaEdit extends Component {
           />
 
           <Header
-            title={`Lección - ${this.state.name}`}
+            title={this.state.name ? `Lección - ${this.state.name}` : 'Lección'}
             back
             customBack={this.props.matchUrl}
             save
