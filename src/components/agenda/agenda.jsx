@@ -30,6 +30,15 @@ const Agenda = (props) => {
       },
     },
     {
+      title: 'Tipo',
+      render(record, key) {
+        if (record.type === null) {
+          return <div>genérico</div>
+        }
+        return <div><code>{record.type.name}</code></div>
+      }
+    },
+    {
       title: 'Lección',
       dataIndex: 'name',
       ellipsis: true,
