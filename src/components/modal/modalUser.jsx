@@ -271,11 +271,21 @@ class UserModal extends Component {
           try {
             resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
           } catch (e) {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Usuario ya registrado en el evento',
-              action: 'show',
-            });
+            console.log(e, e.message, e.status, 'e');
+            if (e.message === 'users limit exceeded') {
+              DispatchMessageService({
+                type: 'error',
+                msj: 'Ha exedido el límite de usuarios en el plan',
+                action: 'show',
+              });
+            } else {
+              DispatchMessageService({
+                type: 'error',
+                msj: 'Usuario ya registrado en el evento',
+                action: 'show',
+              });
+            }
+
             respActivity = false;
           }
         } else {
