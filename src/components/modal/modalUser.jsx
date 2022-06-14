@@ -16,6 +16,7 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
+import { handleRequestError } from '@/helpers/utils';
 
 const { confirm } = Modal;
 
@@ -270,9 +271,8 @@ class UserModal extends Component {
         if (!this.props.edit) {
           try {
             resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
-          } catch (e) {
-            console.log(e, e.message, e.status, 'e');
-            if (e.message === 'users limit exceeded') {
+          } catch (error) {
+            if (handleRequestError(error).message === 'users limit exceeded') {
               DispatchMessageService({
                 type: 'error',
                 msj: 'Ha exedido el límite de usuarios en el plan',
