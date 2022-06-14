@@ -86,7 +86,7 @@ class Service {
                 avalibleGames: roomInfo?.avalibleGames || [],
                 roomState: roomState || null,
               })
-              .then(() => resolve({ message: 'Configuración Creada', state: 'created' }))
+              .then(() => resolve({ message: 'Configuración creada', state: 'created' }))
               .catch((err) => console.log('11. ERROR==>', err));
           }
         });
