@@ -1,13 +1,16 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
-import { UseCurrentUser } from '../context/userContext';
+import { UseEventContext } from '@/context/eventContext';
+//import { UseCurrentUser } from '../context/userContext';
 
 const { Title } = Typography;
 
 const Header = (props) => {
   const history = useHistory();
-  let cUser = UseCurrentUser();
+  //let cUser = UseCurrentUser();
+  const cEventIsActive = UseEventContext()?.value?.isActive;
+  console.log(cEventIsActive ? 'true' : 'false', cEventIsActive);
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
@@ -53,6 +56,9 @@ const Header = (props) => {
           <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
         )}
       </small> */}
+      {cEventIsActive === false && window.location.toString().includes('eventadmin') && (
+        <Typography.Text style={{ color: 'red' }}>Tu evento se encuentra bloqueado</Typography.Text>
+      )}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
@@ -60,13 +66,22 @@ const Header = (props) => {
         <Col>
           {addUrl && (
             <Link to={addUrl}>
-              <Button type='primary' icon={<PlusCircleOutlined />} size='middle'>
+              <Button
+                type='primary'
+                icon={<PlusCircleOutlined />}
+                size='middle'
+                disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                 {'Agregar'}
               </Button>
             </Link>
           )}
           {addFn && (
-            <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={addFn}>
+            <Button
+              type='primary'
+              icon={<PlusCircleOutlined />}
+              size='middle'
+              onClick={addFn}
+              disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
               {'Agregar'}
             </Button>
           )}
@@ -81,14 +96,22 @@ const Header = (props) => {
               size='middle'
               htmlType={form ? 'submit' : 'button'}
               loading={loadingSave}
-              disabled={loadingSave}>
+              disabled={
+                cEventIsActive === false && window.location.toString().includes('eventadmin') ? true : loadingSave
+              }>
               {saveName ? saveName : 'Guardar'}
             </Button>
           )}
         </Col>
         <Col>
           {edit && (
-            <Button id='removeHeader' onClick={remove} type='link' danger icon={<DeleteOutlined />}>
+            <Button
+              id='removeHeader'
+              onClick={remove}
+              type='link'
+              danger
+              icon={<DeleteOutlined />}
+              disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
               {'Eliminar'}
             </Button>
           )}
