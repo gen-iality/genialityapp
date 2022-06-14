@@ -103,10 +103,10 @@ const videoActivity: ProviderOptions[] = [
   },
 ];
 
-/* esta data aparece al momento de escoger un tipo de lección*/
+/* esta data aparece al momento de escoger un tipo de contenido*/
 export const typeActivityData: TypeActivity = {
   key: 'type',
-  MainTitle: 'Escoge el tipo de lección',
+  MainTitle: 'Escoge el tipo de contenido',
   typeOptions: [
     {
       key: 'liveBroadcast',
@@ -133,6 +133,14 @@ export const typeActivityData: TypeActivity = {
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
       typeOptions: videoActivity,
+    },
+    {
+      key: 'examen',
+      MainTitle: 'Asignar examen para la lección',
+      title: 'Examen',
+      description: 'Examen para evaluar el conocimiento de tus asistentes.',
+      image:
+        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
     },
   ],
 };

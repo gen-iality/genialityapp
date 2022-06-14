@@ -80,10 +80,10 @@ const InitialView = (props: any) => {
             <Result
               icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
               status='info'
-              title='Todavía no has definido el tipo de lección'
+              title='Todavía no has definido el tipo de contenido'
               extra={
                 <Button onClick={() => toggleActivitySteps('type')} type='primary'>
-                  Escoge un tipo de lección
+                  Escoge un tipo de contenido
                 </Button>
               }
             />

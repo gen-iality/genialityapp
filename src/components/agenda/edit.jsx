@@ -1502,7 +1502,7 @@ class AgendaEdit extends Component {
               </TabPane>
               {showAditionalTabs && (
                 <>
-                  <TabPane tab='Tipo de lección' key='2'>
+                  <TabPane tab='Tipo de contenido' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
                         <TipeOfActivity
