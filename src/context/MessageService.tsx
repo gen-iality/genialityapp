@@ -2,9 +2,9 @@ import { createContext } from 'react';
 export const MessageController = createContext({});
 import { message } from 'antd';
 
-const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho', 'Éxito'];
+const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho', 'Éxito', 'Bien'];
 const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry'];
-const LoadingAnswer = ['Cargando', 'Procesando'];
+const LoadingAnswer = ['Cargando', 'Procesando', 'Espérame'];
 
 interface PropsOptions {
   type: 'success' | 'error' | 'warning' | 'info' | 'loading';
