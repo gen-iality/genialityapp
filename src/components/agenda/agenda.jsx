@@ -35,7 +35,33 @@ const Agenda = (props) => {
         if (record.type === null) {
           return <div>genérico</div>
         }
-        return <div><code>{record.type.name}</code></div>
+        let typeName = 'genérico';
+        switch (record.type.name) {
+          case 'cargarvideo':
+            typeName = 'Vídeo cargado';
+            break;
+          case 'meeting':
+            typeName = 'Reunión';
+            break;
+          case 'url':
+            typeName = 'Vídeo desde URL';
+            break;
+          case 'vimeo':
+            typeName = 'Transmisión de Vimeo';
+            break;
+          case 'youTube':
+            typeName = 'Transmisión de YouTube';
+            break;
+          case 'RTMP':
+            typeName = 'Transmisión de RTMP';
+            break;
+          case 'eviusMeet':
+            typeName = 'Transmisión de Evius Meet';
+            break;
+          default:
+            typeName = record.type.name;
+        }
+        return <div>{typeName}</div>
       }
     },
     {
