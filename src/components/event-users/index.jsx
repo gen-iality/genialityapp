@@ -45,6 +45,7 @@ import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import moment from 'moment';
+import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -117,7 +118,7 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      return <p>{Moment(item.created_at).format('D/MMM/YY h:mm:ss A ')}</p>;
+      return <p>{Moment(item.created_at?.toDate()).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -136,7 +137,7 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      return <p>{Moment(item.updated_at).format('D/MMM/YY h:mm:ss A ')}</p>;
+      return <p>{Moment(item.updated_at?.toDate()).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -144,22 +145,7 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    var self = this;
-    return item.checkedin_at || item.properties?.checkedin_at ? (
-      <p>{Moment(item.checkedin_at || item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
-    ) : (
-      <div>
-        <Checkbox
-          id={'checkinUser' + item._id}
-          disabled={item.checkedin_at}
-          name={'checkinUser' + item._id}
-          checked={item.checkedin_at || item.properties?.checkedin_at}
-          onChange={() => {
-            self.checkIn(item._id, item);
-          }}
-        />
-      </div>
-    );
+    return <AttendeeCheckIn editUser={item} />;
   };
 
   addDefaultLabels = (extraFields) => {
@@ -178,13 +164,16 @@ class ListEventUser extends Component {
     );
     return extraFields;
   };
-  /** Sort by checkIn field on outside or inside properties object */
+  /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
   sortUsersArray = async (users) => {
     const sortedResult = users.sort((itemA, itemB) => {
-      const aParameter = new Date(itemA?.checkedin_at);
-      const bParameter = new Date(itemB?.checkedin_at);
+      const aParameter = itemA?.checkedin_at?.toDate();
+      const bParameter = itemB?.checkedin_at?.toDate();
 
-      return bParameter - aParameter;
+      if (!aParameter) return 1;
+      if (!bParameter) return -1;
+      if (moment(aParameter) === moment(bParameter)) return 0;
+      return moment(aParameter) > moment(bParameter) ? -1 : 1;
     });
 
     return sortedResult;
@@ -359,10 +348,7 @@ class ListEventUser extends Component {
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
 
-          let totalCheckedIn = updatedAttendees.reduce(
-            (acc, item) => acc + (item.checkedin_at || item?.properties?.checkedin_at ? 1 : 0),
-            0
-          );
+          let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
           let totalCheckedInWithWeight =
             Math.round(
@@ -599,8 +585,8 @@ class ListEventUser extends Component {
   openEditModalUser = (item) => {
     item = {
       ...item,
-      checked_in: item.properties?.checked_in || item.checked_in,
-      checkedin_at: item.properties?.checkedin_at || item.checkedin_at,
+      checked_in: item.checked_in,
+      checkedin_at: item.checkedin_at,
     };
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
@@ -778,11 +764,7 @@ class ListEventUser extends Component {
 
     return (
       <React.Fragment>
-        <Header
-          title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'}
-          description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
-          búsqueda.`}
-        />
+        <Header title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'} />
 
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
@@ -809,7 +791,6 @@ class ListEventUser extends Component {
             fields={fieldsForm}
             typeScanner={this.state.typeScanner}
             clearOption={this.clearOption}
-            checkIn={this.checkIn}
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
           />

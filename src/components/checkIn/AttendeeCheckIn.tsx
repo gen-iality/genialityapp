@@ -14,8 +14,8 @@ const AttendeeCheckIn = ({ editUser, reloadComponent, checkInUserCallbak }: Atte
     const dateAndTime: any = checkedin_at && checkedin_at?.toDate();
 
     setAttemdeeCheckIn(checked_in);
-    setAttemdeeCheckedinAt(dateAndTime?.toDate());
-  }, []);
+    setAttemdeeCheckedinAt(dateAndTime);
+  }, [editUser]);
 
   const saveAttemdeeCheckIn = async (e: CheckboxChangeEvent) => {
     const { checked } = e.target;
@@ -28,7 +28,7 @@ const AttendeeCheckIn = ({ editUser, reloadComponent, checkInUserCallbak }: Atte
         <Checkbox checked={attemdeeCheckIn} onChange={saveAttemdeeCheckIn}>
           <b>
             {attemdeeCheckIn
-              ? `Checked at: ${moment(attemdeeCheckedinAt).format('D/MMM/YY H:mm:ss')}`
+              ? `Checked at: ${moment(attemdeeCheckedinAt).format('D/MMM/YY H:mm:ss A')}`
               : 'Registrar ingreso'}
           </b>
         </Checkbox>
