@@ -16,6 +16,7 @@ import {
   Drawer,
   Image,
   message,
+  List,
   Row,
   Statistic,
   Typography,
@@ -24,6 +25,7 @@ import {
   Space,
   Tooltip,
   Select,
+  Modal,
 } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -37,6 +39,7 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   StarOutlined,
+  CheckOutlined,
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
@@ -46,10 +49,64 @@ import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
 
-const ColumnProgreso = ({ shownAll, item, allActivities, ...props }) => {
+const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentUser}) => {
+  const [loaded, setLoaded] = useState(false);
+  const [activities, setActivities] = useState([]);
+
+  useEffect(async () => {
+    if (!currentUser) return;
+    console.log(allActivities, 'xd', attendee)
+    if (allActivities.length == 0) return;
+
+    const existentActivities = await allActivities.map(async (activity) => {
+      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(currentUser._id).get();
+      if (activity_attendee.exists) {
+        return activity;
+      }
+      return null;
+    });
+    // Filter non-null result that means that the user attendees them
+    const viewedActivities = (await Promise.all(existentActivities)).filter((item) => item !== null);
+    setActivities(viewedActivities.map((activity) => activity.name))
+    setLoaded(true);
+  }, [allActivities, attendee, currentUser]);
+
+  const Content = () => {
+    if (attendee.length === 0) {
+      return <p>No ha visto ningún curso</p>;
+    }
+
+    if (loaded) {
+      if (activities.length) {
+        return (
+          <List
+            header={<Text strong>Cursos vistos</Text>}
+            // bordered
+            dataSource={activities}
+            renderItem={(item) => <List.Item><CheckOutlined /> {item}</List.Item>}
+          />
+        );
+        // return (activities.map((activity) => <p>{activity}</p>));
+      }
+      return <p>Nada para mostrar</p>
+    }
+
+    return <p>Cargando...</p>
+  }
+
+  return (
+    <Modal centered footer={null} visible={show} closable={true} onCancel={onHidden}>
+      <Space direction='vertical'>
+        <Content/>
+      </Space>
+    </Modal>
+  );
+}
+
+const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee, updateCurrentUser, ...props }) => {
   const [attendee, setAttendee] = useState([]);
   useEffect(async () => {
     // Get all existent activities, after will filter it
@@ -61,12 +118,24 @@ const ColumnProgreso = ({ shownAll, item, allActivities, ...props }) => {
       return null;
     });
     // Filter non-null result that means that the user attendees them
-    const attendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
-    setAttendee (attendee);
+    const gotAttendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
+    setAttendee (gotAttendee);
   }, []);
 
+  if (!onOpen) onOpen = () => {}
+
   if (shownAll) {
-    return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>;
+    return (
+      <Button
+        onClick={() => {
+          updateAttendee(attendee);
+          updateCurrentUser(item);
+          onOpen();
+        }}
+      >
+        {`${attendee.length || 0}/${allActivities.length || 0}`}
+     </Button>
+    );
   }
   return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
 };
@@ -123,6 +192,10 @@ class ListEventUser extends Component {
       fieldsForm: [],
       typeScanner: 'options',
       nameActivity: props.location.state?.item?.name || '',
+      allActivities: [],
+      showModalOfProgress: false,
+      attendee: [],
+      currentUser: null,
     };
   }
 
@@ -303,6 +376,7 @@ class ListEventUser extends Component {
         });
       columns = [...columns, ...extraColumns];
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
+      this.setState({ allActivities })
       const progressing = {
         title: 'Progreso',
         dataIndex: 'progress_id',
@@ -311,7 +385,17 @@ class ListEventUser extends Component {
         sorter: (a, b) => {
           return true; // console.log('>', a, b);
         },
-        render: (text, item, index) => <ColumnProgreso shownAll={this.props.shownAll} item={item} index={index} allActivities={allActivities} />
+        render: (text, item, index) => (
+          <ColumnProgreso
+            shownAll={this.props.shownAll}
+            item={item}
+            onOpen={() => this.setState({ showModalOfProgress: true })}
+            updateAttendee={(attendee) => this.setState({ attendee })}
+            updateCurrentUser={(user) => this.setState({ currentUser: user })}
+            index={index}
+            allActivities={allActivities}
+          />
+        )
       };
 
       let rol = {
@@ -778,6 +862,15 @@ class ListEventUser extends Component {
 
     return (
       <React.Fragment>
+        <ModalWithLessonsInfo
+          show={this.state.showModalOfProgress}
+          onHidden={() => {
+            this.setState({showModalOfProgress: false})
+          }}
+          allActivities={this.state.allActivities}
+          attendee={this.state.attendee}
+          currentUser={this.state.currentUser}
+        />
         <Header
           title={type == 'activity' ? 'Inscripción de ' + nameActivity : 'Inscripción de curso'}
           description={`Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una
