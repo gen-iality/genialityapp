@@ -32,13 +32,14 @@ function OrgMembers(props) {
     const { data: dataEvents } = await OrganizationApi.events(organizationId);
 
     const fieldsMembersData = [];
-    console.log('Array de OrgAPI - GetUsers', data);
-    console.log('Array de OrgAPI - Events', dataEvents);
+    // console.log('Array de OrgAPI - GetUsers', data);
+    // console.log('Array de OrgAPI - Events', dataEvents);
     //console.log('Array de EventAPI - GetEventUser', dataEventUser);
     const userActivities = {};
 
     for (let indexOrganization = 0; indexOrganization < data.length; indexOrganization++) {
       const userId = data[indexOrganization].account_id;
+      const email = data[indexOrganization].user.email;
 
       let totalActividades = 0;
       let totalActividadesVistas = 0;
@@ -47,12 +48,16 @@ function OrgMembers(props) {
         const eventId = dataEvents[indexEvent]._id;
         //const { data: dataEventUser } = await EventsApi.getEventUser(eventId, userId);
 
+        const thing = await EventsApi.getStatusRegister(eventId, email)
+        if (thing.data.length === 0) continue;
+        const eventUser = thing.data[0];
+
         const { data: activities } = await AgendaApi.byEvent(eventId);
 
         const existentActivities = await activities.map(async (activity) => {
           const activity_attendee = await firestore
             .collection(`${activity._id}_event_attendees`)
-            .doc(userId)
+            .doc(eventUser._id)
             .get();
           if (activity_attendee.exists) {
             return activity_attendee.data();
@@ -67,7 +72,7 @@ function OrgMembers(props) {
       userActivities[userId] = `${totalActividadesVistas}/${totalActividades}`;
     }
 
-    console.log(userActivities);
+    // console.log(userActivities);
 
     data.map((membersData) => {
       const properties = {
