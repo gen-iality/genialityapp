@@ -107,7 +107,13 @@ class ListEventUser extends Component {
   editcomponent = (text, item, index) => {
     return (
       <Tooltip placement='topLeft' title='Editar'>
-        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
+        <Button
+          type={'primary'}
+          icon={<EditOutlined />}
+          size='small'
+          onClick={() => this.openEditModalUser(item)}
+          disabled={this.props.event?.isActive === false && window.location.toString().includes('eventadmin')}
+        />
       </Tooltip>
     );
   };
@@ -731,6 +737,7 @@ class ListEventUser extends Component {
       columns,
     } = this.state;
     const { event, type } = this.props;
+    const cEventIsActive = event?.isActive;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -806,7 +813,6 @@ class ListEventUser extends Component {
               icon={<StarOutlined />}>
               Participantes:{' '}
               <span style={{ fontSize: '13px' }}>
-                {' '}
                 {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
               </span>
             </Tag>
@@ -845,7 +851,8 @@ class ListEventUser extends Component {
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
-                  style={{ width: 220 }}>
+                  style={{ width: 220 }}
+                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                   <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
                   {this.state.fieldsForm.map((item) => {
@@ -861,14 +868,27 @@ class ListEventUser extends Component {
                 )}
               </Col>
               <Col>
-                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                <Link
+                  to={
+                    cEventIsActive === false && window.location.toString().includes('eventadmin')
+                      ? ''
+                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
+                  }>
+                  <Button
+                    type='primary'
+                    icon={<UploadOutlined />}
+                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                     Importar usuarios
                   </Button>
                 </Link>
               </Col>
               <Col>
-                <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
+                <Button
+                  type='primary'
+                  icon={<PlusCircleOutlined />}
+                  size='middle'
+                  onClick={this.addUser}
+                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                   {'Agregar Usuario'}
                 </Button>
               </Col>
