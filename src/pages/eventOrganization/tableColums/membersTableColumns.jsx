@@ -61,7 +61,7 @@ export const columns = (columnsData, editModalUser) => [
     title: 'Progreso',
     dataIndex: 'progress',
     ellipsis: true,
-    render: (text, item) => <p>progreso#34</p>
+    render: (text, item) => <div>{item.stats}</div>,
   },
   {
     title: 'Creado',

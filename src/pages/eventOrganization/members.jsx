@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi } from '../../helpers/request';
+import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '../../helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
+import { firestore } from '@/helpers/firebase';
 /** export Excel */
 import { useHistory } from 'react-router-dom';
 import { Table, Button, Row, Col, Tag } from 'antd';
@@ -28,20 +29,62 @@ function OrgMembers(props) {
 
   async function getEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
+    const { data: dataEvents } = await OrganizationApi.events(organizationId);
+
     const fieldsMembersData = [];
+    console.log('Array de OrgAPI - GetUsers', data);
+    console.log('Array de OrgAPI - Events', dataEvents);
+    //console.log('Array de EventAPI - GetEventUser', dataEventUser);
+    const userActivities = {};
+
+    for (let indexOrganization = 0; indexOrganization < data.length; indexOrganization++) {
+      const userId = data[indexOrganization].account_id;
+
+      let totalActividades = 0;
+      let totalActividadesVistas = 0;
+
+      for (let indexEvent = 0; indexEvent < dataEvents.length; indexEvent++) {
+        const eventId = dataEvents[indexEvent]._id;
+        //const { data: dataEventUser } = await EventsApi.getEventUser(eventId, userId);
+
+        const { data: activities } = await AgendaApi.byEvent(eventId);
+
+        const existentActivities = await activities.map(async (activity) => {
+          const activity_attendee = await firestore
+            .collection(`${activity._id}_event_attendees`)
+            .doc(userId)
+            .get();
+          if (activity_attendee.exists) {
+            return activity_attendee.data();
+          }
+          return null;
+        });
+        // Filter non-null result that means that the user attendees them
+        const attendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
+        totalActividades += activities.length;
+        totalActividadesVistas += attendee.length;
+      }
+      userActivities[userId] = `${totalActividadesVistas}/${totalActividades}`;
+    }
+
+    console.log(userActivities);
+
     data.map((membersData) => {
       const properties = {
         _id: membersData._id,
         created_at: membersData.created_at,
         updated_at: membersData.updated_at,
-        position: membersData.rol_id,
+        position: membersData.rol.name,
         // names: membersData?.user?.name || membersData?.user?.names,
         // email: membersData?.user?.email,
+        stats: userActivities[membersData.account_id],
         ...membersData.properties,
       };
 
       fieldsMembersData.push(properties);
     });
+
+    dataEvents;
 
     setMembersData(fieldsMembersData);
     setIsLoading(false);
