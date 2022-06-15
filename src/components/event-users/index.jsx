@@ -49,7 +49,7 @@ import Loading from '../profile/loading';
 const { Title } = Typography;
 const { Option } = Select;
 
-const ColumnProgreso = ({ item, allActivities, ...props }) => {
+const ColumnProgreso = ({ shownAll, item, allActivities, ...props }) => {
   const [attendee, setAttendee] = useState([]);
   useEffect(async () => {
     // Get all existent activities, after will filter it
@@ -65,7 +65,10 @@ const ColumnProgreso = ({ item, allActivities, ...props }) => {
     setAttendee (attendee);
   }, []);
 
-  return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>;
+  if (shownAll) {
+    return <p>{`${attendee.length || 0}/${allActivities.length || 0}`}</p>;
+  }
+  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
 };
 
 class ListEventUser extends Component {
@@ -308,7 +311,7 @@ class ListEventUser extends Component {
         sorter: (a, b) => {
           return true; // console.log('>', a, b);
         },
-        render: (text, item, index) => <ColumnProgreso item={item} index={index} allActivities={allActivities} />
+        render: (text, item, index) => <ColumnProgreso shownAll={this.props.shownAll} item={item} index={index} allActivities={allActivities} />
       };
 
       let rol = {
@@ -837,7 +840,8 @@ class ListEventUser extends Component {
               style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
               color='lightgrey'
               icon={<StarOutlined />}>
-              Participantes:{' '}
+              Participantes:
+              {' '}
               <span style={{ fontSize: '13px' }}>
                 {' '}
                 {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
