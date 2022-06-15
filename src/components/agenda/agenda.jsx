@@ -30,6 +30,13 @@ const Agenda = (props) => {
       },
     },
     {
+      title: 'Lección',
+      dataIndex: 'name',
+      ellipsis: true,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      ...getColumnSearchProps('name', columnsData),
+    },
+    {
       title: 'Tipo',
       render(record, key) {
         if (record.type === null) {
@@ -63,13 +70,6 @@ const Agenda = (props) => {
         }
         return <div>{typeName}</div>
       }
-    },
-    {
-      title: 'Lección',
-      dataIndex: 'name',
-      ellipsis: true,
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps('name', columnsData),
     },
     {
       title: 'Categorias',
