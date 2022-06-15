@@ -106,6 +106,7 @@ export const columns = (columnsData) => [
           onChange={update}
           checked={item.published}
           id={`editSwitch${item.index}`}
+          disabled={columnsData.cEventIsActive === false && window.location.toString().includes('eventadmin')}
         />
       );
     },
@@ -139,6 +140,7 @@ export const columns = (columnsData) => [
                 icon={<DeleteOutlined />}
                 type='danger'
                 size='small'
+                disabled={columnsData.cEventIsActive === false && window.location.toString().includes('eventadmin')}
               />
             </Tooltip>
           </Col>

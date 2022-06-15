@@ -16,6 +16,7 @@ import Loading from '../loaders/loading';
 import { withRouter } from 'react-router-dom';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
+import { UseEventContext } from '@/context/eventContext';
 
 const { Column } = Table;
 const { confirm } = Modal;
@@ -303,42 +304,46 @@ class Product extends Component {
               align='center'
               fixed='right'
               width={150}
-              render={(data, index) => (
-                <Space key={index} size='small'>
-                  <Tooltip key={index} placement='topLeft' title='Editar'>
-                    <Button
-                      key={index}
-                      id={`editAction${index.index}`}
-                      onClick={() => this.editProduct(data)}
-                      type='primary'
-                      icon={<EditOutlined /* style={{ fontSize: 25 }} */ />}
-                      size='small'
-                    />
-                  </Tooltip>
-                  <Tooltip key={index} placement='topLeft' title='Eliminar'>
-                    <Button
-                      key={index}
-                      id={`removeAction${index.index}`}
-                      onClick={() => this.removeProduct(data)}
-                      type='danger'
-                      icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
-                      size='small'
-                    />
-                  </Tooltip>
-                  <Tooltip key={index} placement='topLeft' title='Ofertas'>
-                    <Button
-                      key={index}
-                      id={`shoppingAction${index.index}`}
-                      onClick={() =>
-                        this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`)
-                      }
-                      color={'#1890ff'}
-                      icon={<ShoppingCartOutlined /* style={{ fontSize: 25 }} */ />}
-                      size='small'
-                    />
-                  </Tooltip>
-                </Space>
-              )}
+              render={(data, index) => {
+                const cEventIsActive = UseEventContext()?.value?.isActive;
+                return (
+                  <Space key={index} size='small'>
+                    <Tooltip key={index} placement='topLeft' title='Editar'>
+                      <Button
+                        key={index}
+                        id={`editAction${index.index}`}
+                        onClick={() => this.editProduct(data)}
+                        type='primary'
+                        icon={<EditOutlined /* style={{ fontSize: 25 }} */ />}
+                        size='small'
+                      />
+                    </Tooltip>
+                    <Tooltip key={index} placement='topLeft' title='Eliminar'>
+                      <Button
+                        key={index}
+                        id={`removeAction${index.index}`}
+                        onClick={() => this.removeProduct(data)}
+                        type='danger'
+                        icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
+                        size='small'
+                        disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                      />
+                    </Tooltip>
+                    <Tooltip key={index} placement='topLeft' title='Ofertas'>
+                      <Button
+                        key={index}
+                        id={`shoppingAction${index.index}`}
+                        onClick={() =>
+                          this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`)
+                        }
+                        color={'#1890ff'}
+                        icon={<ShoppingCartOutlined /* style={{ fontSize: 25 }} */ />}
+                        size='small'
+                      />
+                    </Tooltip>
+                  </Space>
+                );
+              }}
             />
           </Table>
         )}

@@ -97,9 +97,9 @@ const Table = (props) => {
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
                     to={
-                      cEventIsActive === false && window.location.toString().includes('eventadmin')
+                      /* cEventIsActive === false && window.location.toString().includes('eventadmin')
                         ? {}
-                        : !extraPathStateName
+                        : */ !extraPathStateName
                         ? { pathname: `${extraPath}/${item._id}`, state: { item: item } }
                         : { pathname: `${extraPath}`, state: { report: item._id } }
                     }>
@@ -107,7 +107,7 @@ const Table = (props) => {
                       icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
                       type={extraPathType ? extraPathType : 'primary'}
                       size='small'
-                      disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                      /* disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')} */
                     />
                   </Link>
                 </Tooltip>
