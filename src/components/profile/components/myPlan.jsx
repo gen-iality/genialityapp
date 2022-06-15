@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlansApi, AlertsPlanApi } from '../../../helpers/request';
+import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
 import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Collapse } from 'antd';
@@ -8,7 +8,7 @@ import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 
-const dataSource = [
+/* const dataSource = [
   {
     key: '1',
     reason: 'Se realizó un pago de plan',
@@ -27,7 +27,7 @@ const dataSource = [
     status: 'En progreso',
     created_at: '20-05-2022',
   },
-];
+]; */
 
 const columns = [
   {
@@ -67,7 +67,7 @@ const columns = [
   },
 ];
 
-const bills = [
+/* const bills = [
   {
     key: '1',
     billNumber: '120082021',
@@ -92,7 +92,7 @@ const bills = [
     value: '199',
     created_at: '20-05-2022',
   },
-];
+]; */
 
 const columnsBills = [
   {
@@ -149,7 +149,7 @@ const events = [
   {
     key: '1',
     name: 'Evento 1',
-    users: '2/2',
+    users: '2',
     time: '1h/1h',
     status: 'Activo',
     created_at: '20-08-2021',
@@ -158,7 +158,7 @@ const events = [
   {
     key: '2',
     name: 'Evento 2',
-    users: '1/2',
+    users: '1',
     time: '30m/1h',
     status: 'Activo',
     created_at: '20-03-2022',
@@ -204,18 +204,23 @@ const columnsEvents = [
 const myPlan = ({ cUser }) => {
   console.log(cUser);
   const plan = cUser.value.plan;
-  let [planes, setPlanes] = useState([]);
+  let [plans, setPlans] = useState([]);
+  let [notifications, setNotifications] = useState([]);
+  let [bills, setBills] = useState([]);
 
   useEffect(() => {
-    getPlanes();
+    getPlans();
   }, []);
 
-  const getPlanes = async () => {
+  const getPlans = async () => {
     let plans = await PlansApi.getAll();
-    setPlanes(plans);
-    let us = await AlertsPlanApi.getByUser(cUser.value._id);
-    console.log('us', us);
-    /* console.log(plans, 'planes');
+    setPlans(plans);
+    let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
+    setNotifications(notifications);
+    let bills = await BillssPlanApi.getByUser(cUser.value._id);
+    setBills(bills);
+    console.log('bills', bills);
+    /* console.log(plans, 'plans');
     console.log(plans[0]._id, plans[1]._id, plan._id); */
     //const p = await PlansApi.getOne('62864ad118aa6b4b0f5820a2');
   };
@@ -260,10 +265,10 @@ const myPlan = ({ cUser }) => {
         <Table dataSource={bills} columns={columnsBills} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Notificaciones'} key={'notifications'}>
-        <Table dataSource={dataSource} columns={columns} />
+        <Table dataSource={notifications} columns={columns} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
-        {planes
+        {plans
           .filter((plan1) => plan1._id !== plan._id)
           .map((plan2) => (
             <div style={{ paddingBottom: '15px' }}>

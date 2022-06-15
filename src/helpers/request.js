@@ -1028,6 +1028,10 @@ export const PlansApi = {
   getOne: async (id) => {
     return await Actions.getOne(`api/plans/`, id);
   },
+  getTotalRegisterdUsers: async () => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/users/me/totaluser?token=${token}`, true);
+  },
 };
 
 export const AlertsPlanApi = {
@@ -1045,6 +1049,16 @@ export const AlertsPlanApi = {
   deleteOne: async (userId, eventId) => {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/users/${userId}/notifications/${eventId}`, `${id}?token=${token}`);
+  },
+};
+
+export const BillssPlanApi = {
+  getByUser: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/users/${userId}/billings?token=${token}`, true);
+  },
+  getAddonByUser: async (userId) => {
+    return await Actions.get(`api/users/${userId}/addons`);
   },
 };
 
