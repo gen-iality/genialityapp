@@ -209,7 +209,7 @@ class Event extends Component {
           <Menu match={match} collapseMenu={this.collapseMenu} collapsed={collapsed} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
-          <Row gutter={[16, 16]} wrap>
+          {/* <Row gutter={[16, 16]} wrap>
             <Col>
               <Button
                 type='primary'
@@ -219,7 +219,7 @@ class Event extends Component {
                 Ir al evento
               </Button>
             </Col>
-          </Row>
+          </Row> */}
           <section className='section event-wrapper'>
             <Switch>
               <Route

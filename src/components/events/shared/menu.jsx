@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Divider, Menu, Row } from 'antd';
+import { Button, Col, Divider, Menu, Row } from 'antd';
 import { EventsApi } from '../../../helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
@@ -11,6 +11,7 @@ import { imageUtils } from '../../../Utilities/ImageUtils';
 const { SubMenu } = Menu;
 
 const MenuConfig = (props) => {
+  console.log('🚀 debug ~ MenuConfig ~ props', props);
   const [controller, setcontroller] = useState({
     contentTab: true,
     generalTab: false,
@@ -63,13 +64,25 @@ const MenuConfig = (props) => {
         </Button>
       </div>
 
-      <Row justify='center' style={{ padding: 10 }}>
-        <img
-          style={{
-            width: '50%',
-          }}
-          src={`${imageUtils.LogoSvg}`}
-        />
+      <Row justify='center' style={{ textAlign: 'center' }}>
+        <Col span={24}>
+          <img
+            style={{
+              width: '80%',
+              marginBottom: '15px',
+            }}
+            src={`${imageUtils.LogoSinFondo}`}
+          />
+        </Col>
+        <Col span={24}>
+          <Button
+            type='primary'
+            size='middle'
+            target='_blank'
+            href={'`${window.location.origin}/landing/${this.state.event._id}`'}>
+            Ir al evento
+          </Button>
+        </Col>
         <Divider style={{ background: 'gray' }} />
       </Row>
       {renderMenuItems(controller, props)}
