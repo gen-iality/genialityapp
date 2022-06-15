@@ -770,7 +770,7 @@ class ListEventUser extends Component {
         ? this.state.configfast.totalAttendees
         : usersReq.length;
 
-    const participantes = Math.round((totalCheckedIn / inscritos) * 100);
+    const participantes = inscritos != 0 ? Math.round((totalCheckedIn / inscritos) * 100) : 0;
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
     return (
