@@ -51,6 +51,7 @@ import Service from './roomManager/service';
 import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
 import TipeOfActivity from './typeActivity';
+import SmartTipeOfActivity from './typeActivity/SmartTipeOfActivity';
 import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 
@@ -144,6 +145,7 @@ class AgendaEdit extends Component {
       reloadActivity: false,
       initialActivityStates: null,
       showPendingChangesModal: false,
+      creatingBeforeNamed: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -732,7 +734,8 @@ class AgendaEdit extends Component {
           this.setState({
             idNewlyCreatedActivity: agenda._id,
             activityEdit: true,
-            reloadActivity: true,
+            // reloadActivity: true, Esto no se hace aquí, lo hace el formulario de tipos, SmartType...algo, se me olvidó el nombre
+            creatingBeforeNamed: true,
             isPublished: false,
           });
           this.saveConfig();
@@ -1158,6 +1161,21 @@ class AgendaEdit extends Component {
             <Tabs activeKey={this.state.tabs} onChange={(key) => this.setState({ tabs: key })}>
               <TabPane tab='Agenda' key='1'>
                 <Row justify='center' wrap gutter={12}>
+                  {this.state.creatingBeforeNamed && <></>}
+                  <Col span={20}>
+                    <SmartTipeOfActivity
+                      eventId={this.props.event._id}
+                      activityId={this.state.activity_id}
+                      activityName={this.state.name}
+                      ready={this.state.creatingBeforeNamed}
+                      onSetType={() => {
+                        this.setState({reloadActivity: true});
+                        console.log('listoooooooooooooooooooo');
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
                     <Form.Item
                       label={
@@ -1173,6 +1191,7 @@ class AgendaEdit extends Component {
                       ]}>
                       <Input
                         ref={this.name}
+                        disabled={this.state.creatingBeforeNamed}
                         autoFocus
                         type='text'
                         name={'name'}
