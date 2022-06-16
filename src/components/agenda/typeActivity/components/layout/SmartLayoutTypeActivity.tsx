@@ -6,7 +6,7 @@ const { Header, Content, Footer } = Layout;
 
 interface propsOptions {
   title?: string;
-  onSetType: () => void;
+  onSetType: (typeString: string) => void;
   children: JSX.Element | JSX.Element[];
 }
 
@@ -37,7 +37,7 @@ const SmartLayoutTypeActivity = ({ title, children, onSetType }: propsOptions) =
     } else if (selectedKey === 'initial') {
       closeModal();
     } else {
-      await onSetType();
+      await onSetType(typeOptions.key);
       await createTypeActivity();
     }
   };

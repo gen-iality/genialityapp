@@ -146,6 +146,7 @@ class AgendaEdit extends Component {
       initialActivityStates: null,
       showPendingChangesModal: false,
       creatingBeforeNamed: false,
+      typeString: null,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -669,6 +670,10 @@ class AgendaEdit extends Component {
 
   //Envío de información
   submit = async (changePathWithoutSaving) => {
+    if (this.state.typeString) {
+      this.setState({reloadActivity: true, creatingBeforeNamed: false,})
+      return;
+    }
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -1167,16 +1172,22 @@ class AgendaEdit extends Component {
                       activityId={this.state.activity_id}
                       activityName={this.state.name}
                       ready={this.state.creatingBeforeNamed}
-                      onSetType={() => {
+                      onSetType={(typeString) => {
                         this.setState({
-                          reloadActivity: true,
-                          creatingBeforeNamed: false,
-                          tabs: '2',
+                          // reloadActivity: true,
+                          // creatingBeforeNamed: false,
+                          // tabs: '2',
+                          typeString,
                         });
                         console.log('listoooooooooooooooooooo');
                       }}
                     />
                   </Col>}
+                </Row>
+                <Row justify='center' wrap gutter={12}>
+                  <Col span={20}>
+                    <Text strong>Tipo de contenido</Text>: {this.state.typeString || 'indefinido'}
+                  </Col>
                 </Row>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
