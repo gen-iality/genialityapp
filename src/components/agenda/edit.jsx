@@ -1161,19 +1161,22 @@ class AgendaEdit extends Component {
             <Tabs activeKey={this.state.tabs} onChange={(key) => this.setState({ tabs: key })}>
               <TabPane tab='Agenda' key='1'>
                 <Row justify='center' wrap gutter={12}>
-                  {this.state.creatingBeforeNamed && <></>}
-                  <Col span={20}>
+                  {this.state.creatingBeforeNamed && <Col span={20}>
                     <SmartTipeOfActivity
                       eventId={this.props.event._id}
                       activityId={this.state.activity_id}
                       activityName={this.state.name}
                       ready={this.state.creatingBeforeNamed}
                       onSetType={() => {
-                        this.setState({reloadActivity: true});
+                        this.setState({
+                          reloadActivity: true,
+                          creatingBeforeNamed: false,
+                          tabs: '2',
+                        });
                         console.log('listoooooooooooooooooooo');
                       }}
                     />
-                  </Col>
+                  </Col>}
                 </Row>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
