@@ -1,5 +1,5 @@
 import { Card, Result, Button, Spin } from 'antd';
-import ModalStepByStep from './ModalStepByStep';
+import SmartModalStepByStep from './SmartModalStepByStep';
 import ManagerView from './ManagerView';
 import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
 import { useContext, useEffect, useState } from 'react';
@@ -21,14 +21,14 @@ const objecKeys: object = {
   video: 'Video',
 };
 
-const InitialView = (props: any) => {
+const SmartInitialView = (props: any) => {
   const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity();
   const [loading, setLoading] = useState(true);
   const { typeActivity, meeting_id, setActivityName, activityEdit, roomStatus, saveConfig } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
-    if (props.tab !== '2') return;
+    if (!props.ready) return;
     //OBTENER DETALLE DE LECCIÓN
     setActivityName(props.activityName);
     if (typeActivity === null) {
@@ -38,7 +38,7 @@ const InitialView = (props: any) => {
       obtainDataInitial();
       //MIENTRAS CARGA LOS COMPONENTES
     }
-  }, [props.tab]);
+  }, [props.ready]); // props.tabs ignored
   //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA LECCIÓN
   useEffect(() => {
     saveConfig(null, 1);
@@ -80,7 +80,7 @@ const InitialView = (props: any) => {
             <Result
               icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
               status='info'
-              title='Todavía no has definido el tipo de contenido'
+              title='Define el tipo de contenido'
               extra={
                 <Button onClick={() => toggleActivitySteps('type')} type='primary'>
                   Escoge un tipo de contenido
@@ -95,10 +95,10 @@ const InitialView = (props: any) => {
   return (
     <>
       <ModalPreviewVideo />
-      <ModalStepByStep activityName={props.activityName} />
+      <SmartModalStepByStep onSetType={props.onSetType} activityName={props.activityName} />
       {!loading ? renderComponet() : <Spin />}
     </>
   );
 };
 
-export default InitialView;
+export default SmartInitialView;
