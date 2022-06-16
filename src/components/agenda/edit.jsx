@@ -177,6 +177,7 @@ class AgendaEdit extends Component {
       showPendingChangesModal: false,
       creatingBeforeNamed: false,
       typeString: null,
+      activity_id: this.props.location.state.edit,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -215,6 +216,20 @@ class AgendaEdit extends Component {
   toggleConference = (isVisible) => {
     this.setState({ conferenceVisible: isVisible });
   };
+
+  async componentWillReceiveProps (nextProps, nextStates) {
+    let agenda;
+    if (nextStates.activity_id && nextStates.activity_id !== this.state.activity_id) {
+      agenda = await AgendaApi.getOne(nextStates.activity_id, this.props.event._id);
+    } else if (this.props.location.state.edit) {
+      agenda = await AgendaApi.getOne(this.props.location.state.edit, this.props.event._id);
+    }
+    if (agenda?.type) {
+      this.setState({
+        typeString: formatLessonType(agenda.type.name),
+      })
+    }
+  }
 
   async componentDidMount() {
     const {
@@ -412,6 +427,7 @@ class AgendaEdit extends Component {
     /** Se renderiza de nuevo el componente para mostrar los tabs Transmision, Juegos, Encuestas y Documentos */
     const idNewlyCreatedActivity = this.state.idNewlyCreatedActivity;
     const reloadActivity = this.state.reloadActivity;
+    // console.log('state', this.props.location.state)
 
     if (reloadActivity) {
       this.setState({
