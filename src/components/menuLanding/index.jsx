@@ -76,7 +76,7 @@ class menuLanding extends Component {
           permissions: 'public',
         },
         /* survey: {
-          name: 'Encuestas',
+          name: 'Evaluaciones',
           position: 30,
           section: 'survey',
           icon: 'FileUnknownOutlined',

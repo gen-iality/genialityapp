@@ -439,7 +439,7 @@ function AgendaActivityItem(props) {
                           gotoActivity(item);
                         }}
                         className='space-align-block button-Agenda'>
-                        Encuestas
+                        Evaluaciones
                       </Button>
                     )}
                 </Row>

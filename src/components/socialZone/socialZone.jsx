@@ -199,7 +199,7 @@ let SocialZone = function(props) {
             <div style={{ marginBottom: '0px' }}>
               <Badge dot={props.hasOpenSurveys} size='default'>
                 <span style={{ color: cEvent.value.styles.textMenu }}>
-                  <FormattedMessage id='tabs.surveys.socialzone' defaultMessage='Encuestas' />
+                  <FormattedMessage id='tabs.surveys.socialzone' defaultMessage='Evaluaciones' />
                 </span>
               </Badge>
             </div>
@@ -225,7 +225,7 @@ let SocialZone = function(props) {
                 <div style={{ paddingTop: 30 }}>
                   <Alert
                     showIcon
-                    message='Para poder responder una encuesta debes ser usuario del sistema'
+                    message='Para poder responder una evaluación debes ser usuario del sistema'
                     type='warning'
                   />
                   <Row style={{ marginTop: 30 }} justify='center'>

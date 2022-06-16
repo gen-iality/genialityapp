@@ -137,7 +137,7 @@ const AditionalInformation = (props) => {
               <>
                 <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
                   <Badge dot={props.hasOpenSurveys} size='default'>
-                    Encuestas
+                    Evaluaciones
                   </Badge>
                 </p>
               </>
@@ -148,7 +148,7 @@ const AditionalInformation = (props) => {
               <div style={{ paddingTop: 30 }}>
                 <Alert
                   showIcon
-                  message='Para poder responder una encuesta debes ser usuario del sistema'
+                  message='Para poder responder una evaluación debes ser usuario del sistema'
                   type='warning'
                 />
                 <Row style={{ marginTop: 30 }} justify='center'>

@@ -256,7 +256,7 @@ class triviaEdit extends Component {
         });
         DispatchMessageService({
           type: 'success',
-          msj: 'La encuesta se guardo correctamente!',
+          msj: 'La evaluación se guardo correctamente!',
           action: 'show',
         });
       } catch (e) {
@@ -286,7 +286,7 @@ class triviaEdit extends Component {
       return DispatchMessageService({
         type: 'error',
         /* key: 'updating', */
-        msj: 'Esta encuesta no cuenta con respuestas posibles',
+        msj: 'Esta evaluación no cuenta con respuestas posibles',
         action: 'show',
       });
 
@@ -406,7 +406,7 @@ class triviaEdit extends Component {
         });
         DispatchMessageService({
           type: 'error',
-          msj: 'Esta encuesta es calificable, hay preguntas sin respuesta correcta asignada',
+          msj: 'Esta evaluación es calificable, hay preguntas sin respuesta correcta asignada',
           action: 'show',
         });
       }
@@ -417,7 +417,7 @@ class triviaEdit extends Component {
         });
         DispatchMessageService({
           type: 'error',
-          msj: 'Esta encuesta es calificable, debe asignar un mensaje inicial',
+          msj: 'Esta evaluación es calificable, debe asignar un mensaje inicial',
           action: 'show',
         });
       }
@@ -767,7 +767,7 @@ class triviaEdit extends Component {
     return (
       <Form onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit} {...formLayout}>
         <Header
-          title={'Encuesta'}
+          title={'Evaluación'}
           back
           save
           form
@@ -820,7 +820,7 @@ class triviaEdit extends Component {
                     rules={[{ required: true, message: 'El nombre es requerido' }]}>
                     <Input
                       value={survey}
-                      placeholder={'Nombre de la encuesta'}
+                      placeholder={'Nombre de la evaluación'}
                       name={'survey'}
                       onChange={this.changeInput}
                     />
@@ -852,7 +852,7 @@ class triviaEdit extends Component {
                     </Form.Item>
                   </Col> */}
                         {/* <Col>
-                    <Form.Item label={'Publicar encuesta'}>
+                    <Form.Item label={'Publicar evaluación'}>
                       <Switch
                         name={'publish'}
                         checked={publish === 'true' || publish === true}
@@ -861,7 +861,7 @@ class triviaEdit extends Component {
                     </Form.Item>
                   </Col> */}
                         <Col>
-                          <Form.Item label={'Mostar gráficas en las encuestas'}>
+                          <Form.Item label={'Mostar gráficas en las evaluaciones'}>
                             <Switch
                               name={'displayGraphsInSurveys'}
                               checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
@@ -870,7 +870,7 @@ class triviaEdit extends Component {
                           </Form.Item>
                         </Col>
                         {/* <Col>
-                          <Form.Item label={'Encuesta abierta'}>
+                          <Form.Item label={'Evaluación abierta'}>
                             <Switch
                               name={'openSurvey'}
                               checked={openSurvey === 'true'}
@@ -903,7 +903,7 @@ class triviaEdit extends Component {
                           </>
                         ))}
 
-                      <Form.Item label={'Encuesta global (visible en todas las lecciones)'}>
+                      <Form.Item label={'Evaluación global (visible en todas las lecciones)'}>
                         <Switch
                           name={'isGlobal'}
                           checked={isGlobal === 'true' || isGlobal === true}
@@ -913,7 +913,7 @@ class triviaEdit extends Component {
 
                       {(isGlobal === 'false' || isGlobal === false) && (
                         <>
-                          <Form.Item label={'Relacionar esta encuesta a una lección'}>
+                          <Form.Item label={'Relacionar esta evaluación a una lección'}>
                             <Select
                               name={'activity_id'}
                               value={activity_id || ''}
@@ -938,7 +938,7 @@ class triviaEdit extends Component {
                           onChange={(checked) => this.toggleSwitch('allow_vote_value_per_user', checked)}
                         />
                       </Form.Item>
-                      <Form.Item label={'Encuesta calificable'}>
+                      <Form.Item label={'Evaluación calificable'}>
                         <Switch
                           name={'allow_gradable_survey'}
                           checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
@@ -975,7 +975,7 @@ class triviaEdit extends Component {
                             <Form.Item
                               label={
                                 <label style={{ marginTop: '2%' }}>
-                                  {'Mensaje pantalla inicial de la encuesta'} <label style={{ color: 'red' }}>*</label>
+                                  {'Mensaje pantalla inicial de la evaluación'} <label style={{ color: 'red' }}>*</label>
                                 </label>
                               }>
                               <ReactQuill
@@ -986,7 +986,7 @@ class triviaEdit extends Component {
                                 onChange={this.onChange}
                               />
                             </Form.Item>
-                            <Form.Item label={'Mensaje pantalla final de la encuesta'}>
+                            <Form.Item label={'Mensaje pantalla final de la evaluación'}>
                               <ReactQuill
                                 name={'neutral_Message'}
                                 id={'neutral_Message'}

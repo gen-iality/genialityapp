@@ -25,7 +25,7 @@ class SurveyForm extends Component {
       forceCheckVoted: false,
       surveyLabel: {},
       defaultSurveyLabel: {
-        name: 'Encuestas',
+        name: 'Evaluaciones',
         section: 'survey',
         icon: 'FileUnknownOutlined',
         checked: false,

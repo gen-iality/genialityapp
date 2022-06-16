@@ -23,7 +23,7 @@ function SurveyDetail(props) {
         icon={<ArrowLeftOutlined />}
         block
         onClick={handleClick}>
-        Volver al listado de encuestas
+        Volver al listado de evaluaciones
       </Button>
     </Card>
   );

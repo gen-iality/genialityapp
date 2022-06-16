@@ -59,7 +59,7 @@ export default class SurveyManager extends Component {
         .collection('surveys')
         .doc(survey_id)
         .update({ ...data })
-        .then(() => resolve({ message: 'Encuesta actualizada', state: 'updated' }));
+        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }));
     });
   };
 
@@ -78,12 +78,12 @@ export default class SurveyManager extends Component {
   render() {
     const { publishedSurveys } = this.state;
     return (
-      <Card title='Gestor de encuestas'>
+      <Card title='Gestor de evaluaciones'>
         {publishedSurveys.length > 0 ? (
           <>
             <Row style={{ padding: '8px 16px' }}>
               <Col xs={12} lg={8}>
-                <label className='label'>Encuesta</label>
+                <label className='label'>Evaluación</label>
               </Col>
               <Col xs={4} lg={3}>
                 <label className='label'>Publicar</label>
@@ -100,7 +100,7 @@ export default class SurveyManager extends Component {
             })}
           </>
         ) : (
-          <div>No hay encuestas publicadas para esta lección</div>
+          <div>No hay evaluaciones publicadas para esta lección</div>
         )}
       </Card>
     );
