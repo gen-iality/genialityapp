@@ -315,7 +315,7 @@ class ListEventUser extends Component {
       fieldsForm.push({
         author: null,
         categories: [],
-        label: 'Inscripto',
+        label: 'Inscrito',
         mandatory: false,
         name: 'checked_in',
         organizer: null,
