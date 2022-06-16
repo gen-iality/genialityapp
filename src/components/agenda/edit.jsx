@@ -68,6 +68,9 @@ const { Option } = SelectAntd;
 class AgendaEdit extends Component {
   constructor(props) {
     super(props);
+    const rightNow = new Date();
+    const beforeNow = new Date();
+    beforeNow.setMinutes(beforeNow.getMinutes() + 10);
     this.state = {
       loading: true,
       // Estado para la redireccion de navegacion interna al eliminar lección o volver al listado de lecciones.
@@ -80,8 +83,8 @@ class AgendaEdit extends Component {
       description: '<p><br></p>',
       registration_message: '',
       date: Moment(new Date()).format('YYYY-MM-DD'),
-      hour_start: '',
-      hour_end: '',
+      hour_start: Moment(rightNow, 'HH:mm:ss'),
+      hour_end: Moment(beforeNow, 'HH:mm:ss'),
       key: new Date(),
       image: '',
       locale: 'en',
@@ -1178,7 +1181,7 @@ class AgendaEdit extends Component {
                         placeholder={'Nombre de la lección'}
                       />
                     </Form.Item>
-                    <Form.Item
+                    {showAditionalTabs && <Form.Item
                       label={
                         <label style={{ marginTop: '2%' }}>
                           Día <label style={{ color: 'red' }}>*</label>
@@ -1192,8 +1195,8 @@ class AgendaEdit extends Component {
                         value={date}
                         onChange={(value) => this.handleChangeDate(value, 'date')}
                       />
-                    </Form.Item>
-                    <Row wrap justify='center' gutter={[8, 8]}>
+                    </Form.Item>}
+                    {showAditionalTabs && <Row wrap justify='center' gutter={[8, 8]}>
                       <Col span={12}>
                         <Form.Item
                           style={{ width: '100%' }}
@@ -1264,8 +1267,8 @@ class AgendaEdit extends Component {
                           />
                         </Form.Item>
                       </Col>
-                    </Row>
-                    <Form.Item label={'Conferencista'}>
+                    </Row>}
+                    {showAditionalTabs && <Form.Item label={'Conferencista'}>
                       <Row wrap gutter={[8, 8]}>
                         <Col span={23}>
                           <Select
@@ -1285,8 +1288,8 @@ class AgendaEdit extends Component {
                           />
                         </Col>
                       </Row>
-                    </Form.Item>
-                    <Form.Item label={'Espacio'}>
+                    </Form.Item>}
+                    {showAditionalTabs && <Form.Item label={'Espacio'}>
                       <Row wrap gutter={[8, 8]}>
                         <Col span={23}>
                           <SelectAntd
@@ -1307,8 +1310,8 @@ class AgendaEdit extends Component {
                           </Link>
                         </Col>
                       </Row>
-                    </Form.Item>
-                    <Form.Item label={'Categorías'}>
+                    </Form.Item>}
+                    {showAditionalTabs && <Form.Item label={'Categorías'}>
                       <Row wrap gutter={[8, 8]}>
                         <Col span={23}>
                           <Creatable
@@ -1328,16 +1331,16 @@ class AgendaEdit extends Component {
                           <Button onClick={() => this.goSection(`${matchUrl}/categorias`)} icon={<SettingOutlined />} />
                         </Col>
                       </Row>
-                    </Form.Item>
-                    <Form.Item label={'¿Tiene espacio físico?'}>
+                    </Form.Item>}
+                    {showAditionalTabs && <Form.Item label={'¿Tiene espacio físico?'}>
                       <Switch
                         checked={this.state.isPhysical}
                         checkedChildren='Si'
                         unCheckedChildren='No'
                         onChange={this.handlePhysical}
                       />
-                    </Form.Item>
-                    {this.state.isPhysical && (
+                    </Form.Item>}
+                    {this.state.isPhysical && showAditionalTabs && (
                       <>
                         <Form.Item label={'Longitud'}>
                           <Input
@@ -1379,7 +1382,7 @@ class AgendaEdit extends Component {
                       <Text type='secondary'>Este video solo se vera cuando la transmisión no está en vivo.</Text>
                       <Input name='video' type='text' value={video} onChange={this.handleChange} />
                     </Form.Item> */}
-                    <Form.Item label={'Descripción'}>
+                    {showAditionalTabs && <Form.Item label={'Descripción'}>
                       <Space>
                         <ExclamationCircleOutlined style={{ color: '#faad14' }} />
                         <Text type='secondary'>
@@ -1391,8 +1394,8 @@ class AgendaEdit extends Component {
                         data={this.state.description}
                         handleChange={(e) => this.handleChangeReactQuill(e, 'description')}
                       />
-                    </Form.Item>
-                    <Form.Item label={'Imagen'}>
+                    </Form.Item>}
+                    {showAditionalTabs && <Form.Item label={'Imagen'}>
                       <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
                         <Form.Item noStyle>
                           <p>
@@ -1418,7 +1421,7 @@ class AgendaEdit extends Component {
                           />
                         </Form.Item>
                       </Card>
-                    </Form.Item>
+                    </Form.Item>}
                     <BackTop />
                   </Col>
                 </Row>
