@@ -38,6 +38,8 @@ const HeaderColumns = (props) => {
     removeRequest,
     setActivityEdit,
     typeActivity,
+    getViewers,
+    setRefActivityViewers,
   } = useContext(AgendaContext);
 
   function showPropsConfirm() {
@@ -68,13 +70,16 @@ const HeaderColumns = (props) => {
     if (currentActivity) {
       //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
       setActivityEdit(currentActivity._id);
-      
-      console.log("1. SE EJECUTA ESTO")
+
+      console.log('1. SE EJECUTA ESTO');
     }
     if (!currentActivity || typeActivity !== 'eviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
+    const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${currentActivity?._id}`;
     setRefActivity(refActivity);
+    setRefActivityViewers(refActivityViewers);
     getRequestByActivity(refActivity);
+    getViewers(refActivityViewers);
     return () => {
       setActivityEdit(null);
     };
@@ -251,11 +256,12 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-          {console.log("1. TIPE ACTIVITY==>",typeActivity,recordTypeForThisEvent( cEvent.value?._id) )}
+            {console.log('1. TIPE ACTIVITY==>', typeActivity, recordTypeForThisEvent(cEvent.value?._id))}
             {typeActivity == 'eviusMeet' &&
               !request[cEventUSer.value?._id]?.active &&
               cEventUSer.value?._id &&
-              props.activityState === 'open_meeting_room' && recordTypeForThisEvent( cEvent)!=="UN_REGISTERED_PUBLIC_EVENT" && (
+              props.activityState === 'open_meeting_room' &&
+              recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT' && (
                 <Button
                   style={{ transition: 'all 1s' }}
                   onClick={() => (!loading ? sendOrCancelRequest() : null)}

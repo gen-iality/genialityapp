@@ -89,6 +89,55 @@ const RenderComponent = (props) => {
     }
   }, [chatAttendeChats]);
 
+  // esto es para que incie automaticamente con anomimo pero genera conflito con el compoente de anonymosEventUser
+  // y con los contetxos de userContext y eventuserConext por que denpende del onAuthStateChanged
+  // const loginAnonymus = useCallback(() => {
+  //   const userUid = app.auth().currentUser?.uid;
+  //   console.log('🚀 ------ userUid', userUid);
+
+  //   if (userUid) return;
+
+  //   app
+  //     .auth()
+  //     .signInAnonymously()
+  //     .then(async (user) => {
+  //       console.log('🌮--->Cambio Sign ', user);
+  //       console.log('🚀 debug ~ .then ~ user en el auth ', user.user.uid);
+  //       if (user.user.uid) {
+  //         // await app.auth().currentUser.reload();
+  //         // cEventUser.setUpdateUser(true);
+  //         app
+  //           .auth()
+  //           .currentUser.updateProfile({
+  //             displayName: 'A',
+  //             /**almacenamos el email en el photoURL para poder setearlo en el context del usuario y asi llamar el eventUser anonimo */
+  //             photoURL: 'email@mocionsoft.com',
+  //           })
+  //           .then(async () => {
+  //             console.log('🌮--->Cambio Sign2 ', users);
+  //             await app.auth().currentUser.reload();
+  //             cEventUser.setUpdateUser(true);
+  //           })
+  //           .catch((error) => {
+  //             var errorCode = error.code;
+  //             var errorMessage = error.message;
+  //             console.log('🚀 debug ~ loginAnonymus ~ errorCode', { errorCode, errorMessage });
+  //             // ...
+  //           });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       console.log('🚀 debug ~ loginAnonymus ~ errorCode', { errorCode, errorMessage });
+  //       // ...
+  //     });
+  // }, []);
+
+  // useEffect(() => {
+  //   loginAnonymus();
+  // }, []);
+
   const RenderizarComponente = useCallback((plataforma, actividad_estado, reder_Game) => {
     switch (plataforma) {
       case 'vimeo':

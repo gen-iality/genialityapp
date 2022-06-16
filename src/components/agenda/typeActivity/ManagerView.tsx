@@ -17,12 +17,16 @@ import LoadingTypeActivity from './components/LoadingTypeActivity';
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
   const { data, toggleActivitySteps } = useTypeActivity();
-  const { activityEdit, getRequestByActivity, request, dataLive, roomStatus, meeting_id } = useContext(AgendaContext);
+  const { activityEdit, getViewers, getRequestByActivity, request, dataLive, roomStatus, meeting_id } = useContext(
+    AgendaContext
+  );
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+  const refActivityViewers = `viewers/${eventContext.value?._id}/activities/${activityEdit}`;
   const [videos, setVideos] = useState<any[] | null>(null);
   useEffect(() => {
     meeting_id && obtenerListadodeVideos();
+    getViewers(refActivityViewers);
     if (props.type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
   }, [props.type, meeting_id]);

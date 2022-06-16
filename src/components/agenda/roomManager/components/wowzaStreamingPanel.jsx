@@ -50,25 +50,25 @@ const WowzaStreamingPanel = ({
   const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`;
   let cUser = UseCurrentUser();
   /* console.log('debug ', meeting_id); */
-  const [ livestreamStatus, setLivestreamStatus ] = useState(null);
-  const [ livestreamStats, setLivestreamStats ] = useState(null);
-  const [ linkRolAdmin, setLinkRolAdmin ] = useState(null);
-  const [ linkRolProductor, setLinkRolProductor ] = useState(null);
-  const [ linkRolAsistente, setLinkRolAsistente ] = useState(null);
-  const [ webHookStreamStatus, setWebHookStreamStatus ] = useState(null);
-  const [ copySuccessProductor, setCopySuccessProductor ] = useState(false);
-  const [ copySuccessAsistente, setCopySuccessAsistente ] = useState(false);
-  const [ copySuccessURL, setCopySuccessURL ] = useState(false);
-  const [ copySuccessClave, setCopySuccessClave ] = useState(false);
+  const [livestreamStatus, setLivestreamStatus] = useState(null);
+  const [livestreamStats, setLivestreamStats] = useState(null);
+  const [linkRolAdmin, setLinkRolAdmin] = useState(null);
+  const [linkRolProductor, setLinkRolProductor] = useState(null);
+  const [linkRolAsistente, setLinkRolAsistente] = useState(null);
+  const [webHookStreamStatus, setWebHookStreamStatus] = useState(null);
+  const [copySuccessProductor, setCopySuccessProductor] = useState(false);
+  const [copySuccessAsistente, setCopySuccessAsistente] = useState(false);
+  const [copySuccessURL, setCopySuccessURL] = useState(false);
+  const [copySuccessClave, setCopySuccessClave] = useState(false);
   const eventContext = useContext(CurrentEventContext);
   const { transmition, removeAllRequest } = useContext(AgendaContext);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
-  const [ streamAlreadyCreated, setStreamAlreadyCreated ] = useState(false);
-  const [ timerId, setTimerId ] = useState(null);
+  const [streamAlreadyCreated, setStreamAlreadyCreated] = useState(false);
+  const [timerId, setTimerId] = useState(null);
 
   const queryClient = useQueryClient();
   // console.log('innerRender', meeting_id);
-  const livestreamQuery = useQuery([ 'livestream', meeting_id ], () => getLiveStream(meeting_id));
+  const livestreamQuery = useQuery(['livestream', meeting_id], () => getLiveStream(meeting_id));
 
   useEffect(() => {
     if (livestreamQuery && livestreamQuery.data) {
@@ -76,7 +76,8 @@ const WowzaStreamingPanel = ({
       let rtmplink = livestreamQuery.data.source_connection_information;
       let linkAdmin =
         eviusmeets +
-        `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name
+        `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${
+          rtmplink.stream_name
         }&rol=1&username=${names}&email=${email}&photo=${picture ? picture : ''}`;
       let linkProductor =
         eviusmeets + `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}&rol=1`;
@@ -85,7 +86,7 @@ const WowzaStreamingPanel = ({
       setLinkRolProductor(linkProductor);
       setLinkRolAsistente(linkAsistente);
     }
-  }, [ livestreamQuery.data ]);
+  }, [livestreamQuery.data]);
 
   useEffect(() => {
     const realTimeRef = realTimeviuschat.ref('meets/' + activityEdit + '/streamingStatus');
@@ -118,7 +119,7 @@ const WowzaStreamingPanel = ({
         setLivestreamStatus(livestreamInitial);*/
       }
     }
-  }, [ meeting_id ]);
+  }, [meeting_id]);
 
   const executer_createStream = useMutation(() => createLiveStream(activity_name), {
     onSuccess: (data) => {
@@ -140,7 +141,7 @@ const WowzaStreamingPanel = ({
 
       live_stream_stats = await getLiveStreamStats(meeting_id);
       setLivestreamStats(live_stream_stats);
-    } catch (e) { }
+    } catch (e) {}
     const timer_id = setTimeout(executer_startMonitorStatus, 5000);
     setTimerId(timer_id);
     if (live_stream_status && live_stream_status?.state == 'stopped') {
@@ -248,7 +249,7 @@ const WowzaStreamingPanel = ({
     <>
       <br />
       <Card bordered style={{ borderRadius: '10px' }}>
-        <Row gutter={[ 16, 16 ]}>
+        <Row gutter={[16, 16]}>
           <Col span={24}>
             {livestreamStatus?.state === 'stopped' ? (
               <Button
@@ -300,7 +301,7 @@ const WowzaStreamingPanel = ({
       </Card>
       <br />
       <Card bordered style={{ borderRadius: '10px' }}>
-        <Row gutter={[ 16, 16 ]}>
+        <Row gutter={[16, 16]}>
           <Col span={10}>
             {/* <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} /> */}
             {livestreamStatus?.state === 'starting' ? (
@@ -443,7 +444,7 @@ const WowzaStreamingPanel = ({
       <br />
       {livestreamStatus?.state === 'started' && transmition === 'EviusMeet' && (
         <Card bordered style={{ borderRadius: '10px' }}>
-          <Row gutter={[ 16, 16 ]}>
+          <Row gutter={[16, 16]}>
             <Col span={24}>
               {linkRolProductor && (
                 <>

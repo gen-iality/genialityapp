@@ -5,31 +5,40 @@ import { Grid } from 'antd';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventUserContext } from '../../../context/eventUserContext';
 import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi';
-
+import initBroadcastViewers from '@containers/broadcastViewers';
 const { useBreakpoint } = Grid;
 
 function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   const screens = useBreakpoint();
-  const [ livestreamStats, setLivestreamStats ] = useState(null);
+  const [livestreamStats, setLivestreamStats] = useState(null);
   const userContext = useContext(CurrentUserContext);
   const { request, typeActivity } = useContext(AgendaContext);
   const evetUserContext = useContext(CurrentEventUserContext);
-  const [ visibleMeets, setVisibleMeets ] = useState(false);
-  const [ timer_id, setTimerId ] = useState(null);
+  const [visibleMeets, setVisibleMeets] = useState(false);
+  const [timer_id, setTimerId] = useState(null);
+
   //   const [livestreamStatus, setLivestreamStatus] = useState(null);
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
-  const eviusmeetUrl = `https://stagingeviusmeet.netlify.app/?meetingId=${activity._id}&rol=0&username=${userContext.value?.names
-    }&email=${userContext.value?.email}&photo=${userContext.value?.picture || urlDefault}`;
+  const eviusmeetUrl = `https://stagingeviusmeet.netlify.app/?meetingId=${activity._id}&rol=0&username=${
+    userContext.value?.names
+  }&email=${userContext.value?.email}&photo=${userContext.value?.picture || urlDefault}`;
+
+  useEffect(() => {
+    //presencia de usuario en la
+    if (activity && livestreamStats?.live) {
+      initBroadcastViewers(activity.event_id, activity._id, activity.name, userContext);
+    }
+  }, [activity, livestreamStats?.live]);
 
   useEffect(() => {
     if (transmition !== 'EviusMeet' || !evetUserContext.value) return;
-    if (request && request[ evetUserContext.value._id ] && request[ evetUserContext.value._id ].active) {
+    if (request && request[evetUserContext.value._id] && request[evetUserContext.value._id].active) {
       setVisibleMeets(true);
     } else {
       setVisibleMeets(false);
     }
-  }, [ transmition, request, evetUserContext.value ]);
+  }, [transmition, request, evetUserContext.value]);
 
   const executer_startMonitorStatus = async () => {
     console.log('executer_startMonitorStatus==>', meeting_id, typeActivity);
@@ -56,7 +65,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       clearTimeout(timer_id);
       setTimerId(null);
     }
-  }, [ livestreamStats ]);
+  }, [livestreamStats]);
 
   // SI EXISTE UN MEETING ID SE EJECUTA EL MONITOR, PERO SE QUEDA COLGADO (TIMER)
   useEffect(() => {
@@ -68,7 +77,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       clearTimeout(timer_id);
       setLivestreamStats(null);
     };
-  }, [ meeting_id, typeActivity ]);
+  }, [meeting_id, typeActivity]);
 
   return (
     <>
