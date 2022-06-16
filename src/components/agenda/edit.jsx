@@ -1173,11 +1173,39 @@ class AgendaEdit extends Component {
                       activityName={this.state.name}
                       ready={this.state.creatingBeforeNamed}
                       onSetType={(typeString) => {
+                        // Format this
+                        let typeName = 'genérico';
+                        switch (typeString) {
+                          case 'cargarvideo':
+                            typeName = 'Vídeo cargado';
+                            break;
+                          case 'meeting':
+                            typeName = 'Reunión';
+                            break;
+                          case 'url':
+                            typeName = 'Vídeo desde URL';
+                            break;
+                          case 'vimeo':
+                            typeName = 'Transmisión de Vimeo';
+                            break;
+                          case 'youTube':
+                            typeName = 'Transmisión de YouTube';
+                            break;
+                          case 'RTMP':
+                            typeName = 'Transmisión de RTMP';
+                            break;
+                          case 'eviusMeet':
+                            typeName = 'Transmisión de GEN.iality';
+                            break;
+                          default:
+                            typeName = typeString;
+                        }
+                        // Rewrite the type
                         this.setState({
                           // reloadActivity: true,
                           // creatingBeforeNamed: false,
                           // tabs: '2',
-                          typeString,
+                          typeString: typeName,
                         });
                         console.log('listoooooooooooooooooooo');
                       }}
