@@ -380,7 +380,7 @@ class Graphics extends Component {
                       <Col span={votos.option == 2 ? 16 : 19}>
                         <div style={{ marginLeft: '12px', marginRight: '12px', fontWeight: '600', marginTop: '4px' }}>
                           <div style={{ fontSize: '14px', fontWeight: '600' }}>
-                            <span>{votos.voto} Voto(s)</span>
+                            <span>{votos.voto} respuesta(s)</span>
                             <span style={{ float: 'right', fontSize: '16px' }}>{votos.porcentaje} % </span>
                           </div>
                           <div>
@@ -442,7 +442,7 @@ class Graphics extends Component {
                         }}>
                         <div>
                           <span style={{ fontSize: '22px', fontWeight: '500' }}>
-                            {this.state.resultVotos.usuariosSinRespuesta} Voto(s)
+                            {this.state.resultVotos.usuariosSinRespuesta} respuest(s)
                           </span>
                           <span style={{ fontSize: '22px', fontWeight: '500', float: 'right' }}>
                             {this.state.resultVotos.porcentajevotos} %{' '}
