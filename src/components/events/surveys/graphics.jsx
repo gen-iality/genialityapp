@@ -137,13 +137,13 @@ class Graphics extends Component {
       switch (operation) {
         case 'onlyCount':
           generatedlabels[a] =
-            answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} Voto(s)` : '0 Votos';
+            answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} respuesta(s)` : '0 respuestas';
           break;
         case 'participationPercentage':
           generatedlabels[a] =
             answer_count && answer_count[a]
-              ? `${numberToLetterOfAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
-              : '0 Votos';
+              ? `${numberToLetterOfAlphabet(a)}  ${answer_count[a][0]} respuesta(s), ${answer_count[a][1]}% \n `
+              : '0 respuestas';
           break;
       }
       porcentaj_answer = answer_count[a][1];

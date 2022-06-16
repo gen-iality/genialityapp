@@ -931,7 +931,7 @@ class triviaEdit extends Component {
                         </>
                       )}
 
-                      <Form.Item label={'Permitir valor del voto por usuario'}>
+                      <Form.Item label={'Permitir valor de la respuesta por usuario'}>
                         <Switch
                           name={'allow_vote_value_per_user'}
                           checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user === true}
