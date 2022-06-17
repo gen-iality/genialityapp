@@ -63,7 +63,7 @@ const Agenda = (props) => {
             typeName = 'Transmisión de RTMP';
             break;
           case 'eviusMeet':
-            typeName = 'Transmisión de Evius Meet';
+            typeName = 'Transmisión de GEN Connect';
             break;
           default:
             typeName = record.type.name;

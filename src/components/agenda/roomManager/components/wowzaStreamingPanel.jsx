@@ -617,10 +617,10 @@ const WowzaStreamingPanel = ({
           <Space direction='vertical'>
             {linkRolAdmin && (
               <Button type='primary' href={linkRolAdmin} target='_blank'>
-                Ingresar a EviusMeets para transmitir
+                Ingresar a GEN Connect para transmitir
               </Button>
             )}
-            <b>Ir a EviusMeets: </b>
+            <b>Ir a GEN Connect: </b>
 
             {linkRolProductor && (
               <Input.Group compact>
