@@ -78,7 +78,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Evaluación',
+        name: 'Evaluaciones',
         path: '/trivia',
         key: 'encuestas',
         onClick: handleClick,

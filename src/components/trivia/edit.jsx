@@ -256,7 +256,7 @@ class triviaEdit extends Component {
         });
         DispatchMessageService({
           type: 'success',
-          msj: 'La evaluación se guardo correctamente!',
+          msj: 'La evaluación se guardó correctamente!',
           action: 'show',
         });
       } catch (e) {
@@ -767,7 +767,7 @@ class triviaEdit extends Component {
     return (
       <Form onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit} {...formLayout}>
         <Header
-          title={'Evaluación'}
+          title={'Evaluaciones'}
           back
           save
           form
@@ -975,7 +975,8 @@ class triviaEdit extends Component {
                             <Form.Item
                               label={
                                 <label style={{ marginTop: '2%' }}>
-                                  {'Mensaje pantalla inicial de la evaluación'} <label style={{ color: 'red' }}>*</label>
+                                  {'Mensaje pantalla inicial de la evaluación'}{' '}
+                                  <label style={{ color: 'red' }}>*</label>
                                 </label>
                               }>
                               <ReactQuill

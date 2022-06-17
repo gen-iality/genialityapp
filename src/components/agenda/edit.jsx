@@ -1545,7 +1545,7 @@ class AgendaEdit extends Component {
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Encuestas' key='4'>
+                  <TabPane tab='Evaluaciones' key='4'>
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
                         <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
