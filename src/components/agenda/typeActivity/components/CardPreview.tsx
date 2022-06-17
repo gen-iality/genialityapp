@@ -39,6 +39,10 @@ const CardPreview = (props: any) => {
     stopRecordTransmition,
     loadingRecord,
     record,
+    viewers,
+    viewersOnline,
+    totalViews,
+    maxViewers,
   } = useContext(AgendaContext);
 
   console.log('DATALIVE ===>', dataLive);
@@ -280,6 +284,30 @@ const CardPreview = (props: any) => {
               <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
               {props.type === 'Video' && <Select.Option value='no_visibe'>Oculto</Select.Option>}
             </Select>
+          </Space>
+        )}
+        {dataLive?.live && dataLive?.active && (
+          <Space direction='vertical'>
+            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
+            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
+            <Typography.Text strong>Visualizaciones en curso: {viewersOnline.length}</Typography.Text>
+            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
+          </Space>
+        )}
+        {!dataLive?.live && dataLive?.active && (
+          <Space direction='vertical'>
+            <Typography.Text strong>Resumen de la transmision: </Typography.Text>
+            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
+            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
+            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
+          </Space>
+        )}
+        {!dataLive?.live && totalViews.length > 0 && (
+          <Space direction='vertical'>
+            <Typography.Text strong>Resumen de la transmision: </Typography.Text>
+            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
+            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
+            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
           </Space>
         )}
       </Space>

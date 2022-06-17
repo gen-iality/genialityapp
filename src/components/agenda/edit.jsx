@@ -937,12 +937,14 @@ class AgendaEdit extends Component {
           const onHandlerRemove = async () => {
             try {
               const refActivity = `request/${self.props.event._id}/activities/${self.state.activity_id}`;
+              const refActivityViewers = `viewers/${self.props.event._id}/activities/${self.state.activity_id}`;
               const configuration = await service.getConfiguration(self.props.event._id, self.state.activity_id);
               if (configuration && configuration.typeActivity === 'eviusMeet') {
                 await deleteAllVideos(self.state.name, configuration.meeting_id),
                   await deleteLiveStream(configuration.meeting_id);
               }
               await fireRealtime.ref(refActivity).remove();
+              await fireRealtime.ref(refActivityViewers).remove();
               await service.deleteActivity(self.props.event._id, self.state.activity_id);
               await AgendaApi.deleteOne(self.state.activity_id, self.props.event._id);
               DispatchMessageService({
