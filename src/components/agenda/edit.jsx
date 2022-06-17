@@ -217,18 +217,29 @@ class AgendaEdit extends Component {
     this.setState({ conferenceVisible: isVisible });
   };
 
-  async componentWillReceiveProps (nextProps, nextStates) {
-    let agenda;
-    if (nextStates.activity_id && nextStates.activity_id !== this.state.activity_id) {
-      agenda = await AgendaApi.getOne(nextStates.activity_id, this.props.event._id);
-    } else if (this.props.location.state.edit) {
-      agenda = await AgendaApi.getOne(this.props.location.state.edit, this.props.event._id);
-    }
+  async updateTypeFromSituation (activity_id) {
+    const agenda = await AgendaApi.getOne(activity_id, this.props.event._id);
     if (agenda?.type) {
       this.setState({
         typeString: formatLessonType(agenda.type.name),
       })
     }
+  }
+
+  async componentWillReceiveProps (nextProps, nextStates) {
+    // let agenda;
+    if (nextStates.activity_id && nextStates.activity_id !== this.state.activity_id) {
+      // agenda = await AgendaApi.getOne(nextStates.activity_id, this.props.event._id);
+      await this.updateTypeFromSituation(nextStates.activity_id)
+    } else if (this.props.location.state.edit) {
+      // agenda = await AgendaApi.getOne(this.props.location.state.edit, this.props.event._id);
+      await this.updateTypeFromSituation(this.props.location.state.edit)
+    }
+    // if (agenda?.type) {
+    //   this.setState({
+    //     typeString: formatLessonType(agenda.type.name),
+    //   })
+    // }
   }
 
   async componentDidMount() {
@@ -1516,6 +1527,11 @@ class AgendaEdit extends Component {
                           activityId={this.state.activity_id}
                           activityName={this.state.name}
                           tab={this.state.tabs}
+                          onDelete={() => {
+                            this.setState({
+                              typeString: formatLessonType(null),
+                            })
+                          }}
                         />
 
                         {/* <RoomManager

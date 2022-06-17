@@ -64,6 +64,9 @@ const TransmitionOptions = (props: any) => {
                   // Force to delete that, right? I will need the non-existent doc
                   const deleted = await TypesAgendaApi.deleteOne(thing.type._id, cEvent?.value?._id);
                   console.log('deleted', deleted)
+                  if (props.onDelete) {
+                    props.onDelete()
+                  }
                 }}
                 onCancel={() => console.log('cancelado')}
                 okText='Sí'
