@@ -65,6 +65,9 @@ const Agenda = (props) => {
           case 'eviusMeet':
             typeName = 'Transmisión de GEN Connect';
             break;
+          case 'eviusStreaming':
+            typeName = 'GEN.iality Streaming'
+            break;
           default:
             typeName = record.type.name;
         }

@@ -88,7 +88,10 @@ const formatLessonType = (typeString) => {
       typeName = 'Transmisión de RTMP';
       break;
     case 'eviusMeet':
-      typeName = 'Transmisión de GEN.iality';
+      typeName = 'Transmisión de GEN Connect';
+      break;
+    case 'eviusStreaming':
+      typeName = 'GEN.iality Streaming'
       break;
     default:
       typeName = typeString;
@@ -177,7 +180,7 @@ class AgendaEdit extends Component {
       showPendingChangesModal: false,
       creatingBeforeNamed: false,
       typeString: null,
-      activity_id: this.props.location.state.edit,
+      activity_id: this.props.location?.state?.edit,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -1244,7 +1247,7 @@ class AgendaEdit extends Component {
                 </Row>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
-                    <Text strong>Tipo de contenido</Text>: {this.state.typeString || 'indefinido'}
+                    <Text strong>Tipo de contenido</Text>: {(this.state.typeString ? formatLessonType(this.state.typeString) : null) || 'indefinido'}
                   </Col>
                 </Row>
                 <Row justify='center' wrap gutter={12}>
