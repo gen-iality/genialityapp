@@ -1221,6 +1221,7 @@ class AgendaEdit extends Component {
                     name={'isPublished'}
                     checked={this.context?.isPublished}
                     onChange={(e) => this.handleChange(e, 'isPublished')}
+                    disabled={this.props.event?.isActive === false && window.location.toString().includes('eventadmin')}
                   />
                 </Form.Item>
               )
