@@ -5,7 +5,7 @@ import { Grid } from 'antd';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventUserContext } from '../../../context/eventUserContext';
 import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi';
-import initBroadcastViewers from '@containers/broadcastViewers';
+
 const { useBreakpoint } = Grid;
 
 function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
@@ -23,13 +23,6 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   const eviusmeetUrl = `https://stagingeviusmeet.netlify.app/?meetingId=${activity._id}&rol=0&username=${
     userContext.value?.names
   }&email=${userContext.value?.email}&photo=${userContext.value?.picture || urlDefault}`;
-
-  useEffect(() => {
-    //presencia de usuario en la
-    if (activity && livestreamStats?.live) {
-      initBroadcastViewers(activity.event_id, activity._id, activity.name, userContext);
-    }
-  }, [activity, livestreamStats?.live]);
 
   useEffect(() => {
     if (transmition !== 'EviusMeet' || !evetUserContext.value) return;

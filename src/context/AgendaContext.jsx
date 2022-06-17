@@ -243,7 +243,13 @@ export const AgendaContextProvider = ({ children }) => {
           setViewers([]);
           setViewersOffline([]);
           setViewersOnline([]);
+          setMaxViewers(0);
         }
+      } else {
+        setViewers([]);
+        setViewersOffline([]);
+        setViewersOnline([]);
+        setMaxViewers(0);
       }
     });
     fireRealtime.ref(totalViewRef).on('value', (snapshot) => {
@@ -273,6 +279,11 @@ export const AgendaContextProvider = ({ children }) => {
   const removeViewers = (refActivityViewers) => {
     if (refActivityViewers) {
       fireRealtime.ref(refActivityViewers).remove();
+      setViewers([]);
+      setViewersOffline([]);
+      setViewersOnline([]);
+      setTotalViews([]);
+      setMaxViewers(0);
     }
   };
 

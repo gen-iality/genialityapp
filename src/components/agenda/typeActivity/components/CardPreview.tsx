@@ -46,6 +46,7 @@ const CardPreview = (props: any) => {
   } = useContext(AgendaContext);
 
   console.log('DATALIVE ===>', dataLive);
+  console.log('🌮---> Status', roomStatus, props);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {
@@ -286,27 +287,14 @@ const CardPreview = (props: any) => {
             </Select>
           </Space>
         )}
-        {dataLive?.live && dataLive?.active && (
+        {(roomStatus != '' || props.type === 'reunion') && (
           <Space direction='vertical'>
+            <Typography.Text strong>Estadisticas de la actividad:</Typography.Text>
             <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
             <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
-            <Typography.Text strong>Visualizaciones en curso: {viewersOnline.length}</Typography.Text>
-            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
-          </Space>
-        )}
-        {!dataLive?.live && dataLive?.active && (
-          <Space direction='vertical'>
-            <Typography.Text strong>Resumen de la transmision: </Typography.Text>
-            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
-            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
-            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
-          </Space>
-        )}
-        {!dataLive?.live && totalViews.length > 0 && (
-          <Space direction='vertical'>
-            <Typography.Text strong>Resumen de la transmision: </Typography.Text>
-            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
-            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
+            {(roomStatus === 'open_meeting_room' || props.type === 'reunión') && (
+              <Typography.Text strong>Visualizaciones en curso: {viewersOnline.length}</Typography.Text>
+            )}
             <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
           </Space>
         )}
