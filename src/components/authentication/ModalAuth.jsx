@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from '../../context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isHome, useEventArkmed } from '../../helpers/helperEvent';
+import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
 import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
@@ -233,7 +233,7 @@ const ModalAuth = (props) => {
                   prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                 />
               </Form.Item>
-              {useEventArkmed(cEvent.value?._id).isArkmed ? (
+              {useEventWithCedula(cEvent.value?._id).isArkmed ? (
                 <Form.Item
                   label={intl.formatMessage({
                     id: 'modal.label.cedula',

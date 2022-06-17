@@ -11,7 +11,7 @@ import {
 import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { useEventArkmed } from '../../../helpers/helperEvent';
+import { useEventWithCedula } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
@@ -212,7 +212,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        {useEventArkmed(cEvent.value?._id).isArkmed ? (
+        {useEventWithCedula(cEvent.value?._id).isArkmed ? (
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.cedula',

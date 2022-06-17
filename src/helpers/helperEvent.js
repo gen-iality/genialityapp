@@ -155,11 +155,11 @@ export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
 
 
 
-export const useEventArkmed = (event_id) => {
+export const useEventWithCedula = (event_id) => {
   let label = 'Contraseña';
   let isArkmed = false;
 
-  if (ArkmedEvents.includes(event_id)) {
+  if (EventsWithDni.includes(event_id)) {
     isArkmed = true;
     label = 'Cedula';
   }
@@ -172,7 +172,7 @@ export const useEventArkmed = (event_id) => {
 
 
 
-let ArkmedEvents = [
+export const EventsWithDni = [
   "611c3dcf6fedd7455434a166",
   "618d3a983a90686a9016b5d3",
   "609d41a46bfe5402bd015c5c",
@@ -182,5 +182,7 @@ let ArkmedEvents = [
   "613bd7340a46d371b765fd34",
   "61364ebddb928f7a473eefe5",
   "62684012622f7a044066a798",
-  "62a75a3a32b3246bcf59e06b"
+  "62a75a3a32b3246bcf59e06b",
+  "609d41a46bfe5402bd015c5c",
+  "62ac9b832e3db0537f4decc3",
 ]
