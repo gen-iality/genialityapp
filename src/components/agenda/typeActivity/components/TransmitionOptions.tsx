@@ -57,13 +57,14 @@ const TransmitionOptions = (props: any) => {
                     await removeAllRequest(refActivity);
                     await deleteTransmition();
                   }
-                  await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
+                  const thing = await AgendaApi.editOne({ video: null, type: null }, activityEdit, cEvent?.value?._id);
+                  console.log(thing)
                   await deleteTypeActivity();
                   toggleActivitySteps('initial');
                   setLoadingDelete(false);
                 }}
                 onCancel={() => console.log('cancelado')}
-                okText='Si'
+                okText='Sí'
                 cancelText='No'>
                 <Button loading={loadingDelete} danger>
                   Eliminar
