@@ -198,7 +198,11 @@ class Product extends Component {
           extra={
             <Row wrap gutter={[8, 8]}>
               <Col>
-                <Button onClick={this.savePosition} type='primary' icon={<SaveOutlined />}>
+                <Button
+                  onClick={this.savePosition}
+                  type='primary'
+                  icon={<SaveOutlined />}
+                  disabled={this.props.event?.isActive === false && window.location.toString().includes('eventadmin')}>
                   {'Guardar orden'}
                 </Button>
               </Col>
@@ -232,13 +236,16 @@ class Product extends Component {
               width='50px'
               align='center'
               render={(data, index) => {
+                const cEventIsActive = UseEventContext()?.value?.isActive;
                 const DragHandle = sortableHandle(() => (
                   <DragOutlined
                     id={`drag${index.index}`}
                     style={{ cursor: 'grab', color: '#999', visibility: 'visible' }}
                   />
                 ));
-                return <DragHandle />;
+                return cEventIsActive === false && window.location.toString().includes('eventadmin') ? null : (
+                  <DragHandle />
+                );
               }}
             />
             <Column

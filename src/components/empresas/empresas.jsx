@@ -156,7 +156,7 @@ function Empresas({ event, match }) {
       width: 30,
       className: 'drag-visible',
       render(companyName, record) {
-        return <DragHandle />;
+        return cEventIsActive === false && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
       },
     },
     {
@@ -263,7 +263,11 @@ function Empresas({ event, match }) {
         extra={
           <Row wrap gutter={[8, 8]}>
             <Col>
-              <Button onClick={() => orderCompany()} type='primary' icon={<SaveOutlined />}>
+              <Button
+                onClick={() => orderCompany()}
+                type='primary'
+                icon={<SaveOutlined />}
+                disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                 {'Guardar orden'}
               </Button>
             </Col>

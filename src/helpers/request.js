@@ -1032,6 +1032,10 @@ export const PlansApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/users/me/totaluser?token=${token}`, true);
   },
+  getCurrentConsumptionPlanByUsers: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/users/${userId}/currentPlan?token=${token}`, true);
+  },
 };
 
 export const AlertsPlanApi = {

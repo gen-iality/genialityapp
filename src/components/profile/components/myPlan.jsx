@@ -8,27 +8,6 @@ import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 
-/* const dataSource = [
-  {
-    key: '1',
-    reason: 'Se realizó un pago de plan',
-    status: 'Éxitoso',
-    created_at: '20-08-2021',
-  },
-  {
-    key: '2',
-    reason: 'Se realizó un pago de plan',
-    status: 'Éxitoso',
-    created_at: '20-03-2022',
-  },
-  {
-    key: '3',
-    reason: 'El pago se está realizando',
-    status: 'En progreso',
-    created_at: '20-05-2022',
-  },
-]; */
-
 const columns = [
   {
     title: 'Razón',
@@ -48,69 +27,45 @@ const columns = [
     dataIndex: 'created_at',
     key: 'created_at',
   },
-  {
+  /* {
     title: 'Acciones',
     dataIndex: 'actions',
     key: 'actions',
     render(val, item) {
       return (
         <Space wrap>
-          <Tooltip placement='topLeft' title={'Previsualización'}>
-            <Button icon={<FileDoneOutlined />} />
-          </Tooltip>
           <Tooltip placement='topLeft' title={'Descargar'}>
             <Button icon={<DownloadOutlined />} />
           </Tooltip>
         </Space>
       );
     },
-  },
+  }, */
 ];
-
-/* const bills = [
-  {
-    key: '1',
-    billNumber: '120082021',
-    reason: 'Compra plan básico',
-    status: 'Pagado',
-    value: '199',
-    created_at: '20-08-2021',
-  },
-  {
-    key: '2',
-    billNumber: '220032022',
-    reason: 'Compra plan básico',
-    status: 'Pagado',
-    value: '199',
-    created_at: '20-03-2022',
-  },
-  {
-    key: '3',
-    billNumber: '320052022',
-    reason: 'Compra plan básico',
-    status: 'Pendiente',
-    value: '199',
-    created_at: '20-05-2022',
-  },
-]; */
 
 const columnsBills = [
   {
     title: '# Factura',
-    dataIndex: 'billNumber',
-    key: 'billNumber',
+    dataIndex: 'reference_evius',
+    key: 'reference_evius',
+    render(val, item) {
+      return <>{item.billing.reference_evius}</>;
+    },
   },
   {
     title: 'Razón',
-    dataIndex: 'reason',
-    key: 'reason',
+    dataIndex: 'action',
+    key: 'action',
+    render(val, item) {
+      return <>{item.billing.action}</>;
+    },
   },
   {
     title: 'Estado',
     dataIndex: 'status',
     key: 'status',
     render(val, item) {
-      return <Tag color={val === 'Pagado' ? 'green' : 'orange'}>{val}</Tag>;
+      return <Tag color={item.billing.status === 'ACTIVE' ? 'green' : 'orange'}>{item.billing.status}</Tag>;
     },
   },
   {
@@ -118,7 +73,11 @@ const columnsBills = [
     dataIndex: 'value',
     key: 'value',
     render(val, item) {
-      return <div>US ${val}</div>;
+      return (
+        <div>
+          {item.billing.currency} ${item.billing.total}
+        </div>
+      );
     },
   },
   {
@@ -126,7 +85,7 @@ const columnsBills = [
     dataIndex: 'created_at',
     key: 'created_at',
   },
-  {
+  /* {
     title: 'Acciones',
     dataIndex: 'actions',
     key: 'actions',
@@ -142,28 +101,7 @@ const columnsBills = [
         </Space>
       );
     },
-  },
-];
-
-const events = [
-  {
-    key: '1',
-    name: 'Evento 1',
-    users: '2',
-    time: '1h/1h',
-    status: 'Activo',
-    created_at: '20-08-2021',
-    expirate_date: '20-09-2021',
-  },
-  {
-    key: '2',
-    name: 'Evento 2',
-    users: '1',
-    time: '30m/1h',
-    status: 'Activo',
-    created_at: '20-03-2022',
-    expirate_date: '20-04-2022',
-  },
+  }, */
 ];
 
 const columnsEvents = [
@@ -180,33 +118,36 @@ const columnsEvents = [
   },
   {
     title: 'Horas',
-    dataIndex: 'time',
-    key: 'time',
+    dataIndex: 'hours',
+    key: 'hours',
     align: 'center',
   },
   {
     title: 'Estado',
     dataIndex: 'status',
     key: 'status',
+    render(val, item) {
+      return <Tag color={val === 'ACTIVE' ? 'green' : 'orange'}>{val}</Tag>;
+    },
   },
   {
     title: 'Fecha de creación',
-    dataIndex: 'created_at',
-    key: 'created_at',
+    dataIndex: 'startDate',
+    key: 'startDate',
   },
   {
     title: 'Fecha final',
-    dataIndex: 'expirate_date',
-    key: 'expirate_date',
+    dataIndex: 'endDate',
+    key: 'endDate',
   },
 ];
 
 const myPlan = ({ cUser }) => {
-  console.log(cUser);
   const plan = cUser.value.plan;
   let [plans, setPlans] = useState([]);
   let [notifications, setNotifications] = useState([]);
   let [bills, setBills] = useState([]);
+  let [consumption, setConsumption] = useState([]);
 
   useEffect(() => {
     getPlans();
@@ -216,10 +157,15 @@ const myPlan = ({ cUser }) => {
     let plans = await PlansApi.getAll();
     setPlans(plans);
     let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
-    setNotifications(notifications);
+    setNotifications(notifications.data);
+    /* console.log(notifications, 'notifications'); */
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
-    setBills(bills);
+    setBills(bills.data);
     console.log('bills', bills);
+    let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
+    setConsumption(consumption.events);
+    /* console.log('consumption', consumption); */
+
     /* console.log(plans, 'plans');
     console.log(plans[0]._id, plans[1]._id, plan._id); */
     //const p = await PlansApi.getOne('62864ad118aa6b4b0f5820a2');
@@ -254,7 +200,7 @@ const myPlan = ({ cUser }) => {
             />
           </Col>
           <Col span={24}>
-            <Table dataSource={events} columns={columnsEvents} />
+            <Table dataSource={consumption} columns={columnsEvents} scroll={'auto'} />
           </Col>
           <Col span={24}>
             <Plan plan={plan} mine />
@@ -262,10 +208,10 @@ const myPlan = ({ cUser }) => {
         </Row>
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Facturaciones'} key={'bills'}>
-        <Table dataSource={bills} columns={columnsBills} />
+        <Table dataSource={bills} columns={columnsBills} scroll={'auto'} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Notificaciones'} key={'notifications'}>
-        <Table dataSource={notifications} columns={columns} />
+        <Table dataSource={notifications} columns={columns} scroll={'auto'} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
         {plans

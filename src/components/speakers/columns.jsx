@@ -17,7 +17,9 @@ export const columns = (columnsData) => [
       const DragHandle = sortableHandle(() => (
         <DragOutlined id={`drag${item.index}`} style={{ cursor: 'grab', color: '#999', visibility: 'visible' }} />
       ));
-      return <DragHandle />;
+      return columnsData.cEventIsActive === false && window.location.toString().includes('eventadmin') ? null : (
+        <DragHandle />
+      );
     },
   },
   {

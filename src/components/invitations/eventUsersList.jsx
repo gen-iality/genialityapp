@@ -283,7 +283,6 @@ class eventUsersList extends Component {
       ],
     };
     const cEventIsActive = this.props.event?.isActive;
-    console.log(cEventIsActive, 'aqui');
     return (
       <>
         <Header title={'Enviar información o correo a asistentes'} />
