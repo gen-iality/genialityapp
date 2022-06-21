@@ -27,7 +27,7 @@ const FormEnrollUserToEvent = ({
   options,
   saveUser,
   loaderWhenSavingUpdatingOrDelete = false,
-  checkInUserCallbak = () => {},
+  checkInUserCallbak,
   visibleInCms = false,
   submitIcon = <BadgeAccountOutlineIcon />,
 }: FormEnrollUserToEventPropsTypes) => {

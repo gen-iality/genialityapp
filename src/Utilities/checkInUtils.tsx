@@ -188,7 +188,10 @@ export const saveCheckInAttendee = async ({
 
     if (checkInUserCallbak) checkInUserCallbak(response);
     /** If the component has a reload and sends it, we execute it */
-    if (reloadComponent) reloadComponent();
+    if (reloadComponent) {
+      reloadComponent();
+      setAttemdeeCheckIn(response.checked_in);
+    }
   } catch (error) {
     DispatchMessageService({
       type: 'error',

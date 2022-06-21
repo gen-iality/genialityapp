@@ -60,7 +60,7 @@ export type FormEnrollUserToEventPropsTypes = {
 export type saveCheckInAttendeePropsTypes = {
   _id: string;
   checked: boolean;
-  reloadComponent: () => void;
+  reloadComponent?: () => void;
   setAttemdeeCheckIn: (state: any) => void;
   checkInUserCallbak: (user: any) => void;
 };
@@ -78,6 +78,6 @@ export type updateFieldsVisibilityPropsTypes = {
 };
 export type AttendeeCheckInPropsTypes = {
   editUser: any;
-  reloadComponent: () => any;
+  reloadComponent?: () => any;
   checkInUserCallbak: (user: any) => void;
 };

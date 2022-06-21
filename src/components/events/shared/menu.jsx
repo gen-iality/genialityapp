@@ -7,11 +7,11 @@ import { useEffect } from 'react';
 import { MenuItems } from './utils';
 import { ApartmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { imageUtils } from '../../../Utilities/ImageUtils';
+import OpenInNewIcon from '@2fd/ant-design-icons/lib/OpenInNew';
 
 const { SubMenu } = Menu;
 
 const MenuConfig = (props) => {
-  console.log('🚀 debug ~ MenuConfig ~ props', props);
   const [controller, setcontroller] = useState({
     contentTab: true,
     generalTab: false,
@@ -25,6 +25,8 @@ const MenuConfig = (props) => {
     collapsed: true,
     organizationId: '',
   });
+
+  const eventId = props.match.params.event;
 
   const eventOrganization = async (eventId) => {
     const currentEvent = await EventsApi.getOne(eventId);
@@ -76,11 +78,12 @@ const MenuConfig = (props) => {
         </Col>
         <Col span={24}>
           <Button
+            icon={props.collapsed ? <OpenInNewIcon /> : ''}
             type='primary'
             size='middle'
             target='_blank'
-            href={'`${window.location.origin}/landing/${this.state.event._id}`'}>
-            Ir al evento
+            href={`${window.location.origin}/landing/${eventId}`}>
+            {props.collapsed ? '' : 'Ir al evento'}
           </Button>
         </Col>
         <Divider style={{ background: 'gray' }} />
