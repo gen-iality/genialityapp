@@ -181,6 +181,7 @@ class AgendaEdit extends Component {
       creatingBeforeNamed: false,
       typeString: null,
       activity_id: this.props.location?.state?.edit,
+      showFormPopup: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -1226,7 +1227,10 @@ class AgendaEdit extends Component {
             <Tabs activeKey={this.state.tabs} onChange={(key) => this.setState({ tabs: key })}>
               <TabPane tab='Agenda' key='1'>
                 <Row justify='center' wrap gutter={12}>
-                  {this.state.creatingBeforeNamed && <Col span={20}>
+                  <Button onClick={() => {
+                    this.setState({showFormPopup: !this.state.showFormPopup})
+                  }}>Test {this.state.showFormPopup ? 'on':'off'}</Button>
+                  {this.state.creatingBeforeNamed || 1 && <Col span={20}>
                     <SmartTipeOfActivity
                       eventId={this.props.event._id}
                       activityId={this.state.activity_id}
@@ -1242,6 +1246,7 @@ class AgendaEdit extends Component {
                         });
                         console.log('listoooooooooooooooooooo');
                       }}
+                      showForm={this.state.showFormPopup}
                     />
                   </Col>}
                 </Row>

@@ -23,8 +23,15 @@ const objecKeys: object = {
 
 const SmartInitialView = (props: any) => {
   const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity();
-  const [loading, setLoading] = useState(true);
-  const { typeActivity, meeting_id, setActivityName, activityEdit, roomStatus, saveConfig } = useContext(AgendaContext);
+  // const [loading, setLoading] = useState(true);
+  const {
+    typeActivity,
+    meeting_id,
+    setActivityName,
+    activityEdit,
+    roomStatus,
+    saveConfig,
+  } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
@@ -43,6 +50,14 @@ const SmartInitialView = (props: any) => {
   useEffect(() => {
     saveConfig(null, 1);
   }, [roomStatus]);
+
+  // Show the popup via prop
+  useEffect(() => {
+    if (props.showForm) {
+      toggleActivitySteps('type')
+    }
+  }, [props.showForm]);
+
   //OBTENER DATOS INICIALES Y SETEARLOS EN EL REDUCER
   const obtainDataInitial = async () => {
     let urlVideo;
@@ -68,39 +83,39 @@ const SmartInitialView = (props: any) => {
     return resp;
   };
 
-  const renderComponet = () => {
-    switch (selectedKey) {
-      case 'finish':
-        return (
-          <ManagerView
-            type={objecKeys[previewKey]}
-            activityName={props.activityName}
-            activityId={props.activityId}
-          />
-        );
-      default:
-        return (
-          <Card>
-            <Result
-              icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-              status='info'
-              title='Define el tipo de contenido'
-              extra={
-                <Button onClick={() => toggleActivitySteps('type')} type='primary'>
-                  Escoge un tipo de contenido
-                </Button>
-              }
-            />
-          </Card>
-        );
-    }
-  };
+  // const renderComponet = () => {
+  //   switch (selectedKey) {
+  //     case 'finish':
+  //       return (
+  //         <ManagerView
+  //           type={objecKeys[previewKey]}
+  //           activityName={props.activityName}
+  //           activityId={props.activityId}
+  //         />
+  //       );
+  //     default:
+  //       return (
+  //         <Card>
+  //           <Result
+  //             icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
+  //             status='info'
+  //             title='Define el tipo de contenido'
+  //             extra={
+  //               <Button onClick={() => toggleActivitySteps('type')} type='primary'>
+  //                 Escoge un tipo de contenido
+  //               </Button>
+  //             }
+  //           />
+  //         </Card>
+  //       );
+  //   }
+  // };
 
   return (
     <>
       <ModalPreviewVideo />
       <SmartModalStepByStep onSetType={props.onSetType} activityName={props.activityName} />
-      {!loading ? renderComponet() : <Spin />}
+      {/* {!loading ? renderComponet() : <Spin />} */}
     </>
   );
 };

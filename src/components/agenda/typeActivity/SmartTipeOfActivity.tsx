@@ -3,7 +3,7 @@ import { TypeActivityProvider } from '../../../context/typeactivity/typeActivity
 
 import SmartInitialView from './SmartInitialView';
 
-function SmartTipeOfActivity({ eventId, activityId, activityName, ready, onSetType }) {
+function SmartTipeOfActivity({ eventId, activityId, activityName, hasActivityName, onSetType, showForm }) {
   return (
     <TypeActivityProvider>
       <SmartInitialView
@@ -12,6 +12,7 @@ function SmartTipeOfActivity({ eventId, activityId, activityName, ready, onSetTy
         onSetType={onSetType}
         activityId={activityId}
         activityName={activityName}
+        showForm={showForm}
       />
     </TypeActivityProvider>
   );
