@@ -13,7 +13,7 @@ function ClosedSurvey(props) {
         icon={<SmileOutlined />}
         title={
           <h1>
-            La encuesta &quot;<strong>{currentSurvey.name}</strong>&quot; ha finalizado
+            La evaluación &quot;<strong>{currentSurvey.name}</strong>&quot; ha finalizado
           </h1>
         }
         extra={

@@ -27,8 +27,8 @@ let surveyNotification = () => {
       </Button>
     );
     notification.open({
-      message: 'Encuesta en vivo',
-      description: 'Se encuentra activa la encuesta',
+      message: 'Evaluación en vivo',
+      description: 'Se encuentra activa la evaluación',
       btn,
       key,
       duration: 0,

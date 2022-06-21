@@ -302,6 +302,7 @@ class Event extends Component {
                 eventId={this.state.event._id}
                 event={this.state.event}
                 url={match.url}
+                shownAll
               />
 
               <Protected
@@ -320,6 +321,7 @@ class Event extends Component {
                 url={match.url}
                 componentKey='checkin'
                 type='activity'
+                shownAll={false}
               />
 
               <Protected

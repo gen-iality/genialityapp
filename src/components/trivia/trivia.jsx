@@ -20,7 +20,7 @@ const trivia = (props) => {
 
   const columns = [
     {
-      title: "Nombre de la encuesta",
+      title: "Nombre de la evaluación",
       dataIndex: "survey",
       ellipsis: true,
       sorter: (a, b) => a.survey.localeCompare(b.survey),
@@ -49,7 +49,7 @@ const trivia = (props) => {
         <CMS
           API={SurveysApi}
           eventId={props.event._id}
-          title={"Encuesta"}
+          title={"Evaluación"}
           titleTooltip={
             "Agregue o edite las Agendas que se muestran en la aplicación"
           }

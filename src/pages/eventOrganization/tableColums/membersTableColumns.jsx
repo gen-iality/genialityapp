@@ -58,6 +58,12 @@ export const columns = (columnsData, editModalUser) => [
     ...membersGetColumnSearchProps('position', columnsData),
   },
   {
+    title: 'Progreso',
+    dataIndex: 'progress',
+    ellipsis: true,
+    render: (text, item) => <div>{item.stats}</div>,
+  },
+  {
     title: 'Creado',
     dataIndex: 'created_at',
     /* align: 'center', */

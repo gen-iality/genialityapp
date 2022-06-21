@@ -154,7 +154,7 @@ const Ticket = (props) => {
               onChange={(e) => handleInputChange(e)}
             />
           </Form.Item>
-          <Form.Item label={'Permiso de Voto'}>
+          <Form.Item label={'Permiso de enviar respuestas'}>
             <Switch
               name={'allowed_to_vote'}
               checked={ticket.allowed_to_vote}

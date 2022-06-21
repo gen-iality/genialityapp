@@ -137,13 +137,13 @@ class Graphics extends Component {
       switch (operation) {
         case 'onlyCount':
           generatedlabels[a] =
-            answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} Voto(s)` : '0 Votos';
+            answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} respuesta(s)` : '0 respuestas';
           break;
         case 'participationPercentage':
           generatedlabels[a] =
             answer_count && answer_count[a]
-              ? `${numberToLetterOfAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
-              : '0 Votos';
+              ? `${numberToLetterOfAlphabet(a)}  ${answer_count[a][0]} respuesta(s), ${answer_count[a][1]}% \n `
+              : '0 respuestas';
           break;
       }
       porcentaj_answer = answer_count[a][1];
@@ -380,7 +380,7 @@ class Graphics extends Component {
                       <Col span={votos.option == 2 ? 16 : 19}>
                         <div style={{ marginLeft: '12px', marginRight: '12px', fontWeight: '600', marginTop: '4px' }}>
                           <div style={{ fontSize: '14px', fontWeight: '600' }}>
-                            <span>{votos.voto} Voto(s)</span>
+                            <span>{votos.voto} respuesta(s)</span>
                             <span style={{ float: 'right', fontSize: '16px' }}>{votos.porcentaje} % </span>
                           </div>
                           <div>
@@ -442,7 +442,7 @@ class Graphics extends Component {
                         }}>
                         <div>
                           <span style={{ fontSize: '22px', fontWeight: '500' }}>
-                            {this.state.resultVotos.usuariosSinRespuesta} Voto(s)
+                            {this.state.resultVotos.usuariosSinRespuesta} respuest(s)
                           </span>
                           <span style={{ fontSize: '22px', fontWeight: '500', float: 'right' }}>
                             {this.state.resultVotos.porcentajevotos} %{' '}

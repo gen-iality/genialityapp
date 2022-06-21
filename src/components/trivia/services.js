@@ -26,12 +26,12 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
         refSurvey
           .doc(surveyId)
           .update({ ...status })
-          .then(() => resolve({ message: 'Encuesta actualizada', state: 'updated' }));
+          .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }));
       } else {
         refSurvey
           .doc(surveyId)
           .set({ ...surveyInfo, ...status })
-          .then(() => resolve({ message: 'Encuesta creada', state: 'created' }));
+          .then(() => resolve({ message: 'Evaluación creada', state: 'created' }));
       }
     });
   });
@@ -42,7 +42,7 @@ export const deleteSurvey = (surveyId) => {
     refSurvey
       .doc(surveyId)
       .delete()
-      .then(() => resolve({ message: 'Encuesta eliminada', state: 'deleted' }));
+      .then(() => resolve({ message: 'Evaluación eliminada', state: 'deleted' }));
   });
 };
 

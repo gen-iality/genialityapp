@@ -53,7 +53,7 @@ class EventCard extends Component {
                     loading='lazy'
                     style={{ objectFit: 'cover', height: '180px', width: '100%' }}
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
-                    alt='Evius.co'
+                    alt='geniality.com.co'
                   />
                   {event._id && <StudentGeneralCourseProgress eventId={event._id} />}
                 </Link>
@@ -70,7 +70,7 @@ class EventCard extends Component {
                           : EventImage
                         : EventImage
                     }
-                    alt='Evius.co'
+                    alt='geniality.com.co'
                   />
                   {event._id && <StudentGeneralCourseProgress eventId={event._id} />}
                 </Link>

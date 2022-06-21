@@ -88,7 +88,10 @@ const formatLessonType = (typeString) => {
       typeName = 'Transmisión de RTMP';
       break;
     case 'eviusMeet':
-      typeName = 'Transmisión de GEN.iality';
+      typeName = 'Transmisión de GEN Connect';
+      break;
+    case 'eviusStreaming':
+      typeName = 'GEN.iality Streaming'
       break;
     default:
       typeName = typeString;
@@ -177,7 +180,7 @@ class AgendaEdit extends Component {
       showPendingChangesModal: false,
       creatingBeforeNamed: false,
       typeString: null,
-      activity_id: this.props.location.state.edit,
+      activity_id: this.props.location?.state?.edit,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -217,18 +220,29 @@ class AgendaEdit extends Component {
     this.setState({ conferenceVisible: isVisible });
   };
 
-  async componentWillReceiveProps (nextProps, nextStates) {
-    let agenda;
-    if (nextStates.activity_id && nextStates.activity_id !== this.state.activity_id) {
-      agenda = await AgendaApi.getOne(nextStates.activity_id, this.props.event._id);
-    } else if (this.props.location.state.edit) {
-      agenda = await AgendaApi.getOne(this.props.location.state.edit, this.props.event._id);
-    }
+  async updateTypeFromSituation (activity_id) {
+    const agenda = await AgendaApi.getOne(activity_id, this.props.event._id);
     if (agenda?.type) {
       this.setState({
         typeString: formatLessonType(agenda.type.name),
       })
     }
+  }
+
+  async componentWillReceiveProps (nextProps, nextStates) {
+    // let agenda;
+    if (nextStates.activity_id && nextStates.activity_id !== this.state.activity_id) {
+      // agenda = await AgendaApi.getOne(nextStates.activity_id, this.props.event._id);
+      await this.updateTypeFromSituation(nextStates.activity_id)
+    } else if (this.props.location.state.edit) {
+      // agenda = await AgendaApi.getOne(this.props.location.state.edit, this.props.event._id);
+      await this.updateTypeFromSituation(this.props.location.state.edit)
+    }
+    // if (agenda?.type) {
+    //   this.setState({
+    //     typeString: formatLessonType(agenda.type.name),
+    //   })
+    // }
   }
 
   async componentDidMount() {
@@ -1233,7 +1247,7 @@ class AgendaEdit extends Component {
                 </Row>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
-                    <Text strong>Tipo de contenido</Text>: {this.state.typeString || 'indefinido'}
+                    <Text strong>Tipo de contenido</Text>: {(this.state.typeString ? formatLessonType(this.state.typeString) : null) || 'indefinido'}
                   </Col>
                 </Row>
                 <Row justify='center' wrap gutter={12}>
@@ -1516,6 +1530,11 @@ class AgendaEdit extends Component {
                           activityId={this.state.activity_id}
                           activityName={this.state.name}
                           tab={this.state.tabs}
+                          onDelete={() => {
+                            this.setState({
+                              typeString: formatLessonType(null),
+                            })
+                          }}
                         />
 
                         {/* <RoomManager
@@ -1545,7 +1564,7 @@ class AgendaEdit extends Component {
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Encuestas' key='4'>
+                  <TabPane tab='Evaluaciones' key='4'>
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
                         <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />

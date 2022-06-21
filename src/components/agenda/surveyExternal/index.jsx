@@ -40,7 +40,7 @@ export default class SurveyExternal extends Component {
         .collection('surveys')
         .doc(survey_id)
         .update({ ...data })
-        .then(() => resolve({ message: 'Encuesta actualizada', state: 'updated' }));
+        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }));
     });
   };
 
@@ -59,7 +59,7 @@ export default class SurveyExternal extends Component {
   render() {
     const { publishedSurveys } = this.state;
     return (
-      <Card title='Gestor de encuestas externas'>
+      <Card title='Gestor de evaluaciones externas'>
         {this.props.isExternal ? (
           <>
             <Row style={{ padding: '8px 16px' }}>
@@ -87,7 +87,7 @@ export default class SurveyExternal extends Component {
             })}
           </>
         ) : (
-          <div>No hay encuestas publicadas para esta lección</div>
+          <div>No hay evaluaciones publicadas para esta lección</div>
         )}
       </Card>
     );

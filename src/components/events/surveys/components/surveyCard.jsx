@@ -18,7 +18,7 @@ function SurveyCard(props) {
   return (
     <Card style={{ borderRadius: '10px', marginTop: '6px' }} bodyStyle={bodyStyle}>
       {publishedSurveys && publishedSurveys.length === 0 ? (
-        <Result icon={<ClipboardTextOff />} title='Aún no se han publicado encuestas' />
+        <Result icon={<ClipboardTextOff />} title='Aún no se han publicado evaluaciones' />
       ) : (
         <List
           style={{ overflowY: 'auto', height: 'auto', overflowX: 'hidden' }}
@@ -106,7 +106,7 @@ function SurveyCard(props) {
                                 survey.isOpened === 'false' ||
                                 survey.isOpened === false
                                   ? 'Resultados'
-                                  : 'Ir a Encuesta'}
+                                  : 'Ir a Evaluación'}
                               </Button>
                             </>
                           }

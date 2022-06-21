@@ -29,9 +29,9 @@ function SurveyDetailPage(props) {
   return (
     <div>
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
-        <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta encuesta' />
+        <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
       )}
-      {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta encuesta ha sido cerrada' />}
+      {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
       {(cSurveys.shouldDisplaySurvey() || showSurveyTemporarily) && (
         <Card className='survyCard'>
           <SurveyComponent

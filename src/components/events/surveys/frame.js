@@ -106,7 +106,7 @@ export const graphicsFrame = {
       labels: [],
       datasets: [
         {
-          label: '% de Votos',
+          label: '% de respuestas',
           labelColor: 'black',
           ...colorBars,
           ...alphabet,
@@ -165,7 +165,7 @@ export const graphicsFrame = {
       labels: [],
       datasets: [
         {
-          label: '# de Votos',
+          label: '# de respuestas',
           labelColor: 'black',
           ...colorBars,
           ...alphabet,
@@ -223,7 +223,7 @@ export const graphicsFrame = {
       labels: [],
       datasets: [
         {
-          label: '# de Votos',
+          label: '# de respuestas',
           labelColor: 'black',
           ...colorBars,
           ...alphabet,

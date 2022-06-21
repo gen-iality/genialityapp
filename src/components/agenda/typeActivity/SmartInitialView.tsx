@@ -72,7 +72,11 @@ const SmartInitialView = (props: any) => {
     switch (selectedKey) {
       case 'finish':
         return (
-          <ManagerView type={objecKeys[previewKey]} activityName={props.activityName} activityId={props.activityId} />
+          <ManagerView
+            type={objecKeys[previewKey]}
+            activityName={props.activityName}
+            activityId={props.activityId}
+          />
         );
       default:
         return (

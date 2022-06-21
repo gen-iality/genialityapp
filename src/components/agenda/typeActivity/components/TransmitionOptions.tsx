@@ -4,7 +4,7 @@ import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeA
 import AgendaContext from '../../../../context/AgendaContext';
 import { useContext, useState } from 'react';
 import { deleteLiveStream, deleteAllVideos } from '../../../../adaptors/gcoreStreamingApi';
-import { AgendaApi } from '../../../../helpers/request';
+import { AgendaApi, TypesAgendaApi } from '../../../../helpers/request';
 import { CurrentEventContext } from '../../../../context/eventContext';
 import Service from '../../../agenda/roomManager/service';
 import { firestore } from '@/helpers/firebase';
@@ -57,13 +57,19 @@ const TransmitionOptions = (props: any) => {
                     await removeAllRequest(refActivity);
                     await deleteTransmition();
                   }
-                  await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
+                  const thing = await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
                   await deleteTypeActivity();
                   toggleActivitySteps('initial');
                   setLoadingDelete(false);
+                  // Force to delete that, right? I will need the non-existent doc
+                  const deleted = await TypesAgendaApi.deleteOne(thing.type._id, cEvent?.value?._id);
+                  console.log('deleted', deleted)
+                  if (props.onDelete) {
+                    props.onDelete()
+                  }
                 }}
                 onCancel={() => console.log('cancelado')}
-                okText='Si'
+                okText='Sí'
                 cancelText='No'>
                 <Button loading={loadingDelete} danger>
                   Eliminar

@@ -65,7 +65,7 @@ class TriviaReport extends Component {
     if (!loading)
       return (
         <Fragment>
-          <Header title={'Detalle de la Encuesta'} back />
+          <Header title={'Detalle de la Evaluación'} back />
 
           {surveyQuestions.length > 0 ? (
             <List

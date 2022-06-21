@@ -6,7 +6,13 @@ import SmartInitialView from './SmartInitialView';
 function SmartTipeOfActivity({ eventId, activityId, activityName, ready, onSetType }) {
   return (
     <TypeActivityProvider>
-      <SmartInitialView eventId={eventId} ready={ready} onSetType={onSetType} activityId={activityId} activityName={activityName} />
+      <SmartInitialView
+        eventId={eventId}
+        ready={ready}
+        onSetType={onSetType}
+        activityId={activityId}
+        activityName={activityName}
+      />
     </TypeActivityProvider>
   );
 }

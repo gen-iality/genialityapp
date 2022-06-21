@@ -120,7 +120,9 @@ const EventSectionRoutes = (props) => {
           <Row justify='start'>
             <Col span={24}>
               <div style={{ padding: '25px' }}>
+                {(props.location?.pathname || '').endsWith('evento') && (
                 <StudentSelfCourseProgress hasProgressLabel />
+                )}
               </div>
             </Col>
           </Row>

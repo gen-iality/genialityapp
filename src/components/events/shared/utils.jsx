@@ -54,7 +54,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Nuestra Organización',
+        name: 'Aliados',
         path: '/empresas',
         key: 'empresas',
         onClick: handleClick,
@@ -78,7 +78,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Evaluación',
+        name: 'Evaluaciones',
         path: '/trivia',
         key: 'encuestas',
         onClick: handleClick,

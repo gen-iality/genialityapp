@@ -22,7 +22,7 @@ const Tickets = (props) => {
       ...getColumnSearchProps('title', columnsData),
     },
     {
-      title: 'Permiso de Voto',
+      title: 'Permiso de enviar respuesta',
       dataIndex: 'allowed_to_vote',
       ellipsis: true,
       ...getColumnSearchProps('allowed_to_vote', columnsData),
