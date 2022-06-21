@@ -38,7 +38,8 @@ const SmartLayoutTypeActivity = ({ title, children, onSetType }: propsOptions) =
       closeModal();
     } else {
       await onSetType(typeOptions.key);
-      await createTypeActivity();
+      closeModal();
+      // await createTypeActivity();
     }
   };
 

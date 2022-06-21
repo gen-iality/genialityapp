@@ -22,7 +22,12 @@ const objecKeys: object = {
 };
 
 const SmartInitialView = (props: any) => {
-  const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity();
+  const {
+    toggleActivitySteps,
+    selectedKey,
+    previewKey,
+    createTypeActivity,
+  } = useTypeActivity();
   // const [loading, setLoading] = useState(true);
   const {
     typeActivity,
@@ -35,16 +40,23 @@ const SmartInitialView = (props: any) => {
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
+    if (activityEdit) {
+      // Guardamos
+      createTypeActivity();
+    }
+  }, [props.hasActivityName, activityEdit]);
+
+  useEffect(() => {
     if (!props.hasActivityName) return;
     //OBTENER DETALLE DE LECCIÓN
     setActivityName(props.activityName);
-    if (typeActivity === null) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-      obtainDataInitial();
-      //MIENTRAS CARGA LOS COMPONENTES
-    }
+    // if (typeActivity === null) {
+    //   setLoading(false);
+    // } else {
+    //   setLoading(true);
+    //   obtainDataInitial();
+    //   //MIENTRAS CARGA LOS COMPONENTES
+    // }
   }, [props.hasActivityName]); // props.tabs ignored
 
   //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA LECCIÓN

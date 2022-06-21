@@ -172,7 +172,7 @@ class AgendaEdit extends Component {
       host_id: null,
       host_name: null,
       habilitar_ingreso: '',
-      showAditionalTabs: false,
+      isEditingAgenda: false,
       idNewlyCreatedActivity: null,
       activityEdit: false,
       reloadActivity: false,
@@ -331,7 +331,7 @@ class AgendaEdit extends Component {
 
     if (state?.edit) {
       this.setState({
-        showAditionalTabs: true,
+        isEditingAgenda: true,
       });
       this.context.setActivityEdit(state?.edit);
       const info = await AgendaApi.getOne(state.edit, event._id);
@@ -494,7 +494,7 @@ class AgendaEdit extends Component {
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
         // currentUser: currentUser,
-        showAditionalTabs: true,
+        isEditingAgenda: true,
       });
     }
   }
@@ -731,10 +731,10 @@ class AgendaEdit extends Component {
 
   //Envío de información
   submit = async (changePathWithoutSaving) => {
-    if (this.state.typeString) {
-      this.setState({reloadActivity: true, creatingBeforeNamed: false,})
-      return;
-    }
+    // if (this.state.typeString) {
+    //   this.setState({reloadActivity: true, creatingBeforeNamed: false,})
+    //   return;
+    // }
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -1175,7 +1175,7 @@ class AgendaEdit extends Component {
       isPublished,
       latitude,
       loading,
-      showAditionalTabs,
+      isEditingAgenda,
       showPendingChangesModal,
     } = this.state;
 
@@ -1208,7 +1208,7 @@ class AgendaEdit extends Component {
             saveNameIcon
             edit={this.props.location.state.edit || this.state.activityEdit}
             extra={
-              showAditionalTabs && (
+              isEditingAgenda && (
                 <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
                   <Switch
                     checkedChildren='Sí'
@@ -1227,10 +1227,14 @@ class AgendaEdit extends Component {
             <Tabs activeKey={this.state.tabs} onChange={(key) => this.setState({ tabs: key })}>
               <TabPane tab='Agenda' key='1'>
                 <Row justify='center' wrap gutter={12}>
-                  <Button onClick={() => {
-                    this.setState({showFormPopup: !this.state.showFormPopup})
-                  }}>Test {this.state.showFormPopup ? 'on':'off'}</Button>
-                  {this.state.creatingBeforeNamed || 1 && <Col span={20}>
+                  <Button
+                    onClick={() => {
+                      this.setState({showFormPopup: !this.state.showFormPopup})
+                    }}
+                  >
+                    Seleccionar tipo: {this.state.showFormPopup ? 'on':'off'}
+                  </Button>
+                  <Col span={20}>
                     <SmartTipeOfActivity
                       eventId={this.props.event._id}
                       activityId={this.state.activity_id}
@@ -1248,7 +1252,7 @@ class AgendaEdit extends Component {
                       }}
                       showForm={this.state.showFormPopup}
                     />
-                  </Col>}
+                  </Col>
                 </Row>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
@@ -1280,7 +1284,7 @@ class AgendaEdit extends Component {
                         placeholder={'Nombre de la lección'}
                       />
                     </Form.Item>
-                    {showAditionalTabs && <Form.Item
+                    {isEditingAgenda && <Form.Item
                       label={
                         <label style={{ marginTop: '2%' }}>
                           Día <label style={{ color: 'red' }}>*</label>
@@ -1295,7 +1299,7 @@ class AgendaEdit extends Component {
                         onChange={(value) => this.handleChangeDate(value, 'date')}
                       />
                     </Form.Item>}
-                    {showAditionalTabs && <Row wrap justify='center' gutter={[8, 8]}>
+                    {isEditingAgenda && <Row wrap justify='center' gutter={[8, 8]}>
                       <Col span={12}>
                         <Form.Item
                           style={{ width: '100%' }}
@@ -1367,7 +1371,7 @@ class AgendaEdit extends Component {
                         </Form.Item>
                       </Col>
                     </Row>}
-                    {showAditionalTabs && <Form.Item label={'Conferencista'}>
+                    {isEditingAgenda && <Form.Item label={'Conferencista'}>
                       <Row wrap gutter={[8, 8]}>
                         <Col span={23}>
                           <Select
@@ -1388,7 +1392,7 @@ class AgendaEdit extends Component {
                         </Col>
                       </Row>
                     </Form.Item>}
-                    {showAditionalTabs && <Form.Item label={'Espacio'}>
+                    {isEditingAgenda && <Form.Item label={'Espacio'}>
                       <Row wrap gutter={[8, 8]}>
                         <Col span={23}>
                           <SelectAntd
@@ -1410,7 +1414,7 @@ class AgendaEdit extends Component {
                         </Col>
                       </Row>
                     </Form.Item>}
-                    {showAditionalTabs && <Form.Item label={'Categorías'}>
+                    {isEditingAgenda && <Form.Item label={'Categorías'}>
                       <Row wrap gutter={[8, 8]}>
                         <Col span={23}>
                           <Creatable
@@ -1431,7 +1435,7 @@ class AgendaEdit extends Component {
                         </Col>
                       </Row>
                     </Form.Item>}
-                    {showAditionalTabs && <Form.Item label={'¿Tiene espacio físico?'}>
+                    {isEditingAgenda && <Form.Item label={'¿Tiene espacio físico?'}>
                       <Switch
                         checked={this.state.isPhysical}
                         checkedChildren='Si'
@@ -1439,7 +1443,7 @@ class AgendaEdit extends Component {
                         onChange={this.handlePhysical}
                       />
                     </Form.Item>}
-                    {this.state.isPhysical && showAditionalTabs && (
+                    {this.state.isPhysical && isEditingAgenda && (
                       <>
                         <Form.Item label={'Longitud'}>
                           <Input
@@ -1481,7 +1485,7 @@ class AgendaEdit extends Component {
                       <Text type='secondary'>Este video solo se vera cuando la transmisión no está en vivo.</Text>
                       <Input name='video' type='text' value={video} onChange={this.handleChange} />
                     </Form.Item> */}
-                    {showAditionalTabs && <Form.Item label={'Descripción'}>
+                    {isEditingAgenda && <Form.Item label={'Descripción'}>
                       <Space>
                         <ExclamationCircleOutlined style={{ color: '#faad14' }} />
                         <Text type='secondary'>
@@ -1494,7 +1498,7 @@ class AgendaEdit extends Component {
                         handleChange={(e) => this.handleChangeReactQuill(e, 'description')}
                       />
                     </Form.Item>}
-                    {showAditionalTabs && <Form.Item label={'Imagen'}>
+                    {isEditingAgenda && <Form.Item label={'Imagen'}>
                       <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
                         <Form.Item noStyle>
                           <p>
@@ -1525,9 +1529,9 @@ class AgendaEdit extends Component {
                   </Col>
                 </Row>
               </TabPane>
-              {showAditionalTabs && (
+              {isEditingAgenda && (
                 <>
-                  <TabPane tab='Tipo de contenido' key='2'>
+                  <TabPane tab='Contenido' key='2'>
                     <Row /* justify='center' */ wrap gutter={12}>
                       <Col span={24}>
                         <TipeOfActivity
