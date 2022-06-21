@@ -1213,7 +1213,8 @@ deberia ser solo la url de la imagen
                           display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
                         type='primary'
-                        htmlType='submit'>
+                        htmlType='submit'
+                        disabled={cEvent.value?.isActive === false}>
                         {}
                         {isRegister(initialValues, cEventUser)
                           ? intl.formatMessage({ id: 'Button.signup' })
