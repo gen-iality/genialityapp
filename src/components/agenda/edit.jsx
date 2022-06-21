@@ -1243,9 +1243,6 @@ class AgendaEdit extends Component {
                       onSetType={(typeString) => {
                         // Rewrite the type
                         this.setState({
-                          // reloadActivity: true,
-                          // creatingBeforeNamed: false,
-                          // tabs: '2',
                           typeString: formatLessonType(typeString),
                         });
                         console.log('listoooooooooooooooooooo');

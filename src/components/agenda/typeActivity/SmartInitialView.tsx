@@ -48,18 +48,19 @@ const SmartInitialView = (props: any) => {
 
   useEffect(() => {
     if (!props.hasActivityName) return;
-    //OBTENER DETALLE DE LECCIÓN
+    // Obtener detalles de la lección
     setActivityName(props.activityName);
     // if (typeActivity === null) {
     //   setLoading(false);
     // } else {
     //   setLoading(true);
     //   obtainDataInitial();
-    //   //MIENTRAS CARGA LOS COMPONENTES
+    //   // Mientras carga los componentes
     // }
   }, [props.hasActivityName]); // props.tabs ignored
 
-  //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA LECCIÓN
+  // Permite guardar la data en firebase y activar el snapshot cuando se cambia
+  // el estado de la lección
   useEffect(() => {
     saveConfig(null, 1);
   }, [roomStatus]);
@@ -71,7 +72,7 @@ const SmartInitialView = (props: any) => {
     }
   }, [props.showForm]);
 
-  //OBTENER DATOS INICIALES Y SETEARLOS EN EL REDUCER
+  // Obtiene datos iniciales y guarda en el Reducer
   const obtainDataInitial = async () => {
     let urlVideo;
     if (typeActivity === 'url') {

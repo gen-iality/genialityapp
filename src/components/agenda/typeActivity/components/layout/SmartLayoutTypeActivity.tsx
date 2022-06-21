@@ -69,10 +69,17 @@ const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
         {children}
       </Content>
 
-      <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
+      <Footer
+        style={{
+          backgroundColor: '#fff',
+          padding: '20px 0px 0px 0px',
+        }}
+      >
         <Row justify='end' gutter={[8, 8]}>
           <Col>
-            <Button onClick={handleButtonPreviousClick}>{buttonTextPreviousOrCancel}</Button>
+            <Button onClick={handleButtonPreviousClick}>
+              {buttonTextPreviousOrCancel}
+            </Button>
           </Col>
           <Col>
             {loadingCreate ? <div style={{ width: 60 }}><Spin /></div> : (
