@@ -28,7 +28,7 @@ const SmartInitialView = (props: any) => {
     previewKey,
     createTypeActivity,
   } = useTypeActivity();
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const {
     typeActivity,
     meeting_id,

@@ -3,14 +3,15 @@ import { useState } from 'react';
 import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
 
 const { Header, Content, Footer } = Layout;
+const { Title } = Typography;
 
-interface propsOptions {
+export interface SmartLayoutTypeActivityProps {
   title?: string;
   onSetType: (typeString: string) => void;
   children: JSX.Element | JSX.Element[];
 }
 
-const SmartLayoutTypeActivity = ({ title, children, onSetType }: propsOptions) => {
+const SmartLayoutTypeActivity = ({ title, children, onSetType }: SmartLayoutTypeActivityProps) => {
   const {
     closeModal,
     selectedKey,
@@ -21,16 +22,16 @@ const SmartLayoutTypeActivity = ({ title, children, onSetType }: propsOptions) =
     buttonTextPreviousOrCancel,
     disableNextButton,
     loadingCreate,
-    createTypeActivity,
+    // createTypeActivity,
   } = useTypeActivity();
 
-  const previousOrCancel = () => {
+  const handleButtonPreviousClick = () => {
     if (previewKey === 'close' || typeOptions.key === 'type') closeModal();
     if (previewKey === 'type' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
     if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
   };
 
-  const nextOrCreate = async () => {
+  const handleButtonNextClick = async () => {
     if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== 'Crear') {
       toggleActivitySteps(selectedKey);
       return;
@@ -46,23 +47,29 @@ const SmartLayoutTypeActivity = ({ title, children, onSetType }: propsOptions) =
   return (
     <Layout>
       <Header style={{ textAlign: 'center', padding: '20px 0px 20px 0px' }}>
-        <Typography.Title level={3}>{title}</Typography.Title>
+        <Title level={3}>
+          {title || 'Sin título'}
+        </Title>
       </Header>
-      <Content style={{ padding: '60px 50px 60px 50px' }}>{children}</Content>
+
+      <Content style={{ padding: '60px 50px 60px 50px' }}>
+        {children}
+      </Content>
+
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
-        <Row justify='end' gutter={[8, 8]} /* style={{ backgroundColor: 'red' }} */>
+        <Row justify='end' gutter={[8, 8]}>
           <Col>
-            <Button onClick={previousOrCancel}>{buttonTextPreviousOrCancel}</Button>
+            <Button onClick={handleButtonPreviousClick}>{buttonTextPreviousOrCancel}</Button>
           </Col>
           <Col>
-            {!loadingCreate ? (
-              <Button disabled={disableNextButton} onClick={nextOrCreate} type='primary'>
+            {loadingCreate ? <div style={{ width: 60 }}><Spin /></div> : (
+              <Button
+                disabled={disableNextButton}
+                onClick={handleButtonNextClick}
+                type='primary'
+              >
                 {buttonsTextNextOrCreate}
               </Button>
-            ) : (
-              <div style={{ width: 60 }}>
-                <Spin />
-              </div>
             )}
           </Col>
         </Row>
