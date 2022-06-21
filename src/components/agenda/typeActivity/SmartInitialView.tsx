@@ -35,7 +35,7 @@ const SmartInitialView = (props: any) => {
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
-    if (!props.ready) return;
+    if (!props.hasActivityName) return;
     //OBTENER DETALLE DE LECCIÓN
     setActivityName(props.activityName);
     if (typeActivity === null) {
@@ -45,7 +45,8 @@ const SmartInitialView = (props: any) => {
       obtainDataInitial();
       //MIENTRAS CARGA LOS COMPONENTES
     }
-  }, [props.ready]); // props.tabs ignored
+  }, [props.hasActivityName]); // props.tabs ignored
+
   //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA LECCIÓN
   useEffect(() => {
     saveConfig(null, 1);

@@ -1235,7 +1235,7 @@ class AgendaEdit extends Component {
                       eventId={this.props.event._id}
                       activityId={this.state.activity_id}
                       activityName={this.state.name}
-                      ready={this.state.creatingBeforeNamed}
+                      hasActivityName={this.state.creatingBeforeNamed}
                       onSetType={(typeString) => {
                         // Rewrite the type
                         this.setState({

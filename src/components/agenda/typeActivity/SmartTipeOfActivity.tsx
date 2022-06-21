@@ -8,7 +8,7 @@ function SmartTipeOfActivity({ eventId, activityId, activityName, hasActivityNam
     <TypeActivityProvider>
       <SmartInitialView
         eventId={eventId}
-        ready={ready}
+        hasActivityName={hasActivityName}
         onSetType={onSetType}
         activityId={activityId}
         activityName={activityName}
