@@ -9,9 +9,17 @@ export interface SmartLayoutTypeActivityProps {
   title?: string;
   onSetType: (typeString: string) => void;
   children: JSX.Element | JSX.Element[];
+  onClosedForm: () => void,
 }
 
-const SmartLayoutTypeActivity = ({ title, children, onSetType }: SmartLayoutTypeActivityProps) => {
+const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
+  const {
+    title,
+    children,
+    onSetType,
+    onClosedForm,
+  } = props;
+
   const {
     closeModal,
     selectedKey,
@@ -25,8 +33,13 @@ const SmartLayoutTypeActivity = ({ title, children, onSetType }: SmartLayoutType
     // createTypeActivity,
   } = useTypeActivity();
 
+  const handleClosePopup = () => {
+    closeModal();
+    onClosedForm();
+  }
+
   const handleButtonPreviousClick = () => {
-    if (previewKey === 'close' || typeOptions.key === 'type') closeModal();
+    if (previewKey === 'close' || typeOptions.key === 'type') handleClosePopup();
     if (previewKey === 'type' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
     if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
   };
@@ -36,10 +49,10 @@ const SmartLayoutTypeActivity = ({ title, children, onSetType }: SmartLayoutType
       toggleActivitySteps(selectedKey);
       return;
     } else if (selectedKey === 'initial') {
-      closeModal();
+      handleClosePopup();
     } else {
       await onSetType(typeOptions.key);
-      closeModal();
+      handleClosePopup();
       // await createTypeActivity();
     }
   };

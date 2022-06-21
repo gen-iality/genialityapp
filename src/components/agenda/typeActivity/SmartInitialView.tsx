@@ -127,7 +127,11 @@ const SmartInitialView = (props: any) => {
   return (
     <>
       <ModalPreviewVideo />
-      <SmartModalStepByStep onSetType={props.onSetType} activityName={props.activityName} />
+      <SmartModalStepByStep
+        onSetType={props.onSetType}
+        activityName={props.activityName}
+        onClosedForm={props.onClosedForm}
+      />
       {/* {!loading ? renderComponet() : <Spin />} */}
     </>
   );

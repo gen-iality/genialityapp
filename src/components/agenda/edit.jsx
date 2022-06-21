@@ -1251,6 +1251,7 @@ class AgendaEdit extends Component {
                         console.log('listoooooooooooooooooooo');
                       }}
                       showForm={this.state.showFormPopup}
+                      onClosedForm={() => this.setState({ showFormPopup: false })}
                     />
                   </Col>
                 </Row>

@@ -10,6 +10,7 @@ export interface SmartTipeOfActivityProps {
   hasActivityName: boolean,
   onSetType: (typeString: string) => void,
   showForm: boolean,
+  onClosedForm: () => void,
 };
 
 function SmartTipeOfActivity(props: SmartTipeOfActivityProps) {
@@ -20,6 +21,7 @@ function SmartTipeOfActivity(props: SmartTipeOfActivityProps) {
     hasActivityName,
     onSetType,
     showForm,
+    onClosedForm,
   } = props;
 
   return (
@@ -31,6 +33,7 @@ function SmartTipeOfActivity(props: SmartTipeOfActivityProps) {
         activityId={activityId}
         activityName={activityName}
         showForm={showForm}
+        onClosedForm={onClosedForm}
       />
     </TypeActivityProvider>
   );
