@@ -76,10 +76,12 @@ const HeaderColumns = (props) => {
     if (!currentActivity || typeActivity !== 'eviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
     const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${currentActivity?._id}`;
+    console.log('🌮---> Se ejecuta en HEaderColumn');
     setRefActivity(refActivity);
     setRefActivityViewers(refActivityViewers);
     getRequestByActivity(refActivity);
     getViewers(refActivityViewers);
+    console.log('🌮🌮---> yo soy el que genero este doble Headercolumn ');
     return () => {
       setActivityEdit(null);
     };

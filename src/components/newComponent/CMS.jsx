@@ -103,6 +103,7 @@ const CMS = (props) => {
         const onHandlerRemove = async () => {
           try {
             const refActivity = `request/${eventId}/activities/${id}`;
+            const refActivityViewers = `viewers/${eventId}/activities/${id}`;
             const service = new Service(firestore);
             const configuration = await service.getConfiguration(eventId, id);
             if (configuration && configuration.typeActivity === 'eviusMeet') {
@@ -110,6 +111,7 @@ const CMS = (props) => {
             }
             if (deleteCallback) await deleteCallback(id);
             await fireRealtime.ref(refActivity).remove();
+            await fireRealtime.ref(refActivityViewers).remove();
             await service.deleteActivity(eventId, id);
             await API.deleteOne(id, eventId);
             DispatchMessageService({

@@ -11,6 +11,8 @@ import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import AgendaContext from '../../../context/AgendaContext';
+import initBroadcastViewers from '@containers/broadcastViewers';
+import { CurrentUserContext } from '@/context/userContext';
 
 const RenderComponent = (props) => {
   let tabsdefault = {
@@ -19,6 +21,7 @@ const RenderComponent = (props) => {
     games: true,
     surveys: false,
   };
+  const userContext = useContext(CurrentUserContext);
   const [tabsGeneral, settabsGeneral] = useState(tabsdefault);
   const [activityState, setactivityState] = useState('');
   const [activityStateGlobal, setactivityStateGlobal] = useState('');
@@ -77,6 +80,14 @@ const RenderComponent = (props) => {
       GetStateMeetingRoom();
     }
   }, [currentActivity, props.cEvent]);
+
+  useEffect(() => {
+    //presencia de usuario en la
+
+    if (currentActivity && (activityState === 'open_meeting_room' || currentActivity.habilitar_ingreso === 'only')) {
+      initBroadcastViewers(props.cEvent.value._id, currentActivity._id, currentActivity.name, userContext);
+    }
+  }, [activityState === 'open_meeting_room']);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
