@@ -800,7 +800,7 @@ class AgendaEdit extends Component {
           this.setState({
             idNewlyCreatedActivity: agenda._id,
             activityEdit: true,
-            // reloadActivity: true, Esto no se hace aquí, lo hace el formulario de tipos, SmartType...algo, se me olvidó el nombre
+            reloadActivity: true,
             creatingBeforeNamed: true,
             isPublished: false,
           });
