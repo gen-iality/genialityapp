@@ -67,7 +67,7 @@ const formLayout = {
 const { Option } = SelectAntd;
 
 const formatLessonType = (typeString) => {
-  let typeName = 'genérico';
+  let typeName = 'Sin contenido';
   switch (typeString) {
     case 'cargarvideo':
       typeName = 'Vídeo cargado';
@@ -1256,11 +1256,6 @@ class AgendaEdit extends Component {
                 </Row>
                 <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
-                    <Text strong>Tipo de contenido</Text>: {(this.state.typeString ? formatLessonType(this.state.typeString) : null) || 'indefinido'}
-                  </Col>
-                </Row>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
                     <Form.Item
                       label={
                         <label style={{ marginTop: '2%' }}>
@@ -1282,6 +1277,19 @@ class AgendaEdit extends Component {
                         value={name}
                         onChange={(e) => this.handleChange(e)}
                         placeholder={'Nombre de la lección'}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label={
+                        <label style={{ marginTop: '2%' }}>
+                          Tipo de contenido
+                        </label>
+                      }
+                      >
+                      <Input
+                        disabled
+                        type='text'
+                        value={(this.state.typeString ? formatLessonType(this.state.typeString) : null) || 'indefinido'}
                       />
                     </Form.Item>
                     {isEditingAgenda && <Form.Item
