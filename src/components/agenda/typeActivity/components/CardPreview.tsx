@@ -39,9 +39,14 @@ const CardPreview = (props: any) => {
     stopRecordTransmition,
     loadingRecord,
     record,
+    viewers,
+    viewersOnline,
+    totalViews,
+    maxViewers,
   } = useContext(AgendaContext);
 
   console.log('DATALIVE ===>', dataLive);
+  console.log('🌮---> Status', roomStatus, props);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {
@@ -280,6 +285,17 @@ const CardPreview = (props: any) => {
               <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
               {props.type === 'Video' && <Select.Option value='no_visibe'>Oculto</Select.Option>}
             </Select>
+          </Space>
+        )}
+        {(roomStatus != '' || props.type === 'reunion') && (
+          <Space direction='vertical'>
+            <Typography.Text strong>Estadisticas de la actividad:</Typography.Text>
+            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
+            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
+            {(roomStatus === 'open_meeting_room' || props.type === 'reunión') && (
+              <Typography.Text strong>Visualizaciones en curso: {viewersOnline.length}</Typography.Text>
+            )}
+            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
           </Space>
         )}
       </Space>
