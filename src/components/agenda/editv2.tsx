@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { Redirect, withRouter, Link } from 'react-router-dom';
+import { Redirect, withRouter, Link, useLocation } from 'react-router-dom';
 import Moment from 'moment';
 import {
   Tabs,
@@ -19,6 +19,7 @@ import {
   Modal,
   TimePicker,
 } from 'antd';
+import Loading from '../profile/loading';
 import Header from '../../antdComponents/Header';
 import AgendaContext from '../../context/AgendaContext';
 import { RouterPrompt } from '../../antdComponents/RoutePrompt';
@@ -37,21 +38,27 @@ interface EventType {
 export interface AgendaEditProps {
   event: EventType,
   matchUrl: string,
+  location: Re
 };
   
 function AgendaEdit(props: AgendaEditProps) {
   const [name, setName] = useState('');
   const [activityEdit, setActivityEdit] = useState<null | string>(null);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
   const [currentTab, setCurrentTab] = useState('1');
   const [isLoading, setIsLoading] = useState(true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  
+  const location = useLocation();
 
   const agendaContext = useContext(AgendaContext);
 
   const submit = (changePathWithoutSaving: boolean) => {}
   const remove = () => {}
   const handleChange = (e) => { /** Core here */ }
+
+  if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
 
   return (
     <>
@@ -77,9 +84,9 @@ function AgendaEdit(props: AgendaEditProps) {
         save
         form
         remove={remove}
-        saveName={props.location.state.edit || activityEdit ? '' : 'Crear'}
+        saveName={location.state.edit || activityEdit ? '' : 'Crear'}
         saveNameIcon
-        edit={props.location.state.edit || activityEdit}
+        edit={location.state.edit || activityEdit}
         extra={
           isEditing && (
             <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
