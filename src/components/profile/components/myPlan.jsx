@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
-import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Collapse, Typography } from 'antd';
+import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal } from 'antd';
 import { DownloadOutlined, DownOutlined, FileDoneOutlined, RightOutlined } from '@ant-design/icons';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
@@ -10,6 +10,17 @@ import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
 
 const myPlan = ({ cUser }) => {
+  const plan = cUser.value.plan;
+  let [plans, setPlans] = useState([]);
+  let [notifications, setNotifications] = useState([]);
+  let [bills, setBills] = useState([]);
+  let [consumption, setConsumption] = useState([]);
+  const [loadingNotification, setLoadingNotification] = useState(true);
+  const [loadingBill, setLoadingBill] = useState(true);
+  const [loadingConsumption, setLoadingConsumption] = useState(true);
+  const [show, setShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
   const columns = [
     {
       title: 'Razón',
@@ -33,7 +44,7 @@ const myPlan = ({ cUser }) => {
 
   const columnsBills = [
     {
-      title: '# Factura',
+      title: 'Ref. factura',
       dataIndex: 'reference_evius',
       key: 'reference_evius',
       render(val, item) {
@@ -78,14 +89,64 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'actions',
       key: 'actions',
       render(val, item) {
+        const payment = item.billing.payment_method || item.payment;
         return (
           <Space wrap>
             <Tooltip placement='topLeft' title={'Previsualización'}>
-              <Button icon={<FileDoneOutlined />} />
+              <Button icon={<FileDoneOutlined />} onClick={() => setShowModal(!showModal)} />
+              <Modal visible={showModal} footer={[]} onCancel={() => setShowModal(!showModal)}>
+                <Space direction='vertical'>
+                  <>Compra</>
+                  <>Referencia de factura evius: {item.billing.reference_evius}</>
+                  <>Referencia de factura wompi: {item.billing.reference_wompi}</>
+                  <>Razón: {item.billing.action}</>
+                  <>
+                    Total: {item.billing.currency} {item.billing.total}
+                  </>
+                  <>Estatus: {item.billing.status}</>
+                  <>Tipo de subscripción: {item.billing.subscription_type}</>
+                  <>
+                    Detalle:
+                    {item.billing.details.map((detail) => (
+                      <>
+                        Plan: (monto){detail['plan'].amount} - (precio){detail['plan'].price}
+                        Usuarios: (monto){detail['users'].amount} - (precio){detail['users'].price}
+                      </>
+                    ))}
+                  </>
+                  <>Pago</>
+                  {payment && (
+                    <>
+                      <>Dirección: </>
+                      {payment['address'].address_line_1}
+                      {payment['address'].address_line_2}
+                      {payment['address'].city}
+                      {payment['address'].country}
+                      {payment['address'].email}
+                      {payment['address'].full_name}
+                      {payment['address'].identification['type']}
+                      {payment['address'].identification['value']}
+                      {payment['address'].phone_number}
+                      {payment['address'].postal_code}
+                      {payment['address'].prefix}
+                      {payment['address'].region}
+                      {payment.card_holder}
+                      {payment.brand}
+                      {payment.method_name}
+                      {payment.status}
+                      {/* tienen ? al final */}
+                      {payment.type}
+                      {payment.card_holder}
+                      {payment.last_four}
+                      {payment.id} {/* tienen ? al final */}
+                    </>
+                  )}
+                </Space>
+              </Modal>
             </Tooltip>
-            <Tooltip placement='topLeft' title={'Descargar'}>
+            {/* <Tooltip placement='topLeft' title={'Descargar'}>
               <Button icon={<DownloadOutlined />} />
-            </Tooltip>
+            </Tooltip> */}
           </Space>
         );
       },
@@ -137,16 +198,6 @@ const myPlan = ({ cUser }) => {
     },
   ];
 
-  const plan = cUser.value.plan;
-  let [plans, setPlans] = useState([]);
-  let [notifications, setNotifications] = useState([]);
-  let [bills, setBills] = useState([]);
-  let [consumption, setConsumption] = useState([]);
-  const [loadingNotification, setLoadingNotification] = useState(true);
-  const [loadingBill, setLoadingBill] = useState(true);
-  const [loadingConsumption, setLoadingConsumption] = useState(true);
-  const [show, setShow] = useState(false);
-
   useEffect(() => {
     getInfoPlans();
   }, []);
@@ -157,15 +208,15 @@ const myPlan = ({ cUser }) => {
     let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
     setNotifications(notifications.data);
     setLoadingNotification(false);
-    /* console.log(notifications, 'notifications'); */
+    /* console.log(notifications.data, 'notifications'); */
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
     setBills(bills.data);
     setLoadingBill(false);
-    console.log('bills', bills);
+    console.log('bills', bills.data);
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption.events);
     setLoadingConsumption(false);
-    /* console.log('consumption', consumption); */
+    /* console.log('consumption', consumption.data); */
 
     /* console.log(plans, 'plans');
     console.log(plans[0]._id, plans[1]._id, plan._id); */
