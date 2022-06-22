@@ -49,7 +49,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [activityEdit, setActivityEdit] = useState<null | string>(null);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [currentTab, setCurrentTab] = useState('1');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -60,7 +60,10 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const submit = (changePathWithoutSaving: boolean) => {}
   const remove = () => {}
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => { /** Core here */ }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement> | boolean,
+    name: string
+  ) => { /** Core here */ }
 
   if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
 
@@ -116,4 +119,4 @@ function AgendaEdit(props: AgendaEditProps) {
   );
 }
 
-export default withRouter(AgendaEdit);
+export default AgendaEdit;
