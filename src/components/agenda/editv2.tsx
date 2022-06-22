@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Redirect, withRouter, Link } from 'react-router-dom';
 import Moment from 'moment';
 import {
@@ -20,6 +20,7 @@ import {
   TimePicker,
 } from 'antd';
 import Header from '../../antdComponents/Header';
+import AgendaContext from '../../context/AgendaContext';
 import { RouterPrompt } from '../../antdComponents/RoutePrompt';
 
 const formLayout = {
@@ -46,7 +47,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const agendaContext = useAgendaContext(); // Import it
+  const agendaContext = useContext(AgendaContext);
 
   const submit = (changePathWithoutSaving: boolean) => {}
   const remove = () => {}
@@ -104,4 +105,4 @@ function AgendaEdit(props: AgendaEditProps) {
   );
 }
 
-export default AgendaEdit;
+export default withRouter(AgendaEdit);
