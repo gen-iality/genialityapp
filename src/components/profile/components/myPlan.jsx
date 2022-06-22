@@ -8,7 +8,7 @@ import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+//import moment from 'moment';
 
 const myPlan = ({ cUser }) => {
   const plan = cUser.value.plan;
@@ -53,7 +53,16 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Razón',
+      title: 'Razón social / Nombre completo',
+      dataIndex: 'reason',
+      key: 'reason',
+      render(val, item) {
+        const payment = item.billing.payment_method || item.payment;
+        return <>{payment['address'].full_name}</>;
+      },
+    },
+    {
+      title: 'Acción',
       dataIndex: 'action',
       key: 'action',
       render(val, item) {
@@ -109,7 +118,8 @@ const myPlan = ({ cUser }) => {
                   {payment['address'].full_name}
                 </Typography.Text>
                 <Typography.Text>
-                  <Typography.Text strong>Identificación:</Typography.Text> {payment['id?']}
+                  <Typography.Text strong>Identificación:</Typography.Text>
+                  {payment['address'].identification['type=>']} {payment['address'].identification['value']}
                 </Typography.Text>
                 <Typography.Text>
                   <Typography.Text strong>Teléfono:</Typography.Text> +{payment['address'].prefix}{' '}
@@ -128,7 +138,7 @@ const myPlan = ({ cUser }) => {
                   {/* {moment(item.billing.created_at).format('YYYY-MM-DD')} */}
                 </Typography.Text>
                 <Typography.Text>
-                  <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text> {item.billing.action}
+                  <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text>
                   {item.billing.details.map((detail) => (
                     <>
                       Plan: (monto){detail['plan'].amount} - (precio){detail['plan'].price}
@@ -242,6 +252,8 @@ const myPlan = ({ cUser }) => {
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption.events);
     setLoadingConsumption(false);
+    let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
+    console.log(totalUsersByPlan, 'aqui');
     /* console.log('consumption', consumption.data); */
 
     /* console.log(plans, 'plans');
@@ -269,9 +281,11 @@ const myPlan = ({ cUser }) => {
               value={plan.availables.users}
               icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
               message={
-                <Link href='pay.evius.co' style={{ color: '#1890ff' }}>
-                  Comprar más
-                </Link>
+                plan.name !== 'Free' && (
+                  <Link href='pay.evius.co' style={{ color: '#1890ff' }}>
+                    Comprar más
+                  </Link>
+                )
               }
             />
           </Col>
@@ -283,7 +297,12 @@ const myPlan = ({ cUser }) => {
             />
           </Col>
           <Col span={24}>
-            <Table dataSource={consumption} columns={columnsEvents} scroll={'auto'} loading={loadingNotification} />
+            <Table
+              dataSource={consumption}
+              columns={columnsEvents}
+              scroll={{ x: 'auto' }}
+              loading={loadingNotification}
+            />
           </Col>
           <Col span={24}>
             <Plan plan={plan} mine />
@@ -291,10 +310,10 @@ const myPlan = ({ cUser }) => {
         </Row>
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Facturaciones'} key={'bills'}>
-        <Table dataSource={bills} columns={columnsBills} scroll={'auto'} loading={loadingBill} />
+        <Table dataSource={bills} columns={columnsBills} scroll={{ x: 'auto' }} loading={loadingBill} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Notificaciones'} key={'notifications'}>
-        <Table dataSource={notifications} columns={columns} scroll={'auto'} loading={loadingConsumption} />
+        <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingConsumption} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
         {plans
