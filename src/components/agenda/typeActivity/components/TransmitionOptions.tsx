@@ -57,9 +57,9 @@ const TransmitionOptions = (props: any) => {
                   if (isVisible && meeting_id) {
                     await deleteAllVideos(dataLive.name, meeting_id);
                     await removeAllRequest(refActivity);
-                    await removeViewers(refActivityViewers);
                     await deleteTransmition();
                   }
+                  await removeViewers(refActivityViewers);
                   await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
                   await deleteTypeActivity();
                   toggleActivitySteps('initial');

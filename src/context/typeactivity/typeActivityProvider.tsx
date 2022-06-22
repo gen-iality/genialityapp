@@ -157,6 +157,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'url':
         try {
           const respUrl = await AgendaApi.editOne({ video: typeActivityState.data }, activityEdit, cEvent?.value?._id);
+
           if (respUrl) {
             resp = await saveConfig({
               platformNew: '',

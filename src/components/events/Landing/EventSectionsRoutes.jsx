@@ -10,6 +10,7 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 import { useCheckinUser } from '../../../helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
+import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { UseCurrentUser } from '@/context/userContext';
 
@@ -81,6 +82,63 @@ const EventSectionRoutes = (props) => {
       initUserPresence(props.cEvent.value._id);
     }
   }, [props.cEvent.value, cUser.value]);
+
+  useEffect(() => {
+    // seperar la url en un arrary
+
+    console.log(props);
+
+    if (props.cEvent.value && props.currentActivity) {
+      if (props.location.pathname !== `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {
+        initBroadcastViewers(
+          props.cEvent.value._id,
+          props.currentActivity._id,
+          props.currentActivity.name,
+          cUser,
+          true
+        );
+      }
+    }
+  }, [props.location.pathname]);
+
+  useEffect(() => {
+    //presencia de usuario en la
+    if (props.cEvent.value && props.currentActivity) {
+      if (props.location.pathname === `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {
+        if (props.currentActivity.type) {
+          if (
+            (props.currentActivity.type.name === 'youTube' ||
+              props.currentActivity.type.name === 'eviusMeet' ||
+              props.currentActivity.type.name === 'RTMP' ||
+              props.currentActivity.type.name === 'vimeo') &&
+            props.currentActivity.habilitar_ingreso === 'open_meeting_room'
+          ) {
+            console.log('Llegue aqui 3');
+            initBroadcastViewers(props.cEvent.value._id, props.currentActivity._id, props.currentActivity.name, cUser);
+          }
+        }
+      }
+    }
+  }, [props.cEvent.value, props.currentActivity?._id, props.currentActivity?.habilitar_ingreso]);
+
+  useEffect(() => {
+    //presencia de usuario en la
+    if (props.cEvent.value && props.currentActivity) {
+      if (props.location.pathname === `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {
+        if (props.currentActivity.type) {
+          if (
+            props.currentActivity.type.name === 'video' ||
+            props.currentActivity.type.name === 'url' ||
+            props.currentActivity.type.name === 'meeting' ||
+            props.currentActivity.type.name === 'cargarvideo'
+          ) {
+            console.log('Llegue aqui 4');
+            initBroadcastViewers(props.cEvent.value._id, props.currentActivity._id, props.currentActivity.name, cUser);
+          }
+        }
+      }
+    }
+  }, [props.cEvent.value, props.currentActivity?._id]);
 
   useEffect(() => {
     GetPermissionsEvent();

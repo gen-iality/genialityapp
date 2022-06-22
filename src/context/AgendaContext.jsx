@@ -192,9 +192,9 @@ export const AgendaContextProvider = ({ children }) => {
   };
   const getViewers = (refActivityViewers) => {
     const totalViewRef = refActivityViewers + '/total';
-    const maxViewers = refActivityViewers + '/maxViewers';
-    const viewers = refActivityViewers + '/uniqueUsers';
-    fireRealtime.ref(viewers).on('value', (snapshot) => {
+    const maxViewersRef = refActivityViewers + '/maxViewers';
+    const viewersRef = refActivityViewers + '/uniqueUsers';
+    fireRealtime.ref(viewersRef).on('value', (snapshot) => {
       let viewers = [];
       let viewersOnline = [];
       let viewersOffline = [];
@@ -230,15 +230,6 @@ export const AgendaContextProvider = ({ children }) => {
           setViewers(viewers);
           setViewersOffline(viewersOffline);
           setViewersOnline(viewersOnline);
-          fireRealtime.ref(maxViewers).on('value', (snapshot) => {
-            let data = snapshot.val();
-            if (data < viewersOnline.length) {
-              fireRealtime.ref(maxViewers).set(viewersOnline.length);
-              setMaxViewers(viewersOnline.length);
-            } else {
-              setMaxViewers(data);
-            }
-          });
         } else {
           setViewers([]);
           setViewersOffline([]);
@@ -252,11 +243,19 @@ export const AgendaContextProvider = ({ children }) => {
         setMaxViewers(0);
       }
     });
+
+    fireRealtime.ref(maxViewersRef).on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        setMaxViewers(snapshot.val());
+      } else {
+        setMaxViewers(0);
+      }
+    });
     fireRealtime.ref(totalViewRef).on('value', (snapshot) => {
       let viewersTotal = [];
       if (snapshot.exists()) {
         let data = snapshot.val();
-        console.log('🌮 Total ---->', data);
+
         if (Object.keys(data).length > 0) {
           Object.keys(data).map((viewer) => {
             viewersTotal.push({
@@ -272,13 +271,14 @@ export const AgendaContextProvider = ({ children }) => {
         } else {
           setTotalViews([]);
         }
+      } else {
+        setTotalViews([]);
       }
     });
   };
-
-  const removeViewers = (refActivityViewers) => {
+  const removeViewers = async (refActivityViewers) => {
     if (refActivityViewers) {
-      fireRealtime.ref(refActivityViewers).remove();
+      await fireRealtime.ref(refActivityViewers).remove();
       setViewers([]);
       setViewersOffline([]);
       setViewersOnline([]);
@@ -431,6 +431,7 @@ export const AgendaContextProvider = ({ children }) => {
 
   const deleteTypeActivity = async () => {
     const { roomInfo, tabs } = prepareData({ type: 'delete' });
+    console.log('deleteing', roomInfo);
 
     const activity_id = activityEdit;
     const service = new Service(firestore);
