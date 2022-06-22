@@ -35,6 +35,10 @@ interface EventType {
   name: string,
 };
 
+interface LocationStateType {
+  edit: string | null,
+};
+
 export interface AgendaEditProps {
   event: EventType,
   matchUrl: string,
@@ -49,7 +53,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
-  const location = useLocation();
+  const location = useLocation<LocationStateType>();
   const history = useHistory();
 
   const agendaContext = useContext(AgendaContext);
