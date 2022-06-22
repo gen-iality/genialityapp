@@ -60,7 +60,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const submit = (changePathWithoutSaving: boolean) => {}
   const remove = () => {}
-  const handleChange = (e) => { /** Core here */ }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => { /** Core here */ }
 
   if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
 
@@ -97,7 +97,7 @@ function AgendaEdit(props: AgendaEditProps) {
               <Switch
                 checkedChildren='Sí'
                 unCheckedChildren='No'
-                name={'isPublished'}
+                // name={'isPublished'}
                 checked={agendaContext.isPublished}
                 onChange={(e) => handleChange(e, 'isPublished')}
               />
