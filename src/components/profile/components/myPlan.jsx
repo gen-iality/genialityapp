@@ -3,11 +3,12 @@ import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request
 import PlanCard from './planCard';
 import Plan from './plan';
 import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal } from 'antd';
-import { DownloadOutlined, DownOutlined, FileDoneOutlined, RightOutlined } from '@ant-design/icons';
+import { DownOutlined, FileDoneOutlined, RightOutlined } from '@ant-design/icons';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 const myPlan = ({ cUser }) => {
   const plan = cUser.value.plan;
@@ -83,6 +84,9 @@ const myPlan = ({ cUser }) => {
       title: 'Fecha',
       dataIndex: 'created_at',
       key: 'created_at',
+      /* render(val, item) {
+        return <>{moment(val).format('YYYY-MM-DD')}</>;
+      }, */
     },
     {
       title: 'Acciones',
@@ -94,56 +98,78 @@ const myPlan = ({ cUser }) => {
           <Space wrap>
             <Tooltip placement='topLeft' title={'Previsualización'}>
               <Button icon={<FileDoneOutlined />} onClick={() => setShowModal(!showModal)} />
-              <Modal visible={showModal} footer={[]} onCancel={() => setShowModal(!showModal)}>
-                <Space direction='vertical'>
-                  <>Compra</>
-                  <>Referencia de factura evius: {item.billing.reference_evius}</>
-                  <>Referencia de factura wompi: {item.billing.reference_wompi}</>
-                  <>Razón: {item.billing.action}</>
-                  <>
-                    Total: {item.billing.currency} {item.billing.total}
-                  </>
-                  <>Estatus: {item.billing.status}</>
-                  <>Tipo de subscripción: {item.billing.subscription_type}</>
-                  <>
-                    Detalle:
-                    {item.billing.details.map((detail) => (
-                      <>
-                        Plan: (monto){detail['plan'].amount} - (precio){detail['plan'].price}
-                        Usuarios: (monto){detail['users'].amount} - (precio){detail['users'].price}
-                      </>
-                    ))}
-                  </>
-                  <>Pago</>
-                  {payment && (
-                    <>
-                      <>Dirección: </>
-                      {payment['address'].address_line_1}
-                      {payment['address'].address_line_2}
-                      {payment['address'].city}
-                      {payment['address'].country}
-                      {payment['address'].email}
-                      {payment['address'].full_name}
-                      {payment['address'].identification['type']}
-                      {payment['address'].identification['value']}
-                      {payment['address'].phone_number}
-                      {payment['address'].postal_code}
-                      {payment['address'].prefix}
-                      {payment['address'].region}
-                      {payment.card_holder}
-                      {payment.brand}
-                      {payment.method_name}
-                      {payment.status}
-                      {/* tienen ? al final */}
-                      {payment.type}
-                      {payment.card_holder}
-                      {payment.last_four}
-                      {payment.id} {/* tienen ? al final */}
-                    </>
-                  )}
-                </Space>
-              </Modal>
             </Tooltip>
+            <Modal visible={showModal} footer={[]} onCancel={() => setShowModal(!showModal)} width={600}>
+              <Space direction='vertical'>
+                <Divider orientation='left'>
+                  <strong>Comprobante</strong>
+                </Divider>
+                <Typography.Text>
+                  <Typography.Text strong>Razón social / Nombre completo:</Typography.Text>{' '}
+                  {payment['address'].full_name}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Identificación:</Typography.Text> {payment['id?']}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Teléfono:</Typography.Text> +{payment['address'].prefix}{' '}
+                  {payment['address'].phone_number}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>E-mail:</Typography.Text> {payment['address'].email}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Dirección:</Typography.Text> ({payment['address'].country}){' '}
+                  {payment['address'].address_line_1} {payment['address'].address_line_2}, {payment['address'].city}{' '}
+                  {payment['address'].postal_code}-{payment['address'].region}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Fecha de la venta:</Typography.Text> {item.created_at}
+                  {/* {moment(item.billing.created_at).format('YYYY-MM-DD')} */}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text> {item.billing.action}
+                  {item.billing.details.map((detail) => (
+                    <>
+                      Plan: (monto){detail['plan'].amount} - (precio){detail['plan'].price}
+                      Usuarios: (monto){detail['users'].amount} - (precio){detail['users'].price}
+                    </>
+                  ))}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Valor base de la venta:</Typography.Text> {item.billing.action}
+                  {item.billing.currency} {item.billing.total} con impuesto de {item.billing.tax}{' '}
+                  {item.billing.total_discount && <>aplicando descuento de {item.billing.total_discount}</>}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Medio de pago:</Typography.Text> {payment.method_name} ({payment.brand})
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Referencia del comprobante:</Typography.Text> {item.billing.reference_evius}{' '}
+                  (evius) / {item.billing.reference_wompi} (wompi)
+                </Typography.Text>
+                {/* <>Estatus: {item.billing.status}</>
+                <>Tipo de subscripción: {item.billing.subscription_type}</>
+                <>Detalle:</>
+                <>Pago</>
+                {payment && (
+                  <>
+                    <>Dirección: </>
+
+                    {payment['address'].identification['type']}
+                    {payment['address'].identification['value']}
+
+                    {payment.card_holder}
+
+                    {payment.status}
+                    tienen ? al final
+                    {payment.type}
+                    {payment.card_holder}
+                    {payment.last_four}
+                  </>
+                )} */}
+              </Space>
+            </Modal>
             {/* <Tooltip placement='topLeft' title={'Descargar'}>
               <Button icon={<DownloadOutlined />} />
             </Tooltip> */}
