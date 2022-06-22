@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { Redirect, withRouter, Link, useLocation } from 'react-router-dom';
+import { Redirect, withRouter, Link, useLocation, useHistory } from 'react-router-dom';
 import Moment from 'moment';
 import {
   Tabs,
@@ -38,7 +38,6 @@ interface EventType {
 export interface AgendaEditProps {
   event: EventType,
   matchUrl: string,
-  location: Re
 };
   
 function AgendaEdit(props: AgendaEditProps) {
@@ -51,6 +50,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isEditing, setIsEditing] = useState(false);
   
   const location = useLocation();
+  const history = useHistory();
 
   const agendaContext = useContext(AgendaContext);
 
