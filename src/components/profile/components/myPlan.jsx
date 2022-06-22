@@ -152,12 +152,16 @@ const myPlan = ({ cUser }) => {
                   {item.billing.total_discount && <>aplicando descuento de {item.billing.total_discount}</>}
                 </Typography.Text>
                 <Typography.Text>
-                  <Typography.Text strong>Medio de pago:</Typography.Text> {payment.method_name} ({payment.brand})
+                  <Typography.Text strong>Medio de pago:</Typography.Text> {payment.type} - {payment.method_name} (
+                  {payment.brand})
                 </Typography.Text>
                 <Typography.Text>
                   <Typography.Text strong>Referencia del comprobante:</Typography.Text> {item.billing.reference_evius}{' '}
                   (evius) / {item.billing.reference_wompi} (wompi)
                 </Typography.Text>
+                {/* <Typography.Text>
+                  <Typography.Text strong>Estatus:</Typography.Text>
+                </Typography.Text> */}
                 {/* <>Estatus: {item.billing.status}</>
                 <>Tipo de subscripción: {item.billing.subscription_type}</>
                 <>Detalle:</>
@@ -165,9 +169,6 @@ const myPlan = ({ cUser }) => {
                 {payment && (
                   <>
                     <>Dirección: </>
-
-                    {payment['address'].identification['type']}
-                    {payment['address'].identification['value']}
 
                     {payment.card_holder}
 
