@@ -30,7 +30,9 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  let { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
+  let { transmition, setTransmition, setTypeActivity, typeActivity, inactiveOrActiveViewer } = useContext(
+    AgendaContext
+  );
   let { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
@@ -82,14 +84,6 @@ const RenderComponent = (props) => {
   }, [currentActivity, props.cEvent]);
 
   useEffect(() => {
-    //presencia de usuario en la
-
-    if (currentActivity && (activityState === 'open_meeting_room' || currentActivity.habilitar_ingreso === 'only')) {
-      initBroadcastViewers(props.cEvent.value._id, currentActivity._id, currentActivity.name, userContext);
-    }
-  }, [activityState === 'open_meeting_room']);
-
-  useEffect(() => {
     if (chatAttendeChats === '4') {
       setRenderGame('game');
     } else {
@@ -99,55 +93,6 @@ const RenderComponent = (props) => {
       }
     }
   }, [chatAttendeChats]);
-
-  // esto es para que incie automaticamente con anomimo pero genera conflito con el compoente de anonymosEventUser
-  // y con los contetxos de userContext y eventuserConext por que denpende del onAuthStateChanged
-  // const loginAnonymus = useCallback(() => {
-  //   const userUid = app.auth().currentUser?.uid;
-  //   console.log('🚀 ------ userUid', userUid);
-
-  //   if (userUid) return;
-
-  //   app
-  //     .auth()
-  //     .signInAnonymously()
-  //     .then(async (user) => {
-  //       console.log('🌮--->Cambio Sign ', user);
-  //       console.log('🚀 debug ~ .then ~ user en el auth ', user.user.uid);
-  //       if (user.user.uid) {
-  //         // await app.auth().currentUser.reload();
-  //         // cEventUser.setUpdateUser(true);
-  //         app
-  //           .auth()
-  //           .currentUser.updateProfile({
-  //             displayName: 'A',
-  //             /**almacenamos el email en el photoURL para poder setearlo en el context del usuario y asi llamar el eventUser anonimo */
-  //             photoURL: 'email@mocionsoft.com',
-  //           })
-  //           .then(async () => {
-  //             console.log('🌮--->Cambio Sign2 ', users);
-  //             await app.auth().currentUser.reload();
-  //             cEventUser.setUpdateUser(true);
-  //           })
-  //           .catch((error) => {
-  //             var errorCode = error.code;
-  //             var errorMessage = error.message;
-  //             console.log('🚀 debug ~ loginAnonymus ~ errorCode', { errorCode, errorMessage });
-  //             // ...
-  //           });
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       var errorCode = error.code;
-  //       var errorMessage = error.message;
-  //       console.log('🚀 debug ~ loginAnonymus ~ errorCode', { errorCode, errorMessage });
-  //       // ...
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   loginAnonymus();
-  // }, []);
 
   const RenderizarComponente = useCallback((plataforma, actividad_estado, reder_Game) => {
     switch (plataforma) {

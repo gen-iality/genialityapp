@@ -14,12 +14,22 @@ import ModalListRequestsParticipate from '../roomManager/components/ModalListReq
 import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
 import CardListVideo from './components/CardListVideo';
 import LoadingTypeActivity from './components/LoadingTypeActivity';
+import { fireRealtime } from '@/helpers/firebase';
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext);
   const { data, toggleActivitySteps } = useTypeActivity();
-  const { activityEdit, getViewers, getRequestByActivity, request, dataLive, roomStatus, meeting_id } = useContext(
-    AgendaContext
-  );
+  const {
+    activityEdit,
+    getViewers,
+    getRequestByActivity,
+    request,
+    dataLive,
+    roomStatus,
+    meeting_id,
+    typeActivity,
+    maxViewers,
+    viewersOnline,
+  } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
   const refActivityViewers = `viewers/${eventContext.value?._id}/activities/${activityEdit}`;
@@ -30,6 +40,12 @@ const ManagerView = (props: any) => {
     if (props.type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
   }, [props.type, meeting_id]);
+
+  useEffect(() => {
+    if (maxViewers < viewersOnline.length) {
+      fireRealtime.ref(refActivityViewers + '/maxViewers').set(viewersOnline.length);
+    }
+  }, [viewersOnline]);
 
   const obtenerListadodeVideos = async () => {
     setVideos(null);

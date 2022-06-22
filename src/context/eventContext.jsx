@@ -8,7 +8,7 @@ export const CurrentEventContext = React.createContext();
 
 export function CurrentEventProvider({ children }) {
   let { event_id, event_name, event } = useParams();
-  /* console.log('params=>>', useParams()); */
+  /* ('params=>>', useParams()); */
   let eventNameFormated = null;
   let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };
 

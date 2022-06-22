@@ -17,8 +17,7 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
 
   useEffect(() => {
     if (!eventContext.value || !activityEdit) return;
-    console.log('🌮---> Se ejecuta en ConferenceConfig');
-    console.log('🌮🌮---> yo soy el que genero este doble  confereConfig');
+
     getRequestByActivity(refActivity);
     getViewers(refActivityViewers);
   }, [eventContext.value, activityEdit]);

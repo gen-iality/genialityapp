@@ -1,12 +1,20 @@
 import { fireRealtime, app } from '../helpers/firebase';
 import { uniqueID } from '@/helpers/utils';
 import momemt from 'moment';
-let initBroadcastViewers = async (event_id: string, activity_id: string, activity_name: string, userContext: any) => {
+
+let initBroadcastViewers = async (
+  event_id: string,
+  activity_id: string,
+  activity_name: string,
+  userContext: any,
+  state?: string
+) => {
+  console.log('auiiiiiiiiiiiiiii2223', userContext);
   const userAnonimo = localStorage.getItem('userAnonimo');
   if (!userContext.value) {
     if (userAnonimo) {
       // Set user anonimo
-      initUserPresenceInner(JSON.parse(userAnonimo), event_id, activity_id);
+      initUserPresenceInner(JSON.parse(userAnonimo), event_id, activity_id, state);
     } else {
       let uid = uniqueID();
       let user = {
@@ -16,7 +24,7 @@ let initBroadcastViewers = async (event_id: string, activity_id: string, activit
         isAnonymous: true,
       };
       window.localStorage.setItem('userAnonimo', JSON.stringify(user));
-      initUserPresenceInner(user, event_id, activity_id);
+      initUserPresenceInner(user, event_id, activity_id, state);
     }
   } else {
     if (userAnonimo) {
@@ -26,11 +34,11 @@ let initBroadcastViewers = async (event_id: string, activity_id: string, activit
       window.localStorage.removeItem('userAnonimo');
       //delete user anonimo cuando se inicia session en un usuario registrado
     }
-    initUserPresenceInner(userContext.value, event_id, activity_id);
+    initUserPresenceInner(userContext.value, event_id, activity_id, state);
   }
 };
 
-let initUserPresenceInner = async (user: any, event_id: string, activity_id: string) => {
+let initUserPresenceInner = async (user: any, event_id: string, activity_id: string, state?: string) => {
   let uid = user._id;
   let time = uid + momemt().format('HH:mm:ss');
   var uniqueUsers = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/uniqueUsers/${uid}`);
@@ -59,20 +67,23 @@ let initUserPresenceInner = async (user: any, event_id: string, activity_id: str
     id: user._id || '',
     date: momemt().format('YYYY-MM-DD HH:mm:ss'),
   };
+  if (state) {
+    uniqueUsers.set(isOfflineForDatabase);
+  } else {
+    fireRealtime.ref('.info/connected').on('value', function(snapshot) {
+      totalViews.set(isViewer);
+      if (snapshot.val() == false) {
+        return;
+      }
 
-  totalViews.set(isViewer);
-
-  fireRealtime.ref('.info/connected').on('value', function(snapshot) {
-    if (snapshot.val() == false) {
-      return;
-    }
-    uniqueUsers
-      .onDisconnect()
-      .set(isOfflineForDatabase)
-      .then(function() {
-        uniqueUsers.set(isOnlineForDatabase);
-      });
-  });
+      uniqueUsers
+        .onDisconnect()
+        .set(isOfflineForDatabase)
+        .then(function() {
+          uniqueUsers.set(isOnlineForDatabase);
+        });
+    });
+  }
 };
 
 export default initBroadcastViewers;
