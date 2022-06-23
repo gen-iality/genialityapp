@@ -4,7 +4,7 @@
  * @param object Any object
  * @returns true if the passed object is really an object.
  */
-const isObject = (object) => {
+const isObject = (object: object) => {
   return object != null && typeof object === 'object';
 };
 
@@ -15,7 +15,7 @@ const isObject = (object) => {
  * @param object2 Object 2.
  * @returns true if both object are equals.
  */
-const deepStateEqualityValidation = (object1, object2) => {
+const deepStateEqualityValidation = (object1: object, object2: object) => {
   const keys1 = Object.keys(object1);
   const keys2 = Object.keys(object2);
 
@@ -24,8 +24,8 @@ const deepStateEqualityValidation = (object1, object2) => {
   }
 
   for (const key of keys1) {
-    const value1 = object1[key];
-    const value2 = object2[key];
+    const value1 = object1[key as keyof object];
+    const value2 = object2[key as keyof object];
     const areObjects = isObject(value1) && isObject(value2);
 
     if ((areObjects && !deepStateEqualityValidation(value1, value2)) || (!areObjects && value1 !== value2)) {
@@ -35,4 +35,8 @@ const deepStateEqualityValidation = (object1, object2) => {
   return true;
 };
 
-export default deepStateEqualityValidation;
+const useDeepStateEqualityValidation = () => {
+  return deepStateEqualityValidation;
+};
+
+export default useDeepStateEqualityValidation;
