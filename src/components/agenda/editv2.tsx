@@ -259,90 +259,92 @@ function AgendaEdit(props: AgendaEditProps) {
         }
       />
 
-      {isLoading ? <Loading /> : (
-        <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
-          <TabPane tab='Agenda' key='1'>
-            <AgendaFormulary
-              formulary={formulary}
-              savedFormulary={savedFormulary}
-              setFormulary={setFormulary}
-              setPendingChangesSave={setPendingChangesSave}
-              setShowPendingChangesModal={setShowPendingChangesModal}
-              agendaContext={agendaContext}
-              matchUrl={props.matchUrl}
-              days={days}
-              selectedHosts={selectedHosts}
-              setSelectedHosts={setSelectedHosts}
-              allHosts={allHosts}
-              spaces={spaces}
-              allCategories={allCategories}
-              thisIsLoading={thisIsLoading}
-            />
-          </TabPane>
-          {isEditing && (
-            <>
-              <TabPane tab='Tipo de actividad' key='2'>
-                <Row /* justify='center' */ wrap gutter={12}>
-                  <Col span={24}>
-                    <TipeOfActivity
-                      eventId={props.event._id}
-                      activityId={activity_id}
-                      activityName={formulary.name}
-                      tab={currentTab}
-                    />
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab='Juegos' key='3'>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
-                    <RoomController
-                      handleGamesSelected={handleGamesSelected}
-                      handleTabsController={handleTabsController}
-                    />
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab='Encuestas' key='4'>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
-                    <SurveyManager event_id={props.event._id} activity_id={activity_id} />
-                    {isExternal && (
-                      <SurveyExternal
-                        isExternal={isExternal}
-                        meeting_id={externalSurveyID}
-                        event_id={props.event._id}
-                        activity_id={activity_id}
-                        roomStatus={roomStatus}
-                      />
-                    )}
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab='Documentos' key='5'>
-                <Row justify='center' wrap gutter={12}>
-                  <Col span={20}>
-                    <Form.Item>
-                      <SelectAntd
-                        id={'nameDocuments'}
-                        showArrow
-                        mode='multiple'
-                        onChange={(value) => setSelectedDocument(value)}
-                        options={nameDocuments}
-                        // defaultValue={selectedDocument}
-                      />
-                    </Form.Item>
-                    <BackTop />
-                  </Col>
-                </Row>
-              </TabPane>
-            </>
-          )}
-        </Tabs>
-      )}
+      {isLoading ? <Loading /> :
+      <>
+      <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
+        <TabPane tab='Agenda' key='1'>
+          <AgendaFormulary
+            formulary={formulary}
+            savedFormulary={savedFormulary}
+            setFormulary={setFormulary}
+            setPendingChangesSave={setPendingChangesSave}
+            setShowPendingChangesModal={setShowPendingChangesModal}
+            agendaContext={agendaContext}
+            matchUrl={props.matchUrl}
+            days={days}
+            selectedHosts={selectedHosts}
+            setSelectedHosts={setSelectedHosts}
+            allHosts={allHosts}
+            spaces={spaces}
+            allCategories={allCategories}
+            thisIsLoading={thisIsLoading}
+          />
+        </TabPane>
+        {isEditing &&
+        <>
+        <TabPane tab='Tipo de actividad' key='2'>
+          <Row /* justify='center' */ wrap gutter={12}>
+            <Col span={24}>
+              <TipeOfActivity
+                eventId={props.event._id}
+                activityId={activity_id}
+                activityName={formulary.name}
+                tab={currentTab}
+              />
+              <BackTop />
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab='Juegos' key='3'>
+          <Row justify='center' wrap gutter={12}>
+            <Col span={20}>
+              <RoomController
+                handleGamesSelected={handleGamesSelected}
+                handleTabsController={handleTabsController}
+              />
+              <BackTop />
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab='Encuestas' key='4'>
+          <Row justify='center' wrap gutter={12}>
+            <Col span={20}>
+              <SurveyManager event_id={props.event._id} activity_id={activity_id} />
+              {isExternal && (
+                <SurveyExternal
+                  isExternal={isExternal}
+                  meeting_id={externalSurveyID}
+                  event_id={props.event._id}
+                  activity_id={activity_id}
+                  roomStatus={roomStatus}
+                />
+              )}
+              <BackTop />
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab='Documentos' key='5'>
+          <Row justify='center' wrap gutter={12}>
+            <Col span={20}>
+              <Form.Item>
+                <SelectAntd
+                  id={'nameDocuments'}
+                  showArrow
+                  mode='multiple'
+                  onChange={(value) => setSelectedDocument(value)}
+                  options={nameDocuments}
+                  // defaultValue={selectedDocument}
+                />
+              </Form.Item>
+              <BackTop />
+            </Col>
+          </Row>
+        </TabPane>
+        </>
+        }
+      </Tabs>
+      </>
+      }
     </Form>
     </>
   );
