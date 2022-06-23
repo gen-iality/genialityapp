@@ -97,7 +97,7 @@ class EventCard extends Component {
                   </span>
                   {event?.isActive === false && window.location.toString().includes('myprofile') && (
                     <small style={{ color: 'red' }}>
-                      Tu evento está bloqueado desde el {Moment(event.updated_at).format('DD MMM YYYY')}
+                      Tu evento está bloqueado desde el {Moment(event.datetime_to).format('DD MMM YYYY')}
                     </small>
                   )}
                 </Space>
