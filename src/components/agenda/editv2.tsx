@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext, useRef } from 'react';
+import { useState, useContext, useRef, useEffect } from 'react';
 import { Redirect, withRouter, useLocation } from 'react-router-dom';
 import BackTop from '../../antdComponents/BackTop';
 import TipeOfActivity from './typeActivity';
@@ -34,7 +34,10 @@ import AgendaContext from '../../context/AgendaContext';
 import { RouterPrompt } from '../../antdComponents/RoutePrompt';
 import SelectOptionType from './types/SelectOptionType';
 
+import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
+
 import AgendaFormulary, { FormularyType } from './components/AgendaFormulary';
+import { AgendaApi, CategoriesAgendaApi, DocumentsApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from '@/helpers/request';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -48,6 +51,10 @@ const formLayout = {
 interface EventType {
   _id: string,
   name: string,
+  vimeo_id: string,
+  dates: string[],
+  date_start: string,
+  date_end: string,
 };
 
 interface LocationStateType {
@@ -85,6 +92,8 @@ export interface AgendaDocumentType {
   host_ids: any[] | null,
   length: string,
   latitude: string,
+  date_start_zoom?: string,
+  date_end_zoom?: string,
 };
 
 export interface AgendaEditProps {
@@ -155,14 +164,12 @@ function AgendaEdit(props: AgendaEditProps) {
   /**
    * This states are loaded from API
    */
-  const [days, setDays] = useState<SelectOptionType[]>([]);
-  const [hosts, setHosts] = useState<SelectOptionType[]>([]);
-  const [spaces, setSpaces] = useState<SelectOptionType[]>([// info.space_id loads this with data
+  const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
+  const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([// info.space_id loads this with data
     {label: 'space 1', value: 'space_1'},
     {label: 'space 2', value: 'space_2'},
     {label: 'space 3', value: 'space_3'},
   ]);
-  const [categories, setCategories] = useState<SelectOptionType[]>([]);
   // This state is used in the 'Documentos' tab
   const [nameDocuments, setNameDocuments] = useState<SelectOptionType[]>([]);
   
@@ -178,7 +185,7 @@ function AgendaEdit(props: AgendaEditProps) {
    */
   const [selectedDocument, setSelectedDocument] = useState<SelectOptionType[]>([]);
 
-  const [roles, setRoles] = useState([]);
+  const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([// info.selectedCategories modifies that
     { label: 'sample 1: label', value: 'sample 1 - value' },
     { label: 'sample 2: label', value: 'sample 2 - value' },
@@ -196,6 +203,10 @@ function AgendaEdit(props: AgendaEditProps) {
     {label: 'one one one', value: 'one#3'},
   ]);
 
+  // Aux states
+  const [selectedRol, setSelectedRol] = useState(null);
+  const [selectedTickets, setSelectedTickets] = useState([]);
+
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
   const [formulary, setFormulary] = useState<FormularyType>(initialFormularyState);
   const [savedFormulary, setSavedFormulary] = useState<FormularyType>({} as FormularyType);
@@ -204,7 +215,138 @@ function AgendaEdit(props: AgendaEditProps) {
   
   const location = useLocation<LocationStateType>();
 
-  const nameInputRef = useRef(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  function processDateFromAgendaDocument(document: AgendaDocumentType) {
+    /* console.log(document, 'entro en handleDate'); */
+    let date, hour_start, hour_end;
+    hour_start = Moment(document.datetime_start, 'YYYY-MM-DD HH:mm').toDate();
+    hour_end = Moment(document.datetime_end, 'YYYY-MM-DD HH:mm').toDate();
+    date = Moment(document.datetime_end, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+    return { date, hour_start, hour_end };
+  }
+
+  useEffect(() => {
+    const loading = async () => {
+      const newDays = [];
+      let vimeo_id = '';
+
+      try {
+        // NOTE: The tickets are not used
+        // const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
+
+        vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
+        setInfo((last) => (
+          { ...last, vimeo_id: vimeo_id,}
+        ));
+
+        // Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
+        if (props.event.dates && props.event.dates.length > 0) {
+          const takenDates = props.event.dates;
+
+          // NOTE: why do we use this?
+          // Date.parse(takenDates);
+
+          for (let i = 0; i < takenDates.length; i++) {
+            const formatDate = Moment(takenDates[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
+            /* if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
+              newDays.push({ value: formatDate, label: formatDate });
+            } */
+            newDays.push({ value: formatDate, label: formatDate });
+          }
+          setAllDays(newDays);
+          // Si no, recibe la fecha inicio y la fecha fin y le da el formato
+          // especifico a mostrar
+        } else {
+          const init = Moment(props.event.date_start);
+          const end = Moment(props.event.date_end);
+          const diff = end.diff(init, 'days');
+          // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+          for (let i = 0; i < diff + 1; i++) {
+            const formatDate = Moment(init)
+              .add(i, 'd')
+              .format('YYYY-MM-DD');
+            newDays.push({ value: formatDate, label: formatDate });
+          }
+          setAllDays(newDays);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      // Load page states
+      let documents = await DocumentsApi.byEvent(props.event._id);
+
+      // Load document names
+      const newNameDocuments = documents.map((document: {_id: string, title: string}) => ({
+        ...document,
+        value: document._id,
+        label: document.title,
+      }))
+      setNameDocuments(newNameDocuments);
+
+      let remoteSpaces = await SpacesApi.byEvent(props.event._id);
+      let remoteHosts = await SpeakersApi.byEvent(props.event._id);
+      let remoteRoles = await RolAttApi.byEvent(props.event._id);
+      let remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
+
+      if (location.state?.edit) {
+        setIsEditing(true);
+        agendaContext.setActivityEdit(location.state?.edit);
+        const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
+        console.log(agendaInfo)
+
+        setInfo((last) => ({
+          ...last,
+          ...agendaInfo,
+          selected_document: agendaInfo.selected_document,
+          start_url: agendaInfo.start_url,
+          join_url: agendaInfo.join_url,
+          platform: agendaInfo.platform /*  || event.event_platform */,
+          info: agendaInfo,
+          space_id: agendaInfo.space_id || '',
+          name_host: agendaInfo.name_host,
+          date_start_zoom: agendaInfo.date_start_zoom,
+          date_end_zoom: agendaInfo.date_end_zoom,
+          requires_registration: agendaInfo.requires_registration || false,
+        }));
+  
+        // Object.keys(this.state).map((key) => (agendaInfo[key] ? this.setState({ [key]: agendaInfo[key] }) : ''));
+        
+        const processedDate = processDateFromAgendaDocument(agendaInfo);
+
+        setActivity_id(location.state.edit);
+        setFormulary((last) => ({
+          ...last,
+          name: agendaInfo.name,
+          date: processedDate.date,
+          hour_start: processedDate.hour_start,
+          hour_end: processedDate.hour_end,
+          // selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
+          selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, allCategories),
+        }));
+        setSelectedHosts(fieldsSelect(agendaInfo.host_ids, allHosts))
+        setSelectedRol(fieldsSelect(agendaInfo.access_restriction_rol_ids, allRoles));
+      } else {
+        setAllDays(newDays);
+      }
+  
+      setThisIsLoading({ categories: false });
+      setAllDays(newDays);
+      // La información se neceista de tipo [{ label, value }] para los select
+      setAllSpaces(handleSelect(remoteSpaces));
+      setAllHosts(handleSelect(remoteHosts));
+      setAllRoles(handleSelect(remoteRoles));
+      setAllCategories(handleSelect(remoteCategories));
+
+      setIsLoading(false);
+  
+      nameInputRef.current?.focus();
+      // validateRoom();
+    }
+
+    loading().then();
+  }, []);
 
   const submit = (changePathWithoutSaving: boolean) => {}
   const remove = () => {}
@@ -271,11 +413,11 @@ function AgendaEdit(props: AgendaEditProps) {
             setShowPendingChangesModal={setShowPendingChangesModal}
             agendaContext={agendaContext}
             matchUrl={props.matchUrl}
-            days={days}
+            allDays={allDays}
             selectedHosts={selectedHosts}
             setSelectedHosts={setSelectedHosts}
             allHosts={allHosts}
-            spaces={spaces}
+            allSpaces={allSpaces}
             allCategories={allCategories}
             thisIsLoading={thisIsLoading}
           />

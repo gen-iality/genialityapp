@@ -50,8 +50,8 @@ const creatableStyles = {
 export interface FormularyType {
   name: string,
   date: any,
-  hour_start: string | Moment.Moment,
-  hour_end: string | Moment.Moment,
+  hour_start: string | Moment.Moment | Date,
+  hour_end: string | Moment.Moment | Date,
   selectedHosts: any[],
   space_id: string,
   selectedCategories: any[],
@@ -70,11 +70,11 @@ export interface FormularyProps {
   setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
   agendaContext: any,
   matchUrl: string,
-  days: SelectOptionType[],
+  allDays: SelectOptionType[],
   selectedHosts: SelectOptionType[],
   setSelectedHosts: React.Dispatch<React.SetStateAction<SelectOptionType[]>>
   allHosts: SelectOptionType[],
-  spaces: SelectOptionType[],
+  allSpaces: SelectOptionType[],
   allCategories: SelectOptionType[],
   thisIsLoading: {[key: string]: any},
 };
@@ -87,11 +87,11 @@ function AgendaFormulary(props: FormularyProps) {
     setPendingChangesSave,
     setShowPendingChangesModal,
     agendaContext,
-    days,
+    allDays,
     selectedHosts,
     setSelectedHosts,
     allHosts,
-    spaces,
+    allSpaces,
     allCategories,
     thisIsLoading,
   } = props;
@@ -213,7 +213,7 @@ function AgendaFormulary(props: FormularyProps) {
           }
           rules={[{ required: true, message: 'La fecha es requerida' }]}>
           <SelectAntd
-            options={days}
+            options={allDays}
             value={formulary.date}
             defaultValue={formulary.date}
             onChange={(value) => handleChangeFormulary('date', value)}
@@ -305,7 +305,7 @@ function AgendaFormulary(props: FormularyProps) {
                 value={formulary.space_id}
                 onChange={(value) => handleChangeFormulary('space_id', value)}>
                 <Option value="">Seleccione un lugar/salón ...</Option>
-                {spaces.map((space) => (
+                {allSpaces.map((space) => (
                   <Option key={space.value} value={space.value}>
                     {space.label}
                   </Option>

@@ -13,8 +13,8 @@ function AgendaRoutes({ ...props }) {
     <Fragment>
       <Switch>
         <Route exact path={`${match.url}/`} render={() => <Agenda event={event} matchUrl={match.url} />} />
-        <Route exact path={`${match.url}/actividad`} render={() => <AgendaEdit event={event} matchUrl={match.url} />} />
-        <Route exact path={`${match.url}/actividadv2`} render={() => <AgendaEditv2 event={event} matchUrl={match.url} />} />
+        {/* <Route exact path={`${match.url}/actividad`} render={() => <AgendaEdit event={event} matchUrl={match.url} />} /> */}
+        <Route exact path={`${match.url}/actividad`} render={() => <AgendaEditv2 event={event} matchUrl={match.url} />} />
         <Route exact path={`${match.url}/tipos`} render={() => <AgendaTypeCat event={event} matchUrl={match.url} />} />
         <Route
           exact
