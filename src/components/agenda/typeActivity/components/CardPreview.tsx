@@ -12,6 +12,7 @@ import {
   Badge,
   Popconfirm,
   Result,
+  Statistic,
 } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
@@ -286,7 +287,7 @@ const CardPreview = (props: any) => {
             </Select>
           </Space>
         )}
-        {(roomStatus != '' || props.type === 'reunión' || props.type === 'Video') && (
+        {/* {(roomStatus != '' || props.type === 'reunión' || props.type === 'Video') && (
           <Space direction='vertical'>
             <Typography.Text strong>Estadisticas de la actividad:</Typography.Text>
             <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
@@ -296,7 +297,7 @@ const CardPreview = (props: any) => {
             )}
             <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
           </Space>
-        )}
+        )} */}
       </Space>
     </Card>
   );
