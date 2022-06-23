@@ -1,4 +1,4 @@
-import { Row, Col, Card, Typography, List, Spin, Affix } from 'antd';
+import { Row, Col, Card, Typography, List, Spin, Affix, Space, Statistic } from 'antd';
 import CardPreview from '../typeActivity/components/CardPreview';
 import GoToEviusMeet from './components/GoToEviusMeet';
 import TransmitionOptions from './components/TransmitionOptions';
@@ -29,6 +29,8 @@ const ManagerView = (props: any) => {
     typeActivity,
     maxViewers,
     viewersOnline,
+    totalViews,
+    viewers,
   } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
@@ -89,8 +91,7 @@ const ManagerView = (props: any) => {
                   </Card>
                 </Col>
               ))}
-          </Row>
-          <Row gutter={[16, 16]}>
+
             {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
               <Col span={10}>
                 <GoToEviusMeet type={props.type} activityId={props.activityId} />
@@ -139,6 +140,86 @@ const ManagerView = (props: any) => {
             {(props.type == 'Transmisión' || props.type == 'EviusMeet') && dataLive?.active && (
               <Col span={24}>
                 <CardRTMP />
+              </Col>
+            )}
+
+            {(roomStatus != '' || props.type === 'reunión' || props.type === 'Video') && (
+              <Col span={24}>
+                <Card bodyStyle={{ padding: '21px' }} style={{ borderRadius: '8px' }}>
+                  <Card.Meta
+                    title={
+                      <Typography.Text style={{ fontSize: '20px' }} strong>
+                        Estadisticas de la actividad
+                      </Typography.Text>
+                    }
+                  />
+                  <br />
+                  <Row gutter={[16, 16]} wrap>
+                    {/* <Card style={{ textAlign: 'center', borderRadius: '15px' }} bodyStyle={{ padding: '5px' }}> */}
+                    <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
+                      <Statistic
+                        style={{
+                          textAlign: 'center',
+                          /* border: '0.5px solid lightgray',
+                          borderRadius: '15px',
+                          padding: '2px', */
+                        }}
+                        title={<Typography.Text strong>Número de vistas totales</Typography.Text>}
+                        value={totalViews.length}
+                      />
+                    </Col>
+
+                    {/* </Card> */}
+                    {/* <Card style={{ textAlign: 'center', borderRadius: '15px' }}> */}
+                    <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
+                      <Statistic
+                        style={{
+                          textAlign: 'center',
+                          /* border: '0.5px solid lightgray',
+                          borderRadius: '15px',
+                          padding: '2px', */
+                        }}
+                        title={<Typography.Text strong>Número de Usuarios unicos</Typography.Text>}
+                        value={viewers.length}
+                      />
+                    </Col>
+
+                    {/*  </Card> */}
+
+                    {(roomStatus === 'open_meeting_room' || props.type === 'reunión' || props.type === 'Video') && (
+                      /* <Card style={{ textAlign: 'center', borderRadius: '15px' }}> */
+                      <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
+                        <Statistic
+                          style={{
+                            textAlign: 'center',
+                            /* border: '0.5px solid lightgray',
+                            borderRadius: '15px',
+                            padding: '2px', */
+                          }}
+                          title={<Typography.Text strong>Visualizaciones en curso</Typography.Text>}
+                          value={viewersOnline.length}
+                        />
+                      </Col>
+
+                      /* </Card> */
+                    )}
+                    {/* <Card style={{ textAlign: 'center', borderRadius: '15px' }}> */}
+                    <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
+                      <Statistic
+                        style={{
+                          textAlign: 'center',
+                          /* border: '0.5px solid lightgray',
+                          borderRadius: '15px',
+                          padding: '2px', */
+                        }}
+                        title={<Typography.Text strong>Numero maximo de usuarios</Typography.Text>}
+                        value={maxViewers ? maxViewers : 0}
+                      />
+                    </Col>
+
+                    {/* </Card> */}
+                  </Row>
+                </Card>
               </Col>
             )}
           </Row>
