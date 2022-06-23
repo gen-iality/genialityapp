@@ -41,6 +41,8 @@ import Header from '../../antdComponents/Header';
 import AgendaContext from '../../context/AgendaContext';
 import { RouterPrompt } from '../../antdComponents/RoutePrompt';
 
+import useCreatableStyles from './hooks/useCreatableStyles';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 const { Text } = Typography;
@@ -53,20 +55,6 @@ const formLayout = {
 
 const creatableStyles = {
   menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }),
-};
-
-// Some select styles
-const catStyles = {
-  menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }),
-  multiValue: (styles: object, param: ParamType) => ({ ...styles, ...dot(param.data.item.color) }),
-};
-
-interface ParamType {
-  data: {
-    item: {
-      color: any
-    }
-  }
 };
 
 // TODO: put this type in some site
@@ -184,19 +172,6 @@ const initialFormularyState = {
   image: '',
 } as FormularyType;
 
-// TODO: hook-able
-const dot = (color = 'transparent') => ({
-  alignItems: 'center',
-  display: 'flex',
-  ':before': {
-    backgroundColor: color,
-    content: '" "',
-    display: 'block',
-    margin: 8,
-    height: 10,
-    width: 10,
-  },
-});
 
 function AgendaEdit(props: AgendaEditProps) {
   const [activity_id, setActivity_id] = useState('');
@@ -255,6 +230,11 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
   const [formulary, setFormulary] = useState<FormularyType>(initialFormularyState);
+
+  /**
+   * Custom hooks
+   */
+  const creatableStyles = useCreatableStyles();
   
   const location = useLocation<LocationStateType>();
   const history = useHistory();
@@ -532,7 +512,7 @@ function AgendaEdit(props: AgendaEditProps) {
                       <Creatable
                         isClearable
                         isMulti
-                        styles={catStyles}
+                        styles={creatableStyles}
                         onChange={onSelectedCategoryChange}
                         // TODO: this should edit the object state of thisIsLoading, and
                         // the onCreateOption must be implemented
