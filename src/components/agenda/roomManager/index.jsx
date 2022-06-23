@@ -455,6 +455,7 @@ class RoomManager extends Component {
             }
             if (streamingPlatForm === 'wowza') {
               const { state } = await getLiveStreamStatus(streamingMeetingId);
+              const refActivityViewers = `viewers/${self.props.event_id}/activities/${self.context.activityEdit}`;
               const refActivity = `request/${self.props.event_id}/activities/${self.context.activityEdit}`;
               if (state === 'started') {
                 await stopLiveStream(streamingMeetingId);
@@ -462,6 +463,7 @@ class RoomManager extends Component {
               await deleteLiveStream(streamingMeetingId);
               self.context.setMeetingId(null);
               await self.context.removeAllRequest(refActivity);
+              await self.context.removeViewers(refActivityViewers);
             }
             DispatchMessageService({
               key: 'loading',

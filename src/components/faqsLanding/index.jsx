@@ -2,6 +2,8 @@ import { Component } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import { Collapse, Col, Row } from 'antd';
 import withContext from '../../context/withContext';
+import ReactQuill from 'react-quill';
+
 const { Panel } = Collapse;
 
 const center = {
@@ -61,7 +63,17 @@ class Faqs extends Component {
                     {faqs.title}
                   </span>
                 }>
-                <b>Respuesta:</b> <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
+                <b>Respuesta:</b>{' '}
+                <Row>
+                  <Col span={24} id='img-informative'>
+                    <ReactQuill
+                      value={faqs.content}
+                      readOnly={true}
+                      className='hide-toolbar ql-toolbar'
+                      theme='bubble'
+                    />
+                  </Col>
+                </Row>
               </Panel>
             ))}
           </Collapse>

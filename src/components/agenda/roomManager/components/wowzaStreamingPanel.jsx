@@ -47,7 +47,7 @@ const WowzaStreamingPanel = ({
   saveConfig,
 }) => {
   //Link para eviusmeet dónde se origina el video
-  const eviusmeets = `https://eviusmeets.netlify.app/prepare`;
+  const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`;
   let cUser = UseCurrentUser();
   /* console.log('debug ', meeting_id); */
   const [livestreamStatus, setLivestreamStatus] = useState(null);

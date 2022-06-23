@@ -12,13 +12,16 @@ const TransmitionOptions = (props: any) => {
   const { toggleActivitySteps, executer_stopStream, loadingStop } = useTypeActivity();
   const [loadingDelete, setLoadingDelete] = useState(false);
 
-  const { dataLive, meeting_id, deleteTypeActivity, activityEdit, removeAllRequest } = useContext(AgendaContext);
+  const { dataLive, meeting_id, deleteTypeActivity, activityEdit, removeAllRequest, removeViewers } = useContext(
+    AgendaContext
+  );
   const cEvent = useContext(CurrentEventContext);
   const deleteTransmition = async () => {
     deleteLiveStream(meeting_id);
     await deleteTypeActivity();
   };
   const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`;
+  const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${activityEdit}`;
   const isVisible = props.type === 'Transmisión' || props.type === 'EviusMeet';
 
   return (
@@ -37,7 +40,6 @@ const TransmitionOptions = (props: any) => {
                 Detener
               </Button>
             )}
-
             {
               <Popconfirm
                 title={`¿Está seguro que desea ${
@@ -57,6 +59,7 @@ const TransmitionOptions = (props: any) => {
                     await removeAllRequest(refActivity);
                     await deleteTransmition();
                   }
+                  await removeViewers(refActivityViewers);
                   await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
                   await deleteTypeActivity();
                   toggleActivitySteps('initial');

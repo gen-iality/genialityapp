@@ -9,14 +9,17 @@ const { Option } = Select;
 
 export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus, meeting_id }) {
   const eventContext = useContext(CurrentEventContext);
-  const { activityEdit, getRequestByActivity, request, transmition } = useContext(AgendaContext);
+  const { activityEdit, getRequestByActivity, getViewers, request, transmition } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+  const refActivityViewers = `viewers/${eventContext.value?._id}/activities/${activityEdit}`;
   const [status, setStatus] = useState();
 
   useEffect(() => {
     if (!eventContext.value || !activityEdit) return;
+
     getRequestByActivity(refActivity);
+    getViewers(refActivityViewers);
   }, [eventContext.value, activityEdit]);
 
   useEffect(() => {

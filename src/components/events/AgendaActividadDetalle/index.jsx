@@ -25,12 +25,12 @@ const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
   let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
-  let [ orderedHost, setOrderedHost ] = useState([]);
+  let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
-  const [ videoStyles, setVideoStyles ] = useState(null);
-  const [ videoButtonStyles, setVideoButtonStyles ] = useState(null);
-  let [ blockActivity, setblockActivity ] = useState(false);
-  const [ activity, setactivity ] = useState('');
+  const [videoStyles, setVideoStyles] = useState(null);
+  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
+  let [blockActivity, setblockActivity] = useState(false);
+  const [activity, setactivity] = useState('');
   const cUser = UseCurrentUserContext();
   let cEventUser = UseUserEvent();
   const cEvent = UseEventContext();
@@ -46,7 +46,7 @@ const AgendaActividadDetalle = (props) => {
     }
 
     function orderHost(hosts) {
-      hosts.sort(function (a, b) {
+      hosts.sort(function(a, b) {
         return a.order - b.order;
       });
       setOrderedHost(hosts);
@@ -82,11 +82,11 @@ const AgendaActividadDetalle = (props) => {
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
       // console.log(cEvent.value.type_event)
-      if (cEvent.value.type_event === "onlineEvent") {
+      if (cEvent.value.type_event === 'onlineEvent') {
         useCheckinUser(cEventUser.value, props.match.params.activity_id, 'activity');
       }
     }
-  }, [ currentActivity, cEventUser.status ]);
+  }, [currentActivity, cEventUser.status]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
@@ -119,7 +119,7 @@ const AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
       setVideoButtonStyles({ display: 'none' });
     }
-  }, [ chatAttendeChats, isMobile ]);
+  }, [chatAttendeChats, isMobile]);
 
   // VALIDAR ACTIVIDADES POR CODIGO
   useEffect(() => {
@@ -141,7 +141,7 @@ const AgendaActividadDetalle = (props) => {
         setblockActivity(false);
       }
     }
-  }, [ cEvent.value, cEventUser.value, cUser.value ]);
+  }, [cEvent.value, cEventUser.value, cUser.value]);
 
   return (
     <div>
@@ -151,7 +151,7 @@ const AgendaActividadDetalle = (props) => {
           {!blockActivity ? (
             <>
               {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-                cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+              cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
                 <Alert
                   showIcon
                   style={{
