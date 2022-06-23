@@ -1,6 +1,6 @@
 import * as Moment from 'moment';
 import useDeepStateEqualityValidation from './useDeepStateEqualityValidation';
-import FormularyType from "../types/FormularyType";
+import { FormularyType } from "../components/AgendaFormulary";
 
 function useValideChangesInFormulary(
   saved: FormularyType,
