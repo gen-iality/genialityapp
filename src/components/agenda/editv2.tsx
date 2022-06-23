@@ -42,6 +42,9 @@ import AgendaContext from '../../context/AgendaContext';
 import { RouterPrompt } from '../../antdComponents/RoutePrompt';
 
 import useCreatableStyles from './hooks/useCreatableStyles';
+import useValideChangesInFormulary from './hooks/useValideChangesInFormulary';
+
+import FormularyType from './types/FormularyType';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -103,21 +106,6 @@ export interface AgendaDocumentType {
   host_ids: any[] | null,
   length: string,
   latitude: string,
-};
-
-export interface FormularyType {
-  name: string,
-  date: any,
-  hour_start: string | Moment.Moment,
-  hour_end: string | Moment.Moment,
-  selectedHosts: any[],
-  space_id: string,
-  selectedCategories: any[],
-  isPhysical: boolean,
-  length: string,
-  latitude: string,
-  description: string,
-  image: string,
 };
 
 export interface AgendaEditProps {
@@ -230,18 +218,25 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
   const [formulary, setFormulary] = useState<FormularyType>(initialFormularyState);
+  const [savedFormulary, setSavedFormulary] = useState<FormularyType>({} as FormularyType);
+  
+    const agendaContext = useContext(AgendaContext);
 
   /**
    * Custom hooks
    */
   const creatableStyles = useCreatableStyles();
+  const valideChangesInFormulary = useValideChangesInFormulary(
+    savedFormulary, // The order matter
+    formulary,
+    agendaContext.isPublished,
+    setShowPendingChangesModal,
+  );
   
   const location = useLocation<LocationStateType>();
   const history = useHistory();
 
   const nameInputRef = useRef(null);
-
-  const agendaContext = useContext(AgendaContext);
 
   const submit = (changePathWithoutSaving: boolean) => {}
   const remove = () => {}
@@ -262,7 +257,7 @@ function AgendaEdit(props: AgendaEditProps) {
       return newFormulary;
     });
     setPendingChangesSave(true);
-    // TODO: valid field
+    valideChangesInFormulary();
   }
 
   const handleChangeReactQuill = (value: string, target: string) => {
