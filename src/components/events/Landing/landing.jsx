@@ -24,7 +24,7 @@ import { DispatchMessageService } from '../../../context/MessageService.tsx';
 import WithEviusContext from '../../../context/withContext';
 import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-
+import initBroadcastViewers from '@/containers/broadcastViewers';
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));
@@ -102,6 +102,7 @@ const Landing = (props) => {
       setRegister(urlParams.get('register'));
     }
   }, []);
+
   //PARA OBTENER PARAMETRO AL LOGUEARME
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({

@@ -69,19 +69,19 @@ const HeaderColumns = (props) => {
   useEffect(() => {
     if (currentActivity) {
       //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
-      setActivityEdit(currentActivity._id);
 
       console.log('1. SE EJECUTA ESTO');
     }
     if (!currentActivity || typeActivity !== 'eviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
     const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${currentActivity?._id}`;
-    console.log('🌮---> Se ejecuta en HEaderColumn');
+
+    getViewers(refActivityViewers);
+    setActivityEdit(currentActivity._id);
     setRefActivity(refActivity);
     setRefActivityViewers(refActivityViewers);
     getRequestByActivity(refActivity);
-    getViewers(refActivityViewers);
-    console.log('🌮🌮---> yo soy el que genero este doble Headercolumn ');
+
     return () => {
       setActivityEdit(null);
     };
