@@ -5,14 +5,14 @@ import { useIntl } from 'react-intl';
 
 const { Title, Text } = Typography;
 
-const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
+const BasicFieldsToFormEnrollAttendeeToEvent = ({ basicFields, attendee }: any) => {
   const intl = useIntl();
-  const { names, email } = editUser?.properties || {};
-  const { picture } = editUser?.user || {};
+  const { names, email } = attendee?.properties || {};
+  const { picture } = attendee?.user || {};
 
   return (
     <>
-      {editUser?._id && (
+      {attendee?._id && (
         <Card
           style={{ borderRadius: '8px', marginBottom: '20px', textAlign: 'center', cursor: 'auto' }}
           bodyStyle={{ padding: '20px' }}
@@ -35,7 +35,7 @@ const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
           />
         </Card>
       )}
-      <div style={{ display: editUser?._id ? 'none' : 'block' }}>
+      <div style={{ display: attendee?._id ? 'none' : 'block' }}>
         {basicFields?.length > 0 &&
           basicFields.map((field: any) => {
             return field;
@@ -45,4 +45,4 @@ const BasicFieldsToFormEnrollUserToEvent = ({ basicFields, editUser }: any) => {
   );
 };
 
-export default BasicFieldsToFormEnrollUserToEvent;
+export default BasicFieldsToFormEnrollAttendeeToEvent;

@@ -1,12 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
-import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
-import { assignMessageAndTypeToQrmodalAlert, getEventUserByParameter } from '@/Utilities/checkInUtils';
-import { saveOrUpdateUserInAEvent } from '@/Utilities/formUtils';
+import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
+import { assignMessageAndTypeToQrmodalAlert } from '@/Utilities/checkInUtils';
 import QrAndDocumentForm from './qrAndDocumentForm';
 import PageNextOutlineIcon from '@2fd/ant-design-icons/lib/PageNextOutline';
 import { CurrentEventContext } from '@/context/eventContext';
+import { getAttendeeByParameter } from '@/services/checkinServices/checkinServices';
+import { saveOrUpdateAttendeeInAEvent } from '@/services/formServices/formServices';
 
 const { Title } = Typography;
 
@@ -22,6 +23,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal }) =>
   const [scannerData, setScannerData] = useState({});
   const [label, setLabel] = useState('');
   const [loadingregister, setLoadingregister] = useState(false);
+  const [attendeeId, setAttendeeId] = useState('');
 
   useEffect(() => {
     const { label } = getFieldDataFromAnArrayOfFields(fields, 'checkInField');
@@ -32,7 +34,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal }) =>
     if (!data) {
       return;
     }
-    searchUserByParameter({ qr: data });
+    searchAttendeeByParameter({ qr: data });
   };
 
   const handleError = (err) => {
@@ -40,8 +42,10 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal }) =>
   };
 
   /** allows us to search for an eventuser by a value, at the moment by id or document. */
-  const searchUserByParameter = (searchValue) => {
+  const searchAttendeeByParameter = (searchValue) => {
     Object.keys(searchValue).map((key) => {
+      if (key === 'qr') setAttendeeId(searchValue[key]);
+
       const parameters = {
         key,
         searchValue,
@@ -50,24 +54,24 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal }) =>
         setScannerData,
         setLoadingregister,
       };
-      getEventUserByParameter(parameters);
+      getAttendeeByParameter(parameters);
     });
   };
 
   /** function to create or edit an eventuser from the cms */
-  const saveOrUpdateUser = async (values) => {
-    const shouldBeEdited = scannerData?.user?._id ? true : false;
-    const eventUserId = scannerData?.user?._id;
+  const saveOrUpdateAttendee = async (values) => {
+    const shouldBeEdited = scannerData?.attendee?._id ? true : false;
+    const attendeeId = scannerData?.attendee?._id;
 
-    const response = await saveOrUpdateUserInAEvent({
+    const response = await saveOrUpdateAttendeeInAEvent({
       values,
       shouldBeEdited,
       setLoadingregister,
       eventID: _id,
-      eventUserId,
+      attendeeId,
     });
 
-    if (response?._id) searchUserByParameter({ qr: response._id });
+    if (response?._id) searchAttendeeByParameter({ qr: response._id });
   };
 
   /** When the user clicks the button, the form is reset and the QR code is cleared.*/
@@ -101,21 +105,21 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal }) =>
         {!loadingregister && Object.keys(scannerData).length > 0 && (
           <Alert
             type={assignMessageAndTypeToQrmodalAlert({ scannerData }).type}
-            message={assignMessageAndTypeToQrmodalAlert({ scannerData }).message}
+            message={assignMessageAndTypeToQrmodalAlert({ scannerData, attendeeId }).message}
             showIcon
             closable
             className='animate__animated animate__pulse'
           />
         )}
         <>
-          {scannerData?.user ? (
-            <FormEnrollUserToEvent
+          {scannerData?.attendee ? (
+            <FormEnrollAttendeeToEvent
               fields={fields}
               conditionalFields={fields_conditions}
-              editUser={scannerData?.user && scannerData?.user}
-              saveUser={saveOrUpdateUser}
+              attendee={scannerData?.attendee && scannerData?.attendee}
+              saveAttendee={saveOrUpdateAttendee}
               loaderWhenSavingUpdatingOrDelete={loadingregister}
-              checkInUserCallbak={(user) => searchUserByParameter({ qr: user._id })}
+              checkInAttendeeCallbak={(attendee) => searchAttendeeByParameter({ qr: attendee._id })}
               options={optionsReadOtherButton}
               visibleInCms
             />
@@ -127,7 +131,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal }) =>
               label={label}
               handleScan={handleScan}
               handleError={handleError}
-              searchUserByParameter={searchUserByParameter}
+              searchAttendeeByParameter={searchAttendeeByParameter}
               cleanInputSearch={cleanInputSearch}
               typeScanner={typeScanner}
             />

@@ -19,6 +19,7 @@ function updateAttendees(currentAttendees, snapshot) {
       user._id = change.doc.id;
     }
 
+    console.log('🚀 debug ~ snapshot.docChanges ~ change.type', change.type);
     switch (change.type) {
       case 'added':
         change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
@@ -31,7 +32,9 @@ function updateAttendees(currentAttendees, snapshot) {
         break;
 
       case 'removed':
-        newItems.splice(change.oldIndex, 1);
+        newItems = newItems.filter((item) => {
+          if (item._id !== user._id) return item;
+        });
         break;
 
       default:

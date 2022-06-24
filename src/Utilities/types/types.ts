@@ -27,16 +27,16 @@ export type searchDocumentOrIdPropsTypes = {
 };
 
 export type newData = {
-  userNotFound: boolean;
-  userFound: boolean;
+  attendeeNotFound: boolean;
+  attendeeFound: boolean;
   another: boolean;
-  user: {} | any;
+  attendee: {} | any;
 };
 
-export type FormEnrollUserToEventPropsTypes = {
+export type FormEnrollAttendeeToEventPropsTypes = {
   fields: any;
   conditionalFields: any;
-  editUser: any;
+  attendee: any;
   /** Receive an array of options, example:
      const options = [
     {
@@ -48,11 +48,11 @@ export type FormEnrollUserToEventPropsTypes = {
   ];
    */
   options: any;
-  /** It allows to send a function to which the information of the event user will be passed and it will allow to create or update it */
-  saveUser: (user: any) => void;
+  /** It allows to send a function to which the information of the event attendee will be passed and it will allow to create or update it */
+  saveAttendee: (attendee: any) => void;
   loaderWhenSavingUpdatingOrDelete: boolean;
   /** Allows setting the state for a loader. */
-  checkInUserCallbak: (user: any) => void;
+  checkInAttendeeCallbak: (attendee: any) => void;
   /** Indicates if the component will be used in the cms or in the landing */
   visibleInCms: boolean;
   submitIcon: ReactNode;
@@ -61,13 +61,14 @@ export type saveCheckInAttendeePropsTypes = {
   _id: string;
   checked: boolean;
   reloadComponent?: () => void;
-  setAttemdeeCheckIn: (state: any) => void;
-  checkInUserCallbak: (user: any) => void;
+  setAttemdeeCheckIn?: (state: any) => void;
+  checkInAttendeeCallbak?: (attendee: any) => void;
+  notification?: boolean;
 };
 
 export type aditionalFieldsPropsTypes = {
   validatedFields: Array<any>;
-  editUser: any;
+  attendee: any;
   visibleInCms: any;
 };
 export type updateFieldsVisibilityPropsTypes = {
@@ -77,7 +78,7 @@ export type updateFieldsVisibilityPropsTypes = {
   setValidatedFields: (state: any) => any;
 };
 export type AttendeeCheckInPropsTypes = {
-  editUser: any;
+  attendee: any;
   reloadComponent?: () => any;
-  checkInUserCallbak: (user: any) => void;
+  checkInAttendeeCallbak: (attendee: any) => void;
 };

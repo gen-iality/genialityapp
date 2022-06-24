@@ -1,7 +1,7 @@
 import { Form, Input } from 'antd';
 
-const getBasicFields = ({ fields, editUser }: any) => {
-  let userProperties = editUser?.properties || {};
+const getBasicFields = ({ fields, attendee }: any) => {
+  let attendeeProperties = attendee?.properties || {};
   if (fields?.lenght === 0) return [];
 
   const basicFormFields = fields.map((field: any, key: any) => {
@@ -13,7 +13,7 @@ const getBasicFields = ({ fields, editUser }: any) => {
       let mandatory = field.mandatory;
       let labelPosition = field.labelPosition;
       let target = name;
-      let value = userProperties ? userProperties[target] : '';
+      let value = attendeeProperties ? attendeeProperties[target] : '';
 
       let input = (
         <Form.Item initialValue={value} name={name} noStyle>

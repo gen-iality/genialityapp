@@ -118,7 +118,8 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      return <p>{Moment(item.created_at?.toDate()).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const createdAt = item.created_at;
+      return <p>{Moment(createdAt).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -137,7 +138,8 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      return <p>{Moment(item.updated_at?.toDate()).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const updatedAt = item.created_at;
+      return <p>{Moment(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -145,7 +147,7 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    return <AttendeeCheckIn editUser={item} />;
+    return <AttendeeCheckIn attendee={item} />;
   };
 
   addDefaultLabels = (extraFields) => {
@@ -167,8 +169,13 @@ class ListEventUser extends Component {
   /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
   sortUsersArray = async (users) => {
     const sortedResult = users.sort((itemA, itemB) => {
-      const aParameter = itemA?.checkedin_at?.toDate();
-      const bParameter = itemB?.checkedin_at?.toDate();
+      let aParameter = '';
+      let bParameter = '';
+
+      try {
+        aParameter = itemA?.checkedin_at?.toDate();
+        bParameter = itemB?.checkedin_at?.toDate();
+      } catch (error) {}
 
       if (!aParameter) return 1;
       if (!bParameter) return -1;
@@ -179,8 +186,9 @@ class ListEventUser extends Component {
     return sortedResult;
   };
 
-  async componentDidMount() {
+  getAttendes = async () => {
     let self = this;
+
     this.checkFirebasePersistence();
     try {
       const event = await EventsApi.getOne(this.props.event._id);
@@ -339,7 +347,7 @@ class ListEventUser extends Component {
           this.setState({ ...this.state, configfast: doc.data() });
         });
 
-      usersRef.orderBy('updated_at', 'desc').onSnapshot(
+      usersRef.orderBy('checkedin_at', 'desc').onSnapshot(
         {
           // Listen for document metadata changes
           //includeMetadataChanges: true
@@ -445,8 +453,10 @@ class ListEventUser extends Component {
       const errorData = handleRequestError(error);
       this.setState({ timeout: true, errorData });
     }
+  };
 
-    /* console.log('users=>>', this.state.users); */
+  async componentDidMount() {
+    this.getAttendes();
   }
 
   obtenerName = (fileUrl) => {
@@ -796,50 +806,6 @@ class ListEventUser extends Component {
           />
         )}
 
-        <Row gutter={8}>
-          <Col>
-            <p>
-              <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
-              <FormattedTime value={lastUpdate} />
-            </p>
-          </Col>
-        </Row>
-
-        <Row wrap gutter={[8, 8]}>
-          <Col>
-            <Tag
-              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: '4px' }}
-              color='lightgrey'
-              icon={<UsergroupAddOutlined />}>
-              <strong>Inscritos: </strong>
-              <span style={{ fontSize: '13px' }}>{inscritos}</span>
-            </Tag>
-          </Col>
-          <Col>
-            <Tag
-              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: '4px' }}
-              color='lightgrey'
-              icon={<StarOutlined />}>
-              <strong>Participantes: </strong>
-              <span style={{ fontSize: '13px' }}>
-                {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-              </span>
-            </Tag>
-          </Col>
-          <Col>
-            {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
-              <>
-                <Tag>
-                  <small>
-                    Asistencia por Coeficientes:
-                    {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
-                  </small>
-                </Tag>
-              </>
-            )}
-          </Col>
-        </Row>
-
         {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
           list={users.length > 0 && users}
@@ -847,8 +813,52 @@ class ListEventUser extends Component {
           takeOriginalHeader
           scroll={{ x: 'max-content' }} //auto funciona de la misma forma, para ajustar el contenido
           loading={this.state.loading}
+          footer={
+            <div
+              style={{
+                background: '#D3D3D3',
+                paddingRight: '20px',
+                textAlign: 'end',
+                borderRadius: '3px',
+              }}>
+              <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
+              <FormattedTime value={lastUpdate} />
+            </div>
+          }
           titleTable={
-            <Row gutter={[8, 8]}>
+            <Row gutter={[6, 6]}>
+              <Col>
+                <Tag
+                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                  color='lightgrey'
+                  icon={<UsergroupAddOutlined />}>
+                  <strong>Inscritos: </strong>
+                  <span style={{ fontSize: '13px' }}>{inscritos}</span>
+                </Tag>
+              </Col>
+              <Col>
+                <Tag
+                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                  color='lightgrey'
+                  icon={<StarOutlined />}>
+                  <strong>Participantes: </strong>
+                  <span style={{ fontSize: '13px' }}>
+                    {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
+                  </span>
+                </Tag>
+              </Col>
+              <Col>
+                {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
+                  <>
+                    <Tag>
+                      <small>
+                        Asistencia por Coeficientes:
+                        {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
+                      </small>
+                    </Tag>
+                  </>
+                )}
+              </Col>
               <Col>
                 <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
                   Expandir
@@ -890,6 +900,7 @@ class ListEventUser extends Component {
             </Row>
           }
         />
+
         {/* ) : (
           <Loading />
         )} */}

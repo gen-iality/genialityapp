@@ -56,6 +56,7 @@ const Table = (props) => {
     extraPathUpdateTitle,
     updateMails,
     takeOriginalHeader,
+    footer = undefined,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -321,6 +322,8 @@ const Table = (props) => {
           </Row>
         )}
         scroll={scroll}
+        // footer={footer}
+        footer={() => footer}
       />
     </Suspense>
   );

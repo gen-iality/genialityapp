@@ -1,43 +1,42 @@
 import { useEffect, useRef, useState } from 'react';
-import BasicFieldsToFormEnrollUserToEvent from './BasicFieldsToFormEnrollUserToEvent';
-import AdditionalFieldsToEnrollUserToEvent from './AdditionalFieldsToFormEnrollUserToEvent';
+import BasicFieldsToFormEnrollAttendeeToEvent from './BasicFieldsToFormEnrollAttendeeToEvent';
+import AdditionalFieldsToFormEnrollAttendeeToEvent from './AdditionalFieldsToFormEnrollAttendeeToEvent';
 import { Alert, Button, Card, Col, Divider, Form, Row, Space, Spin, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { LoadingOutlined } from '@ant-design/icons';
-import dispatchFormEnrollUserToEvent from './dispatchFormEnrollUserToEvent';
+import dispatchFormEnrollAttendeeToEvent from './dispatchFormEnrollAttendeeToEvent';
 import {
   aditionalFields,
   alertStyles,
   cardStyles,
   center,
-  saveOrUpdateUser,
   textLeft,
   assignmentOfConditionsToAdditionalFields,
 } from '@/Utilities/formUtils';
-import { FormEnrollUserToEventPropsTypes } from '@/Utilities/types/types';
+import { FormEnrollAttendeeToEventPropsTypes } from '@/Utilities/types/types';
 import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 
 const { Title } = Typography;
 
-const FormEnrollUserToEvent = ({
+const FormEnrollAttendeeToEvent = ({
   fields = [],
   conditionalFields = [],
-  editUser,
+  attendee,
   options,
-  saveUser,
+  saveAttendee = () => {},
   loaderWhenSavingUpdatingOrDelete = false,
-  checkInUserCallbak,
+  checkInAttendeeCallbak,
   visibleInCms = false,
   submitIcon = <BadgeAccountOutlineIcon />,
-}: FormEnrollUserToEventPropsTypes) => {
+}: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
   const buttonSubmit = useRef(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState<boolean>(false);
   const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
 
-  const { formDispatch, formState } = dispatchFormEnrollUserToEvent();
+  const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent();
   const { basicFields, thereAreExtraFields, buttonText } = formState;
 
   /** Restructuring of fields which contain conditions or not */
@@ -47,24 +46,24 @@ const FormEnrollUserToEvent = ({
 
   const componentLoad = () => {
     form.resetFields();
-    formDispatch({ type: 'getBasicFields', payload: { fields, editUser } });
+    formDispatch({ type: 'getBasicFields', payload: { fields, attendee } });
     formDispatch({
       type: 'thereAreExtraFields',
       payload: {
         fields,
-        editUser,
+        attendee,
         visibleInCms,
       },
     });
-    formDispatch({ type: 'buttonText', payload: { visibleInCms, editUser } });
-    const allValues = editUser ? editUser.properties : [];
+    formDispatch({ type: 'buttonText', payload: { visibleInCms, attendee } });
+    const allValues = attendee ? attendee.properties : [];
 
     assigningConditionsToFields({}, allValues);
   };
 
   useEffect(() => {
     componentLoad();
-  }, [editUser]);
+  }, [attendee]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
@@ -81,14 +80,14 @@ const FormEnrollUserToEvent = ({
             form={form}
             scrollToFirstError={true}
             layout='vertical'
-            onFinish={(values) => saveOrUpdateUser(values, fields, saveUser)}
+            onFinish={saveAttendee}
             onFinishFailed={showGeneralMessage}
             onValuesChange={assigningConditionsToFields}>
             <Row style={textLeft}>
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
                   <Spin tip='Guardando cambios' spinning={loaderWhenSavingUpdatingOrDelete}>
-                    <BasicFieldsToFormEnrollUserToEvent basicFields={basicFields} editUser={editUser} />
+                    <BasicFieldsToFormEnrollAttendeeToEvent basicFields={basicFields} attendee={attendee} />
                     <Divider />
                     {thereAreExtraFields > 0 && (
                       <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>
@@ -103,8 +102,8 @@ const FormEnrollUserToEvent = ({
                         id: 'msg.no_fields_create',
                         defaultMessage: 'No hay campos adicionales en este evento',
                       })}
-                    <AdditionalFieldsToEnrollUserToEvent
-                      aditionalFields={aditionalFields({ validatedFields, editUser, visibleInCms })}
+                    <AdditionalFieldsToFormEnrollAttendeeToEvent
+                      aditionalFields={aditionalFields({ validatedFields, attendee, visibleInCms })}
                     />
                   </Spin>
                 </Card>
@@ -133,9 +132,9 @@ const FormEnrollUserToEvent = ({
                   <>
                     <Form.Item>
                       <AttendeeCheckIn
-                        editUser={editUser}
+                        attendee={attendee}
                         reloadComponent={componentLoad}
-                        checkInUserCallbak={checkInUserCallbak}
+                        checkInAttendeeCallbak={checkInAttendeeCallbak}
                       />
                     </Form.Item>
                     <Form.Item>
@@ -153,12 +152,12 @@ const FormEnrollUserToEvent = ({
                         </Button>
 
                         {options &&
-                          editUser &&
+                          attendee &&
                           options.map((option: any) => (
                             <Button
                               key={'option-' + option.text}
                               icon={option.icon}
-                              onClick={() => option.action(editUser._id)}
+                              onClick={() => option.action(attendee._id)}
                               type={option.type}>
                               {option.text}
                             </Button>
@@ -176,4 +175,4 @@ const FormEnrollUserToEvent = ({
   );
 };
 
-export default FormEnrollUserToEvent;
+export default FormEnrollAttendeeToEvent;

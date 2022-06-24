@@ -2,26 +2,28 @@ import { useEffect, useState } from 'react';
 import { Checkbox, Modal } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import moment from 'moment';
-import { saveCheckInAttendee } from '@/Utilities/checkInUtils';
 import { AttendeeCheckInPropsTypes } from '@/Utilities/types/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
 
-const AttendeeCheckIn = ({ editUser, reloadComponent, checkInUserCallbak }: AttendeeCheckInPropsTypes) => {
+const AttendeeCheckIn = ({ attendee, reloadComponent, checkInAttendeeCallbak }: AttendeeCheckInPropsTypes) => {
   const [attemdeeCheckIn, setAttemdeeCheckIn] = useState<boolean>(false);
   const [attemdeeCheckedinAt, setAttemdeeCheckedinAt] = useState<any>('');
-  const { _id, checked_in, checkedin_at } = editUser || {};
+  const { _id, checked_in, checkedin_at } = attendee || {};
 
   useEffect(() => {
-    const dateAndTime: any = checkedin_at && checkedin_at?.toDate();
-
+    let dateAndTime: any = '';
+    try {
+      dateAndTime = checkedin_at && checkedin_at?.toDate();
+    } catch (error) {}
     setAttemdeeCheckIn(checked_in);
     setAttemdeeCheckedinAt(dateAndTime);
-  }, [editUser]);
+  }, [attendee]);
 
   const saveAttemdeeCheckIn = async (e: CheckboxChangeEvent) => {
     const { checked } = e.target;
     if (checked) {
-      await saveCheckInAttendee({ _id, checked, reloadComponent, setAttemdeeCheckIn, checkInUserCallbak });
+      await saveCheckInAttendee({ _id, checked, reloadComponent, setAttemdeeCheckIn, checkInAttendeeCallbak });
       return;
     }
 
@@ -32,7 +34,7 @@ const AttendeeCheckIn = ({ editUser, reloadComponent, checkInUserCallbak }: Atte
       okText: 'Si',
       cancelText: 'No',
       async onOk() {
-        await saveCheckInAttendee({ _id, checked, reloadComponent, setAttemdeeCheckIn, checkInUserCallbak });
+        await saveCheckInAttendee({ _id, checked, reloadComponent, setAttemdeeCheckIn, checkInAttendeeCallbak });
       },
     });
   };

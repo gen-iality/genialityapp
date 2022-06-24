@@ -1,3 +1,4 @@
+import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
 import { useEffect } from 'react';
 import { app, firestore } from './firebase';
 
@@ -20,42 +21,42 @@ export async function GetTokenUserFirebase() {
   });
 }
 
-export const useCheckinUser = (attende, eventId, type = 'event') => {
+export const checkinAttendeeInActivity = (attende, activityId) => {
+  /** We use the activity id plus _event_attendees to be able to reuse the checkIn component per event */
+  const userRef = firestore.collection(`${activityId}_event_attendees`).doc(attende._id);
+  userRef.onSnapshot(function(doc) {
+    if (doc.exists) {
+      if (!doc.data().checked_in) {
+        userRef.set(
+          {
+            checked_in: true,
+            checkedin_at: new Date(),
+          },
+          { merge: true }
+        );
+      }
+    } else {
+      firestore
+        .collection(`${activityId}_event_attendees`)
+        .doc(attende._id)
+        .set({
+          ...attende,
+          checked_in: true,
+          checkedin_at: new Date(),
+        });
+    }
+  });
+};
+
+export const checkinAttendeeInEvent = (attende, eventId) => {
   const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
-  if (type == 'event') {
-    userRef.onSnapshot(function(doc) {
-      if (doc.exists) {
-        if (!doc.data().checked_in) {
-          userRef.set(
-            {
-              checked_in: true,
-              checkedin_at: new Date(),
-            },
-            { merge: true }
-          );
-        }
+
+  userRef.onSnapshot(function(doc) {
+    if (doc.exists) {
+      if (!doc.data().checked_in) {
+        /** We register the checkIn by calling the back */
+        saveCheckInAttendee({ _id: attende._id, checked: true, notification: false });
       }
-    });
-  } else if (type == 'activity') {
-    userRef.onSnapshot(function(doc) {
-      if (doc.exists) {
-        if (!doc.data().checked_in) {
-          userRef.set(
-            {
-              checked_in: true,
-              checkedin_at: new Date(),
-            },
-            { merge: true }
-          );
-        }
-      } else {
-        firestore
-          .collection(`${eventId}_event_attendees`)
-          .doc(attende._id)
-          .set({
-            ...attende,
-          });
-      }
-    });
-  }
+    }
+  });
 };

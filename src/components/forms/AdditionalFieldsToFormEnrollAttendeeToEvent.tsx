@@ -1,4 +1,4 @@
-const AdditionalFieldsToFormEnrollUserToEvent = ({ aditionalFields }: any) => {
+const AdditionalFieldsToFormEnrollAttendeeToEvent = ({ aditionalFields }: any) => {
   return (
     <>
       {aditionalFields?.length > 0 &&
@@ -9,4 +9,4 @@ const AdditionalFieldsToFormEnrollUserToEvent = ({ aditionalFields }: any) => {
   );
 };
 
-export default AdditionalFieldsToFormEnrollUserToEvent;
+export default AdditionalFieldsToFormEnrollAttendeeToEvent;

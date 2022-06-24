@@ -22,7 +22,7 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import loadable from '@loadable/component';
 import { DispatchMessageService } from '../../../context/MessageService.tsx';
 import WithEviusContext from '../../../context/withContext';
-import { useCheckinUser } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 
 const EviusFooter = loadable(() => import('./EviusFooter'));
@@ -120,10 +120,10 @@ const Landing = (props) => {
     if (isNotification.notify) {
       NotificationHelper(isNotification);
     }
-  }, [ isNotification ]);
+  }, [isNotification]);
 
-  let [ generaltabs, setgeneraltabs ] = useState(iniitalstatetabs);
-  let [ totalNewMessages, settotalnewmessages ] = useState(0);
+  let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
+  let [totalNewMessages, settotalnewmessages] = useState(0);
 
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
@@ -131,7 +131,7 @@ const Landing = (props) => {
         fb.firestore
           .collection('events')
           .doc(cEventContext.value?._id)
-          .onSnapshot(function (eventSnapshot) {
+          .onSnapshot(function(eventSnapshot) {
             if (eventSnapshot.exists) {
               if (eventSnapshot.data().tabs !== undefined) {
                 setgeneraltabs(eventSnapshot.data().tabs);
@@ -141,7 +141,7 @@ const Landing = (props) => {
 
         fb.firestore
           .collection('eventchats/' + cEventContext.value._id + '/userchats/' + cUser.uid + '/' + 'chats/')
-          .onSnapshot(function (querySnapshot) {
+          .onSnapshot(function(querySnapshot) {
             let data;
             querySnapshot.forEach((doc) => {
               data = doc.data();
@@ -156,15 +156,15 @@ const Landing = (props) => {
             });
           });
 
-        if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == "LOADED") {
+        if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == 'LOADED') {
           // console.log(EventContext.value.type_event);
-          if (cEventContext.value.type_event === "onlineEvent") {
-            useCheckinUser(cEventUser.value, cEventContext.value._id);
+          if (cEventContext.value.type_event === 'onlineEvent') {
+            checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id);
           }
         }
       });
     }
-  }, [ cEventContext.status, cEventUser.status, cEventUser.value ]);
+  }, [cEventContext.status, cEventUser.status, cEventUser.value]);
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 

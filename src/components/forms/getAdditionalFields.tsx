@@ -14,11 +14,11 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Dragger } = Upload;
 
-const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
+const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const intl = useIntl();
-  let userProperties = editUser?.properties || {};
-  const countryField = userProperties['pais'] || '';
-  let areacodeselected = userProperties['code'] || 57;
+  let attendeeProperties = attendee?.properties || {};
+  const countryField = attendeeProperties['pais'] || '';
+  let areacodeselected = attendeeProperties['code'] || 57;
   const dateFormat = 'YYYY/MM/DD';
 
   const [country, setCountry] = useState('');
@@ -45,7 +45,7 @@ const getAdditionalFields = ({ fields, editUser, visibleInCms }: any) => {
       let labelPosition = field.labelPosition;
       let target = name;
 
-      let value = userProperties.email || userProperties.names ? userProperties[target] : null;
+      let value = attendeeProperties.email || attendeeProperties.names ? attendeeProperties[target] : null;
 
       //esogemos el tipo de validación para email
       rule = type === 'email' ? { ...rule, type: 'email' } : rule;

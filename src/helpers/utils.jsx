@@ -89,13 +89,14 @@ export function parseData2Excel(data, fields, roles = null) {
     info[key]['checked'] =
       item.checkedin_at !== 'null' && item.checkedin_at != null && item.checkedin_at != '' ? 'TRUE' : 'FALSE';
 
-    info[key]['Hora checkIn'] = item.checkedin_at ? moment(item.checkedin_at).format('DD/MM/YYYY H:mm:ss A') : '';
+    info[key]['Hora checkIn'] = item.checkedin_at
+      ? moment(item.checkedin_at.toDate()).format('DD/MM/YYYY H:mm:ss A')
+      : '';
     fields.map(({ name, type, label, _id }) => {
       let str;
       if (item?.properties) {
         switch (type) {
           case 'number':
-            console.log('ITEM ACA====>', item);
             str =
               item && item?.properties
                 ? item.properties[name]

@@ -9,7 +9,7 @@ export const helperInitialState: any = {
 
 export const helperReducer = (state: any, action: any) => {
   let fields = action.payload?.fields;
-  const editUser = action.payload?.editUser;
+  const attendee = action.payload?.attendee;
   const visibleInCms = action.payload?.visibleInCms;
 
   switch (action.type) {
@@ -20,7 +20,7 @@ export const helperReducer = (state: any, action: any) => {
 
       return {
         ...state,
-        basicFields: getBasicFields({ fields, editUser }),
+        basicFields: getBasicFields({ fields, attendee }),
       };
 
     case 'thereAreExtraFields':
@@ -31,7 +31,7 @@ export const helperReducer = (state: any, action: any) => {
     case 'buttonText':
       return {
         ...state,
-        buttonText: validateButtonText(editUser, visibleInCms),
+        buttonText: validateButtonText(attendee, visibleInCms),
       };
 
     default:

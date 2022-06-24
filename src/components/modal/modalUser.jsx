@@ -16,7 +16,7 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
-import FormEnrollUserToEvent from '../forms/FormEnrollUserToEvent';
+import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
 
 const { confirm } = Modal;
 
@@ -259,14 +259,6 @@ class UserModal extends Component {
     let resp;
     let respActivity = true;
     if (values) {
-      // if (values?.checked_in) {
-      //   const checkedinAt = Moment(new Date()).format('D/MMM/YY h:mm:ss A ');
-      //   values.checkedin_at = checkedinAt;
-      //   values.checked_in = true;
-      // } else {
-      //   values.checkedin_at = '';
-      //   values.checked_in = false;
-      // }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };
 
@@ -378,12 +370,12 @@ class UserModal extends Component {
             marginTop: '30px',
           }}>
           {componentKey === 'event-checkin' ? (
-            <FormEnrollUserToEvent
+            <FormEnrollAttendeeToEvent
               fields={this.props.extraFields}
               conditionalFields={this.props.cEvent?.value?.fields_conditions}
-              editUser={this.props.value}
+              attendee={this.props.value}
               options={this.options}
-              saveUser={this.saveUser}
+              saveAttendee={this.saveUser}
               loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
               visibleInCms
             />

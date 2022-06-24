@@ -8,7 +8,6 @@ import QrReader from 'react-qr-reader';
 import { divideInformationObtainedByTheCodeReader } from '@/Utilities/checkInUtils';
 
 const { TabPane } = Tabs;
-const { Option } = Select;
 
 function QrAndDocumentForm({
   form,
@@ -17,7 +16,7 @@ function QrAndDocumentForm({
   label,
   handleScan,
   handleError,
-  searchUserByParameter,
+  searchAttendeeByParameter,
   cleanInputSearch,
   typeScanner,
 }: any) {
@@ -27,7 +26,7 @@ function QrAndDocumentForm({
     <Form
       layout='vertical'
       form={form}
-      onFinish={searchUserByParameter}
+      onFinish={searchAttendeeByParameter}
       // autoComplete='off'
     >
       {typeScanner === 'scanner-qr' ? (
@@ -55,7 +54,7 @@ function QrAndDocumentForm({
               </Form.Item>
               <Row justify='center' wrap gutter={8}>
                 <QrReader
-                  delay={500}
+                  delay={1500}
                   facingMode={facingMode}
                   onError={handleError}
                   onScan={handleScan}
