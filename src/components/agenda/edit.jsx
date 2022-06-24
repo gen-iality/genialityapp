@@ -51,7 +51,6 @@ import Service from './roomManager/service';
 import AgendaContext from '../../context/AgendaContext';
 import { DispatchMessageService } from '../../context/MessageService';
 import TipeOfActivity from './typeActivity';
-import SmartTipeOfActivity from './typeActivity/SmartTipeOfActivity';
 import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 
@@ -65,39 +64,6 @@ const formLayout = {
 };
 
 const { Option } = SelectAntd;
-
-const formatLessonType = (typeString) => {
-  let typeName = 'Sin contenido';
-  switch (typeString) {
-    case 'cargarvideo':
-      typeName = 'Vídeo cargado';
-      break;
-    case 'meeting':
-      typeName = 'Reunión';
-      break;
-    case 'url':
-      typeName = 'Vídeo desde URL';
-      break;
-    case 'vimeo':
-      typeName = 'Transmisión de Vimeo';
-      break;
-    case 'youTube':
-      typeName = 'Transmisión de YouTube';
-      break;
-    case 'RTMP':
-      typeName = 'Transmisión de RTMP';
-      break;
-    case 'eviusMeet':
-      typeName = 'Transmisión de GEN Connect';
-      break;
-    case 'eviusStreaming':
-      typeName = 'GEN.iality Streaming'
-      break;
-    default:
-      typeName = typeString;
-  }
-  return typeName;
-}
 
 class AgendaEdit extends Component {
   constructor(props) {
@@ -178,10 +144,7 @@ class AgendaEdit extends Component {
       reloadActivity: false,
       initialActivityStates: null,
       showPendingChangesModal: false,
-      creatingBeforeNamed: false,
-      typeString: null,
       activity_id: this.props.location?.state?.edit,
-      showFormPopup: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -220,31 +183,6 @@ class AgendaEdit extends Component {
   toggleConference = (isVisible) => {
     this.setState({ conferenceVisible: isVisible });
   };
-
-  async updateTypeFromSituation (activity_id) {
-    const agenda = await AgendaApi.getOne(activity_id, this.props.event._id);
-    if (agenda?.type) {
-      this.setState({
-        typeString: formatLessonType(agenda.type.name),
-      })
-    }
-  }
-
-  async componentWillReceiveProps (nextProps, nextStates) {
-    // let agenda;
-    if (nextStates.activity_id && nextStates.activity_id !== this.state.activity_id) {
-      // agenda = await AgendaApi.getOne(nextStates.activity_id, this.props.event._id);
-      await this.updateTypeFromSituation(nextStates.activity_id)
-    } else if (this.props.location.state.edit) {
-      // agenda = await AgendaApi.getOne(this.props.location.state.edit, this.props.event._id);
-      await this.updateTypeFromSituation(this.props.location.state.edit)
-    }
-    // if (agenda?.type) {
-    //   this.setState({
-    //     typeString: formatLessonType(agenda.type.name),
-    //   })
-    // }
-  }
 
   async componentDidMount() {
     const {
@@ -442,7 +380,6 @@ class AgendaEdit extends Component {
     /** Se renderiza de nuevo el componente para mostrar los tabs Transmision, Juegos, Encuestas y Documentos */
     const idNewlyCreatedActivity = this.state.idNewlyCreatedActivity;
     const reloadActivity = this.state.reloadActivity;
-    // console.log('state', this.props.location.state)
 
     if (reloadActivity) {
       this.setState({
@@ -731,10 +668,6 @@ class AgendaEdit extends Component {
 
   //Envío de información
   submit = async (changePathWithoutSaving) => {
-    // if (this.state.typeString) {
-    //   this.setState({reloadActivity: true, creatingBeforeNamed: false,})
-    //   return;
-    // }
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -801,7 +734,6 @@ class AgendaEdit extends Component {
             idNewlyCreatedActivity: agenda._id,
             activityEdit: true,
             reloadActivity: true,
-            creatingBeforeNamed: true,
             isPublished: false,
           });
           this.saveConfig();
@@ -1227,32 +1159,6 @@ class AgendaEdit extends Component {
             <Tabs activeKey={this.state.tabs} onChange={(key) => this.setState({ tabs: key })}>
               <TabPane tab='Agenda' key='1'>
                 <Row justify='center' wrap gutter={12}>
-                  <Button
-                    onClick={() => {
-                      this.setState({showFormPopup: !this.state.showFormPopup})
-                    }}
-                  >
-                    Seleccionar tipo: {this.state.showFormPopup ? 'on':'off'}
-                  </Button>
-                  <Col span={20}>
-                    <SmartTipeOfActivity
-                      eventId={this.props.event._id}
-                      activityId={this.state.activity_id}
-                      activityName={this.state.name}
-                      hasActivityName={this.state.creatingBeforeNamed}
-                      onSetType={(typeString) => {
-                        // Rewrite the type
-                        this.setState({
-                          typeString: formatLessonType(typeString),
-                        });
-                        console.log('listoooooooooooooooooooo');
-                      }}
-                      showForm={this.state.showFormPopup}
-                      onClosedForm={() => this.setState({ showFormPopup: false })}
-                    />
-                  </Col>
-                </Row>
-                <Row justify='center' wrap gutter={12}>
                   <Col span={20}>
                     <Form.Item
                       label={
@@ -1268,26 +1174,12 @@ class AgendaEdit extends Component {
                       ]}>
                       <Input
                         ref={this.name}
-                        disabled={this.state.creatingBeforeNamed}
                         autoFocus
                         type='text'
                         name={'name'}
                         value={name}
                         onChange={(e) => this.handleChange(e)}
                         placeholder={'Nombre de la lección'}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label={
-                        <label style={{ marginTop: '2%' }}>
-                          Tipo de contenido
-                        </label>
-                      }
-                      >
-                      <Input
-                        disabled
-                        type='text'
-                        value={(this.state.typeString ? formatLessonType(this.state.typeString) : null) || 'indefinido'}
                       />
                     </Form.Item>
                     {isEditingAgenda && <Form.Item
@@ -1545,11 +1437,6 @@ class AgendaEdit extends Component {
                           activityId={this.state.activity_id}
                           activityName={this.state.name}
                           tab={this.state.tabs}
-                          onDelete={() => {
-                            this.setState({
-                              typeString: formatLessonType(null),
-                            })
-                          }}
                         />
 
                         {/* <RoomManager
