@@ -57,11 +57,15 @@ export interface FormularyType {
   selectedHosts: SelectOptionType[],
   selectedRol: SelectOptionType[],
   selectedTickets: SelectOptionType[],
+  selectedDocuments: SelectOptionType[],
   isPhysical: boolean,
   length: string,
   latitude: string,
   description: string,
   image: string,
+  isExternal: boolean,
+  externalSurveyID: string,
+  roomStatus: string,
 };
 
 export interface FormularyProps {

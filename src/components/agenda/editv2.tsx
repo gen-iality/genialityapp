@@ -175,10 +175,14 @@ const initialFormularyState = {
     {label: 'one one one', value: 'one#3'},
   ],
   selectedTickets: [],
+  selectedDocuments: [],
+  isExternal: false,
+  externalSurveyID: '',
+  roomStatus: '',
 } as FormularyType;
 
 function AgendaEdit(props: AgendaEditProps) {
-  const [activity_id, setActivity_id] = useState('');
+  const [currentActivityID, setCurrentActivityID] = useState('');
   const [activityEdit, setActivityEdit] = useState<null | string>(null);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [currentTab, setCurrentTab] = useState('1');
@@ -201,19 +205,12 @@ function AgendaEdit(props: AgendaEditProps) {
     {label: 'space 3', value: 'space_3'},
   ]);
   // This state is used in the 'Documentos' tab
-  const [nameDocuments, setNameDocuments] = useState<SelectOptionType[]>([]);
+  const [allNameDocuments, setAllNameDocuments] = useState<SelectOptionType[]>([]);
   
-  /**
-   * 'Encuestas' states
-   */
-  const [isExternal, setIsExternal] = useState(false);
-  const [externalSurveyID, setExternalSurveyID] = useState('');
-  const [roomStatus, setRoomStatus] = useState('');
-
   /**
    * 'Documentos' states
    */
-  const [selectedDocument, setSelectedDocument] = useState<SelectOptionType[]>([]);
+  // const [selectedDocument, setSelectedDocument] = useState<SelectOptionType[]>([]);
 
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([// info.selectedCategories modifies that
@@ -320,7 +317,7 @@ function AgendaEdit(props: AgendaEditProps) {
         value: document._id,
         label: document.title,
       }))
-      setNameDocuments(newNameDocuments);
+      setAllNameDocuments(newNameDocuments);
 
       // Get more data from this event
       const remoteSpaces = await SpacesApi.byEvent(props.event._id);
@@ -358,7 +355,7 @@ function AgendaEdit(props: AgendaEditProps) {
         const processedDate = processDateFromAgendaDocument(agendaInfo);
 
         // Edit the current activity ID from passed activity ID via route
-        setActivity_id(location.state.edit);
+        setCurrentActivityID(location.state.edit);
 
         // Load data to formulary
         setFormulary((last) => ({
@@ -508,7 +505,7 @@ function AgendaEdit(props: AgendaEditProps) {
       msj: 'Por favor espere mientras borra la información...',
       action: 'show',
     });
-    if (activity_id) {
+    if (currentActivityID) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -519,17 +516,17 @@ function AgendaEdit(props: AgendaEditProps) {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              const refActivity = `request/${props.event._id}/activities/${activity_id}`;
-              const refActivityViewers = `viewers/${props.event._id}/activities/${activity_id}`;
-              const configuration = await service.getConfiguration(props.event._id, activity_id);
+              const refActivity = `request/${props.event._id}/activities/${currentActivityID}`;
+              const refActivityViewers = `viewers/${props.event._id}/activities/${currentActivityID}`;
+              const configuration = await service.getConfiguration(props.event._id, currentActivityID);
               if (configuration && configuration.typeActivity === 'eviusMeet') {
                 await deleteAllVideos(info.name, configuration.meeting_id),
                   await deleteLiveStream(configuration.meeting_id);
               }
               await fireRealtime.ref(refActivity).remove();
               await fireRealtime.ref(refActivityViewers).remove();
-              await service.deleteActivity(props.event._id, activity_id);
-              await AgendaApi.deleteOne(activity_id, props.event._id);
+              await service.deleteActivity(props.event._id, currentActivityID);
+              await AgendaApi.deleteOne(currentActivityID, props.event._id);
               DispatchMessageService({
                 type: 'loading', // Added by types
                 msj: '', // Added by types
@@ -581,6 +578,10 @@ function AgendaEdit(props: AgendaEditProps) {
       await saveConfig();
     }
   };
+
+  const handleDocumentChange = (value: any) => {
+    setFormulary((last) => ({ ...last, selectedDocuments: value }));
+  }
 
   // Encargado de gestionar los tabs de la video conferencia
   const handleTabsController = (e: any, tab: string) => {
@@ -720,7 +721,7 @@ function AgendaEdit(props: AgendaEditProps) {
             <Col span={24}>
               <TipeOfActivity
                 eventId={props.event._id}
-                activityId={activity_id}
+                activityId={currentActivityID}
                 activityName={formulary.name}
                 tab={currentTab}
               />
@@ -742,14 +743,14 @@ function AgendaEdit(props: AgendaEditProps) {
         <TabPane tab='Encuestas' key='4'>
           <Row justify='center' wrap gutter={12}>
             <Col span={20}>
-              <SurveyManager event_id={props.event._id} activity_id={activity_id} />
-              {isExternal &&
+              <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
+              {formulary.isExternal &&
               <SurveyExternal
-                isExternal={isExternal}
-                meeting_id={externalSurveyID}
+                isExternal={formulary.isExternal}
+                meeting_id={formulary.externalSurveyID}
                 event_id={props.event._id}
-                activity_id={activity_id}
-                roomStatus={roomStatus}
+                activity_id={currentActivityID}
+                roomStatus={formulary.roomStatus}
               />
               }
               <BackTop />
@@ -764,8 +765,8 @@ function AgendaEdit(props: AgendaEditProps) {
                   showArrow
                   id={'nameDocuments'}
                   mode='multiple'
-                  options={nameDocuments}
-                  onChange={(value) => setSelectedDocument(value)}
+                  options={allNameDocuments}
+                  onChange={(value) => handleDocumentChange(value)}
                   // defaultValue={selectedDocument}
                 />
               </Form.Item>
