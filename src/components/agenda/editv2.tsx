@@ -27,6 +27,7 @@ import AgendaContext from '@/context/AgendaContext';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
+import { DispatchMessageService } from '@/context/MessageService';
 import {
   fieldsSelect,
   handleRequestError,
@@ -174,6 +175,8 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [thisIsLoading, setThisIsLoading] = useState({ categories: true });;
   const [pendingChangesSave, setPendingChangesSave] = useState(false);
+  const [idNewlyCreatedActivity, setIdNewlyCreatedActivity] = useState<string | null>(null);
+  const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // NOTE: used in Games
   const [service] = useState(new Service(firestore));
   
   /**
@@ -225,6 +228,15 @@ function AgendaEdit(props: AgendaEditProps) {
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
   const [formulary, setFormulary] = useState<FormularyType>(initialFormularyState);
   const [savedFormulary, setSavedFormulary] = useState<FormularyType>({} as FormularyType);
+
+  /**
+   * This states are used as config, I think...
+   */
+  // TODO: check the function that defines these states and clue the types
+  const [chat, setChat] = useState<any>(false);
+  const [surveys, setSurveys] = useState<any>(false);
+  const [games, setGames] = useState<any>(false);
+  const [attendees, setAttendees] = useState<any>(false);
   
   const agendaContext = useContext(AgendaContext);
   
@@ -365,8 +377,109 @@ function AgendaEdit(props: AgendaEditProps) {
   const submit = (changePathWithoutSaving: boolean) => {}
   const remove = () => {}
 
-  const handleGamesSelected = () => {}
-  const handleTabsController = () => {}
+  const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
+    if (status === 'newOrUpdate') {
+      setAvalibleGames(listOfGames);
+      await saveConfig();
+    } else {
+      const newData: object[] = [];
+      listOfGames.forEach((items) => {
+        if (items.id === itemId) {
+          newData.push({ ...items, showGame: status });
+        } else {
+          newData.push({ ...items });
+        }
+      });
+      agendaContext.setAvailableGames(newData);
+      setAvalibleGames(newData);
+      await saveConfig();
+    }
+  };
+
+  // Encargado de gestionar los tabs de la video conferencia
+  const handleTabsController = (e: any, tab: string) => {
+    const valueTab = e;
+    const { chat, surveys, games, attendees } = agendaContext;
+    const tabs = { chat, surveys, games, attendees };
+
+    if (tab === 'chat') {
+      tabs.chat = valueTab;
+      agendaContext.setChat(valueTab);
+      setChat(valueTab);
+      saveConfig();
+    } else if (tab === 'surveys') {
+      tabs.surveys = valueTab;
+      agendaContext.setSurveys(valueTab);
+      setSurveys(valueTab);
+      saveConfig();
+    } else if (tab === 'games') {
+      tabs.games = valueTab;
+      agendaContext.setGames(valueTab);
+      setGames(valueTab);
+      saveConfig();
+    } else if (tab === 'attendees') {
+      tabs.attendees = valueTab;
+      agendaContext.setAttendees(valueTab);
+      setAttendees(valueTab);
+      saveConfig();
+    }
+  };
+
+  // Método para guarda la información de la configuración
+  const saveConfig = async () => {
+    const { roomInfo, tabs } = prepareData();
+    const activity_id = agendaContext.activityEdit || idNewlyCreatedActivity;
+    try {
+      const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
+      if (result) {
+        DispatchMessageService({
+          type: 'success',
+          msj: result.message,
+          action: 'show',
+        });
+      }
+      return result;
+    } catch (err) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error en la configuración!',
+        action: 'show',
+      });
+    }
+  };
+
+  const prepareData = () => {
+    const {
+      roomStatus,
+      platform,
+      meeting_id,
+      chat,
+      surveys,
+      games,
+      attendees,
+      host_id,
+      host_name,
+      avalibleGames,
+      transmition,
+      isPublished,
+      typeActivity,
+    } = agendaContext;
+
+    const roomInfo = {
+      platform,
+      meeting_id,
+      isPublished: isPublished ? isPublished : false,
+      host_id,
+      host_name,
+      avalibleGames,
+      habilitar_ingreso: roomStatus,
+      transmition: transmition || null,
+      typeActivity,
+    };
+
+    const tabs = { chat, surveys, games, attendees };
+    return { roomInfo, tabs };
+  };
 
   if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
 
@@ -407,6 +520,7 @@ function AgendaEdit(props: AgendaEditProps) {
               checked={agendaContext.isPublished}
               onChange={(value) => {
                 agendaContext.setIsPublished(value);
+                saveConfig();
                 // this.setState({ isPublished: value }, async () => await this.saveConfig());
               }}
             />
