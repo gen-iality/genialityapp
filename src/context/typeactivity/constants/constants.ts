@@ -70,7 +70,7 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
     title: 'Vimeo',
     MainTitle: 'Ingrese el identificador de la conferencia/streaming',
     description:
-      'Si posees una transmisión ya configurada en Vimeo, puedes enlazarlo a Evius proporcionando el ID de transmisión.',
+      'Si posees una transmisión ya configurada en Vimeo, puedes enlazarlo a GEN.iality proporcionando el ID de transmisión.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
     typeOptions: vimeoAndYotubeType,
@@ -80,7 +80,7 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
     title: 'YouTube',
     MainTitle: 'Ingrese el identificador de la conferencia/streaming',
     description:
-      'Si posees una transmisión ya configurada en Youtube, puedes enlazarlo a Evius proporcionando el ID de transmisión.',
+      'Si posees una transmisión ya configurada en Youtube, puedes enlazarlo a GEN.iality proporcionando el ID de transmisión.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
     typeOptions: vimeoAndYotubeType,
