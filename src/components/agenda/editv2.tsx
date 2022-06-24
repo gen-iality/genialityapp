@@ -588,26 +588,31 @@ function AgendaEdit(props: AgendaEditProps) {
     const { chat, surveys, games, attendees } = agendaContext;
     const tabs = { chat, surveys, games, attendees };
 
-    if (tab === 'chat') {
+    switch (tab) {
+      case 'chat':
       tabs.chat = valueTab;
       agendaContext.setChat(valueTab);
       setChat(valueTab);
       saveConfig();
-    } else if (tab === 'surveys') {
+        break;
+      case 'surveys':
       tabs.surveys = valueTab;
       agendaContext.setSurveys(valueTab);
       setSurveys(valueTab);
       saveConfig();
-    } else if (tab === 'games') {
+        break;
+      case 'games':
       tabs.games = valueTab;
       agendaContext.setGames(valueTab);
       setGames(valueTab);
       saveConfig();
-    } else if (tab === 'attendees') {
+        break;
+      case 'attendees':
       tabs.attendees = valueTab;
       agendaContext.setAttendees(valueTab);
       setAttendees(valueTab);
       saveConfig();
+        break;
     }
   };
 
