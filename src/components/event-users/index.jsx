@@ -347,7 +347,7 @@ class ListEventUser extends Component {
           this.setState({ ...this.state, configfast: doc.data() });
         });
 
-      usersRef.orderBy('checkedin_at', 'desc').onSnapshot(
+      usersRef.orderBy('updated_at', 'desc').onSnapshot(
         {
           // Listen for document metadata changes
           //includeMetadataChanges: true

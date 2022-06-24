@@ -19,7 +19,6 @@ function updateAttendees(currentAttendees, snapshot) {
       user._id = change.doc.id;
     }
 
-    console.log('🚀 debug ~ snapshot.docChanges ~ change.type', change.type);
     switch (change.type) {
       case 'added':
         change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
