@@ -395,7 +395,32 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   }, []);
 
-  const validForm = () => true // TODO: implement
+  const validForm = () => {
+    const title = [];
+    if (formulary.name.length <= 0)
+      title.push('El nombre es requerido');
+
+    if (formulary.date === '' || formulary.date === 'Invalid date')
+      title.push('Seleccione el día');
+
+    if (formulary.hour_start === '' || formulary.hour_start === 'Invalid date')
+      title.push('Seleccione una hora de inicio valida');
+
+    if (formulary.hour_end === '' || formulary.hour_end === 'Invalid date')
+      title.push('Seleccione una hora de finalización valida');
+    
+    if (title.length > 0) {
+      title.map((item) => {
+        DispatchMessageService({
+          type: 'warning',
+          msj: item,
+          action: 'show',
+        });
+      });
+    } else return true;
+
+    return false;
+  }
   const buildInfo = () => ({}) // TODO: implement
 
   const submit = async (changePathWithoutSaving: boolean) => {
@@ -421,7 +446,9 @@ function AgendaEdit(props: AgendaEditProps) {
           const edit = location.state.edit || idNewlyCreatedActivity;
           result = await AgendaApi.editOne(info, edit, props.event._id);
 
-          //Se actualizan los estados date_start_zoom y date_end_zoom para que componente de administracion actualice el valor pasado por props
+          // Se actualizan los estados date_start_zoom y date_end_zoom para que
+          // componente de administracion actualice el valor pasado por props
+          //
           // this.setState({
           //   date_start_zoom: result.date_start_zoom,
           //   date_end_zoom: result.date_end_zoom,
@@ -496,6 +523,7 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   }
 
+  // @done
   const remove = async () => {
     // let self = this;
     const { removeAllRequest } = agendaContext;
@@ -560,6 +588,7 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
+  // @done
   const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
     if (status === 'newOrUpdate') {
       setAvalibleGames(listOfGames);
@@ -578,10 +607,12 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
+  // @done
   const handleDocumentChange = (value: any) => {
     setFormulary((last) => ({ ...last, selectedDocuments: value }));
   }
 
+  // @done
   // Encargado de gestionar los tabs de la video conferencia
   const handleTabsController = (e: any, tab: string) => {
     const valueTab = e;
@@ -590,28 +621,28 @@ function AgendaEdit(props: AgendaEditProps) {
 
     switch (tab) {
       case 'chat':
-      tabs.chat = valueTab;
-      agendaContext.setChat(valueTab);
-      setChat(valueTab);
-      saveConfig();
+        tabs.chat = valueTab;
+        agendaContext.setChat(valueTab);
+        setChat(valueTab);
+        saveConfig();
         break;
       case 'surveys':
-      tabs.surveys = valueTab;
-      agendaContext.setSurveys(valueTab);
-      setSurveys(valueTab);
-      saveConfig();
+        tabs.surveys = valueTab;
+        agendaContext.setSurveys(valueTab);
+        setSurveys(valueTab);
+        saveConfig();
         break;
       case 'games':
-      tabs.games = valueTab;
-      agendaContext.setGames(valueTab);
-      setGames(valueTab);
-      saveConfig();
+        tabs.games = valueTab;
+        agendaContext.setGames(valueTab);
+        setGames(valueTab);
+        saveConfig();
         break;
       case 'attendees':
-      tabs.attendees = valueTab;
-      agendaContext.setAttendees(valueTab);
-      setAttendees(valueTab);
-      saveConfig();
+        tabs.attendees = valueTab;
+        agendaContext.setAttendees(valueTab);
+        setAttendees(valueTab);
+        saveConfig();
         break;
     }
   };
