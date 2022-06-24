@@ -1,4 +1,4 @@
-import { Card, Result, Button, Spin } from 'antd';
+import { Card, Result, Button, Spin, Typography } from 'antd';
 import ModalStepByStep from './ModalStepByStep';
 import ManagerView from './ManagerView';
 import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
@@ -9,6 +9,8 @@ import InitialSVG from './components/svg/InitialSVG';
 import { AgendaApi } from '../../../helpers/request';
 import { CurrentEventContext } from '../../../context/eventContext';
 import ModalPreviewVideo from './ModalPreviewVideo';
+
+const { Title } = Typography;
 
 const objecKeys: object = {
   url: 'Video',
@@ -82,16 +84,13 @@ const InitialView = (props: any) => {
       default:
         return (
           <Card>
+            <Title level={4} >Todavía no has definido el tipo de contenido</Title>
+            <Button onClick={() => toggleActivitySteps('type')} type='primary'>
+              Escoge un tipo de contenido
+            </Button>
             <Result
               icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-              status='info'
-              title='Todavía no has definido el tipo de contenido'
-              extra={
-                <Button onClick={() => toggleActivitySteps('type')} type='primary'>
-                  Escoge un tipo de contenido
-                </Button>
-              }
-            />
+              status='info'            />
           </Card>
         );
     }
