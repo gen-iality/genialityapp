@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { useState, useContext, useRef, useEffect } from 'react';
 import { Redirect, withRouter, useLocation } from 'react-router-dom';
-import BackTop from '../../antdComponents/BackTop';
-import TipeOfActivity from './typeActivity';
-import SurveyManager from './surveyManager';
-import SurveyExternal from './surveyExternal';
-import RoomController from '../agenda/roomManager/controller';
-import Service from './roomManager/service';
-import { firestore, fireRealtime } from '../../helpers/firebase';
 import { Select as SelectAntd } from 'antd';
-import * as Moment from 'moment';
 
 import {
   Tabs,
@@ -28,16 +20,40 @@ import {
   Modal,
   TimePicker,
 } from 'antd';
+
+import * as Moment from 'moment';
+
+import AgendaContext from '@/context/AgendaContext';
+import Header from '@/antdComponents/Header';
+import BackTop from '@/antdComponents/BackTop';
+import { RouterPrompt } from '@/antdComponents/RoutePrompt';
+import {
+  fieldsSelect,
+  handleRequestError,
+  handleSelect,
+  sweetAlert,
+  uploadImage,
+} from '@/helpers/utils';
+import {
+  AgendaApi,
+  CategoriesAgendaApi,
+  DocumentsApi,
+  eventTicketsApi,
+  RolAttApi,
+  SpacesApi,
+  SpeakersApi,
+} from '@/helpers/request';
+import { firestore, fireRealtime } from '@/helpers/firebase';
+
 import Loading from '../profile/loading';
-import Header from '../../antdComponents/Header';
-import AgendaContext from '../../context/AgendaContext';
-import { RouterPrompt } from '../../antdComponents/RoutePrompt';
-import SelectOptionType from './types/SelectOptionType';
+import RoomController from '../agenda/roomManager/controller';
+import Service from './roomManager/service';
 
-import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
-
+import TipeOfActivity from './typeActivity';
+import SurveyManager from './surveyManager';
+import SurveyExternal from './surveyExternal';
 import AgendaFormulary, { FormularyType } from './components/AgendaFormulary';
-import { AgendaApi, CategoriesAgendaApi, DocumentsApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from '@/helpers/request';
+import SelectOptionType from './types/SelectOptionType';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
