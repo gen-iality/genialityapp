@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useContext, useRef, useEffect } from 'react';
-import { Redirect, withRouter, useLocation } from 'react-router-dom';
+import { Redirect, withRouter, useLocation, useHistory } from 'react-router-dom';
 import { Select as SelectAntd } from 'antd';
 
 import {
@@ -20,6 +20,9 @@ import {
   Modal,
   TimePicker,
 } from 'antd';
+import {
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 
 import * as Moment from 'moment';
 
@@ -28,6 +31,7 @@ import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@/context/MessageService';
+import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
 import {
   fieldsSelect,
   handleRequestError,
@@ -242,6 +246,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const agendaContext = useContext(AgendaContext);
   
   const location = useLocation<LocationStateType>();
+  const history = useHistory();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -376,7 +381,70 @@ function AgendaEdit(props: AgendaEditProps) {
   }, []);
 
   const submit = (changePathWithoutSaving: boolean) => {}
-  const remove = () => {}
+
+  const remove = async () => {
+    // let self = this;
+    const { removeAllRequest } = agendaContext;
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere mientras borra la información...',
+      action: 'show',
+    });
+    if (activity_id) {
+      confirm({
+        title: `¿Está seguro de eliminar la información?`,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Una vez eliminado, no lo podrá recuperar',
+        okText: 'Borrar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerRemove = async () => {
+            try {
+              const refActivity = `request/${props.event._id}/activities/${activity_id}`;
+              const refActivityViewers = `viewers/${props.event._id}/activities/${activity_id}`;
+              const configuration = await service.getConfiguration(props.event._id, activity_id);
+              if (configuration && configuration.typeActivity === 'eviusMeet') {
+                await deleteAllVideos(info.name, configuration.meeting_id),
+                  await deleteLiveStream(configuration.meeting_id);
+              }
+              await fireRealtime.ref(refActivity).remove();
+              await fireRealtime.ref(refActivityViewers).remove();
+              await service.deleteActivity(props.event._id, activity_id);
+              await AgendaApi.deleteOne(activity_id, props.event._id);
+              DispatchMessageService({
+                type: 'loading', // Added by types
+                msj: '', // Added by types
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
+                type: 'success',
+                msj: 'Se eliminó la información correctamente!',
+                action: 'show',
+              });
+              setShouldRedirect(true);
+              history.push(`${props.matchUrl}`);
+            } catch (e) {
+              DispatchMessageService({
+                type: 'loading', // Added by types
+                msj: '', // Added by types
+                key: 'loading',
+                action: 'destroy',
+              });
+              DispatchMessageService({
+                type: 'error',
+                msj: handleRequestError(e).message,
+                action: 'show',
+              });
+            }
+          };
+          onHandlerRemove();
+        },
+      });
+    }
+  };
 
   const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
     if (status === 'newOrUpdate') {
