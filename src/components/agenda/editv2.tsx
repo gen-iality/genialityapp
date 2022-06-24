@@ -85,6 +85,7 @@ interface LocationStateType {
 
 // NOTE: this type can be used by another instances
 export interface AgendaDocumentType {
+  _id?: string,
   name: string,
   subtitle: string,
   bigmaker_meeting_id: any,
@@ -380,7 +381,106 @@ function AgendaEdit(props: AgendaEditProps) {
     loading().then();
   }, []);
 
-  const submit = (changePathWithoutSaving: boolean) => {}
+  const validForm = () => true // TODO: implement
+  const buildInfo = () => ({}) // TODO: implement
+
+  const submit = async (changePathWithoutSaving: boolean) => {
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere mientras se guarda la información...',
+      action: 'show',
+    });
+    const validation = validForm();
+
+    if (validation) {
+      try {
+        const builtInfo = buildInfo();
+        const selected_document = info.selected_document; // TODO: check whether selected_document should be this
+        setIsLoading(true);
+        let agenda: AgendaDocumentType | null = null;
+        let result: AgendaDocumentType;
+        if (location.state.edit || activityEdit) {
+          const data = {
+            activity_id: location.state.edit || idNewlyCreatedActivity,
+          };
+          const edit = location.state.edit || idNewlyCreatedActivity;
+          result = await AgendaApi.editOne(info, edit, props.event._id);
+
+          //Se actualizan los estados date_start_zoom y date_end_zoom para que componente de administracion actualice el valor pasado por props
+          // this.setState({
+          //   date_start_zoom: result.date_start_zoom,
+          //   date_end_zoom: result.date_end_zoom,
+          // });
+          setInfo((last) => ({
+            ...last,
+            date_start_zoom: result.date_start_zoom,
+            date_end_zoom: result.date_end_zoom,
+          }))
+
+          for (let i = 0; i < selected_document?.length; i++) {
+            await DocumentsApi.editOne(data, selected_document[i], props.event._id);
+          }
+        } else {
+          agenda = await AgendaApi.create(props.event._id, builtInfo);
+
+          // Al crear una actividad de la agenda se inicializa el id de la
+          // actividad y las fechas de inicio y finalizacion como requisito
+          // del componente de administrador de salas
+          setInfo((last) => ({
+            ...last,
+            activity_id: (agenda as AgendaDocumentType)._id,
+            date_start_zoom: (agenda as AgendaDocumentType).date_start_zoom,
+            date_end_zoom: (agenda as AgendaDocumentType).date_end_zoom,
+          }));
+        }
+        if (changePathWithoutSaving) setShowPendingChangesModal(false)
+
+        // Se cambia el estado a pendingChangesSave encargado de detectar
+        // cambios pendientes en la fecha/hora sin guardar
+        setPendingChangesSave(false);
+
+        DispatchMessageService({
+          type: 'loading', // Added by types
+          msj: '', // Added by types
+          key: 'loading',
+          action: 'destroy',
+        });
+
+        if (agenda?._id) {
+          /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
+          agendaContext.setActivityEdit(agenda._id);
+          setIdNewlyCreatedActivity(agenda._id);
+          setActivityEdit(true as unknown as string); // TODO: check the right type
+          setShouldRedirect(true); // reloadActivity: true,
+          setInfo((last) => ({
+            ...last,
+            isPublished: false,
+          }));
+          await saveConfig();
+        } else {
+          if (changePathWithoutSaving) history.push(`/eventadmin/${props.event._id}/agenda`);
+        }
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Información guardada correctamente!',
+          action: 'show',
+        });
+      } catch (e) {
+        DispatchMessageService({
+          msj: '',
+          type: 'loading',
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: handleRequestError(e).message,
+          action: 'show',
+        });
+      }
+    }
+  }
 
   const remove = async () => {
     // let self = this;
