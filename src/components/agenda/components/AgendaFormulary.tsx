@@ -183,7 +183,7 @@ function AgendaFormulary(props: FormularyProps) {
 
   return (
     <>
-    <Row justify='center' wrap gutter={12}>
+    <Row justify="center" wrap gutter={12}>
       <Col span={20}>
         <Form.Item
           label={
@@ -201,11 +201,11 @@ function AgendaFormulary(props: FormularyProps) {
           <Input
             autoFocus
             // ref={nameInputRef}
-            type='text'
-            name={'name'}
+            type="text"
+            name="name"
             value={formulary.name}
             onChange={(value) => handleChangeFormulary('name', value.target.value)}
-            placeholder={'Nombre de la actividad'}
+            placeholder="Nombre de la actividad"
           />
         </Form.Item>
         <Form.Item
@@ -223,7 +223,7 @@ function AgendaFormulary(props: FormularyProps) {
             onChange={(value) => handleChangeFormulary('date', value)}
           />
         </Form.Item>
-        <Row wrap justify='center' gutter={[8, 8]}>
+        <Row wrap justify="center" gutter={[8, 8]}>
           <Col span={12}>
             <Form.Item
               style={{ width: '100%' }}
@@ -241,7 +241,7 @@ function AgendaFormulary(props: FormularyProps) {
             >
               <TimePicker
                 use12Hours
-                format='h:mm a'
+                format="h:mm a"
                 allowClear={false}
                 style={{ width: '100%' }}
                 value={
@@ -277,18 +277,18 @@ function AgendaFormulary(props: FormularyProps) {
                   ? Moment(formulary.hour_end)
                   : startOrEndHourWithAdditionalMinutes(5, false)
                 }
-                format='h:mm a'
+                format="h:mm a"
                 onChange={(value) => handleChangeFormulary('hour_end', value)}
               />
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={'Conferencista'}>
+        <Form.Item label="Conferencista">
           <Row wrap gutter={[8, 8]}>
             <Col span={23}>
               <Select
                 isMulti
-                id={'hosts'}
+                id="hosts"
                 isClearable
                 styles={creatableStyles}
                 onChange={(value: any) => handleChangeFormulary('selectedHosts', value)}
@@ -304,7 +304,7 @@ function AgendaFormulary(props: FormularyProps) {
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item label={'Espacio'}>
+        <Form.Item label="Espacio">
           <Row wrap gutter={[8, 8]}>
             <Col span={23}>
               <SelectAntd
@@ -323,7 +323,7 @@ function AgendaFormulary(props: FormularyProps) {
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item label={'Categorías'}>
+        <Form.Item label="Categorías">
           <Row wrap gutter={[8, 8]}>
             <Col span={23}>
               <Creatable
@@ -337,7 +337,7 @@ function AgendaFormulary(props: FormularyProps) {
                 isDisabled={!thisIsLoading.categories}
                 isLoading={!thisIsLoading.categories}
                 options={allCategories}
-                placeholder={'Sin categoría....'}
+                placeholder="Sin categoría...."
                 value={formulary.selectedCategories}
               />
             </Col>
@@ -346,63 +346,63 @@ function AgendaFormulary(props: FormularyProps) {
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item label={'¿Tiene espacio físico?'}>
+        <Form.Item label="¿Tiene espacio físico?">
           <Switch
             checked={formulary.isPhysical}
-            checkedChildren='Si'
-            unCheckedChildren='No'
+            checkedChildren="Sí"
+            unCheckedChildren="No"
             onChange={(chosen) => handleChangeFormulary('isPhysical', chosen)}
           />
         </Form.Item>
         {formulary.isPhysical &&
         <>
-        <Form.Item label={'Longitud'}>
+        <Form.Item label="Longitud">
           <Input
             // ref={formulary.longitud}
             autoFocus
-            type='number'
-            name={'length'}
+            type="number"
+            name="length"
             value={formulary.length}
             onChange={(event) => handleChangeFormulary('length', event.target.value)}
-            placeholder={'Ej. 4.677027'}
+            placeholder="Ej. 4.677027"
           />
         </Form.Item>
-        <Form.Item label={'Latitud'}>
+        <Form.Item label="Latitud">
           <Input
             // Here was a ref called 'this.latitude'
             autoFocus
-            type='number'
-            name={'latitude'}
+            type="number"
+            name="latitude"
             value={formulary.latitude}
             onChange={(event) => handleChangeFormulary('latitude', event.target.value)}
-            placeholder={'Ej. -74.094086'}
+            placeholder="Ej. -74.094086"
           />
         </Form.Item>
         </>
         }
-        <Form.Item label={'Descripción'}>
+        <Form.Item label="Descripción">
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Text type='secondary'>
+            <Text type="secondary">
               Esta información no es visible en la Agenda/Actividad en versión Mobile.
             </Text>
           </Space>
           <EviusReactQuill
-            name='description'
+            name="description"
             data={formulary.description}
             handleChange={(value: string) => handleChangeReactQuill(value, 'description')}
           />
         </Form.Item>
-        <Form.Item label={'Imagen'}>
+        <Form.Item label="Imagen">
           <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
             <Form.Item noStyle>
               <p>
                 Dimensiones:
-                {' '}
+                {" "}
                 <b>
                   <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
                 </b>
-                {' '}
+                {" "}
               </p>
               <p>
                 <small>
@@ -416,8 +416,8 @@ function AgendaFormulary(props: FormularyProps) {
               <ImageUploaderDragAndDrop
                 imageDataCallBack={handleImageChange}
                 imageUrl={formulary.image}
-                width='1080'
-                height='1080'
+                width="1080"
+                height="1080"
               />
             </Form.Item>
           </Card>

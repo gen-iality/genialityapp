@@ -644,11 +644,11 @@ function AgendaEdit(props: AgendaEditProps) {
         save
         form={false}
         when={showPendingChangesModal}
-        title='Tienes cambios sin guardar.'
-        description='¿Qué deseas hacer?'
-        okText='No guardar'
-        okSaveText='Guardar'
-        cancelText='Cancelar'
+        title="Tienes cambios sin guardar."
+        description="¿Qué deseas hacer?"
+        okText="No guardar"
+        okSaveText="Guardar"
+        cancelText="Cancelar"
         onOK={() => true}
         onOKSave={submit}
         onCancel={() => false}
@@ -666,11 +666,11 @@ function AgendaEdit(props: AgendaEditProps) {
         edit={location.state.edit || activityEdit}
         extra={
           isEditing &&
-          <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
+          <Form.Item label="Publicar" labelCol={{ span: 14 }}>
             <Switch
-              checkedChildren='Sí'
-              unCheckedChildren='No'
-              // name={'isPublished'}
+              checkedChildren="Sí"
+              unCheckedChildren="No"
+              // name="isPublished"
               checked={agendaContext.isPublished}
               onChange={(value) => {
                 agendaContext.setIsPublished(value);
@@ -689,7 +689,7 @@ function AgendaEdit(props: AgendaEditProps) {
       {isLoading ? <Loading /> :
       <>
       <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
-        <TabPane tab='Agenda' key='1'>
+        <TabPane tab="Agenda" key="1">
           {/*
           This component will handle the formulary and save the data using
           the provided methods:
@@ -716,8 +716,8 @@ function AgendaEdit(props: AgendaEditProps) {
 
         {isEditing &&
         <>
-        <TabPane tab='Tipo de actividad' key='2'>
-          <Row /* justify='center' */ wrap gutter={12}>
+        <TabPane tab="Tipo de actividad" key="2">
+          <Row /* justify="center" */ wrap gutter={12}>
             <Col span={24}>
               <TipeOfActivity
                 eventId={props.event._id}
@@ -729,8 +729,8 @@ function AgendaEdit(props: AgendaEditProps) {
             </Col>
           </Row>
         </TabPane>
-        <TabPane tab='Juegos' key='3'>
-          <Row justify='center' wrap gutter={12}>
+        <TabPane tab="Juegos" key="3">
+          <Row justify="center" wrap gutter={12}>
             <Col span={20}>
               <RoomController
                 handleGamesSelected={handleGamesSelected}
@@ -740,8 +740,8 @@ function AgendaEdit(props: AgendaEditProps) {
             </Col>
           </Row>
         </TabPane>
-        <TabPane tab='Encuestas' key='4'>
-          <Row justify='center' wrap gutter={12}>
+        <TabPane tab="Encuestas" key="4">
+          <Row justify="center" wrap gutter={12}>
             <Col span={20}>
               <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
               {formulary.isExternal &&
@@ -757,14 +757,14 @@ function AgendaEdit(props: AgendaEditProps) {
             </Col>
           </Row>
         </TabPane>
-        <TabPane tab='Documentos' key='5'>
-          <Row justify='center' wrap gutter={12}>
+        <TabPane tab="Documentos" key="5">
+          <Row justify="center" wrap gutter={12}>
             <Col span={20}>
               <Form.Item>
                 <SelectAntd
                   showArrow
-                  id={'nameDocuments'}
-                  mode='multiple'
+                  id="nameDocuments"
+                  mode="multiple"
                   options={allNameDocuments}
                   onChange={(value) => handleDocumentChange(value)}
                   // defaultValue={selectedDocument}
