@@ -161,14 +161,20 @@ const initialFormularyState = {
   date: Moment(new Date()).format('YYYY-MM-DD'),
   hour_start: '',
   hour_end: '',
-  selectedHosts: [],
   space_id: '',
-  selectedCategories: [],
   isPhysical: false,
   length: '',
   latitude: '',
   description: '',
   image: '',
+  selectedCategories: [],
+  selectedRol: [],
+  selectedHosts: [
+    // For test
+    {label: 'one one', value: 'one#2'},
+    {label: 'one one one', value: 'one#3'},
+  ],
+  selectedTickets: [],
 } as FormularyType;
 
 function AgendaEdit(props: AgendaEditProps) {
@@ -222,14 +228,6 @@ function AgendaEdit(props: AgendaEditProps) {
     {label: 'one one one', value: 'one#3'},
     {label: 'one one one one', value: 'one#4'},
   ]);
-  const [selectedHosts, setSelectedHosts] = useState<SelectOptionType[]>([
-    {label: 'one one', value: 'one#2'},
-    {label: 'one one one', value: 'one#3'},
-  ]);
-
-  // Aux states
-  const [selectedRol, setSelectedRol] = useState(null);
-  const [selectedTickets, setSelectedTickets] = useState([]);
 
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
   const [formulary, setFormulary] = useState<FormularyType>(initialFormularyState);
@@ -260,46 +258,52 @@ function AgendaEdit(props: AgendaEditProps) {
   }
 
   useEffect(() => {
+    /**
+     * This method will load data from API and will save in formulary, and info.
+     * 
+     * It is needed save in formulary to show the info in the page.
+     */
     const loading = async () => {
       const newDays = [];
-      let vimeo_id = '';
+
+      // Take the vimeo_id and save in info.
+      const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
+      setInfo((last) => ({ ...last, vimeo_id: vimeo_id }));
+      
+      // If dates exist, then iterate the specific dates array, formating specially.
+      if (props.event.dates && props.event.dates.length > 0) {
+        const takenDates = props.event.dates;
+
+        // NOTE: why do we use this?
+        // Date.parse(takenDates);
+
+        const newDays = takenDates.map((dates) => {
+          const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
+          return { value: formatDate, label: formatDate };
+        });
+        setAllDays(newDays);
+        // Si no, recibe la fecha inicio y la fecha fin y le da el formato
+        // especifico a mostrar
+      } else {
+        const initMoment = Moment(props.event.date_start);
+        const endMoment = Moment(props.event.date_end);
+        const dayDiff = endMoment.diff(initMoment, 'days');
+        // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+        const newDays = [];
+        for (let i = 0; i < dayDiff + 1; i++) {
+          const formatDate = Moment(initMoment)
+            .add(i, 'd')
+            .format('YYYY-MM-DD');
+          newDays.push({ value: formatDate, label: formatDate });
+        }
+        setAllDays(newDays);
+      }
+
 
       try {
         // NOTE: The tickets are not used
         // const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
-
-        vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
-        setInfo((last) => (
-          { ...last, vimeo_id: vimeo_id,}
-        ));
-
-        // Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
-        if (props.event.dates && props.event.dates.length > 0) {
-          const takenDates = props.event.dates;
-
-          // NOTE: why do we use this?
-          // Date.parse(takenDates);
-
-          newDays.push(...takenDates.map((dates) => {
-            const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
-            return { value: formatDate, label: formatDate };
-          }));
-          setAllDays(newDays);
-          // Si no, recibe la fecha inicio y la fecha fin y le da el formato
-          // especifico a mostrar
-        } else {
-          const initMoment = Moment(props.event.date_start);
-          const endMoment = Moment(props.event.date_end);
-          const diffMoment = endMoment.diff(initMoment, 'days');
-          // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-          for (let i = 0; i < diffMoment + 1; i++) {
-            const formatDate = Moment(initMoment)
-              .add(i, 'd')
-              .format('YYYY-MM-DD');
-            newDays.push({ value: formatDate, label: formatDate });
-          }
-          setAllDays(newDays);
-        }
+        // NOTE: Here was saved tickets in state, but this state was never used.
       } catch (e) {
         console.error(e);
       }
@@ -318,14 +322,19 @@ function AgendaEdit(props: AgendaEditProps) {
       }))
       setNameDocuments(newNameDocuments);
 
+      // Get more data from this event
       const remoteSpaces = await SpacesApi.byEvent(props.event._id);
       const remoteHosts = await SpeakersApi.byEvent(props.event._id);
       const remoteRoles = await RolAttApi.byEvent(props.event._id);
       const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
 
+      // Check if the last page passed an activity_id via route state.
       if (location.state?.edit) {
-        setIsEditing(true);
+        setIsEditing(true); // We are editing
+        // Update the activityEdit of agendaContext from passed activity_id
         agendaContext.setActivityEdit(location.state?.edit);
+
+        // Get the agenda document from current activity_id
         const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
         console.log(agendaInfo)
 
@@ -348,7 +357,10 @@ function AgendaEdit(props: AgendaEditProps) {
         
         const processedDate = processDateFromAgendaDocument(agendaInfo);
 
+        // Edit the current activity ID from passed activity ID via route
         setActivity_id(location.state.edit);
+
+        // Load data to formulary
         setFormulary((last) => ({
           ...last,
           name: agendaInfo.name,
@@ -357,16 +369,15 @@ function AgendaEdit(props: AgendaEditProps) {
           hour_end: processedDate.hour_end,
           // selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
           selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, allCategories),
+          selectedHosts: fieldsSelect(agendaInfo.host_ids, allHosts),
+          selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, allRoles),
         }));
-        setSelectedHosts(fieldsSelect(agendaInfo.host_ids, allHosts))
-        setSelectedRol(fieldsSelect(agendaInfo.access_restriction_rol_ids, allRoles));
-      } else {
-        setAllDays(newDays);
       }
   
+      // Finish loading this:
       setThisIsLoading({ categories: false });
-      setAllDays(newDays);
-      // La información se neceista de tipo [{ label, value }] para los select
+
+      // The object structu should be like [{ label, value }] for the Select components
       setAllSpaces(handleSelect(remoteSpaces));
       setAllHosts(handleSelect(remoteHosts));
       setAllRoles(handleSelect(remoteRoles));
@@ -374,11 +385,17 @@ function AgendaEdit(props: AgendaEditProps) {
 
       setIsLoading(false);
   
+      // Focus the first field
       nameInputRef.current?.focus();
       // validateRoom();
     }
 
     loading().then();
+
+    // This function is running when the component will unmount
+    return () => {
+      agendaContext.setActivityEdit(null);
+    }
   }, []);
 
   const validForm = () => true // TODO: implement
@@ -685,8 +702,6 @@ function AgendaEdit(props: AgendaEditProps) {
             agendaContext={agendaContext}
             matchUrl={props.matchUrl}
             allDays={allDays}
-            selectedHosts={selectedHosts}
-            setSelectedHosts={setSelectedHosts}
             allHosts={allHosts}
             allSpaces={allSpaces}
             allCategories={allCategories}

@@ -52,9 +52,11 @@ export interface FormularyType {
   date: any,
   hour_start: string | Moment.Moment | Date,
   hour_end: string | Moment.Moment | Date,
-  selectedHosts: any[],
   space_id: string,
-  selectedCategories: any[],
+  selectedCategories: SelectOptionType[],
+  selectedHosts: SelectOptionType[],
+  selectedRol: SelectOptionType[],
+  selectedTickets: SelectOptionType[],
   isPhysical: boolean,
   length: string,
   latitude: string,
@@ -71,8 +73,6 @@ export interface FormularyProps {
   agendaContext: any,
   matchUrl: string,
   allDays: SelectOptionType[],
-  selectedHosts: SelectOptionType[],
-  setSelectedHosts: React.Dispatch<React.SetStateAction<SelectOptionType[]>>
   allHosts: SelectOptionType[],
   allSpaces: SelectOptionType[],
   allCategories: SelectOptionType[],
@@ -88,8 +88,6 @@ function AgendaFormulary(props: FormularyProps) {
     setShowPendingChangesModal,
     agendaContext,
     allDays,
-    selectedHosts,
-    setSelectedHosts,
     allHosts,
     allSpaces,
     allCategories,
@@ -289,9 +287,9 @@ function AgendaFormulary(props: FormularyProps) {
                 id={'hosts'}
                 isClearable
                 styles={creatableStyles}
-                onChange={setSelectedHosts}
+                onChange={(value: any) => handleChangeFormulary('selectedHosts', value)}
                 options={allHosts}
-                value={selectedHosts}
+                value={formulary.selectedHosts}
               />
             </Col>
             <Col span={1}>
