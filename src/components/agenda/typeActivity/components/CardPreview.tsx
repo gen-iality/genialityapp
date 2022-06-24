@@ -254,7 +254,7 @@ const CardPreview = (props: any) => {
           props.type == 'Youtube' ||
           props.type == 'EviusMeet') && (
           <Space style={{ width: '100%' }}>
-            <Typography.Text strong>ID {props.type}:</Typography.Text>
+            <Typography.Text strong>ID {props.type === 'EviusMeet' ? 'GEN.iality': props.type}:</Typography.Text>
             <Typography.Text
               copyable={{
                 tooltips: ['clic para copiar', 'ID copiado!!'],
