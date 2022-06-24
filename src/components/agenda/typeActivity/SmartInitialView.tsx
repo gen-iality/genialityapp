@@ -22,28 +22,57 @@ const objecKeys: object = {
 };
 
 const SmartInitialView = (props: any) => {
-  const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity();
+  const {
+    toggleActivitySteps,
+    selectedKey,
+    previewKey,
+    createTypeActivity,
+  } = useTypeActivity();
   const [loading, setLoading] = useState(true);
-  const { typeActivity, meeting_id, setActivityName, activityEdit, roomStatus, saveConfig } = useContext(AgendaContext);
+  const {
+    typeActivity,
+    meeting_id,
+    setActivityName,
+    activityEdit,
+    roomStatus,
+    saveConfig,
+  } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
-    if (!props.ready) return;
-    //OBTENER DETALLE DE LECCIÓN
-    setActivityName(props.activityName);
-    if (typeActivity === null) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-      obtainDataInitial();
-      //MIENTRAS CARGA LOS COMPONENTES
+    if (activityEdit) {
+      // Guardamos
+      createTypeActivity();
     }
-  }, [props.ready]); // props.tabs ignored
-  //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA LECCIÓN
+  }, [props.hasActivityName, activityEdit]);
+
+  useEffect(() => {
+    if (!props.hasActivityName) return;
+    // Obtener detalles de la lección
+    setActivityName(props.activityName);
+    // if (typeActivity === null) {
+    //   setLoading(false);
+    // } else {
+    //   setLoading(true);
+    //   obtainDataInitial();
+    //   // Mientras carga los componentes
+    // }
+  }, [props.hasActivityName]); // props.tabs ignored
+
+  // Permite guardar la data en firebase y activar el snapshot cuando se cambia
+  // el estado de la lección
   useEffect(() => {
     saveConfig(null, 1);
   }, [roomStatus]);
-  //OBTENER DATOS INICIALES Y SETEARLOS EN EL REDUCER
+
+  // Show the popup via prop
+  useEffect(() => {
+    if (props.showForm) {
+      toggleActivitySteps('type')
+    }
+  }, [props.showForm]);
+
+  // Obtiene datos iniciales y guarda en el Reducer
   const obtainDataInitial = async () => {
     let urlVideo;
     if (typeActivity === 'url') {
@@ -68,39 +97,43 @@ const SmartInitialView = (props: any) => {
     return resp;
   };
 
-  const renderComponet = () => {
-    switch (selectedKey) {
-      case 'finish':
-        return (
-          <ManagerView
-            type={objecKeys[previewKey]}
-            activityName={props.activityName}
-            activityId={props.activityId}
-          />
-        );
-      default:
-        return (
-          <Card>
-            <Result
-              icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-              status='info'
-              title='Define el tipo de contenido'
-              extra={
-                <Button onClick={() => toggleActivitySteps('type')} type='primary'>
-                  Escoge un tipo de contenido
-                </Button>
-              }
-            />
-          </Card>
-        );
-    }
-  };
+  // const renderComponet = () => {
+  //   switch (selectedKey) {
+  //     case 'finish':
+  //       return (
+  //         <ManagerView
+  //           type={objecKeys[previewKey]}
+  //           activityName={props.activityName}
+  //           activityId={props.activityId}
+  //         />
+  //       );
+  //     default:
+  //       return (
+  //         <Card>
+  //           <Result
+  //             icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
+  //             status='info'
+  //             title='Define el tipo de contenido'
+  //             extra={
+  //               <Button onClick={() => toggleActivitySteps('type')} type='primary'>
+  //                 Escoge un tipo de contenido
+  //               </Button>
+  //             }
+  //           />
+  //         </Card>
+  //       );
+  //   }
+  // };
 
   return (
     <>
       <ModalPreviewVideo />
-      <SmartModalStepByStep onSetType={props.onSetType} activityName={props.activityName} />
-      {!loading ? renderComponet() : <Spin />}
+      <SmartModalStepByStep
+        onSetType={props.onSetType}
+        activityName={props.activityName}
+        onClosedForm={props.onClosedForm}
+      />
+      {/* {!loading ? renderComponet() : <Spin />} */}
     </>
   );
 };

@@ -29,8 +29,21 @@ const SmartModalStepByStep = (props: any) => {
   const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
 
   return (
-    <Modal visible={openModal} onCancel={closeModal} centered width={1200} footer={null}>
-      <SmartLayoutTypeActivity onSetType={props.onSetType} title={typeOptions?.MainTitle}>
+    <Modal
+      centered
+      visible={openModal}
+      onCancel={() => {
+        closeModal();
+        props.onClosedForm();
+      }}
+      width={1200}
+      footer={null}
+    >
+      <SmartLayoutTypeActivity
+        onSetType={props.onSetType}
+        title={typeOptions?.MainTitle}
+        onClosedForm={props.onClosedForm}
+      >
         {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' && typeOptions.key !== 'url' ? (
           <ContentTypeActivity options={typeOptions.typeOptions} />
         ) : null}
