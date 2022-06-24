@@ -164,7 +164,6 @@ const initialFormularyState = {
   image: '',
 } as FormularyType;
 
-
 function AgendaEdit(props: AgendaEditProps) {
   const [activity_id, setActivity_id] = useState('');
   const [activityEdit, setActivityEdit] = useState<null | string>(null);
@@ -235,10 +234,9 @@ function AgendaEdit(props: AgendaEditProps) {
 
   function processDateFromAgendaDocument(document: AgendaDocumentType) {
     /* console.log(document, 'entro en handleDate'); */
-    let date, hour_start, hour_end;
-    hour_start = Moment(document.datetime_start, 'YYYY-MM-DD HH:mm').toDate();
-    hour_end = Moment(document.datetime_end, 'YYYY-MM-DD HH:mm').toDate();
-    date = Moment(document.datetime_end, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+    const date = Moment(document.datetime_end, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+    const hour_start = Moment(document.datetime_start, 'YYYY-MM-DD HH:mm').toDate();
+    const hour_end = Moment(document.datetime_end, 'YYYY-MM-DD HH:mm').toDate();
     return { date, hour_start, hour_end };
   }
 
@@ -263,23 +261,20 @@ function AgendaEdit(props: AgendaEditProps) {
           // NOTE: why do we use this?
           // Date.parse(takenDates);
 
-          for (let i = 0; i < takenDates.length; i++) {
-            const formatDate = Moment(takenDates[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
-            /* if (Date.parse(formatDate) >= Date.parse(Moment(new Date()).format('YYYY-MM-DD'))) {
-              newDays.push({ value: formatDate, label: formatDate });
-            } */
-            newDays.push({ value: formatDate, label: formatDate });
-          }
+          newDays.push(...takenDates.map((dates) => {
+            const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
+            return { value: formatDate, label: formatDate };
+          }));
           setAllDays(newDays);
           // Si no, recibe la fecha inicio y la fecha fin y le da el formato
           // especifico a mostrar
         } else {
-          const init = Moment(props.event.date_start);
-          const end = Moment(props.event.date_end);
-          const diff = end.diff(init, 'days');
+          const initMoment = Moment(props.event.date_start);
+          const endMoment = Moment(props.event.date_end);
+          const diffMoment = endMoment.diff(initMoment, 'days');
           // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-          for (let i = 0; i < diff + 1; i++) {
-            const formatDate = Moment(init)
+          for (let i = 0; i < diffMoment + 1; i++) {
+            const formatDate = Moment(initMoment)
               .add(i, 'd')
               .format('YYYY-MM-DD');
             newDays.push({ value: formatDate, label: formatDate });
@@ -290,8 +285,11 @@ function AgendaEdit(props: AgendaEditProps) {
         console.error(e);
       }
 
-      // Load page states
-      let documents = await DocumentsApi.byEvent(props.event._id);
+      /**
+       * Load page states
+       */
+
+      const documents = await DocumentsApi.byEvent(props.event._id);
 
       // Load document names
       const newNameDocuments = documents.map((document: {_id: string, title: string}) => ({
@@ -301,10 +299,10 @@ function AgendaEdit(props: AgendaEditProps) {
       }))
       setNameDocuments(newNameDocuments);
 
-      let remoteSpaces = await SpacesApi.byEvent(props.event._id);
-      let remoteHosts = await SpeakersApi.byEvent(props.event._id);
-      let remoteRoles = await RolAttApi.byEvent(props.event._id);
-      let remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
+      const remoteSpaces = await SpacesApi.byEvent(props.event._id);
+      const remoteHosts = await SpeakersApi.byEvent(props.event._id);
+      const remoteRoles = await RolAttApi.byEvent(props.event._id);
+      const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
 
       if (location.state?.edit) {
         setIsEditing(true);
@@ -376,6 +374,8 @@ function AgendaEdit(props: AgendaEditProps) {
     <>
     <Form onFinish={() => submit(true)} {...formLayout}>
       <RouterPrompt
+        save
+        form={false}
         when={showPendingChangesModal}
         title='Tienes cambios sin guardar.'
         description='¿Qué deseas hacer?'
@@ -385,8 +385,6 @@ function AgendaEdit(props: AgendaEditProps) {
         onOK={() => true}
         onOKSave={submit}
         onCancel={() => false}
-        form={false}
-        save
       />
 
       <Header
@@ -400,27 +398,34 @@ function AgendaEdit(props: AgendaEditProps) {
         saveName={location.state.edit || activityEdit ? '' : 'Crear'}
         edit={location.state.edit || activityEdit}
         extra={
-          isEditing && (
-            <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
-              <Switch
-                checkedChildren='Sí'
-                unCheckedChildren='No'
-                // name={'isPublished'}
-                checked={agendaContext.isPublished}
-                onChange={(value) => {
-                  agendaContext.setIsPublished(value);
-                  // this.setState({ isPublished: value }, async () => await this.saveConfig());
-                }}
-              />
-            </Form.Item>
-          )
+          isEditing &&
+          <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
+            <Switch
+              checkedChildren='Sí'
+              unCheckedChildren='No'
+              // name={'isPublished'}
+              checked={agendaContext.isPublished}
+              onChange={(value) => {
+                agendaContext.setIsPublished(value);
+                // this.setState({ isPublished: value }, async () => await this.saveConfig());
+              }}
+            />
+          </Form.Item>
         }
       />
+
+      {/*
+      This is hidden during loading
+      */}
 
       {isLoading ? <Loading /> :
       <>
       <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
         <TabPane tab='Agenda' key='1'>
+          {/*
+          This component will handle the formulary and save the data using
+          the provided methods:
+          */}
           <AgendaFormulary
             formulary={formulary}
             savedFormulary={savedFormulary}
@@ -438,6 +443,11 @@ function AgendaEdit(props: AgendaEditProps) {
             thisIsLoading={thisIsLoading}
           />
         </TabPane>
+
+        {/*
+        If the agenda is editing, this section gets be showed:
+        */}
+
         {isEditing &&
         <>
         <TabPane tab='Tipo de actividad' key='2'>
@@ -468,15 +478,15 @@ function AgendaEdit(props: AgendaEditProps) {
           <Row justify='center' wrap gutter={12}>
             <Col span={20}>
               <SurveyManager event_id={props.event._id} activity_id={activity_id} />
-              {isExternal && (
-                <SurveyExternal
-                  isExternal={isExternal}
-                  meeting_id={externalSurveyID}
-                  event_id={props.event._id}
-                  activity_id={activity_id}
-                  roomStatus={roomStatus}
-                />
-              )}
+              {isExternal &&
+              <SurveyExternal
+                isExternal={isExternal}
+                meeting_id={externalSurveyID}
+                event_id={props.event._id}
+                activity_id={activity_id}
+                roomStatus={roomStatus}
+              />
+              }
               <BackTop />
             </Col>
           </Row>
@@ -486,11 +496,11 @@ function AgendaEdit(props: AgendaEditProps) {
             <Col span={20}>
               <Form.Item>
                 <SelectAntd
-                  id={'nameDocuments'}
                   showArrow
+                  id={'nameDocuments'}
                   mode='multiple'
-                  onChange={(value) => setSelectedDocument(value)}
                   options={nameDocuments}
+                  onChange={(value) => setSelectedDocument(value)}
                   // defaultValue={selectedDocument}
                 />
               </Form.Item>

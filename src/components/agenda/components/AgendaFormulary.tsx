@@ -194,7 +194,8 @@ function AgendaFormulary(props: FormularyProps) {
               required: true,
               message: 'Nombre de la actividad requerida',
             },
-          ]}>
+          ]}
+        >
           <Input
             autoFocus
             // ref={nameInputRef}
@@ -211,7 +212,8 @@ function AgendaFormulary(props: FormularyProps) {
               Día <label style={{ color: 'red' }}>*</label>
             </label>
           }
-          rules={[{ required: true, message: 'La fecha es requerida' }]}>
+          rules={[{ required: true, message: 'La fecha es requerida' }]}
+        >
           <SelectAntd
             options={allDays}
             value={formulary.date}
@@ -233,7 +235,8 @@ function AgendaFormulary(props: FormularyProps) {
                   required: true,
                   message: 'La hora de inicio es requerida',
                 },
-              ]}>
+              ]}
+            >
               <TimePicker
                 use12Hours
                 format='h:mm a'
@@ -261,7 +264,8 @@ function AgendaFormulary(props: FormularyProps) {
                   required: true,
                   message: 'La hora final es requerida',
                 },
-              ]}>
+              ]}
+            >
               <TimePicker
                 use12Hours
                 style={{ width: '100%' }}
@@ -306,9 +310,7 @@ function AgendaFormulary(props: FormularyProps) {
                 onChange={(value) => handleChangeFormulary('space_id', value)}>
                 <Option value="">Seleccione un lugar/salón ...</Option>
                 {allSpaces.map((space) => (
-                  <Option key={space.value} value={space.value}>
-                    {space.label}
-                  </Option>
+                  <Option key={space.value} value={space.value}>{space.label}</Option>
                 ))}
               </SelectAntd>
             </Col>
@@ -347,35 +349,35 @@ function AgendaFormulary(props: FormularyProps) {
             checked={formulary.isPhysical}
             checkedChildren='Si'
             unCheckedChildren='No'
-            onChange={(yon) => handleChangeFormulary('isPhysical', yon)}
+            onChange={(chosen) => handleChangeFormulary('isPhysical', chosen)}
           />
         </Form.Item>
-        {formulary.isPhysical && (
-          <>
-            <Form.Item label={'Longitud'}>
-              <Input
-                // ref={formulary.longitud}
-                autoFocus
-                type='number'
-                name={'length'}
-                value={formulary.length}
-                onChange={(event) => handleChangeFormulary('length', event.target.value)}
-                placeholder={'Ej. 4.677027'}
-              />
-            </Form.Item>
-            <Form.Item label={'Latitud'}>
-              <Input
-                // Here was a ref called 'this.latitude'
-                autoFocus
-                type='number'
-                name={'latitude'}
-                value={formulary.latitude}
-                onChange={(event) => handleChangeFormulary('latitude', event.target.value)}
-                placeholder={'Ej. -74.094086'}
-              />
-            </Form.Item>
-          </>
-        )}
+        {formulary.isPhysical &&
+        <>
+        <Form.Item label={'Longitud'}>
+          <Input
+            // ref={formulary.longitud}
+            autoFocus
+            type='number'
+            name={'length'}
+            value={formulary.length}
+            onChange={(event) => handleChangeFormulary('length', event.target.value)}
+            placeholder={'Ej. 4.677027'}
+          />
+        </Form.Item>
+        <Form.Item label={'Latitud'}>
+          <Input
+            // Here was a ref called 'this.latitude'
+            autoFocus
+            type='number'
+            name={'latitude'}
+            value={formulary.latitude}
+            onChange={(event) => handleChangeFormulary('latitude', event.target.value)}
+            placeholder={'Ej. -74.094086'}
+          />
+        </Form.Item>
+        </>
+        }
         <Form.Item label={'Descripción'}>
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />
@@ -393,10 +395,12 @@ function AgendaFormulary(props: FormularyProps) {
           <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
             <Form.Item noStyle>
               <p>
-                Dimensiones:{' '}
+                Dimensiones:
+                {' '}
                 <b>
                   <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
-                </b>{' '}
+                </b>
+                {' '}
               </p>
               <p>
                 <small>
