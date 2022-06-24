@@ -54,6 +54,7 @@ import TipeOfActivity from './typeActivity';
 import SurveyManager from './surveyManager';
 import SurveyExternal from './surveyExternal';
 import AgendaFormulary, { FormularyType } from './components/AgendaFormulary';
+import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
 import SelectOptionType from './types/SelectOptionType';
 
 const { TabPane } = Tabs;
@@ -427,7 +428,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   // Método para guarda la información de la configuración
   const saveConfig = async () => {
-    const { roomInfo, tabs } = prepareData();
+    const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
     const activity_id = agendaContext.activityEdit || idNewlyCreatedActivity;
     try {
       const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
@@ -446,39 +447,6 @@ function AgendaEdit(props: AgendaEditProps) {
         action: 'show',
       });
     }
-  };
-
-  const prepareData = () => {
-    const {
-      roomStatus,
-      platform,
-      meeting_id,
-      chat,
-      surveys,
-      games,
-      attendees,
-      host_id,
-      host_name,
-      avalibleGames,
-      transmition,
-      isPublished,
-      typeActivity,
-    } = agendaContext;
-
-    const roomInfo = {
-      platform,
-      meeting_id,
-      isPublished: isPublished ? isPublished : false,
-      host_id,
-      host_name,
-      avalibleGames,
-      habilitar_ingreso: roomStatus,
-      transmition: transmition || null,
-      typeActivity,
-    };
-
-    const tabs = { chat, surveys, games, attendees };
-    return { roomInfo, tabs };
   };
 
   if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
