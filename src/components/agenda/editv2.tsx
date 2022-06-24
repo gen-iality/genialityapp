@@ -507,7 +507,7 @@ function AgendaEdit(props: AgendaEditProps) {
     });
     if (currentActivityID) {
       confirm({
-        title: `¿Está seguro de eliminar la información?`,
+        title: '¿Está seguro de eliminar la información?',
         icon: <ExclamationCircleOutlined />,
         content: 'Una vez eliminado, no lo podrá recuperar',
         okText: 'Borrar',
@@ -565,12 +565,11 @@ function AgendaEdit(props: AgendaEditProps) {
       setAvalibleGames(listOfGames);
       await saveConfig();
     } else {
-      const newData: object[] = [];
-      listOfGames.forEach((items) => {
+      const newData: object[] = listOfGames.map((items) => {
         if (items.id === itemId) {
-          newData.push({ ...items, showGame: status });
+          return { ...items, showGame: status };
         } else {
-          newData.push({ ...items });
+          return { ...items };
         }
       });
       agendaContext.setAvailableGames(newData);
