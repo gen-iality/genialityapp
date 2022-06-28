@@ -270,7 +270,7 @@ function Speaker(props) {
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>
       <Header
-        title={'Conferencistas'}
+        title={'Conferencistas' + (justCreate ? ' - crear nuevo': '')}
         back
         save
         form
