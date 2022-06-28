@@ -41,7 +41,13 @@ export const AgendaContextProvider = ({ children }) => {
   const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
   const [request, setRequest] = useState({});
   const [requestList, setRequestList] = useState([]);
+  const [viewers, setViewers] = useState([]);
+  const [viewersOnline, setViewersOnline] = useState([]);
+  const [viewersOffline, setViewersOffline] = useState([]);
+  const [totalViews, setTotalViews] = useState([]);
+  const [maxViewers, setMaxViewers] = useState(0);
   const [refActivity, setRefActivity] = useState(null);
+  const [refActivityViewers, setRefActivityViewers] = useState(null);
   const [typeActivity, setTypeActivity] = useState(undefined);
   const [activityName, setActivityName] = useState(null);
   const [dataLive, setDataLive] = useState(null);
@@ -184,6 +190,111 @@ export const AgendaContextProvider = ({ children }) => {
         }
       });
   };
+  const getViewers = (refActivityViewers) => {
+    setViewers([]);
+    setViewersOffline([]);
+    setViewersOnline([]);
+    setMaxViewers(0);
+    const totalViewRef = refActivityViewers + '/total';
+    const maxViewersRef = refActivityViewers + '/maxViewers';
+    const viewersRef = refActivityViewers + '/uniqueUsers';
+    fireRealtime.ref(viewersRef).on('value', (snapshot) => {
+      let viewers = [];
+      let viewersOnline = [];
+      let viewersOffline = [];
+      if (snapshot.exists()) {
+        let data = snapshot.val();
+        if (Object.keys(data).length > 0) {
+          Object.keys(data).map((viewer) => {
+            viewers.push({
+              key: viewer,
+              state: data[viewer].state,
+              names: data[viewer].names,
+              email: data[viewer].email,
+              id: data[viewer].id,
+            });
+            if (data[viewer].state === 'online') {
+              viewersOnline.push({
+                key: viewer,
+                state: data[viewer].state,
+                names: data[viewer].names,
+                email: data[viewer].email,
+                id: data[viewer].id,
+              });
+            } else {
+              viewersOffline.push({
+                key: viewer,
+                state: data[viewer].state,
+                names: data[viewer].names,
+                email: data[viewer].email,
+                id: data[viewer].id,
+              });
+            }
+          });
+          fireRealtime.ref(maxViewersRef).on('value', (snapshot) => {
+            if (snapshot.exists()) {
+              setMaxViewers(snapshot.val());
+              if (snapshot.val() < viewersOnline.length) {
+                fireRealtime.ref(maxViewersRef).set(viewersOnline.length);
+              }
+            } else {
+              fireRealtime.ref(maxViewersRef).set(viewersOnline.length);
+              setMaxViewers(viewersOnline.length);
+            }
+          });
+          setViewers(viewers);
+          setViewersOffline(viewersOffline);
+          setViewersOnline(viewersOnline);
+        } else {
+          setViewers([]);
+          setViewersOffline([]);
+          setViewersOnline([]);
+          setMaxViewers(0);
+        }
+      } else {
+        setViewers([]);
+        setViewersOffline([]);
+        setViewersOnline([]);
+        setMaxViewers(0);
+      }
+    });
+
+    fireRealtime.ref(totalViewRef).on('value', (snapshot) => {
+      let viewersTotal = [];
+      if (snapshot.exists()) {
+        let data = snapshot.val();
+
+        if (Object.keys(data).length > 0) {
+          Object.keys(data).map((viewer) => {
+            viewersTotal.push({
+              key: viewer,
+              state: data[viewer].state,
+              names: data[viewer].names,
+              email: data[viewer].email,
+              id: data[viewer].id,
+              date: data[viewer].date,
+            });
+          });
+          setTotalViews(viewersTotal);
+        } else {
+          setTotalViews([]);
+        }
+      } else {
+        setTotalViews([]);
+      }
+    });
+  };
+  const removeViewers = async (refActivityViewers) => {
+    if (refActivityViewers) {
+      await fireRealtime.ref(refActivityViewers).remove();
+      setViewers([]);
+      setViewersOffline([]);
+      setViewersOnline([]);
+      setTotalViews([]);
+      setMaxViewers(0);
+    }
+  };
+
   const addRequest = (refActivity, request) => {
     if (request) {
       fireRealtime.ref(refActivity).set(request);
@@ -328,6 +439,7 @@ export const AgendaContextProvider = ({ children }) => {
 
   const deleteTypeActivity = async () => {
     const { roomInfo, tabs } = prepareData({ type: 'delete' });
+    console.log('deleteing', roomInfo);
 
     const activity_id = activityEdit;
     const service = new Service(firestore);
@@ -421,12 +533,21 @@ export const AgendaContextProvider = ({ children }) => {
         useAlreadyCreated,
         setUseAlreadyCreated,
         getRequestByActivity,
+        getViewers,
         request,
         addRequest,
         removeRequest,
         approvedOrRejectedRequest,
         setRefActivity,
         refActivity,
+        setRefActivityViewers,
+        refActivityViewers,
+        viewers,
+        viewersOffline,
+        viewersOnline,
+        totalViews,
+        maxViewers,
+        removeViewers,
         requestList,
         removeAllRequest,
         typeActivity,

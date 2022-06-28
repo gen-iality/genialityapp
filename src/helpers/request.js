@@ -496,13 +496,15 @@ export const TicketsApi = {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
   },
 
-  checkInAttendee: async (event_id, eventUser_id) => {
+  addCheckIn: async (eventUser_id) => {
     let token = await GetTokenUserFirebase();
-    let data = {
-      event: event_id,
-      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
-    };
-    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, data);
+    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, {}, true);
+  },
+
+  deleteCheckIn: async (eventUser_id) => {
+    let token = await GetTokenUserFirebase();
+
+    return await Actions.put(`/api/eventUsers/${eventUser_id}/uncheck/?token=${token}`, {}, true);
   },
 };
 

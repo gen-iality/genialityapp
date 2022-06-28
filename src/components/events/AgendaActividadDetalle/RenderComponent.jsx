@@ -11,6 +11,8 @@ import { firestore } from '../../../helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import AgendaContext from '../../../context/AgendaContext';
+import initBroadcastViewers from '@containers/broadcastViewers';
+import { CurrentUserContext } from '@/context/userContext';
 
 const RenderComponent = (props) => {
   let tabsdefault = {
@@ -19,6 +21,7 @@ const RenderComponent = (props) => {
     games: true,
     surveys: false,
   };
+  const userContext = useContext(CurrentUserContext);
   const [tabsGeneral, settabsGeneral] = useState(tabsdefault);
   const [activityState, setactivityState] = useState('');
   const [activityStateGlobal, setactivityStateGlobal] = useState('');
@@ -27,7 +30,9 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  let { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
+  let { transmition, setTransmition, setTypeActivity, typeActivity, inactiveOrActiveViewer } = useContext(
+    AgendaContext
+  );
   let { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {

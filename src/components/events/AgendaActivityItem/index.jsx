@@ -87,7 +87,6 @@ function AgendaActivityItem(props) {
 
   return (
     <>
-      {/* {console.log('%c🆗 - item', 'color: #00A6ED;', typeActivity)} */}
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           className='agendaHover ' /* efect-scale */

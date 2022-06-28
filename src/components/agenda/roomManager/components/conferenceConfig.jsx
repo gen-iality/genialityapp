@@ -12,10 +12,12 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
   const { activityEdit, getRequestByActivity, request, transmition } = useContext(AgendaContext);
   const [viewModal, setViewModal] = useState(false);
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
+
   const [status, setStatus] = useState();
 
   useEffect(() => {
     if (!eventContext.value || !activityEdit) return;
+
     getRequestByActivity(refActivity);
   }, [eventContext.value, activityEdit]);
 

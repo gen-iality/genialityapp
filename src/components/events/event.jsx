@@ -84,6 +84,7 @@ class Event extends Component {
       FAQS: true,
       Trivia: true,
       event: null,
+      collapsed: false,
     };
     this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this);
   }
@@ -171,9 +172,13 @@ class Event extends Component {
     return encodedUrl;
   }
 
+  collapseMenu = () => {
+    this.setState({ collapsed: !this.state.collapsed });
+  };
+
   render() {
     const { match, permissions, showMenu } = this.props;
-    const { error } = this.state;
+    const { error, collapsed } = this.state;
     if (this.state.loading || this.props.loading || permissions.loading) return <Loading />;
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
     if (error)
@@ -193,17 +198,18 @@ class Event extends Component {
       );
 
     return (
-      <Layout style={{ minHeight: '100vh' }} className='columns'>
+      <Layout className='columns'>
         <Sider
           style={{
-            overflow: 'auto',
+            // overflow: 'auto',
             background: '#1B1E28',
           }}
-          className={` menu event-aside `}>
-          <Menu match={match} />
+          width={250}
+          collapsed={collapsed}>
+          <Menu match={match} collapseMenu={this.collapseMenu} collapsed={collapsed} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
-          <Row gutter={[16, 16]} wrap>
+          {/* <Row gutter={[16, 16]} wrap>
             <Col>
               <Button
                 type='primary'
@@ -213,7 +219,7 @@ class Event extends Component {
                 Ir al evento
               </Button>
             </Col>
-          </Row>
+          </Row> */}
           <section className='section event-wrapper'>
             <Switch>
               <Route
@@ -302,6 +308,8 @@ class Event extends Component {
                 eventId={this.state.event._id}
                 event={this.state.event}
                 url={match.url}
+                componentKey='event-checkin'
+                type='event-checkin'
               />
 
               <Protected
@@ -318,8 +326,8 @@ class Event extends Component {
                 event={this.state.event}
                 eventId={this.state.event._id}
                 url={match.url}
-                componentKey='checkin'
-                type='activity'
+                componentKey='activity-checkin'
+                type='activity-checkin'
               />
 
               <Protected

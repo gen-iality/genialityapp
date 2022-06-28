@@ -12,6 +12,7 @@ import {
   Badge,
   Popconfirm,
   Result,
+  Statistic,
 } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
@@ -39,6 +40,10 @@ const CardPreview = (props: any) => {
     stopRecordTransmition,
     loadingRecord,
     record,
+    viewers,
+    viewersOnline,
+    totalViews,
+    maxViewers,
   } = useContext(AgendaContext);
 
   console.log('DATALIVE ===>', dataLive);
@@ -282,6 +287,17 @@ const CardPreview = (props: any) => {
             </Select>
           </Space>
         )}
+        {/* {(roomStatus != '' || props.type === 'reunión' || props.type === 'Video') && (
+          <Space direction='vertical'>
+            <Typography.Text strong>Estadisticas de la actividad:</Typography.Text>
+            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
+            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
+            {(roomStatus === 'open_meeting_room' || props.type === 'reunión' || props.type === 'Video') && (
+              <Typography.Text strong>Visualizaciones en curso: {viewersOnline.length}</Typography.Text>
+            )}
+            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
+          </Space>
+        )} */}
       </Space>
     </Card>
   );

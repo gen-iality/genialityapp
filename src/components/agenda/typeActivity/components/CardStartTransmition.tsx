@@ -30,9 +30,11 @@ const CardStartTransmition = (props: any) => {
     setRoomStatus,
     removeAllRequest,
     activityEdit,
+    removeViewers,
   } = useContext(AgendaContext);
   const cEvent = useContext(CurrentEventContext);
   const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`;
+  const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${activityEdit}`;
   const { toggleActivitySteps } = useTypeActivity();
   const { confirm } = Modal;
   useEffect(() => {
@@ -66,6 +68,7 @@ const CardStartTransmition = (props: any) => {
     deleteAllVideos(dataLive?.name, meeting_id); // verificar sis eva aelimnar los videos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
     await removeAllRequest(refActivity);
+    await removeViewers(refActivityViewers);
     await deleteTypeActivity();
     toggleActivitySteps('initial');
     setLoadingDelete(false);
