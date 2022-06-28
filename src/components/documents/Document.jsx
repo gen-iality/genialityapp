@@ -27,6 +27,7 @@ const Document = (props) => {
   const [folder, setFolder] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadPercentage, setLoadPercentage] = useState(0);
+  const [fromEditing, setFromEditing] = useState(false);
 
   useEffect(() => {
     if (locationState?.edit) {
@@ -41,6 +42,7 @@ const Document = (props) => {
     setFiles([response.file]);
     setDocumentList(response.documentList);
     setLoading(false);
+    setFromEditing(true);
   };
 
   const onSubmit = async () => {
@@ -274,7 +276,7 @@ const Document = (props) => {
       <Header
         title={'Documento'}
         back
-        save={loadPercentage > 0 && true}
+        save={(loadPercentage > 0 && true) || fromEditing}
         form
         remove={remove}
         edit={locationState?.edit}
