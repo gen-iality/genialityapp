@@ -8,19 +8,19 @@ export default function lessonTypeToString (inputType: string) {
       typeName = 'Reunión';
       break;
     case 'url':
-      typeName = 'Vídeo desde URL';
+      typeName = 'Vídeo'; // desde URL
       break;
     case 'vimeo':
-      typeName = 'Transmisión de Vimeo';
+      typeName = 'Transmisión (Vimeo)';
       break;
     case 'youTube':
-      typeName = 'Transmisión de YouTube';
+      typeName = 'Transmisión (YouTube)';
       break;
     case 'RTMP':
-      typeName = 'Transmisión de RTMP';
+      typeName = 'Transmisión (RTMP)';
       break;
     case 'eviusMeet':
-      typeName = 'Transmisión de GEN Connect';
+      typeName = 'Transmisión (GEN Connect)';
       break;
     case 'eviusStreaming':
       typeName = 'GEN.iality Streaming'
