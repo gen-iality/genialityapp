@@ -38,8 +38,6 @@ const HeaderColumns = (props) => {
     removeRequest,
     setActivityEdit,
     typeActivity,
-    getViewers,
-    setRefActivityViewers,
   } = useContext(AgendaContext);
 
   function showPropsConfirm() {
@@ -74,12 +72,8 @@ const HeaderColumns = (props) => {
     }
     if (!currentActivity || typeActivity !== 'eviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
-    const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${currentActivity?._id}`;
-
-    getViewers(refActivityViewers);
     setActivityEdit(currentActivity._id);
     setRefActivity(refActivity);
-    setRefActivityViewers(refActivityViewers);
     getRequestByActivity(refActivity);
 
     return () => {
