@@ -15,6 +15,7 @@ import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
+import lessonTypeToString from '../lessonTypeToString';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -460,6 +461,7 @@ function AgendaActivityItem(props) {
                       <Row gutter={[10, 10]}>
                         <Col span={24} style={{ paddingLeft: '0px' }}>
                           <div className='titulo'>{item.name}.</div>
+                          <div className="lesson">{lessonTypeToString(item.type?.name || 'Tipo genérico')}</div>
                           <span className='lugar'>{item && item.space && item.space.name}</span>
                         </Col>
                         <Row style={{ width: '100%' }}>
