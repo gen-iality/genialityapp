@@ -282,6 +282,7 @@ class eventUsersList extends Component {
         },
       ],
     };
+    const cEventIsActive = this.props.event?.isActive;
     return (
       <>
         <Header title={'Enviar información o correo a asistentes'} />
@@ -300,7 +301,9 @@ class eventUsersList extends Component {
           title={() => (
             <Row wrap gutter={[8, 8]} justify='end'>
               <Col>
-                <Button onClick={() => this.goToSendMessage()}>
+                <Button
+                  onClick={() => this.goToSendMessage()}
+                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                   Enviar comunicación a : {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}
                 </Button>
                 <ModalAdvise visible={this.state.modalVisible} />
@@ -311,12 +314,26 @@ class eventUsersList extends Component {
                 </Button>
               </Col>
               <Col>
-                <Link to={`${this.props.matchUrl}/importar-excel`} icon={<UploadOutlined />}>
-                  <Button type='primary'>Importar Usuario</Button>
+                <Link
+                  to={
+                    cEventIsActive === false && window.location.toString().includes('eventadmin')
+                      ? ''
+                      : `${this.props.matchUrl}/importar-excel`
+                  }
+                  icon={<UploadOutlined />}>
+                  <Button
+                    type='primary'
+                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                    Importar Usuario
+                  </Button>
                 </Link>
               </Col>
               <Col>
-                <Button type='primary' onClick={this.modalUser} icon={<PlusCircleOutlined />}>
+                <Button
+                  type='primary'
+                  onClick={this.modalUser}
+                  icon={<PlusCircleOutlined />}
+                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                   Agregar Usuario
                 </Button>
               </Col>

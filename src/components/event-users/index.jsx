@@ -110,7 +110,13 @@ class ListEventUser extends Component {
   editcomponent = (text, item, index) => {
     return (
       <Tooltip placement='topLeft' title='Editar'>
-        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
+        <Button
+          type={'primary'}
+          icon={<EditOutlined />}
+          size='small'
+          onClick={() => this.openEditModalUser(item)}
+          disabled={this.props.event?.isActive === false && window.location.toString().includes('eventadmin')}
+        />
       </Tooltip>
     );
   };
@@ -763,6 +769,7 @@ class ListEventUser extends Component {
     } = this.state;
 
     const { event, type, loading, componentKey } = this.props;
+    const cEventIsActive = event?.isActive;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -886,14 +893,27 @@ class ListEventUser extends Component {
                 )}
               </Col>
               <Col>
-                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                <Link
+                  to={
+                    cEventIsActive === false && window.location.toString().includes('eventadmin')
+                      ? ''
+                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
+                  }>
+                  <Button
+                    type='primary'
+                    icon={<UploadOutlined />}
+                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                     Importar usuarios
                   </Button>
                 </Link>
               </Col>
               <Col>
-                <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
+                <Button
+                  type='primary'
+                  icon={<PlusCircleOutlined />}
+                  size='middle'
+                  onClick={this.addUser}
+                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                   {'Agregar Usuario'}
                 </Button>
               </Col>

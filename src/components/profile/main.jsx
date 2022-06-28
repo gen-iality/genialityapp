@@ -33,7 +33,9 @@ import moment from 'moment';
 import Loading from './loading';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
+import MyPlan from './components/myPlan';
 import { imageUtils } from '../../Utilities/ImageUtils';
+import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -109,7 +111,7 @@ const MainProfile = (props) => {
     /* Eventos creados por el usuario    */
     eventsIHaveCreated();
     /* ----------------------------------*/
-    /* Eventos en los que esta registrado el usuario */
+    /* Eventos en los que esta inscrito el usuario */
 
     eventsThatIHaveParticipated();
     /* ----------------------------------*/
@@ -204,6 +206,16 @@ const MainProfile = (props) => {
                 icon={<LockOutlined style={{ fontSize: '18px' }} />}>
                 Cambiar contraseña
               </Menu.Item>
+              <Menu.Item
+                title={null}
+                onClick={() => {
+                  showContent('MY_PLAN');
+                  screens.xs && showSider();
+                }}
+                key={'myPlan'}
+                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
+                Mi plan
+              </Menu.Item>
             </Menu>
           </Col>
           <Col>
@@ -292,7 +304,7 @@ const MainProfile = (props) => {
                           xxl={8}>
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
-                              title={<span style={{ fontSize: '16px' }}>Eventos en los que estoy registrado</span>}
+                              title={<span style={{ fontSize: '16px' }}>Eventos en los que estoy inscrito</span>}
                               value={tickets.length && tickets.length > 0 ? tickets.length : 0}
                               // loading={tickets.length ? false : true}
                               precision={0}
@@ -347,7 +359,7 @@ const MainProfile = (props) => {
                     </Col>
 
                     <Col span={24}>
-                      <Divider orientation='left'>Eventos en los que estoy registrado</Divider>
+                      <Divider orientation='left'>Eventos en los que estoy inscrito</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsThatIHaveParticipatedIsLoading ? (
                           <Loading />
@@ -458,7 +470,7 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab='Registros a eventos' key='4'>
+              <TabPane tab='Inscripciones a eventos' key='4'>
                 {eventsThatIHaveParticipatedIsLoading ? (
                   <Loading />
                 ) : (
@@ -485,6 +497,7 @@ const MainProfile = (props) => {
               </TabPane>
             </Tabs>
           )}
+          {content === 'MY_PLAN' && <MyPlan cUser={props.cUser} />}
         </Content>
       </Layout>
     </Layout>

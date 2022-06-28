@@ -9,6 +9,7 @@ import arrayMove from 'array-move';
 import Header from '../../antdComponents/Header';
 import { columns } from './columns';
 import { DispatchMessageService } from '../../context/MessageService';
+import { UseEventContext } from '@/context/eventContext';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
@@ -20,6 +21,7 @@ function SpeakersList(props) {
   const [searchedColumn, setSearchedColumn] = useState('');
   const [dataSpeakers, setdataSpeakers] = useState([]);
   let { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
+  const cEventIsActive = UseEventContext()?.value?.isActive;
 
   useEffect(() => {
     /* console.log('dataSpeakers', data); */
@@ -204,6 +206,7 @@ function SpeakersList(props) {
     remove,
     searchText: searchText,
     refetch,
+    cEventIsActive,
   };
 
   return (
@@ -215,6 +218,7 @@ function SpeakersList(props) {
           pathname: `${props.matchUrl}/speaker`,
           state: { new: true },
         }}
+        /* listLenght={sortAndIndexSpeakers()} */
       />
 
       <Table
@@ -223,7 +227,6 @@ function SpeakersList(props) {
         size='small'
         rowKey='index'
         loading={isLoading}
-        hasData={sortAndIndexSpeakers()}
         components={{
           body: {
             wrapper: DraggableContainer,

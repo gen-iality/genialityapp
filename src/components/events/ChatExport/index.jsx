@@ -31,6 +31,7 @@ const ChatExport = ({ eventId, event }) => {
   let [columnsData, setColumnsData] = useState({});
   let [listUsersBlocked, setlistUsersBlocked] = useState([]);
   let cEvent = UseEventContext();
+  const cEventIsActive = UseEventContext()?.value?.isActive;
 
   const renderMensaje = (text, record) => (
     <Tooltip title={record.text} placement='topLeft'>
@@ -375,7 +376,11 @@ const ChatExport = ({ eventId, event }) => {
               </Col>
               <Col>
                 {datamsjevent && datamsjevent.length > 0 && (
-                  <Button onClick={deleteAllChat} type='danger' icon={<DeleteOutlined />}>
+                  <Button
+                    onClick={deleteAllChat}
+                    type='danger'
+                    icon={<DeleteOutlined />}
+                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
                     Eliminar Chat
                   </Button>
                 )}

@@ -22,6 +22,7 @@ import Header from '../../../antdComponents/Header';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
+import { UseEventContext } from '@/context/eventContext';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -585,20 +586,42 @@ class Datos extends Component {
       {
         title: 'Opciones',
         dataIndex: '',
-        render: (key) => (
-          <Row wrap gutter={[8, 8]}>
-            <Col>
-              {key.name !== 'email' /* && key.name !== 'contrasena' */ && (
-                <Tooltip placement='topLeft' title='Editar'>
-                  <Button
-                    key={`editAction${key.index}`}
-                    id={`editAction${key.index}`}
-                    onClick={() => this.editField(key)}
-                    icon={<EditOutlined />}
-                    type='primary'
-                    size='small'
-                  />
-                </Tooltip>
+        render: (key) => {
+          const cEventIsActive = UseEventContext()?.value?.isActive;
+          return (
+            <Row wrap gutter={[8, 8]}>
+              <Col>
+                {key.name !== 'email' /* && key.name !== 'contrasena' */ && (
+                  <Tooltip placement='topLeft' title='Editar'>
+                    <Button
+                      key={`editAction${key.index}`}
+                      id={`editAction${key.index}`}
+                      onClick={() => this.editField(key)}
+                      icon={<EditOutlined />}
+                      type='primary'
+                      size='small'
+                      disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    />
+                  </Tooltip>
+                )}
+              </Col>
+              <Col>
+                {key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
+                  <Tooltip placement='topLeft' title='Eliminar'>
+                    <Button
+                      key={`removeAction${key.index}`}
+                      id={`removeAction${key.index}`}
+                      onClick={() => this.removeField(key._id || key.name)}
+                      icon={<DeleteOutlined />}
+                      type='danger'
+                      size='small'
+                      disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    />
+                  </Tooltip>
+                )}
+              </Col>
+              {/* {key.name !== 'email' && key.name !== 'contrasena' && (
+                <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
               )}
             </Col>
             <Col>
@@ -629,8 +652,9 @@ class Datos extends Component {
                 onClick={() => this.setState({ deleteModal: key._id || key.name })}
               />
             )} */}
-          </Row>
-        ),
+            </Row>
+          );
+        },
       },
     ];
 

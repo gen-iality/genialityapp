@@ -1191,18 +1191,22 @@ class AgendaEdit extends Component {
     return (
       <>
         <Form onFinish={() => this.submit(true)} {...formLayout}>
-          <RouterPrompt
-            when={showPendingChangesModal}
-            title='Tienes cambios sin guardar.'
-            description='¿Qué deseas hacer?'
-            okText='No guardar'
-            okSaveText='Guardar'
-            cancelText='Cancelar'
-            onOK={() => true}
-            onOKSave={this.submit}
-            onCancel={() => false}
-            save
-          />
+          {this.props.event?.isActive === false && window.location.toString().includes('eventadmin') ? (
+            <></>
+          ) : (
+            <RouterPrompt
+              when={showPendingChangesModal}
+              title='Tienes cambios sin guardar.'
+              description='¿Qué deseas hacer?'
+              okText='No guardar'
+              okSaveText='Guardar'
+              cancelText='Cancelar'
+              onOK={() => true}
+              onOKSave={this.submit}
+              onCancel={() => false}
+              save
+            />
+          )}
 
           <Header
             title={`Actividad - ${this.state.name}`}
@@ -1223,6 +1227,7 @@ class AgendaEdit extends Component {
                     name={'isPublished'}
                     checked={this.context?.isPublished}
                     onChange={(e) => this.handleChange(e, 'isPublished')}
+                    disabled={this.props.event?.isActive === false && window.location.toString().includes('eventadmin')}
                   />
                 </Form.Item>
               )

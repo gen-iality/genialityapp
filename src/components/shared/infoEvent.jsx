@@ -31,7 +31,11 @@ const InfoEvent = () => {
         recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
         cUser?.value &&
         !cEventUser?.value && (
-          <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
+          <Button
+            onClick={() => handleChangeTypeModal('registerForTheEvent')}
+            type='primary'
+            size='large'
+            disabled={cEvent.value?.isActive === false}>
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al evento',

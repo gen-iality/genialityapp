@@ -259,7 +259,7 @@
     "registration.message.loading": "Inscribiendo usuario",
     "registration.message.created": "Usuario inscrito",
     "registration.message.updated": "Usuario actualizado",
-    "registration.already.registered": "Su correo ya se encuentra registrado en el evento.",
+    "registration.already.registered": "Su correo ya se encuentra inscrito en el evento.",
     "button.return": "Regresar a iniciar sesión",
     "button.go.event": "Ir al evento",
     "button.login": "Ingresar",
