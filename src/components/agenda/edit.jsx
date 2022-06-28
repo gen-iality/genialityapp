@@ -24,7 +24,7 @@ import {
 } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
-import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined, UserOutlined, PlusOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import RoomController from '../agenda/roomManager/controller';
@@ -1273,7 +1273,7 @@ class AgendaEdit extends Component {
                     </Row>}
                     {isEditingAgenda && <Form.Item label={'Conferencista'}>
                       <Row wrap gutter={[8, 8]}>
-                        <Col span={23}>
+                        <Col span={22}>
                           <Select
                             id={'hosts'}
                             isClearable
@@ -1286,10 +1286,16 @@ class AgendaEdit extends Component {
                         </Col>
                         <Col span={1}>
                           <Button
+                            icon={<PlusOutlined />}
+                          onClick={() => {
+                            this.setState({showSpeakersModal: true});
+                            console.log('show modal');
+                          }} />
+                        </Col>
+                        <Col span={1}>
+                          <Button
                             onClick={() => {
-                              this.setState({showSpeakersModal: true})
-                              console.log('show modal')
-                              // this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true });
+                              this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true });
                             }}
                             icon={<SettingOutlined />}
                           />
