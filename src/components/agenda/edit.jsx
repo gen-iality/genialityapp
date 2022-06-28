@@ -1301,7 +1301,15 @@ class AgendaEdit extends Component {
                           <Speaker
                             eventID={this.props.event._id}
                             matchUrl={this.props.match.url}
-                            onCreated={()=> this.setState({showSpeakersModal: false})}
+                            onCreated={()=> {
+                              const loading = async () => {
+                                const incommingHosts = await SpeakersApi.byEvent(this.props.event._id);
+                                const hosts = handleSelect(incommingHosts);
+                                this.setState({ hosts })
+                              }
+                              loading().then(() => console.log('hosts reloaded'));
+                              this.setState({showSpeakersModal: false});
+                            }}
                             justCreate />
                         </Modal>
                       </Row>
