@@ -1297,6 +1297,7 @@ class AgendaEdit extends Component {
                         <Modal
                           visible={this.state.showSpeakersModal}
                           onCancel={()=> this.setState({showSpeakersModal: false})}
+                          okButtonProps={{disabled: true}}
                         >
                           <Speaker
                             eventID={this.props.event._id}
