@@ -22,7 +22,7 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import loadable from '@loadable/component';
 import { DispatchMessageService } from '../../../context/MessageService.tsx';
 import WithEviusContext from '../../../context/withContext';
-import { useCheckinUser } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 const EviusFooter = loadable(() => import('./EviusFooter'));
@@ -160,7 +160,7 @@ const Landing = (props) => {
         if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == 'LOADED') {
           // console.log(EventContext.value.type_event);
           if (cEventContext.value.type_event === 'onlineEvent') {
-            useCheckinUser(cEventUser.value, cEventContext.value._id);
+            checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id);
           }
         }
       });

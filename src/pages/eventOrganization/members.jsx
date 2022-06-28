@@ -102,12 +102,7 @@ function OrgMembers(props) {
 
   return (
     <>
-      <Header
-        title={'Miembros'}
-        description={
-          'Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.'
-        }
-      />
+      <Header title={'Miembros'} />
 
       <p>
         <small>

@@ -11,7 +11,7 @@ import {
 import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { useEventArkmed } from '../../../helpers/helperEvent';
+import { useEventWithCedula } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
@@ -29,22 +29,22 @@ function getBase64(img, callback) {
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
-  const [takingPhoto, setTakingPhoto] = useState(false);
-  const [imageAvatar, setImageAvatar] = useState(null);
-  const [form] = Form.useForm();
+  const [ takingPhoto, setTakingPhoto ] = useState(false);
+  const [ imageAvatar, setImageAvatar ] = useState(null);
+  const [ form ] = Form.useForm();
 
   /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
    y no se ve la imagen en el preview
   */
   useEffect(() => {
-    if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].originFileObj) {
-      getBase64(basicDataUser.picture[0].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-    } else if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].url) {
-      setImageAvatar(basicDataUser.picture[0].url);
+    if (basicDataUser.picture && basicDataUser.picture[ 0 ] && basicDataUser.picture[ 0 ].originFileObj) {
+      getBase64(basicDataUser.picture[ 0 ].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+    } else if (basicDataUser.picture && basicDataUser.picture[ 0 ] && basicDataUser.picture[ 0 ].url) {
+      setImageAvatar(basicDataUser.picture[ 0 ].url);
     } else {
       setImageAvatar(null);
     }
-  }, [basicDataUser.picture]);
+  }, [ basicDataUser.picture ]);
 
   const handleTakePhotoAnimationDone = (dataUri) => {
     let pic = [
@@ -212,7 +212,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        {useEventArkmed(cEvent.value?._id).isArkmed ? (
+        {useEventWithCedula(cEvent.value?._id).isArkmed ? (
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.cedula',
@@ -226,7 +226,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               onChange={(e) => HandleHookForm(e, 'password')}
               type='number'
               size='large'
-              placeholder={'Cedula del medico ó especialista'}
+              // placeholder={'Cedula del medico ó especialista'}
+              placeholder={'Cedula ó numero de identificación'}
               prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>

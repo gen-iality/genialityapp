@@ -106,7 +106,8 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
 }
 
 function isRegister(initialValues, cEventUser) {
-  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null ? true : false;
+  if (!initialValues?._id || cEventUser.value === null ? true : false) return 'Button.signup';
+  if (initialValues?._id) return 'registration.button.update';
 }
 
 function fieldsAditional(extraFields) {
@@ -158,6 +159,7 @@ const FormRegister = ({
   HandleHookForm = () => {},
   setvalidateEventUser = () => {},
   validateEventUser,
+  usedInCms,
 }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
@@ -290,6 +292,7 @@ const FormRegister = ({
 
   const onFinish = async (values) => {
     values = { ...initialValues, ...values };
+
     if (Object.keys(basicDataUser).length > 0) {
       setvalidateEventUser({
         statusFields: true,
@@ -622,8 +625,8 @@ const FormRegister = ({
   const renderForm = useCallback(() => {
     if (!extraFields) return '';
     let formUI = extraFields.map((m, key) => {
-      /* console.log(m, key) */
-      if (m.visibleByAdmin == true) {
+      if (m.visibleByAdmin == true && !usedInCms) {
+        /* console.log(m, key) */
         return;
       }
       //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
@@ -728,6 +731,7 @@ const FormRegister = ({
         }
 
         let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
+
         if (type === 'multiplelisttable') {
           input = <ReactSelect options={m.options} isMulti name={name} />;
         }
@@ -943,6 +947,11 @@ const FormRegister = ({
               }
             : rule;
 
+        if (type === 'number') {
+          input = (
+            <Input type={type} rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />
+          );
+        }
         return (
           type !== 'boolean' && (
             <div key={'g' + key} name='field'>
@@ -1214,12 +1223,7 @@ deberia ser solo la url de la imagen
                         }}
                         type='primary'
                         htmlType='submit'>
-                        {}
-                        {isRegister(initialValues, cEventUser)
-                          ? intl.formatMessage({ id: 'Button.signup' })
-                          : intl.formatMessage({
-                              id: 'registration.button.update',
-                            })}
+                        {intl.formatMessage({ id: isRegister(initialValues, cEventUser) })}
                       </Button>
 
                       {options &&

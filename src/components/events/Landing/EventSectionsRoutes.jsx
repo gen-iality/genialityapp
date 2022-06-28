@@ -7,7 +7,7 @@ import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
 import { UseUserEvent } from '../../../context/eventUserContext';
-import { useCheckinUser } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@/containers/broadcastViewers';
@@ -152,7 +152,7 @@ const EventSectionRoutes = (props) => {
     if (cEventUser.value && props.cEvent.value) {
       // console.log(props.cEvent.value.type_event)
       if (props.cEvent.value.type_event === 'onlineEvent') {
-        useCheckinUser(cEventUser.value, props.cEvent.value._id);
+        checkinAttendeeInEvent(cEventUser.value, props.cEvent.value._id);
       }
     }
   }, [cEventUser.status, props.cEvent.value]);
