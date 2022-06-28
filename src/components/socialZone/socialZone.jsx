@@ -18,6 +18,8 @@ import { useHistory } from 'react-router-dom';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import ThisRouteCanBeDisplayed, { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
+
+
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -83,36 +85,39 @@ let SocialZone = function(props) {
   }, [cEvent]);
 
   return (
-    <Tabs
-      style={{ marginTop: '-15px' }}
+    <div className='siderContentFixed'>
+      <Tabs
       defaultActiveKey='1'
       onChange={callback}
       activeKey={chatAttendeChats}
       onTabClick={(key) => {
         HandleChatOrAttende(key);
-      }}>
-      <TabPane
-        className='asistente-chat-list'
-        tab={
-          <>
-            {props.generalTabs.publicChat && (
-              <Badge onClick={() => HandleChatOrAttende('1')} size='small' count={totalPrivateMessages}>
-                <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
-              </Badge>
-            )}
-          </>
-        }
-        key='1'>
-        <ThisRouteCanBeDisplayed>
-          <ChatList
-            typeEvent={typeEvent}
-            key='ChatList'
-            props={props}
-            setCurrentUser={setCurrentUser}
-            generalTabs={props.generalTabs}
-          />
-        </ThisRouteCanBeDisplayed>
-      </TabPane>
+      }}
+      tabBarExtraContent={{left: props.ToggleVisibilityButton}}>
+     
+     <TabPane
+            className='asistente-chat-list'
+            tab={
+              <>
+                {props.generalTabs.publicChat && (
+                  <Badge onClick={() => HandleChatOrAttende('1')} size='small' count={totalPrivateMessages}>
+                    <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
+                  </Badge>
+                )}
+              </>
+            }
+            key='1'>
+            <ThisRouteCanBeDisplayed>
+              <ChatList
+                typeEvent={typeEvent}
+                key='ChatList'
+                props={props}
+                setCurrentUser={setCurrentUser}
+                generalTabs={props.generalTabs}
+              />
+            </ThisRouteCanBeDisplayed>
+          </TabPane>
+      
 
       <>
         {typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
@@ -267,6 +272,7 @@ let SocialZone = function(props) {
           </TabPane>
         )}
     </Tabs>
+    </div>
   );
 };
 

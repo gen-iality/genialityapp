@@ -1,14 +1,13 @@
 .Chat-Event {
-  position: fixed;
-  width: 389px;
+  display: flex;
+  //width: 95%;
   height: 100%;
-  .ant-tabs {
-    margin-left: 3% !important;
-  }
+  margin: 0 auto;
   .ant-menu-item-icon {
     top: 12px;
   }
 }
+
 .drawerMobile {
   .ant-drawer-body {
     flex-grow: 1;
@@ -20,19 +19,15 @@
   }
 }
 
-// .ChatEvius {
-//   width: 100vw;
-//   height: 50vh;
-// }
 .ChatEviusLan {
-  position: absolute;
-  top: 20%;
-  left: 0;
-  width: 100%;
-  height: 78%;
+  display: flex;
+  width: 95%;
+  height: 100%;
+  margin: 12px auto;
   min-width: 347px;
   z-index: 999999999;
-  margin-left: 4px;
+  border: none;
+  border-radius: 15px;
   .mdl-card__supporting-text {
     width: 223px;
     height: 100%;
@@ -41,13 +36,33 @@
   }
 }
 
+.siderContentFixed {
+  position: fixed;
+  width: 400px;
+  height: 90%;
+  height: calc(100% - 64px);
+  top: 64px;
+  right: 0;
+}
+
+.Chat-Event {
+  .ant-tabs, .ant-tabs-content-holder, .ant-tabs-content {
+    width: 100%;
+    height: 100%;
+  }
+  .ant-tabs-top > .ant-tabs-nav {
+    margin: 0;
+  }
+}
+
+/*  .asistente-chat-list {
+  height: 80vh;
+}  */
+
 .asistente-list {
   overflow-y: auto;
   height: 70vh;
   overflow-x: hidden;
-}
-.asistente-chat-list {
-  height: 80vh;
 }
 
 .asistente-list::-webkit-scrollbar {
