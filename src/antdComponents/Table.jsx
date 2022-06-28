@@ -56,6 +56,7 @@ const Table = (props) => {
     extraPathUpdateTitle,
     updateMails,
     takeOriginalHeader,
+    footer = undefined,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -203,15 +204,14 @@ const Table = (props) => {
     }
   }, [header]);
 
-  if (list && list.length) {
-    list.map((list, index) => {
-      if (!list.index) {
-        list.index = index;
-      }
-    });
-  }
-
   useEffect(() => {
+    if (list && list.length) {
+      list.map((list, index) => {
+        if (!list.index) {
+          list.index = index;
+        }
+      });
+    }
     if (draggable) {
       draggableFn();
     }
@@ -322,6 +322,8 @@ const Table = (props) => {
           </Row>
         )}
         scroll={scroll}
+        // footer={footer}
+        footer={() => footer}
       />
     </Suspense>
   );

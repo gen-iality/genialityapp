@@ -1,8 +1,9 @@
 import { Component, createRef, Fragment } from 'react';
 import { typeInputs } from '../../../helpers/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
+import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row, Alert } from 'antd';
 import { DispatchMessageService } from '@/context/MessageService';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 const html = document.querySelector('html');
 const formLayout = {
@@ -52,7 +53,7 @@ class DatosModal extends Component {
     let tmpInfo = { ...this.state.info };
 
     //Generamos el nombre del campo para la base de datos(name) a partir del  label solo si el campo se esta creando
-    if (name == 'label') {
+    if (name == 'label' && !this.props.edit) {
       if (tmpInfo['name'] !== 'names' && tmpInfo['name'] !== 'email' && tmpInfo['name'] !== 'picture') {
         tmpInfo['name'] = this.generateFieldNameForLabel(name, value);
         this.formRef.current.setFieldsValue({
@@ -135,7 +136,7 @@ class DatosModal extends Component {
     const info = Object.assign({}, this.state.info);
 
     if (
-      info?.options?.length === 0 &&
+      (!info?.options || info?.options?.length === 0) &&
       (info?.type === 'list' || info?.type === 'multiplelist' || info?.type === 'multiplelisttable')
     ) {
       DispatchMessageService({
@@ -175,7 +176,12 @@ class DatosModal extends Component {
     return (
       <Fragment>
         {/* <section className='modal-card-body'> */}
-        <Form initialValues={this.props.info} ref={this.formRef} onFinish={this.saveField} {...formLayout}>
+        <Form
+          autoComplete='off'
+          initialValues={this.props.info}
+          ref={this.formRef}
+          onFinish={this.saveField}
+          {...formLayout}>
           {/* Campo oculto  con el id del mismo para poder editar un campo a recolectar para una organización */}
           <Form.Item hidden initialValue={this.props.info?._id} name={'id'}>
             <Input name='label' type='text' />
@@ -186,7 +192,13 @@ class DatosModal extends Component {
             label={'Nombre Campo'}
             name={'label'}
             rules={[{ required: true }]}>
-            <Input name={'label'} type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
+            <Input
+              autocomplete={false}
+              name={'label'}
+              type='text'
+              placeholder={'Ej: Celular'}
+              onChange={this.handleChange}
+            />
           </Form.Item>
           <Form.Item name='name' initialValue={this.props.info?.name}>
             <Input
@@ -217,7 +229,15 @@ class DatosModal extends Component {
             <Select
               defaultValue={typeInputs}
               options={typeInputs}
-              disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
+              disabled={
+                info.name === 'picture' || info.name == 'email' || info.name == 'names'
+                  ? true
+                  : false ||
+                    info.type === 'checkInField' ||
+                    info.name === 'birthdate' ||
+                    info.name === 'bloodtype' ||
+                    info.name === 'gender'
+              }
               onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>
           </Form.Item>
 
@@ -259,6 +279,7 @@ class DatosModal extends Component {
               //name={`mandatory`}
               checked={info.mandatory}
               onChange={this.changeFieldCheck}
+              disabled={info.type === 'checkInField'}
             />
           </Form.Item>
           <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
@@ -267,6 +288,12 @@ class DatosModal extends Component {
               name={`visibleByContacts`}
               checked={info?.visibleByContacts}
               onChange={this.changeFieldCheckVisibleByContacts}
+              disabled={
+                info.type === 'checkInField' ||
+                info.name === 'birthdate' ||
+                info.name === 'bloodtype' ||
+                info.name === 'gender'
+              }
             />
           </Form.Item>
           <Form.Item label={'Visible para Admin'} htmlFor={`visibleByAdminModal`} name='visibleByAdmin'>

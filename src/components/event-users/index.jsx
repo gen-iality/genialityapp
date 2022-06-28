@@ -44,6 +44,8 @@ import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
+import moment from 'moment';
+import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -98,8 +100,9 @@ class ListEventUser extends Component {
       configfast: {},
       isModalVisible: false,
       fieldsForm: [],
-      typeScanner: 'options',
+      typeScanner: 'CheckIn options',
       nameActivity: props.location.state?.item?.name || '',
+      qrModalOpen: false,
     };
   }
 
@@ -115,7 +118,8 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      return <p>{Moment(item.created_at).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const createdAt = item.created_at;
+      return <p>{Moment(createdAt).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -134,7 +138,8 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      return <p>{Moment(item.updated_at).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const updatedAt = item.created_at;
+      return <p>{Moment(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -142,22 +147,7 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    var self = this;
-    return item.checkedin_at || item.properties?.checkedin_at ? (
-      <p>{Moment(item.checkedin_at || item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
-    ) : (
-      <div>
-        <Checkbox
-          id={'checkinUser' + item._id}
-          disabled={item.checkedin_at}
-          name={'checkinUser' + item._id}
-          checked={item.checkedin_at || item.properties?.checkedin_at}
-          onChange={() => {
-            self.checkIn(item._id, item);
-          }}
-        />
-      </div>
-    );
+    return <AttendeeCheckIn attendee={item} />;
   };
 
   addDefaultLabels = (extraFields) => {
@@ -176,9 +166,29 @@ class ListEventUser extends Component {
     );
     return extraFields;
   };
+  /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
+  sortUsersArray = async (users) => {
+    const sortedResult = users.sort((itemA, itemB) => {
+      let aParameter = '';
+      let bParameter = '';
 
-  async componentDidMount() {
+      try {
+        aParameter = itemA?.checkedin_at?.toDate();
+        bParameter = itemB?.checkedin_at?.toDate();
+      } catch (error) {}
+
+      if (!aParameter) return 1;
+      if (!bParameter) return -1;
+      if (moment(aParameter) === moment(bParameter)) return 0;
+      return moment(aParameter) > moment(bParameter) ? -1 : 1;
+    });
+
+    return sortedResult;
+  };
+
+  getAttendes = async () => {
     let self = this;
+
     this.checkFirebasePersistence();
     try {
       const event = await EventsApi.getOne(this.props.event._id);
@@ -266,15 +276,26 @@ class ListEventUser extends Component {
             sorter: (a, b) => a[item.name]?.length - b[item.name]?.length,
             ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
-              return item.type == 'file' ? (
-                <a target='__blank' download={item?.name} href={key[item?.name]}>
-                  {this.obtenerName(key[item?.name])}
-                </a>
-              ) : item.type == 'avatar' ? (
-                <Image width={40} height={40} src={key?.user?.picture} />
-              ) : (
-                key[item.name]
-              );
+              switch (item.type) {
+                /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
+                case 'date':
+                  const date = key[item.name];
+                  const dateSplit = date ? date.split('T') : '';
+                  return dateSplit[0];
+
+                case 'file':
+                  return (
+                    <a target='__blank' download={item?.name} href={key[item?.name]}>
+                      {this.obtenerName(key[item?.name])}
+                    </a>
+                  );
+
+                case 'avatar':
+                  return <Image width={40} height={40} src={key?.user?.picture} />;
+
+                default:
+                  return key[item.name];
+              }
             },
           };
         });
@@ -331,9 +352,10 @@ class ListEventUser extends Component {
           // Listen for document metadata changes
           //includeMetadataChanges: true
         },
-        (snapshot) => {
+        async (snapshot) => {
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
+
           let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
           let totalCheckedInWithWeight =
@@ -414,11 +436,12 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-          // console.log("ATTENDESSTWO==>",updatedAttendees)
+          const sortedUsers = await this.sortUsersArray(updatedAttendees);
+
           this.setState({
-            users: updatedAttendees,
-            usersReq: updatedAttendees,
-            auxArr: updatedAttendees,
+            users: sortedUsers,
+            usersReq: sortedUsers,
+            auxArr: sortedUsers,
             loading: false,
           });
         },
@@ -430,8 +453,10 @@ class ListEventUser extends Component {
       const errorData = handleRequestError(error);
       this.setState({ timeout: true, errorData });
     }
+  };
 
-    /* console.log('users=>>', this.state.users); */
+  async componentDidMount() {
+    this.getAttendes();
   }
 
   obtenerName = (fileUrl) => {
@@ -471,13 +496,16 @@ class ListEventUser extends Component {
   };
 
   checkModal = () => {
+    // this.setState((prevState) => {
+    //   return { qrModal: !prevState.qrModal };
+    // });
     this.setState((prevState) => {
-      return { qrModal: !prevState.qrModal };
+      return { qrModalOpen: !prevState.qrModalOpen };
     });
   };
   closeQRModal = () => {
     this.setState((prevState) => {
-      return { qrModal: !prevState.qrModal };
+      return { qrModalOpen: !prevState.qrModalOpen };
     });
   };
 
@@ -510,12 +538,6 @@ class ListEventUser extends Component {
         ...item,
         updated_at: new Date(),
         checkedin_at: new Date(),
-        checked_at: new Date(),
-        properties: {
-          ...item.properties,
-          checkedin_at: new Date(),
-          checked_in: true,
-        },
         checked_in: true,
       })
       .then(() => {
@@ -528,11 +550,19 @@ class ListEventUser extends Component {
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
-        DispatchMessageService({
-          type: 'error',
-          msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
-          action: 'show',
-        });
+        if (this.props.intl) {
+          DispatchMessageService({
+            type: 'error',
+            msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+            action: 'show',
+          });
+        } else {
+          DispatchMessageService({
+            type: 'error',
+            msj: 'Algo salió mal. Intentalo de nuevo',
+            action: 'show',
+          });
+        }
         checkInStatus = false;
       });
     return checkInStatus;
@@ -565,8 +595,8 @@ class ListEventUser extends Component {
   openEditModalUser = (item) => {
     item = {
       ...item,
-      checked_in: item.properties?.checked_in || item.checked_in,
-      checkedin_at: item.properties?.checkedin_at || item.checkedin_at,
+      checked_in: item.checked_in,
+      checkedin_at: item.checkedin_at,
     };
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
@@ -633,7 +663,7 @@ class ListEventUser extends Component {
 
   // Set options in dropdown list
   clearOption = () => {
-    this.setState({ typeScanner: 'options' });
+    this.setState({ typeScanner: 'CheckIn options' });
   };
 
   showModal = () => {
@@ -729,8 +759,10 @@ class ListEventUser extends Component {
       disabledPersistence,
       nameActivity,
       columns,
+      fieldsForm,
     } = this.state;
-    const { event, type } = this.props;
+
+    const { event, type, loading, componentKey } = this.props;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -742,11 +774,7 @@ class ListEventUser extends Component {
 
     return (
       <React.Fragment>
-        <Header
-          title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'}
-          description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
-          búsqueda.`}
-        />
+        <Header title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'} />
 
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
@@ -768,62 +796,15 @@ class ListEventUser extends Component {
           </Row>
         )}
 
-        {this.state.qrModal && (
+        {this.state.qrModalOpen && (
           <QrModal
-            fields={extraFields}
-            usersReq={usersReq}
+            fields={fieldsForm}
             typeScanner={this.state.typeScanner}
             clearOption={this.clearOption}
-            checkIn={this.checkIn}
-            eventID={this.props.event._id}
             closeModal={this.closeQRModal}
-            openEditModalUser={this.openEditModalUser}
+            openModal={this.state.qrModalOpen}
           />
         )}
-
-        <Row gutter={8}>
-          <Col>
-            <p>
-              <strong> Última Sincronización </strong>: <FormattedDate value={lastUpdate} />{' '}
-              <FormattedTime value={lastUpdate} />
-            </p>
-          </Col>
-        </Row>
-
-        <Row wrap gutter={[8, 8]}>
-          <Col>
-            <Tag
-              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
-              color='lightgrey'
-              icon={<UsergroupAddOutlined />}>
-              Inscritos: <span style={{ fontSize: '13px' }}>{inscritos}</span>
-            </Tag>
-          </Col>
-          <Col>
-            <Tag
-              style={{ color: 'black', fontSize: '13px', padding: 10, borderRadius: 9999 }}
-              color='lightgrey'
-              icon={<StarOutlined />}>
-              Participantes:{' '}
-              <span style={{ fontSize: '13px' }}>
-                {' '}
-                {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-              </span>
-            </Tag>
-          </Col>
-          <Col>
-            {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
-              <>
-                <Tag>
-                  <small>
-                    Asistencia por Coeficientes:
-                    {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
-                  </small>
-                </Tag>
-              </>
-            )}
-          </Col>
-        </Row>
 
         {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
@@ -832,8 +813,52 @@ class ListEventUser extends Component {
           takeOriginalHeader
           scroll={{ x: 'max-content' }} //auto funciona de la misma forma, para ajustar el contenido
           loading={this.state.loading}
+          footer={
+            <div
+              style={{
+                background: '#D3D3D3',
+                paddingRight: '20px',
+                textAlign: 'end',
+                borderRadius: '3px',
+              }}>
+              <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
+              <FormattedTime value={lastUpdate} />
+            </div>
+          }
           titleTable={
-            <Row gutter={[8, 8]}>
+            <Row gutter={[6, 6]}>
+              <Col>
+                <Tag
+                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                  color='lightgrey'
+                  icon={<UsergroupAddOutlined />}>
+                  <strong>Inscritos: </strong>
+                  <span style={{ fontSize: '13px' }}>{inscritos}</span>
+                </Tag>
+              </Col>
+              <Col>
+                <Tag
+                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                  color='lightgrey'
+                  icon={<StarOutlined />}>
+                  <strong>Participantes: </strong>
+                  <span style={{ fontSize: '13px' }}>
+                    {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
+                  </span>
+                </Tag>
+              </Col>
+              <Col>
+                {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
+                  <>
+                    <Tag>
+                      <small>
+                        Asistencia por Coeficientes:
+                        {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
+                      </small>
+                    </Tag>
+                  </>
+                )}
+              </Col>
               <Col>
                 <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
                   Expandir
@@ -846,10 +871,10 @@ class ListEventUser extends Component {
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
                   style={{ width: 220 }}>
-                  <Option value='options'>Escanear...</Option>
                   <Option value='scanner-qr'>Escanear QR</Option>
-                  {this.state.fieldsForm.map((item) => {
-                    if (item.name === 'cedula') return <Option value='scanner-document'>Escanear Documento</Option>;
+                  {fieldsForm.map((item) => {
+                    if (item.type === 'checkInField')
+                      return <Option value='scanner-document'>Escanear {item.label}</Option>;
                   })}
                 </Select>
               </Col>
@@ -875,11 +900,12 @@ class ListEventUser extends Component {
             </Row>
           }
         />
+
         {/* ) : (
           <Loading />
         )} */}
 
-        {!this.props.loading && editUser && (
+        {!loading && editUser && (
           <UserModal
             handleModal={this.modalUser}
             modal={editUser}
@@ -889,17 +915,23 @@ class ListEventUser extends Component {
             value={this.state.selectedUser}
             checkIn={this.checkIn}
             badgeEvent={this.state.badgeEvent}
-            extraFields={this.state.fieldsForm}
+            extraFields={fieldsForm}
             spacesEvent={spacesEvent}
             edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}
+            componentKey={componentKey}
           />
         )}
 
         {timeout && <ErrorServe errorData={this.state.errorData} />}
 
         <Drawer
-          title='Estadísticas'
+          title={
+            <>
+              <Title level={3}>Estadísticas</Title>
+              {this.props.event.name ? <Title level={5}>{this.props.event.name}</Title> : ''}
+            </>
+          }
           visible={this.state.isModalVisible}
           closable={false}
           footer={[
@@ -912,31 +944,24 @@ class ListEventUser extends Component {
               </Title>
             </div>,
           ]}
-          style={{ top: 0 }}
+          style={{ top: 0, textAlign: 'center' }}
           width='100vw'>
-          <Row align='middle' justify='center' style={{}}>
+          <Row align='middle' justify='center' style={{ width: '80vw' }}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
               <Row align='middle'>
                 <Card
                   bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
-                  bordered={false}
                   cover={
                     this.props.event.styles.event_image ? (
                       <img
-                        style={{ objectFit: 'cover', width: '100vw' }}
+                        style={{ objectFit: 'cover', width: '96vw' }}
                         src={this.props.event.styles.event_image}
                         alt='Logo evento'
                       />
                     ) : (
                       ''
                     )
-                  }>
-                  {this.props.event.name ? (
-                    <Card.Meta description={<Title level={5}>{this.props.event.name}</Title>} />
-                  ) : (
-                    ''
-                  )}
-                </Card>
+                  }></Card>
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
