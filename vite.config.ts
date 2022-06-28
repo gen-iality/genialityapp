@@ -9,11 +9,11 @@ Object.assign(require('less').options, {
 });
 
 export default defineConfig({
-  define: {
-    'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL),
-    'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV === 'production'),
-  },
+  // define: {
+  //   'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL),
+  //   'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
+  //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV === 'production'),
+  // },
   plugins: [
     react(),
     EnvironmentPlugin(
@@ -48,8 +48,8 @@ export default defineConfig({
         VITE_MESSAGINGSENDER_EVIUSAUTH: '86708016609',
         VITE_MEASUREMENTID_EVIUSAUTH: '',
         VITE_APPID_EVIUSAUTH: '1:86708016609:web:129d087ffa3077a1ef2ea0',
-      },
-      { loadEnvFiles: false }
+      }
+      //{ loadEnvFiles: false }
     ),
     // EnvironmentPlugin(
     //   {
