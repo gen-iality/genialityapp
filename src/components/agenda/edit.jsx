@@ -31,6 +31,7 @@ import RoomController from '../agenda/roomManager/controller';
 import { RouterPrompt } from '../../antdComponents/RoutePrompt';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
+import Speaker from '../speakers/speaker';
 
 import {
   AgendaApi,
@@ -145,6 +146,7 @@ class AgendaEdit extends Component {
       initialActivityStates: null,
       showPendingChangesModal: false,
       activity_id: this.props.location?.state?.edit,
+      showSpeakersModal: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -1284,10 +1286,24 @@ class AgendaEdit extends Component {
                         </Col>
                         <Col span={1}>
                           <Button
-                            onClick={() => this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true })}
+                            onClick={() => {
+                              this.setState({showSpeakersModal: true})
+                              console.log('show modal')
+                              // this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true });
+                            }}
                             icon={<SettingOutlined />}
                           />
                         </Col>
+                        <Modal
+                          visible={this.state.showSpeakersModal}
+                          onCancel={()=> this.setState({showSpeakersModal: false})}
+                        >
+                          <Speaker
+                            eventID={this.props.event._id}
+                            matchUrl={this.props.match.url}
+                            onCreated={()=> this.setState({showSpeakersModal: false})}
+                            justCreate />
+                        </Modal>
                       </Row>
                     </Form.Item>}
                     {isEditingAgenda && <Form.Item label={'Espacio'}>
