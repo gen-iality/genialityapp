@@ -36,6 +36,7 @@ function Speaker(props) {
     location: { state },
     history,
     matchUrl,
+    justCreate,
   } = props;
   const match = matchUrl.split('/').slice(0)[1];
   const newCategoryUrl = `/${match}/` + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
@@ -67,6 +68,7 @@ function Speaker(props) {
   }, []);
 
   async function dataTheLoaded() {
+    console.log('getting data to eventID:', eventID)
     let categoriesData = await CategoriesAgendaApi.byEvent(eventID);
     let event = await EventsApi.getOne(eventID);
     //const typeEvent = await TypesApi.getAll();
@@ -77,7 +79,7 @@ function Speaker(props) {
     //Filtrado de categorias
     categoriesData = handleSelect(categoriesData);
 
-    if (state.edit) {
+    if (state.edit && !justCreate) {
       setEditDataIsLoading(true);
       const info = await SpeakersApi.getOne(state.edit, eventID);
 
@@ -152,7 +154,7 @@ function Speaker(props) {
         index: parseInt(order),
       };
       try {
-        if (state.edit) await SpeakersApi.editOne(body, state.edit, eventID);
+        if (state.edit && !justCreate) await SpeakersApi.editOne(body, state.edit, eventID);
         else await SpeakersApi.create(eventID, body);
         DispatchMessageService({
           key: 'loading',
@@ -163,7 +165,8 @@ function Speaker(props) {
           msj: 'Conferencista guardado correctamente!',
           action: 'show',
         });
-        history.push(`/${match}/${eventID}/speakers`);
+        if (!justCreate) history.push(`/${match}/${eventID}/speakers`);
+        else if (props.onCreated) props.onCreated();
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
@@ -191,7 +194,7 @@ function Speaker(props) {
       msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
     });
-    if (state.edit) {
+    if (state.edit && !justCreate) {
       confirm({
         title: `¿Está seguro de eliminar al conferencista?`,
         icon: <ExclamationCircleOutlined />,
@@ -271,7 +274,7 @@ function Speaker(props) {
         back
         save
         form
-        edit={state.edit}
+        edit={state.edit && !justCreate}
         remove={remove}
         extra={
           <Form.Item label={'Visible'} labelCol={{ span: 13 }}>
@@ -292,7 +295,7 @@ function Speaker(props) {
       />
 
       <Row justify='center' wrap gutter={12}>
-        {state.edit && editDataIsLoading ? (
+        {state.edit && !justCreate && editDataIsLoading ? (
           <Loading />
         ) : (
           <Col span={12}>
