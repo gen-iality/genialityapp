@@ -38,16 +38,14 @@ const ManagerView = (props: any) => {
   const [videos, setVideos] = useState<any[] | null>(null);
   useEffect(() => {
     meeting_id && obtenerListadodeVideos();
-    getViewers(refActivityViewers);
+
     if (props.type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
   }, [props.type, meeting_id]);
 
   useEffect(() => {
-    if (maxViewers < viewersOnline.length) {
-      fireRealtime.ref(refActivityViewers + '/maxViewers').set(viewersOnline.length);
-    }
-  }, [viewersOnline]);
+    getViewers(refActivityViewers);
+  }, []);
 
   const obtenerListadodeVideos = async () => {
     setVideos(null);

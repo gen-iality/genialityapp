@@ -9,12 +9,15 @@ import LoadingEvent from '@/components/loaders/loadevent';
 import ErrorServe from '@/components/modal/serverError';
 import EventCard from '@/components/shared/eventCard';
 import { useApiMultiple } from '@/services/hooks/useApiMultiple';
+import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
+import { async } from 'ramda-adjunct';
+import { UseCurrentUserContext } from '@/context/userContext';
 Moment.locale('es');
 momentLocalizer();
 
 const Home = () => {
   let { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } = useApiMultiple();
-
+  const cUser = UseCurrentUserContext();
   const [typeEvent, settypeEvent] = useState<string>('nextEvents');
   const [hasMore, sethasMore] = useState(false);
   const [pagebyTypevent, setpagebyTypevent] = useState({
@@ -34,6 +37,29 @@ const Home = () => {
       payloads: [{}, {}],
     });
   }, []);
+
+  useEffect(() => {
+    const querystring = window.location.search;
+    const params = new URLSearchParams(querystring);
+    let redirect = params.get('redirect');
+    let planId = params.get('plan_id');
+    let additionalHours = params.get('additionalHours');
+    let additionalUsers = params.get('additionalUsers');
+    let billingType = params.get('billingType');
+    GetTokenUserFirebase().then((token) => {
+      if (token && redirect === 'payevius' && planId) {
+        let urlRedirect = new URL(
+          `?redirect=subscription&planType=${planId}&token=${token}${
+            additionalHours ? `&additionalHours=${additionalHours} ` : ``
+          }${additionalUsers ? `&additionalUsers=${additionalUsers}` : ``}${
+            billingType ? `&billingType=${billingType}` : ``
+          }`,
+          `https://pay.evius.co/`
+        );
+        window.location.assign(urlRedirect.href);
+      }
+    });
+  }, [cUser]);
 
   const SeeMoreEvents = () => {
     switch (typeEvent) {

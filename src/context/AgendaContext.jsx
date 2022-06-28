@@ -191,6 +191,10 @@ export const AgendaContextProvider = ({ children }) => {
       });
   };
   const getViewers = (refActivityViewers) => {
+    setViewers([]);
+    setViewersOffline([]);
+    setViewersOnline([]);
+    setMaxViewers(0);
     const totalViewRef = refActivityViewers + '/total';
     const maxViewersRef = refActivityViewers + '/maxViewers';
     const viewersRef = refActivityViewers + '/uniqueUsers';
@@ -227,6 +231,17 @@ export const AgendaContextProvider = ({ children }) => {
               });
             }
           });
+          fireRealtime.ref(maxViewersRef).on('value', (snapshot) => {
+            if (snapshot.exists()) {
+              setMaxViewers(snapshot.val());
+              if (snapshot.val() < viewersOnline.length) {
+                fireRealtime.ref(maxViewersRef).set(viewersOnline.length);
+              }
+            } else {
+              fireRealtime.ref(maxViewersRef).set(viewersOnline.length);
+              setMaxViewers(viewersOnline.length);
+            }
+          });
           setViewers(viewers);
           setViewersOffline(viewersOffline);
           setViewersOnline(viewersOnline);
@@ -244,13 +259,6 @@ export const AgendaContextProvider = ({ children }) => {
       }
     });
 
-    fireRealtime.ref(maxViewersRef).on('value', (snapshot) => {
-      if (snapshot.exists()) {
-        setMaxViewers(snapshot.val());
-      } else {
-        setMaxViewers(0);
-      }
-    });
     fireRealtime.ref(totalViewRef).on('value', (snapshot) => {
       let viewersTotal = [];
       if (snapshot.exists()) {
