@@ -60,7 +60,7 @@ const ChatList = (props) => {
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
 
   return (
-    <Tabs style={{ marginTop: '-18px' }} activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
+    <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
         <TabPane
           tab={
@@ -70,7 +70,6 @@ const ChatList = (props) => {
           }
           key='public'>
           <iframe
-            style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px'}` }}
             title='chatevius'
             className='ChatEviusLan'
             src={
@@ -126,7 +125,6 @@ const ChatList = (props) => {
           {chatActual.chatname && (
             <>
               <iframe
-                style={{ marginTop: `${props.props.mobile && props.props.mobile === true ? '-74px' : '-45px'}` }}
                 title='chatevius'
                 className='ChatEviusLan'
                 src={
