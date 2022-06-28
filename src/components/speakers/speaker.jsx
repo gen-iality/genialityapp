@@ -298,7 +298,7 @@ function Speaker(props) {
         {state.edit && !justCreate && editDataIsLoading ? (
           <Loading />
         ) : (
-          <Col span={12}>
+          <Col span={justCreate ? 22 : 12}>
             <Form.Item
               label={
                 <label style={{ marginTop: '2%' }} className='label'>
