@@ -392,7 +392,7 @@ function Speaker(props) {
               )}
             </Form.Item>
 
-            <Form.Item label='Categoría'>
+            {/* <Form.Item label='Categoría'>
               <Row wrap gutter={16}>
                 <Col span={22}>
                   <Creatable
@@ -416,7 +416,7 @@ function Speaker(props) {
                   </Form.Item>
                 </Col>
               </Row>
-            </Form.Item>
+            </Form.Item> */}
           </Col>
         )}
       </Row>
