@@ -1287,10 +1287,12 @@ class AgendaEdit extends Component {
                         <Col span={1}>
                           <Button
                             icon={<PlusOutlined />}
-                          onClick={() => {
-                            this.setState({showSpeakersModal: true});
-                            console.log('show modal');
-                          }} />
+                            onClick={() => {
+                              this.setState({showSpeakersModal: true});
+                              console.log('show modal');
+                            }}
+                            title="Agregar conferencista"
+                          />
                         </Col>
                         <Col span={1}>
                           <Button
@@ -1298,6 +1300,7 @@ class AgendaEdit extends Component {
                               this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true });
                             }}
                             icon={<SettingOutlined />}
+                            title="Configurar en otra página"
                           />
                         </Col>
                         <Modal
