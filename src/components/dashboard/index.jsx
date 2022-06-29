@@ -434,7 +434,7 @@ class DashboardEvent extends Component {
               style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
               src={
                 // 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote2.jpg?alt=media&token=0f65b3ed-47f3-4c98-a616-db9a6a7b6ae3' ||
-                'https://i.imgur.com/yfewcnB.png' ||
+                import.meta.env.VITE_IMAGE_BANNER_STATISTICS ||
                 'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
               }
               alt='evius'
@@ -695,7 +695,7 @@ class DashboardEvent extends Component {
               style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
               src={
                 // 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote-sin-texto.jpg?alt=media&token=67e3e7cb-9c5f-489b-9eb0-e3526e204e34' ||
-                'https://i.imgur.com/yfewcnB.png' ||
+                import.meta.env.VITE_IMAGE_BANNER_STATISTICS ||
                 'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
               }
               alt='evius'
