@@ -11,16 +11,16 @@ export default function lessonTypeToString (inputType: string) {
       typeName = 'Vídeo'; // desde URL
       break;
     case 'vimeo':
-      typeName = 'Transmisión (Vimeo)';
+      typeName = 'Transmisión';
       break;
     case 'youTube':
-      typeName = 'Transmisión (YouTube)';
+      typeName = 'Transmisión';
       break;
     case 'RTMP':
-      typeName = 'Transmisión (RTMP)';
+      typeName = 'Transmisión';
       break;
     case 'eviusMeet':
-      typeName = 'Transmisión (GEN Connect)';
+      typeName = 'Transmisión';
       break;
     case 'eviusStreaming':
       typeName = 'GEN.iality Streaming'
