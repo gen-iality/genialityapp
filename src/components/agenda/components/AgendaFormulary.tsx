@@ -81,6 +81,7 @@ export interface FormularyProps {
   allSpaces: SelectOptionType[],
   allCategories: SelectOptionType[],
   thisIsLoading: {[key: string]: any},
+  handlerCreateCategories: (value: any, name: string) => void,
 };
 
 function AgendaFormulary(props: FormularyProps) {
@@ -96,6 +97,7 @@ function AgendaFormulary(props: FormularyProps) {
     allSpaces,
     allCategories,
     thisIsLoading,
+    handlerCreateCategories,
   } = props;
 
   const history = useHistory();
@@ -333,7 +335,7 @@ function AgendaFormulary(props: FormularyProps) {
                 onChange={onSelectedCategoryChange}
                 // TODO: this should edit the object state of thisIsLoading, and
                 // the onCreateOption must be implemented
-                onCreateOption={(value: string) => handleCreate(value, 'categories')}
+                onCreateOption={(value: string) => handlerCreateCategories(value, 'categories')}
                 isDisabled={!thisIsLoading.categories}
                 isLoading={!thisIsLoading.categories}
                 options={allCategories}

@@ -670,6 +670,52 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
+  // @testable
+  const handlerCreateCategories = async (value: any, name: string) => {
+    alert(`${value}: ${name}`);
+    // Last handleCreate method
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere mientras guarda la información...',
+      action: 'show',
+    });
+
+    try {
+      // Show as loading...
+      setThisIsLoading((last) => ({ ...last, [name]: true }));
+
+      const item = name === 'categories' && (await CategoriesAgendaApi.create(
+          props.event._id, { name: value },
+        )
+      );
+      const newOption = {
+        label: value,
+        value: item._id,
+        item,
+      };
+
+      // Stop showing as loading.
+      setThisIsLoading((last) => ({ ...last, [name]: false }));
+
+      // Update categories list
+      setAllCategories((last) => ([...last, newOption]));
+      setFormulary((last) => ({
+        ...last,
+        selectedCategories: [...last.selectedCategories, newOption],
+      }));
+
+      // Show this messages
+      DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
+      DispatchMessageService({ type: 'success', msj: 'Información guardada correctamente!', action: 'show' });
+    } catch (e) {
+      // Stop showing as loading and hide the messages
+      setThisIsLoading((last) => ({ ...last, [name]: false }));
+      DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
+      DispatchMessageService({ msj: handleRequestError(e).message, type: 'error', action: 'show' });
+    }
+  };
+
   if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
 
   return (
@@ -742,6 +788,7 @@ function AgendaEdit(props: AgendaEditProps) {
             allSpaces={allSpaces}
             allCategories={allCategories}
             thisIsLoading={thisIsLoading}
+            handlerCreateCategories={handlerCreateCategories}
           />
         </TabPane>
 
