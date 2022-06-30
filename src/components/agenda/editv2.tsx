@@ -50,6 +50,7 @@ import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
 import useProcessDateFromAgendaDocument from './hooks/useProcessDateFromAgendaDocument';
 import useBuildInfo from './hooks/useBuildInfo';
 import SelectOptionType from './types/SelectOptionType';
+import AgendaDocumentType from './types/AgendaDocumentType';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -71,41 +72,6 @@ interface EventType {
 
 interface LocationStateType {
   edit: string | null,
-};
-
-export interface AgendaDocumentType {
-  _id?: string,
-  name: string,
-  subtitle: string,
-  bigmaker_meeting_id: any,
-  datetime_start: any,
-  datetime_end: any,
-  space_id: any,
-  image: any,
-  description: string,
-  registration_message: string,
-  capacity: number,
-  activity_categories_ids: any[],
-  access_restriction_type: string,
-  access_restriction_rol_ids: any[],
-  has_date: boolean,
-  timeConference: any,
-  selected_document: any[],
-  meeting_id: any,
-  vimeo_id: any,
-  selectedTicket: any,
-  platform: any,
-  start_url: any,
-  join_url: any,
-  name_host: any,
-  key: any,
-  requires_registration: boolean,
-  isPublished: boolean,
-  host_ids: any[] | null,
-  length: string,
-  latitude: string,
-  date_start_zoom?: string,
-  date_end_zoom?: string,
 };
 
 export interface AgendaEditProps {

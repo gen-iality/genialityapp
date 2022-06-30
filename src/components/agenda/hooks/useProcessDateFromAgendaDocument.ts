@@ -1,5 +1,5 @@
 import * as Moment from 'moment';
-import { AgendaDocumentType } from '../editv2';
+import AgendaDocumentType from '../types/AgendaDocumentType';
 
 function processDateFromAgendaDocument (document: AgendaDocumentType) {
   /* console.log(document, 'entro en handleDate'); */

@@ -1,5 +1,5 @@
 import * as Moment from 'moment';
-import { AgendaDocumentType } from '../editv2';
+import AgendaDocumentType from '../types/AgendaDocumentType';
 import { FormularyType } from '../components/AgendaFormulary';
 
 export default function useBuildInfo (formulary: FormularyType, info: AgendaDocumentType) {
