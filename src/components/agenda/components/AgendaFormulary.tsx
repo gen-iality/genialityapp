@@ -336,8 +336,8 @@ function AgendaFormulary(props: FormularyProps) {
                 // TODO: this should edit the object state of thisIsLoading, and
                 // the onCreateOption must be implemented
                 onCreateOption={(value: string) => handlerCreateCategories(value, 'categories')}
-                isDisabled={!thisIsLoading.categories}
-                isLoading={!thisIsLoading.categories}
+                isDisabled={thisIsLoading.categories}
+                isLoading={thisIsLoading.categories}
                 options={allCategories}
                 placeholder="Sin categoría...."
                 value={formulary.selectedCategories}

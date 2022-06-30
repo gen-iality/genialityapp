@@ -189,7 +189,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isLoading, setIsLoading] = useState(!true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [thisIsLoading, setThisIsLoading] = useState({ categories: true });;
+  const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });;
   const [pendingChangesSave, setPendingChangesSave] = useState(false);
   const [idNewlyCreatedActivity, setIdNewlyCreatedActivity] = useState<string | null>(null);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // NOTE: used in Games
@@ -381,6 +381,7 @@ function AgendaEdit(props: AgendaEditProps) {
       setAllCategories(handleSelect(remoteCategories));
 
       setIsLoading(false);
+      setThisIsLoading((last) => ({ ...last, categories: false }));
   
       // Focus the first field
       nameInputRef.current?.focus();
