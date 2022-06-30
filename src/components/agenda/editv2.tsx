@@ -424,7 +424,7 @@ function AgendaEdit(props: AgendaEditProps) {
     return false;
   }
 
-  // @done
+  // TODO: this is hook-able
   const buildInfo = () => {
     const {
       name,
