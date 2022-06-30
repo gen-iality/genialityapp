@@ -178,10 +178,13 @@ function AgendaFormulary(props: FormularyProps) {
     ));
   }
 
-  // TODO: copy from edit.jsx
-  const handleCreate = async (value: any, name: string) => {};
-  
-  const onSelectedCategoryChange = () => {}
+  /**
+   * Mask as select a category.
+   * @param selectedCategories SelectOptionType[].
+   */
+  const onSelectedCategoryChange = (selectedCategories: any[]) => {
+    setFormulary((last) => ({ ...last, selectedCategories }));
+  }
 
   return (
     <>
