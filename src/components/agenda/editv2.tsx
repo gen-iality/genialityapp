@@ -35,6 +35,7 @@ import {
   RolAttApi,
   SpacesApi,
   SpeakersApi,
+  eventTicketsApi,
 } from '@/helpers/request';
 import { firestore, fireRealtime } from '@/helpers/firebase';
 
@@ -98,7 +99,7 @@ const initialInfoState = {
   selected_document: [],
   meeting_id: '',
   vimeo_id: '',
-  selectedTicket: null,
+  selectedTicket: [],
   platform: null,
   start_url: null,
   join_url: null,
@@ -137,7 +138,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [activityEdit, setActivityEdit] = useState<null | string>(null);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [currentTab, setCurrentTab] = useState('1');
-  const [isLoading, setIsLoading] = useState(!true);
+  const [isLoading, setIsLoading] = useState(true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });;
@@ -159,6 +160,7 @@ function AgendaEdit(props: AgendaEditProps) {
    */
   // const [selectedDocument, setSelectedDocument] = useState<SelectOptionType[]>([]);
 
+  const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   // This enable to handles hosts, and select them
@@ -229,8 +231,13 @@ function AgendaEdit(props: AgendaEditProps) {
 
       try {
         // NOTE: The tickets are not used
-        // const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
-        // NOTE: Here was saved tickets in state, but this state was never used.
+        const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
+        const newAllTickets = remoteTickets.map((ticket: any) => ({
+          item: ticket,
+          label: ticket.title,
+          value: ticket._id,
+        }));
+        setAllTickets(newAllTickets);
       } catch (e) {
         console.error(e);
       }
@@ -309,7 +316,7 @@ function AgendaEdit(props: AgendaEditProps) {
           latitude: agendaInfo.latitude,
           description: agendaInfo.description,
           image: agendaInfo.image,
-          // selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
+          selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
           selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, newAllCategories),
           selectedHosts: fieldsSelect(agendaInfo.host_ids, newAllHosts),
           selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, newAllRoles),

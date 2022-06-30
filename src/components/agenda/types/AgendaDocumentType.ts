@@ -18,7 +18,7 @@ export default interface AgendaDocumentType {
   selected_document: any[],
   meeting_id: any,
   vimeo_id: any,
-  selectedTicket: any,
+  selectedTicket: any[],
   platform: any,
   start_url: any,
   join_url: any,
