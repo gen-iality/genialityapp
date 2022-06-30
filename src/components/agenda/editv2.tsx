@@ -736,6 +736,7 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
+  // @testable
   // Método para guarda la información de la configuración
   const saveConfig = async () => {
     const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
@@ -743,19 +744,11 @@ function AgendaEdit(props: AgendaEditProps) {
     try {
       const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
       if (result) {
-        DispatchMessageService({
-          type: 'success',
-          msj: result.message,
-          action: 'show',
-        });
+        DispatchMessageService({ msj: result.message, type: 'success', action: 'show' });
       }
       return result;
     } catch (err) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error en la configuración!',
-        action: 'show',
-      });
+      DispatchMessageService({ msj: 'Error en la configuración!', type: 'error', action: 'show' });
     }
   };
 
