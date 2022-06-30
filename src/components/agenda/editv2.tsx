@@ -193,8 +193,6 @@ function AgendaEdit(props: AgendaEditProps) {
      * It is needed save in formulary to show the info in the page.
      */
     const loading = async () => {
-      const newDays = [];
-
       // Take the vimeo_id and save in info.
       const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
       setInfo((last) => ({ ...last, vimeo_id: vimeo_id }));
@@ -257,6 +255,17 @@ function AgendaEdit(props: AgendaEditProps) {
       const remoteRoles = await RolAttApi.byEvent(props.event._id);
       const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
 
+      // The object structu should be like [{ label, value }] for the Select components
+      const newAllSpaces = handleSelect(remoteSpaces);
+      const newAllHosts = handleSelect(remoteHosts);
+      const newAllRoles = handleSelect(remoteRoles);
+      const newAllCategories = handleSelect(remoteCategories);
+
+      setAllSpaces(newAllSpaces);
+      setAllHosts(newAllHosts);
+      setAllRoles(newAllRoles);
+      setAllCategories(newAllCategories);
+
       // Check if the last page passed an activity_id via route state.
       if (location.state?.edit) {
         setIsEditing(true); // We are editing
@@ -265,7 +274,6 @@ function AgendaEdit(props: AgendaEditProps) {
 
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
-        console.log(agendaInfo)
 
         setInfo((last) => ({
           ...last,
@@ -296,24 +304,17 @@ function AgendaEdit(props: AgendaEditProps) {
           date: processedDate.date,
           hour_start: processedDate.hour_start,
           hour_end: processedDate.hour_end,
+          space_id: agendaInfo.space_id || '',
           // selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
-          selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, allCategories),
-          selectedHosts: fieldsSelect(agendaInfo.host_ids, allHosts),
-          selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, allRoles),
+          selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, newAllCategories),
+          selectedHosts: fieldsSelect(agendaInfo.host_ids, newAllHosts),
+          selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, newAllRoles),
           selectedDocuments: agendaInfo.selected_document,
         }));
       }
   
-      // Finish loading this:
-      setThisIsLoading({ categories: false });
-
-      // The object structu should be like [{ label, value }] for the Select components
-      setAllSpaces(handleSelect(remoteSpaces));
-      setAllHosts(handleSelect(remoteHosts));
-      setAllRoles(handleSelect(remoteRoles));
-      setAllCategories(handleSelect(remoteCategories));
-
       setIsLoading(false);
+      // Finish loading this:
       setThisIsLoading((last) => ({ ...last, categories: false }));
   
       // Focus the first field

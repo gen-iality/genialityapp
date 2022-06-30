@@ -54,7 +54,7 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
         : [];
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts.length >= 0 ? [] : selectedHosts?.filter((host) => host != null).map(({ value }) => value);
+    const host_ids = selectedHosts.filter((host) => host !== null).map(({ value }) => value);
     return {
       name,
       subtitle,
