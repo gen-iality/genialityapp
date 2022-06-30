@@ -90,7 +90,7 @@ export interface AgendaDocumentType {
   subtitle: string,
   bigmaker_meeting_id: any,
   datetime_start: any,
-  datetime_end: null,
+  datetime_end: any,
   space_id: any,
   image: any,
   description: string,
@@ -214,16 +214,16 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([// info.selectedCategories modifies that
-    { label: 'sample 1: label', value: 'sample 1 - value' },
-    { label: 'sample 2: label', value: 'sample 2 - value' },
-    { label: 'sample 3: label', value: 'sample 3 - value' },
+    // { label: 'sample 1: label', value: 'sample 1 - value' },
+    // { label: 'sample 2: label', value: 'sample 2 - value' },
+    // { label: 'sample 3: label', value: 'sample 3 - value' },
   ]);
   // This enable to handles hosts, and select them
   const [allHosts, setAllHosts] = useState<SelectOptionType[]>([
-    {label: 'one', value: 'one#1'},
-    {label: 'one one', value: 'one#2'},
-    {label: 'one one one', value: 'one#3'},
-    {label: 'one one one one', value: 'one#4'},
+    // {label: 'one', value: 'one#1'},
+    // {label: 'one one', value: 'one#2'},
+    // {label: 'one one one', value: 'one#3'},
+    // {label: 'one one one one', value: 'one#4'},
   ]);
 
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
@@ -396,7 +396,8 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   }, []);
 
-  const validForm = () => {
+  // @done
+  const validForm: () => boolean = () => {
     const title = [];
     if (formulary.name.length <= 0)
       title.push('El nombre es requerido');
@@ -423,6 +424,7 @@ function AgendaEdit(props: AgendaEditProps) {
     return false;
   }
 
+  // @done
   const buildInfo = () => {
     const {
       name,
@@ -507,6 +509,7 @@ function AgendaEdit(props: AgendaEditProps) {
     } as AgendaDocumentType;
   };
 
+  // @testable
   const submit = async (changePathWithoutSaving: boolean) => {
     DispatchMessageService({
       type: 'loading',
@@ -573,7 +576,9 @@ function AgendaEdit(props: AgendaEditProps) {
         });
 
         if (agenda?._id) {
-          /** Si es un evento recien creado se envia a la misma ruta con el estado edit el cual tiene el id de la actividad para poder editar */
+          /** Si es un evento recien creado se envia a la misma ruta con el
+           * estado edit el cual tiene el id de la actividad para poder editar
+           * */
           agendaContext.setActivityEdit(agenda._id);
           setIdNewlyCreatedActivity(agenda._id);
           setActivityEdit(true as unknown as string); // TODO: check the right type

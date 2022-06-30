@@ -113,6 +113,7 @@ function AgendaFormulary(props: FormularyProps) {
      setShowPendingChangesModal,
    );
 
+  // @done
   /**
    * This method edit the state info, that has various attributes.
    * 
@@ -132,6 +133,7 @@ function AgendaFormulary(props: FormularyProps) {
     valideChangesInFormulary();
   }
 
+  // @done
   const handleChangeReactQuill = (value: string, target: string) => {
     if (target === 'description') {
       setFormulary((last) => (
@@ -144,6 +146,7 @@ function AgendaFormulary(props: FormularyProps) {
     }
   };
 
+  // @done
   // TODO: this method is hook-able. Or not, just the beginning!!
   const startOrEndHourWithAdditionalMinutes = (minutes: number, isStart: boolean) => {
     const fecha = new Date();
@@ -162,10 +165,12 @@ function AgendaFormulary(props: FormularyProps) {
     return Moment(fecha, 'HH:mm:ss');
   };
 
+  // @done
   const goSection = (path: string, state?: any) => {
     history.push(path, state);
   };
 
+  // @done
   const handleImageChange = (files: any) => {
     DispatchMessageService({
       type: 'loading',
@@ -177,7 +182,8 @@ function AgendaFormulary(props: FormularyProps) {
       { ...last, image: files }
     ));
   }
-
+  
+  // @done
   /**
    * Mask as select a category.
    * @param selectedCategories SelectOptionType[].
