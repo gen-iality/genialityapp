@@ -713,7 +713,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
     if (status === 'newOrUpdate') {
       setAvalibleGames(listOfGames);
-      await saveConfig();
+      // await saveConfig(); // did by useEffect (avalibleGames)
     } else {
       const newData: object[] = listOfGames.map((items) => {
         if (items.id === itemId) {
@@ -724,7 +724,7 @@ function AgendaEdit(props: AgendaEditProps) {
       });
       agendaContext.setAvailableGames(newData);
       setAvalibleGames(newData);
-      await saveConfig();
+      // await saveConfig(); // did by useEffect (avalibleGames)
     }
   };
 
@@ -745,28 +745,28 @@ function AgendaEdit(props: AgendaEditProps) {
         tabs.chat = valueTab;
         agendaContext.setChat(valueTab);
         setChat(valueTab);
-        saveConfig();
         break;
       case 'surveys':
         tabs.surveys = valueTab;
         agendaContext.setSurveys(valueTab);
         setSurveys(valueTab);
-        saveConfig();
         break;
       case 'games':
         tabs.games = valueTab;
         agendaContext.setGames(valueTab);
         setGames(valueTab);
-        saveConfig();
         break;
       case 'attendees':
         tabs.attendees = valueTab;
         agendaContext.setAttendees(valueTab);
         setAttendees(valueTab);
-        saveConfig();
         break;
     }
   };
+
+  useEffect(() => {
+    saveConfig();
+  }, [attendees, games, surveys, chat, avalibleGames]);
 
   // @testable
   // Método para guarda la información de la configuración
