@@ -334,6 +334,10 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   }, []);
 
+  useEffect(() => {
+    saveConfig();
+  }, [attendees, games, surveys, chat, avalibleGames]);
+
   const validateRoom = async () => {
     const activity_id = agendaContext.activityEdit;
     const hasVideoconference = await service.validateHasVideoconference(props.event._id, activity_id);
@@ -401,7 +405,7 @@ function AgendaEdit(props: AgendaEditProps) {
       try {
         const builtInfo = buildInfo();
         const selected_document = info.selected_document; // TODO: check whether selected_document should be this
-        setIsLoading(true);
+        // setIsLoading(true);
         let agenda: AgendaDocumentType | null = null;
         let result: AgendaDocumentType;
         if (location.state.edit || activityEdit) {
@@ -454,7 +458,8 @@ function AgendaEdit(props: AgendaEditProps) {
           agendaContext.setActivityEdit(agenda._id);
           setIdNewlyCreatedActivity(agenda._id);
           setActivityEdit(true as unknown as string); // TODO: check the right type
-          setShouldRedirect(true); // reloadActivity: true,
+          // setShouldRedirect(true); // reloadActivity: true,
+          setIsEditing(true);
           setInfo((last) => ({
             ...last,
             isPublished: false,
@@ -590,10 +595,6 @@ function AgendaEdit(props: AgendaEditProps) {
         break;
     }
   };
-
-  useEffect(() => {
-    saveConfig();
-  }, [attendees, games, surveys, chat, avalibleGames]);
 
   // @testable
   // Método para guarda la información de la configuración
