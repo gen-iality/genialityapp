@@ -368,6 +368,7 @@ function AgendaEdit(props: AgendaEditProps) {
           selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, allCategories),
           selectedHosts: fieldsSelect(agendaInfo.host_ids, allHosts),
           selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, allRoles),
+          selectedDocuments: agendaInfo.selected_document,
         }));
       }
   
@@ -435,6 +436,7 @@ function AgendaEdit(props: AgendaEditProps) {
       selectedCategories,
       selectedHosts,
       selectedRol,
+      selectedDocuments,
       description,
       image,
       length,
@@ -453,7 +455,7 @@ function AgendaEdit(props: AgendaEditProps) {
       requires_registration,
       isPublished,
       registration_message,
-      selected_document,
+      // selected_document,
       capacity,
       access_restriction_type,
       subtitle,
@@ -492,7 +494,7 @@ function AgendaEdit(props: AgendaEditProps) {
       access_restriction_rol_ids,
       has_date,
       timeConference: '',
-      selected_document,
+      // selected_document,
       meeting_id: meeting_id,
       vimeo_id: vimeo_id,
       selectedTicket,
@@ -506,6 +508,7 @@ function AgendaEdit(props: AgendaEditProps) {
       host_ids,
       length,
       latitude,
+      selected_document: selectedDocuments,
     } as AgendaDocumentType;
   };
 
@@ -931,7 +934,7 @@ function AgendaEdit(props: AgendaEditProps) {
                   mode="multiple"
                   options={allNameDocuments}
                   onChange={(value) => handleDocumentChange(value)}
-                  // defaultValue={selectedDocument}
+                  defaultValue={formulary.selectedDocuments}
                 />
               </Form.Item>
               <BackTop />
