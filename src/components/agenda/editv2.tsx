@@ -386,7 +386,7 @@ function AgendaEdit(props: AgendaEditProps) {
   
       // Focus the first field
       nameInputRef.current?.focus();
-      // validateRoom();
+      validateRoom();
     }
 
     loading().then();
@@ -396,6 +396,35 @@ function AgendaEdit(props: AgendaEditProps) {
       agendaContext.setActivityEdit(null);
     }
   }, []);
+
+  const validateRoom = async () => {
+    const activity_id = agendaContext.activityEdit;
+    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activity_id);
+    if (hasVideoconference) {
+      const configuration = await service.getConfiguration(props.event._id, activity_id);
+      setFormulary((last) => ({
+        ...last,
+        isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
+        externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
+        platform: configuration.platform ? configuration.platform : null,
+        meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
+        roomStatus: configuration.roomStatus || null,
+        host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
+      }));
+      setInfo((last) => ({
+        ...last,
+        isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
+      }));
+      // transmition: configuration.transmition || null,
+      // host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
+      // habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '',
+      setAvalibleGames(configuration.avalibleGames || []);
+      setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
+      setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
+      setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
+      setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
+    }
+  };
 
   // @done
   const validForm: () => boolean = () => {
