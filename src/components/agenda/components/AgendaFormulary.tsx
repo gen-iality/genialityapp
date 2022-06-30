@@ -3,28 +3,21 @@ import { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import {
-  Tabs,
   Row,
   Col,
-  Checkbox,
   Space,
   Typography,
   Button,
   Form,
   Input,
   Switch,
-  Empty,
   Card,
-  Image,
-  Modal,
   TimePicker,
 } from 'antd';
 import { Select as SelectAntd } from 'antd';
 import {
-  DeleteOutlined,
   ExclamationCircleOutlined,
   SettingOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 
 import Select from 'react-select';
@@ -342,8 +335,6 @@ function AgendaFormulary(props: FormularyProps) {
                 isMulti
                 styles={catStyles}
                 onChange={onSelectedCategoryChange}
-                // TODO: this should edit the object state of thisIsLoading, and
-                // the onCreateOption must be implemented
                 onCreateOption={(value: string) => handlerCreateCategories(value, 'categories')}
                 isDisabled={thisIsLoading.categories}
                 isLoading={thisIsLoading.categories}

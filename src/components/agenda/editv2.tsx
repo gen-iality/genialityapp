@@ -1,24 +1,15 @@
 import * as React from 'react';
 import { useState, useContext, useRef, useEffect } from 'react';
-import { Redirect, withRouter, useLocation, useHistory } from 'react-router-dom';
+import { Redirect, useLocation, useHistory } from 'react-router-dom';
 import { Select as SelectAntd } from 'antd';
 
 import {
   Tabs,
   Row,
   Col,
-  Checkbox,
-  Space,
-  Typography,
-  Button,
   Form,
-  Input,
   Switch,
-  Empty,
-  Card,
-  Image,
   Modal,
-  TimePicker,
 } from 'antd';
 import {
   ExclamationCircleOutlined,
@@ -36,14 +27,11 @@ import {
   fieldsSelect,
   handleRequestError,
   handleSelect,
-  sweetAlert,
-  uploadImage,
 } from '@/helpers/utils';
 import {
   AgendaApi,
   CategoriesAgendaApi,
   DocumentsApi,
-  eventTicketsApi,
   RolAttApi,
   SpacesApi,
   SpeakersApi,
@@ -83,7 +71,6 @@ interface LocationStateType {
   edit: string | null,
 };
 
-// NOTE: this type can be used by another instances
 export interface AgendaDocumentType {
   _id?: string,
   name: string,
@@ -169,11 +156,7 @@ const initialFormularyState = {
   image: '',
   selectedCategories: [],
   selectedRol: [],
-  selectedHosts: [
-    // For test
-    {label: 'one one', value: 'one#2'},
-    {label: 'one one one', value: 'one#3'},
-  ],
+  selectedHosts: [],
   selectedTickets: [],
   selectedDocuments: [],
   isExternal: false,
@@ -192,18 +175,14 @@ function AgendaEdit(props: AgendaEditProps) {
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });;
   const [pendingChangesSave, setPendingChangesSave] = useState(false);
   const [idNewlyCreatedActivity, setIdNewlyCreatedActivity] = useState<string | null>(null);
-  const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // NOTE: used in Games
+  const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
   
   /**
    * This states are loaded from API
    */
   const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
-  const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([// info.space_id loads this with data
-    {label: 'space 1', value: 'space_1'},
-    {label: 'space 2', value: 'space_2'},
-    {label: 'space 3', value: 'space_3'},
-  ]);
+  const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
   // This state is used in the 'Documentos' tab
   const [allNameDocuments, setAllNameDocuments] = useState<SelectOptionType[]>([]);
   
@@ -213,18 +192,9 @@ function AgendaEdit(props: AgendaEditProps) {
   // const [selectedDocument, setSelectedDocument] = useState<SelectOptionType[]>([]);
 
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
-  const [allCategories, setAllCategories] = useState<SelectOptionType[]>([// info.selectedCategories modifies that
-    // { label: 'sample 1: label', value: 'sample 1 - value' },
-    // { label: 'sample 2: label', value: 'sample 2 - value' },
-    // { label: 'sample 3: label', value: 'sample 3 - value' },
-  ]);
+  const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   // This enable to handles hosts, and select them
-  const [allHosts, setAllHosts] = useState<SelectOptionType[]>([
-    // {label: 'one', value: 'one#1'},
-    // {label: 'one one', value: 'one#2'},
-    // {label: 'one one one', value: 'one#3'},
-    // {label: 'one one one one', value: 'one#4'},
-  ]);
+  const [allHosts, setAllHosts] = useState<SelectOptionType[]>([]);
 
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
   const [formulary, setFormulary] = useState<FormularyType>(initialFormularyState);
@@ -233,11 +203,10 @@ function AgendaEdit(props: AgendaEditProps) {
   /**
    * This states are used as config, I think...
    */
-  // TODO: check the function that defines these states and clue the types
-  const [chat, setChat] = useState<any>(false);
-  const [surveys, setSurveys] = useState<any>(false);
-  const [games, setGames] = useState<any>(false);
-  const [attendees, setAttendees] = useState<any>(false);
+  const [chat, setChat] = useState<boolean>(false);
+  const [surveys, setSurveys] = useState<boolean>(false);
+  const [games, setGames] = useState<boolean>(false);
+  const [attendees, setAttendees] = useState<boolean>(false);
   
   const agendaContext = useContext(AgendaContext);
   
@@ -443,11 +412,7 @@ function AgendaEdit(props: AgendaEditProps) {
     
     if (title.length > 0) {
       title.map((item) => {
-        DispatchMessageService({
-          type: 'warning',
-          msj: item,
-          action: 'show',
-        });
+        DispatchMessageService({ msj: item, type: 'warning', action: 'show' });
       });
     } else return true;
 
@@ -599,13 +564,7 @@ function AgendaEdit(props: AgendaEditProps) {
         // Se cambia el estado a pendingChangesSave encargado de detectar
         // cambios pendientes en la fecha/hora sin guardar
         setPendingChangesSave(false);
-
-        DispatchMessageService({
-          type: 'loading', // Added by types
-          msj: '', // Added by types
-          key: 'loading',
-          action: 'destroy',
-        });
+        DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' });
 
         if (agenda?._id) {
           /** Si es un evento recien creado se envia a la misma ruta con el
@@ -623,23 +582,10 @@ function AgendaEdit(props: AgendaEditProps) {
         } else {
           if (changePathWithoutSaving) history.push(`/eventadmin/${props.event._id}/agenda`);
         }
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
+        DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' });
       } catch (e) {
-        DispatchMessageService({
-          msj: '',
-          type: 'loading',
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        });
+        DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' });
+        DispatchMessageService({ msj: handleRequestError(e).message, type: 'error', action: 'show' });
       }
     }
   }
