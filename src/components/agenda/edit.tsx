@@ -659,7 +659,7 @@ function AgendaEdit(props: AgendaEditProps) {
         saveNameIcon
         remove={remove}
         customBack={props.matchUrl}
-        title={`Actividad - ${formulary.name}`}
+        title={formulary.name ? `Actividad - ${formulary.name}` : 'Actividad'}
         saveName={location.state.edit || activityEdit ? '' : 'Crear'}
         edit={location.state.edit || activityEdit}
         extra={
