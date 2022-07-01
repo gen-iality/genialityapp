@@ -10,6 +10,7 @@ export const helperInitialState: HelperState = {
   currentActivity: null,
   showNotification: false,
   params: {},
+  eventIsActive: false,
 };
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
@@ -67,6 +68,12 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
       logout(params);
 
       return { ...state };
+
+    case 'eventIsActive':
+      return {
+        ...state,
+        eventIsActive: action.eventIsActive,
+      };
 
     //   case 'selectLiveBroadcast':
     //     return {

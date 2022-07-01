@@ -36,6 +36,8 @@ import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
+import { disabledDateTime, disabledEndDate } from '@/Utilities/disableTimeAndDatePickerInEventDate';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -47,7 +49,6 @@ const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
-
 class General extends Component {
   constructor(props) {
     super(props);
@@ -92,6 +93,8 @@ class General extends Component {
       },
       typeEvent: 0,
       image: this.props.event.picture,
+      iMustBlockAFunctionality: false,
+      iMustValidate: true,
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -295,7 +298,12 @@ class General extends Component {
           .toDate();
       this.setState({
         minDate: value,
-        event: { ...this.state.event, date_end: date_end, date_start: value },
+        event: { ...this.state.event, date_start: value, date_end: value },
+      });
+    } else if (name === 'hour_start') {
+      this.setState({
+        minDate: value,
+        event: { ...this.state.event, hour_start: value, hour_end: value },
       });
     } else this.setState({ event: { ...this.state.event, [name]: value } });
   };
@@ -653,6 +661,13 @@ class General extends Component {
     }
   };
 
+  theEventIsActive = (state) => {
+    this.setState({
+      iMustBlockAFunctionality: !state,
+      iMustValidate: false,
+    });
+  };
+
   render() {
     if (this.state.loading) return <Loading />;
     const {
@@ -669,10 +684,17 @@ class General extends Component {
       specificDates,
       registerForm,
       image,
+      iMustBlockAFunctionality,
+      iMustValidate,
     } = this.state;
 
     return (
       <React.Fragment>
+        {iMustValidate && (
+          <>
+            <ValidateEventStart startDate={event.datetime_from} callBackTheEventIsActive={this.theEventIsActive} />
+          </>
+        )}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1'>
@@ -835,6 +857,7 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha Inicio'}>
                             <DatePicker
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={Moment(event.date_start)}
@@ -854,6 +877,7 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Hora Inicio'}>
                             <TimePicker
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={Moment(event.hour_start)}
@@ -876,6 +900,8 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha Fin'}>
                             <DatePicker
+                              disabledDate={(date) => disabledEndDate(date, event)}
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={Moment(event.date_end)}
@@ -896,6 +922,9 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Hora Fin'}>
                             <TimePicker
+                              showNow={false}
+                              disabledTime={(time) => disabledDateTime(event)}
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={Moment(event.hour_end)}

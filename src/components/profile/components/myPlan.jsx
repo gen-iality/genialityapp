@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 //import moment from 'moment';
 
 const myPlan = ({ cUser }) => {
-  const plan = cUser.value.plan;
+  const plan = cUser.value?.plan;
   let [plans, setPlans] = useState([]);
   let [notifications, setNotifications] = useState([]);
   let [bills, setBills] = useState([]);
@@ -310,22 +310,22 @@ const myPlan = ({ cUser }) => {
       <Tabs.TabPane tab={'Mi plan'} key={'plan'}>
         <Row gutter={[12, 12]} wrap>
           <Col span={6}>
-            <PlanCard title={`Plan ${plan.name}`} value={`US $ ${plan.price}`} />
+            <PlanCard title={`Plan ${plan?.name}`} value={`US $ ${plan?.price}`} />
           </Col>
           <Col span={6}>
             <PlanCard
               title={'Horas de transmisión'}
-              value={`${plan.availables.streaming_hours / 60}h`}
+              value={`${plan?.availables?.streaming_hours / 60}h`}
               icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
             />
           </Col>
           <Col span={6}>
             <PlanCard
               title={'Usuarios'}
-              value={plan.availables.users}
+              value={plan?.availables?.users}
               icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
               message={
-                plan.name !== 'Free' && (
+                plan?.name !== 'Free' && (
                   <Link href='pay.evius.co' style={{ color: '#1890ff' }}>
                     Comprar más
                   </Link>
@@ -336,7 +336,7 @@ const myPlan = ({ cUser }) => {
           <Col span={6}>
             <PlanCard
               title={'Eventos'}
-              value={plan.availables.events}
+              value={plan?.availables?.events}
               icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
             />
           </Col>
@@ -361,13 +361,13 @@ const myPlan = ({ cUser }) => {
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
         {plans
-          .filter((plan1) => plan1._id !== plan._id)
+          .filter((plan1) => plan1?._id !== plan?._id)
           .map((plan2) => (
             <div style={{ paddingBottom: '15px' }}>
               <Card style={{ borderRadius: '15px' }}>
                 <Space>
                   <Divider>
-                    <strong>Disponible {plan2.name}</strong>
+                    <strong>Disponible {plan2?.name}</strong>
                   </Divider>
                   <Link href='pay.evius.co' style={{ color: '#1890ff' }}>
                     Comprar plan
@@ -375,33 +375,33 @@ const myPlan = ({ cUser }) => {
                 </Space>
                 <Row gutter={[12, 12]} wrap>
                   <Col span={6}>
-                    <PlanCard title={`Plan ${plan2.name}`} value={`US $ ${plan2.price}`} />
+                    <PlanCard title={`Plan ${plan2?.name}`} value={`US $ ${plan2?.price}`} />
                   </Col>
                   <Col span={6}>
                     <PlanCard
                       title={'Horas de transmisión'}
-                      value={`${plan2.availables.streaming_hours / 60}h`}
+                      value={`${plan2?.availables?.streaming_hours / 60}h`}
                       icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
                     />
                   </Col>
                   <Col span={6}>
                     <PlanCard
                       title={'Usuarios'}
-                      value={plan2.availables.users}
+                      value={plan2?.availables?.users}
                       icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
                     />
                   </Col>
                   <Col span={6}>
                     <PlanCard
                       title={'Eventos'}
-                      value={plan2.availables.events}
+                      value={plan2?.availables?.events}
                       icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
                     />
                   </Col>
                   <Col span={24}>
                     <Typography.Text style={{ cursor: 'pointer' }} onClick={() => setShow(!show)}>
                       {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes más información del plan{' '}
-                      <strong>{plan2.name}</strong>.
+                      <strong>{plan2?.name}</strong>.
                     </Typography.Text>
                     {show && (
                       <>

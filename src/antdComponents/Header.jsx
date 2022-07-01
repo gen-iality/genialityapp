@@ -2,6 +2,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
 import { UseEventContext } from '@/context/eventContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 //import { UseCurrentUser } from '../context/userContext';
 
 const { Title } = Typography;
@@ -9,7 +10,8 @@ const { Title } = Typography;
 const Header = (props) => {
   const history = useHistory();
   //let cUser = UseCurrentUser();
-  const cEventIsActive = UseEventContext()?.value?.isActive;
+  const { eventIsActive } = useHelper();
+  const cEventIsActive = eventIsActive;
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
@@ -55,7 +57,7 @@ const Header = (props) => {
           <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
         )}
       </small> */}
-      {cEventIsActive === false && window.location.toString().includes('eventadmin') && (
+      {!cEventIsActive && window.location.toString().includes('eventadmin') && (
         <Typography.Text style={{ color: 'red' }}>Tu evento se encuentra bloqueado</Typography.Text>
       )}
       {description && <p>{description}</p>}
@@ -69,7 +71,7 @@ const Header = (props) => {
                 type='primary'
                 icon={<PlusCircleOutlined />}
                 size='middle'
-                disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}>
                 {'Agregar'}
               </Button>
             </Link>
@@ -80,7 +82,7 @@ const Header = (props) => {
               icon={<PlusCircleOutlined />}
               size='middle'
               onClick={addFn}
-              disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+              disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}>
               {'Agregar'}
             </Button>
           )}
@@ -95,9 +97,7 @@ const Header = (props) => {
               size='middle'
               htmlType={form ? 'submit' : 'button'}
               loading={loadingSave}
-              disabled={
-                cEventIsActive === false && window.location.toString().includes('eventadmin') ? true : loadingSave
-              }>
+              disabled={!cEventIsActive && window.location.toString().includes('eventadmin') ? true : loadingSave}>
               {saveName ? saveName : 'Guardar'}
             </Button>
           )}
@@ -110,7 +110,7 @@ const Header = (props) => {
               type='link'
               danger
               icon={<DeleteOutlined />}
-              disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+              disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}>
               {'Eliminar'}
             </Button>
           )}
