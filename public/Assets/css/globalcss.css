@@ -74,12 +74,17 @@
 }
 
 .preloaderIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: auto;
-  background: url('../img/Favicon-Geniality.png') no-repeat center;
-  background-size: 150px;
   width: 300px;
   height: 300px;
   opacity: 0.8;
+}
+
+.sizeBackground {
+  width: 150px;
 }
 
 .preloader {

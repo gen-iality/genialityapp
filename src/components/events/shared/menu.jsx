@@ -57,7 +57,7 @@ const MenuConfig = (props) => {
             style={{
               width: '50%',
             }}
-            src={`${imageUtils.LOGOEVIUS}`}
+            src={`${import.meta.env.VITE_LOGO_SVG}`}
           />
           <Divider style={{ background: 'gray' }} />
         </Row>

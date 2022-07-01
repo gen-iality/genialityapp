@@ -46,7 +46,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
             bottom: `${screens.xs ? '4%' : '6%'}`,
             // right: `${screens.xs ? '10%' : '22%'}`,
           }}
-          src={imageUtils.LogoSvgDark}
+          src={import.meta.env.VITE_LOGO_SVG_DARK}
           alt='logo'
         />
         <Result
