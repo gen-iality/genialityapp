@@ -98,7 +98,7 @@ function AgendaFormulary(props: FormularyProps) {
 
   useEffect(() => {
     // Focus the first field
-    nameInputRef.current?.focus();
+    if (!formulary.name) nameInputRef.current?.focus();
   }, [nameInputRef.current]);
 
   /**

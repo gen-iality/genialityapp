@@ -465,6 +465,7 @@ function AgendaEdit(props: AgendaEditProps) {
            * */
           agendaContext.setActivityEdit(agenda._id);
           setIdNewlyCreatedActivity(agenda._id);
+          setCurrentActivityID(agenda._id);
           setActivityEdit(true as unknown as string); // TODO: check the right type
           // setShouldRedirect(true); // reloadActivity: true,
           setIsEditing(true);
