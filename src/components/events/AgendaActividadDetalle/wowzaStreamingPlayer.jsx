@@ -84,7 +84,8 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
               <iframe
                 width={'100%'}
                 style={{ height: '100%' }}
-                allow='autoplay; fullscreen; camera *;microphone *'
+                allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; camera; microphone;allow-top-navigation;allow-same-origin;allow-scripts;allow-popups;allow-forms;allow-modals;allow-orientation-lock'
+                // allow='autoplay; fullscreen; camera *;microphone *'
                 // sandbox='allow-scripts;allow-presentation; allow-modals'
                 allowFullScreen
                 allowusermedia

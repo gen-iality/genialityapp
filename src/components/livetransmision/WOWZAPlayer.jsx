@@ -123,7 +123,11 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             height={'100%'}
             src={platformurl}
             frameborder='0'
-            allow={typeActivity == 'meeting' ? 'camera *;microphone *' : 'autoplay; encrypted-media'}
+            allow={
+              typeActivity == 'meeting'
+                ? 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; camera; microphone;allow-top-navigation;allow-same-origin;allow-scripts;allow-popups;allow-forms;allow-modals;allow-orientation-lock'
+                : 'autoplay; encrypted-media'
+            }
             allowfullscreen></iframe>
         ) : (
           <Spin />
