@@ -51,6 +51,7 @@ import AgendaFormulary, { FormularyType } from './components/AgendaFormulary';
 import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
 import useProcessDateFromAgendaDocument from './hooks/useProcessDateFromAgendaDocument';
 import useBuildInfo from './hooks/useBuildInfo';
+import useValidForm from './hooks/useValidAgendaForm';
 import useDeleteActivity from './hooks/useDeleteActivity';
 import SelectOptionType from './types/SelectOptionType';
 import AgendaDocumentType from './types/AgendaDocumentType';
@@ -183,6 +184,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
   const buildInfo = useBuildInfo(formulary, info);
   const deleteActivity = useDeleteActivity();
+  const validForm = useValidForm(formulary);
 
   useEffect(() => {
     /**
@@ -374,30 +376,6 @@ function AgendaEdit(props: AgendaEditProps) {
       setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
     }
   };
-
-  // @done
-  const validForm: () => boolean = () => {
-    const title = [];
-    if (formulary.name.length <= 0)
-      title.push('El nombre es requerido');
-
-    if (formulary.date === '' || formulary.date === 'Invalid date')
-      title.push('Seleccione el día');
-
-    if (formulary.hour_start === '' || formulary.hour_start === 'Invalid date')
-      title.push('Seleccione una hora de inicio valida');
-
-    if (formulary.hour_end === '' || formulary.hour_end === 'Invalid date')
-      title.push('Seleccione una hora de finalización valida');
-    
-    if (title.length > 0) {
-      title.map((item) => {
-        DispatchMessageService({ msj: item, type: 'warning', action: 'show' });
-      });
-    } else return true;
-
-    return false;
-  }
 
   // @testable
   const submit = async (changePathWithoutSaving: boolean) => {
