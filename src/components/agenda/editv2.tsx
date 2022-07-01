@@ -50,6 +50,7 @@ import AgendaFormulary, { FormularyType } from './components/AgendaFormulary';
 import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
 import useProcessDateFromAgendaDocument from './hooks/useProcessDateFromAgendaDocument';
 import useBuildInfo from './hooks/useBuildInfo';
+import useDeleteActivity from './hooks/useDeleteActivity';
 import SelectOptionType from './types/SelectOptionType';
 import AgendaDocumentType from './types/AgendaDocumentType';
 
@@ -187,6 +188,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
   const buildInfo = useBuildInfo(formulary, info);
+  const deleteActivity = useDeleteActivity();
 
   useEffect(() => {
     /**
@@ -502,47 +504,15 @@ function AgendaEdit(props: AgendaEditProps) {
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          const onHandlerRemove = async () => {
-            try {
-              const refActivity = `request/${props.event._id}/activities/${currentActivityID}`;
-              const refActivityViewers = `viewers/${props.event._id}/activities/${currentActivityID}`;
-              const configuration = await service.getConfiguration(props.event._id, currentActivityID);
-              if (configuration && configuration.typeActivity === 'eviusMeet') {
-                await deleteAllVideos(info.name, configuration.meeting_id),
-                  await deleteLiveStream(configuration.meeting_id);
-              }
-              await fireRealtime.ref(refActivity).remove();
-              await fireRealtime.ref(refActivityViewers).remove();
-              await service.deleteActivity(props.event._id, currentActivityID);
-              await AgendaApi.deleteOne(currentActivityID, props.event._id);
-              DispatchMessageService({
-                type: 'loading', // Added by types
-                msj: '', // Added by types
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
+          deleteActivity(
+            props.event._id,
+            currentActivityID,
+            info.name,
+            () => {
               setShouldRedirect(true);
               history.push(`${props.matchUrl}`);
-            } catch (e) {
-              DispatchMessageService({
-                type: 'loading', // Added by types
-                msj: '', // Added by types
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              });
             }
-          };
-          onHandlerRemove();
+          ).then();
         },
       });
     }
