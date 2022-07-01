@@ -6,6 +6,7 @@ import { Button, Spin } from 'antd';
 import AgendaContext from '@/context/AgendaContext';
 import { CurrentUserContext } from '@/context/userContext';
 import { Grid } from 'antd';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const { useBreakpoint } = Grid;
 
@@ -14,14 +15,16 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
 
-  const [ platformurl, setPlatformurl ] = useState(defaultVideo);
-  const [ muted, setMuted ] = useState(false);
-  const [ loopBackGround, setLoopBackGround ] = useState(false);
-  const [ visibleReactPlayer, setVisibleReactPlayer ] = useState(false);
-  const { typeActivity, activityEdit } = useContext(AgendaContext);
+  const [platformurl, setPlatformurl] = useState(defaultVideo);
+  const [muted, setMuted] = useState(false);
+  const [loopBackGround, setLoopBackGround] = useState(false);
+  const [visibleReactPlayer, setVisibleReactPlayer] = useState(false);
+  const { typeActivity } = useContext(AgendaContext);
+
+  let { currentActivity } = useHelper();
   const userContext = useContext(CurrentUserContext);
   //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA ACTIVIDAD
-  const [ conected, setConected ] = useState('No');
+  const [conected, setConected] = useState('No');
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
   //console.log('DATOOS PLAYER===>', meeting_id, thereIsConnection);
@@ -33,8 +36,9 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
       setVisibleReactPlayer(false);
       setConected('Yes');
       setPlatformurl(
-        `https://stagingeviusmeet.netlify.app/?meetingId=${activityEdit}&rol=0&username=${userContext.value?.names}&email=${userContext.value?.email
-        }&photo=${userContext.value?.picture || urlDefault}`
+        `https://stagingeviusmeet.netlify.app/?meetingId=${currentActivity?._id}&rol=0&username=${
+          userContext.value?.names
+        }&email=${userContext.value?.email}&photo=${userContext.value?.picture || urlDefault}`
       );
     }
     //console.log('100. typeActivity=>', typeActivity, conected, meeting_id);
@@ -81,7 +85,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
       setPlatformurl(null);
       setMuted(false);
     };
-  }, [ meeting_id, thereIsConnection, typeActivity ]);
+  }, [meeting_id, thereIsConnection, typeActivity]);
 
   return (
     <>
@@ -119,7 +123,11 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             height={'100%'}
             src={platformurl}
             frameborder='0'
-            allow={typeActivity == 'meeting' ? 'camera *;microphone *' : 'autoplay; encrypted-media'}
+            allow={
+              typeActivity == 'meeting'
+                ? 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; camera; microphone;allow-top-navigation;allow-same-origin;allow-scripts;allow-popups;allow-forms;allow-modals;allow-orientation-lock'
+                : 'autoplay; encrypted-media'
+            }
             allowfullscreen></iframe>
         ) : (
           <Spin />

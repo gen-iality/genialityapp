@@ -5,13 +5,13 @@ import { UseEventContext } from '../../context/eventContext';
 import { getLiveStreamStatus, getLiveStreamStats, ResetLiveStream } from '../../adaptors/wowzaStreamingAPI';
 
 const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, isHost }) => {
-  const [ platformurl, setPlatformurl ] = useState(null);
+  const [platformurl, setPlatformurl] = useState(null);
 
   useEffect(() => {
     if (!meeting_id) return;
     getMeetingPath(platform, name, email, meeting_id, generalTabs, isHost);
     checkStreamStatus();
-  }, [ meeting_id ]);
+  }, [meeting_id]);
 
   const checkStreamStatus = async () => {
     let live_stream_status = await getLiveStreamStatus(meeting_id);
@@ -75,7 +75,8 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
         <iframe
           src={platformurl}
           frameBorder='0'
-          allow='autoplay; fullscreen; camera *;microphone *'
+          // allow='autoplay; fullscreen; camera *;microphone *'
+          allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; camera; microphone;allow-top-navigation;allow-same-origin;allow-scripts;allow-popups;allow-forms;allow-modals;allow-orientation-lock'
           allowFullScreen
           allowusermedia
           width='100%'
@@ -89,7 +90,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
   let cEventuser = UseUserEvent();
   let cEvent = UseEventContext();
-  const [ userEvent, setuserEvent ] = useState({});
+  const [userEvent, setuserEvent] = useState({});
   useEffect(() => {
     if (!cEventuser.value || !cEvent.value) return;
     let { displayName, email } = cEventuser.value.properties;
@@ -98,7 +99,7 @@ const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
       email: email,
       isHostuser: isHost(cEventuser.value, cEvent.value),
     });
-  }, [ cEventuser.value, cEvent.value ]);
+  }, [cEventuser.value, cEvent.value]);
 
   return (
     <IframeZoomComponent
