@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
+import * as Moment from 'moment';
+import { useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import {
@@ -10,6 +11,7 @@ import {
   Button,
   Form,
   Input,
+  InputRef,
   Switch,
   Card,
   TimePicker,
@@ -22,8 +24,6 @@ import {
 
 import Select from 'react-select';
 import Creatable from 'react-select';
-
-import * as Moment from 'moment';
 
 import { DispatchMessageService } from '../../../context/MessageService';
 import useCreatableStyles from '../hooks/useCreatableStyles';
@@ -94,6 +94,12 @@ function AgendaFormulary(props: FormularyProps) {
   } = props;
 
   const history = useHistory();
+  const nameInputRef = useRef<InputRef>(null);
+
+  useEffect(() => {
+    // Focus the first field
+    nameInputRef.current?.focus();
+  }, [nameInputRef.current]);
 
   /**
    * Custom hooks
@@ -140,7 +146,6 @@ function AgendaFormulary(props: FormularyProps) {
   };
 
   // @done
-  // TODO: this method is hook-able. Or not, just the beginning!!
   const startOrEndHourWithAdditionalMinutes = (minutes: number, isStart: boolean) => {
     const fecha = new Date();
     fecha.setMinutes(fecha.getMinutes() + minutes);
@@ -204,7 +209,7 @@ function AgendaFormulary(props: FormularyProps) {
         >
           <Input
             autoFocus
-            // ref={nameInputRef}
+            ref={nameInputRef}
             type="text"
             name="name"
             value={formulary.name}

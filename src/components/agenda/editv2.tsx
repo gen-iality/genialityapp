@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { useState, useContext, useRef, useEffect } from 'react';
+import * as Moment from 'moment';
+
+import { useState, useContext, useEffect } from 'react';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
 import { Select as SelectAntd } from 'antd';
 
@@ -15,14 +17,13 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 
-import * as Moment from 'moment';
 
 import AgendaContext from '@/context/AgendaContext';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@/context/MessageService';
-import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
+
 import {
   fieldsSelect,
   handleRequestError,
@@ -37,7 +38,7 @@ import {
   SpeakersApi,
   eventTicketsApi,
 } from '@/helpers/request';
-import { firestore, fireRealtime } from '@/helpers/firebase';
+import { firestore } from '@/helpers/firebase';
 
 import Loading from '../profile/loading';
 import RoomController from '../agenda/roomManager/controller';
@@ -85,7 +86,7 @@ const initialInfoState = {
   name: '',
   subtitle: '',
   bigmaker_meeting_id: null,
-  datetime_start: null, // TODO
+  datetime_start: null,
   datetime_end: null,
   space_id: '',
   image: '',
@@ -116,19 +117,19 @@ const initialInfoState = {
 const initialFormularyState = {
   name: '',
   date: Moment(new Date()).format('YYYY-MM-DD'),
-  hour_start: '',
-  hour_end: '',
   space_id: '',
+  hour_end: '',
+  hour_start: '',
   isPhysical: false,
   length: '',
   latitude: '',
   description: '',
   image: '',
-  selectedCategories: [],
   selectedRol: [],
   selectedHosts: [],
   selectedTickets: [],
   selectedDocuments: [],
+  selectedCategories: [],
   isExternal: false,
   externalSurveyID: '',
   roomStatus: '',
@@ -142,7 +143,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });;
+  const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
   const [pendingChangesSave, setPendingChangesSave] = useState(false);
   const [idNewlyCreatedActivity, setIdNewlyCreatedActivity] = useState<string | null>(null);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
@@ -155,11 +156,6 @@ function AgendaEdit(props: AgendaEditProps) {
   const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
   // This state is used in the 'Documentos' tab
   const [allNameDocuments, setAllNameDocuments] = useState<SelectOptionType[]>([]);
-  
-  /**
-   * 'Documentos' states
-   */
-  // const [selectedDocument, setSelectedDocument] = useState<SelectOptionType[]>([]);
 
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
@@ -183,8 +179,6 @@ function AgendaEdit(props: AgendaEditProps) {
   
   const location = useLocation<LocationStateType>();
   const history = useHistory();
-
-  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
   const buildInfo = useBuildInfo(formulary, info);
@@ -251,28 +245,29 @@ function AgendaEdit(props: AgendaEditProps) {
       const documents = await DocumentsApi.byEvent(props.event._id);
 
       // Load document names
-      const newNameDocuments = documents.map((document: {_id: string, title: string}) => ({
-        ...document,
-        value: document._id,
-        label: document.title,
-      }))
+      const newNameDocuments = documents
+        .map((document: {_id: string, title: string}) => ({
+          ...document,
+          value: document._id,
+          label: document.title,
+        }))
       setAllNameDocuments(newNameDocuments);
 
       // Get more data from this event
-      const remoteSpaces = await SpacesApi.byEvent(props.event._id);
-      const remoteHosts = await SpeakersApi.byEvent(props.event._id);
       const remoteRoles = await RolAttApi.byEvent(props.event._id);
+      const remoteHosts = await SpeakersApi.byEvent(props.event._id);
+      const remoteSpaces = await SpacesApi.byEvent(props.event._id);
       const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
 
       // The object structu should be like [{ label, value }] for the Select components
-      const newAllSpaces = handleSelect(remoteSpaces);
       const newAllHosts = handleSelect(remoteHosts);
       const newAllRoles = handleSelect(remoteRoles);
+      const newAllSpaces = handleSelect(remoteSpaces);
       const newAllCategories = handleSelect(remoteCategories);
 
-      setAllSpaces(newAllSpaces);
       setAllHosts(newAllHosts);
       setAllRoles(newAllRoles);
+      setAllSpaces(newAllSpaces);
       setAllCategories(newAllCategories);
 
       // Check if the last page passed an activity_id via route state.
@@ -282,12 +277,12 @@ function AgendaEdit(props: AgendaEditProps) {
         agendaContext.setActivityEdit(location.state?.edit);
 
         // Get the agenda document from current activity_id
-        const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
+        const agendaInfo: AgendaDocumentType = await AgendaApi
+          .getOne(location.state.edit, props.event._id);
 
         setInfo((last) => ({
           ...last,
           ...agendaInfo,
-          selected_document: agendaInfo.selected_document,
           start_url: agendaInfo.start_url,
           join_url: agendaInfo.join_url,
           platform: agendaInfo.platform /*  || event.event_platform */,
@@ -296,6 +291,7 @@ function AgendaEdit(props: AgendaEditProps) {
           name_host: agendaInfo.name_host,
           date_start_zoom: agendaInfo.date_start_zoom,
           date_end_zoom: agendaInfo.date_end_zoom,
+          selected_document: agendaInfo.selected_document,
           requires_registration: agendaInfo.requires_registration || false,
         }));
   
@@ -329,9 +325,6 @@ function AgendaEdit(props: AgendaEditProps) {
       setIsLoading(false);
       // Finish loading this:
       setThisIsLoading((last) => ({ ...last, categories: false }));
-  
-      // Focus the first field
-      nameInputRef.current?.focus();
       validateRoom();
     }
 
@@ -349,7 +342,11 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const validateRoom = async () => {
     const activity_id = agendaContext.activityEdit;
-    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activity_id);
+    const hasVideoconference = await service.validateHasVideoconference(
+      props.event._id,
+      activity_id,
+    );
+
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(props.event._id, activity_id);
       setFormulary((last) => ({
@@ -361,10 +358,12 @@ function AgendaEdit(props: AgendaEditProps) {
         roomStatus: configuration.roomStatus || null,
         host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
       }));
+
       setInfo((last) => ({
         ...last,
         isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
       }));
+
       // transmition: configuration.transmition || null,
       // host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
       // habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '',
@@ -408,8 +407,8 @@ function AgendaEdit(props: AgendaEditProps) {
       msj: 'Por favor espere mientras se guarda la información...',
       action: 'show',
     });
-    const validation = validForm();
 
+    const validation = validForm();
     if (validation) {
       try {
         const builtInfo = buildInfo();
@@ -484,7 +483,7 @@ function AgendaEdit(props: AgendaEditProps) {
       }
     }
   }
-
+  
   // @done
   const remove = async () => {
     // let self = this;
@@ -525,11 +524,8 @@ function AgendaEdit(props: AgendaEditProps) {
       // await saveConfig(); // did by useEffect (avalibleGames)
     } else {
       const newData: object[] = listOfGames.map((items) => {
-        if (items.id === itemId) {
-          return { ...items, showGame: status };
-        } else {
-          return { ...items };
-        }
+        if (items.id === itemId) return { ...items, showGame: status };
+        else return { ...items };
       });
       agendaContext.setAvailableGames(newData);
       setAvalibleGames(newData);
@@ -579,7 +575,8 @@ function AgendaEdit(props: AgendaEditProps) {
     const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
     const activity_id = agendaContext.activityEdit || idNewlyCreatedActivity;
     try {
-      const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
+      const result = await service
+        .createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
       if (result) {
         DispatchMessageService({ msj: result.message, type: 'success', action: 'show' });
       }
@@ -591,7 +588,6 @@ function AgendaEdit(props: AgendaEditProps) {
 
   // @testable
   const handlerCreateCategories = async (value: any, name: string) => {
-    alert(`${value}: ${name}`);
     // Last handleCreate method
     DispatchMessageService({
       type: 'loading',
@@ -608,6 +604,7 @@ function AgendaEdit(props: AgendaEditProps) {
           props.event._id, { name: value },
         )
       );
+
       const newOption = {
         label: value,
         value: item._id,
