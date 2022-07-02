@@ -34,7 +34,7 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import Loading from '../profile/loading';
 import { DispatchMessageService } from '../../context/MessageService';
-import { UseEventContext } from '@/context/eventContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -737,7 +737,8 @@ class triviaEdit extends Component {
         title: 'Opciones',
         key: 'action',
         render: (text, record) => {
-          const cEventIsActive = UseEventContext()?.value?.isActive;
+          const { eventIsActive } = useHelper();
+          const cEventIsActive = eventIsActive;
           return (
             <Row gutter={[8, 8]}>
               <Col>

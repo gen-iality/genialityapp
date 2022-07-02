@@ -10,9 +10,10 @@ import { useIntl } from 'react-intl';
 
 const InfoEvent = () => {
   let cEvent = UseEventContext();
-  let { handleChangeTypeModal } = useHelper();
+  let { handleChangeTypeModal, eventIsActive } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
+
   const intl = useIntl();
   return (
     <PageHeader
@@ -35,7 +36,7 @@ const InfoEvent = () => {
             onClick={() => handleChangeTypeModal('registerForTheEvent')}
             type='primary'
             size='large'
-            disabled={cEvent.value?.isActive === false}>
+            disabled={!eventIsActive}>
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al evento',

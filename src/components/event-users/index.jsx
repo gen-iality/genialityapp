@@ -46,6 +46,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import moment from 'moment';
 import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
+import { HelperContext } from '@/context/helperContext/helperContext';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -105,9 +106,11 @@ class ListEventUser extends Component {
       qrModalOpen: false,
     };
   }
+  static contextType = HelperContext;
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
+    const { eventIsActive } = this.context;
     return (
       <Tooltip placement='topLeft' title='Editar'>
         <Button
@@ -115,7 +118,7 @@ class ListEventUser extends Component {
           icon={<EditOutlined />}
           size='small'
           onClick={() => this.openEditModalUser(item)}
-          disabled={this.props.event?.isActive === false && window.location.toString().includes('eventadmin')}
+          disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
         />
       </Tooltip>
     );
@@ -768,8 +771,8 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
-    const { event, type, loading, componentKey } = this.props;
-    const cEventIsActive = event?.isActive;
+    const { type, loading, componentKey } = this.props;
+    const { eventIsActive } = this.context;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -895,14 +898,14 @@ class ListEventUser extends Component {
               <Col>
                 <Link
                   to={
-                    cEventIsActive === false && window.location.toString().includes('eventadmin')
+                    !eventIsActive && window.location.toString().includes('eventadmin')
                       ? ''
                       : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
                   }>
                   <Button
                     type='primary'
                     icon={<UploadOutlined />}
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     Importar usuarios
                   </Button>
                 </Link>
@@ -913,7 +916,7 @@ class ListEventUser extends Component {
                   icon={<PlusCircleOutlined />}
                   size='middle'
                   onClick={this.addUser}
-                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   {'Agregar Usuario'}
                 </Button>
               </Col>

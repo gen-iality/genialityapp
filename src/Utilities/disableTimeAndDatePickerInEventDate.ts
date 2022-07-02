@@ -6,12 +6,16 @@ const equivalentToAMinute = 60;
 interface eventProps {
   hour_start?: string;
   date_start?: string;
+  date_end?: string;
 }
 
 /** @params function Allows you to disable the days before and after a certain range based on a start date and a number of additional minutes  */
-export const disabledEndDate = (endValue: any, event: eventProps) => {
+export const disabledEndDate = (endValue: any, event: eventProps, streamingHours: number) => {
   const startDate = event?.date_start;
-  const addExtraTime = moment(startDate).add(120 - equivalentToADayInMinutes, 'minutes');
+
+  if (!streamingHours) return;
+
+  const addExtraTime = moment(startDate).add(streamingHours - equivalentToADayInMinutes, 'minutes');
 
   if (!endValue || !startDate) {
     return false;
@@ -27,11 +31,14 @@ export const disabledEndDate = (endValue: any, event: eventProps) => {
 };
 
 /** @params feature Allows you to disable the hours before and after a certain range based on a start time and number of additional minutes  */
-const disableHoursRange = (event: eventProps) => {
+const disableHoursRange = (event: eventProps, streamingHours: number) => {
   const result = [];
   const hourStart = event?.hour_start;
+  const endDate = event?.date_end;
+  if (!streamingHours) return;
   /** We add 60 more minutes to discriminate the current time, this affects the free plans */
-  const addExtraTime = moment(hourStart).add(120 + equivalentToAMinute, 'minutes');
+  //   if(){}
+  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAMinute, 'minutes');
 
   /** We iterate to be able to discriminate the hours before the start */
   for (let InitialHour = 0; InitialHour < moment(hourStart).hour(); InitialHour++) {
@@ -40,15 +47,16 @@ const disableHoursRange = (event: eventProps) => {
 
   /** We iterate to be able to discriminate the hours after the limit */
   for (let finalHour = addExtraTime.hour(); finalHour < 24; finalHour++) {
-    result.push(finalHour);
+    if (streamingHours <= 120) result.push(finalHour);
   }
 
   return result;
 };
 /** @params function  Disables minutes different from those established in an initial hour */
-const disableMinutesRange = (event: eventProps) => {
+const disableMinutesRange = (event: eventProps, streamingHours: number) => {
   const result = [];
   const hour_start = event.hour_start;
+  if (!streamingHours) return;
   /** A minute is added to be able to show the current minute of the start date available */
   const addExtraTime = moment(hour_start).add(1, 'minutes');
   /** We iterate to be able to discriminate the minutes before the start */
@@ -64,9 +72,9 @@ const disableMinutesRange = (event: eventProps) => {
   return result;
 };
 
-export const disabledDateTime = (event: {}) => ({
+export const disabledDateTime = (event: {}, streamingHours: number) => ({
   //debugger: console.log('event => ', event),
-  disabledHours: () => disableHoursRange(event),
-  disabledMinutes: () => disableMinutesRange(event),
+  disabledHours: () => disableHoursRange(event, streamingHours),
+  disabledMinutes: () => disableMinutesRange(event, streamingHours),
   // disabledSeconds: () => [55, 56],
 });

@@ -7,10 +7,10 @@ import { getColumnSearchProps } from '../../../components/speakers/getColumnSear
 import Table from '../../../antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
 import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
-import { UseEventContext } from '../../../context/eventContext';
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
 import Account from '@2fd/ant-design-icons/lib/Account';
 import { DispatchMessageService } from '../../../context/MessageService';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const { TabPane } = Tabs;
 
@@ -31,7 +31,7 @@ const ChatExport = ({ eventId, event }) => {
   let [columnsData, setColumnsData] = useState({});
   let [listUsersBlocked, setlistUsersBlocked] = useState([]);
   let cEvent = UseEventContext();
-  const cEventIsActive = UseEventContext()?.value?.isActive;
+  const { eventIsActive } = useHelper();
 
   const renderMensaje = (text, record) => (
     <Tooltip title={record.text} placement='topLeft'>
@@ -380,7 +380,7 @@ const ChatExport = ({ eventId, event }) => {
                     onClick={deleteAllChat}
                     type='danger'
                     icon={<DeleteOutlined />}
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     Eliminar Chat
                   </Button>
                 )}

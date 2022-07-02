@@ -19,7 +19,7 @@ import { useEffect } from 'react';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
-import { UseEventContext } from '@/context/eventContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const { confirm } = Modal;
 
@@ -30,7 +30,7 @@ const tableLocale = {
 function Empresas({ event, match }) {
   const [companies, loadingCompanies] = useGetEventCompanies(event._id);
   const [companyList, setCompanyList] = useState([]);
-  const cEventIsActive = UseEventContext()?.value?.isActive;
+  const { eventIsActive } = useHelper();
 
   useEffect(() => {
     if (companies.length > 0) {
@@ -156,7 +156,7 @@ function Empresas({ event, match }) {
       width: 30,
       className: 'drag-visible',
       render(companyName, record) {
-        return cEventIsActive === false && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
+        return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
       },
     },
     {
@@ -217,7 +217,7 @@ function Empresas({ event, match }) {
                   icon={<DeleteOutlined />}
                   type='danger'
                   size='small'
-                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 />
               </Tooltip>
             </Col>
@@ -267,7 +267,7 @@ function Empresas({ event, match }) {
                 onClick={() => orderCompany()}
                 type='primary'
                 icon={<SaveOutlined />}
-                disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                 {'Guardar orden'}
               </Button>
             </Col>

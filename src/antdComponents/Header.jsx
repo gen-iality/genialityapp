@@ -11,7 +11,6 @@ const Header = (props) => {
   const history = useHistory();
   //let cUser = UseCurrentUser();
   const { eventIsActive } = useHelper();
-  const cEventIsActive = eventIsActive;
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
@@ -57,7 +56,7 @@ const Header = (props) => {
           <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
         )}
       </small> */}
-      {!cEventIsActive && window.location.toString().includes('eventadmin') && (
+      {!eventIsActive && window.location.toString().includes('eventadmin') && (
         <Typography.Text style={{ color: 'red' }}>Tu evento se encuentra bloqueado</Typography.Text>
       )}
       {description && <p>{description}</p>}
@@ -71,7 +70,7 @@ const Header = (props) => {
                 type='primary'
                 icon={<PlusCircleOutlined />}
                 size='middle'
-                disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}>
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                 {'Agregar'}
               </Button>
             </Link>
@@ -82,7 +81,7 @@ const Header = (props) => {
               icon={<PlusCircleOutlined />}
               size='middle'
               onClick={addFn}
-              disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}>
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
               {'Agregar'}
             </Button>
           )}
@@ -97,7 +96,7 @@ const Header = (props) => {
               size='middle'
               htmlType={form ? 'submit' : 'button'}
               loading={loadingSave}
-              disabled={!cEventIsActive && window.location.toString().includes('eventadmin') ? true : loadingSave}>
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin') ? true : loadingSave}>
               {saveName ? saveName : 'Guardar'}
             </Button>
           )}
@@ -110,7 +109,7 @@ const Header = (props) => {
               type='link'
               danger
               icon={<DeleteOutlined />}
-              disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}>
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
               {'Eliminar'}
             </Button>
           )}

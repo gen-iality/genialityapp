@@ -17,6 +17,7 @@ import { withRouter } from 'react-router-dom';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
 import { UseEventContext } from '@/context/eventContext';
+import { HelperContext } from '@/context/helperContext/helperContext';
 
 const { Column } = Table;
 const { confirm } = Modal;
@@ -33,6 +34,7 @@ class Product extends Component {
       loadingPosition: false,
     };
   }
+  static contextType = HelperContext;
   //DRAG TABLE
   DraggableContainer = (props) => (
     <SortableContainer
@@ -189,6 +191,7 @@ class Product extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
+    const { eventIsActive } = this.context;
     return (
       <div>
         <Header
@@ -202,7 +205,7 @@ class Product extends Component {
                   onClick={this.savePosition}
                   type='primary'
                   icon={<SaveOutlined />}
-                  disabled={this.props.event?.isActive === false && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   {'Guardar orden'}
                 </Button>
               </Col>
@@ -236,16 +239,13 @@ class Product extends Component {
               width='50px'
               align='center'
               render={(data, index) => {
-                const cEventIsActive = UseEventContext()?.value?.isActive;
                 const DragHandle = sortableHandle(() => (
                   <DragOutlined
                     id={`drag${index.index}`}
                     style={{ cursor: 'grab', color: '#999', visibility: 'visible' }}
                   />
                 ));
-                return cEventIsActive === false && window.location.toString().includes('eventadmin') ? null : (
-                  <DragHandle />
-                );
+                return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
               }}
             />
             <Column
@@ -312,7 +312,6 @@ class Product extends Component {
               fixed='right'
               width={150}
               render={(data, index) => {
-                const cEventIsActive = UseEventContext()?.value?.isActive;
                 return (
                   <Space key={index} size='small'>
                     <Tooltip key={index} placement='topLeft' title='Editar'>
@@ -333,7 +332,7 @@ class Product extends Component {
                         type='danger'
                         icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
                         size='small'
-                        disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                        disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                       />
                     </Tooltip>
                     <Tooltip key={index} placement='topLeft' title='Ofertas'>

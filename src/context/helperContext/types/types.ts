@@ -10,6 +10,7 @@ export type HelperAction = {
   showNotification?: boolean | any;
   params?: object | any;
   eventIsActive?: boolean;
+  eventId?: string;
 };
 
 export type HelperContextProps = any;

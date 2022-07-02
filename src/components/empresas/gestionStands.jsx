@@ -13,7 +13,7 @@ import { firestore } from '../../helpers/firebase';
 import { SketchPicker } from 'react-color';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
-import { UseEventContext } from '@/context/eventContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -29,7 +29,7 @@ const Stands = (props) => {
   const [colorStand, setColorStand] = useState('#2C2A29');
   const [viewModalColor, setViewModalColor] = useState(false);
   const [noValid, setNoValid] = useState(false);
-  const cEventIsActive = UseEventContext()?.value?.isActive;
+  const { eventIsActive } = useHelper();
 
   let columns = [
     {
@@ -81,7 +81,7 @@ const Stands = (props) => {
                     icon={<EditOutlined />}
                     type='primary'
                     size='small'
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -96,7 +96,7 @@ const Stands = (props) => {
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -307,7 +307,7 @@ const Stands = (props) => {
               onClick={() => saveConfiguration()}
               type='primary'
               icon={<SaveOutlined />}
-              disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
               {'Guardar'}
             </Button>
           </Row>
@@ -327,7 +327,7 @@ const Stands = (props) => {
                 }}
                 type='primary'
                 icon={<PlusCircleOutlined />}
-                disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                 {'Agregar'}
               </Button>
             }

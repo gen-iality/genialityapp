@@ -36,6 +36,8 @@ import EditInformation from './components/EditInformation';
 import MyPlan from './components/myPlan';
 import { imageUtils } from '../../Utilities/ImageUtils';
 import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -57,6 +59,8 @@ const MainProfile = (props) => {
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
 
+  const { helperDispatch } = useHelper();
+
   const showSider = () => {
     if (!collapsed) {
       setCollapsed(true);
@@ -71,6 +75,12 @@ const MainProfile = (props) => {
 
   const eventsIHaveCreated = async () => {
     const events = await EventsApi.mine();
+
+    if (events.length > 0) {
+      events.map((event) => {
+        featureBlockingListener(event._id, helperDispatch, 'map');
+      });
+    }
     const eventsDataSorted = events.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
     setevents(eventsDataSorted);
     seteventsLimited(events.slice(0, 3));
@@ -85,6 +95,11 @@ const MainProfile = (props) => {
       setEventsThatIHaveParticipatedIsLoading(false);
       return;
     }
+
+    ticketsall.map((event) => {
+      featureBlockingListener(event.event_id, helperDispatch, 'map');
+    });
+
     const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     const usersInscription = [];
     ticketsDataSorted.forEach(async (element) => {

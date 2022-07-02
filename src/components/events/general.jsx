@@ -38,6 +38,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
 import { disabledDateTime, disabledEndDate } from '@/Utilities/disableTimeAndDatePickerInEventDate';
+import { CurrentUserContext } from '@/context/userContext';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -101,6 +102,7 @@ class General extends Component {
     this.deleteEvent = this.deleteEvent.bind(this);
     this.getInitialPage = this.getInitialPage.bind(this);
   }
+  static contextType = CurrentUserContext;
 
   async componentDidMount() {
     //inicializacion del estado de menu
@@ -663,7 +665,7 @@ class General extends Component {
 
   theEventIsActive = (state) => {
     this.setState({
-      iMustBlockAFunctionality: !state,
+      iMustBlockAFunctionality: state,
       iMustValidate: false,
     });
   };
@@ -687,6 +689,9 @@ class General extends Component {
       iMustBlockAFunctionality,
       iMustValidate,
     } = this.state;
+    const userContext = this.context;
+    const userPlan = userContext.value?.plan;
+    const streamingHours = userPlan?.availables?.streaming_hours;
 
     return (
       <React.Fragment>
@@ -900,7 +905,7 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha Fin'}>
                             <DatePicker
-                              disabledDate={(date) => disabledEndDate(date, event)}
+                              disabledDate={(date) => disabledEndDate(date, event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -923,7 +928,7 @@ class General extends Component {
                           <Form.Item label={'Hora Fin'}>
                             <TimePicker
                               showNow={false}
-                              disabledTime={(time) => disabledDateTime(event)}
+                              disabledTime={(time) => disabledDateTime(event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}

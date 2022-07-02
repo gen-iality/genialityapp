@@ -70,6 +70,14 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
       return { ...state };
 
     case 'eventIsActive':
+      const eventId = action.eventId;
+      if (eventId) {
+        return {
+          ...state,
+          // @ts-ignore: Unreachable code error
+          eventIsActive: { ...state.eventIsActive, [eventId]: action.eventIsActive },
+        };
+      }
       return {
         ...state,
         eventIsActive: action.eventIsActive,

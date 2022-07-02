@@ -1,6 +1,6 @@
 import { firestore } from '@/helpers/firebase';
 
-export const featureBlockingListener = (eventId: string, helperDispatch: ({}) => void) => {
+export const featureBlockingListener = (eventId: string, helperDispatch: ({}) => void, isMap: string) => {
   if (!eventId) return;
 
   const refToEvent = firestore.collection('events');
@@ -8,7 +8,10 @@ export const featureBlockingListener = (eventId: string, helperDispatch: ({}) =>
   refToEvent.doc(eventId).onSnapshot((event) => {
     if (event.exists) {
       const eventIsActive = event.data()?.eventIsActive;
-      // console.log('🚀 eventIsActive =>  ', eventIsActive);
+      if (isMap === 'map') {
+        helperDispatch({ type: 'eventIsActive', eventIsActive, eventId });
+        return;
+      }
       helperDispatch({ type: 'eventIsActive', eventIsActive });
       return;
     }

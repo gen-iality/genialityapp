@@ -9,6 +9,7 @@ import { utils, writeFileXLSX } from 'xlsx';
 import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
 import Header from '../../antdComponents/Header';
+import { HelperContext } from '@/context/helperContext/helperContext';
 
 class eventUsersList extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class eventUsersList extends Component {
     this.createTableColumns = this.createTableColumns.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
   }
+  static contextType = HelperContext;
 
   async componentDidMount() {
     const { eventID, event } = this.props;
@@ -253,6 +255,8 @@ class eventUsersList extends Component {
   };
 
   render() {
+    const { eventIsActive } = this.context;
+
     const menu = (
       <Menu>
         <Menu.Item key='1' icon={<UserOutlined />} onClick={this.modalUser}>
@@ -282,7 +286,7 @@ class eventUsersList extends Component {
         },
       ],
     };
-    const cEventIsActive = this.props.event?.isActive;
+
     return (
       <>
         <Header title={'Enviar información o correo a asistentes'} />
@@ -303,7 +307,7 @@ class eventUsersList extends Component {
               <Col>
                 <Button
                   onClick={() => this.goToSendMessage()}
-                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   Enviar comunicación a : {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}
                 </Button>
                 <ModalAdvise visible={this.state.modalVisible} />
@@ -316,14 +320,12 @@ class eventUsersList extends Component {
               <Col>
                 <Link
                   to={
-                    cEventIsActive === false && window.location.toString().includes('eventadmin')
+                    !eventIsActive && window.location.toString().includes('eventadmin')
                       ? ''
                       : `${this.props.matchUrl}/importar-excel`
                   }
                   icon={<UploadOutlined />}>
-                  <Button
-                    type='primary'
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                  <Button type='primary' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     Importar Usuario
                   </Button>
                 </Link>
@@ -333,7 +335,7 @@ class eventUsersList extends Component {
                   type='primary'
                   onClick={this.modalUser}
                   icon={<PlusCircleOutlined />}
-                  disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   Agregar Usuario
                 </Button>
               </Col>

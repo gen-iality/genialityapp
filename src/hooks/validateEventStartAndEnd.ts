@@ -14,6 +14,7 @@ interface EventInitialDates {
 const secondsBetweenTwoDates = ({ startDate = null, endDate = null }: EventInitialDates) => {
   const start = new Date(`${startDate}`);
   const end = new Date(`${endDate}`);
+
   return start.getTime() - end.getTime();
 };
 
@@ -51,8 +52,9 @@ export const ValidateEndEvent = ({ endDate = null, callBackTheEventIsActive = ({
     if (eventEndDate >= localDate) {
       const difference = secondsBetweenTwoDates({ startDate: endDate, endDate: localDate.toString() });
 
-      // console.log('🚀 debug ~ difference', difference);
+      /** The status starts at true for cases where it is a newly created event, because if the value is not set to true, we get undefined from firebase and it is understood that the end date of the event is less than the user's date and time. */
 
+      callBackTheEventIsActive(true);
       setTimeout(() => {
         callBackTheEventIsActive(false);
       }, difference);

@@ -16,7 +16,7 @@ import { sortableHandle } from 'react-sortable-hoc';
 import moment from 'moment';
 import { Suspense } from 'react';
 import { ExportExcel } from '../components/newComponent/ExportExcel';
-import { UseEventContext } from '@/context/eventContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 //import { UseCurrentUser } from '../context/userContext';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -24,7 +24,7 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = (props) => {
   //let cUser = UseCurrentUser();
-  const cEventIsActive = UseEventContext()?.value?.isActive;
+  const { eventIsActive } = useHelper();
   let {
     header,
     list,
@@ -86,7 +86,7 @@ const Table = (props) => {
                     icon={extraFnIcon ? extraFnIcon : <SettingOutlined />}
                     type={extraFnType ? extraFnType : 'primary'}
                     size='small'
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -98,7 +98,7 @@ const Table = (props) => {
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
                     to={
-                      /* cEventIsActive === false && window.location.toString().includes('eventadmin')
+                      /* !eventIsActive && window.location.toString().includes('eventadmin')
                         ? {}
                         : */ !extraPathStateName
                         ? { pathname: `${extraPath}/${item._id}`, state: { item: item } }
@@ -108,7 +108,7 @@ const Table = (props) => {
                       icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
                       type={extraPathType ? extraPathType : 'primary'}
                       size='small'
-                      /* disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')} */
+                      /* !eventIsActive === false && window.location.toString().includes('eventadmin')} */
                     />
                   </Link>
                 </Tooltip>
@@ -192,7 +192,7 @@ const Table = (props) => {
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>

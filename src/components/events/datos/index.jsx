@@ -22,7 +22,7 @@ import Header from '../../../antdComponents/Header';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
-import { UseEventContext } from '@/context/eventContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -587,7 +587,8 @@ class Datos extends Component {
         title: 'Opciones',
         dataIndex: '',
         render: (key) => {
-          const cEventIsActive = UseEventContext()?.value?.isActive;
+          const { eventIsActive } = useHelper();
+
           return (
             <Row wrap gutter={[8, 8]}>
               <Col>
@@ -600,7 +601,7 @@ class Datos extends Component {
                       icon={<EditOutlined />}
                       type='primary'
                       size='small'
-                      disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                      disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                     />
                   </Tooltip>
                 )}
@@ -615,7 +616,7 @@ class Datos extends Component {
                       icon={<DeleteOutlined />}
                       type='danger'
                       size='small'
-                      disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                      disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                     />
                   </Tooltip>
                 )}

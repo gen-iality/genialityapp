@@ -3,10 +3,14 @@ import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Card, Space, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
+import { HelperContext } from '@/context/helperContext/helperContext';
 const EventImage = imageUtils.EventImage;
 class EventCard extends Component {
+  static contextType = HelperContext;
   render() {
     const { event, bordered, right, loading, isAdmin } = this.props;
+    const { eventIsActive } = this.context;
+
     const { Meta } = Card;
 
     const styleNormal = {
@@ -95,7 +99,7 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
-                  {event?.isActive === false && window.location.toString().includes('myprofile') && (
+                  {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
                     <small style={{ color: 'red' }}>
                       Tu evento está bloqueado desde el {Moment(event.datetime_to).format('DD MMM YYYY')}
                     </small>
