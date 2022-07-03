@@ -553,10 +553,17 @@ class Styles extends Component {
                   </div>
                 ))}
 
-                <Space direction='vertical' wrap>
+                <Space direction='vertical' size={25} wrap>
                   {this.imageDrawer.map((item, key) => (
                     <div key={key}>
-                      <Form.Item label={item.title} help={item.description}>
+                      <Form.Item
+                        label={
+                        <label style={{ paddingBottom: '30px' }}>
+                          {item.title}
+                        </label>
+                        }
+                        help={item.description}
+                      >
                         <ImageUploaderDragAndDrop
                           imageDataCallBack={(imageUrl) => this.saveEventImage(imageUrl, item.imageFieldName)}
                           imageUrl={this.state.styles[item.imageFieldName]}
