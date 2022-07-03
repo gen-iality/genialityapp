@@ -942,22 +942,24 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <div>
-                    <label style={{ marginTop: '2%' }}>Imagen general (para el listado)</label>
-                    <Form.Item noStyle>
-                      <ImageUploaderDragAndDrop
-                        imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
-                        imageUrl={image}
-                        width='1080'
-                        height='1080'
-                      />
-                    </Form.Item>
-                  </div>
+                  <Form.Item
+                    label={
+                      <label style={{ marginTop: '2%' }}>
+                        Imagen general - miniatura del curso
+                      </label>
+                    }>
+                    <ImageUploaderDragAndDrop
+                      imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
+                      imageUrl={image}
+                      width='1080'
+                      height='1080'
+                    />
+                  </Form.Item>
 
-                  <Form.Item label={'Vídeo'}>
+                  <Form.Item label={'Vídeo promocional'}>
                     <Input
                       name={'video'}
-                      placeholder={'¿El curso tiene video promocional?'}
+                      placeholder={'www.ejemplo.com/watch?v=oK88Stdw0DI'}
                       value={event.video}
                       onChange={(e) => this.handleChange(e, 'video')}
                     />
