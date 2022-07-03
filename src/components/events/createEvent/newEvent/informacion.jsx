@@ -164,7 +164,7 @@ const Informacion = (props) => {
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              un día podrás ajustar las fechas en la sección <strong>Datos del curso</strong> una vez lo hayas creado.
+              Podrás ajustar las fechas en la sección <strong>Datos del curso</strong> una vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>
