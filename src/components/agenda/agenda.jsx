@@ -71,7 +71,7 @@ const Agenda = (props) => {
       render(record) {
         return (
           <>
-            <p>{record?.name}</p>
+            <div>{record?.name}</div>
           </>
         );
       },
