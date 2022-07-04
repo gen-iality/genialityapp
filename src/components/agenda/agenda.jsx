@@ -42,9 +42,9 @@ const Agenda = (props) => {
       title: 'Tipo',
       render(record, key) {
         if (record.type === null) {
-          return <div>genérico</div>
+          return <div>Genérico</div>
         }
-        let typeName = lessonTypeToString(record.type.name) || 'genérico';
+        let typeName = lessonTypeToString(record.type.name) || 'Genérico';
         return <div>{typeName}</div>
       }
     },
