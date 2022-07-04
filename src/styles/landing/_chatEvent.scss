@@ -27,7 +27,7 @@
   min-width: 347px;
   z-index: 999999999;
   border: none;
-  border-radius: 15px;
+  border-radius: 10px;
   .mdl-card__supporting-text {
     width: 223px;
     height: 100%;
@@ -52,6 +52,16 @@
   }
   .ant-tabs-top > .ant-tabs-nav {
     margin: 0;
+  }
+  .asistente-list {
+    width: 95%;
+    margin: 12px auto;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .ant-tabs-tabpane {
+    margin: 0 auto 12px;
   }
 }
 

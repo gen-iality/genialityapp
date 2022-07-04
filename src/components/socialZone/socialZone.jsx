@@ -25,6 +25,8 @@ const { TabPane } = Tabs;
 const callback = () => {};
 const { setNotification } = notificationsActions;
 const styleTabAttendes = {
+  width: '95%',
+  marginTop: '12px',
   backgroundColor: '#ffffff4d',
   padding: 5,
   borderRadius: '10px',
