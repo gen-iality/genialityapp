@@ -211,7 +211,7 @@ const FormRegister = ({
         ...dataEventUser,
       };
     }
-    console.log('initialValues2', initialValuesGeneral, cUser, cEventUser);
+    // console.log('initialValues2', initialValuesGeneral, cUser, cEventUser);
     setinitialValues(
       organization
         ? {
@@ -1076,7 +1076,7 @@ const FormRegister = ({
                     {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido
 deberia ser solo la url de la imagen 
 */}{' '}
-                    {console.log('initialValues', initialValues, cUser)}
+                    {/* {console.log('initialValues', initialValues, cUser)} */}
                     <Comment
                       avatar={
                         initialValues.picture ? (

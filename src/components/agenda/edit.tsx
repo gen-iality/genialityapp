@@ -5,18 +5,8 @@ import { useState, useContext, useEffect } from 'react';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
 import { Select as SelectAntd } from 'antd';
 
-import {
-  Tabs,
-  Row,
-  Col,
-  Form,
-  Switch,
-  Modal,
-} from 'antd';
-import {
-  ExclamationCircleOutlined,
-} from '@ant-design/icons';
-
+import { Tabs, Row, Col, Form, Switch, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import AgendaContext from '@/context/AgendaContext';
 import Header from '@/antdComponents/Header';
@@ -24,11 +14,7 @@ import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@/context/MessageService';
 
-import {
-  fieldsSelect,
-  handleRequestError,
-  handleSelect,
-} from '@/helpers/utils';
+import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
 import {
   AgendaApi,
   CategoriesAgendaApi,
@@ -41,7 +27,7 @@ import {
 import { firestore } from '@/helpers/firebase';
 
 import Loading from '../profile/loading';
-import RoomController from '../agenda/roomManager/controller';
+import RoomController from './roomManager/controller';
 import Service from './roomManager/service';
 
 import TipeOfActivity from './typeActivity';
@@ -66,22 +52,22 @@ const formLayout = {
 
 // TODO: put this type in some site
 interface EventType {
-  _id: string,
-  name: string,
-  vimeo_id: string,
-  dates: string[],
-  date_start: string,
-  date_end: string,
-};
+  _id: string;
+  name: string;
+  vimeo_id: string;
+  dates: string[];
+  date_start: string;
+  date_end: string;
+}
 
 interface LocationStateType {
-  edit: string | null,
-};
+  edit: string | null;
+}
 
 export interface AgendaEditProps {
-  event: EventType,
-  matchUrl: string,
-};
+  event: EventType;
+  matchUrl: string;
+}
 
 const initialInfoState = {
   name: '',
@@ -117,7 +103,8 @@ const initialInfoState = {
 
 const initialFormularyState = {
   name: '',
-  date: Moment(new Date()).format('YYYY-MM-DD'),
+  // date: Moment(new Date()).format('YYYY-MM-DD')??new Date().,
+  date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
   space_id: '',
   hour_end: '',
   hour_start: '',
@@ -149,7 +136,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [idNewlyCreatedActivity, setIdNewlyCreatedActivity] = useState<string | null>(null);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
-  
+
   /**
    * This states are loaded from API
    */
@@ -175,9 +162,9 @@ function AgendaEdit(props: AgendaEditProps) {
   const [surveys, setSurveys] = useState<boolean>(false);
   const [games, setGames] = useState<boolean>(false);
   const [attendees, setAttendees] = useState<boolean>(false);
-  
+
   const agendaContext = useContext(AgendaContext);
-  
+
   const location = useLocation<LocationStateType>();
   const history = useHistory();
 
@@ -189,14 +176,14 @@ function AgendaEdit(props: AgendaEditProps) {
   useEffect(() => {
     /**
      * This method will load data from API and will save in formulary, and info.
-     * 
+     *
      * It is needed save in formulary to show the info in the page.
      */
     const loading = async () => {
       // Take the vimeo_id and save in info.
       const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
       setInfo((last) => ({ ...last, vimeo_id: vimeo_id }));
-      
+
       // If dates exist, then iterate the specific dates array, formating specially.
       if (props.event.dates && props.event.dates.length > 0) {
         const takenDates = props.event.dates;
@@ -226,7 +213,6 @@ function AgendaEdit(props: AgendaEditProps) {
         setAllDays(newDays);
       }
 
-
       try {
         // NOTE: The tickets are not used
         const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
@@ -247,12 +233,11 @@ function AgendaEdit(props: AgendaEditProps) {
       const documents = await DocumentsApi.byEvent(props.event._id);
 
       // Load document names
-      const newNameDocuments = documents
-        .map((document: {_id: string, title: string}) => ({
-          ...document,
-          value: document._id,
-          label: document.title,
-        }))
+      const newNameDocuments = documents.map((document: { _id: string; title: string }) => ({
+        ...document,
+        value: document._id,
+        label: document.title,
+      }));
       setAllNameDocuments(newNameDocuments);
 
       // Get more data from this event
@@ -279,8 +264,7 @@ function AgendaEdit(props: AgendaEditProps) {
         agendaContext.setActivityEdit(location.state?.edit);
 
         // Get the agenda document from current activity_id
-        const agendaInfo: AgendaDocumentType = await AgendaApi
-          .getOne(location.state.edit, props.event._id);
+        const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
 
         setInfo((last) => ({
           ...last,
@@ -296,9 +280,9 @@ function AgendaEdit(props: AgendaEditProps) {
           selected_document: agendaInfo.selected_document,
           requires_registration: agendaInfo.requires_registration || false,
         }));
-  
+
         // Object.keys(this.state).map((key) => (agendaInfo[key] ? this.setState({ [key]: agendaInfo[key] }) : ''));
-        
+
         const processedDate = processDateFromAgendaDocument(agendaInfo);
 
         // Edit the current activity ID from passed activity ID via route
@@ -323,19 +307,19 @@ function AgendaEdit(props: AgendaEditProps) {
           selectedDocuments: agendaInfo.selected_document,
         }));
       }
-  
+
       setIsLoading(false);
       // Finish loading this:
       setThisIsLoading((last) => ({ ...last, categories: false }));
       validateRoom();
-    }
+    };
 
     loading().then();
 
     // This function is running when the component will unmount
     return () => {
       agendaContext.setActivityEdit(null);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -344,10 +328,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const validateRoom = async () => {
     const activity_id = agendaContext.activityEdit;
-    const hasVideoconference = await service.validateHasVideoconference(
-      props.event._id,
-      activity_id,
-    );
+    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activity_id);
 
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(props.event._id, activity_id);
@@ -412,7 +393,7 @@ function AgendaEdit(props: AgendaEditProps) {
             ...last,
             date_start_zoom: result.date_start_zoom,
             date_end_zoom: result.date_end_zoom,
-          }))
+          }));
 
           for (let i = 0; i < selected_document?.length; i++) {
             await DocumentsApi.editOne(data, selected_document[i], props.event._id);
@@ -430,7 +411,7 @@ function AgendaEdit(props: AgendaEditProps) {
             date_end_zoom: (agenda as AgendaDocumentType).date_end_zoom,
           }));
         }
-        if (changePathWithoutSaving) setShowPendingChangesModal(false)
+        if (changePathWithoutSaving) setShowPendingChangesModal(false);
 
         // Se cambia el estado a pendingChangesSave encargado de detectar
         // cambios pendientes en la fecha/hora sin guardar
@@ -444,7 +425,7 @@ function AgendaEdit(props: AgendaEditProps) {
           agendaContext.setActivityEdit(agenda._id);
           setIdNewlyCreatedActivity(agenda._id);
           setCurrentActivityID(agenda._id);
-          setActivityEdit(true as unknown as string); // TODO: check the right type
+          setActivityEdit((true as unknown) as string); // TODO: check the right type
           // setShouldRedirect(true); // reloadActivity: true,
           setIsEditing(true);
           setInfo((last) => ({
@@ -461,8 +442,8 @@ function AgendaEdit(props: AgendaEditProps) {
         DispatchMessageService({ msj: handleRequestError(e).message, type: 'error', action: 'show' });
       }
     }
-  }
-  
+  };
+
   // @done
   const remove = async () => {
     // let self = this;
@@ -482,15 +463,10 @@ function AgendaEdit(props: AgendaEditProps) {
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          deleteActivity(
-            props.event._id,
-            currentActivityID,
-            info.name,
-            () => {
-              setShouldRedirect(true);
-              history.push(`${props.matchUrl}`);
-            }
-          ).then();
+          deleteActivity(props.event._id, currentActivityID, info.name, () => {
+            setShouldRedirect(true);
+            history.push(`${props.matchUrl}`);
+          }).then();
         },
       });
     }
@@ -515,7 +491,7 @@ function AgendaEdit(props: AgendaEditProps) {
   // @done
   const handleDocumentChange = (value: any) => {
     setFormulary((last) => ({ ...last, selectedDocuments: value }));
-  }
+  };
 
   // @done
   // Encargado de gestionar los tabs de la video conferencia
@@ -554,8 +530,7 @@ function AgendaEdit(props: AgendaEditProps) {
     const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
     const activity_id = agendaContext.activityEdit || idNewlyCreatedActivity;
     try {
-      const result = await service
-        .createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
+      const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
       if (result) {
         DispatchMessageService({ msj: result.message, type: 'success', action: 'show' });
       }
@@ -579,10 +554,7 @@ function AgendaEdit(props: AgendaEditProps) {
       // Show as loading...
       setThisIsLoading((last) => ({ ...last, [name]: true }));
 
-      const item = name === 'categories' && (await CategoriesAgendaApi.create(
-          props.event._id, { name: value },
-        )
-      );
+      const item = name === 'categories' && (await CategoriesAgendaApi.create(props.event._id, { name: value }));
 
       const newOption = {
         label: value,
@@ -594,7 +566,7 @@ function AgendaEdit(props: AgendaEditProps) {
       setThisIsLoading((last) => ({ ...last, [name]: false }));
 
       // Update categories list
-      setAllCategories((last) => ([...last, newOption]));
+      setAllCategories((last) => [...last, newOption]);
       setFormulary((last) => ({
         ...last,
         selectedCategories: [...last.selectedCategories, newOption],
@@ -615,148 +587,151 @@ function AgendaEdit(props: AgendaEditProps) {
 
   return (
     <>
-    <Form onFinish={() => submit(true)} {...formLayout}>
-      <RouterPrompt
-        save
-        form={false}
-        when={showPendingChangesModal}
-        title="Tienes cambios sin guardar."
-        description="¿Qué deseas hacer?"
-        okText="No guardar"
-        okSaveText="Guardar"
-        cancelText="Cancelar"
-        onOK={() => true}
-        onOKSave={submit}
-        onCancel={() => false}
-      />
+      <Form onFinish={() => submit(true)} {...formLayout}>
+        <RouterPrompt
+          save
+          form={false}
+          when={showPendingChangesModal}
+          title='Tienes cambios sin guardar.'
+          description='¿Qué deseas hacer?'
+          okText='No guardar'
+          okSaveText='Guardar'
+          cancelText='Cancelar'
+          onOK={() => true}
+          onOKSave={submit}
+          onCancel={() => false}
+        />
 
-      <Header
-        back
-        save
-        form
-        saveNameIcon
-        remove={remove}
-        customBack={props.matchUrl}
-        title={formulary.name ? `Actividad - ${formulary.name}` : 'Actividad'}
-        saveName={location.state.edit || activityEdit ? '' : 'Crear'}
-        edit={location.state.edit || activityEdit}
-        extra={
-          isEditing &&
-          <Form.Item label="Publicar" labelCol={{ span: 14 }}>
-            <Switch
-              checkedChildren="Sí"
-              unCheckedChildren="No"
-              // name="isPublished"
-              checked={agendaContext.isPublished}
-              onChange={(value) => {
-                agendaContext.setIsPublished(value);
-                saveConfig();
-                // this.setState({ isPublished: value }, async () => await this.saveConfig());
-              }}
-            />
-          </Form.Item>
-        }
-      />
+        <Header
+          back
+          save
+          form
+          saveNameIcon
+          remove={remove}
+          customBack={props.matchUrl}
+          title={formulary.name ? `Actividad - ${formulary.name}` : 'Actividad'}
+          saveName={location.state.edit || activityEdit ? '' : 'Crear'}
+          edit={location.state.edit || activityEdit}
+          extra={
+            isEditing && (
+              <Form.Item label='Publicar' labelCol={{ span: 14 }}>
+                <Switch
+                  checkedChildren='Sí'
+                  unCheckedChildren='No'
+                  // name="isPublished"
+                  checked={agendaContext.isPublished}
+                  onChange={(value) => {
+                    agendaContext.setIsPublished(value);
+                    saveConfig();
+                    // this.setState({ isPublished: value }, async () => await this.saveConfig());
+                  }}
+                />
+              </Form.Item>
+            )
+          }
+        />
 
-      {/*
+        {/*
       This is hidden during loading
       */}
 
-      {isLoading ? <Loading /> :
-      <>
-      <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
-        <TabPane tab="Agenda" key="1">
-          {/*
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
+              <TabPane tab='Agenda' key='1'>
+                {/*
           This component will handle the formulary and save the data using
           the provided methods:
           */}
-          <AgendaFormulary
-            formulary={formulary}
-            savedFormulary={savedFormulary}
-            setFormulary={setFormulary}
-            setPendingChangesSave={setPendingChangesSave}
-            setShowPendingChangesModal={setShowPendingChangesModal}
-            agendaContext={agendaContext}
-            matchUrl={props.matchUrl}
-            allDays={allDays}
-            allHosts={allHosts}
-            allSpaces={allSpaces}
-            allCategories={allCategories}
-            thisIsLoading={thisIsLoading}
-            handlerCreateCategories={handlerCreateCategories}
-          />
-        </TabPane>
+                <AgendaFormulary
+                  formulary={formulary}
+                  savedFormulary={savedFormulary}
+                  setFormulary={setFormulary}
+                  setPendingChangesSave={setPendingChangesSave}
+                  setShowPendingChangesModal={setShowPendingChangesModal}
+                  agendaContext={agendaContext}
+                  matchUrl={props.matchUrl}
+                  allDays={allDays}
+                  allHosts={allHosts}
+                  allSpaces={allSpaces}
+                  allCategories={allCategories}
+                  thisIsLoading={thisIsLoading}
+                  handlerCreateCategories={handlerCreateCategories}
+                />
+              </TabPane>
 
-        {/*
+              {/*
         If the agenda is editing, this section gets be showed:
         */}
 
-        {isEditing &&
-        <>
-        <TabPane tab="Tipo de actividad" key="2">
-          <Row /* justify="center" */ wrap gutter={12}>
-            <Col span={24}>
-              <TipeOfActivity
-                eventId={props.event._id}
-                activityId={currentActivityID}
-                activityName={formulary.name}
-                tab={currentTab}
-              />
-              <BackTop />
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane tab="Juegos" key="3">
-          <Row justify="center" wrap gutter={12}>
-            <Col span={20}>
-              <RoomController
-                handleGamesSelected={handleGamesSelected}
-                handleTabsController={handleTabsController}
-              />
-              <BackTop />
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane tab="Encuestas" key="4">
-          <Row justify="center" wrap gutter={12}>
-            <Col span={20}>
-              <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
-              {formulary.isExternal &&
-              <SurveyExternal
-                isExternal={formulary.isExternal}
-                meeting_id={formulary.externalSurveyID}
-                event_id={props.event._id}
-                activity_id={currentActivityID}
-                roomStatus={formulary.roomStatus}
-              />
-              }
-              <BackTop />
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane tab="Documentos" key="5">
-          <Row justify="center" wrap gutter={12}>
-            <Col span={20}>
-              <Form.Item>
-                <SelectAntd
-                  showArrow
-                  id="nameDocuments"
-                  mode="multiple"
-                  options={allNameDocuments}
-                  onChange={(value) => handleDocumentChange(value)}
-                  defaultValue={formulary.selectedDocuments}
-                />
-              </Form.Item>
-              <BackTop />
-            </Col>
-          </Row>
-        </TabPane>
-        </>
-        }
-      </Tabs>
-      </>
-      }
-    </Form>
+              {isEditing && (
+                <>
+                  <TabPane tab='Tipo de actividad' key='2'>
+                    <Row /* justify="center" */ wrap gutter={12}>
+                      <Col span={24}>
+                        <TipeOfActivity
+                          eventId={props.event._id}
+                          activityId={currentActivityID}
+                          activityName={formulary.name}
+                          tab={currentTab}
+                        />
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Juegos' key='3'>
+                    <Row justify='center' wrap gutter={12}>
+                      <Col span={20}>
+                        <RoomController
+                          handleGamesSelected={handleGamesSelected}
+                          handleTabsController={handleTabsController}
+                        />
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Encuestas' key='4'>
+                    <Row justify='center' wrap gutter={12}>
+                      <Col span={20}>
+                        <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
+                        {formulary.isExternal && (
+                          <SurveyExternal
+                            isExternal={formulary.isExternal}
+                            meeting_id={formulary.externalSurveyID}
+                            event_id={props.event._id}
+                            activity_id={currentActivityID}
+                            roomStatus={formulary.roomStatus}
+                          />
+                        )}
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Documentos' key='5'>
+                    <Row justify='center' wrap gutter={12}>
+                      <Col span={20}>
+                        <Form.Item>
+                          <SelectAntd
+                            showArrow
+                            id='nameDocuments'
+                            mode='multiple'
+                            options={allNameDocuments}
+                            onChange={(value) => handleDocumentChange(value)}
+                            defaultValue={formulary.selectedDocuments}
+                          />
+                        </Form.Item>
+                        <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                </>
+              )}
+            </Tabs>
+          </>
+        )}
+      </Form>
     </>
   );
 }
