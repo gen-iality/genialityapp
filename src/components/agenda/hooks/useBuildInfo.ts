@@ -1,8 +1,8 @@
 import * as Moment from 'moment';
 import AgendaDocumentType from '../types/AgendaDocumentType';
-import { FormularyType } from '../components/AgendaFormulary';
+import { FormDataType } from '../components/MainAgendaForm';
 
-export default function useBuildInfo (formulary: FormularyType, info: AgendaDocumentType) {
+export default function useBuildInfo (formdata: FormDataType, info: AgendaDocumentType) {
   const buildInfo = () => {
     const {
       name,
@@ -18,7 +18,7 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
       image,
       length,
       latitude,
-    } = formulary;
+    } = formdata;
 
     const {
       meeting_id,

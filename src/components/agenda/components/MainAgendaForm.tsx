@@ -27,7 +27,7 @@ import Creatable from 'react-select';
 
 import { DispatchMessageService } from '../../../context/MessageService';
 import useCreatableStyles from '../hooks/useCreatableStyles';
-import useValideChangesInFormulary from '../hooks/useValideChangesInFormulary';
+import useValideChangesInFormData from '../hooks/useValideChangesInFormData';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import BackTop from '../../../antdComponents/BackTop';
@@ -40,7 +40,7 @@ const creatableStyles = {
   menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }),
 };
 
-export interface FormularyType {
+export interface FormDataType {
   name: string,
   date: any,
   hour_start: string | Moment.Moment | Date,
@@ -61,10 +61,10 @@ export interface FormularyType {
   roomStatus: string,
 };
 
-export interface FormularyProps {
-  formulary: FormularyType,
-  savedFormulary: FormularyType,
-  setFormulary: React.Dispatch<React.SetStateAction<FormularyType>>,
+export interface MainAgendaFormProps {
+  formdata: FormDataType,
+  savedFormData: FormDataType,
+  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>,
   setPendingChangesSave: React.Dispatch<React.SetStateAction<boolean>>,
   setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
   agendaContext: any,
@@ -77,11 +77,11 @@ export interface FormularyProps {
   handlerCreateCategories: (value: any, name: string) => void,
 };
 
-function AgendaFormulary(props: FormularyProps) {
+function MainAgendaForm(props: MainAgendaFormProps) {
   const {
-    formulary,
-    savedFormulary,
-    setFormulary,
+    formdata,
+    savedFormData,
+    setFormData,
     setPendingChangesSave,
     setShowPendingChangesModal,
     agendaContext,
@@ -98,16 +98,16 @@ function AgendaFormulary(props: FormularyProps) {
 
   useEffect(() => {
     // Focus the first field
-    if (!formulary.name) nameInputRef.current?.focus();
+    if (!formdata.name) nameInputRef.current?.focus();
   }, [nameInputRef.current]);
 
   /**
    * Custom hooks
    */
    const catStyles = useCreatableStyles();
-   const valideChangesInFormulary = useValideChangesInFormulary(
-     savedFormulary, // The order matter
-     formulary,
+   const valideChangesInFormData = useValideChangesInFormData(
+     savedFormData, // The order matter
+     formdata,
      agendaContext.isPublished,
      setShowPendingChangesModal,
    );
@@ -122,24 +122,24 @@ function AgendaFormulary(props: FormularyProps) {
    * @param name The key name.
    * @param value The value.
    */
-   const handleChangeFormulary = (name: keyof FormularyType, value: any) => {
-    setFormulary((last) => {
-      const newFormulary: FormularyType = { ...last };
-      newFormulary[name] = value as never; // ignore it
-      return newFormulary;
+   const handleChangeFormData = (name: keyof FormDataType, value: any) => {
+    setFormData((last) => {
+      const newFormData: FormDataType = { ...last };
+      newFormData[name] = value as never; // ignore it
+      return newFormData;
     });
     setPendingChangesSave(true);
-    valideChangesInFormulary();
+    valideChangesInFormData();
   }
 
   // @done
   const handleChangeReactQuill = (value: string, target: string) => {
     if (target === 'description') {
-      setFormulary((last) => (
+      setFormData((last) => (
         { ...last, description: value}
       ))
     } else if (target === 'registration_message') {
-      setFormulary((last) => (
+      setFormData((last) => (
         { ...last, registration_message: value}
       ))
     }
@@ -151,11 +151,11 @@ function AgendaFormulary(props: FormularyProps) {
     fecha.setMinutes(fecha.getMinutes() + minutes);
 
     if (isStart) {
-      setFormulary((last) => (
+      setFormData((last) => (
         { ...last, hour_start: Moment(fecha, 'HH:mm:ss') }
       ));
     } else {
-      setFormulary((last) => (
+      setFormData((last) => (
         { ...last, hour_end: Moment(fecha, 'HH:mm:ss') }
       ));
     }
@@ -176,7 +176,7 @@ function AgendaFormulary(props: FormularyProps) {
       msj: 'Por favor espere mientras carga la imagen...',
       action: 'show',
     });
-    setFormulary((last) => (
+    setFormData((last) => (
       { ...last, image: files }
     ));
   }
@@ -187,7 +187,7 @@ function AgendaFormulary(props: FormularyProps) {
    * @param selectedCategories SelectOptionType[].
    */
   const onSelectedCategoryChange = (selectedCategories: any[]) => {
-    setFormulary((last) => ({ ...last, selectedCategories }));
+    setFormData((last) => ({ ...last, selectedCategories }));
   }
 
   return (
@@ -212,8 +212,8 @@ function AgendaFormulary(props: FormularyProps) {
             ref={nameInputRef}
             type="text"
             name="name"
-            value={formulary.name}
-            onChange={(value) => handleChangeFormulary('name', value.target.value)}
+            value={formdata.name}
+            onChange={(value) => handleChangeFormData('name', value.target.value)}
             placeholder="Nombre de la actividad"
           />
         </Form.Item>
@@ -227,9 +227,9 @@ function AgendaFormulary(props: FormularyProps) {
         >
           <SelectAntd
             options={allDays}
-            value={formulary.date}
-            defaultValue={formulary.date}
-            onChange={(value) => handleChangeFormulary('date', value)}
+            value={formdata.date}
+            defaultValue={formdata.date}
+            onChange={(value) => handleChangeFormData('date', value)}
           />
         </Form.Item>
         <Row wrap justify="center" gutter={[8, 8]}>
@@ -254,11 +254,11 @@ function AgendaFormulary(props: FormularyProps) {
                 allowClear={false}
                 style={{ width: '100%' }}
                 value={
-                  formulary.hour_start !== ''
-                  ? Moment(formulary.hour_start)
+                  formdata.hour_start !== ''
+                  ? Moment(formdata.hour_start)
                   : startOrEndHourWithAdditionalMinutes(1, true)
                 }
-                onChange={(value) => handleChangeFormulary('hour_start', value)}
+                onChange={(value) => handleChangeFormData('hour_start', value)}
               />
             </Form.Item>
           </Col>
@@ -282,12 +282,12 @@ function AgendaFormulary(props: FormularyProps) {
                 style={{ width: '100%' }}
                 allowClear={false}
                 value={
-                  formulary.hour_end !== ''
-                  ? Moment(formulary.hour_end)
+                  formdata.hour_end !== ''
+                  ? Moment(formdata.hour_end)
                   : startOrEndHourWithAdditionalMinutes(5, false)
                 }
                 format="h:mm a"
-                onChange={(value) => handleChangeFormulary('hour_end', value)}
+                onChange={(value) => handleChangeFormData('hour_end', value)}
               />
             </Form.Item>
           </Col>
@@ -300,9 +300,9 @@ function AgendaFormulary(props: FormularyProps) {
                 id="hosts"
                 isClearable
                 styles={creatableStyles}
-                onChange={(value: any) => handleChangeFormulary('selectedHosts', value)}
+                onChange={(value: any) => handleChangeFormData('selectedHosts', value)}
                 options={allHosts}
-                value={formulary.selectedHosts}
+                value={formdata.selectedHosts}
               />
             </Col>
             <Col span={1}>
@@ -317,8 +317,8 @@ function AgendaFormulary(props: FormularyProps) {
           <Row wrap gutter={[8, 8]}>
             <Col span={23}>
               <SelectAntd
-                value={formulary.space_id}
-                onChange={(value) => handleChangeFormulary('space_id', value)}>
+                value={formdata.space_id}
+                onChange={(value) => handleChangeFormData('space_id', value)}>
                 <Option value="">Seleccione un lugar/salón ...</Option>
                 {allSpaces.map((space) => (
                   <Option key={space.value} value={space.value}>{space.label}</Option>
@@ -345,7 +345,7 @@ function AgendaFormulary(props: FormularyProps) {
                 isLoading={thisIsLoading.categories}
                 options={allCategories}
                 placeholder="Sin categoría...."
-                value={formulary.selectedCategories}
+                value={formdata.selectedCategories}
               />
             </Col>
             <Col span={1}>
@@ -355,22 +355,22 @@ function AgendaFormulary(props: FormularyProps) {
         </Form.Item>
         <Form.Item label="¿Tiene espacio físico?">
           <Switch
-            checked={formulary.isPhysical}
+            checked={formdata.isPhysical}
             checkedChildren="Sí"
             unCheckedChildren="No"
-            onChange={(chosen) => handleChangeFormulary('isPhysical', chosen)}
+            onChange={(chosen) => handleChangeFormData('isPhysical', chosen)}
           />
         </Form.Item>
-        {formulary.isPhysical &&
+        {formdata.isPhysical &&
         <>
         <Form.Item label="Longitud">
           <Input
-            // ref={formulary.longitud}
+            // ref={formdata.longitud}
             autoFocus
             type="number"
             name="length"
-            value={formulary.length}
-            onChange={(event) => handleChangeFormulary('length', event.target.value)}
+            value={formdata.length}
+            onChange={(event) => handleChangeFormData('length', event.target.value)}
             placeholder="Ej. 4.677027"
           />
         </Form.Item>
@@ -380,8 +380,8 @@ function AgendaFormulary(props: FormularyProps) {
             autoFocus
             type="number"
             name="latitude"
-            value={formulary.latitude}
-            onChange={(event) => handleChangeFormulary('latitude', event.target.value)}
+            value={formdata.latitude}
+            onChange={(event) => handleChangeFormData('latitude', event.target.value)}
             placeholder="Ej. -74.094086"
           />
         </Form.Item>
@@ -396,7 +396,7 @@ function AgendaFormulary(props: FormularyProps) {
           </Space>
           <EviusReactQuill
             name="description"
-            data={formulary.description}
+            data={formdata.description}
             handleChange={(value: string) => handleChangeReactQuill(value, 'description')}
           />
         </Form.Item>
@@ -422,7 +422,7 @@ function AgendaFormulary(props: FormularyProps) {
               </p>
               <ImageUploaderDragAndDrop
                 imageDataCallBack={handleImageChange}
-                imageUrl={formulary.image}
+                imageUrl={formdata.image}
                 width="1080"
                 height="1080"
               />
@@ -436,4 +436,4 @@ function AgendaFormulary(props: FormularyProps) {
   );
 }
 
-export default AgendaFormulary;
+export default MainAgendaForm;

@@ -1,15 +1,15 @@
 import * as Moment from 'moment';
 import useDeepStateEqualityValidation from './useDeepStateEqualityValidation';
-import { FormularyType } from "../components/AgendaFormulary";
+import { FormDataType } from "../components/MainAgendaForm";
 
-function useValideChangesInFormulary(
-  saved: FormularyType,
-  modified: FormularyType,
+function useValideChangesInFormData(
+  saved: FormDataType,
+  modified: FormDataType,
   isPublished: boolean,
   setWasChanged: (was: boolean) => void,
 ) {
   const deepStateEqualityValidation = useDeepStateEqualityValidation(); 
-  const valideChangesInFormulary = () => {
+  const valideChangesInFormData = () => {
     if (!saved) return;
     const {
       name,
@@ -51,7 +51,7 @@ function useValideChangesInFormulary(
     setWasChanged(equalityValidation === false)
   };
 
-  return valideChangesInFormulary;
+  return valideChangesInFormData;
 }
 
-export default useValideChangesInFormulary;
+export default useValideChangesInFormData;

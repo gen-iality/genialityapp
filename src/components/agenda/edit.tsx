@@ -33,7 +33,7 @@ import Service from './roomManager/service';
 import TipeOfActivity from './typeActivity';
 import SurveyManager from './surveyManager';
 import SurveyExternal from './surveyExternal';
-import AgendaFormulary, { FormularyType } from './components/AgendaFormulary';
+import MainAgendaForm, { FormDataType } from './components/MainAgendaForm';
 import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
 import useProcessDateFromAgendaDocument from './hooks/useProcessDateFromAgendaDocument';
 import useBuildInfo from './hooks/useBuildInfo';
@@ -101,7 +101,7 @@ const initialInfoState = {
   latitude: '',
 } as AgendaDocumentType;
 
-const initialFormularyState = {
+const initialFormDataState = {
   name: '',
   // date: Moment(new Date()).format('YYYY-MM-DD')??new Date().,
   date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
@@ -121,7 +121,7 @@ const initialFormularyState = {
   isExternal: false,
   externalSurveyID: '',
   roomStatus: '',
-} as FormularyType;
+} as FormDataType;
 
 function AgendaEdit(props: AgendaEditProps) {
   const [currentActivityID, setCurrentActivityID] = useState('');
@@ -152,8 +152,8 @@ function AgendaEdit(props: AgendaEditProps) {
   const [allHosts, setAllHosts] = useState<SelectOptionType[]>([]);
 
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
-  const [formulary, setFormulary] = useState<FormularyType>(initialFormularyState);
-  const [savedFormulary, setSavedFormulary] = useState<FormularyType>({} as FormularyType);
+  const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
+  const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType);
 
   /**
    * This states are used as config, I think...
@@ -169,15 +169,15 @@ function AgendaEdit(props: AgendaEditProps) {
   const history = useHistory();
 
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
-  const buildInfo = useBuildInfo(formulary, info);
+  const buildInfo = useBuildInfo(formdata, info);
   const deleteActivity = useDeleteActivity();
-  const validForm = useValidForm(formulary);
+  const validForm = useValidForm(formdata);
 
   useEffect(() => {
     /**
-     * This method will load data from API and will save in formulary, and info.
+     * This method will load data from API and will save in formdata, and info.
      *
-     * It is needed save in formulary to show the info in the page.
+     * It is needed save in formdata to show the info in the page.
      */
     const loading = async () => {
       // Take the vimeo_id and save in info.
@@ -288,8 +288,8 @@ function AgendaEdit(props: AgendaEditProps) {
         // Edit the current activity ID from passed activity ID via route
         setCurrentActivityID(location.state.edit);
 
-        // Load data to formulary
-        setFormulary((last) => ({
+        // Load data to formdata
+        setFormData((last) => ({
           ...last,
           name: agendaInfo.name,
           date: processedDate.date,
@@ -332,7 +332,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(props.event._id, activity_id);
-      setFormulary((last) => ({
+      setFormData((last) => ({
         ...last,
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
@@ -490,7 +490,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   // @done
   const handleDocumentChange = (value: any) => {
-    setFormulary((last) => ({ ...last, selectedDocuments: value }));
+    setFormData((last) => ({ ...last, selectedDocuments: value }));
   };
 
   // @done
@@ -567,7 +567,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
       // Update categories list
       setAllCategories((last) => [...last, newOption]);
-      setFormulary((last) => ({
+      setFormData((last) => ({
         ...last,
         selectedCategories: [...last.selectedCategories, newOption],
       }));
@@ -609,7 +609,7 @@ function AgendaEdit(props: AgendaEditProps) {
           saveNameIcon
           remove={remove}
           customBack={props.matchUrl}
-          title={formulary.name ? `Actividad - ${formulary.name}` : 'Actividad'}
+          title={formdata.name ? `Actividad - ${formdata.name}` : 'Actividad'}
           saveName={location.state.edit || activityEdit ? '' : 'Crear'}
           edit={location.state.edit || activityEdit}
           extra={
@@ -642,13 +642,13 @@ function AgendaEdit(props: AgendaEditProps) {
             <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
               <TabPane tab='Agenda' key='1'>
                 {/*
-          This component will handle the formulary and save the data using
+          This component will handle the formdata and save the data using
           the provided methods:
           */}
-                <AgendaFormulary
-                  formulary={formulary}
-                  savedFormulary={savedFormulary}
-                  setFormulary={setFormulary}
+                <MainAgendaForm
+                  formdata={formdata}
+                  savedFormData={savedFormData}
+                  setFormData={setFormData}
                   setPendingChangesSave={setPendingChangesSave}
                   setShowPendingChangesModal={setShowPendingChangesModal}
                   agendaContext={agendaContext}
@@ -674,7 +674,7 @@ function AgendaEdit(props: AgendaEditProps) {
                         <TipeOfActivity
                           eventId={props.event._id}
                           activityId={currentActivityID}
-                          activityName={formulary.name}
+                          activityName={formdata.name}
                           tab={currentTab}
                         />
                         <BackTop />
@@ -696,13 +696,13 @@ function AgendaEdit(props: AgendaEditProps) {
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
                         <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
-                        {formulary.isExternal && (
+                        {formdata.isExternal && (
                           <SurveyExternal
-                            isExternal={formulary.isExternal}
-                            meeting_id={formulary.externalSurveyID}
+                            isExternal={formdata.isExternal}
+                            meeting_id={formdata.externalSurveyID}
                             event_id={props.event._id}
                             activity_id={currentActivityID}
-                            roomStatus={formulary.roomStatus}
+                            roomStatus={formdata.roomStatus}
                           />
                         )}
                         <BackTop />
@@ -719,7 +719,7 @@ function AgendaEdit(props: AgendaEditProps) {
                             mode='multiple'
                             options={allNameDocuments}
                             onChange={(value) => handleDocumentChange(value)}
-                            defaultValue={formulary.selectedDocuments}
+                            defaultValue={formdata.selectedDocuments}
                           />
                         </Form.Item>
                         <BackTop />
