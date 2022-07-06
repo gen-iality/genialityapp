@@ -107,7 +107,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'reason',
       key: 'reason',
       render(val, item) {
-        const payment = item.billing.payment_method || item.payment;
+        const payment = item.billing.payment_method || item.payment || {};
         return <>{payment['address']?.full_name}</>;
       },
     },
@@ -152,7 +152,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'actions',
       key: 'actions',
       render(val, item) {
-        const payment = item.billing.payment_method || item.payment;
+        const payment = item.billing.payment_method || item.payment || {};
         return (
           <Space wrap>
             <Tooltip placement='topLeft' title={'Previsualización'}>
