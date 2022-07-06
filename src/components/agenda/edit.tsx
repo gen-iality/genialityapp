@@ -3,7 +3,6 @@ import * as Moment from 'moment';
 
 import { useState, useContext, useEffect } from 'react';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
-import { Select as SelectAntd } from 'antd';
 
 import { Tabs, Row, Col, Form, Switch, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -41,6 +40,7 @@ import useValidForm from './hooks/useValidAgendaForm';
 import useDeleteActivity from './hooks/useDeleteActivity';
 import SelectOptionType from './types/SelectOptionType';
 import AgendaDocumentType from './types/AgendaDocumentType';
+import AgendaDocumentForm from './components/AgendaDocumentForm';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -142,9 +142,6 @@ function AgendaEdit(props: AgendaEditProps) {
    */
   const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
   const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
-  // This state is used in the 'Documentos' tab
-  const [allNameDocuments, setAllNameDocuments] = useState<SelectOptionType[]>([]);
-
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
@@ -229,17 +226,6 @@ function AgendaEdit(props: AgendaEditProps) {
       /**
        * Load page states
        */
-
-      const documents = await DocumentsApi.byEvent(props.event._id);
-
-      // Load document names
-      const newNameDocuments = documents.map((document: { _id: string; title: string }) => ({
-        ...document,
-        value: document._id,
-        label: document.title,
-      }));
-      setAllNameDocuments(newNameDocuments);
-
       // Get more data from this event
       const remoteRoles = await RolAttApi.byEvent(props.event._id);
       const remoteHosts = await SpeakersApi.byEvent(props.event._id);
@@ -713,13 +699,10 @@ function AgendaEdit(props: AgendaEditProps) {
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
                         <Form.Item>
-                          <SelectAntd
-                            showArrow
-                            id='nameDocuments'
-                            mode='multiple'
-                            options={allNameDocuments}
-                            onChange={(value) => handleDocumentChange(value)}
-                            defaultValue={formdata.selectedDocuments}
+                          <AgendaDocumentForm
+                            eventId={props.event._id}
+                            selectedDocuments={formdata.selectedDocuments}
+                            onSelectedDocuments={(changed) => handleDocumentChange(changed)}
                           />
                         </Form.Item>
                         <BackTop />
