@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Moment from 'moment';
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import {
@@ -22,6 +22,15 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
+import {
+  RolAttApi,
+  SpacesApi,
+  SpeakersApi,
+  CategoriesAgendaApi,
+  eventTicketsApi,
+} from '@/helpers/request';
+import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
+
 import Select from 'react-select';
 import Creatable from 'react-select';
 
@@ -31,7 +40,12 @@ import useValideChangesInFormData from '../hooks/useValideChangesInFormData';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import BackTop from '../../../antdComponents/BackTop';
+
+import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaDocument';
+
 import SelectOptionType from '../types/SelectOptionType';
+import EventType from '../types/EventType';
+import AgendaDocumentType from '../types/AgendaDocumentType';
 
 const { Text } = Typography;
 const { Option } = SelectAntd;
@@ -62,39 +76,136 @@ export interface FormDataType {
 };
 
 export interface MainAgendaFormProps {
+  event: EventType,
   formdata: FormDataType,
+  agendaInfo: AgendaDocumentType,
   savedFormData: FormDataType,
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>,
   setPendingChangesSave: React.Dispatch<React.SetStateAction<boolean>>,
   setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
   agendaContext: any,
   matchUrl: string,
-  allDays: SelectOptionType[],
-  allHosts: SelectOptionType[],
-  allSpaces: SelectOptionType[],
-  allCategories: SelectOptionType[],
-  thisIsLoading: {[key: string]: any},
-  handlerCreateCategories: (value: any, name: string) => void,
 };
 
 function MainAgendaForm(props: MainAgendaFormProps) {
   const {
     formdata,
+    agendaInfo,
     savedFormData,
     setFormData,
     setPendingChangesSave,
     setShowPendingChangesModal,
     agendaContext,
-    allDays,
-    allHosts,
-    allSpaces,
-    allCategories,
-    thisIsLoading,
-    handlerCreateCategories,
   } = props;
+
+  const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
+  const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
+  const [allHosts, setAllHosts] = useState<SelectOptionType[]>([]);
+  const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
+  const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
+  const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
+  const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
 
   const history = useHistory();
   const nameInputRef = useRef<InputRef>(null);
+
+  const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
+
+  useEffect(() => {
+    if (!props.event) return;
+    const loading = async () => {
+      try {
+        // NOTE: The tickets are not used
+        const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
+        const newAllTickets = remoteTickets.map((ticket: any) => ({
+          item: ticket,
+          label: ticket.title,
+          value: ticket._id,
+        }));
+        setAllTickets(newAllTickets);
+      } catch (e) {
+        console.error(e);
+      }
+
+      // If dates exist, then iterate the specific dates array, formating specially.
+      if (props.event.dates && props.event.dates.length > 0) {
+        const takenDates = props.event.dates;
+
+        // NOTE: why do we use this?
+        // Date.parse(takenDates);
+
+        const newDays = takenDates.map((dates) => {
+          const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
+          return { value: formatDate, label: formatDate };
+        });
+        setAllDays(newDays);
+        // Si no, recibe la fecha inicio y la fecha fin y le da el formato
+        // especifico a mostrar
+      } else {
+        const initMoment = Moment(props.event.date_start);
+        const endMoment = Moment(props.event.date_end);
+        const dayDiff = endMoment.diff(initMoment, 'days');
+        // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+        const newDays = [];
+        for (let i = 0; i < dayDiff + 1; i++) {
+          const formatDate = Moment(initMoment)
+            .add(i, 'd')
+            .format('YYYY-MM-DD');
+          newDays.push({ value: formatDate, label: formatDate });
+        }
+        setAllDays(newDays);
+      }
+
+      // Get more data from this event
+      const remoteHosts = await SpeakersApi.byEvent(props.event._id);
+      const remoteRoles = await RolAttApi.byEvent(props.event._id);
+      const remoteSpaces = await SpacesApi.byEvent(props.event._id);
+      const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
+
+      // The object struct should be like [{ label, value }] for the Select components
+      const newAllHosts = handleSelect(remoteHosts);
+      const newAllRoles = handleSelect(remoteRoles);
+      const newAllSpaces = handleSelect(remoteSpaces);
+      const newAllCategories = handleSelect(remoteCategories);
+
+      setAllHosts(newAllHosts);
+      setAllRoles(newAllRoles);
+      setAllSpaces(newAllSpaces);
+      setAllCategories(newAllCategories);
+
+      setFormData((last) => ({
+        ...last,
+        selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, newAllCategories),
+        selectedHosts: fieldsSelect(agendaInfo.host_ids, newAllHosts),
+        selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, newAllRoles),
+      }));
+
+      // Finish loading this:
+      setThisIsLoading((last) => ({ ...last, categories: false }));
+    }
+
+    loading().then();
+  }, [props.event]);
+
+  useEffect(() => {
+    const processedDate = processDateFromAgendaDocument(agendaInfo);
+
+    // Load data to formdata
+    setFormData((last) => ({
+      ...last,
+      name: agendaInfo.name,
+      date: processedDate.date,
+      hour_start: processedDate.hour_start,
+      hour_end: processedDate.hour_end,
+      space_id: agendaInfo.space_id || '',
+      length: agendaInfo.length,
+      latitude: agendaInfo.latitude,
+      description: agendaInfo.description,
+      image: agendaInfo.image,
+      selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
+      selectedDocuments: agendaInfo.selected_document,
+    }));
+  }, [agendaInfo]);
 
   useEffect(() => {
     // Focus the first field
@@ -189,6 +300,49 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const onSelectedCategoryChange = (selectedCategories: any[]) => {
     setFormData((last) => ({ ...last, selectedCategories }));
   }
+
+  // @testable
+  const handlerCreateCategories = async (value: any, name: string) => {
+    // Last handleCreate method
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere mientras guarda la información...',
+      action: 'show',
+    });
+
+    try {
+      // Show as loading...
+      setThisIsLoading((last) => ({ ...last, [name]: true }));
+
+      const item = name === 'categories' && (await CategoriesAgendaApi.create(props.event._id, { name: value }));
+
+      const newOption = {
+        label: value,
+        value: item._id,
+        item,
+      };
+
+      // Stop showing as loading.
+      setThisIsLoading((last) => ({ ...last, [name]: false }));
+
+      // Update categories list
+      setAllCategories((last) => [...last, newOption]);
+      setFormData((last) => ({
+        ...last,
+        selectedCategories: [...last.selectedCategories, newOption],
+      }));
+
+      // Show this messages
+      DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
+      DispatchMessageService({ type: 'success', msj: 'Información guardada correctamente!', action: 'show' });
+    } catch (e) {
+      // Stop showing as loading and hide the messages
+      setThisIsLoading((last) => ({ ...last, [name]: false }));
+      DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
+      DispatchMessageService({ msj: handleRequestError(e).message, type: 'error', action: 'show' });
+    }
+  };
 
   const currentHourStart = useMemo(() => {
     if (formdata.hour_start === '') {

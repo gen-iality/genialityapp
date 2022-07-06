@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Moment from 'moment';
 
 import { useState, useContext, useEffect } from 'react';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
@@ -13,15 +12,11 @@ import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@/context/MessageService';
 
-import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
+import { handleRequestError } from '@/helpers/utils';
 import {
   AgendaApi,
   CategoriesAgendaApi,
   DocumentsApi,
-  RolAttApi,
-  SpacesApi,
-  SpeakersApi,
-  eventTicketsApi,
 } from '@/helpers/request';
 import { firestore } from '@/helpers/firebase';
 
@@ -34,11 +29,9 @@ import SurveyManager from './surveyManager';
 import SurveyExternal from './surveyExternal';
 import MainAgendaForm, { FormDataType } from './components/MainAgendaForm';
 import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
-import useProcessDateFromAgendaDocument from './hooks/useProcessDateFromAgendaDocument';
 import useBuildInfo from './hooks/useBuildInfo';
 import useValidForm from './hooks/useValidAgendaForm';
 import useDeleteActivity from './hooks/useDeleteActivity';
-import SelectOptionType from './types/SelectOptionType';
 import EventType from './types/EventType';
 import AgendaDocumentType from './types/AgendaDocumentType';
 import AgendaDocumentForm from './components/AgendaDocumentForm';
@@ -122,22 +115,10 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
   const [pendingChangesSave, setPendingChangesSave] = useState(false);
   const [idNewlyCreatedActivity, setIdNewlyCreatedActivity] = useState<string | null>(null);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
-
-  /**
-   * This states are loaded from API
-   */
-  const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
-  const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
-  const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
-  const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
-  const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
-  // This enable to handles hosts, and select them
-  const [allHosts, setAllHosts] = useState<SelectOptionType[]>([]);
 
   const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
@@ -156,7 +137,6 @@ function AgendaEdit(props: AgendaEditProps) {
   const location = useLocation<LocationStateType>();
   const history = useHistory();
 
-  const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
   const buildInfo = useBuildInfo(formdata, info);
   const deleteActivity = useDeleteActivity();
   const validForm = useValidForm(formdata);
@@ -171,68 +151,6 @@ function AgendaEdit(props: AgendaEditProps) {
       // Take the vimeo_id and save in info.
       const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
       setInfo((last) => ({ ...last, vimeo_id: vimeo_id }));
-
-      // If dates exist, then iterate the specific dates array, formating specially.
-      if (props.event.dates && props.event.dates.length > 0) {
-        const takenDates = props.event.dates;
-
-        // NOTE: why do we use this?
-        // Date.parse(takenDates);
-
-        const newDays = takenDates.map((dates) => {
-          const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
-          return { value: formatDate, label: formatDate };
-        });
-        setAllDays(newDays);
-        // Si no, recibe la fecha inicio y la fecha fin y le da el formato
-        // especifico a mostrar
-      } else {
-        const initMoment = Moment(props.event.date_start);
-        const endMoment = Moment(props.event.date_end);
-        const dayDiff = endMoment.diff(initMoment, 'days');
-        // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-        const newDays = [];
-        for (let i = 0; i < dayDiff + 1; i++) {
-          const formatDate = Moment(initMoment)
-            .add(i, 'd')
-            .format('YYYY-MM-DD');
-          newDays.push({ value: formatDate, label: formatDate });
-        }
-        setAllDays(newDays);
-      }
-
-      try {
-        // NOTE: The tickets are not used
-        const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
-        const newAllTickets = remoteTickets.map((ticket: any) => ({
-          item: ticket,
-          label: ticket.title,
-          value: ticket._id,
-        }));
-        setAllTickets(newAllTickets);
-      } catch (e) {
-        console.error(e);
-      }
-
-      /**
-       * Load page states
-       */
-      // Get more data from this event
-      const remoteRoles = await RolAttApi.byEvent(props.event._id);
-      const remoteHosts = await SpeakersApi.byEvent(props.event._id);
-      const remoteSpaces = await SpacesApi.byEvent(props.event._id);
-      const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
-
-      // The object structu should be like [{ label, value }] for the Select components
-      const newAllHosts = handleSelect(remoteHosts);
-      const newAllRoles = handleSelect(remoteRoles);
-      const newAllSpaces = handleSelect(remoteSpaces);
-      const newAllCategories = handleSelect(remoteCategories);
-
-      setAllHosts(newAllHosts);
-      setAllRoles(newAllRoles);
-      setAllSpaces(newAllSpaces);
-      setAllCategories(newAllCategories);
 
       // Check if the last page passed an activity_id via route state.
       if (location.state?.edit) {
@@ -259,36 +177,12 @@ function AgendaEdit(props: AgendaEditProps) {
         }));
 
         // Object.keys(this.state).map((key) => (agendaInfo[key] ? this.setState({ [key]: agendaInfo[key] }) : ''));
-
-        const processedDate = processDateFromAgendaDocument(agendaInfo);
-
         // Edit the current activity ID from passed activity ID via route
         setCurrentActivityID(location.state.edit);
-
-        // Load data to formdata
-        setFormData((last) => ({
-          ...last,
-          name: agendaInfo.name,
-          date: processedDate.date,
-          hour_start: processedDate.hour_start,
-          hour_end: processedDate.hour_end,
-          space_id: agendaInfo.space_id || '',
-          length: agendaInfo.length,
-          latitude: agendaInfo.latitude,
-          description: agendaInfo.description,
-          image: agendaInfo.image,
-          selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
-          selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, newAllCategories),
-          selectedHosts: fieldsSelect(agendaInfo.host_ids, newAllHosts),
-          selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, newAllRoles),
-          selectedDocuments: agendaInfo.selected_document,
-        }));
       }
 
-      setIsLoading(false);
-      // Finish loading this:
-      setThisIsLoading((last) => ({ ...last, categories: false }));
       validateRoom();
+      setIsLoading(false);
     };
 
     loading().then();
@@ -297,7 +191,7 @@ function AgendaEdit(props: AgendaEditProps) {
     return () => {
       agendaContext.setActivityEdit(null);
     };
-  }, []);
+  }, [props.event]);
 
   useEffect(() => {
     saveConfig();
@@ -517,49 +411,6 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  // @testable
-  const handlerCreateCategories = async (value: any, name: string) => {
-    // Last handleCreate method
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras guarda la información...',
-      action: 'show',
-    });
-
-    try {
-      // Show as loading...
-      setThisIsLoading((last) => ({ ...last, [name]: true }));
-
-      const item = name === 'categories' && (await CategoriesAgendaApi.create(props.event._id, { name: value }));
-
-      const newOption = {
-        label: value,
-        value: item._id,
-        item,
-      };
-
-      // Stop showing as loading.
-      setThisIsLoading((last) => ({ ...last, [name]: false }));
-
-      // Update categories list
-      setAllCategories((last) => [...last, newOption]);
-      setFormData((last) => ({
-        ...last,
-        selectedCategories: [...last.selectedCategories, newOption],
-      }));
-
-      // Show this messages
-      DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
-      DispatchMessageService({ type: 'success', msj: 'Información guardada correctamente!', action: 'show' });
-    } catch (e) {
-      // Stop showing as loading and hide the messages
-      setThisIsLoading((last) => ({ ...last, [name]: false }));
-      DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
-      DispatchMessageService({ msj: handleRequestError(e).message, type: 'error', action: 'show' });
-    }
-  };
-
   if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
 
   return (
@@ -623,19 +474,15 @@ function AgendaEdit(props: AgendaEditProps) {
           the provided methods:
           */}
                 <MainAgendaForm
+                  event={props.event}
                   formdata={formdata}
+                  agendaInfo={info}
                   savedFormData={savedFormData}
                   setFormData={setFormData}
                   setPendingChangesSave={setPendingChangesSave}
                   setShowPendingChangesModal={setShowPendingChangesModal}
                   agendaContext={agendaContext}
                   matchUrl={props.matchUrl}
-                  allDays={allDays}
-                  allHosts={allHosts}
-                  allSpaces={allSpaces}
-                  allCategories={allCategories}
-                  thisIsLoading={thisIsLoading}
-                  handlerCreateCategories={handlerCreateCategories}
                 />
               </TabPane>
 
