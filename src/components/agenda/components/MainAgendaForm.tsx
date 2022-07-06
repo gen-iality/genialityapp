@@ -173,15 +173,15 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       setAllSpaces(newAllSpaces);
       setAllCategories(newAllCategories);
 
-      setFormData((last) => ({
-        ...last,
+      setFormData((previous) => ({
+        ...previous,
         selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, newAllCategories),
         selectedHosts: fieldsSelect(agendaInfo.host_ids, newAllHosts),
         selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, newAllRoles),
       }));
 
       // Finish loading this:
-      setThisIsLoading((last) => ({ ...last, categories: false }));
+      setThisIsLoading((previous) => ({ ...previous, categories: false }));
     }
 
     loading().then();
@@ -191,8 +191,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     const processedDate = processDateFromAgendaDocument(agendaInfo);
 
     // Load data to formdata
-    setFormData((last) => ({
-      ...last,
+    setFormData((previous) => ({
+      ...previous,
       name: agendaInfo.name,
       date: processedDate.date,
       hour_start: processedDate.hour_start,
@@ -234,8 +234,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
    * @param value The value.
    */
    const handleChangeFormData = (name: keyof FormDataType, value: any) => {
-    setFormData((last) => {
-      const newFormData: FormDataType = { ...last };
+    setFormData((previous) => {
+      const newFormData: FormDataType = { ...previous };
       newFormData[name] = value as never; // ignore it
       return newFormData;
     });
@@ -246,12 +246,12 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   // @done
   const handleChangeReactQuill = (value: string, target: string) => {
     if (target === 'description') {
-      setFormData((last) => (
-        { ...last, description: value}
+      setFormData((previous) => (
+        { ...previous, description: value}
       ))
     } else if (target === 'registration_message') {
-      setFormData((last) => (
-        { ...last, registration_message: value}
+      setFormData((previous) => (
+        { ...previous, registration_message: value}
       ))
     }
   };
@@ -262,12 +262,12 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     fecha.setMinutes(fecha.getMinutes() + minutes);
 
     if (isStart) {
-      setFormData((last) => (
-        { ...last, hour_start: Moment(fecha, 'HH:mm:ss') }
+      setFormData((previous) => (
+        { ...previous, hour_start: Moment(fecha, 'HH:mm:ss') }
       ));
     } else {
-      setFormData((last) => (
-        { ...last, hour_end: Moment(fecha, 'HH:mm:ss') }
+      setFormData((previous) => (
+        { ...previous, hour_end: Moment(fecha, 'HH:mm:ss') }
       ));
     }
 
@@ -287,8 +287,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       msj: 'Por favor espere mientras carga la imagen...',
       action: 'show',
     });
-    setFormData((last) => (
-      { ...last, image: files }
+    setFormData((previous) => (
+      { ...previous, image: files }
     ));
   }
   
@@ -298,7 +298,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
    * @param selectedCategories SelectOptionType[].
    */
   const onSelectedCategoryChange = (selectedCategories: any[]) => {
-    setFormData((last) => ({ ...last, selectedCategories }));
+    setFormData((previous) => ({ ...previous, selectedCategories }));
   }
 
   // @testable
@@ -313,7 +313,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
     try {
       // Show as loading...
-      setThisIsLoading((last) => ({ ...last, [name]: true }));
+      setThisIsLoading((previous) => ({ ...previous, [name]: true }));
 
       const item = name === 'categories' && (await CategoriesAgendaApi.create(props.event._id, { name: value }));
 
@@ -324,13 +324,13 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       };
 
       // Stop showing as loading.
-      setThisIsLoading((last) => ({ ...last, [name]: false }));
+      setThisIsLoading((previous) => ({ ...previous, [name]: false }));
 
       // Update categories list
-      setAllCategories((last) => [...last, newOption]);
-      setFormData((last) => ({
-        ...last,
-        selectedCategories: [...last.selectedCategories, newOption],
+      setAllCategories((previous) => [...previous, newOption]);
+      setFormData((previous) => ({
+        ...previous,
+        selectedCategories: [...previous.selectedCategories, newOption],
       }));
 
       // Show this messages
@@ -338,7 +338,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       DispatchMessageService({ type: 'success', msj: 'Información guardada correctamente!', action: 'show' });
     } catch (e) {
       // Stop showing as loading and hide the messages
-      setThisIsLoading((last) => ({ ...last, [name]: false }));
+      setThisIsLoading((previous) => ({ ...previous, [name]: false }));
       DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
       DispatchMessageService({ msj: handleRequestError(e).message, type: 'error', action: 'show' });
     }

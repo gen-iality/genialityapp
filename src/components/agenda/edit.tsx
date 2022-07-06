@@ -150,9 +150,9 @@ function AgendaEdit(props: AgendaEditProps) {
     const loading = async () => {
       // Take the vimeo_id and save in info.
       const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
-      setInfo((last) => ({ ...last, vimeo_id: vimeo_id }));
+      setInfo((previous) => ({ ...previous, vimeo_id: vimeo_id }));
 
-      // Check if the last page passed an activity_id via route state.
+      // Check if the previous page passed an activity_id via route state.
       if (location.state?.edit) {
         setIsEditing(true); // We are editing
         // Update the activityEdit of agendaContext from passed activity_id
@@ -161,8 +161,8 @@ function AgendaEdit(props: AgendaEditProps) {
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
 
-        setInfo((last) => ({
-          ...last,
+        setInfo((previous) => ({
+          ...previous,
           ...agendaInfo,
           start_url: agendaInfo.start_url,
           join_url: agendaInfo.join_url,
@@ -203,8 +203,8 @@ function AgendaEdit(props: AgendaEditProps) {
 
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(props.event._id, activity_id);
-      setFormData((last) => ({
-        ...last,
+      setFormData((previous) => ({
+        ...previous,
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
         platform: configuration.platform ? configuration.platform : null,
@@ -213,8 +213,8 @@ function AgendaEdit(props: AgendaEditProps) {
         host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
       }));
 
-      setInfo((last) => ({
-        ...last,
+      setInfo((previous) => ({
+        ...previous,
         isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
       }));
 
@@ -260,8 +260,8 @@ function AgendaEdit(props: AgendaEditProps) {
           //   date_start_zoom: result.date_start_zoom,
           //   date_end_zoom: result.date_end_zoom,
           // });
-          setInfo((last) => ({
-            ...last,
+          setInfo((previous) => ({
+            ...previous,
             date_start_zoom: result.date_start_zoom,
             date_end_zoom: result.date_end_zoom,
           }));
@@ -275,8 +275,8 @@ function AgendaEdit(props: AgendaEditProps) {
           // Al crear una actividad de la agenda se inicializa el id de la
           // actividad y las fechas de inicio y finalizacion como requisito
           // del componente de administrador de salas
-          setInfo((last) => ({
-            ...last,
+          setInfo((previous) => ({
+            ...previous,
             activity_id: (agenda as AgendaDocumentType)._id,
             date_start_zoom: (agenda as AgendaDocumentType).date_start_zoom,
             date_end_zoom: (agenda as AgendaDocumentType).date_end_zoom,
@@ -299,8 +299,8 @@ function AgendaEdit(props: AgendaEditProps) {
           setActivityEdit((true as unknown) as string); // TODO: check the right type
           // setShouldRedirect(true); // reloadActivity: true,
           setIsEditing(true);
-          setInfo((last) => ({
-            ...last,
+          setInfo((previous) => ({
+            ...previous,
             isPublished: false,
           }));
           await saveConfig();
@@ -361,7 +361,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   // @done
   const handleDocumentChange = (value: any) => {
-    setFormData((last) => ({ ...last, selectedDocuments: value }));
+    setFormData((previous) => ({ ...previous, selectedDocuments: value }));
   };
 
   // @done
