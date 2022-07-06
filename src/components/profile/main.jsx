@@ -58,7 +58,6 @@ const MainProfile = (props) => {
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
-
   const { helperDispatch } = useHelper();
 
   const showSider = () => {
@@ -363,6 +362,7 @@ const MainProfile = (props) => {
                                           </Link>
                                         </div>,
                                       ]}
+                                      blockedEvent={props?.cUser?.value?.plan?.availables?.streaming_hours}
                                     />
                                   </Col>
                                 );
@@ -478,6 +478,7 @@ const MainProfile = (props) => {
                                 </Link>
                               </div>,
                             ]}
+                            blockedEvent={props?.cUser?.value?.plan?.availables?.streaming_hours}
                           />
                         </Col>
                       );

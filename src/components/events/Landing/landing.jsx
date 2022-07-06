@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../context/userContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 
 /** ant design */
-import { Layout, Spin, notification, Button } from 'antd';
+import { Layout, Spin, notification, Button, Result } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 const { Content } = Layout;
 
@@ -25,6 +25,8 @@ import WithEviusContext from '../../../context/withContext';
 import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import initBroadcastViewers from '@/containers/broadcastViewers';
+import DateEvent from '../dateEvent';
+import moment from 'moment';
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));
@@ -70,18 +72,36 @@ const IconRender = (type) => {
 };
 
 const Landing = (props) => {
+  let cEventContext = UseEventContext();
+  let cUser = UseCurrentUser();
+  let cEventUser = UseUserEvent();
+  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
+  let [blockedEvent, setBlockedEvent] = useState(false);
+  let [blockedEventDate, setBlockedEventDate] = useState(new Date());
+
   useEffect(() => {
     DispatchMessageService({
       type: 'loading',
       msj: 'Estamos configurando la mejor experiencia para tí!',
       action: 'show',
     });
-  }, []);
 
-  let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
-  let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
+    //Esto sólo va a aplicar para cuando el usuario tiene un plan
+    //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
+    let actualDate = new Date(cEventContext.value?.datetime_to);
+    //aqui  tiene que venir ahora unos minutos en caso de tener plan
+    let blockedDate = new Date(
+      actualDate.setDate(actualDate.getDate() + cUser?.value?.plan?.availables?.streaming_hours / 60 / 24)
+    );
+    let formatDate = moment(blockedDate).format('DD-MM-YYYY');
+    setBlockedEventDate(formatDate);
+
+    if (new Date() > blockedDate) {
+      setBlockedEvent(true);
+    } else {
+      setBlockedEvent(false);
+    }
+  }, []);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -174,55 +194,63 @@ const Landing = (props) => {
       {/* <ModalFeedback /> */}
       {/* <ModalNoRegister /> */}
       {/* <ModalAuth /> */}
-      <ModalLoginHelpers />
-      <ModalPermission />
-      <ModalFeedback />
-      {/*update: modal de actualizar || register: modal de registro */}
-      {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
-      <Layout>
-        <AppointmentModal
-          targetEventUserId={props.userAgenda?.eventUserId}
-          targetEventUser={props.userAgenda}
-          cEventUser={cEventUser}
-          cEvent={cEventContext}
-          closeModal={() => {
-            props.setUserAgenda(null);
-          }}
-        />
+      {blockedEvent && cUser.value.plan ? (
+        <Result status={403} title={`Evento no disponible desde el ${blockedEventDate}`} />
+      ) : (
+        <>
+          <ModalLoginHelpers />
+          <ModalPermission />
+          <ModalFeedback />
+          {/*update: modal de actualizar || register: modal de registro */}
+          {register !== null && (
+            <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
+          )}
+          <Layout>
+            <AppointmentModal
+              targetEventUserId={props.userAgenda?.eventUserId}
+              targetEventUser={props.userAgenda}
+              cEventUser={cEventUser}
+              cEvent={cEventContext}
+              closeModal={() => {
+                props.setUserAgenda(null);
+              }}
+            />
 
-        <EventSectionsInnerMenu />
-        <MenuTablets />
+            <EventSectionsInnerMenu />
+            <MenuTablets />
 
-        <Layout className='site-layout'>
-          <Content
-            className='site-layout-background'
-            style={{
-              // paddingBottom: '15vh',
-              backgroundSize: 'cover',
-              background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
-              backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,
-            }}>
-            {props.view && <TopBanner currentActivity={currentActivity} />}
+            <Layout className='site-layout'>
+              <Content
+                className='site-layout-background'
+                style={{
+                  // paddingBottom: '15vh',
+                  backgroundSize: 'cover',
+                  background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
+                  backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,
+                }}>
+                {props.view && <TopBanner currentActivity={currentActivity} />}
 
-            <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
-            <EviusFooter />
-          </Content>
-        </Layout>
-        <EventSectionMenuRigth
-          generalTabs={generaltabs}
-          currentActivity={currentActivity}
-          totalNewMessages={totalNewMessages}
-          tabs={props.tabs}
-        />
-        <MenuTabletsSocialZone
-          totalNewMessages={totalNewMessages}
-          currentActivity={currentActivity}
-          generalTabs={generaltabs}
-        />
-        <EnableGTMByEVENT />
-        <EnableAnalyticsByEVENT />
-        <EnableFacebookPixelByEVENT />
-      </Layout>
+                <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
+                <EviusFooter />
+              </Content>
+            </Layout>
+            <EventSectionMenuRigth
+              generalTabs={generaltabs}
+              currentActivity={currentActivity}
+              totalNewMessages={totalNewMessages}
+              tabs={props.tabs}
+            />
+            <MenuTabletsSocialZone
+              totalNewMessages={totalNewMessages}
+              currentActivity={currentActivity}
+              generalTabs={generaltabs}
+            />
+            <EnableGTMByEVENT />
+            <EnableAnalyticsByEVENT />
+            <EnableFacebookPixelByEVENT />
+          </Layout>
+        </>
+      )}
     </>
   );
 };

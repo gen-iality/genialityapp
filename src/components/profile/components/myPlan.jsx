@@ -21,12 +21,13 @@ const myPlan = ({ cUser }) => {
   const [loadingConsumption, setLoadingConsumption] = useState(true);
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [toShow, setToShow] = useState(0);
 
   const columns = [
     {
       title: 'Razón',
-      dataIndex: 'reason',
-      key: 'reason',
+      dataIndex: 'message',
+      key: 'message',
     },
     {
       title: 'Estado',
@@ -107,7 +108,7 @@ const myPlan = ({ cUser }) => {
       key: 'reason',
       render(val, item) {
         const payment = item.billing.payment_method || item.payment;
-        return <>{payment['address'].full_name}</>;
+        return <>{payment['address']?.full_name}</>;
       },
     },
     {
@@ -166,38 +167,37 @@ const myPlan = ({ cUser }) => {
                   <Space direction='vertical'>
                     <Typography.Text>
                       <Typography.Text strong>Razón social / Nombre completo:</Typography.Text>{' '}
-                      {payment['address'].full_name}
+                      {payment['address']?.full_name}
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>Identificación:</Typography.Text>
-                      {payment['address'].identification['type=>'] || payment['address'].identification['type']}{' '}
-                      {payment['address'].identification['value']}
+                      {payment['address']?.identification['type']} {payment['address']?.identification['value']}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Teléfono:</Typography.Text> +{payment['address'].prefix}{' '}
-                      {payment['address'].phone_number}
+                      <Typography.Text strong>Teléfono:</Typography.Text> +{payment['address']?.prefix}{' '}
+                      {payment['address']?.phone_number}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>E-mail:</Typography.Text> {payment['address'].email}
+                      <Typography.Text strong>E-mail:</Typography.Text> {payment['address']?.email}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Dirección:</Typography.Text> ({payment['address'].country}){' '}
-                      {payment['address'].address_line_1} {payment['address'].address_line_2}, {payment['address'].city}{' '}
-                      {payment['address'].postal_code}-{payment['address'].region}
+                      <Typography.Text strong>Dirección:</Typography.Text> ({payment['address']?.country}){' '}
+                      {payment['address']?.address_line_1} {payment['address']?.address_line_2},{' '}
+                      {payment['address']?.city} {payment['address']?.postal_code}-{payment['address']?.region}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Fecha de la venta:</Typography.Text> {item.created_at}
+                      <Typography.Text strong>Fecha de la venta:</Typography.Text> {item?.created_at}
                       {/* {moment(item.billing.created_at).format('YYYY-MM-DD')} */}
                     </Typography.Text>
 
                     <Typography.Text>
-                      <Typography.Text strong>Valor base de la venta:</Typography.Text> {item.billing.currency} $
-                      {item.billing.total} con ({item.billing.tax * 100}% de impuesto){' '}
-                      {item.billing.total_discount && <>y un descuento de ${item.billing.total_discount}</>}
+                      <Typography.Text strong>Valor base de la venta:</Typography.Text> {item?.billing?.currency} $
+                      {item?.billing?.total} con ({item?.billing?.tax * 100}% de impuesto){' '}
+                      {item?.billing?.total_discount && <>y un descuento de ${item?.billing?.total_discount}</>}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Medio de pago:</Typography.Text> {payment.type} - {payment.method_name} (
-                      {payment.brand})
+                      <Typography.Text strong>Medio de pago:</Typography.Text> {payment?.type} - {payment?.method_name}{' '}
+                      ({payment?.brand})
                     </Typography.Text>
                   </Space>
                 </Col>
@@ -205,23 +205,22 @@ const myPlan = ({ cUser }) => {
                   <Space direction='vertical'>
                     <Typography.Text>
                       <Typography.Text strong>Referencia del comprobante:</Typography.Text>{' '}
-                      {item.billing.reference_evius} (evius) / {item.billing.reference_wompi} (wompi)
+                      {item?.billing?.reference_evius} (evius) / {item?.billing?.reference_wompi} (wompi)
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text>
-                      <Table dataSource={item.billing.details} columns={cols} pagination={false} />
+                      <Table dataSource={item?.billing?.details} columns={cols} pagination={false} />
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Estatus de la compra:</Typography.Text> {item.billing.status}
+                      <Typography.Text strong>Estatus de la compra:</Typography.Text> {item?.billing?.status}
                     </Typography.Text>
-                    {(payment['status?'] || payment.status) && (
+                    {payment?.status && (
                       <Typography.Text>
-                        <Typography.Text strong>Estatus del pago:</Typography.Text>{' '}
-                        {payment['status?'] || payment.status}
+                        <Typography.Text strong>Estatus del pago:</Typography.Text> {payment?.status}
                       </Typography.Text>
                     )}
                     <Typography.Text>
-                      <Typography.Text strong>Tipo de subscripción:</Typography.Text> {item.billing.subscription_type}
+                      <Typography.Text strong>Tipo de subscripción:</Typography.Text> {item?.billing?.subscription_type}
                     </Typography.Text>
                   </Space>
                 </Col>
@@ -283,22 +282,28 @@ const myPlan = ({ cUser }) => {
   }, []);
 
   const getInfoPlans = async () => {
+    /* Planes adicionales */
     let plans = await PlansApi.getAll();
     setPlans(plans);
+    /* console.log('plans', plans); */
+    /* Notificaciones/Alertas */
     let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
     setNotifications(notifications.data);
     setLoadingNotification(false);
     /* console.log(notifications.data, 'notifications'); */
+    /* Facturas/Comprobantes */
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
     setBills(bills.data);
     setLoadingBill(false);
     console.log('bills', bills.data);
+    /* Consumos del usuario */
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption.events);
     setLoadingConsumption(false);
+    /* console.log('consumption', consumption.data); */
+    /* Total de registros de usuario */
     let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
     console.log(totalUsersByPlan, 'aqui');
-    /* console.log('consumption', consumption.data); */
 
     /* console.log(plans, 'plans');
     console.log(plans[0]._id, plans[1]._id, plan._id); */
@@ -310,25 +315,28 @@ const myPlan = ({ cUser }) => {
       <Tabs.TabPane tab={'Mi plan'} key={'plan'}>
         <Row gutter={[12, 12]} wrap>
           <Col span={6}>
-            <PlanCard title={`Plan ${plan?.name}`} value={`US $ ${plan?.price}`} />
+            <PlanCard
+              title={`Plan ${plan?.name || 'Personalizado'}`}
+              value={plan ? `US $ ${plan?.price}` : 'Personalizado'}
+            />
           </Col>
           <Col span={6}>
             <PlanCard
               title={'Horas de transmisión'}
-              value={`${plan?.availables?.streaming_hours / 60}h`}
+              value={plan ? `${plan?.availables?.streaming_hours / 60}h` : 'Ilimitadas'}
               icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
             />
           </Col>
           <Col span={6}>
             <PlanCard
               title={'Usuarios'}
-              value={plan?.availables?.users}
+              value={plan?.availables?.users || 'Ilimitados'}
               icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
               message={
                 plan?.name !== 'Free' && (
-                  <Link href='pay.evius.co' style={{ color: '#1890ff' }}>
+                  <a href='https://pay.evius.co/' style={{ color: '#1890ff' }} target='_blank'>
                     Comprar más
-                  </Link>
+                  </a>
                 )
               }
             />
@@ -336,7 +344,7 @@ const myPlan = ({ cUser }) => {
           <Col span={6}>
             <PlanCard
               title={'Eventos'}
-              value={plan?.availables?.events}
+              value={plan?.availables?.events || 'Ilimitados'}
               icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
             />
           </Col>
@@ -346,6 +354,7 @@ const myPlan = ({ cUser }) => {
               columns={columnsEvents}
               scroll={{ x: 'auto' }}
               loading={loadingNotification}
+              pagination={{ pageSize: 2 }}
             />
           </Col>
           <Col span={24}>
@@ -362,25 +371,33 @@ const myPlan = ({ cUser }) => {
       <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
         {plans
           .filter((plan1) => plan1?._id !== plan?._id)
-          .map((plan2) => (
+          .sort((a, b) => a.index - b.index)
+          .map((plan2, index) => (
             <div style={{ paddingBottom: '15px' }}>
               <Card style={{ borderRadius: '15px' }}>
                 <Space>
                   <Divider>
                     <strong>Disponible {plan2?.name}</strong>
                   </Divider>
-                  <Link href='pay.evius.co' style={{ color: '#1890ff' }}>
+                  <a href='https://pay.evius.co/' style={{ color: '#1890ff' }} target='_blank'>
                     Comprar plan
-                  </Link>
+                  </a>
                 </Space>
                 <Row gutter={[12, 12]} wrap>
                   <Col span={6}>
-                    <PlanCard title={`Plan ${plan2?.name}`} value={`US $ ${plan2?.price}`} />
+                    <PlanCard
+                      title={`Plan ${plan2?.name}`}
+                      value={plan2?.price !== 'Personalizado' ? `US $ ${plan2?.price}` : plan2?.price}
+                    />
                   </Col>
                   <Col span={6}>
                     <PlanCard
                       title={'Horas de transmisión'}
-                      value={`${plan2?.availables?.streaming_hours / 60}h`}
+                      value={
+                        plan2?.availables?.streaming_hours !== 'Personalizado'
+                          ? `${plan2?.availables?.streaming_hours / 60}h`
+                          : plan2?.availables?.streaming_hours
+                      }
                       icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
                     />
                   </Col>
@@ -399,11 +416,16 @@ const myPlan = ({ cUser }) => {
                     />
                   </Col>
                   <Col span={24}>
-                    <Typography.Text style={{ cursor: 'pointer' }} onClick={() => setShow(!show)}>
+                    <Typography.Text
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        setShow(!show);
+                        setToShow(index);
+                      }}>
                       {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes más información del plan{' '}
                       <strong>{plan2?.name}</strong>.
                     </Typography.Text>
-                    {show && (
+                    {show && toShow === index && (
                       <>
                         <br />
                         <br />
