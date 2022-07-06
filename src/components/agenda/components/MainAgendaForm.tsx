@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Moment from 'moment';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import {
@@ -190,6 +190,20 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     setFormData((last) => ({ ...last, selectedCategories }));
   }
 
+  const currentHourStart = useMemo(() => {
+    if (formdata.hour_start === '') {
+      return startOrEndHourWithAdditionalMinutes(1, true)
+    }
+    return Moment(formdata.hour_start)
+  }, [formdata.hour_start])
+
+  const currentHourEnd = useMemo(() => {
+    if (formdata.hour_end === '') {
+      return startOrEndHourWithAdditionalMinutes(5, false)
+    }
+    return Moment(formdata.hour_end)
+  }, [formdata.hour_end])
+
   return (
     <>
     <Row justify="center" wrap gutter={12}>
@@ -253,11 +267,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 format="h:mm a"
                 allowClear={false}
                 style={{ width: '100%' }}
-                value={
-                  formdata.hour_start !== ''
-                  ? Moment(formdata.hour_start)
-                  : startOrEndHourWithAdditionalMinutes(1, true)
-                }
+                value={currentHourStart}
                 onChange={(value) => handleChangeFormData('hour_start', value)}
               />
             </Form.Item>
@@ -281,11 +291,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 use12Hours
                 style={{ width: '100%' }}
                 allowClear={false}
-                value={
-                  formdata.hour_end !== ''
-                  ? Moment(formdata.hour_end)
-                  : startOrEndHourWithAdditionalMinutes(5, false)
-                }
+                value={currentHourEnd}
                 format="h:mm a"
                 onChange={(value) => handleChangeFormData('hour_end', value)}
               />
