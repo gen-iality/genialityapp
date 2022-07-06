@@ -474,6 +474,7 @@ function AgendaEdit(props: AgendaEditProps) {
           the provided methods:
           */}
                 <MainAgendaForm
+                  isEditing={isEditing}
                   event={props.event}
                   formdata={formdata}
                   agendaInfo={info}

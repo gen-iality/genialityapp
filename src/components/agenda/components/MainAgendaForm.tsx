@@ -56,9 +56,9 @@ const creatableStyles = {
 
 export interface FormDataType {
   name: string,
-  date: any,
-  hour_start: string | Moment.Moment | Date,
-  hour_end: string | Moment.Moment | Date,
+  date: string,
+  hour_start: Moment.Moment | string,
+  hour_end: Moment.Moment | string,
   space_id: string,
   selectedCategories: SelectOptionType[],
   selectedHosts: SelectOptionType[],
@@ -76,6 +76,7 @@ export interface FormDataType {
 };
 
 export interface MainAgendaFormProps {
+  isEditing?: boolean,
   event: EventType,
   formdata: FormDataType,
   agendaInfo: AgendaDocumentType,
@@ -89,6 +90,7 @@ export interface MainAgendaFormProps {
 
 function MainAgendaForm(props: MainAgendaFormProps) {
   const {
+    isEditing=false,
     formdata,
     agendaInfo,
     savedFormData,
@@ -173,13 +175,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       setAllSpaces(newAllSpaces);
       setAllCategories(newAllCategories);
 
-      setFormData((previous) => ({
-        ...previous,
-        selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, newAllCategories),
-        selectedHosts: fieldsSelect(agendaInfo.host_ids, newAllHosts),
-        selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, newAllRoles),
-      }));
-
       // Finish loading this:
       setThisIsLoading((previous) => ({ ...previous, categories: false }));
     }
@@ -188,6 +183,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   }, [props.event]);
 
   useEffect(() => {
+    if (!isEditing) return;
+
     const processedDate = processDateFromAgendaDocument(agendaInfo);
 
     // Load data to formdata
@@ -195,8 +192,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       ...previous,
       name: agendaInfo.name,
       date: processedDate.date,
-      hour_start: processedDate.hour_start,
-      hour_end: processedDate.hour_end,
+      hour_start: Moment(processedDate.hour_start),
+      hour_end: Moment(processedDate.hour_end),
       space_id: agendaInfo.space_id || '',
       length: agendaInfo.length,
       latitude: agendaInfo.latitude,
@@ -204,8 +201,12 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       image: agendaInfo.image,
       selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
       selectedDocuments: agendaInfo.selected_document,
+      selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, allCategories),
+      selectedHosts: fieldsSelect(agendaInfo.host_ids, allHosts),
+      selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, allRoles),
     }));
-  }, [agendaInfo]);
+
+  }, [agendaInfo, isEditing]);
 
   useEffect(() => {
     // Focus the first field
@@ -276,9 +277,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       msj: 'Por favor espere mientras carga la imagen...',
       action: 'show',
     });
-    setFormData((previous) => (
-      { ...previous, image: files }
-    ));
+    setFormData((previous) => ({ ...previous, image: files }));
   }
   
   // @done
@@ -334,15 +333,21 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   };
 
   const currentHourStart = useMemo(() => {
-    const newMoment = Moment(formdata.hour_start, 'HH:mm:ss');
-    if (newMoment.isValid()) return newMoment;
-    return hourWithAdditionalMinutes(1);
+    if (formdata.hour_start instanceof Moment) {
+      return Moment(formdata.hour_start, 'HH:mm:ss');
+    }
+    const newHour = hourWithAdditionalMinutes(1);
+    setFormData((previous) => ({ ...previous, hour_start: newHour }));
+    return newHour;
   }, [formdata.hour_start])
 
   const currentHourEnd = useMemo(() => {
-    const newMoment = Moment(formdata.hour_end, 'HH:mm:ss');
-    if (newMoment.isValid()) return newMoment;
-    return hourWithAdditionalMinutes(5);
+    if (formdata.hour_end instanceof Moment) {
+      return Moment(formdata.hour_end, 'HH:mm:ss');
+    }
+    const newHour = hourWithAdditionalMinutes(5);
+    setFormData((previous) => ({ ...previous, hour_end: newHour }));
+    return newHour;
   }, [formdata.hour_end])
 
   return (
