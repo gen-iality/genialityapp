@@ -39,6 +39,7 @@ import useBuildInfo from './hooks/useBuildInfo';
 import useValidForm from './hooks/useValidAgendaForm';
 import useDeleteActivity from './hooks/useDeleteActivity';
 import SelectOptionType from './types/SelectOptionType';
+import EventType from './types/EventType';
 import AgendaDocumentType from './types/AgendaDocumentType';
 import AgendaDocumentForm from './components/AgendaDocumentForm';
 
@@ -49,16 +50,6 @@ const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
-
-// TODO: put this type in some site
-interface EventType {
-  _id: string;
-  name: string;
-  vimeo_id: string;
-  dates: string[];
-  date_start: string;
-  date_end: string;
-}
 
 interface LocationStateType {
   edit: string | null;
