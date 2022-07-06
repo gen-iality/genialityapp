@@ -257,20 +257,9 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   };
 
   // @done
-  const startOrEndHourWithAdditionalMinutes = (minutes: number, isStart: boolean) => {
+  const hourWithAdditionalMinutes = (minutes: number) => {
     const fecha = new Date();
     fecha.setMinutes(fecha.getMinutes() + minutes);
-
-    if (isStart) {
-      setFormData((previous) => (
-        { ...previous, hour_start: Moment(fecha, 'HH:mm:ss') }
-      ));
-    } else {
-      setFormData((previous) => (
-        { ...previous, hour_end: Moment(fecha, 'HH:mm:ss') }
-      ));
-    }
-
     return Moment(fecha, 'HH:mm:ss');
   };
 
@@ -345,17 +334,15 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   };
 
   const currentHourStart = useMemo(() => {
-    if (formdata.hour_start === '') {
-      return startOrEndHourWithAdditionalMinutes(1, true)
-    }
-    return Moment(formdata.hour_start)
+    const newMoment = Moment(formdata.hour_start, 'HH:mm:ss');
+    if (newMoment.isValid()) return newMoment;
+    return hourWithAdditionalMinutes(1);
   }, [formdata.hour_start])
 
   const currentHourEnd = useMemo(() => {
-    if (formdata.hour_end === '') {
-      return startOrEndHourWithAdditionalMinutes(5, false)
-    }
-    return Moment(formdata.hour_end)
+    const newMoment = Moment(formdata.hour_end, 'HH:mm:ss');
+    if (newMoment.isValid()) return newMoment;
+    return hourWithAdditionalMinutes(5);
   }, [formdata.hour_end])
 
   return (
