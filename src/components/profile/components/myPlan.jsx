@@ -8,6 +8,7 @@ import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
+import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 //import moment from 'moment';
 
 const myPlan = ({ cUser }) => {
@@ -22,6 +23,8 @@ const myPlan = ({ cUser }) => {
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [toShow, setToShow] = useState(0);
+  const [UrlAdditional, setUrlAdditional] = useState('');
+  const [UrlPlan, setUrlPlan] = useState('');
 
   const columns = [
     {
@@ -115,16 +118,16 @@ const myPlan = ({ cUser }) => {
       title: 'Acción',
       dataIndex: 'action',
       key: 'action',
-      render(val, item) {
+      /*  render(val, item) {
         return <>{item.billing.action}</>;
-      },
+      }, */
     },
     {
       title: 'Estado',
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
-        return <Tag color={item.billing.status === 'ACEPTED' ? 'green' : 'orange'}>{item.billing.status}</Tag>;
+        return <Tag color={item.status === 'ACEPTED' ? 'green' : 'orange'}>{item.status}</Tag>;
       },
     },
     {
@@ -134,7 +137,7 @@ const myPlan = ({ cUser }) => {
       render(val, item) {
         return (
           <div>
-            {item.billing.currency} ${item.billing.total}
+            {/* {item.billing.currency} */}COP ${item.billing.total}
           </div>
         );
       },
@@ -279,13 +282,25 @@ const myPlan = ({ cUser }) => {
 
   useEffect(() => {
     getInfoPlans();
+
+    GetTokenUserFirebase().then((token) => {
+      if (token) {
+        let urlRedirect = new URL(`?redirect=additional&additionalUsers=${2}&token=${token}`, `https://pay.evius.co/`);
+        setUrlAdditional(urlRedirect.href);
+        let urlRedirectPlan = new URL(
+          `?redirect=subscription&planType=629e1db8f8fceb1d688c35d3&token=${token}`,
+          `https://pay.evius.co/`
+        );
+        setUrlPlan(urlRedirectPlan.href);
+      }
+    });
   }, []);
 
   const getInfoPlans = async () => {
     /* Planes adicionales */
     let plans = await PlansApi.getAll();
     setPlans(plans);
-    /* console.log('plans', plans); */
+    console.log('plans', plans);
     /* Notificaciones/Alertas */
     let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
     setNotifications(notifications.data);
@@ -303,7 +318,7 @@ const myPlan = ({ cUser }) => {
     /* console.log('consumption', consumption.data); */
     /* Total de registros de usuario */
     let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
-    console.log(totalUsersByPlan, 'aqui');
+    /* console.log(totalUsersByPlan, 'aqui'); */
 
     /* console.log(plans, 'plans');
     console.log(plans[0]._id, plans[1]._id, plan._id); */
@@ -334,7 +349,7 @@ const myPlan = ({ cUser }) => {
               icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
               message={
                 plan?.name !== 'Free' && (
-                  <a href='https://pay.evius.co/' style={{ color: '#1890ff' }} target='_blank'>
+                  <a href={UrlAdditional} style={{ color: '#1890ff' }} target='_blank'>
                     Comprar más
                   </a>
                 )
@@ -379,7 +394,7 @@ const myPlan = ({ cUser }) => {
                   <Divider>
                     <strong>Disponible {plan2?.name}</strong>
                   </Divider>
-                  <a href='https://pay.evius.co/' style={{ color: '#1890ff' }} target='_blank'>
+                  <a href={UrlPlan} style={{ color: '#1890ff' }} target='_blank'>
                     Comprar plan
                   </a>
                 </Space>

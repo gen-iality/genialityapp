@@ -198,7 +198,7 @@ const menuLanding = (props) => {
 
   useEffect(() => {
     getMenu();
-  }, [menu]);
+  }, []);
 
   const getMenu = async () => {
     const menuBase = menu;
