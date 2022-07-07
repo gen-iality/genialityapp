@@ -105,7 +105,7 @@ const initialFormDataState = {
 } as FormDataType;
 
 function AgendaEdit(props: AgendaEditProps) {
-  const [currentActivityID, setCurrentActivityID] = useState('');
+  const [currentActivityID, setCurrentActivityID] = useState<string | null>(null);
   const [activityEdit, setActivityEdit] = useState<null | string>(null);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [currentTab, setCurrentTab] = useState('1');
@@ -113,7 +113,6 @@ function AgendaEdit(props: AgendaEditProps) {
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [pendingChangesSave, setPendingChangesSave] = useState(false);
-  const [idNewlyCreatedActivity, setIdNewlyCreatedActivity] = useState<string | null>(null);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
 
@@ -153,7 +152,7 @@ function AgendaEdit(props: AgendaEditProps) {
       if (location.state?.edit) {
         setIsEditing(true); // We are editing
         // Update the activityEdit of agendaContext from passed activity_id
-        agendaContext.setActivityEdit(location.state?.edit);
+        agendaContext.setActivityEdit(location.state.edit);
 
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
@@ -164,7 +163,6 @@ function AgendaEdit(props: AgendaEditProps) {
           start_url: agendaInfo.start_url,
           join_url: agendaInfo.join_url,
           platform: agendaInfo.platform /*  || event.event_platform */,
-          info: agendaInfo,
           space_id: agendaInfo.space_id || '',
           name_host: agendaInfo.name_host,
           selected_document: agendaInfo.selected_document,
@@ -176,7 +174,7 @@ function AgendaEdit(props: AgendaEditProps) {
         setCurrentActivityID(location.state.edit);
       }
 
-      validateRoom();
+      await validateRoom();
       setIsLoading(false);
     };
 
@@ -241,9 +239,9 @@ function AgendaEdit(props: AgendaEditProps) {
         let agenda: AgendaDocumentType | null = null;
         if (location.state.edit || activityEdit) {
           const data = {
-            activity_id: location.state.edit || idNewlyCreatedActivity,
+            activity_id: location.state.edit || currentActivityID,
           };
-          const edit = location.state.edit || idNewlyCreatedActivity;
+          const edit = location.state.edit || currentActivityID;
           const result: AgendaDocumentType = await AgendaApi.editOne(builtInfo, edit, props.event._id);
 
           for (let i = 0; i < selected_document?.length; i++) {
@@ -273,7 +271,6 @@ function AgendaEdit(props: AgendaEditProps) {
            * estado edit el cual tiene el id de la actividad para poder editar
            * */
           agendaContext.setActivityEdit(agenda._id);
-          setIdNewlyCreatedActivity(agenda._id);
           setCurrentActivityID(agenda._id);
           setActivityEdit((true as unknown) as string); // TODO: check the right type
           // setShouldRedirect(true); // reloadActivity: true,
@@ -376,7 +373,7 @@ function AgendaEdit(props: AgendaEditProps) {
   // Método para guarda la información de la configuración
   const saveConfig = async () => {
     const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
-    const activity_id = agendaContext.activityEdit || idNewlyCreatedActivity;
+    const activity_id = agendaContext.activityEdit || currentActivityID;
     try {
       const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
       if (result) {
