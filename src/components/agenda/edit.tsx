@@ -334,10 +334,11 @@ function AgendaEdit(props: AgendaEditProps) {
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          deleteActivity(props.event._id, currentActivityID, info.name, () => {
+          deleteActivity(props.event._id, currentActivityID, info.name)
+            .then(() => {
             setShouldRedirect(true);
             history.push(`${props.matchUrl}`);
-          }).then();
+            });
         },
       });
     }

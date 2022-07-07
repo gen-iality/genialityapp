@@ -13,7 +13,6 @@ export default function useDeleteActivity () {
       eventId: string,
       activityId: string,
       activityName: string,
-      cb: () => void,
     ) => {
     try {
       const refActivity = `request/${eventId}/activities/${activityId}`;
@@ -38,7 +37,6 @@ export default function useDeleteActivity () {
         msj: 'Se eliminó la información correctamente!',
         action: 'show',
       });
-      cb();
     } catch (e) {
       DispatchMessageService({
         type: 'loading', // Added by types
