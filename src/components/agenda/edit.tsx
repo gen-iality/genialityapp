@@ -102,9 +102,6 @@ const initialFormDataState = {
   selectedTickets: [],
   selectedDocuments: [],
   selectedCategories: [],
-  isExternal: false,
-  externalSurveyID: '',
-  roomStatus: '',
 } as FormDataType;
 
 function AgendaEdit(props: AgendaEditProps) {
@@ -170,8 +167,6 @@ function AgendaEdit(props: AgendaEditProps) {
           info: agendaInfo,
           space_id: agendaInfo.space_id || '',
           name_host: agendaInfo.name_host,
-          date_start_zoom: agendaInfo.date_start_zoom,
-          date_end_zoom: agendaInfo.date_end_zoom,
           selected_document: agendaInfo.selected_document,
           requires_registration: agendaInfo.requires_registration || false,
         }));
@@ -205,11 +200,11 @@ function AgendaEdit(props: AgendaEditProps) {
       const configuration = await service.getConfiguration(props.event._id, activity_id);
       setFormData((previous) => ({
         ...previous,
-        isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
-        externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
+        // isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
+        // externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
         platform: configuration.platform ? configuration.platform : null,
         meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
-        roomStatus: configuration.roomStatus || null,
+        // roomStatus: configuration.roomStatus || null,
         host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
       }));
 
@@ -503,15 +498,6 @@ function AgendaEdit(props: AgendaEditProps) {
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
                         <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
-                        {formdata.isExternal && (
-                          <SurveyExternal
-                            isExternal={formdata.isExternal}
-                            meeting_id={formdata.externalSurveyID}
-                            event_id={props.event._id}
-                            activity_id={currentActivityID}
-                            roomStatus={formdata.roomStatus}
-                          />
-                        )}
                         <BackTop />
                       </Col>
                     </Row>

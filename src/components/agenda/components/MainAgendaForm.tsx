@@ -70,9 +70,6 @@ export interface FormDataType {
   latitude: string,
   description: string,
   image: string,
-  isExternal: boolean,
-  externalSurveyID: string,
-  roomStatus: string,
 };
 
 export interface MainAgendaFormProps {
