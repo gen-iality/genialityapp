@@ -106,7 +106,6 @@ const initialFormDataState = {
 
 function AgendaEdit(props: AgendaEditProps) {
   const [currentActivityID, setCurrentActivityID] = useState<string | null>(null);
-  const [activityEdit, setActivityEdit] = useState<null | string>(null);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [currentTab, setCurrentTab] = useState('1');
   const [isLoading, setIsLoading] = useState(true);
@@ -237,7 +236,7 @@ function AgendaEdit(props: AgendaEditProps) {
         const selected_document = info.selected_document; // TODO: check whether selected_document should be this
         // setIsLoading(true);
         let agenda: AgendaDocumentType | null = null;
-        if (location.state.edit || activityEdit) {
+        if (location.state.edit || currentActivityID) {
           const data = {
             activity_id: location.state.edit || currentActivityID,
           };
@@ -272,7 +271,6 @@ function AgendaEdit(props: AgendaEditProps) {
            * */
           agendaContext.setActivityEdit(agenda._id);
           setCurrentActivityID(agenda._id);
-          setActivityEdit((true as unknown) as string); // TODO: check the right type
           // setShouldRedirect(true); // reloadActivity: true,
           setIsEditing(true);
           setInfo((previous) => ({ ...previous, isPublished: false }));
@@ -412,8 +410,8 @@ function AgendaEdit(props: AgendaEditProps) {
           remove={remove}
           customBack={props.matchUrl}
           title={formdata.name ? `Actividad - ${formdata.name}` : 'Actividad'}
-          saveName={location.state.edit || activityEdit ? '' : 'Crear'}
-          edit={location.state.edit || activityEdit}
+          saveName={location.state.edit || currentActivityID ? '' : 'Crear'}
+          edit={location.state.edit || currentActivityID}
           extra={
             isEditing && (
               <Form.Item label='Publicar' labelCol={{ span: 14 }}>
