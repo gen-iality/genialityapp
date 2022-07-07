@@ -197,7 +197,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles),
     }));
 
-  }, [agenda]);
+  }, [agenda, allCategories, allHosts, allRoles]);
 
   useEffect(() => {
     // Focus the first field
