@@ -1,5 +1,5 @@
-import * as React from 'react';
 import * as Moment from 'moment';
+import * as React from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -37,11 +37,11 @@ import Creatable from 'react-select';
 import { DispatchMessageService } from '../../../context/MessageService';
 import useCreatableStyles from '../hooks/useCreatableStyles';
 import useValideChangesInFormData from '../hooks/useValideChangesInFormData';
+import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaDocument';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import BackTop from '../../../antdComponents/BackTop';
-
-import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaDocument';
+import RequiredStar from './RequiredStar';
 
 import SelectOptionType from '../types/SelectOptionType';
 import EventType from '../types/EventType';
@@ -50,49 +50,47 @@ import AgendaDocumentType from '../types/AgendaDocumentType';
 const { Text } = Typography;
 const { Option } = SelectAntd;
 
-const creatableStyles = {
-  menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }),
-};
+const creatableStyles = { menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }) };
 
 export interface FormDataType {
   name: string,
   date: string,
+  description: string,
+  space_id: string,
+  image: string,
   hour_start: Moment.Moment | string,
   hour_end: Moment.Moment | string,
-  space_id: string,
+  isPhysical: boolean,
+  length: string,
+  latitude: string,
   selectedCategories: SelectOptionType[],
   selectedHosts: SelectOptionType[],
   selectedRol: SelectOptionType[],
   selectedTickets: SelectOptionType[],
   selectedDocuments: SelectOptionType[],
-  isPhysical: boolean,
-  length: string,
-  latitude: string,
-  description: string,
-  image: string,
 };
 
 export interface MainAgendaFormProps {
+  agendaContext: any,
   isEditing?: boolean,
+  matchUrl: string,
   event: EventType,
   formdata: FormDataType,
-  agendaInfo: AgendaDocumentType,
   savedFormData: FormDataType,
+  agendaInfo: AgendaDocumentType,
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>,
   setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
-  agendaContext: any,
-  matchUrl: string,
 };
 
 function MainAgendaForm(props: MainAgendaFormProps) {
   const {
+    agendaContext,
     isEditing=false,
     formdata,
-    agendaInfo,
     savedFormData,
+    agendaInfo,
     setFormData,
     setShowPendingChangesModal,
-    agendaContext,
   } = props;
 
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
@@ -100,8 +98,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allHosts, setAllHosts] = useState<SelectOptionType[]>([]);
   const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
-  const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
+  const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
 
   const history = useHistory();
   const nameInputRef = useRef<InputRef>(null);
@@ -109,7 +107,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
 
   useEffect(() => {
-    if (!props.event) return;
+    if (!props.event?._id) return;
+
     const loading = async () => {
       try {
         // NOTE: The tickets are not used
@@ -136,9 +135,9 @@ function MainAgendaForm(props: MainAgendaFormProps) {
           return { value: formatDate, label: formatDate };
         });
         setAllDays(newDays);
+      } else {
         // Si no, recibe la fecha inicio y la fecha fin y le da el formato
         // especifico a mostrar
-      } else {
         const initMoment = Moment(props.event.date_start);
         const endMoment = Moment(props.event.date_end);
         const dayDiff = endMoment.diff(initMoment, 'days');
@@ -187,13 +186,13 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       ...previous,
       name: agendaInfo.name,
       date: processedDate.date,
-      hour_start: Moment(processedDate.hour_start),
-      hour_end: Moment(processedDate.hour_end),
-      space_id: agendaInfo.space_id || '',
-      length: agendaInfo.length,
-      latitude: agendaInfo.latitude,
       description: agendaInfo.description,
       image: agendaInfo.image,
+      space_id: agendaInfo.space_id || '',
+      hour_start: Moment(processedDate.hour_start),
+      hour_end: Moment(processedDate.hour_end),
+      length: agendaInfo.length,
+      latitude: agendaInfo.latitude,
       selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
       selectedDocuments: agendaInfo.selected_document,
       selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, allCategories),
@@ -354,12 +353,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               Nombre <label style={{ color: 'red' }}>*</label>
             </label>
           }
-          rules={[
-            {
-              required: true,
-              message: 'Nombre de la actividad requerida',
-            },
-          ]}
+          rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}
         >
           <Input
             autoFocus
@@ -374,7 +368,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
         <Form.Item
           label={
             <label style={{ marginTop: '2%' }}>
-              Día <label style={{ color: 'red' }}>*</label>
+              Día <RequiredStar/>
             </label>
           }
           rules={[{ required: true, message: 'La fecha es requerida' }]}
@@ -392,15 +386,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               style={{ width: '100%' }}
               label={
                 <label style={{ marginTop: '2%' }}>
-                  Hora Inicio <label style={{ color: 'red' }}>*</label>
+                  Hora Inicio <RequiredStar/>
                 </label>
               }
-              rules={[
-                {
-                  required: true,
-                  message: 'La hora de inicio es requerida',
-                },
-              ]}
+              rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
             >
               <TimePicker
                 use12Hours
@@ -417,15 +406,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               style={{ width: '100%' }}
               label={
                 <label style={{ marginTop: '2%' }}>
-                  Hora Fin <label style={{ color: 'red' }}>*</label>
+                  Hora Fin <RequiredStar/>
                 </label>
               }
-              rules={[
-                {
-                  required: true,
-                  message: 'La hora final es requerida',
-                },
-              ]}
+              rules={[{ required: true, message: 'La hora final es requerida' }]}
             >
               <TimePicker
                 use12Hours
@@ -490,8 +474,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 isDisabled={thisIsLoading.categories}
                 isLoading={thisIsLoading.categories}
                 options={allCategories}
-                placeholder="Sin categoría...."
                 value={formdata.selectedCategories}
+                placeholder="Sin categoría...."
               />
             </Col>
             <Col span={1}>
@@ -511,7 +495,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
         <>
         <Form.Item label="Longitud">
           <Input
-            // ref={formdata.longitud}
             autoFocus
             type="number"
             name="length"
@@ -522,7 +505,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
         </Form.Item>
         <Form.Item label="Latitud">
           <Input
-            // Here was a ref called 'this.latitude'
             autoFocus
             type="number"
             name="latitude"
@@ -551,11 +533,11 @@ function MainAgendaForm(props: MainAgendaFormProps) {
             <Form.Item noStyle>
               <p>
                 Dimensiones:
-                {" "}
+                {' '}
                 <b>
                   <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
                 </b>
-                {" "}
+                {' '}
               </p>
               <p>
                 <small>

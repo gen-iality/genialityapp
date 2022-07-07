@@ -15,7 +15,6 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { handleRequestError } from '@/helpers/utils';
 import {
   AgendaApi,
-  CategoriesAgendaApi,
   DocumentsApi,
 } from '@/helpers/request';
 import { firestore } from '@/helpers/firebase';
@@ -26,7 +25,6 @@ import Service from './roomManager/service';
 
 import TipeOfActivity from './typeActivity';
 import SurveyManager from './surveyManager';
-import SurveyExternal from './surveyExternal';
 import MainAgendaForm, { FormDataType } from './components/MainAgendaForm';
 import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
 import useBuildInfo from './hooks/useBuildInfo';
@@ -209,9 +207,6 @@ function AgendaEdit(props: AgendaEditProps) {
         isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
       }));
 
-      // transmition: configuration.transmition || null,
-      // host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
-      // habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '',
       setAvalibleGames(configuration.avalibleGames || []);
       setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
       setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
@@ -240,7 +235,7 @@ function AgendaEdit(props: AgendaEditProps) {
             activity_id: location.state.edit || currentActivityID,
           };
           const edit = location.state.edit || currentActivityID;
-          const result: AgendaDocumentType = await AgendaApi.editOne(builtInfo, edit, props.event._id);
+          await AgendaApi.editOne(builtInfo, edit, props.event._id);
 
           for (let i = 0; i < selected_document?.length; i++) {
             await DocumentsApi.editOne(data, selected_document[i], props.event._id);
@@ -271,8 +266,8 @@ function AgendaEdit(props: AgendaEditProps) {
           setIsEditing(true);
           setInfo((previous) => ({ ...previous, isPublished: false }));
           await saveConfig();
-        } else {
-          if (changePathWithoutSaving) history.push(`/eventadmin/${props.event._id}/agenda`);
+        } else if (changePathWithoutSaving) {
+          history.push(`/eventadmin/${props.event._id}/agenda`);
         }
         DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' });
       } catch (e) {
@@ -303,8 +298,8 @@ function AgendaEdit(props: AgendaEditProps) {
         onOk() {
           deleteActivity(props.event._id, currentActivityID, info.name)
             .then(() => {
-            setShouldRedirect(true);
-            history.push(`${props.matchUrl}`);
+              setShouldRedirect(true);
+              history.push(`${props.matchUrl}`);
             });
         },
       });
@@ -414,12 +409,10 @@ function AgendaEdit(props: AgendaEditProps) {
                 <Switch
                   checkedChildren='Sí'
                   unCheckedChildren='No'
-                  // name="isPublished"
                   checked={agendaContext.isPublished}
                   onChange={(value) => {
                     agendaContext.setIsPublished(value);
                     saveConfig();
-                    // this.setState({ isPublished: value }, async () => await this.saveConfig());
                   }}
                 />
               </Form.Item>

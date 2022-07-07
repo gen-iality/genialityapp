@@ -1,5 +1,3 @@
-import useDot from "./useDot";
-
 interface ParamType {
   data: {
     item: {
@@ -8,8 +6,20 @@ interface ParamType {
   }
 };
 
+const dot = (color = 'transparent') => ({
+  alignItems: 'center',
+  display: 'flex',
+  ':before': {
+    backgroundColor: color,
+    content: '" "',
+    display: 'block',
+    margin: 8,
+    height: 10,
+    width: 10,
+  },
+});
+
 const useCreatableStyles = () => {
-  const dot = useDot();
   // Some select styles
   const creatableStyles = {
     menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }),
