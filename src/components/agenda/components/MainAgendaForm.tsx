@@ -41,6 +41,7 @@ import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaD
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import BackTop from '../../../antdComponents/BackTop';
+import Loading from '../../profile/loading';
 import RequiredStar from './RequiredStar';
 
 import SelectOptionType from '../types/SelectOptionType';
@@ -72,12 +73,11 @@ export interface FormDataType {
 
 export interface MainAgendaFormProps {
   agendaContext: any,
-  isEditing?: boolean,
   matchUrl: string,
   event: EventType,
   formdata: FormDataType,
   savedFormData: FormDataType,
-  agendaInfo: AgendaDocumentType,
+  agenda: AgendaDocumentType | null,
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>,
   setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
 };
@@ -85,14 +85,14 @@ export interface MainAgendaFormProps {
 function MainAgendaForm(props: MainAgendaFormProps) {
   const {
     agendaContext,
-    isEditing=false,
     formdata,
     savedFormData,
-    agendaInfo,
+    agenda,
     setFormData,
     setShowPendingChangesModal,
   } = props;
 
+  const [isLoaded, setIsLoaded] = useState(false);
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
   const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
   const [allHosts, setAllHosts] = useState<SelectOptionType[]>([]);
@@ -125,12 +125,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
       // If dates exist, then iterate the specific dates array, formating specially.
       if (props.event.dates && props.event.dates.length > 0) {
-        const takenDates = props.event.dates;
-
-        // NOTE: why do we use this?
-        // Date.parse(takenDates);
-
-        const newDays = takenDates.map((dates) => {
+        const newDays = props.event.dates.map((dates) => {
           const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
           return { value: formatDate, label: formatDate };
         });
@@ -169,6 +164,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       setAllSpaces(newAllSpaces);
       setAllCategories(newAllCategories);
 
+      setIsLoaded(true);
+
       // Finish loading this:
       setThisIsLoading((previous) => ({ ...previous, categories: false }));
     }
@@ -176,31 +173,31 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     loading().then();
   }, [props.event]);
 
+  // If agenda is not null, load data to form
   useEffect(() => {
-    if (!isEditing) return;
+    if (agenda === null) return;
 
-    const processedDate = processDateFromAgendaDocument(agendaInfo);
+    const processedDate = processDateFromAgendaDocument(agenda);
 
-    // Load data to formdata
     setFormData((previous) => ({
       ...previous,
-      name: agendaInfo.name,
+      name: agenda.name,
       date: processedDate.date,
-      description: agendaInfo.description,
-      image: agendaInfo.image,
-      space_id: agendaInfo.space_id || '',
+      description: agenda.description,
+      image: agenda.image,
+      space_id: agenda.space_id || '',
       hour_start: Moment(processedDate.hour_start),
       hour_end: Moment(processedDate.hour_end),
-      length: agendaInfo.length,
-      latitude: agendaInfo.latitude,
-      selectedTickets: agendaInfo.selectedTicket ? agendaInfo.selectedTicket : [],
-      selectedDocuments: agendaInfo.selected_document,
-      selectedCategories: fieldsSelect(agendaInfo.activity_categories_ids, allCategories),
-      selectedHosts: fieldsSelect(agendaInfo.host_ids, allHosts),
-      selectedRol: fieldsSelect(agendaInfo.access_restriction_rol_ids, allRoles),
+      length: agenda.length,
+      latitude: agenda.latitude,
+      selectedTickets: agenda.selectedTicket ? agenda.selectedTicket : [],
+      selectedDocuments: agenda.selected_document,
+      selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories),
+      selectedHosts: fieldsSelect(agenda.host_ids, allHosts),
+      selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles),
     }));
 
-  }, [agendaInfo, isEditing]);
+  }, [agenda]);
 
   useEffect(() => {
     // Focus the first field
@@ -218,7 +215,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
      setShowPendingChangesModal,
    );
 
-  // @done
   /**
    * This method edit the state info, that has various attributes.
    * 
@@ -237,7 +233,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     valideChangesInFormData();
   }
 
-  // @done
   const handleChangeReactQuill = (value: string, target: string) => {
     if (target === 'description') {
       setFormData((previous) => (
@@ -250,19 +245,16 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     }
   };
 
-  // @done
   const hourWithAdditionalMinutes = (minutes: number) => {
     const fecha = new Date();
     fecha.setMinutes(fecha.getMinutes() + minutes);
     return Moment(fecha, 'HH:mm:ss');
   };
 
-  // @done
   const goSection = (path: string, state?: any) => {
     history.push(path, state);
   };
 
-  // @done
   const handleImageChange = (files: any) => {
     DispatchMessageService({
       type: 'loading',
@@ -273,7 +265,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     setFormData((previous) => ({ ...previous, image: files }));
   }
   
-  // @done
   /**
    * Mask as select a category.
    * @param selectedCategories SelectOptionType[].
@@ -282,7 +273,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     setFormData((previous) => ({ ...previous, selectedCategories }));
   }
 
-  // @testable
   const handlerCreateCategories = async (value: any, name: string) => {
     // Last handleCreate method
     DispatchMessageService({
@@ -345,221 +335,222 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   return (
     <>
-    <Row justify="center" wrap gutter={12}>
-      <Col span={20}>
-        <Form.Item
-          label={
-            <label style={{ marginTop: '2%' }}>
-              Nombre <label style={{ color: 'red' }}>*</label>
-            </label>
-          }
-          rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}
-        >
-          <Input
-            autoFocus
-            ref={nameInputRef}
-            type="text"
-            name="name"
-            value={formdata.name}
-            onChange={(value) => handleChangeFormData('name', value.target.value)}
-            placeholder="Nombre de la actividad"
-          />
-        </Form.Item>
-        <Form.Item
-          label={
-            <label style={{ marginTop: '2%' }}>
-              Día <RequiredStar/>
-            </label>
-          }
-          rules={[{ required: true, message: 'La fecha es requerida' }]}
-        >
-          <SelectAntd
-            options={allDays}
-            value={formdata.date}
-            defaultValue={formdata.date}
-            onChange={(value) => handleChangeFormData('date', value)}
-          />
-        </Form.Item>
-        <Row wrap justify="center" gutter={[8, 8]}>
-          <Col span={12}>
-            <Form.Item
-              style={{ width: '100%' }}
-              label={
-                <label style={{ marginTop: '2%' }}>
-                  Hora Inicio <RequiredStar/>
-                </label>
-              }
-              rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
-            >
-              <TimePicker
-                use12Hours
-                format="h:mm a"
-                allowClear={false}
+    { isLoaded ? (
+      <Row justify="center" wrap gutter={12}>
+        <Col span={20}>
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }}>
+                Nombre <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}
+          >
+            <Input
+              autoFocus
+              ref={nameInputRef}
+              type="text"
+              name="name"
+              value={formdata.name}
+              onChange={(value) => handleChangeFormData('name', value.target.value)}
+              placeholder="Nombre de la actividad"
+            />
+          </Form.Item>
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }}>
+                Día <RequiredStar/>
+              </label>
+            }
+            rules={[{ required: true, message: 'La fecha es requerida' }]}
+          >
+            <SelectAntd
+              options={allDays}
+              value={formdata.date}
+              defaultValue={formdata.date}
+              onChange={(value) => handleChangeFormData('date', value)}
+            />
+          </Form.Item>
+          <Row wrap justify="center" gutter={[8, 8]}>
+            <Col span={12}>
+              <Form.Item
                 style={{ width: '100%' }}
-                value={currentHourStart}
-                onChange={(value) => handleChangeFormData('hour_start', value)}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              style={{ width: '100%' }}
-              label={
-                <label style={{ marginTop: '2%' }}>
-                  Hora Fin <RequiredStar/>
-                </label>
-              }
-              rules={[{ required: true, message: 'La hora final es requerida' }]}
-            >
-              <TimePicker
-                use12Hours
+                label={
+                  <label style={{ marginTop: '2%' }}>
+                    Hora Inicio <RequiredStar/>
+                  </label>
+                }
+                rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
+              >
+                <TimePicker
+                  use12Hours
+                  format="h:mm a"
+                  allowClear={false}
+                  style={{ width: '100%' }}
+                  value={currentHourStart}
+                  onChange={(value) => handleChangeFormData('hour_start', value)}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
                 style={{ width: '100%' }}
-                allowClear={false}
-                value={currentHourEnd}
-                format="h:mm a"
-                onChange={(value) => handleChangeFormData('hour_end', value)}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item label="Conferencista">
-          <Row wrap gutter={[8, 8]}>
-            <Col span={23}>
-              <Select
-                isMulti
-                id="hosts"
-                isClearable
-                styles={creatableStyles}
-                onChange={(value: any) => handleChangeFormData('selectedHosts', value)}
-                options={allHosts}
-                value={formdata.selectedHosts}
-              />
-            </Col>
-            <Col span={1}>
-              <Button
-                onClick={() => goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
-                icon={<SettingOutlined />}
-              />
+                label={
+                  <label style={{ marginTop: '2%' }}>
+                    Hora Fin <RequiredStar/>
+                  </label>
+                }
+                rules={[{ required: true, message: 'La hora final es requerida' }]}
+              >
+                <TimePicker
+                  use12Hours
+                  style={{ width: '100%' }}
+                  allowClear={false}
+                  value={currentHourEnd}
+                  format="h:mm a"
+                  onChange={(value) => handleChangeFormData('hour_end', value)}
+                />
+              </Form.Item>
             </Col>
           </Row>
-        </Form.Item>
-        <Form.Item label="Espacio">
-          <Row wrap gutter={[8, 8]}>
-            <Col span={23}>
-              <SelectAntd
-                value={formdata.space_id}
-                onChange={(value) => handleChangeFormData('space_id', value)}>
-                <Option value="">Seleccione un lugar/salón ...</Option>
-                {allSpaces.map((space) => (
-                  <Option key={space.value} value={space.value}>{space.label}</Option>
-                ))}
-              </SelectAntd>
-            </Col>
-            <Col span={1}>
-              <Link to={props.matchUrl.replace('agenda', 'espacios')}>
-                <Button icon={<SettingOutlined />} />
-              </Link>
-            </Col>
-          </Row>
-        </Form.Item>
-        <Form.Item label="Categorías">
-          <Row wrap gutter={[8, 8]}>
-            <Col span={23}>
-              <Creatable
-                isClearable
-                isMulti
-                styles={catStyles}
-                onChange={onSelectedCategoryChange}
-                onCreateOption={(value: string) => handlerCreateCategories(value, 'categories')}
-                isDisabled={thisIsLoading.categories}
-                isLoading={thisIsLoading.categories}
-                options={allCategories}
-                value={formdata.selectedCategories}
-                placeholder="Sin categoría...."
-              />
-            </Col>
-            <Col span={1}>
-              <Button onClick={() => goSection(`${props.matchUrl}/categorias`)} icon={<SettingOutlined />} />
-            </Col>
-          </Row>
-        </Form.Item>
-        <Form.Item label="¿Tiene espacio físico?">
-          <Switch
-            checked={formdata.isPhysical}
-            checkedChildren="Sí"
-            unCheckedChildren="No"
-            onChange={(chosen) => handleChangeFormData('isPhysical', chosen)}
-          />
-        </Form.Item>
-        {formdata.isPhysical &&
-        <>
-        <Form.Item label="Longitud">
-          <Input
-            autoFocus
-            type="number"
-            name="length"
-            value={formdata.length}
-            onChange={(event) => handleChangeFormData('length', event.target.value)}
-            placeholder="Ej. 4.677027"
-          />
-        </Form.Item>
-        <Form.Item label="Latitud">
-          <Input
-            autoFocus
-            type="number"
-            name="latitude"
-            value={formdata.latitude}
-            onChange={(event) => handleChangeFormData('latitude', event.target.value)}
-            placeholder="Ej. -74.094086"
-          />
-        </Form.Item>
-        </>
-        }
-        <Form.Item label="Descripción">
-          <Space>
-            <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Text type="secondary">
-              Esta información no es visible en la Agenda/Actividad en versión Mobile.
-            </Text>
-          </Space>
-          <EviusReactQuill
-            name="description"
-            data={formdata.description}
-            handleChange={(value: string) => handleChangeReactQuill(value, 'description')}
-          />
-        </Form.Item>
-        <Form.Item label="Imagen">
-          <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
-            <Form.Item noStyle>
-              <p>
-                Dimensiones:
-                {' '}
-                <b>
-                  <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
-                </b>
-                {' '}
-              </p>
-              <p>
-                <small>
-                  Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
-                  funcionamiento
-                </small>
-              </p>
-              <p>
-                <small>La imagen tarda unos segundos en cargar</small>
-              </p>
-              <ImageUploaderDragAndDrop
-                imageDataCallBack={handleImageChange}
-                imageUrl={formdata.image}
-                width="1080"
-                height="1080"
-              />
-            </Form.Item>
-          </Card>
-        </Form.Item>
-        <BackTop />
-      </Col>
-    </Row>
+          <Form.Item label="Conferencista">
+            <Row wrap gutter={[8, 8]}>
+              <Col span={23}>
+                <Select
+                  isMulti
+                  id="hosts"
+                  isClearable
+                  styles={creatableStyles}
+                  onChange={(value: any) => handleChangeFormData('selectedHosts', value)}
+                  options={allHosts}
+                  value={formdata.selectedHosts}
+                />
+              </Col>
+              <Col span={1}>
+                <Button
+                  onClick={() => goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
+                  icon={<SettingOutlined />}
+                />
+              </Col>
+            </Row>
+          </Form.Item>
+          <Form.Item label="Espacio">
+            <Row wrap gutter={[8, 8]}>
+              <Col span={23}>
+                <SelectAntd
+                  value={formdata.space_id}
+                  onChange={(value) => handleChangeFormData('space_id', value)}>
+                  <Option value="">Seleccione un lugar/salón ...</Option>
+                  {allSpaces.map((space) => (
+                    <Option key={space.value} value={space.value}>{space.label}</Option>
+                  ))}
+                </SelectAntd>
+              </Col>
+              <Col span={1}>
+                <Link to={props.matchUrl.replace('agenda', 'espacios')}>
+                  <Button icon={<SettingOutlined />} />
+                </Link>
+              </Col>
+            </Row>
+          </Form.Item>
+          <Form.Item label="Categorías">
+            <Row wrap gutter={[8, 8]}>
+              <Col span={23}>
+                <Creatable
+                  isClearable
+                  isMulti
+                  styles={catStyles}
+                  onChange={onSelectedCategoryChange}
+                  onCreateOption={(value: string) => handlerCreateCategories(value, 'categories')}
+                  isDisabled={thisIsLoading.categories}
+                  isLoading={thisIsLoading.categories}
+                  options={allCategories}
+                  value={formdata.selectedCategories}
+                  placeholder="Sin categoría...."
+                />
+              </Col>
+              <Col span={1}>
+                <Button onClick={() => goSection(`${props.matchUrl}/categorias`)} icon={<SettingOutlined />} />
+              </Col>
+            </Row>
+          </Form.Item>
+          <Form.Item label="¿Tiene espacio físico?">
+            <Switch
+              checked={formdata.isPhysical}
+              checkedChildren="Sí"
+              unCheckedChildren="No"
+              onChange={(chosen) => handleChangeFormData('isPhysical', chosen)}
+            />
+          </Form.Item>
+          {formdata.isPhysical &&
+          <>
+          <Form.Item label="Longitud">
+            <Input
+              autoFocus
+              type="number"
+              name="length"
+              value={formdata.length}
+              onChange={(event) => handleChangeFormData('length', event.target.value)}
+              placeholder="Ej. 4.677027"
+            />
+          </Form.Item>
+          <Form.Item label="Latitud">
+            <Input
+              autoFocus
+              type="number"
+              name="latitude"
+              value={formdata.latitude}
+              onChange={(event) => handleChangeFormData('latitude', event.target.value)}
+              placeholder="Ej. -74.094086"
+            />
+          </Form.Item>
+          </>
+          }
+          <Form.Item label="Descripción">
+            <Space>
+              <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+              <Text type="secondary">
+                Esta información no es visible en la Agenda/Actividad en versión Mobile.
+              </Text>
+            </Space>
+            <EviusReactQuill
+              name="description"
+              data={formdata.description}
+              handleChange={(value: string) => handleChangeReactQuill(value, 'description')}
+            />
+          </Form.Item>
+          <Form.Item label="Imagen">
+            <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
+              <Form.Item noStyle>
+                <p>
+                  Dimensiones:
+                  {' '}
+                  <b>
+                    <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
+                  </b>
+                  {' '}
+                </p>
+                <p>
+                  <small>
+                    Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
+                    funcionamiento
+                  </small>
+                </p>
+                <p>
+                  <small>La imagen tarda unos segundos en cargar</small>
+                </p>
+                <ImageUploaderDragAndDrop
+                  imageDataCallBack={handleImageChange}
+                  imageUrl={formdata.image}
+                  width="1080"
+                  height="1080"
+                />
+              </Form.Item>
+            </Card>
+          </Form.Item>
+          <BackTop />
+        </Col>
+      </Row> ) : ( <Loading /> ) }
     </>
   );
 }

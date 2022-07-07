@@ -112,7 +112,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
 
-  const [info, setInfo] = useState<AgendaDocumentType>(initialInfoState);
+  const [loadedAgenda, setLoadedAgenda] = useState<AgendaDocumentType | null>(null);
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
   const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType);
 
@@ -129,7 +129,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const location = useLocation<LocationStateType>();
   const history = useHistory();
 
-  const buildInfo = useBuildInfo(formdata, info);
+  const buildInfo = useBuildInfo(formdata, loadedAgenda, initialInfoState);
   const deleteActivity = useDeleteActivity();
   const validForm = useValidForm(formdata);
 
@@ -140,10 +140,6 @@ function AgendaEdit(props: AgendaEditProps) {
      * It is needed save in formdata to show the info in the page.
      */
     const loading = async () => {
-      // Take the vimeo_id and save in info.
-      const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
-      setInfo((previous) => ({ ...previous, vimeo_id: vimeo_id }));
-
       // Check if the previous page passed an activity_id via route state.
       if (location.state?.edit) {
         setIsEditing(true); // We are editing
@@ -152,18 +148,15 @@ function AgendaEdit(props: AgendaEditProps) {
 
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
-
-        setInfo((previous) => ({
-          ...previous,
+        
+        // Take the vimeo_id and save in info.
+        const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
+        setLoadedAgenda({
           ...agendaInfo,
-          start_url: agendaInfo.start_url,
-          join_url: agendaInfo.join_url,
-          platform: agendaInfo.platform /*  || event.event_platform */,
+          vimeo_id,
           space_id: agendaInfo.space_id || '',
-          name_host: agendaInfo.name_host,
-          selected_document: agendaInfo.selected_document,
-          requires_registration: agendaInfo.requires_registration || false,
-        }));
+          requires_registration: agendaInfo.requires_registration || false
+        });
 
         // Object.keys(this.state).map((key) => (agendaInfo[key] ? this.setState({ [key]: agendaInfo[key] }) : ''));
         // Edit the current activity ID from passed activity ID via route
@@ -194,18 +187,17 @@ function AgendaEdit(props: AgendaEditProps) {
       const configuration = await service.getConfiguration(props.event._id, activity_id);
       setFormData((previous) => ({
         ...previous,
-        // isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
-        // externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
-        platform: configuration.platform ? configuration.platform : null,
-        meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
-        // roomStatus: configuration.roomStatus || null,
-        host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
+        platform: configuration.platform || null,
+        meeting_id: configuration.meeting_id || null,
+        host_id: configuration.host_id || null,
       }));
 
-      setInfo((previous) => ({
-        ...previous,
-        isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
-      }));
+      if (loadedAgenda !== null) {
+        setLoadedAgenda({
+          ...loadedAgenda,
+          isPublished: !!configuration.isPublished,
+        });
+      }
 
       setAvalibleGames(configuration.avalibleGames || []);
       setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
@@ -215,7 +207,6 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  // @testable
   const submit = async (changePathWithoutSaving: boolean) => {
     DispatchMessageService({
       type: 'loading',
@@ -227,7 +218,6 @@ function AgendaEdit(props: AgendaEditProps) {
     if (validForm()) {
       try {
         const builtInfo = buildInfo();
-        const selected_document = info.selected_document; // TODO: check whether selected_document should be this
         // setIsLoading(true);
         let agenda: AgendaDocumentType | null = null;
         if (location.state.edit || currentActivityID) {
@@ -237,20 +227,12 @@ function AgendaEdit(props: AgendaEditProps) {
           const edit = location.state.edit || currentActivityID;
           await AgendaApi.editOne(builtInfo, edit, props.event._id);
 
-          for (let i = 0; i < selected_document?.length; i++) {
-            await DocumentsApi.editOne(data, selected_document[i], props.event._id);
-          }
+          await Promise.all(builtInfo.selected_document.map(
+            (selected) => DocumentsApi.editOne(data, selected, props.event._id)
+          ));
         } else {
           agenda = await AgendaApi.create(props.event._id, builtInfo);
-
-          // Al crear una actividad de la agenda se inicializa el id de la
-          // actividad y las fechas de inicio y finalizacion como requisito
-          // del componente de administrador de salas
-          setInfo((previous) => ({
-            ...previous,
-            ...agenda,
-            activity_id: (agenda as AgendaDocumentType)._id,
-          }));
+          setLoadedAgenda(agenda);
         }
         if (changePathWithoutSaving) setShowPendingChangesModal(false);
 
@@ -262,12 +244,11 @@ function AgendaEdit(props: AgendaEditProps) {
            * */
           agendaContext.setActivityEdit(agenda._id);
           setCurrentActivityID(agenda._id);
-          // setShouldRedirect(true); // reloadActivity: true,
           setIsEditing(true);
-          setInfo((previous) => ({ ...previous, isPublished: false }));
+          setLoadedAgenda({ ...agenda, isPublished: false });
           await saveConfig();
         } else if (changePathWithoutSaving) {
-          history.push(`/eventadmin/${props.event._id}/agenda`);
+          history.push(`${props.matchUrl}`);
         }
         DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' });
       } catch (e) {
@@ -277,17 +258,14 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  // @done
   const remove = async () => {
-    // let self = this;
-    const { removeAllRequest } = agendaContext;
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: 'Por favor espere mientras borra la información...',
       action: 'show',
     });
-    if (currentActivityID) {
+    if (currentActivityID && loadedAgenda) {
       confirm({
         title: '¿Está seguro de eliminar la información?',
         icon: <ExclamationCircleOutlined />,
@@ -296,7 +274,7 @@ function AgendaEdit(props: AgendaEditProps) {
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          deleteActivity(props.event._id, currentActivityID, info.name)
+          deleteActivity(props.event._id, currentActivityID, loadedAgenda.name)
             .then(() => {
               setShouldRedirect(true);
               history.push(`${props.matchUrl}`);
@@ -306,7 +284,6 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  // @done
   const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
     if (status === 'newOrUpdate') {
       setAvalibleGames(listOfGames);
@@ -322,12 +299,10 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  // @done
   const handleDocumentChange = (value: any) => {
     setFormData((previous) => ({ ...previous, selectedDocuments: value }));
   };
 
-  // @done
   // Encargado de gestionar los tabs de la video conferencia
   const handleTabsController = (e: any, tab: string) => {
     const valueTab = e;
@@ -358,7 +333,6 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  // @testable
   // Método para guarda la información de la configuración
   const saveConfig = async () => {
     const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
@@ -435,10 +409,9 @@ function AgendaEdit(props: AgendaEditProps) {
           the provided methods:
           */}
                 <MainAgendaForm
-                  isEditing={isEditing}
                   event={props.event}
                   formdata={formdata}
-                  agendaInfo={info}
+                  agenda={loadedAgenda}
                   savedFormData={savedFormData}
                   setFormData={setFormData}
                   setShowPendingChangesModal={setShowPendingChangesModal}
