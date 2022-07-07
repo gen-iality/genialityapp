@@ -1,5 +1,5 @@
 import { Button, Card, Row, Spin, Switch, Table } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { MenuOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 import { useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
@@ -7,8 +7,8 @@ import { SectionsPrelanding } from '@/helpers/constants';
 const DragHandle = SortableHandle(() => (
   <MenuOutlined
     style={{
-      cursor: 'grab',
-      color: '#999',
+      cursor: 'move',
+      color: '#999999',
     }}
   />
 ));
@@ -39,9 +39,18 @@ const PreLandingSections = (props) => {
     {
       title: '',
       dataIndex: 'sort',
-      width: 30,
+      width: 50,
       className: 'drag-visible',
       render: () => <DragHandle />,
+    },
+    {
+      title: <OrderedListOutlined />,
+      dataIndex: 'order',
+      width: 50,
+      className: 'drag-visible',
+      render: (val, item) => {
+        return item.index + 1;
+      },
     },
     {
       title: 'Sección',
@@ -63,7 +72,10 @@ const PreLandingSections = (props) => {
       },
     },
     {
-      title: 'Modificar sección',
+      title: 'Opciones',
+      dataIndex: 'options',
+      className: 'drag-visible',
+      render: () => <Button>Configurar</Button>,
     },
   ];
 
@@ -90,28 +102,32 @@ const PreLandingSections = (props) => {
     return <SortableItem index={index} {...restProps} />;
   };
   return (
-    <Card>
-      <Table
-        pagination={false}
-        dataSource={dataSource}
-        columns={columns}
-        rowKey='index'
-        components={{
-          body: {
-            wrapper: DraggableContainer,
-            row: DraggableBodyRow,
-          },
-        }}
-      />
-      <Row justify='end' style={{ marginTop: 10 }}>
-        {!loading ? (
-          <Button onClick={() => saveSections()} type='primary'>
-            Guardar
-          </Button>
-        ) : (
-          <Spin />
-        )}
-      </Row>
+    <>
+      <Card hoverable={true} style={{ borderRadius: '20px' }}>
+        <Table
+          tableLayout='fixed'
+          style={{ userSelect: 'none' }}
+          pagination={false}
+          dataSource={dataSource}
+          columns={columns}
+          rowKey='index'
+          components={{
+            body: {
+              wrapper: DraggableContainer,
+              row: DraggableBodyRow,
+            },
+          }}
+        />
+        <Row justify='end' style={{ marginTop: 10 }}>
+          {!loading ? (
+            <Button onClick={() => saveSections()} type='primary'>
+              Guardar
+            </Button>
+          ) : (
+            <Spin />
+          )}
+        </Row>
+      </Card>
       {dataSource
         ? dataSource.map((data) => {
             return (
@@ -121,7 +137,7 @@ const PreLandingSections = (props) => {
             );
           })
         : null}
-    </Card>
+    </>
   );
 };
 
