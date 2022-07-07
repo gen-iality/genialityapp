@@ -238,33 +238,18 @@ function AgendaEdit(props: AgendaEditProps) {
       action: 'show',
     });
 
-    const validation = validForm();
-    if (validation) {
+    if (validForm()) {
       try {
         const builtInfo = buildInfo();
         const selected_document = info.selected_document; // TODO: check whether selected_document should be this
         // setIsLoading(true);
         let agenda: AgendaDocumentType | null = null;
-        let result: AgendaDocumentType;
         if (location.state.edit || activityEdit) {
           const data = {
             activity_id: location.state.edit || idNewlyCreatedActivity,
           };
           const edit = location.state.edit || idNewlyCreatedActivity;
-          result = await AgendaApi.editOne(builtInfo, edit, props.event._id);
-
-          // Se actualizan los estados date_start_zoom y date_end_zoom para que
-          // componente de administracion actualice el valor pasado por props
-          //
-          // this.setState({
-          //   date_start_zoom: result.date_start_zoom,
-          //   date_end_zoom: result.date_end_zoom,
-          // });
-          setInfo((previous) => ({
-            ...previous,
-            date_start_zoom: result.date_start_zoom,
-            date_end_zoom: result.date_end_zoom,
-          }));
+          const result: AgendaDocumentType = await AgendaApi.editOne(builtInfo, edit, props.event._id);
 
           for (let i = 0; i < selected_document?.length; i++) {
             await DocumentsApi.editOne(data, selected_document[i], props.event._id);
@@ -277,9 +262,8 @@ function AgendaEdit(props: AgendaEditProps) {
           // del componente de administrador de salas
           setInfo((previous) => ({
             ...previous,
+            ...agenda,
             activity_id: (agenda as AgendaDocumentType)._id,
-            date_start_zoom: (agenda as AgendaDocumentType).date_start_zoom,
-            date_end_zoom: (agenda as AgendaDocumentType).date_end_zoom,
           }));
         }
         if (changePathWithoutSaving) setShowPendingChangesModal(false);
@@ -299,10 +283,7 @@ function AgendaEdit(props: AgendaEditProps) {
           setActivityEdit((true as unknown) as string); // TODO: check the right type
           // setShouldRedirect(true); // reloadActivity: true,
           setIsEditing(true);
-          setInfo((previous) => ({
-            ...previous,
-            isPublished: false,
-          }));
+          setInfo((previous) => ({ ...previous, isPublished: false }));
           await saveConfig();
         } else {
           if (changePathWithoutSaving) history.push(`/eventadmin/${props.event._id}/agenda`);
