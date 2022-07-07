@@ -80,7 +80,7 @@ const initialInfoState = {
   key: '',
   requires_registration: false,
   isPublished: true,
-  host_ids: null,
+  host_ids: [],
   length: '',
   latitude: '',
 } as AgendaDocumentType;
