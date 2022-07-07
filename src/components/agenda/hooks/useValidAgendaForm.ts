@@ -16,11 +16,11 @@ export default function useValidAgendaForm (formdata: FormDataType)  {
     if (formdata.hour_end === '' || formdata.hour_end === 'Invalid date')
       title.push('Seleccione una hora de finalización valida');
     
-    if (title.length > 0) {
-      title.map((item) => {
-        DispatchMessageService({ msj: item, type: 'warning', action: 'show' });
-      });
-    } else return true;
+    if (title.length === 0) return true;
+
+    title.map((item) => {
+      DispatchMessageService({ msj: item, type: 'warning', action: 'show' });
+    });
 
     return false;
   };
