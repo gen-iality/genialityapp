@@ -36,6 +36,7 @@ import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import PreLandingSections from '../prelanding';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -1202,6 +1203,9 @@ class General extends Component {
                   </Form.Item>
                 </Col>
               </Row>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab='Pre landing' key='3'>
+              <PreLandingSections />
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}
