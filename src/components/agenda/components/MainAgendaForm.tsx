@@ -79,7 +79,6 @@ export interface MainAgendaFormProps {
   agendaInfo: AgendaDocumentType,
   savedFormData: FormDataType,
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>,
-  setPendingChangesSave: React.Dispatch<React.SetStateAction<boolean>>,
   setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
   agendaContext: any,
   matchUrl: string,
@@ -92,7 +91,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     agendaInfo,
     savedFormData,
     setFormData,
-    setPendingChangesSave,
     setShowPendingChangesModal,
     agendaContext,
   } = props;
@@ -236,8 +234,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       const newFormData: FormDataType = { ...previous };
       newFormData[name] = value as never; // ignore it
       return newFormData;
-    });
-    setPendingChangesSave(true);
+    })
     valideChangesInFormData();
   }
 

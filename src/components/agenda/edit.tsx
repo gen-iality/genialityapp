@@ -111,7 +111,6 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [pendingChangesSave, setPendingChangesSave] = useState(false);
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
 
@@ -260,9 +259,6 @@ function AgendaEdit(props: AgendaEditProps) {
         }
         if (changePathWithoutSaving) setShowPendingChangesModal(false);
 
-        // Se cambia el estado a pendingChangesSave encargado de detectar
-        // cambios pendientes en la fecha/hora sin guardar
-        setPendingChangesSave(false);
         DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' });
 
         if (agenda?._id) {
@@ -452,7 +448,6 @@ function AgendaEdit(props: AgendaEditProps) {
                   agendaInfo={info}
                   savedFormData={savedFormData}
                   setFormData={setFormData}
-                  setPendingChangesSave={setPendingChangesSave}
                   setShowPendingChangesModal={setShowPendingChangesModal}
                   agendaContext={agendaContext}
                   matchUrl={props.matchUrl}
