@@ -1,14 +1,16 @@
-import { Button, Card, Row, Spin, Switch, Table } from 'antd';
+import { Button, Card, Row, Space, Spin, Switch, Table, Tag } from 'antd';
 import { MenuOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 import { useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { SectionsPrelanding } from '@/helpers/constants';
+import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 const DragHandle = SortableHandle(() => (
-  <MenuOutlined
+  <DragIcon
     style={{
       cursor: 'move',
       color: '#999999',
+      fontSize: '20px',
     }}
   />
 ));
@@ -62,20 +64,27 @@ const PreLandingSections = (props) => {
       dataIndex: 'status',
       render: (val, item) => {
         return (
-          <Switch
-            onChange={(val) => updateItem(item, val)}
-            checkedChildren='On'
-            unCheckedChildren='Off'
-            checked={val}
-          />
+          <Tag color={item.status === true ? 'green' : 'red'}> {item.status === true ? 'Visible' : 'Oculto'} </Tag>
         );
       },
     },
     {
       title: 'Opciones',
-      dataIndex: 'options',
+      dataIndex: 'status',
       className: 'drag-visible',
-      render: () => <Button>Configurar</Button>,
+      render: (val, item) => {
+        return (
+          <Space>
+            <Switch
+              onChange={(val) => updateItem(item, val)}
+              checkedChildren='On'
+              unCheckedChildren='Off'
+              checked={val}
+            />
+            <Button>Configurar</Button>
+          </Space>
+        );
+      },
     },
   ];
 
@@ -105,7 +114,7 @@ const PreLandingSections = (props) => {
     <>
       <Card hoverable={true} style={{ borderRadius: '20px' }}>
         <Table
-          tableLayout='fixed'
+          tableLayout='auto'
           style={{ userSelect: 'none' }}
           pagination={false}
           dataSource={dataSource}
