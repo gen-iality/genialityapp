@@ -356,6 +356,19 @@ export const EventsApi = {
       {}
     );
   },
+  getPreviews: async (eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/event/${eventId}/previews?token=${token}`);
+  },
+  addPreviews: async (eventId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/previews?token=${token}`, { ...data, event_id: eventId });
+  },
+
+  updatePreviews: async (previewId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/previews/${previewId}?token=${token}`, data);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {

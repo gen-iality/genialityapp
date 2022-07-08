@@ -93,6 +93,7 @@ class General extends Component {
       },
       typeEvent: 0,
       image: this.props.event.picture,
+      tabActive: '1',
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -676,7 +677,7 @@ class General extends Component {
       <React.Fragment>
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
-          <Tabs defaultActiveKey='1'>
+          <Tabs defaultActiveKey='1' onChange={(key) => this.setState({ tabActive: key })}>
             <Tabs.TabPane tab='General' key='1'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
@@ -1205,7 +1206,7 @@ class General extends Component {
               </Row>
             </Tabs.TabPane>
             <Tabs.TabPane tab='Pre landing' key='3' style={{ paddingLeft: '30px', paddingRight: '30px' }}>
-              <PreLandingSections />
+              <PreLandingSections tabActive={this.state.tabActive} />
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}

@@ -1,10 +1,13 @@
-import { Button, Card, Row, Space, Spin, Switch, Table, Tag } from 'antd';
+import { Button, Card, message, Row, Space, Spin, Switch, Table, Tag } from 'antd';
 import { MenuOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { SectionsPrelanding } from '@/helpers/constants';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
+import { CurrentEventContext } from '@/context/eventContext';
+import { EventsApi } from '@/helpers/request';
+import { async } from 'ramda-adjunct';
 const DragHandle = SortableHandle(() => (
   <DragIcon
     style={{
@@ -18,9 +21,24 @@ const DragHandle = SortableHandle(() => (
 const SortableItem = SortableElement((props) => <tr {...props} />);
 const SortableBody = SortableContainer((props) => <tbody {...props} />);
 
-const PreLandingSections = (props) => {
-  const [dataSource, setDataSource] = useState(SectionsPrelanding);
+const PreLandingSections = ({ tabActive }) => {
+  const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
+  const cEvent = useContext(CurrentEventContext);
+
+  useEffect(() => {
+    if (!cEvent.value || tabActive !== '3') return;
+    setLoading(true);
+    obtainPreview();
+    async function obtainPreview() {
+      //OBTENENOS LAS SECCIONES DE PRELANDING
+      const previews = await EventsApi.getPreviews(cEvent.value._id);
+      //SE ORDENAN LAS SECCIONES POR INDEX
+      const sections = previews.data.length > 0 ? previews.data.sort((a, b) => a.index - b.index) : SectionsPrelanding;
+      setDataSource(sections);
+      setLoading(false);
+    }
+  }, [cEvent, tabActive]);
   //PERMITE ACTUALIZAR EL STATUS DE LAS SECCIONES
   const updateItem = (item, val) => {
     setLoading(true);
@@ -34,7 +52,30 @@ const PreLandingSections = (props) => {
   };
   //PERMITE GUARDAR STATUS DE LAS SECCIONES EN BD
   const saveSections = async () => {
-    console.log('DATASOURCE==>', dataSource);
+    if (dataSource) {
+      let saved = true;
+      await Promise.all(
+        dataSource.map(async (section) => {
+          if (!section._id) {
+            try {
+              const resp = await EventsApi.addPreviews(cEvent.value._id, section);
+            } catch (error) {
+              saved = false;
+            }
+          } else {
+            try {
+              const resp = await EventsApi.updatePreviews(section._id, section);
+            } catch (error) {
+              saved = false;
+            }
+          }
+        })
+      );
+      if (saved) message.success('Configuración guardada correctamente');
+      else message.error('Error al guardar la configuración');
+    } else {
+      message.error('Secciones no se pueden guardar');
+    }
   };
   //COLUMNAS PARA LAS SECCIONES DE PRELANDING
   const columns = [
@@ -96,7 +137,6 @@ const PreLandingSections = (props) => {
           return { ...data, index: key };
         });
       }
-      console.log('Sorted items: ', newData);
       setDataSource(newData);
     }
   };
@@ -137,7 +177,7 @@ const PreLandingSections = (props) => {
           )}
         </Row>
       </Card>
-      {dataSource
+      {/* {dataSource
         ? dataSource.map((data) => {
             return (
               <Row key={'row' + data.key} style={{ marginTop: 10 }}>
@@ -145,7 +185,7 @@ const PreLandingSections = (props) => {
               </Row>
             );
           })
-        : null}
+        : null} */}
     </>
   );
 };
