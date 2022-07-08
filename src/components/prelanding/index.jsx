@@ -1,5 +1,5 @@
-import { Button, Card, message, Row, Space, Spin, Switch, Table, Tag } from 'antd';
-import { MenuOutlined, OrderedListOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, message, Row, Space, Spin, Switch, Table, Tag } from 'antd';
+import { EyeInvisibleOutlined, EyeOutlined, MenuOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 import { useContext, useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
@@ -13,7 +13,7 @@ const DragHandle = SortableHandle(() => (
     style={{
       cursor: 'move',
       color: '#999999',
-      fontSize: '20px',
+      fontSize: '22px',
     }}
   />
 ));
@@ -89,10 +89,10 @@ const PreLandingSections = ({ tabActive }) => {
     {
       title: <OrderedListOutlined />,
       dataIndex: 'order',
-      width: 50,
+      width: 80,
       className: 'drag-visible',
       render: (val, item) => {
-        return item.index + 1;
+        return <Avatar shape='square'>{item.index + 1}</Avatar>;
       },
     },
     {
@@ -104,9 +104,7 @@ const PreLandingSections = ({ tabActive }) => {
       title: 'Estado',
       dataIndex: 'status',
       render: (val, item) => {
-        return (
-          <Tag color={item.status === true ? 'green' : 'red'}> {item.status === true ? 'Visible' : 'Oculto'} </Tag>
-        );
+        return <Tag color={item.status === true ? 'green' : 'red'}>{item.status === true ? 'Visible' : 'Oculto'} </Tag>;
       },
     },
     {
@@ -117,9 +115,10 @@ const PreLandingSections = ({ tabActive }) => {
         return (
           <Space>
             <Switch
+              loading={loading}
               onChange={(val) => updateItem(item, val)}
-              checkedChildren='On'
-              unCheckedChildren='Off'
+              checkedChildren={<EyeOutlined />}
+              unCheckedChildren={<EyeInvisibleOutlined />}
               checked={val}
             />
             <Button>Configurar</Button>
