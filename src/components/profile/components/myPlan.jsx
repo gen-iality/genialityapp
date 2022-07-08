@@ -9,7 +9,6 @@ import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
-//import moment from 'moment';
 
 const myPlan = ({ cUser }) => {
   const plan = cUser.value?.plan;
@@ -24,8 +23,14 @@ const myPlan = ({ cUser }) => {
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [toShow, setToShow] = useState(0);
+  const [toShowModal, setToShowModal] = useState('');
   const [UrlAdditional, setUrlAdditional] = useState('');
   let [token, setToken] = useState('');
+  const goBackUrlPayment = window.location.toString().includes('https://staging.evius.co/')
+    ? 'https://staging.evius.co/'
+    : window.location.toString().includes('https://app.evius.co/myprofile/events')
+    ? 'https://app.evius.co/myprofile/events'
+    : 'http://localhost:3000/myprofile/events';
 
   const columns = [
     {
@@ -112,7 +117,11 @@ const myPlan = ({ cUser }) => {
       key: 'reason',
       render(val, item) {
         const payment = item.billing.payment_method || item.payment || {};
-        return <>{payment['address']?.full_name}</>;
+        return (
+          <>
+            {payment['address']?.name} {payment['address']?.last_name}
+          </>
+        );
       },
     },
     {
@@ -160,9 +169,22 @@ const myPlan = ({ cUser }) => {
         return (
           <Space wrap>
             <Tooltip placement='topLeft' title={'Previsualización'}>
-              <Button icon={<FileDoneOutlined />} onClick={() => setShowModal(!showModal)} />
+              <Button
+                icon={<FileDoneOutlined />}
+                onClick={() => {
+                  setShowModal(!showModal);
+                  setToShowModal(item._id);
+                }}
+              />
             </Tooltip>
-            <Modal visible={showModal} footer={null} onCancel={() => setShowModal(!showModal)} width={'100%'}>
+            <Modal
+              visible={showModal && toShowModal === item._id}
+              footer={null}
+              onCancel={() => {
+                setShowModal(!showModal);
+                setToShowModal('');
+              }}
+              width={'100%'}>
               <Divider orientation='left'>
                 <strong>Comprobante</strong>
               </Divider>
@@ -171,7 +193,7 @@ const myPlan = ({ cUser }) => {
                   <Space direction='vertical'>
                     <Typography.Text>
                       <Typography.Text strong>Razón social / Nombre completo:</Typography.Text>{' '}
-                      {payment['address']?.full_name}
+                      {payment['address']?.name} {payment['address']?.last_name}
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>Identificación:</Typography.Text>
@@ -288,7 +310,10 @@ const myPlan = ({ cUser }) => {
     GetTokenUserFirebase().then((token) => {
       if (token) {
         setToken(token);
-        let urlRedirect = new URL(`?redirect=additional&additionalUsers=${1}&token=${token}`, `https://pay.evius.co/`);
+        let urlRedirect = new URL(
+          `?redirect=additional&additionalUsers=${1}&goBack=${goBackUrlPayment}&goForward=${goBackUrlPayment}&token=${token}`,
+          `https://pay.evius.co/`
+        );
         setUrlAdditional(urlRedirect.href);
       }
     });
@@ -308,7 +333,7 @@ const myPlan = ({ cUser }) => {
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
     setBills(bills.data);
     setLoadingBill(false);
-    /* console.log('bills', bills.data); */
+    console.log('bills', bills.data);
     /* Consumos del usuario */
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption.events);
@@ -418,9 +443,7 @@ const myPlan = ({ cUser }) => {
                       href={
                         plan2?._id !== '629e1dd4f8fceb1d688c35d5'
                           ? new URL(
-                              `?redirect=subscription&planType=${
-                                plan2?._id
-                              }&goBack=${'http://localhost:3000/myprofile/events'}&token=${token}`,
+                              `?redirect=subscription&planType=${plan2?._id}&goBack=${goBackUrlPayment}&goForward=${goBackUrlPayment}&token=${token}`,
                               `https://pay.evius.co/`
                             )
                           : 'https://evius.co/pricing/'
@@ -431,7 +454,7 @@ const myPlan = ({ cUser }) => {
                     </a>
                   ) : (
                     <Typography.Text strong style={{ color: 'red' }}>
-                      <small>Ya tuviste éste plan, solo puedes seguir ascendiendo.</small>
+                      <small>Ya tuviste este plan, solo puedes seguir ascendiendo.</small>
                     </Typography.Text>
                   )}
                 </Space>
