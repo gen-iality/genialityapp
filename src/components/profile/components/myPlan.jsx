@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
-import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal } from 'antd';
+import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal, Alert } from 'antd';
 import { DownOutlined, FileDoneOutlined, RightOutlined } from '@ant-design/icons';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
@@ -17,6 +17,7 @@ const myPlan = ({ cUser }) => {
   let [notifications, setNotifications] = useState([]);
   let [bills, setBills] = useState([]);
   let [consumption, setConsumption] = useState([]);
+  let [totalUsersByPlan, setTotalUsersByPlan] = useState({});
   const [loadingNotification, setLoadingNotification] = useState(true);
   const [loadingBill, setLoadingBill] = useState(true);
   const [loadingConsumption, setLoadingConsumption] = useState(true);
@@ -24,7 +25,7 @@ const myPlan = ({ cUser }) => {
   const [showModal, setShowModal] = useState(false);
   const [toShow, setToShow] = useState(0);
   const [UrlAdditional, setUrlAdditional] = useState('');
-  const [UrlPlan, setUrlPlan] = useState('');
+  let [token, setToken] = useState('');
 
   const columns = [
     {
@@ -210,12 +211,12 @@ const myPlan = ({ cUser }) => {
                       <Typography.Text strong>Referencia del comprobante:</Typography.Text>{' '}
                       {item?.billing?.reference_evius} (evius) / {item?.billing?.reference_wompi} (wompi)
                     </Typography.Text>
-                    <Typography.Text>
+                    {/* <Typography.Text>
                       <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text>
                       <Table dataSource={item?.billing?.details} columns={cols} pagination={false} />
-                    </Typography.Text>
+                    </Typography.Text> */}
                     <Typography.Text>
-                      <Typography.Text strong>Estatus de la compra:</Typography.Text> {item?.billing?.status}
+                      <Typography.Text strong>Estatus de la compra:</Typography.Text> {item?.status}
                     </Typography.Text>
                     {payment?.status && (
                       <Typography.Text>
@@ -282,16 +283,13 @@ const myPlan = ({ cUser }) => {
 
   useEffect(() => {
     getInfoPlans();
+    console.log(plan, 'plan');
 
     GetTokenUserFirebase().then((token) => {
       if (token) {
-        let urlRedirect = new URL(`?redirect=additional&additionalUsers=${2}&token=${token}`, `https://pay.evius.co/`);
+        setToken(token);
+        let urlRedirect = new URL(`?redirect=additional&additionalUsers=${1}&token=${token}`, `https://pay.evius.co/`);
         setUrlAdditional(urlRedirect.href);
-        let urlRedirectPlan = new URL(
-          `?redirect=subscription&planType=629e1db8f8fceb1d688c35d3&token=${token}`,
-          `https://pay.evius.co/`
-        );
-        setUrlPlan(urlRedirectPlan.href);
       }
     });
   }, []);
@@ -300,7 +298,7 @@ const myPlan = ({ cUser }) => {
     /* Planes adicionales */
     let plans = await PlansApi.getAll();
     setPlans(plans);
-    console.log('plans', plans);
+    /* console.log('plans', plans); */
     /* Notificaciones/Alertas */
     let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
     setNotifications(notifications.data);
@@ -310,7 +308,7 @@ const myPlan = ({ cUser }) => {
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
     setBills(bills.data);
     setLoadingBill(false);
-    console.log('bills', bills.data);
+    /* console.log('bills', bills.data); */
     /* Consumos del usuario */
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption.events);
@@ -318,6 +316,7 @@ const myPlan = ({ cUser }) => {
     /* console.log('consumption', consumption.data); */
     /* Total de registros de usuario */
     let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
+    setTotalUsersByPlan(totalUsersByPlan);
     /* console.log(totalUsersByPlan, 'aqui'); */
 
     /* console.log(plans, 'plans');
@@ -329,20 +328,20 @@ const myPlan = ({ cUser }) => {
     <Tabs defaultActiveKey={'plan'}>
       <Tabs.TabPane tab={'Mi plan'} key={'plan'}>
         <Row gutter={[12, 12]} wrap>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
               title={`Plan ${plan?.name || 'Personalizado'}`}
               value={plan ? `US $ ${plan?.price}` : 'Personalizado'}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
               title={'Horas de transmisión'}
               value={plan ? `${plan?.availables?.streaming_hours / 60}h` : 'Ilimitadas'}
               icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
               title={'Usuarios'}
               value={plan?.availables?.users || 'Ilimitados'}
@@ -350,13 +349,13 @@ const myPlan = ({ cUser }) => {
               message={
                 plan?.name !== 'Free' && (
                   <a href={UrlAdditional} style={{ color: '#1890ff' }} target='_blank'>
-                    Comprar más
+                    Comprar más {plan?.costAdditionalUsers && <>a (${plan?.costAdditionalUsers})</>}
                   </a>
                 )
               }
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
               title={'Eventos'}
               value={plan?.availables?.events || 'Ilimitados'}
@@ -364,6 +363,26 @@ const myPlan = ({ cUser }) => {
             />
           </Col>
           <Col span={24}>
+            {totalUsersByPlan?.totalRegisteredUsers > 0 && (
+              <Alert
+                message={
+                  totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
+                    ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
+                    : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`
+                }
+                type='warning'
+                showIcon
+              />
+            )}
+            {/* <Typography.Text strong style={{ color: 'orange' }}>
+              <small>
+                <Space>
+                  <Typography.Text>
+
+                  </Typography.Text>
+                </Space>
+              </small>
+            </Typography.Text> */}
             <Table
               dataSource={consumption}
               columns={columnsEvents}
@@ -394,18 +413,36 @@ const myPlan = ({ cUser }) => {
                   <Divider>
                     <strong>Disponible {plan2?.name}</strong>
                   </Divider>
-                  <a href={UrlPlan} style={{ color: '#1890ff' }} target='_blank'>
-                    Comprar plan
-                  </a>
+                  {plan2?._id !== '6285536ce040156b63d517e5' && plan2?.index > plan?.index ? (
+                    <a
+                      href={
+                        plan2?._id !== '629e1dd4f8fceb1d688c35d5'
+                          ? new URL(
+                              `?redirect=subscription&planType=${
+                                plan2?._id
+                              }&goBack=${'http://localhost:3000/myprofile/events'}&token=${token}`,
+                              `https://pay.evius.co/`
+                            )
+                          : 'https://evius.co/pricing/'
+                      }
+                      style={{ color: '#1890ff' }}
+                      target='_blank'>
+                      Comprar plan
+                    </a>
+                  ) : (
+                    <Typography.Text strong style={{ color: 'red' }}>
+                      <small>Ya tuviste éste plan, solo puedes seguir ascendiendo.</small>
+                    </Typography.Text>
+                  )}
                 </Space>
                 <Row gutter={[12, 12]} wrap>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
                       title={`Plan ${plan2?.name}`}
                       value={plan2?.price !== 'Personalizado' ? `US $ ${plan2?.price}` : plan2?.price}
                     />
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
                       title={'Horas de transmisión'}
                       value={
@@ -416,14 +453,15 @@ const myPlan = ({ cUser }) => {
                       icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
                     />
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
                       title={'Usuarios'}
                       value={plan2?.availables?.users}
                       icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
+                      message={plan2?.costAdditionalUsers && <>Adicional (${plan2?.costAdditionalUsers})</>}
                     />
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
                       title={'Eventos'}
                       value={plan2?.availables?.events}

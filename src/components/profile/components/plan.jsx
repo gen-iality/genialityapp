@@ -44,7 +44,7 @@ const plan = ({ plan, mine, children }) => {
             <Space>
               <Typography.Text strong>Certificados: </Typography.Text>
               <Typography.Text>
-                {plan?.availables?.certificates === 'false' ? (
+                {plan?.availables?.certificates === false ? (
                   <CloseOutlined style={{ color: 'red' }} />
                 ) : plan?.availables?.certificates ? (
                   plan?.availables?.certificates
