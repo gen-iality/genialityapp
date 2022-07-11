@@ -38,6 +38,7 @@ import { imageUtils } from '../../Utilities/ImageUtils';
 import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
+import eventCard from '../shared/eventCard';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -362,7 +363,10 @@ const MainProfile = (props) => {
                                           </Link>
                                         </div>,
                                       ]}
-                                      blockedEvent={props?.cUser?.value?.plan?.availables?.streaming_hours}
+                                      blockedEvent={
+                                        props?.cUser?.value?.plan?.availables?.streaming_hours ||
+                                        eventCard.value?.later_days
+                                      }
                                     />
                                   </Col>
                                 );
@@ -478,7 +482,9 @@ const MainProfile = (props) => {
                                 </Link>
                               </div>,
                             ]}
-                            blockedEvent={props?.cUser?.value?.plan?.availables?.streaming_hours}
+                            blockedEvent={
+                              props?.cUser?.value?.plan?.availables?.streaming_hours || eventCard.value?.later_days
+                            }
                           />
                         </Col>
                       );

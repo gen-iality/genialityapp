@@ -9,6 +9,7 @@ import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
+import moment from 'moment';
 
 const myPlan = ({ cUser }) => {
   const plan = cUser.value?.plan;
@@ -43,62 +44,21 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
-        return <Tag color={val === 'Éxitoso' ? 'green' : 'orange'}>{val}</Tag>;
+        const color = () => {
+          switch (val) {
+            case 'ACTIVE':
+              return 'green';
+            default:
+              return 'orange';
+          }
+        };
+        return <Tag color={color()}>{val}</Tag>;
       },
     },
     {
       title: 'Fecha',
       dataIndex: 'created_at',
       key: 'created_at',
-    },
-  ];
-
-  const cols = [
-    {
-      title: 'Plan',
-      children: [
-        {
-          title: 'Monto',
-          dataIndex: 'amount',
-          key: 'amount',
-          align: 'center',
-          render(val, item) {
-            return <>{item['plan'].amount}</>;
-          },
-        },
-        {
-          title: 'Precio',
-          dataIndex: 'price',
-          key: 'price',
-          align: 'center',
-          render(val, item) {
-            return <>${item['plan'].price}</>;
-          },
-        },
-      ],
-    },
-    {
-      title: 'Usuarios',
-      children: [
-        {
-          title: 'Monto',
-          dataIndex: 'amount',
-          key: 'amount',
-          align: 'center',
-          render(val, item) {
-            return <>{item['users'].amount}</>;
-          },
-        },
-        {
-          title: 'Precio',
-          dataIndex: 'price',
-          key: 'price',
-          align: 'center',
-          render(val, item) {
-            return <>${item['users'].price}</>;
-          },
-        },
-      ],
     },
   ];
 
@@ -137,7 +97,21 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
-        return <Tag color={item.status === 'ACEPTED' ? 'green' : 'orange'}>{item.status}</Tag>;
+        //APPROVED VOIDED DECLINED ERROR PENDING
+        const color = () => {
+          switch (val) {
+            case 'APPROVED':
+              return 'green';
+            case 'VOIDED':
+            case 'PENDING':
+              return 'orange';
+            case 'DECLINED':
+            case 'ERROR':
+              return 'red';
+          }
+        };
+
+        return <Tag color={color()}>{item.status}</Tag>;
       },
     },
     {
@@ -166,6 +140,7 @@ const myPlan = ({ cUser }) => {
       key: 'actions',
       render(val, item) {
         const payment = item.billing.payment_method || item.payment || {};
+        console.log(item);
         return (
           <Space wrap>
             <Tooltip placement='topLeft' title={'Previsualización'}>
@@ -213,7 +188,6 @@ const myPlan = ({ cUser }) => {
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>Fecha de la venta:</Typography.Text> {item?.created_at}
-                      {/* {moment(item.billing.created_at).format('YYYY-MM-DD')} */}
                     </Typography.Text>
 
                     <Typography.Text>
@@ -233,10 +207,22 @@ const myPlan = ({ cUser }) => {
                       <Typography.Text strong>Referencia del comprobante:</Typography.Text>{' '}
                       {item?.billing?.reference_evius} (evius) / {item?.billing?.reference_wompi} (wompi)
                     </Typography.Text>
-                    {/* <Typography.Text>
-                      <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text>
-                      <Table dataSource={item?.billing?.details} columns={cols} pagination={false} />
-                    </Typography.Text> */}
+                    <Typography.Text>
+                      <Space direction='vertical'>
+                        <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text>
+                        <Typography.Text>
+                          Plan: {item?.billing?.details['plan'].amount} (${item?.billing?.details['plan'].price})
+                        </Typography.Text>
+
+                        <Typography.Text>
+                          Usuarios adicionales: {item?.billing?.details['users'].amount} ($
+                          {item?.billing?.details['users'].price}){' '}
+                          <small>
+                            (Total: ${item?.billing?.details['users'].amount * item?.billing?.details['users'].price})
+                          </small>
+                        </Typography.Text>
+                      </Space>
+                    </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>Estatus de la compra:</Typography.Text> {item?.status}
                     </Typography.Text>
@@ -288,7 +274,15 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
-        return <Tag color={val === 'ACTIVE' ? 'green' : 'orange'}>{val}</Tag>;
+        const color = () => {
+          switch (val) {
+            case 'ACTIVE':
+              return 'green';
+            default:
+              return 'orange';
+          }
+        };
+        return <Tag color={color()}>{val}</Tag>;
       },
     },
     {
@@ -305,7 +299,6 @@ const myPlan = ({ cUser }) => {
 
   useEffect(() => {
     getInfoPlans();
-    console.log(plan, 'plan');
 
     GetTokenUserFirebase().then((token) => {
       if (token) {
@@ -333,7 +326,7 @@ const myPlan = ({ cUser }) => {
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
     setBills(bills.data);
     setLoadingBill(false);
-    console.log('bills', bills.data);
+    /* console.log('bills', bills.data); */
     /* Consumos del usuario */
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption.events);
@@ -388,6 +381,12 @@ const myPlan = ({ cUser }) => {
             />
           </Col>
           <Col span={24}>
+            {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users > 0 && (
+              <Typography.Text strong>
+                Has comprado {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users} usuarios adicionales en tu
+                plan
+              </Typography.Text>
+            )}
             {totalUsersByPlan?.totalRegisteredUsers > 0 && (
               <Alert
                 message={
@@ -399,15 +398,16 @@ const myPlan = ({ cUser }) => {
                 showIcon
               />
             )}
-            {/* <Typography.Text strong style={{ color: 'orange' }}>
+            <Typography.Text strong style={{ color: 'orange' }}>
               <small>
                 <Space>
                   <Typography.Text>
-
+                    Tu plan se encuentra activo desde {moment(new Date()).format('DD-MM-YYYY')} y termina el{' '}
+                    {moment(new Date()).format('DD-MM-YYYY')}
                   </Typography.Text>
                 </Space>
               </small>
-            </Typography.Text> */}
+            </Typography.Text>
             <Table
               dataSource={consumption}
               columns={columnsEvents}
