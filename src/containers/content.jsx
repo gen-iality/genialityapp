@@ -45,6 +45,7 @@ const QueryTesting = loadable(() => import('../components/events/surveys/compone
 const EventFinished = loadable(() => import('../components/eventFinished/eventFinished'));
 const LoginWithCode = loadable(() => import('../components/AdminUsers/WithCode'));
 const NoMatchPage = loadable(() => import('../components/notFoundPage/noMatchPage'));
+const ViewPrelanding = loadable(() => import('@/components/prelanding/viewPrelanding'));
 
 const { useBreakpoint } = Grid;
 const ContentContainer = () => {
@@ -57,6 +58,7 @@ const ContentContainer = () => {
       }}>
       <main className='main'>
         <Switch>
+          <RouteContext exact path={'/:event_id'} component={ViewPrelanding} />
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
           {/*Ruta para ver resumen */}
           <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
@@ -134,6 +136,33 @@ const RouteContext = ({ component: Component, ...rest }) => (
                     <Component {...props} />
                     <ModalAuth />
                     <ModalNoRegister />
+                  </Layout>
+                </SurveysProvider>
+              </HelperContextProvider>
+            </AgendaContextProvider>
+          </CurrentUserProvider>
+        </CurrentUserEventProvider>
+      </CurrentEventProvider>
+    )}
+  />
+);
+
+const RouteContextNoModal = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (
+      <CurrentEventProvider>
+        <CurrentUserEventProvider>
+          <CurrentUserProvider>
+            <AgendaContextProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <Layout
+                    style={{
+                      minHeight: '100vh',
+                    }}>
+                    <Header />
+                    <Component {...props} />
                   </Layout>
                 </SurveysProvider>
               </HelperContextProvider>
