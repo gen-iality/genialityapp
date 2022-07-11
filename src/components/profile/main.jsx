@@ -364,8 +364,7 @@ const MainProfile = (props) => {
                                         </div>,
                                       ]}
                                       blockedEvent={
-                                        props?.cUser?.value?.plan?.availables?.streaming_hours ||
-                                        eventCard.value?.later_days
+                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
                                       }
                                     />
                                   </Col>
@@ -483,7 +482,7 @@ const MainProfile = (props) => {
                               </div>,
                             ]}
                             blockedEvent={
-                              props?.cUser?.value?.plan?.availables?.streaming_hours || eventCard.value?.later_days
+                              props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
                             }
                           />
                         </Col>

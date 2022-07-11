@@ -59,6 +59,11 @@ const myPlan = ({ cUser }) => {
       title: 'Fecha',
       dataIndex: 'created_at',
       key: 'created_at',
+      render(val, item) {
+        const date = moment(val).subtract(5, 'hours');
+
+        return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
+      },
     },
   ];
 
@@ -130,9 +135,11 @@ const myPlan = ({ cUser }) => {
       title: 'Fecha',
       dataIndex: 'created_at',
       key: 'created_at',
-      /* render(val, item) {
-        return <>{moment(val).format('YYYY-MM-DD')}</>;
-      }, */
+      render(val, item) {
+        const date = moment(val).subtract(5, 'hours');
+
+        return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
+      },
     },
     {
       title: 'Acciones',
@@ -140,7 +147,6 @@ const myPlan = ({ cUser }) => {
       key: 'actions',
       render(val, item) {
         const payment = item.billing.payment_method || item.payment || {};
-        console.log(item);
         return (
           <Space wrap>
             <Tooltip placement='topLeft' title={'Previsualización'}>
@@ -171,7 +177,7 @@ const myPlan = ({ cUser }) => {
                       {payment['address']?.name} {payment['address']?.last_name}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Identificación:</Typography.Text>
+                      <Typography.Text strong>Identificación:</Typography.Text>{' '}
                       {payment['address']?.identification['type']} {payment['address']?.identification['value']}
                     </Typography.Text>
                     <Typography.Text>
@@ -191,8 +197,9 @@ const myPlan = ({ cUser }) => {
                     </Typography.Text>
 
                     <Typography.Text>
-                      <Typography.Text strong>Valor base de la venta:</Typography.Text> {item?.billing?.currency} $
-                      {item?.billing?.total} con ({item?.billing?.tax * 100}% de impuesto){' '}
+                      <Typography.Text strong>Valor base de la venta:</Typography.Text>{' '}
+                      {/* {item?.billing?.currency} */}COP ${item?.billing?.total} con ({item?.billing?.tax * 100}% de
+                      impuesto){' '}
                       {item?.billing?.total_discount && <>y un descuento de ${item?.billing?.total_discount}</>}
                     </Typography.Text>
                     <Typography.Text>
@@ -210,17 +217,22 @@ const myPlan = ({ cUser }) => {
                     <Typography.Text>
                       <Space direction='vertical'>
                         <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text>
-                        <Typography.Text>
-                          Plan: {item?.billing?.details['plan'].amount} (${item?.billing?.details['plan'].price})
-                        </Typography.Text>
 
-                        <Typography.Text>
-                          Usuarios adicionales: {item?.billing?.details['users'].amount} ($
-                          {item?.billing?.details['users'].price}){' '}
-                          <small>
-                            (Total: ${item?.billing?.details['users'].amount * item?.billing?.details['users'].price})
-                          </small>
-                        </Typography.Text>
+                        {item?.action === 'SUBSCRIPTION' && (
+                          <Typography.Text>
+                            Plan: {item?.billing?.details['plan'].amount} (${item?.billing?.details['plan'].price})
+                          </Typography.Text>
+                        )}
+
+                        {item?.action === 'ADDITIONAL' && (
+                          <Typography.Text>
+                            Usuarios adicionales: {item?.billing?.details['users'].amount} ($
+                            {item?.billing?.details['users'].price}){' '}
+                            <small>
+                              (Total: ${item?.billing?.details['users'].amount * item?.billing?.details['users'].price})
+                            </small>
+                          </Typography.Text>
+                        )}
                       </Space>
                     </Typography.Text>
                     <Typography.Text>
@@ -326,7 +338,7 @@ const myPlan = ({ cUser }) => {
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
     setBills(bills.data);
     setLoadingBill(false);
-    /* console.log('bills', bills.data); */
+    console.log('bills', bills.data);
     /* Consumos del usuario */
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption.events);
@@ -336,10 +348,6 @@ const myPlan = ({ cUser }) => {
     let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
     setTotalUsersByPlan(totalUsersByPlan);
     /* console.log(totalUsersByPlan, 'aqui'); */
-
-    /* console.log(plans, 'plans');
-    console.log(plans[0]._id, plans[1]._id, plan._id); */
-    //const p = await PlansApi.getOne('62864ad118aa6b4b0f5820a2');
   };
 
   return (
@@ -381,30 +389,33 @@ const myPlan = ({ cUser }) => {
             />
           </Col>
           <Col span={24}>
-            {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users > 0 && (
-              <Typography.Text strong>
-                Has comprado {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users} usuarios adicionales en tu
-                plan
-              </Typography.Text>
-            )}
-            {totalUsersByPlan?.totalRegisteredUsers > 0 && (
-              <Alert
-                message={
-                  totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
-                    ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
-                    : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`
-                }
-                type='warning'
-                showIcon
-              />
-            )}
             <Typography.Text strong style={{ color: 'orange' }}>
               <small>
-                <Space>
-                  <Typography.Text>
-                    Tu plan se encuentra activo desde {moment(new Date()).format('DD-MM-YYYY')} y termina el{' '}
-                    {moment(new Date()).format('DD-MM-YYYY')}
-                  </Typography.Text>
+                <Space direction='vertical'>
+                  {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users > 0 && (
+                    <Typography.Text strong>
+                      Has comprado {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users} usuarios adicionales
+                      en tu plan
+                    </Typography.Text>
+                  )}
+                  {totalUsersByPlan?.totalRegisteredUsers > 0 && (
+                    <Alert
+                      message={
+                        totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
+                          ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
+                          : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`
+                      }
+                      type='warning'
+                      showIcon
+                    />
+                  )}
+                  {cUser.value?.start_date && cUser.value?.end_date && (
+                    <Typography.Text>
+                      Tu plan se encuentra activo desde{' '}
+                      {cUser.value?.start_date && moment(cUser.value?.start_date).format('DD-MM-YYYY')} y termina el{' '}
+                      {cUser.value?.end_date && moment(cUser.value?.end_date).format('DD-MM-YYYY')}
+                    </Typography.Text>
+                  )}
                 </Space>
               </small>
             </Typography.Text>
