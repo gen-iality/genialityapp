@@ -194,11 +194,12 @@ const menuLanding = (props) => {
   const [keySelect, setkeySelect] = useState(Date.now());
   const [isLoading, setisLoading] = useState(true);
   let cUser = UseCurrentUser();
-  const toDisable = cUser.value.plan.availables.networking;
+  const toDisable = cUser.value.plan?.availables?.networking;
 
   useEffect(() => {
     getMenu();
-  }, []);
+    console.log('entro');
+  }, [menu, itemsMenu]);
 
   const getMenu = async () => {
     const menuBase = menu;

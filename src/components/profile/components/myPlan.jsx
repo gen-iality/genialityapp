@@ -126,7 +126,7 @@ const myPlan = ({ cUser }) => {
       render(val, item) {
         return (
           <div>
-            {/* {item.billing.currency} */}COP ${item.billing.total}
+            {/* {item.billing.currency} */}COP ${item.billing.total / 100}
           </div>
         );
       },
@@ -198,8 +198,8 @@ const myPlan = ({ cUser }) => {
 
                     <Typography.Text>
                       <Typography.Text strong>Valor base de la venta:</Typography.Text>{' '}
-                      {/* {item?.billing?.currency} */}COP ${item?.billing?.total} con ({item?.billing?.tax * 100}% de
-                      impuesto){' '}
+                      {/* {item?.billing?.currency} */}COP ${item?.billing?.total / 100} con ({item?.billing?.tax * 100}
+                      % de impuesto){' '}
                       {item?.billing?.total_discount && <>y un descuento de ${item?.billing?.total_discount}</>}
                     </Typography.Text>
                     <Typography.Text>
@@ -341,9 +341,9 @@ const myPlan = ({ cUser }) => {
     console.log('bills', bills.data);
     /* Consumos del usuario */
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
-    setConsumption(consumption.events);
+    setConsumption(consumption);
     setLoadingConsumption(false);
-    /* console.log('consumption', consumption.data); */
+    console.log('consumption', consumption);
     /* Total de registros de usuario */
     let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
     setTotalUsersByPlan(totalUsersByPlan);
@@ -392,6 +392,13 @@ const myPlan = ({ cUser }) => {
             <Typography.Text strong style={{ color: 'orange' }}>
               <small>
                 <Space direction='vertical'>
+                  {consumption?.start_date && consumption?.end_date && (
+                    <Typography.Text>
+                      Tu plan se encuentra activo desde{' '}
+                      {consumption?.start_date && moment(consumption?.start_date).format('DD-MM-YYYY')} hasta el{' '}
+                      {consumption?.end_date && moment(consumption?.end_date).format('DD-MM-YYYY')}
+                    </Typography.Text>
+                  )}
                   {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users > 0 && (
                     <Typography.Text strong>
                       Has comprado {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users} usuarios adicionales
@@ -405,18 +412,11 @@ const myPlan = ({ cUser }) => {
                         : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`}
                     </Tag>
                   )}
-                  {cUser.value?.start_date && cUser.value?.end_date && (
-                    <Typography.Text>
-                      Tu plan se encuentra activo desde{' '}
-                      {cUser.value?.start_date && moment(cUser.value?.start_date).format('DD-MM-YYYY')} y termina el{' '}
-                      {cUser.value?.end_date && moment(cUser.value?.end_date).format('DD-MM-YYYY')}
-                    </Typography.Text>
-                  )}
                 </Space>
               </small>
             </Typography.Text>
             <Table
-              dataSource={consumption}
+              dataSource={consumption.events}
               columns={columnsEvents}
               scroll={{ x: 'auto' }}
               loading={loadingNotification}
