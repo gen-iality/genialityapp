@@ -3,7 +3,7 @@ import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request
 import PlanCard from './planCard';
 import Plan from './plan';
 import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal, Alert } from 'antd';
-import { DownOutlined, FileDoneOutlined, RightOutlined } from '@ant-design/icons';
+import { DownOutlined, ExclamationCircleOutlined, FileDoneOutlined, RightOutlined } from '@ant-design/icons';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
@@ -399,15 +399,11 @@ const myPlan = ({ cUser }) => {
                     </Typography.Text>
                   )}
                   {totalUsersByPlan?.totalRegisteredUsers > 0 && (
-                    <Alert
-                      message={
-                        totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
-                          ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
-                          : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`
-                      }
-                      type='warning'
-                      showIcon
-                    />
+                    <Tag icon={<ExclamationCircleOutlined />} color='warning'>
+                      {totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
+                        ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
+                        : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`}
+                    </Tag>
                   )}
                   {cUser.value?.start_date && cUser.value?.end_date && (
                     <Typography.Text>
