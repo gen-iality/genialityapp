@@ -1206,9 +1206,9 @@ class General extends Component {
               </Row>
             </Tabs.TabPane>
             <Tabs.TabPane
-              tab='Pre landing'
+              tab='Landing informativa'
               key='3'
-              style={{ paddingLeft: '30px', paddingRight: '30px', paddingBottom: '30px' }}>
+              style={{ paddingLeft: '25px', paddingRight: '25px', paddingBottom: '30px' }}>
               <PreLandingSections tabActive={this.state.tabActive} />
             </Tabs.TabPane>
           </Tabs>
