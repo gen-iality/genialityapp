@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from 'react';
 import EventLanding from '../events/eventLanding';
 import ActivityBlock from './block/activityBlock';
 import DescriptionBlock from './block/descriptionBlock';
+import MenuScrollBlock from './MenuScrollBlock';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -95,17 +96,16 @@ const ViewPrelanding = (props) => {
             <Row gutter={[0, 16]} align='stretch' justify='center'>
               <Col span={24} order={1}>
                 <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: '10px' }}>
-                  {sections &&
-                    sections
-                      .filter((section) => section?.status)
-                      .map((section) => {
-                        return <Card style={{ float: 'left', marginRight: 20 }}>{section.name}</Card>;
-                      })}
+                  <Row justify='center' align='middle'>
+                    <MenuScrollBlock sections={sections && sections} />
+                  </Row>
                 </Card>
               </Col>
               {visibleSection('Contador') && (
                 <Col order={obtenerOrder('Contador')} span={24}>
-                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
+                  <Card
+                    id='Contador_block'
+                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
                     Bloque de cuenta regresiva
                   </Card>
                 </Col>
@@ -113,6 +113,7 @@ const ViewPrelanding = (props) => {
               {visibleSection('Descripción') && (
                 <Col order={obtenerOrder('Descripción')} span={24}>
                   <Card
+                    id='Descripción_block'
                     style={{
                       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                       height: '300px',
@@ -125,14 +126,18 @@ const ViewPrelanding = (props) => {
               )}
               {visibleSection('Conferencistas') && (
                 <Col span={24} order={obtenerOrder('Conferencistas')}>
-                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
+                  <Card
+                    id='Conferencistas_block'
+                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
                     Bloque de conferencistas
                   </Card>
                 </Col>
               )}
               {visibleSection('Actividades') && (
                 <Col span={24} order={obtenerOrder('Actividades')}>
-                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
+                  <Card
+                    id='Actividades_block'
+                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
                     Bloque de actividades
                     <ActivityBlock />
                   </Card>
