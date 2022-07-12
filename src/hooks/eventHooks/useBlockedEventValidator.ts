@@ -8,9 +8,7 @@ export const useBlockedEventValidator = (event: any, cUser: any) => {
   if (!cUser) return null;
 
   let actualDate = new Date(event.value?.datetime_to);
-  let dayUserOrEvent = cUser?.value?.plan
-    ? cUser?.value?.plan?.availables?.later_days / 60 / 24
-    : event.value?.later_days / 60 / 24;
+  let dayUserOrEvent = cUser?.value?.plan ? cUser?.value?.plan?.availables?.later_days : event.value?.later_days;
 
   let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + dayUserOrEvent));
   let formatDate = moment(blockedDate).format('DD-MM-YYYY');

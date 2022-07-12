@@ -348,6 +348,7 @@ const myPlan = ({ cUser }) => {
       setConsumption(consumption);
       setLoadingConsumption(false);
     } catch (error) {
+      /* console.log(error, 'error'); */
       setLoadingConsumption(false);
     }
 

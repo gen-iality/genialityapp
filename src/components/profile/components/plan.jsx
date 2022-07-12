@@ -56,7 +56,7 @@ const plan = ({ plan, mine, children }) => {
           </Space>
           <Space>
             <Typography.Text strong>Días posteriores: </Typography.Text>
-            <Typography.Text>{plan?.availables?.later_days / 60 / 24 || 'Personalizado'}</Typography.Text>
+            <Typography.Text>{plan?.availables?.later_days || 'Personalizado'}</Typography.Text>
           </Space>
         </Col>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>

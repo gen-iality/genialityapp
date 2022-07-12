@@ -26,7 +26,7 @@ class EventCard extends Component {
     //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
     let actualDate = new Date(event.datetime_to);
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
-    let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent / 60 / 24));
+    let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
     let formatDate = Moment(blockedDate).format('DD MMM YYYY');
 
     return (
