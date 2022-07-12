@@ -1,4 +1,23 @@
-import { Affix, Avatar, Button, Card, Col, Layout, List, message, Row, Space, Spin, Switch, Table, Tag } from 'antd';
+import {
+  Affix,
+  Avatar,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Layout,
+  List,
+  message,
+  Modal,
+  Row,
+  Space,
+  Spin,
+  Switch,
+  Table,
+  Tag,
+} from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined, MenuOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 import { useContext, useEffect, useState } from 'react';
@@ -8,6 +27,7 @@ import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { CurrentEventContext } from '@/context/eventContext';
 import { EventsApi } from '@/helpers/request';
 import { async } from 'ramda-adjunct';
+import moment from 'moment';
 const DragHandle = SortableHandle(() => (
   <DragIcon
     style={{
@@ -221,6 +241,44 @@ const PreLandingSections = ({ tabActive }) => {
           </Layout>
         </Card>
       </Col>
+      {/* Modal para la creacion de la data del contador */}
+      <Modal
+        footer={null}
+        visible={true}
+        bodyStyle={{ paddingLeft: '40px', paddingTop: '30px', paddingRight: '40px', paddingBottom: '30px' }}>
+        <Form layout='vertical'>
+          <Form.Item label='Fecha y hora'>
+            <DatePicker
+              allowClear={false}
+              style={{ width: '100%' }}
+              format='YYYY-MM-DD HH:mm:ss'
+              showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+            />
+          </Form.Item>
+          <Form.Item label='Mensaje durante la cuenta'>
+            <Input.TextArea
+              showCount
+              autoSize={{ minRows: 2, maxRows: 4 }}
+              placeholder='Este mensaje se verá durante la cuenta regresiva'
+              maxLength={50}
+            />
+          </Form.Item>
+          <Form.Item label='Mensaje al finalizar la cuenta'>
+            <Input.TextArea
+              showCount
+              autoSize={{ minRows: 2, maxRows: 4 }}
+              placeholder='Este mensaje se verá al finalizar la cuenta regresiva'
+              maxLength={50}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button size='large' block type='primary' htmlType='submit'>
+              Guardar
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </Row>
   );
 };
