@@ -1,7 +1,8 @@
 import { CurrentEventContext } from '@/context/eventContext';
 import { SectionsPrelanding } from '@/helpers/constants';
 import { EventsApi } from '@/helpers/request';
-import { Col, Row, Layout, Card, Grid } from 'antd';
+import { ArrowUpOutlined } from '@ant-design/icons';
+import { Col, Row, Layout, Card, Grid, BackTop, Avatar } from 'antd';
 /** ant design */
 
 import { useContext, useEffect, useState } from 'react';
@@ -149,6 +150,13 @@ const ViewPrelanding = (props) => {
           </Col>
         </Row>
       </Content>
+      <BackTop>
+        <Avatar
+          shape='square'
+          icon={<ArrowUpOutlined />}
+          size={{ xs: 50, sm: 50, md: 50, lg: 50, xl: 50, xxl: 50 }}
+          style={{ color: '#FFFFFF', backgroundColor: '#000000', borderRadius: '8px' }}></Avatar>
+      </BackTop>
     </Layout>
   );
 };

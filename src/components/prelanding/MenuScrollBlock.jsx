@@ -1,22 +1,25 @@
-import { Button, Divider, Space } from 'antd';
+import { Button, Divider, Grid, Space } from 'antd';
 import ScrollIntoView from 'react-scroll-into-view';
 
+const { useBreakpoint } = Grid;
+
 const MenuScrollBlock = ({ sections }) => {
+  const screens = useBreakpoint();
   return (
-    <Space size={'large'}>
+    <Space
+      wrap
+      size={'large'}
+      split={!screens.xs && <Divider style={{ borderLeft: '1px solid black' }} type={'vertical'} />}>
       {sections &&
         sections
           .filter((section) => section?.status)
           .map((section) => {
             return (
-              <>
-                <ScrollIntoView selector={`#${section.name}_block`}>
-                  <Button type='text' size='large'>
-                    {section.name}
-                  </Button>
-                </ScrollIntoView>
-                <Divider type='vertical' />
-              </>
+              <ScrollIntoView alignToTop={true} selector={`#${section.name}_block`}>
+                <Button type='text' size='large'>
+                  {section.name}
+                </Button>
+              </ScrollIntoView>
             );
           })}
     </Space>
