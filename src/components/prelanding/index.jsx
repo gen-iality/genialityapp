@@ -44,6 +44,7 @@ const SortableBody = SortableContainer((props) => <tbody {...props} />);
 const PreLandingSections = ({ tabActive }) => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
@@ -141,12 +142,19 @@ const PreLandingSections = ({ tabActive }) => {
               unCheckedChildren={<EyeInvisibleOutlined />}
               checked={val}
             />
-            <Button>Configurar</Button>
+            <Button onClick={() => settingsSection(item)}>Configurar</Button>
           </Space>
         );
       },
     },
   ];
+
+  //SETTINGS SECTIONS
+  const settingsSection = (section) => {
+    if (section.name === 'Contador') {
+      setVisible(true);
+    }
+  };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
@@ -243,8 +251,9 @@ const PreLandingSections = ({ tabActive }) => {
       </Col>
       {/* Modal para la creacion de la data del contador */}
       <Modal
+        onCancel={() => setVisible(false)}
         footer={null}
-        visible={true}
+        visible={visible}
         bodyStyle={{ paddingLeft: '40px', paddingTop: '30px', paddingRight: '40px', paddingBottom: '30px' }}>
         <Form layout='vertical'>
           <Form.Item label='Fecha y hora'>
