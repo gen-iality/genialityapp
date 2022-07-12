@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from 'react';
 import EventLanding from '../events/eventLanding';
 import ActivityBlock from './block/activityBlock';
 import DescriptionBlock from './block/descriptionBlock';
+import SpeakersBlock from './block/speakersBlock';
 import MenuScrollBlock from './MenuScrollBlock';
 
 const { Content } = Layout;
@@ -119,7 +120,7 @@ const ViewPrelanding = (props) => {
                       height: '300px',
                       borderRadius: '20px',
                     }}>
-                    Bloque de conferencistas
+                    Bloque de Descripción
                     {/*<DescriptionBlock />*/}
                   </Card>
                 </Col>
@@ -130,6 +131,7 @@ const ViewPrelanding = (props) => {
                     id='Conferencistas_block'
                     style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
                     Bloque de conferencistas
+                    {/* <SpeakersBlock /> */}
                   </Card>
                 </Col>
               )}
@@ -139,7 +141,7 @@ const ViewPrelanding = (props) => {
                     id='Actividades_block'
                     style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
                     Bloque de actividades
-                    <ActivityBlock />
+                    {/* <ActivityBlock /> */}
                   </Card>
                 </Col>
               )}
