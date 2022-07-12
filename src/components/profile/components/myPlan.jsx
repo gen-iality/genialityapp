@@ -28,7 +28,7 @@ const myPlan = ({ cUser }) => {
   const [UrlAdditional, setUrlAdditional] = useState('');
   let [token, setToken] = useState('');
   const goBackUrlPayment = window.location.toString().includes('https://staging.evius.co/')
-    ? 'https://staging.evius.co/'
+    ? 'https://staging.evius.co/myprofile/events'
     : window.location.toString().includes('https://app.evius.co/myprofile/events')
     ? 'https://app.evius.co/myprofile/events'
     : 'http://localhost:3000/myprofile/events';
@@ -331,21 +331,26 @@ const myPlan = ({ cUser }) => {
     /* console.log('plans', plans); */
 
     /* Notificaciones/Alertas */
-    let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
+    let notifications = await AlertsPlanApi.getByUser(cUser.value?._id);
     setNotifications(notifications.data);
     setLoadingNotification(false);
     /* console.log(notifications.data, 'notifications'); */
 
     /* Facturas/Comprobantes */
-    let bills = await BillssPlanApi.getByUser(cUser.value._id);
+    let bills = await BillssPlanApi.getByUser(cUser.value?._id);
     setBills(bills.data);
     setLoadingBill(false);
     /* console.log('bills', bills.data); */
 
     /* Consumos del usuario */
-    let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
-    setConsumption(consumption);
-    setLoadingConsumption(false);
+    try {
+      let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value?._id);
+      setConsumption(consumption);
+      setLoadingConsumption(false);
+    } catch (error) {
+      setLoadingConsumption(false);
+    }
+
     /* console.log('consumption', consumption); */
 
     /* Total de registros de usuario */
@@ -374,7 +379,11 @@ const myPlan = ({ cUser }) => {
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
               title={'Usuarios'}
-              value={plan?.availables?.users || 'Ilimitados'}
+              value={
+                totalUsersByPlan?.totalAllowedUsers > 0
+                  ? totalUsersByPlan?.totalAllowedUsers
+                  : plan?.availables?.users || 'Ilimitados'
+              }
               icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
               message={
                 plan?.name !== 'Free' && (
@@ -406,7 +415,7 @@ const myPlan = ({ cUser }) => {
                   {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users > 0 && (
                     <Typography.Text strong>
                       Has comprado {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users} usuarios adicionales
-                      en tu plan
+                      en tu plan. El plan cuenta inicialmente con {plan?.availables?.users} usuarios en total.
                     </Typography.Text>
                   )}
                   {totalUsersByPlan?.totalRegisteredUsers > 0 && (
