@@ -329,21 +329,25 @@ const myPlan = ({ cUser }) => {
     let plans = await PlansApi.getAll();
     setPlans(plans);
     /* console.log('plans', plans); */
+
     /* Notificaciones/Alertas */
     let notifications = await AlertsPlanApi.getByUser(cUser.value._id);
     setNotifications(notifications.data);
     setLoadingNotification(false);
     /* console.log(notifications.data, 'notifications'); */
+
     /* Facturas/Comprobantes */
     let bills = await BillssPlanApi.getByUser(cUser.value._id);
     setBills(bills.data);
     setLoadingBill(false);
-    console.log('bills', bills.data);
+    /* console.log('bills', bills.data); */
+
     /* Consumos del usuario */
     let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value._id);
     setConsumption(consumption);
     setLoadingConsumption(false);
-    console.log('consumption', consumption);
+    /* console.log('consumption', consumption); */
+
     /* Total de registros de usuario */
     let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
     setTotalUsersByPlan(totalUsersByPlan);
@@ -419,7 +423,7 @@ const myPlan = ({ cUser }) => {
               dataSource={consumption.events}
               columns={columnsEvents}
               scroll={{ x: 'auto' }}
-              loading={loadingNotification}
+              loading={loadingConsumption}
               pagination={{ pageSize: 2 }}
             />
           </Col>
@@ -432,7 +436,7 @@ const myPlan = ({ cUser }) => {
         <Table dataSource={bills} columns={columnsBills} scroll={{ x: 'auto' }} loading={loadingBill} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Notificaciones'} key={'notifications'}>
-        <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingConsumption} />
+        <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingNotification} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
         {plans
