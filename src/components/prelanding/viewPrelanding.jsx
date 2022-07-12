@@ -6,6 +6,7 @@ import { Col, Row, Layout, Card, Grid } from 'antd';
 
 import { useContext, useEffect, useState } from 'react';
 import EventLanding from '../events/eventLanding';
+import ActivityBlock from './block/activityBlock';
 import DescriptionBlock from './block/descriptionBlock';
 
 const { Content } = Layout;
@@ -133,6 +134,7 @@ const ViewPrelanding = (props) => {
                 <Col span={24} order={obtenerOrder('Actividades')}>
                   <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
                     Bloque de actividades
+                    <ActivityBlock />
                   </Card>
                 </Col>
               )}
