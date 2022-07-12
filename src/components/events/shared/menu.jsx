@@ -57,7 +57,7 @@ const MenuConfig = (props) => {
             style={{
               width: '50%',
             }}
-            src={`${import.meta.env.VITE_LOGO_SVG}`}
+            src={`${import.meta.env.VITE_LOGO_SVG_DARK}`}
           />
           <Divider style={{ background: 'gray' }} />
         </Row>
