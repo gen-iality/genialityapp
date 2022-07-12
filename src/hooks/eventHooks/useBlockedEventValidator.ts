@@ -16,15 +16,13 @@ export const useBlockedEventValidator = (event: any, cUser: any) => {
   let formatDate = moment(blockedDate).format('DD-MM-YYYY');
   const blockedEventDate = formatDate;
 
-  console.log(cUser.value._id);
-
   if (new Date() > blockedDate) {
     const blockedMessage = async () => {
       try {
         let message = await AlertsPlanApi.createOne({
           message: 'Evento bloqueado sin días posteriores',
           status: 'ACTIVE',
-          user_id: cUser.value._id,
+          user_id: cUser.value?._id,
         });
         if (message) {
           DispatchMessageService({
