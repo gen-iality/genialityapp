@@ -1,8 +1,12 @@
 import { CurrentEventContext } from '@/context/eventContext';
+import { SectionsPrelanding } from '@/helpers/constants';
+import { EventsApi } from '@/helpers/request';
 import { Col, Row, Layout, Card, Grid } from 'antd';
 /** ant design */
 
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import EventLanding from '../events/eventLanding';
+import DescriptionBlock from './block/descriptionBlock';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -10,6 +14,8 @@ const { useBreakpoint } = Grid;
 const ViewPrelanding = (props) => {
   const screens = useBreakpoint();
   const cEventContext = useContext(CurrentEventContext);
+  const [loading, setLoading] = useState(false);
+  const [sections, setSections] = useState([]);
   console.log('Event', cEventContext);
   const cBanner = cEventContext.value?.styles?.banner_image;
   const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
@@ -31,6 +37,36 @@ const ViewPrelanding = (props) => {
     paddingTop: '40px',
     paddingBottom: '40px',
   };
+
+  const obtenerOrder = (name) => {
+    if (sections) {
+      return sections && sections.filter((section) => section.name == name)[0]?.index + 2;
+    } else {
+      return 2;
+    }
+  };
+
+  const visibleSection = (name) => {
+    if (sections) {
+      return sections && sections.filter((section) => section.name == name && section.status).length > 0 ? true : false;
+    } else {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!cEventContext.value) return;
+    setLoading(true);
+    obtainPreview();
+    async function obtainPreview() {
+      //OBTENENOS LAS SECCIONES DE PRELANDING
+      const previews = await EventsApi.getPreviews(cEventContext.value._id);
+      //SE ORDENAN LAS SECCIONES POR INDEX
+      const sections = previews.data.length > 0 ? previews.data.sort((a, b) => a.index - b.index) : SectionsPrelanding;
+      setSections(sections);
+      setLoading(false);
+    }
+  }, [cEventContext]);
   return (
     <Layout className='site-layout-background'>
       <Row className='headerContainer'>
@@ -48,37 +84,58 @@ const ViewPrelanding = (props) => {
           <Col id='Franja de titulo' span={24}>
             <Row>
               <Col span={24}>
-                <Card>Franja de titulo</Card>
+                <Card>
+                  <p>{cEventContext?.value?.name}</p>
+                </Card>
               </Col>
             </Row>
           </Col>
           <Col id='Bloques del evento' span={24}>
             <Row gutter={[0, 16]} align='stretch' justify='center'>
-              <Col span={24}>
+              <Col span={24} order={1}>
                 <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: '10px' }}>
-                  Menu de bloques
+                  {sections &&
+                    sections
+                      .filter((section) => section?.status)
+                      .map((section) => {
+                        return <Card style={{ float: 'left', marginRight: 20 }}>{section.name}</Card>;
+                      })}
                 </Card>
               </Col>
-              <Col span={24}>
-                <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
-                  Bloque de cuenta regresiva
-                </Card>
-              </Col>
-              <Col span={24}>
-                <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
-                  Bloque de descripción
-                </Card>
-              </Col>
-              <Col span={24}>
-                <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
-                  Bloque de conferencistas
-                </Card>
-              </Col>
-              <Col span={24}>
-                <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
-                  Bloque de actividades
-                </Card>
-              </Col>
+              {visibleSection('Contador') && (
+                <Col order={obtenerOrder('Contador')} span={24}>
+                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
+                    Bloque de cuenta regresiva
+                  </Card>
+                </Col>
+              )}
+              {visibleSection('Descripción') && (
+                <Col order={obtenerOrder('Descripción')} span={24}>
+                  <Card
+                    style={{
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      height: '300px',
+                      borderRadius: '20px',
+                    }}>
+                    Bloque de conferencistas
+                    {/*<DescriptionBlock />*/}
+                  </Card>
+                </Col>
+              )}
+              {visibleSection('Conferencistas') && (
+                <Col span={24} order={obtenerOrder('Conferencistas')}>
+                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
+                    Bloque de conferencistas
+                  </Card>
+                </Col>
+              )}
+              {visibleSection('Actividades') && (
+                <Col span={24} order={obtenerOrder('Actividades')}>
+                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
+                    Bloque de actividades
+                  </Card>
+                </Col>
+              )}
             </Row>
           </Col>
         </Row>

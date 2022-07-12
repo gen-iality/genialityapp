@@ -1,7 +1,14 @@
-import React from 'react';
+import EventLanding from '@/components/events/eventLanding';
+import { Col, Row } from 'antd';
 
-const descriptionBlock = () => {
-  return <div>descriptionBlock</div>;
+const DescriptionBlock = () => {
+  return (
+    <Row justify='center'>
+      <Col span={22} /* sm={24} md={16} lg={18} xl={18} */>
+        <EventLanding />
+      </Col>
+    </Row>
+  );
 };
 
-export default descriptionBlock;
+export default DescriptionBlock;
