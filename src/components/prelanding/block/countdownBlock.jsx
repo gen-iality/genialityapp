@@ -1,7 +1,7 @@
 import { CurrentEventContext } from '@/context/eventContext';
 import { Col, Grid, Row, Space, Typography } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import Countdown from 'react-countdown';
+import Countdown, { zeroPad } from 'react-countdown';
 
 const { useBreakpoint } = Grid;
 
@@ -63,7 +63,7 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Dias
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{days}</Typography.Text>
+                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(days)}</Typography.Text>
                   </Space>
                 </Col>
 
@@ -72,7 +72,7 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Horas
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{hours}</Typography.Text>
+                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(hours)}</Typography.Text>
                   </Space>
                 </Col>
                 <Col>
@@ -80,7 +80,7 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Minutos
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{minutes}</Typography.Text>
+                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(minutes)}</Typography.Text>
                   </Space>
                 </Col>
                 <Col>
@@ -88,7 +88,7 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Segundos
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{seconds}</Typography.Text>
+                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(seconds)}</Typography.Text>
                   </Space>
                 </Col>
               </Row>
