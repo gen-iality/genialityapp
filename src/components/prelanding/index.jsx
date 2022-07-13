@@ -28,6 +28,7 @@ import { CurrentEventContext } from '@/context/eventContext';
 import { EventsApi } from '@/helpers/request';
 import { async } from 'ramda-adjunct';
 import moment from 'moment';
+import ModalContador from './modalContador';
 const DragHandle = SortableHandle(() => (
   <DragIcon
     style={{
@@ -44,6 +45,7 @@ const SortableBody = SortableContainer((props) => <tbody {...props} />);
 const PreLandingSections = ({ tabActive }) => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
@@ -141,12 +143,19 @@ const PreLandingSections = ({ tabActive }) => {
               unCheckedChildren={<EyeInvisibleOutlined />}
               checked={val}
             />
-            <Button>Configurar</Button>
+            <Button onClick={() => settingsSection(item)}>Configurar</Button>
           </Space>
         );
       },
     },
   ];
+
+  //SETTINGS SECTIONS
+  const settingsSection = (section) => {
+    if (section.name === 'Contador') {
+      setVisible(true);
+    }
+  };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
@@ -242,43 +251,7 @@ const PreLandingSections = ({ tabActive }) => {
         </Card>
       </Col>
       {/* Modal para la creacion de la data del contador */}
-      <Modal
-        footer={null}
-        visible={true}
-        bodyStyle={{ paddingLeft: '40px', paddingTop: '30px', paddingRight: '40px', paddingBottom: '30px' }}>
-        <Form layout='vertical'>
-          <Form.Item label='Fecha y hora'>
-            <DatePicker
-              allowClear={false}
-              style={{ width: '100%' }}
-              format='YYYY-MM-DD HH:mm:ss'
-              showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
-            />
-          </Form.Item>
-          <Form.Item label='Mensaje durante la cuenta'>
-            <Input.TextArea
-              showCount
-              autoSize={{ minRows: 2, maxRows: 4 }}
-              placeholder='Este mensaje se verá durante la cuenta regresiva'
-              maxLength={50}
-            />
-          </Form.Item>
-          <Form.Item label='Mensaje al finalizar la cuenta'>
-            <Input.TextArea
-              showCount
-              autoSize={{ minRows: 2, maxRows: 4 }}
-              placeholder='Este mensaje se verá al finalizar la cuenta regresiva'
-              maxLength={50}
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Button size='large' block type='primary' htmlType='submit'>
-              Guardar
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <ModalContador visible={visible} setVisible={setVisible} />
     </Row>
   );
 };
