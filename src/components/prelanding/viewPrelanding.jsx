@@ -61,7 +61,7 @@ const ViewPrelanding = (props) => {
 
   const isVisibleCardSections = () => {
     if (sections) {
-      return sections && sections.filter((section) => section.name == name && section.status).length > 1 ? true : false;
+      return sections && sections.filter((section) => section.status).length > 1 ? true : false;
     } else {
       return false;
     }
