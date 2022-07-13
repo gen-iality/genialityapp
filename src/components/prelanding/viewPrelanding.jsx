@@ -8,6 +8,7 @@ import { Col, Row, Layout, Card, Grid, BackTop, Avatar } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import EventLanding from '../events/eventLanding';
 import ActivityBlock from './block/activityBlock';
+import CountdownBlock from './block/countdownBlock';
 import DescriptionBlock from './block/descriptionBlock';
 import SpeakersBlock from './block/speakersBlock';
 import MenuScrollBlock from './MenuScrollBlock';
@@ -107,8 +108,8 @@ const ViewPrelanding = (props) => {
                 <Col order={obtenerOrder('Contador')} span={24}>
                   <Card
                     id='Contador_block'
-                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
-                    Bloque de cuenta regresiva
+                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: 'auto', borderRadius: '20px' }}>
+                    <CountdownBlock />
                   </Card>
                 </Col>
               )}

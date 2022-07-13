@@ -5,6 +5,25 @@ const { useBreakpoint } = Grid;
 
 const MenuScrollBlock = ({ sections }) => {
   const screens = useBreakpoint();
+
+  const createLabel = (name) => {
+    let label;
+    switch (name) {
+      case 'Contador':
+        label = 'Contador';
+        break;
+      case 'Descripción':
+        label = 'Descripción';
+        break;
+      case 'Conferencistas':
+        label = 'Conferención';
+        break;
+      case 'Actividades':
+        label = 'Actividades';
+        break;
+    }
+    return label;
+  };
   return (
     <Space
       wrap
@@ -17,7 +36,7 @@ const MenuScrollBlock = ({ sections }) => {
             return (
               <ScrollIntoView alignToTop={true} selector={`#${section.name}_block`}>
                 <Button type='text' size='large'>
-                  {section.name}
+                  {createLabel(section.name)}
                 </Button>
               </ScrollIntoView>
             );
