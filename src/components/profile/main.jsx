@@ -33,7 +33,12 @@ import moment from 'moment';
 import Loading from './loading';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
+import MyPlan from './components/myPlan';
 import { imageUtils } from '../../Utilities/ImageUtils';
+import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
+import eventCard from '../shared/eventCard';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -54,6 +59,7 @@ const MainProfile = (props) => {
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
+  const { helperDispatch } = useHelper();
 
   const showSider = () => {
     if (!collapsed) {
@@ -69,6 +75,12 @@ const MainProfile = (props) => {
 
   const eventsIHaveCreated = async () => {
     const events = await EventsApi.mine();
+
+    if (events.length > 0) {
+      events.map((event) => {
+        featureBlockingListener(event._id, helperDispatch, 'map');
+      });
+    }
     const eventsDataSorted = events.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
     setevents(eventsDataSorted);
     seteventsLimited(events.slice(0, 3));
@@ -83,6 +95,11 @@ const MainProfile = (props) => {
       setEventsThatIHaveParticipatedIsLoading(false);
       return;
     }
+
+    ticketsall.map((event) => {
+      featureBlockingListener(event.event_id, helperDispatch, 'map');
+    });
+
     const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     const usersInscription = [];
     ticketsDataSorted.forEach(async (element) => {
@@ -109,7 +126,7 @@ const MainProfile = (props) => {
     /* Eventos creados por el usuario    */
     eventsIHaveCreated();
     /* ----------------------------------*/
-    /* Eventos en los que esta registrado el usuario */
+    /* Eventos en los que esta inscrito el usuario */
 
     eventsThatIHaveParticipated();
     /* ----------------------------------*/
@@ -204,6 +221,16 @@ const MainProfile = (props) => {
                 icon={<LockOutlined style={{ fontSize: '18px' }} />}>
                 Cambiar contraseña
               </Menu.Item>
+              <Menu.Item
+                title={null}
+                onClick={() => {
+                  showContent('MY_PLAN');
+                  screens.xs && showSider();
+                }}
+                key={'myPlan'}
+                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
+                Mi plan
+              </Menu.Item>
             </Menu>
           </Col>
           <Col>
@@ -292,7 +319,7 @@ const MainProfile = (props) => {
                           xxl={8}>
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
-                              title={<span style={{ fontSize: '16px' }}>Eventos en los que estoy registrado</span>}
+                              title={<span style={{ fontSize: '16px' }}>Eventos en los que estoy inscrito</span>}
                               value={tickets.length && tickets.length > 0 ? tickets.length : 0}
                               // loading={tickets.length ? false : true}
                               precision={0}
@@ -336,6 +363,9 @@ const MainProfile = (props) => {
                                           </Link>
                                         </div>,
                                       ]}
+                                      blockedEvent={
+                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                                      }
                                     />
                                   </Col>
                                 );
@@ -347,7 +377,7 @@ const MainProfile = (props) => {
                     </Col>
 
                     <Col span={24}>
-                      <Divider orientation='left'>Eventos en los que estoy registrado</Divider>
+                      <Divider orientation='left'>Eventos en los que estoy inscrito</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsThatIHaveParticipatedIsLoading ? (
                           <Loading />
@@ -451,6 +481,9 @@ const MainProfile = (props) => {
                                 </Link>
                               </div>,
                             ]}
+                            blockedEvent={
+                              props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                            }
                           />
                         </Col>
                       );
@@ -458,7 +491,7 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab='Registros a eventos' key='4'>
+              <TabPane tab='Inscripciones a eventos' key='4'>
                 {eventsThatIHaveParticipatedIsLoading ? (
                   <Loading />
                 ) : (
@@ -485,6 +518,7 @@ const MainProfile = (props) => {
               </TabPane>
             </Tabs>
           )}
+          {content === 'MY_PLAN' && <MyPlan cUser={props.cUser} />}
         </Content>
       </Layout>
     </Layout>

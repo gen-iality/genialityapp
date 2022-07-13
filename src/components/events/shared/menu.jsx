@@ -43,6 +43,7 @@ const MenuConfig = (props) => {
   const handleClick = (e) => {
     if (!navigator.onLine) e.preventDefault();
   };
+  // cosole.log('Test request');
   return (
     <Menu
       // defaultOpenKeys={['main']}

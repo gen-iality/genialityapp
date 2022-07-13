@@ -13,6 +13,7 @@ export interface HelperState {
   currentActivity: object | null;
   showNotification: boolean;
   params: object;
+  eventIsActive: boolean;
 }
 
 export interface logoutUser {

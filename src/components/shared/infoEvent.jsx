@@ -10,9 +10,10 @@ import { useIntl } from 'react-intl';
 
 const InfoEvent = () => {
   let cEvent = UseEventContext();
-  let { handleChangeTypeModal } = useHelper();
+  let { handleChangeTypeModal, eventIsActive } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
+
   const intl = useIntl();
   return (
     <PageHeader
@@ -31,7 +32,11 @@ const InfoEvent = () => {
         recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
         cUser?.value &&
         !cEventUser?.value && (
-          <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
+          <Button
+            onClick={() => handleChangeTypeModal('registerForTheEvent')}
+            type='primary'
+            size='large'
+            disabled={!eventIsActive}>
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al evento',

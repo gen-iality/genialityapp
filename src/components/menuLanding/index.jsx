@@ -1,10 +1,11 @@
 import { Component, Fragment } from 'react';
-import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber } from 'antd';
+import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber, Result } from 'antd';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
+import { CurrentUserContext } from '@/context/userContext';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -198,6 +199,7 @@ class menuLanding extends Component {
     };
     this.submit = this.submit.bind(this);
   }
+  static contextType = CurrentUserContext;
 
   async componentDidMount() {
     const menuBase = this.state.menu;
@@ -370,6 +372,8 @@ class menuLanding extends Component {
     this.setState({ itemsMenu: itemsMenuToOrder });
   }
   render() {
+    const userContext = this.context;
+    const userPlan = userContext.value?.plan;
     return (
       <Fragment>
         <Form {...formLayout} onFinish={this.submit}>
@@ -386,47 +390,53 @@ class menuLanding extends Component {
             <Row gutter={[8, 8]} wrap>
               {Object.keys(this.state.menu).map((key, index) => (
                 <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                  <Card title={this.state.menu[key].name} bordered={true}>
-                    <Form.Item name={this.state.menu[key].name}>
-                      <Button
-                        onClick={() => {
-                          this.mapActiveItemsToAvailable(key);
-                        }}>
-                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                      </Button>
-                    </Form.Item>
-                    <Form.Item label={'Cambiar nombre de la sección'}>
-                      <Input
-                        name={`name${index}`}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        //value={this.state.menu[key].name}
-                        onChange={(e) => {
-                          this.changeNameMenu(key, e.target.value);
-                        }}
-                        placeholder={this.state.menu[key].name}
-                      />
-                    </Form.Item>
-                    <Form.Item label={'Permisos para la sección'}>
-                      <Select
-                        name={`permissions${index}`}
-                        key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].permissions}
-                        onChange={(e) => {
-                          this.changePermissions(key, e);
-                        }}>
-                        <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al evento</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item label={'Posición en el menú'}>
-                      <InputNumber
-                        name={`position${index}`}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].position}
-                        onChange={(e) => this.orderPosition(key, e)}
-                      />
-                    </Form.Item>
+                  <Card title={this.state.menu[key].name} bordered={true} style={{ maxHeight: '350px' }}>
+                    {this.state.menu[key].section === 'networking' && !userPlan?.availables?.networking ? (
+                      <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
+                    ) : (
+                      <>
+                        <Form.Item name={this.state.menu[key].name}>
+                          <Button
+                            onClick={() => {
+                              this.mapActiveItemsToAvailable(key);
+                            }}>
+                            {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                          </Button>
+                        </Form.Item>
+                        <Form.Item label={'Cambiar nombre de la sección'}>
+                          <Input
+                            name={`name${index}`}
+                            disabled={this.state.menu[key].checked === true ? false : true}
+                            //value={this.state.menu[key].name}
+                            onChange={(e) => {
+                              this.changeNameMenu(key, e.target.value);
+                            }}
+                            placeholder={this.state.menu[key].name}
+                          />
+                        </Form.Item>
+                        <Form.Item label={'Permisos para la sección'}>
+                          <Select
+                            name={`permissions${index}`}
+                            key={this.state.keySelect}
+                            disabled={this.state.menu[key].checked === true ? false : true}
+                            value={this.state.menu[key].permissions}
+                            onChange={(e) => {
+                              this.changePermissions(key, e);
+                            }}>
+                            <Option value='public'>Abierto para todos</Option>
+                            <Option value='assistants'>Usuarios inscritos al evento</Option>
+                          </Select>
+                        </Form.Item>
+                        <Form.Item label={'Posición en el menú'}>
+                          <InputNumber
+                            name={`position${index}`}
+                            disabled={this.state.menu[key].checked === true ? false : true}
+                            value={this.state.menu[key].position}
+                            onChange={(e) => this.orderPosition(key, e)}
+                          />
+                        </Form.Item>
+                      </>
+                    )}
                   </Card>
                 </Col>
               ))}

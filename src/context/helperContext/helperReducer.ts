@@ -10,6 +10,7 @@ export const helperInitialState: HelperState = {
   currentActivity: null,
   showNotification: false,
   params: {},
+  eventIsActive: false,
 };
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
@@ -67,6 +68,20 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
       logout(params);
 
       return { ...state };
+
+    case 'eventIsActive':
+      const eventId = action.eventId;
+      if (eventId) {
+        return {
+          ...state,
+          // @ts-ignore: Unreachable code error
+          eventIsActive: { ...state.eventIsActive, [eventId]: action.eventIsActive },
+        };
+      }
+      return {
+        ...state,
+        eventIsActive: action.eventIsActive,
+      };
 
     //   case 'selectLiveBroadcast':
     //     return {

@@ -1036,6 +1036,56 @@ export const SpeakersApi = {
   },
 };
 
+export const PlansApi = {
+  getAll: async () => {
+    return await Actions.getAll(`api/plans`, true);
+  },
+  getOne: async (id) => {
+    return await Actions.getOne(`api/plans/`, id);
+  },
+  getTotalRegisterdUsers: async () => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/users/me/totaluser?token=${token}`, true);
+  },
+  getCurrentConsumptionPlanByUsers: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/users/${userId}/currentPlan?token=${token}`, true);
+  },
+};
+
+export const AlertsPlanApi = {
+  getAll: async () => {
+    return await Actions.getAll(`api/notfitications`, true);
+  },
+  getByUser: async (userId) => {
+    //1ra objeto es el ultimo que se creo
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/users/${userId}/notifications?token=${token}`, true);
+  },
+  getOne: async (id) => {
+    return await Actions.getOne(`api/notifications/`, id);
+  },
+
+  createOne: async (data) => {
+    return await Actions.post(`api/notifications/`, data, true);
+  },
+
+  deleteOne: async (userId, eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/users/${userId}/notifications/${eventId}`, `${userId}?token=${token}`);
+  },
+};
+
+export const BillssPlanApi = {
+  getByUser: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/users/${userId}/billings?token=${token}`, true);
+  },
+  getAddonByUser: async (userId) => {
+    return await Actions.get(`api/users/${userId}/addons`);
+  },
+};
+
 export const OrganizationPlantillaApi = {
   createTemplate: async (organization, data) => {
     let token = await GetTokenUserFirebase();

@@ -55,6 +55,8 @@ const CMS = (props) => {
     deleteCallback,
     extraPathUpdate,
     extraPathUpdateTitle,
+    listLenght,
+    messageHeaderAlert,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
@@ -164,6 +166,8 @@ const CMS = (props) => {
         form={form}
         save={save}
         saveMethod={saveMethod}
+        listLenght={listLenght}
+        messageHeaderAlert={messageHeaderAlert}
       />
 
       {/* {list.length > 0 ? ( */}

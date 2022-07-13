@@ -21,6 +21,7 @@ import { UseCurrentUser } from '../context/userContext';
 import loadable from '@loadable/component';
 import ModalAuth from '../components/authentication/ModalAuth';
 import ModalNoRegister from '../components/authentication/ModalNoRegister';
+import BlockedEvent from '@/components/events/Landing/BlockedEvent';
 
 //Code splitting
 const Header = loadable(() => import('./header'));
@@ -75,6 +76,7 @@ const ContentContainer = () => {
           <Route path='/meetupsfenalco' render={() => <Redirect to='/landing/5f0622f01ce76d5550058c32' />} />
           <Route path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
           <Route path='/notfound' component={NotFoundPage} />
+          <RouteContext path='/blockedEvent/:event_id' component={BlockedEvent} />
           <PrivateRoute path='/create-event/:user?'>
             <NewEventProvider>
               <NewEvent />

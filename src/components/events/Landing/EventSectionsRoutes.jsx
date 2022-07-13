@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
@@ -13,6 +13,7 @@ import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { UseCurrentUser } from '@/context/userContext';
+import { useBlockedEventValidator } from '@/hooks/eventHooks/useBlockedEventValidator';
 
 //Code spliting
 const DocumentsForm = loadable(() => import('../../documents/front/documentsLanding'));
@@ -47,6 +48,7 @@ const EventSectionRoutes = (props) => {
   let { GetPermissionsEvent } = useHelper();
   let cEventUser = UseUserEvent();
   let cUser = UseCurrentUser();
+  let history = useHistory();
 
   //redirigir a evento Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -81,12 +83,16 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value && cUser.value) {
       initUserPresence(props.cEvent.value._id);
     }
+    let { isBlocked, formatDate } = useBlockedEventValidator(props.cEvent, cUser);
+    if (isBlocked) {
+      history.push(`/blockedEvent/${props.cEvent.value._id}`, formatDate);
+    }
   }, [props.cEvent.value, cUser.value]);
 
   useEffect(() => {
     // seperar la url en un arrary
 
-    console.log(props);
+    /* console.log(props); */
 
     if (props.cEvent.value && props.currentActivity) {
       if (props.location.pathname !== `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {

@@ -46,6 +46,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import moment from 'moment';
 import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
+import { HelperContext } from '@/context/helperContext/helperContext';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -105,12 +106,20 @@ class ListEventUser extends Component {
       qrModalOpen: false,
     };
   }
+  static contextType = HelperContext;
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
+    const { eventIsActive } = this.context;
     return (
       <Tooltip placement='topLeft' title='Editar'>
-        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
+        <Button
+          type={'primary'}
+          icon={<EditOutlined />}
+          size='small'
+          onClick={() => this.openEditModalUser(item)}
+          disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+        />
       </Tooltip>
     );
   };
@@ -762,7 +771,8 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
-    const { event, type, loading, componentKey } = this.props;
+    const { type, loading, componentKey } = this.props;
+    const { eventIsActive } = this.context;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -886,14 +896,27 @@ class ListEventUser extends Component {
                 )}
               </Col>
               <Col>
-                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                <Link
+                  to={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                      ? ''
+                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
+                  }>
+                  <Button
+                    type='primary'
+                    icon={<UploadOutlined />}
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     Importar usuarios
                   </Button>
                 </Link>
               </Col>
               <Col>
-                <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
+                <Button
+                  type='primary'
+                  icon={<PlusCircleOutlined />}
+                  size='middle'
+                  onClick={this.addUser}
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   {'Agregar Usuario'}
                 </Button>
               </Col>
