@@ -467,7 +467,7 @@ const myPlan = ({ cUser }) => {
                               `?redirect=subscription&planType=${plan2?._id}&goBack=${goBackUrlPayment}&goForward=${goBackUrlPayment}&token=${token}`,
                               `https://pay.evius.co/`
                             )
-                          : 'https://evius.co/pricing/'
+                          : 'https://evius.co/contacto/'
                       }
                       style={{ color: '#1890ff' }}
                       target='_blank'>

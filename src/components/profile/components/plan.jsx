@@ -53,10 +53,10 @@ const plan = ({ plan, mine, children }) => {
                 )}
               </Typography.Text>
             </Space>
-          </Space>
-          <Space>
-            <Typography.Text strong>Días posteriores: </Typography.Text>
-            <Typography.Text>{plan?.availables?.later_days || 'Personalizado'}</Typography.Text>
+            <Space>
+              <Typography.Text strong>Días posteriores: </Typography.Text>
+              <Typography.Text>{plan?.availables?.later_days || 'Personalizado'}</Typography.Text>
+            </Space>
           </Space>
         </Col>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>

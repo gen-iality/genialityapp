@@ -204,6 +204,16 @@ const MainProfile = (props) => {
               <Menu.Item
                 title={null}
                 onClick={() => {
+                  showContent('MY_PLAN');
+                  screens.xs && showSider();
+                }}
+                key={'myPlan'}
+                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
+                Mi plan
+              </Menu.Item>
+              <Menu.Item
+                title={null}
+                onClick={() => {
                   showContent('EDIT_INFORMATION');
                   screens.xs && showSider();
                 }}
@@ -220,16 +230,6 @@ const MainProfile = (props) => {
                 key={'cambiarPassword'}
                 icon={<LockOutlined style={{ fontSize: '18px' }} />}>
                 Cambiar contraseña
-              </Menu.Item>
-              <Menu.Item
-                title={null}
-                onClick={() => {
-                  showContent('MY_PLAN');
-                  screens.xs && showSider();
-                }}
-                key={'myPlan'}
-                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
-                Mi plan
               </Menu.Item>
             </Menu>
           </Col>
