@@ -16,7 +16,7 @@ const MenuScrollBlock = ({ sections }) => {
         label = 'Descripción';
         break;
       case 'Conferencistas':
-        label = 'Conferención';
+        label = 'Conferencistas';
         break;
       case 'Actividades':
         label = 'Actividades';

@@ -5,11 +5,6 @@ import Countdown from 'react-countdown';
 const { useBreakpoint } = Grid;
 
 const CountdownBlock = () => {
-  const [days, setdays] = useState(2);
-  const [hours, sethours] = useState(8);
-  const [minutes, setminutes] = useState(45);
-  const [second, setsecond] = useState(15);
-
   const screens = useBreakpoint();
 
   const stylesSubtitle = {
@@ -34,8 +29,8 @@ const CountdownBlock = () => {
         <Row gutter={[0, 16]} justify='center' align='middle' style={{ height: '100%' }}>
           <Col span={24}>
             <Row justify='center' align='middle'>
-              <Typography.Text style={{ textAlign: 'center' }}>
-                LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING
+              <Typography.Text strong style={{ textAlign: 'center' }}>
+                Ya finalizo el contador
               </Typography.Text>
             </Row>
           </Col>
@@ -96,7 +91,7 @@ const CountdownBlock = () => {
     }
   };
 
-  return <Countdown date={'2022-07-13T14:32:03'} renderer={renderer} />;
+  return <Countdown date={'2022-07-13T14:43:03'} renderer={renderer} />;
 };
 
 export default CountdownBlock;
