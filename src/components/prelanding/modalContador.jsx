@@ -38,6 +38,7 @@ const ModalContador = ({ setVisible, visible }) => {
           messageIn: event?.countdownMessage || '',
           messageFinish: event?.countdownFinalMessage || '',
         };
+        setDateLimit(event?.dateLimit);
         form.setFieldsValue(initialValueEvent);
       }
     }
