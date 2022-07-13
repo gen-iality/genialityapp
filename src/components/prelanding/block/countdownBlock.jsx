@@ -1,11 +1,21 @@
+import { CurrentEventContext } from '@/context/eventContext';
 import { Col, Grid, Row, Space, Typography } from 'antd';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 
 const { useBreakpoint } = Grid;
 
 const CountdownBlock = () => {
   const screens = useBreakpoint();
+  const cEvent = useContext(CurrentEventContext);
+  const [dateLimitContador, setDateLimitContador] = useState(null);
+  useEffect(() => {
+    if (!cEvent.value) return;
+    //PERMITE FORMATEAR LA FECHA PARA PODER INICIALIZAR EL CONTADOR
+    const dateSplit = cEvent.value?.dateLimit && cEvent.value.dateLimit.split(' ');
+    const dateFormat = dateSplit.join('T');
+    setDateLimitContador(dateFormat);
+  }, [cEvent.value]);
 
   const stylesSubtitle = {
     fontSize: '12px',
@@ -30,7 +40,7 @@ const CountdownBlock = () => {
           <Col span={24}>
             <Row justify='center' align='middle'>
               <Typography.Text strong style={{ textAlign: 'center' }}>
-                Ya finalizo el contador
+                {cEvent?.value?.countdownFinalMessage}
               </Typography.Text>
             </Row>
           </Col>
@@ -42,9 +52,7 @@ const CountdownBlock = () => {
         <Row gutter={[0, 16]} justify='center' align='middle' style={{ height: '100%' }}>
           <Col span={24}>
             <Row justify='center' align='middle'>
-              <Typography.Text style={{ textAlign: 'center' }}>
-                LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING
-              </Typography.Text>
+              <Typography.Text style={{ textAlign: 'center' }}>{cEvent?.value?.countdownMessage}</Typography.Text>
             </Row>
           </Col>
           <Col span={24}>
@@ -90,8 +98,7 @@ const CountdownBlock = () => {
       );
     }
   };
-
-  return <Countdown date={'2022-07-13T14:43:03'} renderer={renderer} />;
+  return dateLimitContador ? <Countdown date={dateLimitContador.toString()} renderer={renderer} /> : null;
 };
 
 export default CountdownBlock;

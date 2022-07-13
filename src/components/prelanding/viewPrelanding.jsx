@@ -59,6 +59,14 @@ const ViewPrelanding = (props) => {
     }
   };
 
+  const isVisibleCardSections = () => {
+    if (sections) {
+      return sections && sections.filter((section) => section.name == name && section.status).length > 1 ? true : false;
+    } else {
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (!cEventContext.value) return;
     setLoading(true);
@@ -98,11 +106,13 @@ const ViewPrelanding = (props) => {
           <Col id='Bloques del evento' span={24}>
             <Row gutter={[0, 16]} align='stretch' justify='center'>
               <Col span={24} order={1}>
-                <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: '10px' }}>
-                  <Row justify='center' align='middle'>
-                    <MenuScrollBlock sections={sections && sections} />
-                  </Row>
-                </Card>
+                {isVisibleCardSections() ? (
+                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: '10px' }}>
+                    <Row justify='center' align='middle'>
+                      <MenuScrollBlock sections={sections && sections} />
+                    </Row>
+                  </Card>
+                ) : null}
               </Col>
               {visibleSection('Contador') && (
                 <Col order={obtenerOrder('Contador')} span={24}>
