@@ -132,8 +132,7 @@ const ViewPrelanding = (props) => {
                       height: '300px',
                       borderRadius: '20px',
                     }}>
-                    Bloque de Descripción
-                    {/*<DescriptionBlock />*/}
+                    <DescriptionBlock />
                   </Card>
                 </Col>
               )}
@@ -142,8 +141,7 @@ const ViewPrelanding = (props) => {
                   <Card
                     id='Conferencistas_block'
                     style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
-                    Bloque de conferencistas
-                    {/* <SpeakersBlock /> */}
+                    <SpeakersBlock />
                   </Card>
                 </Col>
               )}
@@ -152,8 +150,7 @@ const ViewPrelanding = (props) => {
                   <Card
                     id='Actividades_block'
                     style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
-                    Bloque de actividades
-                    {/* <ActivityBlock /> */}
+                    <ActivityBlock />
                   </Card>
                 </Col>
               )}

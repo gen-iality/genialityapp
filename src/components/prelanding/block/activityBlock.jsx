@@ -1,7 +1,7 @@
 import { CurrentEventContext } from '@/context/eventContext';
 import { firestore } from '@/helpers/firebase';
 import { AgendaApi } from '@/helpers/request';
-import { Spin, Timeline } from 'antd';
+import { Col, Row, Spin, Timeline } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 
@@ -9,6 +9,7 @@ const ActivityBlock = () => {
   const cEvent = useContext(CurrentEventContext);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
+  const mode = 'left';
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -60,18 +61,27 @@ const ActivityBlock = () => {
       //console.log('DATA NEW==>', data);
     }
   }, [cEvent.value]);
-  return !loading ? (
-    <Timeline>
-      {activities.map((activity) => {
-        return (
-          <Timeline.Item key={activity?._id}>
-            {activity?.name} {activity?.datetime_start}
-          </Timeline.Item>
-        );
-      })}
-    </Timeline>
-  ) : (
-    <Spin />
+  return (
+    <Col>
+      <Row justify='center' style={{ marginBottom: 35 }}>
+        <strong>Actividades</strong>
+      </Row>
+      {!loading ? (
+        <Row style={{ width: '100%' }}>
+          <Timeline style={{ width: '100%' }} mode={mode}>
+            {activities.map((activity) => {
+              return (
+                <Timeline.Item key={activity?._id} label={activity?.datetime_start}>
+                  {activity?.name}
+                </Timeline.Item>
+              );
+            })}
+          </Timeline>
+        </Row>
+      ) : (
+        <Spin />
+      )}
+    </Col>
   );
 };
 
