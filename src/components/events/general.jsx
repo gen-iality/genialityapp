@@ -690,6 +690,7 @@ class General extends Component {
       iMustValidate,
     } = this.state;
     const userContext = this.context;
+    const cUser = userContext?.value;
     const userPlan = userContext.value?.plan;
     const streamingHours = userPlan?.availables?.streaming_hours;
 
@@ -697,7 +698,11 @@ class General extends Component {
       <React.Fragment>
         {iMustValidate && (
           <>
-            <ValidateEventStart startDate={event.datetime_from} callBackTheEventIsActive={this.theEventIsActive} />
+            <ValidateEventStart
+              startDate={event.datetime_from}
+              callBackTheEventIsActive={this.theEventIsActive}
+              user={cUser}
+            />
           </>
         )}
         <Form onFinish={this.submit} {...formLayout}>
@@ -852,9 +857,11 @@ class General extends Component {
                     </>
                   )}
 
-                  <Form.Item label={'Especificar fechas'}>
-                    <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
-                  </Form.Item>
+                  {!cUser?.plan && (
+                    <Form.Item label={'Especificar fechas'}>
+                      <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                    </Form.Item>
+                  )}
 
                   {specificDates === false ? (
                     <div>
