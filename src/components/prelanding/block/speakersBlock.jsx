@@ -110,7 +110,7 @@ const SpeakersBlock = () => {
           </div>
         </Col>
         <Col xs={0} sm={24} md={24} lg={4} xl={4} xxl={4}>
-          <Row align='bottom' style={{ height: '100%' }}>
+          <Row align='bottom' justify='end' style={{ height: '100%' }}>
             <Space>
               <Button size='large' icon={<CaretLeftFilled />} onClick={() => scrollMinus()}></Button>
               <Button size='large' icon={<CaretRightFilled />} onClick={() => scrollPlus()}></Button>
