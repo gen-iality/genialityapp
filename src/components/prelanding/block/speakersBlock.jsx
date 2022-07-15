@@ -64,7 +64,8 @@ const SpeakersBlock = () => {
               scrollPaddingRight: '2rem',
               overflowX: `${screens.xs ? 'auto' : 'hidden'}`,
               scrollSnapType: 'x mandatory',
-              touchAction: 'pan-x',
+              touchAction: 'auto',
+              scrollBehavior: 'smooth',
             }}>
             {speakersWithoutCategory.length > 0 && !loading
               ? speakersWithoutCategory.map((speaker, key) => (
@@ -124,53 +125,6 @@ const SpeakersBlock = () => {
           </Row>
         </Col>
       </Row>
-      {/* <Row wrap gutter={[16, 16]} justify='center'>
-        {speakersWithoutCategory.length > 0 && !loading ? (
-          speakersWithoutCategory.map((speaker, key) => (
-            <>
-              {speaker.published && (
-                <Col key={key} xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                  <Card
-                    hoverable={false}
-                    style={{
-                      paddingTop: '30px',
-                      borderRadius: '20px',
-                      minHeight: '90px',
-                    }}
-                    cover={
-                      speaker.image ? (
-                        <Avatar
-                          style={{ display: 'block', margin: 'auto' }}
-                          size={{ xs: 70, sm: 70, md: 70, lg: 70, xl: 70, xxl: 70 }}
-                          src={speaker.image}
-                        />
-                      ) : (
-                        <Avatar
-                          style={{ display: 'block', margin: 'auto' }}
-                          size={{ xs: 70, sm: 70, md: 70, lg: 70, xl: 70, xxl: 70 }}
-                          icon={<UserOutlined />}
-                        />
-                      )
-                    }>
-                    <Meta
-                      description={[
-                        <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
-                          <Title level={4}>{speaker.name}</Title>
-                          <Paragraph>{speaker.profession}</Paragraph>
-                        </div>,
-                      ]}
-                    />
-                  </Card>
-                </Col>
-              )}
-            </>
-          ))
-        ) : speakersWithoutCategory.length == 0 && !loading ? (
-          <Card>No existen conferencistas</Card>
-        ) : (
-          <Spin />
-        )}
-      </Row> */}
     </div>
   );
 };
