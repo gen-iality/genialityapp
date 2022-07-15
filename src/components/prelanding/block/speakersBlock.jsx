@@ -44,7 +44,14 @@ const SpeakersBlock = () => {
   return (
     <div style={{ height: '100%' }}>
       <Row gutter={[8, 8]} style={{ height: '100%' }}>
-        <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} style={{ height: '100%' }}>
+        <Col style={{ zIndex: '100' }} xs={0} sm={1} md={1} lg={1} xl={1} xxl={1}>
+          <Row align='middle' justify='center' style={{ height: '100%' }}>
+            <Space>
+              <Button size='large' icon={<CaretLeftFilled />} onClick={() => scrollMinus()}></Button>
+            </Space>
+          </Row>
+        </Col>
+        <Col xs={24} sm={22} md={22} lg={22} xl={22} xxl={22} style={{ height: '100%' }}>
           <div
             id='carrusel'
             style={{
@@ -109,10 +116,9 @@ const SpeakersBlock = () => {
               : 'nada'}
           </div>
         </Col>
-        <Col xs={0} sm={24} md={24} lg={4} xl={4} xxl={4}>
-          <Row align='bottom' justify='end' style={{ height: '100%' }}>
+        <Col xs={0} sm={1} md={1} lg={1} xl={1} xxl={1}>
+          <Row align='middle' justify='center' style={{ height: '100%' }}>
             <Space>
-              <Button size='large' icon={<CaretLeftFilled />} onClick={() => scrollMinus()}></Button>
               <Button size='large' icon={<CaretRightFilled />} onClick={() => scrollPlus()}></Button>
             </Space>
           </Row>
