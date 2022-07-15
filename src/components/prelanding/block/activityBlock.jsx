@@ -1,15 +1,16 @@
 import { CurrentEventContext } from '@/context/eventContext';
 import { firestore } from '@/helpers/firebase';
 import { AgendaApi } from '@/helpers/request';
-import { Col, Row, Spin, Timeline } from 'antd';
+import { Col, Row, Space, Spin, Tag, Timeline, Typography } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
+import FlagCheckeredIcon from '@2fd/ant-design-icons/lib/FlagCheckered';
 
 const ActivityBlock = () => {
   const cEvent = useContext(CurrentEventContext);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
-  const mode = 'left';
+  const mode = 'alternate';
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -61,27 +62,55 @@ const ActivityBlock = () => {
       //console.log('DATA NEW==>', data);
     }
   }, [cEvent.value]);
+
+  console.log('activities', activities);
+
+  const determineType = (type) => {
+    console.log('type', type);
+    switch (type) {
+      case 'url':
+      case 'cargarvideo':
+        return <Tag color='success'>Video</Tag>;
+      case 'eviusMeet':
+      case 'vimeo':
+      case 'youTube':
+        return <Tag color='success'>Transmisión</Tag>;
+      case 'meeting':
+        return <Tag color='success'>Reunión</Tag>;
+      default:
+        return <></>;
+    }
+  };
   return (
-    <Col>
-      <Row justify='center' style={{ marginBottom: 35 }}>
-        <strong>Actividades</strong>
-      </Row>
-      {!loading ? (
-        <Row style={{ width: '100%' }}>
-          <Timeline style={{ width: '100%' }} mode={mode}>
-            {activities.map((activity) => {
-              return (
-                <Timeline.Item key={activity?._id} label={activity?.datetime_start}>
+    <Row style={{ height: '100%' }} justify='center' align='middle'>
+      <Timeline style={{ width: '100%' }} mode={mode}>
+        {activities.map((activity, index) => {
+          return (
+            <Timeline.Item
+              label={activity?.type && determineType(activity.type.name)}
+              style={index === 0 ? { marginTop: '20px' } : {}}
+              dot={activities.length === index + 1 && <FlagCheckeredIcon style={{ fontSize: '20px' }} />}
+              key={activity?._id}>
+              <Space size={0} direction='vertical'>
+                <Typography.Text
+                  strong
+                  style={{
+                    userSelect: 'none',
+                  }}>
+                  {activity?.datetime_start}
+                </Typography.Text>
+                <Typography.Text
+                  style={{
+                    userSelect: 'none',
+                  }}>
                   {activity?.name}
-                </Timeline.Item>
-              );
-            })}
-          </Timeline>
-        </Row>
-      ) : (
-        <Spin />
-      )}
-    </Col>
+                </Typography.Text>
+              </Space>
+            </Timeline.Item>
+          );
+        })}
+      </Timeline>
+    </Row>
   );
 };
 

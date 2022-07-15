@@ -140,7 +140,7 @@ const ViewPrelanding = (props) => {
                 <Col span={24} order={obtenerOrder('Conferencistas')}>
                   <Card
                     id='Conferencistas_block'
-                    bodyStyle={{ height: '100%' }}
+                    bodyStyle={{ height: '100%', padding: screens.xs ? '10px' : '24px' }}
                     style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '450px', borderRadius: '20px' }}>
                     <SpeakersBlock />
                   </Card>
@@ -150,7 +150,8 @@ const ViewPrelanding = (props) => {
                 <Col span={24} order={obtenerOrder('Actividades')}>
                   <Card
                     id='Actividades_block'
-                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '300px', borderRadius: '20px' }}>
+                    bodyStyle={{ height: '100%' }}
+                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '100%', borderRadius: '20px' }}>
                     <ActivityBlock />
                   </Card>
                 </Col>
