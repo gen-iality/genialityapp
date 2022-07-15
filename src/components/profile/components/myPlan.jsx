@@ -320,6 +320,9 @@ const myPlan = ({ cUser }) => {
                     <Typography.Text>
                       <Typography.Text strong>Tipo de subscripción:</Typography.Text> {item?.billing?.subscription_type}
                     </Typography.Text>
+                    <Typography.Text>
+                      <Typography.Text strong>Tasa del dolar:</Typography.Text> {item?.billing?.dollarToday}
+                    </Typography.Text>
                   </Space>
                 </Col>
               </Row>
