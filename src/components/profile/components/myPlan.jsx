@@ -2,14 +2,23 @@ import { useEffect, useState } from 'react';
 import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
-import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal, Alert } from 'antd';
-import { DownOutlined, ExclamationCircleOutlined, FileDoneOutlined, RightOutlined } from '@ant-design/icons';
+import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal } from 'antd';
+import {
+  DeleteOutlined,
+  DownOutlined,
+  ExclamationCircleOutlined,
+  FileDoneOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import moment from 'moment';
+import { useIntl } from 'react-intl';
+import { DispatchMessageService } from '@/context/MessageService';
+import { handleRequestError } from '@/helpers/utils';
 
 const myPlan = ({ cUser }) => {
   const plan = cUser.value?.plan;
@@ -32,14 +41,64 @@ const myPlan = ({ cUser }) => {
     : window.location.toString().includes('https://app.evius.co/myprofile/events')
     ? 'https://app.evius.co/myprofile/events'
     : 'http://localhost:3000/myprofile/events';
+  const intl = useIntl();
 
+  const deleteNotification = async (id) => {
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la notificación?`,
+      icon: <ExclamationCircleOutlined />,
+      content: '',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        DispatchMessageService({
+          type: 'loading',
+          key: 'loading',
+          msj: 'Por favor espere mientras se borra la notificación...',
+          action: 'show',
+        });
+        const onHandlerRemove = async () => {
+          try {
+            await AlertsPlanApi.editOne(id, {
+              status: 'INACTIVE',
+              user_id: cUser.value?._id,
+            });
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la notificación correctamente!',
+              action: 'show',
+            });
+            getInfoPlans();
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: handleRequestError(e).message,
+              action: 'show',
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+  };
+
+  //Notifications
   const columns = [
     {
       title: 'Razón',
       dataIndex: 'message',
       key: 'message',
     },
-    {
+    /* {
       title: 'Estado',
       dataIndex: 'status',
       key: 'status',
@@ -54,15 +113,29 @@ const myPlan = ({ cUser }) => {
         };
         return <Tag color={color()}>{val}</Tag>;
       },
-    },
+    }, */
     {
       title: 'Fecha',
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
-        const date = moment(val).subtract(5, 'hours');
+        const date = moment(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
 
         return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
+      },
+    },
+    {
+      title: 'Acciones',
+      dataIndex: 'actions',
+      key: 'actions',
+      render(val, item) {
+        return (
+          <Space wrap>
+            <Tooltip placement='topLeft' title={'Eliminar'}>
+              <Button danger icon={<DeleteOutlined />} onClick={() => deleteNotification(item._id)} />
+            </Tooltip>
+          </Space>
+        );
       },
     },
   ];
@@ -93,7 +166,7 @@ const myPlan = ({ cUser }) => {
       title: 'Acción',
       dataIndex: 'action',
       key: 'action',
-      /*  render(val, item) {
+      /* render(val, item) {
         return <>{item.billing.action}</>;
       }, */
     },
@@ -126,7 +199,7 @@ const myPlan = ({ cUser }) => {
       render(val, item) {
         return (
           <div>
-            {/* {item.billing.currency} */}COP ${item.billing.total / 100}
+            {item?.billing?.currency} ${parseFloat(item?.billing?.base_value * item?.billing?.tax).toFixed(2)}
           </div>
         );
       },
@@ -136,7 +209,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
-        const date = moment(val).subtract(5, 'hours');
+        const date = moment(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
 
         return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
       },
@@ -197,9 +270,9 @@ const myPlan = ({ cUser }) => {
                     </Typography.Text>
 
                     <Typography.Text>
-                      <Typography.Text strong>Valor base de la venta:</Typography.Text>{' '}
-                      {/* {item?.billing?.currency} */}COP ${item?.billing?.total / 100} con ({item?.billing?.tax * 100}
-                      % de impuesto){' '}
+                      <Typography.Text strong>Valor base de la venta:</Typography.Text> {item?.billing?.currency} $
+                      {parseFloat(item?.billing?.base_value * item?.billing?.tax).toFixed(2)} con (
+                      {item?.billing?.tax * 100}% de impuesto){' '}
                       {item?.billing?.total_discount && <>y un descuento de ${item?.billing?.total_discount}</>}
                     </Typography.Text>
                     <Typography.Text>
@@ -226,10 +299,11 @@ const myPlan = ({ cUser }) => {
 
                         {item?.action === 'ADDITIONAL' && (
                           <Typography.Text>
-                            Usuarios adicionales: {item?.billing?.details['users'].amount} ($
+                            Usuarios adicionales: {item?.billing?.details['users'].amount} ({item?.billing?.currency} $
                             {item?.billing?.details['users'].price}){' '}
                             <small>
-                              (Total: ${item?.billing?.details['users'].amount * item?.billing?.details['users'].price})
+                              (Total: {item?.billing?.currency} $
+                              {item?.billing?.details['users'].amount * item?.billing?.details['users'].price})
                             </small>
                           </Typography.Text>
                         )}
@@ -340,19 +414,19 @@ const myPlan = ({ cUser }) => {
     let bills = await BillssPlanApi.getByUser(cUser.value?._id);
     setBills(bills.data);
     setLoadingBill(false);
-    /* console.log('bills', bills.data); */
+    console.log('bills', bills.data);
+    //dollarToday
 
     /* Consumos del usuario */
     try {
       let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value?._id);
       setConsumption(consumption);
       setLoadingConsumption(false);
+      /* console.log('consumption', consumption); */
     } catch (error) {
       /* console.log(error, 'error'); */
       setLoadingConsumption(false);
     }
-
-    /* console.log('consumption', consumption); */
 
     /* Total de registros de usuario */
     let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
@@ -387,7 +461,9 @@ const myPlan = ({ cUser }) => {
               }
               icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
               message={
-                plan?.name !== 'Free' && (
+                (plan?._id !== '6285536ce040156b63d517e5' ||
+                  !plan?._id ||
+                  plan?._id !== '629e1dd4f8fceb1d688c35d5') && (
                   <a href={UrlAdditional} style={{ color: '#1890ff' }} target='_blank'>
                     Comprar más {plan?.costAdditionalUsers && <>a (${plan?.costAdditionalUsers})</>}
                   </a>
