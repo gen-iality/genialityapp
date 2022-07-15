@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 const equivalentToADayInMinutes = 1440;
-const equivalentToAMinute = 60;
+const equivalentToAHourInMinute = 60;
 
 interface eventProps {
   hour_start?: string;
@@ -30,15 +30,36 @@ export const disabledEndDate = (endValue: any, event: eventProps, streamingHours
   return endValue.valueOf() < startDate.valueOf();
 };
 
+/** @params function Allows you to disable the days before and after a certain range based on a start date and a number of additional minutes  */
+export const disabledStartDate = (endValue: any, event: eventProps, streamingHours: number) => {
+  const startDate = event?.date_start;
+
+  if (!streamingHours) return;
+
+  const addExtraTime = moment(startDate).add(30, 'days');
+
+  if (!endValue || !startDate) {
+    return false;
+  }
+
+  /** Disable of days after the limit of the event */
+  if (endValue.valueOf() > moment(addExtraTime).valueOf()) {
+    return true;
+  }
+
+  /** Disable of days after the limit of the event */
+  return endValue.valueOf() < startDate.valueOf();
+};
+
 /** @params feature Allows you to disable the hours before and after a certain range based on a start time and number of additional minutes  */
 const disableHoursRange = (event: eventProps, streamingHours: number) => {
   const result = [];
   const hourStart = event?.hour_start;
-  const endDate = event?.date_end;
+  // const endDate = event?.date_end;
   if (!streamingHours) return;
   /** We add 60 more minutes to discriminate the current time, this affects the free plans */
   //   if(){}
-  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAMinute, 'minutes');
+  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAHourInMinute, 'minutes');
 
   /** We iterate to be able to discriminate the hours before the start */
   for (let InitialHour = 0; InitialHour < moment(hourStart).hour(); InitialHour++) {
@@ -73,7 +94,6 @@ const disableMinutesRange = (event: eventProps, streamingHours: number) => {
 };
 
 export const disabledDateTime = (event: {}, streamingHours: number) => ({
-  //debugger: console.log('event => ', event),
   disabledHours: () => disableHoursRange(event, streamingHours),
   disabledMinutes: () => disableMinutesRange(event, streamingHours),
   // disabledSeconds: () => [55, 56],

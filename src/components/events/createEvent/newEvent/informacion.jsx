@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePicker } from 'antd';
+import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePicker, DatePicker } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -7,6 +7,7 @@ import { useContextNewEvent } from '../../../../context/newEventContext';
 import { OrganizationApi } from '../../../../helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
 import moment from 'moment';
+import { disabledDateTime, disabledStartDate } from '@/Utilities/disableTimeAndDatePickerInEventDate';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -31,7 +32,10 @@ const Informacion = (props) => {
     dispatch,
     state,
   } = useContextNewEvent();
-
+  const cUser = props?.currentUser;
+  const eventDateStart = { date_start: selectedDay };
+  // console.log('🚀 debug ~ Informacion ~ cUser', cUser);
+  const eventHourStart = { hour_start: selectedHours.from };
   const handleChange = (value) => {
     selectTemplate(value);
   };
@@ -127,7 +131,20 @@ const Informacion = (props) => {
         width={600}>
         <Row gutter={[16, 16]} justify='center' align='top'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} />
+            {/* <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} /> */}
+            <DatePicker
+              disabledDate={(date) => {
+                if (cUser?.plan?._id) {
+                  const streamingHours = cUser?.plan?.availables?.streaming_hours;
+                  return disabledStartDate(date, eventDateStart, streamingHours);
+                }
+              }}
+              style={{ width: '100%', marginTop: '20px' }}
+              allowClear={false}
+              value={moment(selectedDay)}
+              format={'DD/MM/YYYY'}
+              onChange={(value) => changeSelectDay(value.toDate())}
+            />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Title level={4} type='secondary'>
@@ -141,10 +158,14 @@ const Informacion = (props) => {
                       <span>de</span>
                     </div>
                     <TimePicker
+                      disabledTime={(time) => {
+                        const streamingHours = cUser?.plan?.availables?.streaming_hours;
+                        return disabledDateTime(eventHourStart, streamingHours);
+                      }}
                       allowClear={false}
                       use12Hours
                       value={moment(selectedHours.from)}
-                      onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
+                      onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours, at: hours })}
                     />
                   </Space>
                 </div>
@@ -154,6 +175,10 @@ const Informacion = (props) => {
                       <span>a</span>
                     </div>
                     <TimePicker
+                      disabledTime={(time) => {
+                        const streamingHours = cUser?.plan?.availables?.streaming_hours;
+                        return disabledDateTime(eventHourStart, streamingHours);
+                      }}
                       allowClear={false}
                       use12Hours
                       value={moment(selectedHours.at)}
