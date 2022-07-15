@@ -1057,6 +1057,10 @@ export const AlertsPlanApi = {
     return await Actions.post(`api/notifications/`, data, true);
   },
 
+  editOne: async (id, data) => {
+    return await Actions.put(`api/notifications/${id}`, data, true);
+  },
+
   deleteOne: async (userId, eventId) => {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/users/${userId}/notifications/${eventId}`, `${userId}?token=${token}`);
