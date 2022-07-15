@@ -23,8 +23,10 @@ const SpeakersBlock = () => {
       setLoading(true);
       let speakers = await SpeakersApi.byEvent(cEvent.value._id);
       console.log('SPEAKERS ACA=>', speakers);
+      //FILTRAMOS LOS SPEAKERS POR PUBLICADOS
+      let filteredSpeakers = speakers.filter((speaker) => speaker.published);
       //ORDENAMOS LOS SPEAKERS
-      const speakersWithoutCategory = speakers.sort((a, b) => a.order - b.order);
+      const speakersWithoutCategory = filteredSpeakers.sort((a, b) => a.order - b.order);
 
       setSpeakersWithoutCategory(speakersWithoutCategory);
       setLoading(false);
@@ -33,18 +35,16 @@ const SpeakersBlock = () => {
 
   const scrollPlus = () => {
     let carrusel = document.getElementById('carrusel');
-    carrusel.scroll({ behavior: 'smooth' });
-    carrusel.scrollLeft += 500;
+    carrusel.scrollLeft += 400;
   };
   const scrollMinus = () => {
     let carrusel = document.getElementById('carrusel');
-    carrusel.scroll({ behavior: 'smooth' });
-    carrusel.scrollLeft -= 500;
+    carrusel.scrollLeft -= 400;
   };
   return (
     <div style={{ height: '100%' }}>
       <Row gutter={[8, 8]} style={{ height: '100%' }}>
-        <Col xs={24} sm={24} md={24} lg={18} xl={18} xxl={18} style={{ height: '100%' }}>
+        <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} style={{ height: '100%' }}>
           <div
             id='carrusel'
             style={{
@@ -81,10 +81,12 @@ const SpeakersBlock = () => {
                         borderRadius: '10px',
                         paddingLeft: '10px',
                         paddingRight: '10px',
-                        paddingBottom: '5px',
+                        paddingBottom: '10px',
+                        background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 65.94%, rgba(0, 0, 0, 020) 100%)`,
                       }}>
                       <Space size={0} direction='vertical'>
                         <Typography.Text
+                          strong
                           style={{
                             color: '#FFFFFF',
                             textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
@@ -107,7 +109,7 @@ const SpeakersBlock = () => {
               : 'nada'}
           </div>
         </Col>
-        <Col xs={0} sm={24} md={24} lg={6} xl={6} xxl={6}>
+        <Col xs={0} sm={24} md={24} lg={4} xl={4} xxl={4}>
           <Row align='bottom' style={{ height: '100%' }}>
             <Space>
               <Button size='large' icon={<CaretLeftFilled />} onClick={() => scrollMinus()}></Button>
