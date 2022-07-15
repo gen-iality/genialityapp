@@ -52,7 +52,7 @@ const SpeakersBlock = () => {
           </Row>
         </Col>
         <Col xs={24} sm={22} md={22} lg={22} xl={22} xxl={22} style={{ height: '100%' }}>
-          <div
+          <Row
             id='carrusel'
             style={{
               borderRadius: '10px',
@@ -60,6 +60,7 @@ const SpeakersBlock = () => {
               display: 'flex',
               flexWrap: 'nowrap',
               gap: '1rem',
+              justifyContent: speakersWithoutCategory.length > 3 ? 'initial' : 'space-around',
               scrollPaddingLeft: '2rem',
               scrollPaddingRight: '2rem',
               overflowX: `${screens.xs ? 'auto' : 'hidden'}`,
@@ -115,7 +116,7 @@ const SpeakersBlock = () => {
                   </div>
                 ))
               : 'nada'}
-          </div>
+          </Row>
         </Col>
         <Col xs={0} sm={1} md={1} lg={1} xl={1} xxl={1}>
           <Row align='middle' justify='center' style={{ height: '100%' }}>
