@@ -1,13 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePicker, DatePicker } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
-import { OrganizationApi } from '../../../../helpers/request';
+import { OrganizationApi, PlansApi } from '../../../../helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
 import moment from 'moment';
-import { disabledDateTime, disabledStartDate } from '@/Utilities/disableTimeAndDatePickerInEventDate';
+import {
+  disabledEndDateTime,
+  disabledStartDate,
+  disabledStartDateTime,
+} from '@/Utilities/disableTimeAndDatePickerInEventDate';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -34,11 +38,23 @@ const Informacion = (props) => {
   } = useContextNewEvent();
   const cUser = props?.currentUser;
   const eventDateStart = { date_start: selectedDay };
-  // console.log('🚀 debug ~ Informacion ~ cUser', cUser);
   const eventHourStart = { hour_start: selectedHours.from };
+
+  const [userConsumption, setUserConsumption] = useState({});
   const handleChange = (value) => {
     selectTemplate(value);
   };
+
+  const getCurrentConsumptionPlanByUsers = async () => {
+    if (!cUser?._id) return;
+
+    const consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser?._id);
+    setUserConsumption(consumption);
+  };
+
+  useEffect(() => {
+    getCurrentConsumptionPlanByUsers();
+  }, [cUser]);
 
   {
     useEffect(() => {
@@ -132,11 +148,14 @@ const Informacion = (props) => {
         <Row gutter={[16, 16]} justify='center' align='top'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             {/* <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} /> */}
+            {userConsumption?.end_date && <h1>Su plan finaliza el dia {userConsumption?.end_date}</h1>}
+
             <DatePicker
+              inputReadOnly={true}
               disabledDate={(date) => {
                 if (cUser?.plan?._id) {
                   const streamingHours = cUser?.plan?.availables?.streaming_hours;
-                  return disabledStartDate(date, eventDateStart, streamingHours);
+                  return disabledStartDate(date, streamingHours, userConsumption);
                 }
               }}
               style={{ width: '100%', marginTop: '20px' }}
@@ -158,9 +177,11 @@ const Informacion = (props) => {
                       <span>de</span>
                     </div>
                     <TimePicker
+                      showNow={false}
+                      inputReadOnly={true}
                       disabledTime={(time) => {
                         const streamingHours = cUser?.plan?.availables?.streaming_hours;
-                        return disabledDateTime(eventHourStart, streamingHours);
+                        return disabledStartDateTime(eventHourStart, streamingHours);
                       }}
                       allowClear={false}
                       use12Hours
@@ -175,9 +196,11 @@ const Informacion = (props) => {
                       <span>a</span>
                     </div>
                     <TimePicker
+                      showNow={false}
+                      inputReadOnly={true}
                       disabledTime={(time) => {
                         const streamingHours = cUser?.plan?.availables?.streaming_hours;
-                        return disabledDateTime(eventHourStart, streamingHours);
+                        return disabledEndDateTime(eventHourStart, streamingHours);
                       }}
                       allowClear={false}
                       use12Hours
