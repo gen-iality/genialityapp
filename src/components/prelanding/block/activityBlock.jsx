@@ -1,7 +1,7 @@
 import { CurrentEventContext } from '@/context/eventContext';
 import { firestore } from '@/helpers/firebase';
 import { AgendaApi } from '@/helpers/request';
-import { Col, Row, Space, Spin, Tag, Timeline, Typography } from 'antd';
+import { Card, Col, Popover, Row, Space, Spin, Tag, Timeline, Typography } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import FlagCheckeredIcon from '@2fd/ant-design-icons/lib/FlagCheckered';
@@ -70,13 +70,37 @@ const ActivityBlock = () => {
     switch (type) {
       case 'url':
       case 'cargarvideo':
-        return <Tag color='success'>Video</Tag>;
+        return (
+          <Tag
+            color='#87d068'
+            style={{
+              userSelect: 'none',
+            }}>
+            Video
+          </Tag>
+        );
       case 'eviusMeet':
       case 'vimeo':
       case 'youTube':
-        return <Tag color='success'>Transmisión</Tag>;
+        return (
+          <Tag
+            color='#87d068'
+            style={{
+              userSelect: 'none',
+            }}>
+            Transmisión
+          </Tag>
+        );
       case 'meeting':
-        return <Tag color='success'>Reunión</Tag>;
+        return (
+          <Tag
+            color='#87d068'
+            style={{
+              userSelect: 'none',
+            }}>
+            Reunión
+          </Tag>
+        );
       default:
         return <></>;
     }
@@ -91,21 +115,42 @@ const ActivityBlock = () => {
               style={index === 0 ? { marginTop: '20px' } : {}}
               dot={activities.length === index + 1 && <FlagCheckeredIcon style={{ fontSize: '20px' }} />}
               key={activity?._id}>
-              <Space size={0} direction='vertical'>
-                <Typography.Text
-                  strong
+              <Popover
+                overlayStyle={{ maxWidth: '400px' }}
+                content={
+                  activity?.description !== '<p><br></p>' && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: activity?.description,
+                      }}></div>
+                  )
+                }
+                title={null}>
+                <Space
+                  className='ant-card-grid-hoverable'
+                  size={0}
+                  direction='vertical'
                   style={{
-                    userSelect: 'none',
+                    padding: '10px',
+                    border: '1px solid #0000000f',
+                    borderRadius: '5px',
+                    transition: 'all 500ms ease-in-out',
                   }}>
-                  {activity?.datetime_start}
-                </Typography.Text>
-                <Typography.Text
-                  style={{
-                    userSelect: 'none',
-                  }}>
-                  {activity?.name}
-                </Typography.Text>
-              </Space>
+                  <Typography.Text
+                    strong
+                    style={{
+                      userSelect: 'none',
+                    }}>
+                    {activity?.datetime_start}
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{
+                      userSelect: 'none',
+                    }}>
+                    {activity?.name}
+                  </Typography.Text>
+                </Space>
+              </Popover>
             </Timeline.Item>
           );
         })}

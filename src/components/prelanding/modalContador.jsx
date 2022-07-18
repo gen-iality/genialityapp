@@ -65,7 +65,7 @@ const ModalContador = ({ setVisible, visible }) => {
             showCount
             autoSize={{ minRows: 2, maxRows: 4 }}
             placeholder='Este mensaje se verá durante la cuenta regresiva'
-            maxLength={50}
+            maxLength={100}
           />
         </Form.Item>
         <Form.Item name='messageFinish' label='Mensaje al finalizar la cuenta'>
@@ -73,7 +73,7 @@ const ModalContador = ({ setVisible, visible }) => {
             showCount
             autoSize={{ minRows: 2, maxRows: 4 }}
             placeholder='Este mensaje se verá al finalizar la cuenta regresiva'
-            maxLength={50}
+            maxLength={100}
           />
         </Form.Item>
 
