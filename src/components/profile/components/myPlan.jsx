@@ -210,7 +210,7 @@ const myPlan = ({ cUser }) => {
     },
     {
       title: intl.formatMessage({
-        id: 'my_plan.state',
+        id: 'my_plan.status',
         defaultMessage: 'Estado',
       }),
       dataIndex: 'status',
@@ -517,7 +517,7 @@ const myPlan = ({ cUser }) => {
     },
     {
       title: intl.formatMessage({
-        id: 'my_plan.state',
+        id: 'my_plan.status',
         defaultMessage: 'Estado',
       }),
       dataIndex: 'status',

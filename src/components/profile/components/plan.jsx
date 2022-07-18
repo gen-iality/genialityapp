@@ -252,7 +252,7 @@ const plan = ({ plan, mine, children }) => {
             <Space>
               <Typography.Text strong>
                 {intl.formatMessage({
-                  id: 'my_plan.checking',
+                  id: 'my_plan.checkin',
                   defaultMessage: 'Checkin',
                 })}
                 :
