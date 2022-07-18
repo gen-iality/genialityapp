@@ -147,8 +147,9 @@ const Informacion = (props) => {
         width={600}>
         <Row gutter={[16, 16]} justify='center' align='top'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            {/* <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} /> */}
-            {userConsumption?.end_date && <h1>Su plan finaliza el dia {userConsumption?.end_date}</h1>}
+            <Title level={4} type='secondary'>
+              Asignar fecha
+            </Title>
 
             <DatePicker
               inputReadOnly={true}
@@ -159,13 +160,19 @@ const Informacion = (props) => {
                 }
               }}
               style={{ width: '100%', marginTop: '20px' }}
+              /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               allowClear={false}
               value={moment(selectedDay)}
               format={'DD/MM/YYYY'}
               onChange={(value) => changeSelectDay(value.toDate())}
             />
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+
+            {userConsumption?.end_date && (
+              <Typography.Text strong type='secondary'>
+                <small>Su plan finaliza el dia {userConsumption?.end_date}</small>
+              </Typography.Text>
+            )}
+
             <Title level={4} type='secondary'>
               Asignar hora
             </Title>
@@ -212,7 +219,8 @@ const Informacion = (props) => {
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              un día podrás ajustar las fechas en la sección <strong>Datos del evento</strong> una vez lo hayas creado.
+              Recuerda que podrás modificar las fechas de inicio y fin del evento, en la sección{' '}
+              <strong>Datos del evento</strong>.
             </Paragraph>
           </Col>
         </Row>
