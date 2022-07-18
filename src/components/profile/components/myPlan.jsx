@@ -45,17 +45,29 @@ const myPlan = ({ cUser }) => {
 
   const deleteNotification = async (id) => {
     Modal.confirm({
-      title: `¿Está seguro de eliminar la notificación?`,
+      title: intl.formatMessage({
+        id: 'my_plan.delete.notification',
+        defaultMessage: '¿Está seguro de eliminar la notificación?',
+      }),
       icon: <ExclamationCircleOutlined />,
       content: '',
-      okText: 'Borrar',
+      okText: intl.formatMessage({
+        id: 'button.delete',
+        defaultMessage: 'Borrar',
+      }),
       okType: 'danger',
-      cancelText: 'Cancelar',
+      cancelText: intl.formatMessage({
+        id: 'button.cancel',
+        defaultMessage: 'Cancelar',
+      }),
       onOk() {
         DispatchMessageService({
           type: 'loading',
           key: 'loading',
-          msj: 'Por favor espere mientras se borra la notificación...',
+          msj: intl.formatMessage({
+            id: 'my_plan.delete.loading.notification',
+            defaultMessage: 'Por favor espere mientras se borra la notificación...',
+          }),
           action: 'show',
         });
         const onHandlerRemove = async () => {
@@ -70,7 +82,10 @@ const myPlan = ({ cUser }) => {
             });
             DispatchMessageService({
               type: 'success',
-              msj: 'Se eliminó la notificación correctamente!',
+              msj: intl.formatMessage({
+                id: 'my_plan.delete.notification.success',
+                defaultMessage: 'Se eliminó la notificación correctamente!',
+              }),
               action: 'show',
             });
             getInfoPlans();
@@ -94,7 +109,10 @@ const myPlan = ({ cUser }) => {
   //Notifications
   const columns = [
     {
-      title: 'Razón',
+      title: intl.formatMessage({
+        id: 'my_plan.reason',
+        defaultMessage: 'Razón',
+      }),
       dataIndex: 'message',
       key: 'message',
     },
@@ -115,7 +133,10 @@ const myPlan = ({ cUser }) => {
       },
     }, */
     {
-      title: 'Fecha',
+      title: intl.formatMessage({
+        id: 'my_plan.date',
+        defaultMessage: 'Fecha',
+      }),
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
@@ -125,13 +146,21 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Acciones',
+      title: intl.formatMessage({
+        id: 'my_plan.actions',
+        defaultMessage: 'Acciones',
+      }),
       dataIndex: 'actions',
       key: 'actions',
       render(val, item) {
         return (
           <Space wrap>
-            <Tooltip placement='topLeft' title={'Eliminar'}>
+            <Tooltip
+              placement='topLeft'
+              title={intl.formatMessage({
+                id: 'button.delete',
+                defaultMessage: 'Eliminar',
+              })}>
               <Button danger icon={<DeleteOutlined />} onClick={() => deleteNotification(item._id)} />
             </Tooltip>
           </Space>
@@ -142,7 +171,10 @@ const myPlan = ({ cUser }) => {
 
   const columnsBills = [
     {
-      title: 'Ref. factura',
+      title: intl.formatMessage({
+        id: 'my_plan.number.billing',
+        defaultMessage: 'Ref. factura',
+      }),
       dataIndex: 'reference_evius',
       key: 'reference_evius',
       render(val, item) {
@@ -150,7 +182,10 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Razón social / Nombre completo',
+      title: intl.formatMessage({
+        id: 'my_plan.reason.name',
+        defaultMessage: 'Razón social / Nombre completo',
+      }),
       dataIndex: 'reason',
       key: 'reason',
       render(val, item) {
@@ -163,7 +198,10 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Acción',
+      title: intl.formatMessage({
+        id: 'my_plan.acition',
+        defaultMessage: 'Acción',
+      }),
       dataIndex: 'action',
       key: 'action',
       /* render(val, item) {
@@ -171,7 +209,10 @@ const myPlan = ({ cUser }) => {
       }, */
     },
     {
-      title: 'Estado',
+      title: intl.formatMessage({
+        id: 'my_plan.state',
+        defaultMessage: 'Estado',
+      }),
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
@@ -193,7 +234,10 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Valor',
+      title: intl.formatMessage({
+        id: 'my_plan.value',
+        defaultMessage: 'Valor',
+      }),
       dataIndex: 'value',
       key: 'value',
       render(val, item) {
@@ -205,7 +249,10 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Fecha',
+      title: intl.formatMessage({
+        id: 'my_plan.date',
+        defaultMessage: 'Fecha',
+      }),
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
@@ -215,14 +262,22 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Acciones',
+      title: intl.formatMessage({
+        id: 'my_plan.actions',
+        defaultMessage: 'Acciones',
+      }),
       dataIndex: 'actions',
       key: 'actions',
       render(val, item) {
         const payment = item.billing.payment_method || item.payment || {};
         return (
           <Space wrap>
-            <Tooltip placement='topLeft' title={'Previsualización'}>
+            <Tooltip
+              placement='topLeft'
+              title={intl.formatMessage({
+                id: 'my_plan.preview',
+                defaultMessage: 'Previsualización',
+              })}>
               <Button
                 icon={<FileDoneOutlined />}
                 onClick={() => {
@@ -240,56 +295,117 @@ const myPlan = ({ cUser }) => {
               }}
               width={'100%'}>
               <Divider orientation='left'>
-                <strong>Comprobante</strong>
+                <strong>
+                  {intl.formatMessage({
+                    id: 'my_plan.voucher',
+                    defaultMessage: 'Comprobante',
+                  })}
+                </strong>
               </Divider>
               <Row gutter={[12, 12]} wrap>
                 <Col span={12}>
                   <Space direction='vertical'>
                     <Typography.Text>
-                      <Typography.Text strong>Razón social / Nombre completo:</Typography.Text>{' '}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.reason.name',
+                          defaultMessage: 'Razón social / Nombre completo',
+                        })}
+                        :
+                      </Typography.Text>{' '}
                       {payment['address']?.name} {payment['address']?.last_name}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Identificación:</Typography.Text>{' '}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.identification',
+                          defaultMessage: 'Identificación',
+                        })}
+                        :
+                      </Typography.Text>{' '}
                       {payment['address']?.identification['type']} {payment['address']?.identification['value']}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Teléfono:</Typography.Text> +{payment['address']?.prefix}{' '}
-                      {payment['address']?.phone_number}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.phone_number',
+                          defaultMessage: 'Teléfono',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      +{payment['address']?.prefix} {payment['address']?.phone_number}
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>E-mail:</Typography.Text> {payment['address']?.email}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Dirección:</Typography.Text> ({payment['address']?.country}){' '}
-                      {payment['address']?.address_line_1} {payment['address']?.address_line_2},{' '}
-                      {payment['address']?.city} {payment['address']?.postal_code}-{payment['address']?.region}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.address',
+                          defaultMessage: 'Dirección',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      ({payment['address']?.country}) {payment['address']?.address_line_1}{' '}
+                      {payment['address']?.address_line_2}, {payment['address']?.city} {payment['address']?.postal_code}
+                      -{payment['address']?.region}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Fecha de la venta:</Typography.Text> {item?.created_at}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.billing.date',
+                          defaultMessage: 'Fecha de la venta',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      {item?.created_at}
                     </Typography.Text>
 
                     <Typography.Text>
-                      <Typography.Text strong>Valor base de la venta:</Typography.Text> {item?.billing?.currency} $
-                      {parseFloat(item?.billing?.base_value * item?.billing?.tax).toFixed(2)} con (
-                      {item?.billing?.tax * 100}% de impuesto){' '}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.billing.base',
+                          defaultMessage: 'Valor base de la venta',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      {item?.billing?.currency} ${parseFloat(item?.billing?.base_value * item?.billing?.tax).toFixed(2)}{' '}
+                      con ({item?.billing?.tax * 100}% de impuesto){' '}
                       {item?.billing?.total_discount && <>y un descuento de ${item?.billing?.total_discount}</>}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Medio de pago:</Typography.Text> {payment?.type} - {payment?.method_name}{' '}
-                      ({payment?.brand})
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.payment.method',
+                          defaultMessage: 'Medio de pago',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      {payment?.type} - {payment?.method_name} ({payment?.brand})
                     </Typography.Text>
                   </Space>
                 </Col>
                 <Col span={12}>
                   <Space direction='vertical'>
                     <Typography.Text>
-                      <Typography.Text strong>Referencia del comprobante:</Typography.Text>{' '}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.reference',
+                          defaultMessage: 'Referencia del comprobante',
+                        })}
+                        :
+                      </Typography.Text>{' '}
                       {item?.billing?.reference_evius} (evius) / {item?.billing?.reference_wompi} (wompi)
                     </Typography.Text>
                     <Typography.Text>
                       <Space direction='vertical'>
-                        <Typography.Text strong>Concepto y/o descripción de la venta:</Typography.Text>
+                        <Typography.Text strong>
+                          {intl.formatMessage({
+                            id: 'my_plan.description',
+                            defaultMessage: 'Concepto y/o descripción de la venta',
+                          })}
+                          :
+                        </Typography.Text>
 
                         {item?.action === 'SUBSCRIPTION' && (
                           <Typography.Text>
@@ -299,7 +415,11 @@ const myPlan = ({ cUser }) => {
 
                         {item?.action === 'ADDITIONAL' && (
                           <Typography.Text>
-                            Usuarios adicionales: {item?.billing?.details['users'].amount} ({item?.billing?.currency} $
+                            {intl.formatMessage({
+                              id: 'my_plan.additional.users',
+                              defaultMessage: 'Usuarios adicionales',
+                            })}
+                            : {item?.billing?.details['users'].amount} ({item?.billing?.currency} $
                             {item?.billing?.details['users'].price}){' '}
                             <small>
                               (Total: {item?.billing?.currency} $
@@ -310,18 +430,46 @@ const myPlan = ({ cUser }) => {
                       </Space>
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Estatus de la compra:</Typography.Text> {item?.status}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.billing.state',
+                          defaultMessage: 'Estatus de la compra',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      {item?.status}
                     </Typography.Text>
                     {payment?.status && (
                       <Typography.Text>
-                        <Typography.Text strong>Estatus del pago:</Typography.Text> {payment?.status}
+                        <Typography.Text strong>
+                          {intl.formatMessage({
+                            id: 'my_plan.payment.state',
+                            defaultMessage: 'Estatus del pago',
+                          })}
+                          :
+                        </Typography.Text>{' '}
+                        {payment?.status}
                       </Typography.Text>
                     )}
                     <Typography.Text>
-                      <Typography.Text strong>Tipo de subscripción:</Typography.Text> {item?.billing?.subscription_type}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.subscription_type',
+                          defaultMessage: 'Tipo de subscripción',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      {item?.billing?.subscription_type}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>Tasa del dolar:</Typography.Text> {item?.billing?.dollarToday}
+                      <Typography.Text strong>
+                        {intl.formatMessage({
+                          id: 'my_plan.dollarToday',
+                          defaultMessage: 'Tasa del dolar',
+                        })}
+                        :
+                      </Typography.Text>{' '}
+                      {item?.billing?.dollarToday}
                     </Typography.Text>
                   </Space>
                 </Col>
@@ -335,7 +483,10 @@ const myPlan = ({ cUser }) => {
 
   const columnsEvents = [
     {
-      title: 'Nombre del evento',
+      title: intl.formatMessage({
+        id: 'my_plan.event.name',
+        defaultMessage: 'Nombre del evento',
+      }),
       dataIndex: 'name',
       key: 'name',
       render(val, item) {
@@ -347,19 +498,28 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Usuarios',
+      title: intl.formatMessage({
+        id: 'my_plan.users',
+        defaultMessage: 'Usuarios',
+      }),
       dataIndex: 'users',
       key: 'users',
       align: 'center',
     },
     {
-      title: 'Horas',
+      title: intl.formatMessage({
+        id: 'my_plan.hours',
+        defaultMessage: 'Horas',
+      }),
       dataIndex: 'hours',
       key: 'hours',
       align: 'center',
     },
     {
-      title: 'Estado',
+      title: intl.formatMessage({
+        id: 'my_plan.state',
+        defaultMessage: 'Estado',
+      }),
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
@@ -375,12 +535,18 @@ const myPlan = ({ cUser }) => {
       },
     },
     {
-      title: 'Fecha de creación',
+      title: intl.formatMessage({
+        id: 'my_plan.created_at',
+        defaultMessage: 'Fecha de creación',
+      }),
       dataIndex: 'startDate',
       key: 'startDate',
     },
     {
-      title: 'Fecha final',
+      title: intl.formatMessage({
+        id: 'my_plan.endDate',
+        defaultMessage: 'Fecha final',
+      }),
       dataIndex: 'endDate',
       key: 'endDate',
     },
@@ -417,7 +583,7 @@ const myPlan = ({ cUser }) => {
     let bills = await BillssPlanApi.getByUser(cUser.value?._id);
     setBills(bills.data);
     setLoadingBill(false);
-    console.log('bills', bills.data);
+    /* console.log('bills', bills.data); */
     //dollarToday
 
     /* Consumos del usuario */
@@ -439,7 +605,12 @@ const myPlan = ({ cUser }) => {
 
   return (
     <Tabs defaultActiveKey={'plan'}>
-      <Tabs.TabPane tab={'Mi plan'} key={'plan'}>
+      <Tabs.TabPane
+        tab={intl.formatMessage({
+          id: 'my_plan',
+          defaultMessage: 'Mi plan',
+        })}
+        key={'plan'}>
         <Row gutter={[12, 12]} wrap>
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
@@ -449,14 +620,20 @@ const myPlan = ({ cUser }) => {
           </Col>
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
-              title={'Horas de transmisión'}
+              title={intl.formatMessage({
+                id: 'my_plan.streaming_hours',
+                defaultMessage: 'Horas de transmisión',
+              })}
               value={plan ? `${plan?.availables?.streaming_hours / 60}h` : 'Ilimitadas'}
               icon={<TimerOutlineIcon style={{ fontSize: '24px' }} />}
             />
           </Col>
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
-              title={'Usuarios'}
+              title={intl.formatMessage({
+                id: 'my_plan.users',
+                defaultMessage: 'Usuarios',
+              })}
               value={
                 totalUsersByPlan?.totalAllowedUsers > 0
                   ? totalUsersByPlan?.totalAllowedUsers
@@ -467,8 +644,12 @@ const myPlan = ({ cUser }) => {
                 (plan?._id !== '6285536ce040156b63d517e5' ||
                   !plan?._id ||
                   plan?._id !== '629e1dd4f8fceb1d688c35d5') && (
-                  <a href={UrlAdditional} style={{ color: '#1890ff' }} target='_blank'>
-                    Comprar más {plan?.costAdditionalUsers && <>a (${plan?.costAdditionalUsers})</>}
+                  <a href={UrlAdditional} style={{ color: '#1890ff' }}>
+                    {intl.formatMessage({
+                      id: 'my_plan.buy.more',
+                      defaultMessage: 'Comprar más',
+                    })}{' '}
+                    {plan?.costAdditionalUsers && <>a (${plan?.costAdditionalUsers})</>}
                   </a>
                 )
               }
@@ -476,7 +657,10 @@ const myPlan = ({ cUser }) => {
           </Col>
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
-              title={'Eventos'}
+              title={intl.formatMessage({
+                id: 'my_plan.events',
+                defaultMessage: 'Eventos',
+              })}
               value={plan?.availables?.events || 'Ilimitados'}
               icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
             />
@@ -521,13 +705,28 @@ const myPlan = ({ cUser }) => {
           </Col>
         </Row>
       </Tabs.TabPane>
-      <Tabs.TabPane tab={'Facturaciones'} key={'bills'}>
+      <Tabs.TabPane
+        tab={intl.formatMessage({
+          id: 'my_plan.billings',
+          defaultMessage: 'Facturaciones',
+        })}
+        key={'bills'}>
         <Table dataSource={bills} columns={columnsBills} scroll={{ x: 'auto' }} loading={loadingBill} />
       </Tabs.TabPane>
-      <Tabs.TabPane tab={'Notificaciones'} key={'notifications'}>
+      <Tabs.TabPane
+        tab={intl.formatMessage({
+          id: 'my_plan.notifications',
+          defaultMessage: 'Notificaciones',
+        })}
+        key={'notifications'}>
         <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingNotification} />
       </Tabs.TabPane>
-      <Tabs.TabPane tab={'Mejorar plan'} key={'plan2'}>
+      <Tabs.TabPane
+        tab={intl.formatMessage({
+          id: 'my_plan.better.plan',
+          defaultMessage: 'Mejorar plan',
+        })}
+        key={'plan2'}>
         {plans
           .filter((plan1) => plan1?._id !== plan?._id)
           .sort((a, b) => a.index - b.index)
@@ -536,7 +735,13 @@ const myPlan = ({ cUser }) => {
               <Card style={{ borderRadius: '15px' }}>
                 <Space>
                   <Divider>
-                    <strong>Disponible {plan2?.name}</strong>
+                    <strong>
+                      {intl.formatMessage({
+                        id: 'my_plan.available',
+                        defaultMessage: 'Disponible',
+                      })}{' '}
+                      {plan2?.name}
+                    </strong>
                   </Divider>
                   {plan2?._id !== '6285536ce040156b63d517e5' && plan2?.index > plan?.index ? (
                     <a
@@ -548,9 +753,11 @@ const myPlan = ({ cUser }) => {
                             )
                           : 'https://evius.co/contacto/'
                       }
-                      style={{ color: '#1890ff' }}
-                      target='_blank'>
-                      Comprar plan
+                      style={{ color: '#1890ff' }}>
+                      {intl.formatMessage({
+                        id: 'my_plan.buy.plan',
+                        defaultMessage: 'Comprar plan',
+                      })}
                     </a>
                   ) : (
                     <Typography.Text strong style={{ color: 'red' }}>
@@ -567,7 +774,10 @@ const myPlan = ({ cUser }) => {
                   </Col>
                   <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
-                      title={'Horas de transmisión'}
+                      title={intl.formatMessage({
+                        id: 'my_plan.streaming_hours',
+                        defaultMessage: 'Horas de transmisión',
+                      })}
                       value={
                         plan2?.availables?.streaming_hours !== 'Personalizado'
                           ? `${plan2?.availables?.streaming_hours / 60}h`
@@ -578,15 +788,31 @@ const myPlan = ({ cUser }) => {
                   </Col>
                   <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
-                      title={'Usuarios'}
+                      title={intl.formatMessage({
+                        id: 'my_plan.users',
+                        defaultMessage: 'Usuarios',
+                      })}
                       value={plan2?.availables?.users}
                       icon={<AccountGroupIcon style={{ fontSize: '24px' }} />}
-                      message={plan2?.costAdditionalUsers && <>Adicional (${plan2?.costAdditionalUsers})</>}
+                      message={
+                        plan2?.costAdditionalUsers && (
+                          <>
+                            {intl.formatMessage({
+                              id: 'my_plan.additional',
+                              defaultMessage: 'Adicional',
+                            })}{' '}
+                            (${plan2?.costAdditionalUsers})
+                          </>
+                        )
+                      }
                     />
                   </Col>
                   <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
-                      title={'Eventos'}
+                      title={intl.formatMessage({
+                        id: 'my_plan.events',
+                        defaultMessage: 'Eventos',
+                      })}
                       value={plan2?.availables?.events}
                       icon={<ViewAgendaIcon style={{ fontSize: '24px' }} />}
                     />
