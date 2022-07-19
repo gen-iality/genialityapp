@@ -149,7 +149,7 @@ const DescriptionDynamic = () => {
           </Popover>
         </Row>
       </Col>
-      <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
+      {/* <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} /> */}
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
     </Row>
   );

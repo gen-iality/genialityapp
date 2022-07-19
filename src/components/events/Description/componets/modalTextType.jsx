@@ -12,7 +12,7 @@ const ModalTextComponent = ({ type, setType, saveItem, initialValue }) => {
         return () => setType(null);
     }, [type]);
     const saveText = () => {
-        if (text) {
+        /* if (text) {
             const item = {
                 type: 'text',
                 value: text
@@ -21,7 +21,7 @@ const ModalTextComponent = ({ type, setType, saveItem, initialValue }) => {
             setType(null);
         } else {
             message.error("Ingrese un text para poder guardar")
-        }
+        } */
 
     }
     const handleText = (text) => {
