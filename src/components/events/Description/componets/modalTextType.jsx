@@ -14,6 +14,7 @@ const ModalTextComponent = ({ type, setType, saveItem, initialValue }) => {
     const saveText = () => {
         if (text) {
             const item = {
+                ...initialValue,
                 type: 'text',
                 value: text
             }

@@ -1,6 +1,7 @@
 import { EditOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Image, Popover, Row, Table } from 'antd';
 import arrayMove from 'array-move';
+import { isNumber } from 'ramda-adjunct';
 import { useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ModalImageComponent from './componets/modalImage';
@@ -100,13 +101,31 @@ const DescriptionDynamic = () => {
     return data.length + 1;
   }
 
+
+  const updateItem = (item) => {
+    const newList = dataSource.map((data) => {
+      if (data.index == item?.index) {
+        return item;
+      } else {
+        return data;
+      }
+    });
+    return newList;
+  }
+
   const saveItem = (item) => {
-    if (item) {
+    let newList = [];
+    console.log("ITEM ACA A EDITAR==>", item)
+    if (item && !isNumber(item.index)) {
       const itemIndex = { ...item, index: obtenerIndex() };
-      const newList = [...dataSource, itemIndex];
-      setDataSource(newList);
-      setItem(null);
+      newList = [...dataSource, itemIndex];
+
+    } else {
+      console.log("SE EJECUTA ESTO");
+      newList = updateItem(item)
     }
+    setDataSource(newList);
+    setItem(null);
   }
   return (
     <div>

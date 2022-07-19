@@ -14,7 +14,9 @@ const ModalImageComponent = ({ type, setType, saveItem, initialValue }) => {
 
     const saveImage = () => {
         if (image) {
+
             const item = {
+                ...initialValue,
                 type: 'image',
                 value: image
             }
