@@ -2,6 +2,7 @@ import { CurrentEventContext } from '@/context/eventContext';
 import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
 import { CaretLeftFilled, CaretRightFilled, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Row, Space, Typography, Grid, Comment } from 'antd';
+import { set } from 'firebase/database';
 import { useContext, useEffect, useState } from 'react';
 
 const { useBreakpoint } = Grid;
@@ -13,6 +14,8 @@ const SpeakersBlock = () => {
   const cEvent = useContext(CurrentEventContext);
   const [speakersWithoutCategory, setSpeakersWithoutCategory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [disabledPlus, setDisabledPlus] = useState(false);
+  const [disabledMinus, setDisabledMinus] = useState(false);
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -34,32 +37,54 @@ const SpeakersBlock = () => {
   }, [cEvent.value]);
 
   const scrollPlus = () => {
-    let carrusel = document.getElementById('carrusel');
-    carrusel.scrollLeft += 400;
+    let carrusel = document.getElementById('carrusel-speakers');
+    let scrollLeftPrevious = carrusel.scrollLeft;
+    carrusel.scrollLeft += 450;
+    setTimeout(() => {
+      if (carrusel.scrollLeft === scrollLeftPrevious) {
+        setDisabledPlus(true);
+      }
+    }, 1000);
+    setDisabledMinus(false);
   };
+
   const scrollMinus = () => {
-    let carrusel = document.getElementById('carrusel');
-    carrusel.scrollLeft -= 400;
+    let carrusel = document.getElementById('carrusel-speakers');
+    carrusel.scrollLeft -= 450;
+    if (carrusel.scrollLeft < 50) {
+      setDisabledMinus(true);
+    }
+    setDisabledPlus(false);
   };
   return (
     <div style={{ height: '100%' }}>
       <Row gutter={[8, 8]} style={{ height: '100%' }}>
-        <Col style={{ zIndex: '100' }} xs={0} sm={1} md={1} lg={1} xl={1} xxl={1}>
+        <Col style={{ zIndex: '100' }} span={!disabledMinus ? 1 : 0}>
           <Row align='middle' justify='center' style={{ height: '100%' }}>
             <Space>
-              <Button size='large' icon={<CaretLeftFilled />} onClick={() => scrollMinus()}></Button>
+              <Button
+                shape='circle'
+                disabled={disabledMinus}
+                size='large'
+                icon={<CaretLeftFilled />}
+                onClick={() => scrollMinus()}></Button>
             </Space>
           </Row>
         </Col>
-        <Col xs={24} sm={22} md={22} lg={22} xl={22} xxl={22} style={{ height: '100%' }}>
-          <div
-            id='carrusel'
+        <Col span={!disabledMinus || !disabledPlus ? 22 : 23} style={{ height: '100%' }}>
+          <Row
+            id='carrusel-speakers'
+            onTouchMove={(e) => {
+              setDisabledPlus(false);
+              setDisabledMinus(false);
+            }}
             style={{
               borderRadius: '10px',
               height: '100%',
               display: 'flex',
               flexWrap: 'nowrap',
               gap: '1rem',
+              justifyContent: speakersWithoutCategory.length > 3 ? 'initial' : 'space-around',
               scrollPaddingLeft: '2rem',
               scrollPaddingRight: '2rem',
               overflowX: `${screens.xs ? 'auto' : 'hidden'}`,
@@ -87,9 +112,9 @@ const SpeakersBlock = () => {
                         height: '100%',
                         widows: '100%',
                         borderRadius: '10px',
-                        paddingLeft: '10px',
-                        paddingRight: '10px',
-                        paddingBottom: '10px',
+                        paddingLeft: '15px',
+                        paddingRight: '15px',
+                        paddingBottom: '15px',
                         background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 65.94%, rgba(0, 0, 0, 020) 100%)`,
                       }}>
                       <Space size={0} direction='vertical'>
@@ -115,12 +140,17 @@ const SpeakersBlock = () => {
                   </div>
                 ))
               : 'nada'}
-          </div>
+          </Row>
         </Col>
-        <Col xs={0} sm={1} md={1} lg={1} xl={1} xxl={1}>
+        <Col span={!disabledPlus ? 1 : 0}>
           <Row align='middle' justify='center' style={{ height: '100%' }}>
             <Space>
-              <Button size='large' icon={<CaretRightFilled />} onClick={() => scrollPlus()}></Button>
+              <Button
+                shape='circle'
+                disabled={disabledPlus}
+                size='large'
+                icon={<CaretRightFilled />}
+                onClick={() => scrollPlus()}></Button>
             </Space>
           </Row>
         </Col>
