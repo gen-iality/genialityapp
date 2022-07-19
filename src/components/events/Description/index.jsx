@@ -1,11 +1,23 @@
-import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Popover, Row, Table } from 'antd';
+import { EditOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Image, Popover, Row, Table } from 'antd';
 import arrayMove from 'array-move';
 import { useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import ModalImageComponent from './componets/modalImage';
+import ModalTextComponent from './componets/modalTextType';
 
 const DescriptionDynamic = () => {
+  //permite guardar el listado de elmentos de la descripción
   const [dataSource, setDataSource] = useState([]);
+  const [type, setType] = useState(null);
+  const [item, setItem] = useState(null);
+
+  const editItem = (item) => {
+    setItem(item);
+    setType(item.type);
+
+  }
+
   const DragHandle = SortableHandle(() => (
     <MenuOutlined
       style={{
@@ -16,17 +28,41 @@ const DescriptionDynamic = () => {
   ));
   const columns = [
     {
+      title: 'value',
+      dataIndex: 'value',
+      width: '95%',
+      render: (value, item) => { return renderTypeComponent(item.type, value) },
+    },
+    {
+      title: 'Edit',
+      dataIndex: 'index',
+      width: 30,
+      render: (value, item) => <Button onClick={() => editItem(item)}><EditOutlined /></Button>,
+    },
+    {
       title: 'Sort',
       dataIndex: 'sort',
       width: 30,
       render: () => <DragHandle />,
     },
-    {
-      title: 'value',
-      dataIndex: 'value',
-      width: '95%',
-    },
+
   ];
+
+  const renderTypeComponent = (type, value) => {
+    switch (type) {
+      case 'image':
+        return <Image
+          preview={false}
+          src={value}
+          width={'100%'}
+          height={350} />
+      case 'text':
+        return <div dangerouslySetInnerHTML={{ __html: value }} />
+      default:
+        return <div></div>;
+    }
+
+  }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
@@ -41,7 +77,7 @@ const DescriptionDynamic = () => {
   };
 
   const DraggableContainer = (props) => (
-    <SortableBody useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
+    <SortableBody useDragHandle disableAutoscroll onSortEnd={onSortEnd} {...props} />
   );
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
@@ -53,15 +89,30 @@ const DescriptionDynamic = () => {
   const SortableBody = SortableContainer((props) => <tbody {...props} />);
   const content = (
     <Row>
-      <Button style={{ marginRight: 10 }}>Imagen</Button>
-      <Button style={{ marginRight: 10 }}>Texto</Button>
+      <Button onClick={() => { setItem(null); setType('image') }} style={{ marginRight: 10 }}>Imagen</Button>
+      <Button onClick={() => { setItem(null); setType('text') }} style={{ marginRight: 10 }}>Texto</Button>
       <Button style={{ marginRight: 10 }}>Video</Button>
     </Row>
   );
+
+  const obtenerIndex = () => {
+    let data = dataSource.sort((a, b) => a.index > b.index);
+    return data.length + 1;
+  }
+
+  const saveItem = (item) => {
+    if (item) {
+      const itemIndex = { ...item, index: obtenerIndex() };
+      const newList = [...dataSource, itemIndex];
+      setDataSource(newList);
+      setItem(null);
+    }
+  }
   return (
     <div>
       <Row>
         <Table
+          showHeader={false}
           style={{ width: '100%' }}
           pagination={false}
           dataSource={dataSource}
@@ -80,6 +131,8 @@ const DescriptionDynamic = () => {
           <Button shape='circle' icon={<PlusCircleOutlined />} size={'large'}></Button>
         </Popover>
       </Row>
+      <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
+      <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
     </div>
   );
 };

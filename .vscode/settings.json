@@ -10,7 +10,7 @@
   "prettier.jsxSingleQuote": true,
   "eslint.validate": ["javascript", "javascriptreact"],
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "docwriter.style": "Auto-detect",
   "docwriter.progress.trackMethods": true,

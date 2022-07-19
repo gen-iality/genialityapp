@@ -28,6 +28,8 @@ const ImageUploaderDragAndDrop = ({
     /** Seteamos la imagen cuando ya vien una desde la base de datos, para ver la previa */
     if (imageUrl) {
       setImage(imageUrl);
+    }else{
+      setImage(null);
     }
   }, [imageUrl]);
 
@@ -39,7 +41,7 @@ const ImageUploaderDragAndDrop = ({
     multiple: false,
     maxCount: 1,
     customRequest: uploadImagedummyRequest,
-    defaultFileList: imageUrl && [...fileList],
+    fileList: imageUrl ? [...fileList]:null,
     onChange: async ({ file }: any) => {
       const { status } = file;
 
