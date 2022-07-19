@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Image, Layout, Popover, Row, Space, Table } from 'antd';
+import { Button, Card, Col, Image, Layout, Popover, Row, Space, Table } from 'antd';
 import arrayMove from 'array-move';
 import { isNumber } from 'ramda-adjunct';
 import { useState } from 'react';
@@ -89,7 +89,7 @@ const DescriptionDynamic = () => {
   };
 
   const DraggableContainer = (props) => (
-    <SortableBody useDragHandle disableAutoscroll onSortEnd={onSortEnd} {...props} />
+    <SortableBody useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
   );
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
@@ -155,21 +155,23 @@ const DescriptionDynamic = () => {
     <Row gutter={[16, 16]}>
       <Col span={24}>
         <Row justify="center" align='middle'>
-          <Table
-            tableLayout='auto'
-            showHeader={false}
-            style={{ userSelect: 'none', width: '100%' }}
-            pagination={false}
-            dataSource={dataSource}
-            columns={columns}
-            rowKey='index'
-            components={{
-              body: {
-                wrapper: DraggableContainer,
-                row: DraggableBodyRow,
-              },
-            }}
-          />
+          <Card hoverable={true} style={{ borderRadius: '20px', width: '100%' }}>
+            <Table
+              tableLayout='auto'
+              showHeader={false}
+              style={{ userSelect: 'none', width: '100%' }}
+              pagination={false}
+              dataSource={dataSource}
+              columns={columns}
+              rowKey='index'
+              components={{
+                body: {
+                  wrapper: DraggableContainer,
+                  row: DraggableBodyRow,
+                },
+              }}
+            />
+          </Card>
         </Row>
       </Col>
       <Col span={24}>
@@ -179,7 +181,7 @@ const DescriptionDynamic = () => {
           </Popover>
         </Row>
       </Col>
-      <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
+      {/* <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} /> */}
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
     </Row>
   );
