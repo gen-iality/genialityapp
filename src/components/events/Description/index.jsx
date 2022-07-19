@@ -1,10 +1,11 @@
-import { EditOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Image, Popover, Row, Table } from 'antd';
+import { DeleteOutlined, EditOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Col, Image, Layout, Popover, Row, Space, Table } from 'antd';
 import arrayMove from 'array-move';
 import { useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ModalImageComponent from './componets/modalImage';
 import ModalTextComponent from './componets/modalTextType';
+import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 
 const DescriptionDynamic = () => {
   //permite guardar el listado de elmentos de la descripción
@@ -19,32 +20,42 @@ const DescriptionDynamic = () => {
   }
 
   const DragHandle = SortableHandle(() => (
-    <MenuOutlined
+    <DragIcon
       style={{
-        cursor: 'grab',
-        color: '#999',
+        cursor: 'move',
+        color: '#999999',
+        fontSize: '22px',
       }}
     />
   ));
   const columns = [
     {
+      title: 'Sort',
+      dataIndex: 'sort',
+      width: 50,
+      className: 'drag-visible',
+      render: () => <DragHandle />,
+    },
+    {
       title: 'value',
       dataIndex: 'value',
-      width: '95%',
+
+      className: 'drag-visible',
       render: (value, item) => { return renderTypeComponent(item.type, value) },
     },
     {
       title: 'Edit',
       dataIndex: 'index',
-      width: 30,
-      render: (value, item) => <Button onClick={() => editItem(item)}><EditOutlined /></Button>,
+      width: 100,
+      className: 'drag-visible',
+      render: (value, item) => (
+        <Space>
+          <Button icon={<EditOutlined />} onClick={() => editItem(item)} />
+          <Button icon={<DeleteOutlined />} type='primary' danger />
+        </Space>
+      )
     },
-    {
-      title: 'Sort',
-      dataIndex: 'sort',
-      width: 30,
-      render: () => <DragHandle />,
-    },
+
 
   ];
 
@@ -109,31 +120,36 @@ const DescriptionDynamic = () => {
     }
   }
   return (
-    <div>
-      <Row>
-        <Table
-          showHeader={false}
-          style={{ width: '100%' }}
-          pagination={false}
-          dataSource={dataSource}
-          columns={columns}
-          rowKey='index'
-          components={{
-            body: {
-              wrapper: DraggableContainer,
-              row: DraggableBodyRow,
-            },
-          }}
-        />
-      </Row>
-      <Row justify='center' style={{ marginTop: 40 }}>
-        <Popover content={content} title='¿Que deseas agregar?'>
-          <Button shape='circle' icon={<PlusCircleOutlined />} size={'large'}></Button>
-        </Popover>
-      </Row>
+    <Row gutter={[16, 16]}>
+      <Col span={24}>
+        <Row justify="center" align='middle'>
+          <Table
+            tableLayout='auto'
+            showHeader={false}
+            style={{ userSelect: 'none', width: '100%' }}
+            pagination={false}
+            dataSource={dataSource}
+            columns={columns}
+            rowKey='index'
+            components={{
+              body: {
+                wrapper: DraggableContainer,
+                row: DraggableBodyRow,
+              },
+            }}
+          />
+        </Row>
+      </Col>
+      <Col span={24}>
+        <Row justify="center" align='middle'>
+          <Popover content={content} title='¿Que deseas agregar?' trigger={'click'}>
+            <Button type='text' shape='circle' icon={<PlusCircleOutlined />} size={'large'} />
+          </Popover>
+        </Row>
+      </Col>
       <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
-    </div>
+    </Row>
   );
 };
 
