@@ -8,7 +8,6 @@ const ModalImageComponent = ({ type, setType, saveItem, initialValue }) => {
     useEffect(() => {
         if (type !== "image") return;
         !initialValue ? setImage(null) : setImage(initialValue.value);
-        console.log("SE EJECUTA EL EFFECT IMAGE==>", initialValue);
         return () => setType(null);
     }, [type]);
 

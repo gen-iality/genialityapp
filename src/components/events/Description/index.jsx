@@ -52,7 +52,7 @@ const DescriptionDynamic = () => {
       render: (value, item) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => editItem(item)} />
-          <Button icon={<DeleteOutlined />} type='primary' danger />
+          <Button icon={<DeleteOutlined />} onClick={() => deleteItem(item)} type='primary' danger />
         </Space>
       )
     },
@@ -124,15 +124,28 @@ const DescriptionDynamic = () => {
     return newList;
   }
 
+  const deleteItem = (item) => {
+    let newList = dataSource.filter((data) => data.index !== item.index);
+    newList = updateIndexTotal(newList);
+    setDataSource(newList);
+  }
+
+  //PERMITE ACTUALIZAR LOS INDICES
+  const updateIndexTotal = (lista) => {
+    let newList = lista.sort((a, b) => a.index > b.index);
+    newList = lista.map((data, index) => {
+      return { ...data, index: index }
+    });
+    return newList;
+  }
+
   const saveItem = (item) => {
     let newList = [];
-    console.log("ITEM ACA A EDITAR==>", item)
     if (item && !isNumber(item.index)) {
       const itemIndex = { ...item, index: obtenerIndex() };
       newList = [...dataSource, itemIndex];
 
     } else {
-      console.log("SE EJECUTA ESTO");
       newList = updateItem(item)
     }
     setDataSource(newList);

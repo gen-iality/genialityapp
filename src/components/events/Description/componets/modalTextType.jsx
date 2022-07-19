@@ -7,7 +7,6 @@ const ModalTextComponent = ({ type, setType, saveItem, initialValue }) => {
 
     useEffect(() => {
         if (type !== "text") return;
-        console.log("SE EJECUTA EL EFFECT==>", initialValue);
         !initialValue ? setText(null) : setText(initialValue.value);
         return () => setType(null);
     }, [type]);
