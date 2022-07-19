@@ -40,6 +40,7 @@ import PreLandingSections from '../prelanding';
 import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
 import { disabledDateTime, disabledEndDate } from '@/Utilities/disableTimeAndDatePickerInEventDate';
 import { CurrentUserContext } from '@/context/userContext';
+import DescriptionDynamic from './Description';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -1244,6 +1245,12 @@ class General extends Component {
               key='3'
               style={{ paddingLeft: '25px', paddingRight: '25px', paddingBottom: '30px' }}>
               <PreLandingSections tabActive={this.state.tabActive} />
+            </Tabs.TabPane>
+            <Tabs.TabPane
+              tab='Descripción'
+              key='4'
+              style={{ paddingLeft: '25px', paddingRight: '25px', paddingBottom: '30px' }}>
+              <DescriptionDynamic />
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}
