@@ -496,9 +496,10 @@ export const TicketsApi = {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
   },
 
-  addCheckIn: async (eventUser_id) => {
+  addCheckIn: async (eventUser_id, checkInType) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, {}, true);
+    const checkedin_type = checkInType;
+    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, { checkedin_type }, true);
   },
 
   deleteCheckIn: async (eventUser_id) => {

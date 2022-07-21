@@ -35,6 +35,7 @@ const FormEnrollAttendeeToEvent = ({
   const buttonSubmit = useRef(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState<boolean>(false);
   const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
+  const [attendeeCheckedInType, setAttendeeCheckedInType] = useState<string | null>(null);
 
   const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent();
   const { basicFields, thereAreExtraFields, buttonText } = formState;
@@ -44,25 +45,26 @@ const FormEnrollAttendeeToEvent = ({
     assignmentOfConditionsToAdditionalFields({ conditionalFields, allValues, fields, setValidatedFields });
   };
 
-  const componentLoad = () => {
+  const componentLoad = (attendeeData: { properties: {}; checkedin_type: string | null }) => {
+    setAttendeeCheckedInType(attendeeData?.checkedin_type);
     form.resetFields();
-    formDispatch({ type: 'getBasicFields', payload: { fields, attendee } });
+    formDispatch({ type: 'getBasicFields', payload: { fields, attendeeData } });
     formDispatch({
       type: 'thereAreExtraFields',
       payload: {
         fields,
-        attendee,
+        attendeeData,
         visibleInCms,
       },
     });
-    formDispatch({ type: 'buttonText', payload: { visibleInCms, attendee } });
-    const allValues = attendee ? attendee.properties : [];
+    formDispatch({ type: 'buttonText', payload: { visibleInCms, attendeeData } });
+    const allValues = attendeeData ? attendeeData.properties : [];
 
     assigningConditionsToFields({}, allValues);
   };
 
   useEffect(() => {
-    componentLoad();
+    componentLoad(attendee);
   }, [attendee]);
 
   const showGeneralMessage = () => {
@@ -136,6 +138,9 @@ const FormEnrollAttendeeToEvent = ({
                         reloadComponent={componentLoad}
                         checkInAttendeeCallbak={checkInAttendeeCallbak}
                       />
+                    </Form.Item>
+                    <Form.Item>
+                      <b>Tipo de checkIn: {attendeeCheckedInType ? attendeeCheckedInType : 'ninguno'}</b>
                     </Form.Item>
                     <Form.Item>
                       <Space direction='horizontal'>

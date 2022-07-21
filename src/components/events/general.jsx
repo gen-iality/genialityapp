@@ -832,6 +832,7 @@ class General extends Component {
                       <Option value=''>Seleccionar...</Option>
                       <Option value='physicalEvent'>Evento físico</Option>
                       <Option value='onlineEvent'>Evento virtual</Option>
+                      <Option value='hybridEvent'>Evento híbrido</Option>
                     </Select>
                   </Form.Item>
 

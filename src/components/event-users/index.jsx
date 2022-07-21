@@ -47,6 +47,7 @@ import Loading from '../profile/loading';
 import moment from 'moment';
 import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -159,6 +160,24 @@ class ListEventUser extends Component {
     return <AttendeeCheckIn attendee={item} />;
   };
 
+  physicalCheckInComponent = (text, item, index) => {
+    return (
+      <Button
+        size='small'
+        type='primary'
+        block={true}
+        onClick={() => {
+          saveCheckInAttendee({ _id: item._id, checked: true, checkInType: 'Físico' });
+        }}>
+        CheckIn físico
+      </Button>
+    );
+  };
+
+  checkInTypeComponent = (text, item, index) => {
+    return <>{item?.checkedin_type ? <b>{item?.checkedin_type}</b> : <b>Ninguno</b>}</>;
+  };
+
   addDefaultLabels = (extraFields) => {
     extraFields = extraFields.map((field) => {
       field['label'] = field['label'] ? field['label'] : field['name'];
@@ -262,6 +281,26 @@ class ListEventUser extends Component {
         ...self.getColumnSearchProps('checkedin_at'),
         render: self.checkedincomponent,
       };
+
+      let checkInType = {
+        title: 'Tipo de checkIn',
+        dataIndex: 'checkedin_type',
+        key: 'checkedin_type',
+        width: '120px',
+        ellipsis: true,
+        ...self.getColumnSearchProps('checkedin_type'),
+        render: self.checkInTypeComponent,
+      };
+
+      let physicalCheckIn = {
+        title: 'Registrar checkIn físico',
+        dataIndex: 'physicalCheckIn',
+        key: 'physicalCheckIn',
+        width: '120px',
+        ellipsis: true,
+        render: self.physicalCheckInComponent,
+      };
+
       let editColumn = {
         title: 'Editar',
         key: 'edit',
@@ -270,6 +309,9 @@ class ListEventUser extends Component {
         render: self.editcomponent,
       };
       /* columns.push(editColumn); */
+      /** Additional columns for hybrid events */
+      if (self.props.event?.type_event === 'hybridEvent') columns.push(checkInType, physicalCheckIn);
+
       columns.push(checkInColumn);
 
       let extraColumns = extraFields

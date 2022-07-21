@@ -23,7 +23,14 @@ const AttendeeCheckIn = ({ attendee, reloadComponent, checkInAttendeeCallbak }: 
   const saveAttemdeeCheckIn = async (e: CheckboxChangeEvent) => {
     const { checked } = e.target;
     if (checked) {
-      await saveCheckInAttendee({ _id, checked, reloadComponent, setAttemdeeCheckIn, checkInAttendeeCallbak });
+      await saveCheckInAttendee({
+        _id,
+        checked,
+        reloadComponent,
+        setAttemdeeCheckIn,
+        checkInAttendeeCallbak,
+        checkInType: 'Físico',
+      });
       return;
     }
 
@@ -34,7 +41,13 @@ const AttendeeCheckIn = ({ attendee, reloadComponent, checkInAttendeeCallbak }: 
       okText: 'Si',
       cancelText: 'No',
       async onOk() {
-        await saveCheckInAttendee({ _id, checked, reloadComponent, setAttemdeeCheckIn, checkInAttendeeCallbak });
+        await saveCheckInAttendee({
+          _id,
+          checked,
+          reloadComponent,
+          setAttemdeeCheckIn,
+          checkInAttendeeCallbak,
+        });
       },
     });
   };
