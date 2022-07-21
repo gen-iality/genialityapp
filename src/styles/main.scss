@@ -328,6 +328,10 @@ iframe {
   }
 }
 
+#content-block-description {
+  --animate-delay: 0.2s;
+}
+
 // Estilos para el reactQuill que se llama desde un modal
 
 .insideModal {
@@ -404,10 +408,14 @@ iframe {
   border: none;
   border-radius: 8px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .row-dragging td {
   padding: 16px;
+  align-self: center;
 }
 
 .row-dragging .drag-visible {
