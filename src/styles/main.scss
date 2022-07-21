@@ -328,6 +328,76 @@ iframe {
   }
 }
 
+// Estilos para el reactQuill que se llama desde un modal
+
+.insideModal {
+  .ql-toolbar {
+    border: none;
+    border-bottom: 1px solid #f0f0f0 !important;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    padding: 8px;
+    border-radius: 8px 8px 0px 0px !important;
+  }
+  .ql-container {
+    border: none;
+    border-radius: 0px 0px 8px 8px !important;
+  }
+  .ql-editor {
+    height: 250px !important;
+  }
+}
+//------------------------------------------------------------------------------------------
+
+// Reglas para poder visualizar los estilos por defecto de ReactQuill en una tabla de Antd
+
+#tableDescription {
+  .ql-size-huge {
+    font-size: 2.5em !important;
+  }
+  .ql-size-large {
+    font-size: 1.5em !important;
+  }
+  .ql-size-small {
+    font-size: 0.75em !important;
+  }
+  .ql-font-monospace {
+    font-family: Monaco, Courier New, monospace !important;
+  }
+  .ql-font-serif {
+    font-family: Georgia, Times New Roman, serif !important;
+  }
+  blockquote {
+    border-left: 4px solid #ccc;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-left: 16px;
+  }
+  a {
+    text-decoration: underline;
+  }
+  p {
+    font-size: 1.3rem;
+  }
+  h1 {
+    font-size: 2em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  h3 {
+    font-size: 1.17em;
+  }
+  h4 {
+    font-size: 1em;
+  }
+  h5 {
+    font-size: 0.83em;
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+
 // estilos para el efecto de drag en las tablas de antd
 .row-dragging {
   background: #ffffff;

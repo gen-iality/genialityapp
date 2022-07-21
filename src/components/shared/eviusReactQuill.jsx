@@ -90,7 +90,7 @@ function EviusReactQuill(props) {
       toolbar: {
         container: [
           [{ font: [] }],
-          [{ header: [0, 1, 2, 3, 4, 5] }],
+          [{ header: [false, 1, 2, 3, 4, 5] }],
           [{ size: ['small', false, 'large', 'huge'] }],
           [{ align: [] }],
           [{ syntax: true }],
@@ -115,7 +115,7 @@ function EviusReactQuill(props) {
       var ImageData = QuillImageDropAndPaste.ImageData;
       let editor = reactQuilllRef.current.getEditor();
 
-      editor.getModule('toolbar').addHandler('image', function (clicked) {
+      editor.getModule('toolbar').addHandler('image', function(clicked) {
         if (clicked) {
           var fileInput = this.container.querySelector('input.ql-image[type=file]');
           if (fileInput == null) {
@@ -123,7 +123,7 @@ function EviusReactQuill(props) {
             fileInput.setAttribute('type', 'file');
             fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
             fileInput.classList.add('ql-image');
-            fileInput.addEventListener('change', function (e) {
+            fileInput.addEventListener('change', function(e) {
               var files = e.target.files,
                 file;
               if (files.length > 0) {
@@ -151,6 +151,7 @@ function EviusReactQuill(props) {
   return (
     <>
       <ReactQuill
+        className={props.className}
         id='reactQuill'
         ref={reactQuilllRef}
         modules={modules}

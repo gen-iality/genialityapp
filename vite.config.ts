@@ -94,6 +94,7 @@ export default defineConfig({
         modifyVars: {
           '@primary-color': '#333F44',
           '@secondary-color': '#C44D17',
+          '@border-radius-base': '8px'
         },
         javascriptEnabled: true,
       },
