@@ -827,7 +827,7 @@ const myPlan = ({ cUser }) => {
                         setShow(!show);
                         setToShow(index);
                       }}>
-                      {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes más información del plan{' '}
+                      {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes conocer más información del plan{' '}
                       <strong>{plan2?.name}</strong>.
                     </Typography.Text>
                     {show && toShow === index && (
