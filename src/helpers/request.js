@@ -378,10 +378,15 @@ export const EventsApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.post(`/api/descriptions?token=${token}`,section);
   },
-  updateSections:async (sectionId,newSections)=>{
+  updateSections:async (eventId,newSections)=>{
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`/api/descriptions/${sectionId}?token=${token}`,newSections);
+    return await Actions.put(`/api/descriptions/${eventId}?token=${token}`,newSections);
   },
+  updateSectionOne:async (sectionId,newSection)=>{
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/descriptions/${sectionId}?token=${token}`,newSection);
+  },
+
   deleteSections:async (sectionId)=>{
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`/api/descriptions/${sectionId}?token=${token}`);

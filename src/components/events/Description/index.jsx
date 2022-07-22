@@ -1,4 +1,11 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  FullscreenOutlined,
+  PlusOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
 import {
   Affix,
   Avatar,
@@ -7,14 +14,18 @@ import {
   Col,
   ConfigProvider,
   Divider,
+  Drawer,
   Empty,
   Image,
   message,
+  Popconfirm,
   Popover,
   Row,
   Space,
   Spin,
   Table,
+  Tag,
+  Tooltip,
   Typography,
 } from 'antd';
 import arrayMove from 'array-move';
@@ -31,6 +42,7 @@ import ModalVideoComponent from './componets/modalVideo';
 import ReactPlayer from 'react-player';
 import { EventsApi } from '@/helpers/request';
 import { CurrentEventContext } from '@/context/eventContext';
+import DrawerPreview from './componets/drawerPreview';
 
 const DescriptionDynamic = () => {
   //permite guardar el listado de elmentos de la descripción
@@ -38,7 +50,9 @@ const DescriptionDynamic = () => {
   const [type, setType] = useState(null);
   const [item, setItem] = useState(null);
   const [focus, setFocus] = useState(false);
-  const [loading, setLoading]=useState(false)
+  const [loading, setLoading]=useState(false);
+  const [isOrderUpdate, setIsOrderUpdate]=useState(false);
+  const [visibleDrawer,setVisibleDrawer]=useState(false);
   const cEvent= useContext(CurrentEventContext);
 
   const editItem = (item) => {
@@ -59,7 +73,7 @@ const DescriptionDynamic = () => {
       style={{
         cursor: 'move',
         color: '#999999',
-        fontSize: '22px',
+        fontSize: '28px',
       }}
     />
   ));
@@ -87,26 +101,79 @@ const DescriptionDynamic = () => {
       className: 'drag-visible',
       render: (value, item) => (
         <Space direction='vertical'>
-          <Button icon={<EditOutlined />} onClick={() => editItem(item)} />
-          <Button icon={<DeleteOutlined />} onClick={() => deleteItem(item)} type='primary' danger />
+          <Tooltip placement='left' title='Editar'>
+            <Button size='large' icon={<EditOutlined />} onClick={() => editItem(item)} />
+          </Tooltip>
+          <Popconfirm
+            icon={<WarningOutlined />}
+            placement='left'
+            title={
+              <Typography.Text>{`¿Está seguro que desea eliminar este bloque de ${messageDinamic(
+                item.type
+              )}?`}</Typography.Text>
+            }
+            onConfirm={() => deleteItem(item)}
+            okText='Eliminar'
+            okType='danger'
+            cancelText='Cancelar'>
+            <Button size='large' icon={<DeleteOutlined />} type='primary' danger />
+          </Popconfirm>
+          {item.type === 'image' && (
+            <Tooltip
+              placement='left'
+              title='La imagen agregada no refleja sus dimensiones reales, esto con el fin de facilitar la acción de ordenar.'>
+              <Button size='large' icon={<ExclamationCircleOutlined style={{ color: '#1890FF' }} />} type='text' />
+            </Tooltip>
+          )}
         </Space>
       ),
     },
   ];
 
-  const renderTypeComponent = useCallback((type, value) => {
-    if (focus) return;
+  const messageDinamic = (type) => {
     switch (type) {
       case 'image':
-        return <Image preview={false} src={value} width={'100%'} height={350} />;
+        return 'imagen';
       case 'text':
-        return <div dangerouslySetInnerHTML={{ __html: value }} />;
+        return 'texto';
       case 'video':
-        return  <ReactPlayer controls width={'100%'} height={'350'} style={{}} url={value} />;
-      default :
-        return <div></div>;
+        return 'video';
+
+      default:
+        break;
     }
-  },[dataSource]);
+  };
+
+  const renderTypeComponent = useCallback(
+    (type, value) => {
+      if (focus) return;
+      switch (type) {
+        case 'image':
+          return (
+            <Image
+              preview={{
+                mask: (
+                  <Button size='large' type='primary'>
+                    Ver imagen completa
+                  </Button>
+                ),
+              }}
+              src={value}
+              style={{ objectFit: 'contain' }}
+              width='100%'
+              height='250px'
+            />
+          );
+        case 'text':
+          return <div dangerouslySetInnerHTML={{ __html: value }} />;
+        case 'video':
+          return <ReactPlayer controls width={'100%'} height={'350'} style={{}} url={value} />;
+        default:
+          return <div></div>;
+      }
+    },
+    [dataSource]
+  );
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
@@ -116,6 +183,7 @@ const DescriptionDynamic = () => {
           return { ...data, index: key };
         });
       }
+      setIsOrderUpdate(true);
       setDataSource(newData);
     }
   };
@@ -177,10 +245,14 @@ const DescriptionDynamic = () => {
           <Typography.Text>Imagen</Typography.Text>
         </Space>
       </Card>
-      <Card onClick={() => {
+      <Card
+        onClick={() => {
           setItem(null);
           setType('video');
-        }} className='animate__animated animate__bounceIn ' hoverable={true} style={styleCardButton}>
+        }}
+        className='animate__animated animate__bounceIn '
+        hoverable={true}
+        style={styleCardButton}>
         <Space size={8} style={{ textAlign: 'center' }} direction='vertical'>
           <Avatar
             shape='square'
@@ -208,7 +280,7 @@ const DescriptionDynamic = () => {
     setLoading(true);
    const sections= await EventsApi.getSectionsDescriptions(cEvent.value._id)
    let dataOrder=sections.data.sort((a,b)=>a.index-b.index);
-   setDataSource(dataOrder|| [])
+   setDataSource(dataOrder|| []);
    setLoading(false);
   }
 
@@ -226,31 +298,26 @@ const DescriptionDynamic = () => {
     return data?.length + 1;
   };
 
-  const updateItem = async (item) => {
-  //  const sectionUpdate=await EventsApi.updateSections(item._id,item);
-  //  console.log("RESP UPDATE==>", sectionUpdate)
-  //  return sectionUpdate._id;
-    // const newList = dataSource.map((data) => {
-    //   if (data.index == item?.index) {
-    //     return item;
-    //   } else {
-    //     return data;
-    //   }
-    // });
-    // return newList;
+  const updateItem = async (item) => { 
+    const newList = dataSource.map((data) => {
+      if (data.index == item?.index) {
+        return item;
+      } else {
+        return data;
+      }
+    });
+    const sectionUpdate=await EventsApi.updateSectionOne(item._id,item);
+    return newList;
   };
 
   const deleteItem = async (item) => {
-   const resp= await EventsApi.deleteSections(item._id);
-   if(resp){
-    let newList = dataSource.filter((data) => data.index !== item.index);
+    let newList = dataSource.filter((data) => data._id !== item._id);
+   const resp= await EventsApi.deleteSections(item._id);    
     newList = updateIndexTotal(newList);
-    const updateIndexSections=await EventsApi.updateSections(cEvent.value?._id,newList);
-    if(updateIndexSections){
-      setDataSource(newList);
-    }
-   }
-    
+    await Promise.all(newList.map(async(item)=>{
+      const updateIndexSections=await EventsApi.updateSectionOne(item._id,item);
+    }))
+    setDataSource(newList);     
   };
 
   //PERMITE ACTUALIZAR LOS INDICES
@@ -263,48 +330,60 @@ const DescriptionDynamic = () => {
   };
 
   const saveItem = async (item) => {
+    setLoading(true);
     let newList = [];
     let resp;
     if (item && !isNumber(item.index)) {
       const itemIndex = { ...item, index: obtenerIndex() };
       newList = [...dataSource, itemIndex];
-      resp = addSectionToDescription(itemIndex)
+      resp = await  addSectionToDescription(itemIndex)
     } else {
       resp = updateItem(item);
     }
     if(resp){
-      setDataSource(newList);
+      setTimeout(async ()=> await obtenerDescriptionSections(),300);     
       setItem(null);
     }else{
       message.error("Error al guardar la sección")
     }
+    setLoading(false)
     
   };
-  const tableFunction=useCallback(()=>{
-   return( <Table
-    id='tableDescription'
-    tableLayout='auto'
-    showHeader={false}
-    style={{ userSelect: 'none', width: '100%' }}
-    pagination={false}
-    dataSource={dataSource}
-    columns={columns}
-    rowKey='index'
-    components={{
-      body: {
-        wrapper: DraggableContainer,
-        row: DraggableBodyRow,
-      },
-    }}
-  />)
-  },[dataSource]);
+
+  const saveOrder=async ()=>{   
+    const newList = updateIndexTotal(dataSource);
+    await Promise.all(newList.map(async(item)=>{
+      const updateIndexSections=await EventsApi.updateSectionOne(item._id,item);
+    }));
+    setIsOrderUpdate(false)
+    }
+  const tableFunction = useCallback(() => {
+    return (
+      !loading ?<Table
+        id='tableDescription'
+        tableLayout='auto'
+        showHeader={false}
+        title={()=><Button onClick={()=>setVisibleDrawer(true)} icon={<FullscreenOutlined />} />}
+        style={{ userSelect: 'none', width: '100%' }}
+        pagination={false}
+        dataSource={dataSource}
+        columns={columns}
+        rowKey='index'
+        components={{
+          body: {
+            wrapper: DraggableContainer,
+            row: DraggableBodyRow,
+          },
+        }}
+      />:<Spin />
+    );
+  }, [dataSource,loading]);
   return (
     <Row gutter={[16, 16]}>
       <Col span={24}>
+      {isOrderUpdate && <Button onClick={saveOrder} >Guardar Orden</Button>}
         <Row justify='center' align='middle'>
-          <ConfigProvider renderEmpty={() => <Empty />}>
-          {!loading ?tableFunction() :<Spin />}
-          </ConfigProvider>
+          <ConfigProvider renderEmpty={() => <Empty />}>{tableFunction()}</ConfigProvider>
         </Row>
       </Col>
       <Col span={24}>
@@ -324,9 +403,10 @@ const DescriptionDynamic = () => {
           </Popover>
         </Row>
       </Col>
+      <DrawerPreview dataSource={dataSource} visibleDrawer={visibleDrawer} setVisibleDrawer={setVisibleDrawer} />
       <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
-      <ModalVideoComponent  type={type} setType={setType} initialValue={item} saveItem={saveItem} />
+      <ModalVideoComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
     </Row>
   );
 };

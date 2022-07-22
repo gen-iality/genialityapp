@@ -41,8 +41,10 @@ const ModalImageComponent = ({ type, setType, saveItem, initialValue }) => {
       <ImageUploaderDragAndDrop
         imageDataCallBack={(imageUrl) => handleImage(imageUrl)}
         imageUrl={image}
-        width='80'
-        height='80'
+        width={null}
+        height={null}
+        styles={{ cursor: 'auto', borderRadius: '10px 10px 0px 0px', textAlign: 'center' }}
+        hoverable={false}
       />
     </Modal>
   );
