@@ -9,15 +9,17 @@ import {
   Divider,
   Empty,
   Image,
+  message,
   Popover,
   Row,
   Space,
+  Spin,
   Table,
   Typography,
 } from 'antd';
 import arrayMove from 'array-move';
 import { isNumber } from 'ramda-adjunct';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ModalImageComponent from './componets/modalImage';
 import ModalTextComponent from './componets/modalTextType';
@@ -27,6 +29,8 @@ import CardTextIcon from '@2fd/ant-design-icons/lib/CardText';
 import VideoBoxtIcon from '@2fd/ant-design-icons/lib/VideoBox';
 import ModalVideoComponent from './componets/modalVideo';
 import ReactPlayer from 'react-player';
+import { EventsApi } from '@/helpers/request';
+import { CurrentEventContext } from '@/context/eventContext';
 
 const DescriptionDynamic = () => {
   //permite guardar el listado de elmentos de la descripción
@@ -34,6 +38,8 @@ const DescriptionDynamic = () => {
   const [type, setType] = useState(null);
   const [item, setItem] = useState(null);
   const [focus, setFocus] = useState(false);
+  const [loading, setLoading]=useState(false)
+  const cEvent= useContext(CurrentEventContext);
 
   const editItem = (item) => {
     setItem(item);
@@ -192,26 +198,59 @@ const DescriptionDynamic = () => {
     </Space>
   );
 
+  useEffect(()=>{
+    if(!cEvent.value) return;
+    obtenerDescriptionSections()
+
+  },[cEvent.value])
+
+  const obtenerDescriptionSections=async ()=>{
+    setLoading(true);
+   const sections= await EventsApi.getSectionsDescriptions(cEvent.value._id)
+   let dataOrder=sections.data.sort((a,b)=>a.index-b.index);
+   setDataSource(dataOrder|| [])
+   setLoading(false);
+  }
+
+  const addSectionToDescription=async (section)=>{
+    const sectionEvent={...section, event_id:cEvent.value._id}
+    const saveSection=await EventsApi.saveSections(sectionEvent);
+    if(saveSection?._id){
+      return true;
+    }
+    return false;
+  }
+
   const obtenerIndex = () => {
-    let data = dataSource.sort((a, b) => a.index > b.index);
-    return data.length + 1;
+    let data = dataSource?.sort((a, b) => a.index > b.index);
+    return data?.length + 1;
   };
 
-  const updateItem = (item) => {
-    const newList = dataSource.map((data) => {
-      if (data.index == item?.index) {
-        return item;
-      } else {
-        return data;
-      }
-    });
-    return newList;
+  const updateItem = async (item) => {
+  //  const sectionUpdate=await EventsApi.updateSections(item._id,item);
+  //  console.log("RESP UPDATE==>", sectionUpdate)
+  //  return sectionUpdate._id;
+    // const newList = dataSource.map((data) => {
+    //   if (data.index == item?.index) {
+    //     return item;
+    //   } else {
+    //     return data;
+    //   }
+    // });
+    // return newList;
   };
 
-  const deleteItem = (item) => {
+  const deleteItem = async (item) => {
+   const resp= await EventsApi.deleteSections(item._id);
+   if(resp){
     let newList = dataSource.filter((data) => data.index !== item.index);
     newList = updateIndexTotal(newList);
-    setDataSource(newList);
+    const updateIndexSections=await EventsApi.updateSections(cEvent.value?._id,newList);
+    if(updateIndexSections){
+      setDataSource(newList);
+    }
+   }
+    
   };
 
   //PERMITE ACTUALIZAR LOS INDICES
@@ -223,16 +262,23 @@ const DescriptionDynamic = () => {
     return newList;
   };
 
-  const saveItem = (item) => {
+  const saveItem = async (item) => {
     let newList = [];
+    let resp;
     if (item && !isNumber(item.index)) {
       const itemIndex = { ...item, index: obtenerIndex() };
       newList = [...dataSource, itemIndex];
+      resp = addSectionToDescription(itemIndex)
     } else {
-      newList = updateItem(item);
+      resp = updateItem(item);
     }
-    setDataSource(newList);
-    setItem(null);
+    if(resp){
+      setDataSource(newList);
+      setItem(null);
+    }else{
+      message.error("Error al guardar la sección")
+    }
+    
   };
   const tableFunction=useCallback(()=>{
    return( <Table
@@ -257,7 +303,7 @@ const DescriptionDynamic = () => {
       <Col span={24}>
         <Row justify='center' align='middle'>
           <ConfigProvider renderEmpty={() => <Empty />}>
-          {tableFunction() }
+          {!loading ?tableFunction() :<Spin />}
           </ConfigProvider>
         </Row>
       </Col>
