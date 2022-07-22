@@ -12,6 +12,8 @@ const ImageUploaderDragAndDrop = ({
   imageUrl,
   width = 0,
   height = 0,
+  styles = { cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' },
+  hoverable = true,
 }: ImageUploaderDragAndDropType) => {
   const { Dragger } = Upload;
   let [image, setImage] = useState<any>(null);
@@ -28,7 +30,7 @@ const ImageUploaderDragAndDrop = ({
     /** Seteamos la imagen cuando ya vien una desde la base de datos, para ver la previa */
     if (imageUrl) {
       setImage(imageUrl);
-    }else{
+    } else {
       setImage(null);
     }
   }, [imageUrl]);
@@ -36,12 +38,12 @@ const ImageUploaderDragAndDrop = ({
   /** props para el dragger */
   let draggerprops: any = {
     listType: 'picture',
-    accept: 'image/png,image/jpeg,image/jpg',
+    accept: 'image/png,image/jpeg,image/jpg,image/gif',
     name: 'file',
     multiple: false,
     maxCount: 1,
     customRequest: uploadImagedummyRequest,
-    fileList: imageUrl ? [...fileList]:undefined,
+    fileList: imageUrl ? [...fileList] : undefined,
     onChange: async ({ file }: any) => {
       const { status } = file;
 
@@ -88,7 +90,7 @@ const ImageUploaderDragAndDrop = ({
 
   return (
     <Spin tip='Cargando imagen...' spinning={isUploading}>
-      <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}>
+      <Card hoverable={hoverable} style={styles}>
         <Dragger {...draggerprops}>
           {image ? (
             <Image preview={false} alt='preview' src={image} />
@@ -98,9 +100,12 @@ const ImageUploaderDragAndDrop = ({
                 <FileImageOutlined style={{ color: '#009fd9' }} />
               </p>
               <p className='ant-upload-text'>Haga clic o arrastre el archivo a esta área para cargarlo</p>
-              <p className='ant-upload-hint'>
-                Dimensiones sugeridas: {width}px * {height}px
-              </p>
+              {width && height && (
+                <p className='ant-upload-hint'>
+                  Dimensiones sugeridas: {width}px * {height}px
+                </p>
+              )}
+              <p>Formatos aceptados: .png, .jpeg, .jpg, .gif</p>
             </>
           )}
         </Dragger>

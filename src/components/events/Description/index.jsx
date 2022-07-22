@@ -51,7 +51,7 @@ const DescriptionDynamic = () => {
       style={{
         cursor: 'move',
         color: '#999999',
-        fontSize: '22px',
+        fontSize: '28px',
       }}
     />
   ));
@@ -79,8 +79,8 @@ const DescriptionDynamic = () => {
       className: 'drag-visible',
       render: (value, item) => (
         <Space direction='vertical'>
-          <Button icon={<EditOutlined />} onClick={() => editItem(item)} />
-          <Button icon={<DeleteOutlined />} onClick={() => deleteItem(item)} type='primary' danger />
+          <Button size='large' icon={<EditOutlined />} onClick={() => editItem(item)} />
+          <Button size='large' icon={<DeleteOutlined />} onClick={() => deleteItem(item)} type='primary' danger />
         </Space>
       ),
     },
@@ -89,7 +89,7 @@ const DescriptionDynamic = () => {
   const renderTypeComponent = (type, value) => {
     switch (type) {
       case 'image':
-        return <Image preview={false} src={value} width={'100%'} height={350} />;
+        return <Image preview={true} src={value} style={{ objectFit: 'contain' }} width='100%' height='250px' />;
       case 'text':
         return <div dangerouslySetInnerHTML={{ __html: value }} />;
       default:

@@ -3,8 +3,10 @@ import { ReactNode } from 'react';
 export type ImageUploaderDragAndDropType = {
   imageDataCallBack: (file: object | null) => void;
   imageUrl: string;
-  width: number | string;
-  height: number | string;
+  width: number | string | null;
+  height: number | string | null;
+  styles?: Object,
+  hoverable?: boolean
 };
 
 export type fieldsData = {
