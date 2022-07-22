@@ -43,7 +43,7 @@ const ModalImageComponent = ({ type, setType, saveItem, initialValue }) => {
         imageUrl={image}
         width={null}
         height={null}
-        styles={{ cursor: 'auto', borderRadius: '20px', textAlign: 'center' }}
+        styles={{ cursor: 'auto', borderRadius: '10px 10px 0px 0px', textAlign: 'center' }}
         hoverable={false}
       />
     </Modal>

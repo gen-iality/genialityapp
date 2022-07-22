@@ -1,4 +1,11 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  FullscreenOutlined,
+  PlusOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
 import {
   Affix,
   Avatar,
@@ -9,10 +16,13 @@ import {
   Divider,
   Empty,
   Image,
+  Popconfirm,
   Popover,
   Row,
   Space,
   Table,
+  Tag,
+  Tooltip,
   Typography,
 } from 'antd';
 import arrayMove from 'array-move';
@@ -81,26 +91,79 @@ const DescriptionDynamic = () => {
       className: 'drag-visible',
       render: (value, item) => (
         <Space direction='vertical'>
-          <Button size='large' icon={<EditOutlined />} onClick={() => editItem(item)} />
-          <Button size='large' icon={<DeleteOutlined />} onClick={() => deleteItem(item)} type='primary' danger />
+          <Tooltip placement='left' title='Editar'>
+            <Button size='large' icon={<EditOutlined />} onClick={() => editItem(item)} />
+          </Tooltip>
+          <Popconfirm
+            icon={<WarningOutlined />}
+            placement='left'
+            title={
+              <Typography.Text>{`¿Está seguro que desea eliminar este bloque de ${messageDinamic(
+                item.type
+              )}?`}</Typography.Text>
+            }
+            onConfirm={() => deleteItem(item)}
+            okText='Eliminar'
+            okType='danger'
+            cancelText='Cancelar'>
+            <Button size='large' icon={<DeleteOutlined />} type='primary' danger />
+          </Popconfirm>
+          {item.type === 'image' && (
+            <Tooltip
+              placement='left'
+              title='La imagen agregada no refleja sus dimensiones reales, esto con el fin de facilitar la acción de ordenar.'>
+              <Button size='large' icon={<ExclamationCircleOutlined style={{ color: '#1890FF' }} />} type='text' />
+            </Tooltip>
+          )}
         </Space>
       ),
     },
   ];
 
-  const renderTypeComponent = useCallback((type, value) => {
-    if (focus) return;
+  const messageDinamic = (type) => {
     switch (type) {
       case 'image':
-        return <Image preview={true} src={value} style={{ objectFit: 'contain' }} width='100%' height='250px' />;
+        return 'imagen';
       case 'text':
-        return <div dangerouslySetInnerHTML={{ __html: value }} />;
+        return 'texto';
       case 'video':
-        return  <ReactPlayer controls width={'100%'} height={'350'} style={{}} url={value} />;
-      default :
-        return <div></div>;
+        return 'video';
+
+      default:
+        break;
     }
-  },[dataSource]);
+  };
+
+  const renderTypeComponent = useCallback(
+    (type, value) => {
+      if (focus) return;
+      switch (type) {
+        case 'image':
+          return (
+            <Image
+              preview={{
+                mask: (
+                  <Button size='large' type='primary'>
+                    Ver imagen completa
+                  </Button>
+                ),
+              }}
+              src={value}
+              style={{ objectFit: 'contain' }}
+              width='100%'
+              height='250px'
+            />
+          );
+        case 'text':
+          return <div dangerouslySetInnerHTML={{ __html: value }} />;
+        case 'video':
+          return <ReactPlayer controls width={'100%'} height={'350'} style={{}} url={value} />;
+        default:
+          return <div></div>;
+      }
+    },
+    [dataSource]
+  );
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
@@ -171,10 +234,14 @@ const DescriptionDynamic = () => {
           <Typography.Text>Imagen</Typography.Text>
         </Space>
       </Card>
-      <Card onClick={() => {
+      <Card
+        onClick={() => {
           setItem(null);
           setType('video');
-        }} className='animate__animated animate__bounceIn ' hoverable={true} style={styleCardButton}>
+        }}
+        className='animate__animated animate__bounceIn '
+        hoverable={true}
+        style={styleCardButton}>
         <Space size={8} style={{ textAlign: 'center' }} direction='vertical'>
           <Avatar
             shape='square'
@@ -234,31 +301,32 @@ const DescriptionDynamic = () => {
     setDataSource(newList);
     setItem(null);
   };
-  const tableFunction=useCallback(()=>{
-   return( <Table
-    id='tableDescription'
-    tableLayout='auto'
-    showHeader={false}
-    style={{ userSelect: 'none', width: '100%' }}
-    pagination={false}
-    dataSource={dataSource}
-    columns={columns}
-    rowKey='index'
-    components={{
-      body: {
-        wrapper: DraggableContainer,
-        row: DraggableBodyRow,
-      },
-    }}
-  />)
-  },[dataSource]);
+  const tableFunction = useCallback(() => {
+    return (
+      <Table
+        id='tableDescription'
+        tableLayout='auto'
+        showHeader={false}
+        title={() => ''}
+        style={{ userSelect: 'none', width: '100%' }}
+        pagination={false}
+        dataSource={dataSource}
+        columns={columns}
+        rowKey='index'
+        components={{
+          body: {
+            wrapper: DraggableContainer,
+            row: DraggableBodyRow,
+          },
+        }}
+      />
+    );
+  }, [dataSource]);
   return (
     <Row gutter={[16, 16]}>
       <Col span={24}>
         <Row justify='center' align='middle'>
-          <ConfigProvider renderEmpty={() => <Empty />}>
-          {tableFunction() }
-          </ConfigProvider>
+          <ConfigProvider renderEmpty={() => <Empty />}>{tableFunction()}</ConfigProvider>
         </Row>
       </Col>
       <Col span={24}>
@@ -280,7 +348,7 @@ const DescriptionDynamic = () => {
       </Col>
       <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
-      <ModalVideoComponent  type={type} setType={setType} initialValue={item} saveItem={saveItem} />
+      <ModalVideoComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
     </Row>
   );
 };
