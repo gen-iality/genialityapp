@@ -369,6 +369,28 @@ export const EventsApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`/api/previews/${previewId}?token=${token}`, data);
   },
+
+  getSectionsDescriptions: async (eventId)=>{
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`/api/event/${eventId}/descriptions?token=${token}`);
+  },
+  saveSections:async (section)=>{
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/descriptions?token=${token}`,section);
+  },
+  updateSections:async (eventId,newSections)=>{
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/descriptions/${eventId}?token=${token}`,newSections);
+  },
+  updateSectionOne:async (sectionId,newSection)=>{
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`/api/descriptions/${sectionId}?token=${token}`,newSection);
+  },
+
+  deleteSections:async (sectionId)=>{
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/descriptions/${sectionId}?token=${token}`);
+  }
 };
 export const InvitationsApi = {
   getAll: async (id) => {

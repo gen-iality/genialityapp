@@ -14,12 +14,15 @@ import {
   Col,
   ConfigProvider,
   Divider,
+  Drawer,
   Empty,
   Image,
+  message,
   Popconfirm,
   Popover,
   Row,
   Space,
+  Spin,
   Table,
   Tag,
   Tooltip,
@@ -27,7 +30,7 @@ import {
 } from 'antd';
 import arrayMove from 'array-move';
 import { isNumber } from 'ramda-adjunct';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ModalImageComponent from './componets/modalImage';
 import ModalTextComponent from './componets/modalTextType';
@@ -37,6 +40,9 @@ import CardTextIcon from '@2fd/ant-design-icons/lib/CardText';
 import VideoBoxtIcon from '@2fd/ant-design-icons/lib/VideoBox';
 import ModalVideoComponent from './componets/modalVideo';
 import ReactPlayer from 'react-player';
+import { EventsApi } from '@/helpers/request';
+import { CurrentEventContext } from '@/context/eventContext';
+import DrawerPreview from './componets/drawerPreview';
 
 const DescriptionDynamic = () => {
   //permite guardar el listado de elmentos de la descripción
@@ -44,6 +50,10 @@ const DescriptionDynamic = () => {
   const [type, setType] = useState(null);
   const [item, setItem] = useState(null);
   const [focus, setFocus] = useState(false);
+  const [loading, setLoading]=useState(false);
+  const [isOrderUpdate, setIsOrderUpdate]=useState(false);
+  const [visibleDrawer,setVisibleDrawer]=useState(false);
+  const cEvent= useContext(CurrentEventContext);
 
   const editItem = (item) => {
     setItem(item);
@@ -173,6 +183,7 @@ const DescriptionDynamic = () => {
           return { ...data, index: key };
         });
       }
+      setIsOrderUpdate(true);
       setDataSource(newData);
     }
   };
@@ -259,12 +270,35 @@ const DescriptionDynamic = () => {
     </Space>
   );
 
+  useEffect(()=>{
+    if(!cEvent.value) return;
+    obtenerDescriptionSections()
+
+  },[cEvent.value])
+
+  const obtenerDescriptionSections=async ()=>{
+    setLoading(true);
+   const sections= await EventsApi.getSectionsDescriptions(cEvent.value._id)
+   let dataOrder=sections.data.sort((a,b)=>a.index-b.index);
+   setDataSource(dataOrder|| []);
+   setLoading(false);
+  }
+
+  const addSectionToDescription=async (section)=>{
+    const sectionEvent={...section, event_id:cEvent.value._id}
+    const saveSection=await EventsApi.saveSections(sectionEvent);
+    if(saveSection?._id){
+      return true;
+    }
+    return false;
+  }
+
   const obtenerIndex = () => {
-    let data = dataSource.sort((a, b) => a.index > b.index);
-    return data.length + 1;
+    let data = dataSource?.sort((a, b) => a.index > b.index);
+    return data?.length + 1;
   };
 
-  const updateItem = (item) => {
+  const updateItem = async (item) => { 
     const newList = dataSource.map((data) => {
       if (data.index == item?.index) {
         return item;
@@ -272,13 +306,18 @@ const DescriptionDynamic = () => {
         return data;
       }
     });
+    const sectionUpdate=await EventsApi.updateSectionOne(item._id,item);
     return newList;
   };
 
-  const deleteItem = (item) => {
-    let newList = dataSource.filter((data) => data.index !== item.index);
+  const deleteItem = async (item) => {
+    let newList = dataSource.filter((data) => data._id !== item._id);
+   const resp= await EventsApi.deleteSections(item._id);    
     newList = updateIndexTotal(newList);
-    setDataSource(newList);
+    await Promise.all(newList.map(async(item)=>{
+      const updateIndexSections=await EventsApi.updateSectionOne(item._id,item);
+    }))
+    setDataSource(newList);     
   };
 
   //PERMITE ACTUALIZAR LOS INDICES
@@ -290,24 +329,41 @@ const DescriptionDynamic = () => {
     return newList;
   };
 
-  const saveItem = (item) => {
+  const saveItem = async (item) => {
+    setLoading(true);
     let newList = [];
+    let resp;
     if (item && !isNumber(item.index)) {
       const itemIndex = { ...item, index: obtenerIndex() };
       newList = [...dataSource, itemIndex];
+      resp = await  addSectionToDescription(itemIndex)
     } else {
-      newList = updateItem(item);
+      resp = updateItem(item);
     }
-    setDataSource(newList);
-    setItem(null);
+    if(resp){
+      setTimeout(async ()=> await obtenerDescriptionSections(),300);     
+      setItem(null);
+    }else{
+      message.error("Error al guardar la sección")
+    }
+    setLoading(false)
+    
   };
+
+  const saveOrder=async ()=>{   
+    const newList = updateIndexTotal(dataSource);
+    await Promise.all(newList.map(async(item)=>{
+      const updateIndexSections=await EventsApi.updateSectionOne(item._id,item);
+    }));
+    setIsOrderUpdate(false)
+    }
   const tableFunction = useCallback(() => {
     return (
-      <Table
+      !loading ?<Table
         id='tableDescription'
         tableLayout='auto'
         showHeader={false}
-        title={() => ''}
+        title={()=><Button onClick={()=>setVisibleDrawer(true)} icon={<FullscreenOutlined />} />}
         style={{ userSelect: 'none', width: '100%' }}
         pagination={false}
         dataSource={dataSource}
@@ -319,12 +375,13 @@ const DescriptionDynamic = () => {
             row: DraggableBodyRow,
           },
         }}
-      />
+      />:<Spin />
     );
-  }, [dataSource]);
+  }, [dataSource,loading]);
   return (
     <Row gutter={[16, 16]}>
       <Col span={24}>
+      {isOrderUpdate && <Button onClick={saveOrder} >Guardar Orden</Button>}
         <Row justify='center' align='middle'>
           <ConfigProvider renderEmpty={() => <Empty />}>{tableFunction()}</ConfigProvider>
         </Row>
@@ -346,6 +403,7 @@ const DescriptionDynamic = () => {
           </Popover>
         </Row>
       </Col>
+      <DrawerPreview dataSource={dataSource} visibleDrawer={visibleDrawer} setVisibleDrawer={setVisibleDrawer} />
       <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
       <ModalVideoComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
