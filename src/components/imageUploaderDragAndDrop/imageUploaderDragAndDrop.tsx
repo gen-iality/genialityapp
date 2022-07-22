@@ -34,14 +34,14 @@ const ImageUploaderDragAndDrop = ({
   }, [imageUrl]);
 
   /** props para el dragger */
-  const draggerprops: any = {
+  let draggerprops: any = {
     listType: 'picture',
-    accept: 'image/png,image/jpeg',
+    accept: 'image/png,image/jpeg,image/jpg',
     name: 'file',
     multiple: false,
     maxCount: 1,
     customRequest: uploadImagedummyRequest,
-    fileList: imageUrl ? [...fileList]:null,
+    fileList: imageUrl ? [...fileList]:undefined,
     onChange: async ({ file }: any) => {
       const { status } = file;
 
