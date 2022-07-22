@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import arrayMove from 'array-move';
 import { isNumber } from 'ramda-adjunct';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ModalImageComponent from './componets/modalImage';
 import ModalTextComponent from './componets/modalTextType';
@@ -25,6 +25,8 @@ import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import ImageAreaIcon from '@2fd/ant-design-icons/lib/ImageArea';
 import CardTextIcon from '@2fd/ant-design-icons/lib/CardText';
 import VideoBoxtIcon from '@2fd/ant-design-icons/lib/VideoBox';
+import ModalVideoComponent from './componets/modalVideo';
+import ReactPlayer from 'react-player';
 
 const DescriptionDynamic = () => {
   //permite guardar el listado de elmentos de la descripción
@@ -86,16 +88,19 @@ const DescriptionDynamic = () => {
     },
   ];
 
-  const renderTypeComponent = (type, value) => {
+  const renderTypeComponent = useCallback((type, value) => {
+    if (focus) return;
     switch (type) {
       case 'image':
         return <Image preview={true} src={value} style={{ objectFit: 'contain' }} width='100%' height='250px' />;
       case 'text':
         return <div dangerouslySetInnerHTML={{ __html: value }} />;
-      default:
+      case 'video':
+        return  <ReactPlayer controls width={'100%'} height={'350'} style={{}} url={value} />;
+      default :
         return <div></div>;
     }
-  };
+  },[dataSource]);
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
@@ -166,7 +171,10 @@ const DescriptionDynamic = () => {
           <Typography.Text>Imagen</Typography.Text>
         </Space>
       </Card>
-      <Card className='animate__animated animate__bounceIn ' hoverable={true} style={styleCardButton}>
+      <Card onClick={() => {
+          setItem(null);
+          setType('video');
+        }} className='animate__animated animate__bounceIn ' hoverable={true} style={styleCardButton}>
         <Space size={8} style={{ textAlign: 'center' }} direction='vertical'>
           <Avatar
             shape='square'
@@ -226,27 +234,30 @@ const DescriptionDynamic = () => {
     setDataSource(newList);
     setItem(null);
   };
+  const tableFunction=useCallback(()=>{
+   return( <Table
+    id='tableDescription'
+    tableLayout='auto'
+    showHeader={false}
+    style={{ userSelect: 'none', width: '100%' }}
+    pagination={false}
+    dataSource={dataSource}
+    columns={columns}
+    rowKey='index'
+    components={{
+      body: {
+        wrapper: DraggableContainer,
+        row: DraggableBodyRow,
+      },
+    }}
+  />)
+  },[dataSource]);
   return (
     <Row gutter={[16, 16]}>
       <Col span={24}>
         <Row justify='center' align='middle'>
           <ConfigProvider renderEmpty={() => <Empty />}>
-            <Table
-              id='tableDescription'
-              tableLayout='auto'
-              showHeader={false}
-              style={{ userSelect: 'none', width: '100%' }}
-              pagination={false}
-              dataSource={dataSource}
-              columns={columns}
-              rowKey='index'
-              components={{
-                body: {
-                  wrapper: DraggableContainer,
-                  row: DraggableBodyRow,
-                },
-              }}
-            />
+          {tableFunction() }
           </ConfigProvider>
         </Row>
       </Col>
@@ -269,6 +280,7 @@ const DescriptionDynamic = () => {
       </Col>
       <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
+      <ModalVideoComponent  type={type} setType={setType} initialValue={item} saveItem={saveItem} />
     </Row>
   );
 };
