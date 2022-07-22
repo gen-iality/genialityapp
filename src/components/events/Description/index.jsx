@@ -157,7 +157,7 @@ const DescriptionDynamic = () => {
         case 'text':
           return <div dangerouslySetInnerHTML={{ __html: value }} />;
         case 'video':
-          return <ReactPlayer controls width={'100%'} height={'350'} style={{}} url={value} />;
+          return <ReactPlayer controls width={'100%'} height={'250px'} url={value} />;
         default:
           return <div></div>;
       }

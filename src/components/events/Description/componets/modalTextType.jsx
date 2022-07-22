@@ -30,7 +30,7 @@ const ModalTextComponent = ({ type, setType, saveItem, initialValue }) => {
     <Modal
       maskClosable={false}
       closable={false}
-      bodyStyle={{ padding: '0px' }}
+      bodyStyle={{ padding: '0px', borderTop: '10px solid #517FD6', borderRadius: '8px' }}
       title={null}
       visible={type == 'text'}
       onOk={saveText}

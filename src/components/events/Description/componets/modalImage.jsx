@@ -32,7 +32,7 @@ const ModalImageComponent = ({ type, setType, saveItem, initialValue }) => {
     <Modal
       maskClosable={false}
       closable={false}
-      bodyStyle={{ padding: '0px' }}
+      bodyStyle={{ padding: '0px', borderTop: '10px solid #51D6A8', borderRadius: '8px' }}
       title={null}
       visible={type == 'image'}
       onOk={saveImage}
