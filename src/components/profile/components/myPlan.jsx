@@ -241,9 +241,11 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'value',
       key: 'value',
       render(val, item) {
+        const tax = item?.billing?.tax === 0 ? 1 : item?.billing?.tax * 10;
+        const total = parseFloat(item?.billing?.base_value * tax).toFixed(2);
         return (
           <div>
-            {item?.billing?.currency} ${parseFloat(item?.billing?.base_value * item?.billing?.tax).toFixed(2)}
+            {item?.billing?.currency} ${total}
           </div>
         );
       },
@@ -263,13 +265,15 @@ const myPlan = ({ cUser }) => {
     },
     {
       title: intl.formatMessage({
-        id: 'my_plan.actions',
-        defaultMessage: 'Acciones',
+        id: 'my_plan.details',
+        defaultMessage: 'Detalles',
       }),
-      dataIndex: 'actions',
-      key: 'actions',
+      dataIndex: 'details',
+      key: 'details',
       render(val, item) {
         const payment = item.billing.payment_method || item.payment || {};
+        const tax = item?.billing?.tax === 0 ? 1 : item?.billing?.tax * 10;
+        const total = parseFloat(item?.billing?.base_value * tax).toFixed(2);
         return (
           <Space wrap>
             <Tooltip
@@ -369,8 +373,7 @@ const myPlan = ({ cUser }) => {
                         })}
                         :
                       </Typography.Text>{' '}
-                      {item?.billing?.currency} ${parseFloat(item?.billing?.base_value * item?.billing?.tax).toFixed(2)}{' '}
-                      con ({item?.billing?.tax * 100}% de impuesto){' '}
+                      {item?.billing?.currency} ${total} con ({item?.billing?.tax * 100}% de impuesto){' '}
                       {item?.billing?.total_discount && <>y un descuento de ${item?.billing?.total_discount}</>}
                     </Typography.Text>
                     <Typography.Text>
@@ -824,7 +827,7 @@ const myPlan = ({ cUser }) => {
                         setShow(!show);
                         setToShow(index);
                       }}>
-                      {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes más información del plan{' '}
+                      {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes conocer más información del plan{' '}
                       <strong>{plan2?.name}</strong>.
                     </Typography.Text>
                     {show && toShow === index && (
