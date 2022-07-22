@@ -7,23 +7,7 @@ import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Drawer,
-  Image,
-  message,
-  Row,
-  Statistic,
-  Typography,
-  Tag,
-  Input,
-  Space,
-  Tooltip,
-  Select,
-} from 'antd';
+import { Button, Card, Col, Drawer, Image, Row, Statistic, Typography, Tag, Input, Space, Tooltip, Select } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
@@ -45,9 +29,9 @@ import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import moment from 'moment';
-import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
+import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@/context/helperContext/helperContext';
-import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
+import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -128,8 +112,9 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      const createdAt = item.created_at;
-      return <p>{Moment(createdAt).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const createdAt = typeof item?.created_at === 'object' ? item?.created_at?.toDate() : item?.created_at;
+
+      return <>{createdAt ? <p>{Moment(createdAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
       return '';
     }
@@ -148,8 +133,9 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      const updatedAt = item.created_at;
-      return <p>{Moment(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const updatedAt = typeof item?.created_at === 'object' ? item?.updated_at?.toDate() : item?.updated_at;
+
+      return <>{updatedAt ? <p>{Moment(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
       return '';
     }
@@ -157,21 +143,11 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    return <AttendeeCheckIn attendee={item} />;
+    return <AttendeeCheckInCheckbox attendee={item} />;
   };
 
   physicalCheckInComponent = (text, item, index) => {
-    return (
-      <Button
-        size='small'
-        type='primary'
-        block={true}
-        onClick={() => {
-          saveCheckInAttendee({ _id: item._id, checked: true, checkInType: 'Físico' });
-        }}>
-        CheckIn físico
-      </Button>
-    );
+    return <AttendeeCheckInButton attendee={item} />;
   };
 
   checkInTypeComponent = (text, item, index) => {

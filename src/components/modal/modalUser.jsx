@@ -388,6 +388,7 @@ class UserModal extends Component {
               saveAttendee={this.saveUser}
               loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
               visibleInCms
+              eventType={this.props.cEvent?.value?.type_event}
             />
           ) : (
             <FormComponent

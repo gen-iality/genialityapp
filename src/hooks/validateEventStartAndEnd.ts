@@ -12,6 +12,8 @@ interface EventInitialDates {
   user?: { plan: {}; expiredPlan: boolean } | undefined;
 }
 
+const oneDayInMilliseconds = 86400000;
+
 const secondsBetweenTwoDates = ({ startDate = null, endDate = null }: EventInitialDates) => {
   const start = new Date(`${startDate}`);
   const end = new Date(`${endDate}`);
@@ -50,9 +52,10 @@ export const ValidateEventStart = ({
   if (eventStartDate > localDate) {
     const difference = secondsBetweenTwoDates({ startDate, endDate: localDate.toString() });
 
-    setTimeout(() => {
-      callBackTheEventIsActive(true);
-    }, difference);
+    if (difference < oneDayInMilliseconds)
+      setTimeout(() => {
+        callBackTheEventIsActive(true);
+      }, difference);
   } else {
     callBackTheEventIsActive(false);
   }
@@ -94,9 +97,11 @@ export const ValidateEndEvent = ({
     /** The status starts at true for cases where it is a newly created event, because if the value is not set to true, we get undefined from firebase and it is understood that the end date of the event is less than the user's date and time. */
 
     callBackTheEventIsActive(true);
-    setTimeout(() => {
-      callBackTheEventIsActive(false);
-    }, difference);
+    /**  We validate that the difference is not greater than one day so as not to generate an error in the setTimeout. */
+    if (difference < oneDayInMilliseconds)
+      setTimeout(() => {
+        callBackTheEventIsActive(false);
+      }, difference);
   } else {
     callBackTheEventIsActive(true);
   }

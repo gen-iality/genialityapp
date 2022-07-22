@@ -6,7 +6,12 @@ import { AttendeeCheckInPropsTypes } from '@/Utilities/types/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
 
-const AttendeeCheckIn = ({ attendee, reloadComponent, checkInAttendeeCallbak }: AttendeeCheckInPropsTypes) => {
+/**
+ * This function is a React component that generates a checkBox, which saves the user's checkIn and allows to delete it after making a confirmation to execute the requested action
+ * @param {AttendeeCheckInPropsTypes}  - AttendeeCheckInPropsTypes
+ * @returns A React component
+ */
+const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCallbak }: AttendeeCheckInPropsTypes) => {
   const [attemdeeCheckIn, setAttemdeeCheckIn] = useState<boolean>(false);
   const [attemdeeCheckedinAt, setAttemdeeCheckedinAt] = useState<any>('');
   const { _id, checked_in, checkedin_at } = attendee || {};
@@ -14,7 +19,7 @@ const AttendeeCheckIn = ({ attendee, reloadComponent, checkInAttendeeCallbak }: 
   useEffect(() => {
     let dateAndTime: any = '';
     try {
-      dateAndTime = checkedin_at && checkedin_at?.toDate();
+      dateAndTime = typeof checkedin_at === 'object' ? checkedin_at?.toDate() : checkedin_at;
     } catch (error) {}
     setAttemdeeCheckIn(checked_in);
     setAttemdeeCheckedinAt(dateAndTime);
@@ -66,4 +71,5 @@ const AttendeeCheckIn = ({ attendee, reloadComponent, checkInAttendeeCallbak }: 
     </>
   );
 };
-export default AttendeeCheckIn;
+
+export default AttendeeCheckInCheckbox;
