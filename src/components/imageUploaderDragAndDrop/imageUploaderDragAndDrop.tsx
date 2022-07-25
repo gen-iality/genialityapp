@@ -39,7 +39,7 @@ const ImageUploaderDragAndDrop = ({
     multiple: false,
     maxCount: 1,
     customRequest: uploadImagedummyRequest,
-    defaultFileList: imageUrl && [...fileList],
+    defaultFileList: imageUrl ? [...fileList] : undefined,
     onChange: async ({ file }: any) => {
       const { status } = file;
 
