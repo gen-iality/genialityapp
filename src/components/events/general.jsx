@@ -676,7 +676,7 @@ class General extends Component {
       });
     }
   };
-
+  /** RESTRICIONES */
   theEventIsActive = (state) => {
     this.setState({
       iMustBlockAFunctionality: state,
@@ -705,13 +705,15 @@ class General extends Component {
       consumption,
     } = this.state;
     const userContext = this.context;
+    /** RESTRICIONES */
     const cUser = userContext?.value;
     const userPlan = userContext.value?.plan;
     const streamingHours = userPlan?.availables?.streaming_hours;
 
     return (
       <React.Fragment>
-        {iMustValidate && (
+        {/* RESTRICIONES */}
+        {/* {iMustValidate && (
           <>
             <ValidateEventStart
               startDate={event.datetime_from}
@@ -719,7 +721,7 @@ class General extends Component {
               user={cUser}
             />
           </>
-        )}
+        )} */}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1'>
@@ -886,7 +888,8 @@ class General extends Component {
                           <Form.Item label={'Fecha Inicio'}>
                             <DatePicker
                               inputReadOnly={true}
-                              disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
+                              //RESTRICIONES
+                              // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -901,7 +904,8 @@ class General extends Component {
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
-                              disabledTime={(time) => disabledStartDateTime(event, streamingHours)}
+                              //RESTRICIONES
+                              // disabledTime={(time) => disabledStartDateTime(event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -926,7 +930,8 @@ class General extends Component {
                           <Form.Item label={'Fecha Fin'}>
                             <DatePicker
                               inputReadOnly={true}
-                              disabledDate={(date) => disabledEndDate(date, event, streamingHours)}
+                              //RESTRICIONES
+                              // disabledDate={(date) => disabledEndDate(date, event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -950,7 +955,8 @@ class General extends Component {
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
-                              disabledTime={(time) => disabledEndDateTime(event, streamingHours)}
+                              //RESTRICIONES
+                              // disabledTime={(time) => disabledEndDateTime(event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}

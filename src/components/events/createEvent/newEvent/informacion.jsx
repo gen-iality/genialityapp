@@ -153,12 +153,13 @@ const Informacion = (props) => {
 
             <DatePicker
               inputReadOnly={true}
-              disabledDate={(date) => {
-                if (cUser?.plan?._id) {
-                  const streamingHours = cUser?.plan?.availables?.streaming_hours;
-                  return disabledStartDate(date, streamingHours, userConsumption);
-                }
-              }}
+              //RESTRICIONES
+              // disabledDate={(date) => {
+              //   if (cUser?.plan?._id) {
+              //     const streamingHours = cUser?.plan?.availables?.streaming_hours;
+              //     return disabledStartDate(date, streamingHours, userConsumption);
+              //   }
+              // }}
               style={{ width: '100%', marginTop: '20px' }}
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               allowClear={false}
@@ -186,10 +187,11 @@ const Informacion = (props) => {
                     <TimePicker
                       showNow={false}
                       inputReadOnly={true}
-                      disabledTime={(time) => {
-                        const streamingHours = cUser?.plan?.availables?.streaming_hours;
-                        return disabledStartDateTime(eventHourStart, streamingHours);
-                      }}
+                      //RESTRICIONES
+                      // disabledTime={(time) => {
+                      //   const streamingHours = cUser?.plan?.availables?.streaming_hours;
+                      //   return disabledStartDateTime(eventHourStart, streamingHours);
+                      // }}
                       allowClear={false}
                       use12Hours
                       value={moment(selectedHours.from)}
@@ -205,10 +207,11 @@ const Informacion = (props) => {
                     <TimePicker
                       showNow={false}
                       inputReadOnly={true}
-                      disabledTime={(time) => {
-                        const streamingHours = cUser?.plan?.availables?.streaming_hours;
-                        return disabledEndDateTime(eventHourStart, streamingHours);
-                      }}
+                      //RESTRICIONES
+                      // disabledTime={(time) => {
+                      //   const streamingHours = cUser?.plan?.availables?.streaming_hours;
+                      //   return disabledEndDateTime(eventHourStart, streamingHours);
+                      // }}
                       allowClear={false}
                       use12Hours
                       value={moment(selectedHours.at)}

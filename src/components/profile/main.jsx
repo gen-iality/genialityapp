@@ -201,7 +201,8 @@ const MainProfile = (props) => {
                 icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
                 Actividad en Evius
               </Menu.Item>
-              <Menu.Item
+              {/* RESTRICIONES seccion mi plan */}
+              {/* <Menu.Item
                 title={null}
                 onClick={() => {
                   showContent('MY_PLAN');
@@ -210,7 +211,7 @@ const MainProfile = (props) => {
                 key={'myPlan'}
                 icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
                 Mi plan
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item
                 title={null}
                 onClick={() => {

@@ -182,6 +182,7 @@ class Event extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   };
 
+  /** RESTRICIONES */
   theEventIsActive = (state) => {
     const eventId = this.state.event._id;
 
@@ -217,7 +218,8 @@ class Event extends Component {
 
     return (
       <Layout className='columns'>
-        {iMustValidate && (
+        {/* RESTRICIONES */}
+        {/* {iMustValidate && (
           <>
             <ValidateEndEvent
               endDate={event.datetime_to}
@@ -225,7 +227,7 @@ class Event extends Component {
               user={cUser}
             />
           </>
-        )}
+        )} */}
         <Sider
           style={{
             // overflow: 'auto',

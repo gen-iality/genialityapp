@@ -107,7 +107,8 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
-                  {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
+                  {/* RESTRICIONES */}
+                  {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
                     <Typography.Paragraph style={{ color: 'red' }}>
                       {blockedEvent && (
                         <small>
@@ -116,7 +117,7 @@ class EventCard extends Component {
                         </small>
                       )}
                     </Typography.Paragraph>
-                  )}
+                  )} */}
                 </Space>
               }
             />
