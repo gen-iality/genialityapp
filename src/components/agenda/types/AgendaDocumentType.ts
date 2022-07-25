@@ -30,3 +30,7 @@ export default interface AgendaDocumentType {
   length: string,
   latitude: string,
 };
+
+export interface ExtendedAgendaDocumentType extends AgendaDocumentType {
+  type?: { name: string },
+};
