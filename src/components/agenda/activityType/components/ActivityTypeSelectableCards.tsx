@@ -3,7 +3,11 @@ import * as React from 'react';
 import { Row, Col, Alert } from 'antd';
 
 import SelectableCard from './SelectableCard';
-import { ActivityTypeCard, ActivityTypeData, WidgetType } from '../schema/structureInterfaces';
+import {
+  ActivityTypeCard,
+  ActivityTypeData,
+  WidgetType,
+} from '@/context/activityType/schema/structureInterfaces';
 
 export interface ActivityTypeSelectableCardsProps {
   widget: ActivityTypeCard | ActivityTypeData, // Only here

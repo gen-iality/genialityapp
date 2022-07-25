@@ -8,9 +8,22 @@ import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCard
 import ActivityContentModalLayout from './components/ActivityContentModalLayout';
 
 import { ModalWrapperUIProps} from './interfaces/ModalWrapperUIProps';
-import { ActivitySubTypeValueType, FormStructure, ActivityTypeCard, ActivitySubTypeNameType, WidgetType, FormType, GeneralTypeValue } from  './schema/structureInterfaces';
-import { activityTypeKeys, activitySubTypeKeys } from  './schema/activityTypeFormStructure';
-import FullActivityTypeInfoLayout, { FullActivityTypeInfoLayoutProps } from './components/FullActivityTypeInfoLayout';
+import {
+  ActivitySubTypeValueType,
+  FormStructure,
+  ActivityTypeCard,
+  ActivitySubTypeNameType,
+  WidgetType,
+  FormType,
+  GeneralTypeValue,
+} from  '@/context/activityType/schema/structureInterfaces';
+import {
+  activityTypeKeys,
+  activitySubTypeKeys,
+} from  '@/context/activityType/schema/activityTypeFormStructure';
+import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout';
+import { FullActivityTypeInfoLayoutProps } from './components/FullActivityTypeInfoLayout';
+
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 

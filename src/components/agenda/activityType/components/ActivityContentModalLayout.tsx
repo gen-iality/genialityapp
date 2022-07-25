@@ -4,8 +4,20 @@ import { useState, useMemo, useEffect } from 'react';
 import { Typography, Layout, Row, Col, Button, } from 'antd';
 
 import { ModalWrapperUIProps } from '../interfaces/ModalWrapperUIProps';
-import { activityTypeKeys, activityTypeData, activitySubTypeKeys } from '../schema/activityTypeFormStructure';
-import { ActivityTypeCard, FormStructure, GeneralTypeName, ActivitySubTypeNameType, ActivityTypeNameType, WidgetType, GeneralTypeValue, } from '../schema/structureInterfaces';
+import {
+  activityTypeKeys,
+  activityTypeData,
+  activitySubTypeKeys,
+} from '@/context/activityType/schema/activityTypeFormStructure';
+import {
+  ActivityTypeCard,
+  FormStructure,
+  GeneralTypeName,
+  ActivitySubTypeNameType,
+  ActivityTypeNameType,
+  WidgetType,
+  GeneralTypeValue,
+} from '@/context/activityType/schema/structureInterfaces';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;

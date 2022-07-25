@@ -8,6 +8,7 @@ import { WarningOutlined } from '@ant-design/icons';
 import { TypesAgendaApi, AgendaApi } from '@/helpers/request';
 import ActivityTypeModal from './ActivityTypeModal';
 import { ExtendedAgendaDocumentType } from '../types/AgendaDocumentType';
+import { ActivityTypeValueType } from '@/context/activityType/schema/structureInterfaces';
 
 export interface SubActivityTypeSelectorProps {
   activityId: string,

@@ -10,7 +10,11 @@ import { createLiveStream, stopLiveStream } from '../../../adaptors/gcoreStreami
 
 import AgendaContext from '../../../context/AgendaContext';
 
-import { activitySubTypeKeys, activityTypeData, activityTypeKeys } from './schema/activityTypeFormStructure';
+import {
+  activitySubTypeKeys,
+  activityTypeData,
+  activityTypeKeys,
+} from '@/context/activityType/schema/activityTypeFormStructure';
 import {
   ActivityTypeCard,
   FormStructure,
@@ -18,7 +22,7 @@ import {
   ActivitySubTypeNameType,
   GeneralTypeName,
   GeneralTypeValue,
-} from './schema/structureInterfaces';
+} from '@/context/activityType/schema/structureInterfaces';
 import ActivityContentManager from './ActivityContentManager';
 import { ExtendedAgendaDocumentType } from '../types/AgendaDocumentType';
 import ActivityContentModal from './ActivityContentModal';
