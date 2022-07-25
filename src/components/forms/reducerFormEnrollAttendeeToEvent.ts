@@ -9,7 +9,7 @@ export const helperInitialState: any = {
 
 export const helperReducer = (state: any, action: any) => {
   let fields = action.payload?.fields;
-  const attendee = action.payload?.attendee;
+  const attendee = action.payload?.attendeeData;
   const visibleInCms = action.payload?.visibleInCms;
 
   switch (action.type) {
