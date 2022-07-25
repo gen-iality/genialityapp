@@ -48,6 +48,8 @@ import SelectOptionType from '../types/SelectOptionType';
 import EventType from '../types/EventType';
 import AgendaDocumentType from '../types/AgendaDocumentType';
 
+import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
+
 const { Text } = Typography;
 const { Option } = SelectAntd;
 
@@ -75,6 +77,7 @@ export interface MainAgendaFormProps {
   agendaContext: any,
   matchUrl: string,
   event: EventType,
+  activityId: string | null,
   formdata: FormDataType,
   savedFormData: FormDataType,
   agenda: AgendaDocumentType | null,
@@ -337,6 +340,15 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     <>
     { isLoaded ? (
       <Row justify="center" wrap gutter={12}>
+        <Col span={20}>
+          {props.activityId && (
+          <ActivityTypeSelector
+            activityId={props.activityId}
+            eventId={props.event._id}
+            activityName={formdata.name}
+          />
+          )}
+        </Col>
         <Col span={20}>
           <Form.Item
             label={

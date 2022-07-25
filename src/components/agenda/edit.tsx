@@ -415,6 +415,7 @@ function AgendaEdit(props: AgendaEditProps) {
           */}
                 <MainAgendaForm
                   event={props.event}
+                  activityId={currentActivityID}
                   formdata={formdata}
                   agenda={loadedAgenda}
                   savedFormData={savedFormData}
