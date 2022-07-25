@@ -1,4 +1,5 @@
-import { TypeActivityProvider } from '../../../context/typeactivity/typeActivityProvider';
+import { TypeActivityProvider } from '@/context/typeactivity/typeActivityProvider';
+import ActivityTypeProvider from '@/context/activityType/activityTypeProvider';
 
 import SubActivityTypeSelector from './SubActivityTypeSelector';
 import { SubActivityTypeSelectorProps } from './SubActivityTypeSelector';
@@ -6,7 +7,9 @@ import { SubActivityTypeSelectorProps } from './SubActivityTypeSelector';
 function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   return (
     <TypeActivityProvider>
-      <SubActivityTypeSelector {...props} />
+      <ActivityTypeProvider>
+        <SubActivityTypeSelector {...props} />
+      </ActivityTypeProvider>
     </TypeActivityProvider>
   );
 }
