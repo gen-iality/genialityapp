@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Row, Col, Alert } from 'antd';
 
-import SelectableCard from '../SelectableCard';
+import SelectableCard from './SelectableCard';
 import { ActivityTypeCard, ActivityTypeData, WidgetType } from '../schema/structureInterfaces';
 
 export interface ActivityTypeSelectableCardsProps {
