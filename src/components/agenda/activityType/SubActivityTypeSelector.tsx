@@ -5,91 +5,54 @@ import { Card, Result, Button, Alert, Spin, Row, Col } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
 // import InitialSVG from './components/svg/InitialSVG';
 
-import { TypesAgendaApi, AgendaApi } from '@/helpers/request';
+import { AgendaApi } from '@/helpers/request';
 import ActivityTypeModal from './ActivityTypeModal';
 import { ExtendedAgendaDocumentType } from '../types/AgendaDocumentType';
+import useActivityType from '@/context/activityType/hooks/useActivityType';
 import { ActivityTypeValueType } from '@/context/activityType/schema/structureInterfaces';
 
-export interface SubActivityTypeSelectorProps {
-  activityId: string,
-  eventId: string,
-  activityName: string,
-};
+export interface SubActivityTypeSelectorProps {};
 
 function SubActivityTypeSelector(props: SubActivityTypeSelectorProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDeletingActivityType, setIsDeletingActivityType] = useState(false);
-  const [temporalErrorMessage, setTemporalErrorMessage] = useState('');
   const [isModalShown, setIsModalShown] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+
+  const [selected, setSelected] = useState<ActivityTypeValueType | null>(null);
+  const [confirmedSelection, setConfirmedSelection] = useState<ActivityTypeValueType | null>(null);
+
+  const {
+    is,
+    saveActivityType,
+    deleteActivityType,
+    activityType,
+    setActivityType,
+  } = useActivityType();
 
   const handleCloseModal = (success: boolean = false) => {
     setIsModalShown(false);
-
     console.log('this stuff was closed, success:', success)
-    
-    // if (success) saveActivityType(); - glitched
   }
 
   const handleSetActivityType = () => {
     setIsModalShown(true);
   };
 
-  const handleSelectionChange = (selected: string | null) => {
+  const handleSelectionChange = (selected: ActivityTypeValueType) => {
     console.log('[activity type modal] selected changes:', selected);
     setSelected(selected);
-    saveActivityType(selected); // because glitched
-  };
-
-  const saveActivityType = (selected: string | null /* because glitched */) => {
-    console.log('selected in wrapped is:', selected)
-    if (selected === null) {
-      // alert('No se puedo guardar bien');
-      return;
-    };
-    (async () => {
-      const createTypeActivityBody = { name: selected };
-      const activityType = await TypesAgendaApi
-        .create(props.eventId, createTypeActivityBody);
-      const agenda = await AgendaApi
-        .editOne({ type_id: activityType._id }, props.activityId, props.eventId);
-      console.log('agenda: activity type changes:', agenda);
-    })();
-  };
-
-  const deleteActivityType = async () => {
-    console.log('Reset the activity type')
-    setIsDeletingActivityType(true);
-    // Can this delete the activity type? well, in the future we will know about
-    try {
-      await TypesAgendaApi.deleteOne(props.activityId, props.eventId);
-    } catch (err) {
-      setTemporalErrorMessage(` (no puede: ${err})`);
-      setTimeout(() => setTemporalErrorMessage(''), 3000);
-    } finally {
-      setSelected(null);
-      setIsDeletingActivityType(false);
-    }
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const agendaInfo: ExtendedAgendaDocumentType = await AgendaApi
-          .getOne(props.activityId, props.eventId);
-        // setDefinedType(agendaInfo.type?.name || null);
-        const typeIncomming = agendaInfo.type?.name;
-        if (typeIncomming) setSelected(typeIncomming);
-      } catch (e) {
-        console.error(e);
-      }
-      setIsLoading(false);
-    })();
-  }, []);
+    if (selected) {
+      setActivityType(selected);
+      setConfirmedSelection(selected);
+    };
+  }, [selected]);
 
-  if (isLoading) {
-    return <Spin/>
-  }
+  useEffect(() => {
+    if (confirmedSelection) saveActivityType();
+  }, [confirmedSelection]);
+
+  if (is.updatingActivityType) return <Spin/>
 
   return (
     <>
@@ -99,13 +62,13 @@ function SubActivityTypeSelector(props: SubActivityTypeSelectorProps) {
       onSelectionChange={handleSelectionChange}
     />
 
-    {selected !== null ? (
+    {activityType !== null ? (
       <Alert
         closable
         type='info'
-        showIcon={isDeletingActivityType}
+        showIcon={is.deleting}
         icon={<Spin/>}
-        message={`Actividad de tipo: ${selected} ${temporalErrorMessage}`}
+        message={`Actividad de tipo: ${activityType}`}
         onClose={deleteActivityType}
       />
     ) : (

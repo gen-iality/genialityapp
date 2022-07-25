@@ -342,11 +342,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       <Row justify="center" wrap gutter={12}>
         <Col span={20}>
           {props.activityId && (
-          <ActivityTypeSelector
-            activityId={props.activityId}
-            eventId={props.event._id}
-            activityName={formdata.name}
-          />
+          <ActivityTypeSelector/>
           )}
         </Col>
         <Col span={20}>

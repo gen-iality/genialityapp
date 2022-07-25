@@ -6,15 +6,19 @@ import { Modal } from 'antd';
 import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCards';
 import ActivityTypeModalLayout from './components/ActivityTypeModalLayout';
 import { ActivityTypeValueType } from '@/context/activityType/schema/structureInterfaces';
+import useActivityType from '@/context/activityType/hooks/useActivityType';
+// import { ActivityTypeCard } from '@/context/activityType/schema/structureInterfaces';
 
 export interface ActivityTypeModalProps {
   visible: boolean,
   onClose: (success?: boolean) => void,
-  onSelectionChange: (selected: string | null) => void,
+  onSelectionChange: (selected: ActivityTypeValueType) => void,
 };
 
 function ActivityTypeModal(props: ActivityTypeModalProps) {
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<ActivityTypeValueType | null>(null);
+
+  const { formWidgetFlow } = useActivityType();
   
   const handleCancel = () => {
     props.onClose(false)
@@ -25,13 +29,12 @@ function ActivityTypeModal(props: ActivityTypeModalProps) {
 
   const handleConfirm = () => {
     console.log('activity type saved:', selected);
-    if (somethingWasSelected) {
+    if (somethingWasSelected && selected) {
       props.onSelectionChange(selected);
-      // setSelected(null);
     }
   }
 
-  const handleSelectChange = (newSelected: string) => {
+  const handleSelectChange = (newSelected: ActivityTypeValueType) => {
     console.log('selected changed to', newSelected);
     setSelected(newSelected);
   }
@@ -52,14 +55,15 @@ function ActivityTypeModal(props: ActivityTypeModalProps) {
     >
       <ActivityTypeModalLayout
         somethingWasSelected={somethingWasSelected}
-        title={activityTypeData.MainTitle}
+        title={formWidgetFlow.MainTitle}
         onClose={props.onClose}
         onConfirm={handleConfirm}
         render={() => <ActivityTypeSelectableCards
           selected={selected}
-          widget={activityTypeData}
+          widget={formWidgetFlow}
           onWidgetChange={(widget) => {
-            handleSelectChange(widget.key);
+            // In this case, the keys are the same of the activity type value
+            handleSelectChange(widget.key as ActivityTypeValueType);
           }}
         />}
       />
