@@ -34,6 +34,8 @@ import EventType from './types/EventType';
 import AgendaDocumentType from './types/AgendaDocumentType';
 import AgendaDocumentForm from './components/AgendaDocumentForm';
 
+import ActivityContentSelector from './activityType/ActivityContentSelector';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 
@@ -442,6 +444,21 @@ function AgendaEdit(props: AgendaEditProps) {
                           tab={currentTab}
                         />
                         <BackTop />
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tab='Contenido' key='2.1'>
+                    <Row wrap gutter={12}>
+                      <Col span={24}>
+                        {currentActivityID && (
+                        <ActivityContentSelector
+                          activityId={currentActivityID}
+                          activityName={formdata.name}
+                          eventId={props.event._id}
+                          shouldLoad={currentTab === '2.1'}
+                        />
+                        )}
+                        <BackTop/>
                       </Col>
                     </Row>
                   </TabPane>
