@@ -7,7 +7,7 @@ import AgendaContext from '../AgendaContext';
 import { CurrentEventContext } from '../eventContext';
 
 import ActivityTypeContext from './activityTypeContext';
-import { ActivitySubTypeValueType, ActivityTypeValueType } from './schema/structureInterfaces';
+import { ActivitySubTypeName, ActivityTypeName } from './schema/structureInterfaces';
 import {
   ActivityTypeProviderProps,
   ActivityTypeContextType,
@@ -39,8 +39,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const [isUpdatingActivityType, setIsUpdatingActivityType] = useState(false);
   const [isUpdatingActivityContent, setIsUpdatingActivityContent] = useState(false);
   const [videoObject, setVideoObject] = useState<any | null>(null);
-  const [activityType, setActivityType] = useState<ActivityTypeValueType | null>(null);
-  const [activityContentType, setActivityContentType] = useState<ActivitySubTypeValueType | null>(null);
+  const [activityType, setActivityType] = useState<ActivityTypeName | null>(null);
+  const [activityContentType, setActivityContentType] = useState<ActivitySubTypeName | null>(null);
   const [contentSource, setContentSource] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
@@ -117,7 +117,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
   };
 
-  const saveActivityContent = async (type?: ActivitySubTypeValueType) => {
+  const saveActivityContent = async (type?: ActivitySubTypeName) => {
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -286,17 +286,17 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         const agendaInfo: ExtendedAgendaDocumentType = await AgendaApi
           .getOne(activityEdit, cEvent.value._id);
         // setDefinedType(agendaInfo.type?.name || null);
-        const typeIncoming = agendaInfo.type?.name as ActivityTypeValueType;
+        const typeIncoming = agendaInfo.type?.name as ActivityTypeName;
 
-        const onlyActivityTypes: ActivityTypeValueType[] = [
+        const onlyActivityTypes: ActivityTypeName[] = [
           'liveBroadcast',
           'meeting',
           'video',
         ];
 
-        const theseAreLiveToo: ActivitySubTypeValueType[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
-        const theseAreMeeting: ActivitySubTypeValueType[] = ['meeting'];
-        const theseAreVideo: ActivitySubTypeValueType[] = ['url', 'cargarvideo'];
+        const theseAreLiveToo: ActivitySubTypeName[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
+        const theseAreMeeting: ActivitySubTypeName[] = ['meeting'];
+        const theseAreVideo: ActivitySubTypeName[] = ['url', 'cargarvideo'];
 
         if (typeIncoming) {
           if (onlyActivityTypes.includes(typeIncoming)) {
@@ -306,13 +306,13 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           } else {
             console.debug(typeIncoming, 'is not in', onlyActivityTypes);
 
-            setActivityContentType(typeIncoming as ActivitySubTypeValueType);
+            setActivityContentType(typeIncoming as ActivitySubTypeName);
 
-            if (theseAreLiveToo.includes(typeIncoming as ActivitySubTypeValueType)) {
+            if (theseAreLiveToo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('liveBroadcast');
-            } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeValueType)) {
+            } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('video');
-            } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeValueType)) {
+            } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('meeting');
             } else {
               setActivityType(null);

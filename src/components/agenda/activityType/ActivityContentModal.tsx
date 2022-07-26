@@ -9,7 +9,7 @@ import ActivityContentModalLayout from './components/ActivityContentModalLayout'
 
 import { ModalWrapperUIProps} from './interfaces/ModalWrapperUIProps';
 import {
-  ActivitySubTypeValueType,
+  ActivitySubTypeName,
   FormStructure,
   ActivityTypeCard,
   ActivitySubTypeKey,

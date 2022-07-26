@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivitySubTypeValueType, ActivityTypeData, ActivityTypeValueType } from '../schema/structureInterfaces';
+import { ActivitySubTypeName, ActivityTypeData, ActivityTypeName } from '../schema/structureInterfaces';
 
 export type ProcessingType = {
   stoppingStreaming: boolean,
@@ -15,15 +15,15 @@ export type ActivityTypeContextType = {
   videoObject: any | null,
   contentSource: string | null,
   formWidgetFlow: ActivityTypeData,
-  activityType: ActivityTypeValueType | null,
-  activityContentType: ActivitySubTypeValueType | null,
+  activityType: ActivityTypeName | null,
+  activityContentType: ActivitySubTypeName | null,
 
-  setActivityType: (type: ActivityTypeValueType | null) => void,
-  setActivityContentType: (type: ActivitySubTypeValueType | null) => void,
+  setActivityType: (type: ActivityTypeName | null) => void,
+  setActivityContentType: (type: ActivitySubTypeName | null) => void,
   setContentSource: (input: string) => void,
   saveActivityType: () => void,
   deleteActivityType: () => void,
-  saveActivityContent: (type?: ActivitySubTypeValueType) => void,
+  saveActivityContent: (type?: ActivitySubTypeName) => void,
 };
 
 export type ActivityTypeProviderProps = {

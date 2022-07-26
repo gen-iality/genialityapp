@@ -9,15 +9,15 @@ import { AgendaApi } from '@/helpers/request';
 import ActivityTypeModal from './ActivityTypeModal';
 import { ExtendedAgendaDocumentType } from '../types/AgendaDocumentType';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
-import { ActivityTypeValueType } from '@/context/activityType/schema/structureInterfaces';
+import { ActivityTypeName } from '@/context/activityType/schema/structureInterfaces';
 
 export interface SubActivityTypeSelectorProps {};
 
 function SubActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   const [isModalShown, setIsModalShown] = useState(false);
 
-  const [selected, setSelected] = useState<ActivityTypeValueType | null>(null);
-  const [confirmedSelection, setConfirmedSelection] = useState<ActivityTypeValueType | null>(null);
+  const [selected, setSelected] = useState<ActivityTypeName | null>(null);
+  const [confirmedSelection, setConfirmedSelection] = useState<ActivityTypeName | null>(null);
 
   const {
     is,
@@ -36,7 +36,7 @@ function SubActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     setIsModalShown(true);
   };
 
-  const handleSelectionChange = (selected: ActivityTypeValueType) => {
+  const handleSelectionChange = (selected: ActivityTypeName) => {
     console.log('[activity type modal] selected changes:', selected);
     setSelected(selected);
   };

@@ -6,29 +6,31 @@ import {
   ActivityTypeKey,
   ActivitySubTypeKey,
   FormType,
-  ActivityTypeValueType,
-  ActivitySubTypeValueType,
+  ActivityTypeName,
+  ActivitySubTypeName,
 } from './structureInterfaces';
 
-export const activityTypeKeys: { [key in ActivityTypeKey]: ActivityTypeValueType } = {
+export const activityTypeKeys: { [key in ActivityTypeKey]: ActivityTypeName } = {
   live: 'liveBroadcast',
   meeting: 'meeting',
   video: 'video',
 };
 
-export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubTypeValueType } = {
+export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubTypeName } = {
   meeting: 'meeting',
   streaming: 'eviusStreaming',
   vimeo: 'vimeo',
   youtube: 'youTube',
   url: 'url',
   file: 'cargarvideo',
+  rtmp: 'RTMP',
+  meet: 'eviusMeet',
 };
 
 const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure } = {
   url: {
     formType: FormType.INPUT,
-    key: 'url',
+    key: activitySubTypeKeys.url,
     title: ' ',
     image: '',
     addonBefore: '🔗',
@@ -37,7 +39,7 @@ const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure
   },
   vimeo: {
     formType: FormType.INPUT,
-    key: 'vimeo',
+    key: activitySubTypeKeys.vimeo,
     title: 'Vimeo Icon',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
     addonBefore: 'ID',
@@ -46,7 +48,7 @@ const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure
   },
   youtube: {
     formType: FormType.INPUT,
-    key: 'youTube',
+    key: activitySubTypeKeys.youtube,
     title: 'youTube Icon',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
     addonBefore: 'https://youtu.be/',
@@ -58,7 +60,7 @@ const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure
 const liveBroadcastTransmissionCards: ActivityTypeCard[] = [
   {
     widgetType: WidgetType.FINAL,
-    key: 'eviusMeet',
+    key: activitySubTypeKeys.meet,
     title: 'EviusMeet',
     description: 'La herramienta ideal para realizar tus transmisiones en vivo.',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fevius_streaming.jpg?alt=media&token=3bdcd392-143f-4958-a1c2-f5663ff0f650',
@@ -66,7 +68,7 @@ const liveBroadcastTransmissionCards: ActivityTypeCard[] = [
   },
   {
     widgetType: WidgetType.FINAL,
-    key: 'RTMP',
+    key: activitySubTypeKeys.rtmp,
     title: 'RTMP',
     description: 'El Protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet.',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2FRTMP.jpg?alt=media&token=d0c74ddc-5ad6-49bf-ad57-c1d0c02a1ee6',

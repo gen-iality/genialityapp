@@ -1,16 +1,16 @@
 export type ActivityTypeKey = 'live' | 'meeting' | 'video';
-export type ActivitySubTypeKey = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting';
+export type ActivitySubTypeKey = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting' | 'meet' | 'rtmp';
 
-export type ActivityTypeValueType = 'liveBroadcast' | 'meeting' | 'video';
-export type ActivitySubTypeValueType = '' | 'meeting' | 'eviusStreaming' | 'vimeo' | 'youTube' | 'url' | 'cargarvideo' | 'eviusMeet' | 'RTMP';
+export type ActivityTypeName = 'liveBroadcast' | 'meeting' | 'video';
+export type ActivitySubTypeName = '' | 'meeting' | 'eviusStreaming' | 'vimeo' | 'youTube' | 'url' | 'cargarvideo' | 'eviusMeet' | 'RTMP';
 
 export type GeneralTypeName = 
-  | (ActivitySubTypeKey & string)
-  | (ActivityTypeKey & string);
+  | (ActivityTypeKey & string)
+  | (ActivitySubTypeKey & string);
 
 export type GeneralTypeValue = 
-  | (ActivityTypeValueType & string)
-  | (ActivitySubTypeValueType & string);
+  | (ActivityTypeName & string)
+  | (ActivitySubTypeName & string);
 
 export enum FormType {
   INFO = 'INFO',
@@ -26,7 +26,7 @@ export enum WidgetType {
 
 export interface FormStructure {
   formType: FormType,
-  key: ActivitySubTypeValueType;
+  key: ActivitySubTypeName;
   title?: string;
   MainTitle?: string;
   description?: string;
