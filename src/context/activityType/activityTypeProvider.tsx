@@ -12,7 +12,7 @@ import {
   ActivityTypeProviderProps,
   ActivityTypeContextType,
 } from './types/types';
-import { activitySubTypeKeys, activityTypeData, activityTypeTranslationPair } from './schema/activityTypeFormStructure';
+import { activitySubTypeKeys, activityTypeData, simplifiedActivityTypeMap } from './schema/activityTypeFormStructure';
 // Temporally
 import { ExtendedAgendaDocumentType } from '@/components/agenda/types/AgendaDocumentType';
 
@@ -46,7 +46,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const queryClient = useQueryClient();
 
   const translateActivityType = useCallback((type: string) => {
-    const value: string = activityTypeTranslationPair[type as keyof typeof activityTypeTranslationPair];
+    const value = simplifiedActivityTypeMap[type as keyof typeof simplifiedActivityTypeMap];
     if (!value) {
       throw new Error(`transpilerActivityType cannot find {type} in {activityTypeTranslationPair}`);
     }

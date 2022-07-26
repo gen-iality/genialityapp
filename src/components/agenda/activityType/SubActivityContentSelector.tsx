@@ -127,7 +127,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
         >
           Eliminar contenido
         </Button>
-        <ActivityContentManager/>
+        <ActivityContentManager activityName={activityName}/>
       </>
     );
   }

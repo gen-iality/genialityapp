@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useMemo } from 'react';
 
 import {
   Row,
@@ -8,12 +8,18 @@ import {
 } from 'antd';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
 import AgendaContext from '@/context/AgendaContext';
+import VideoPreviewerCard from './components/manager/VideoPreviewerCard';
+import TransmitionStatusCard from './components/manager/TransmitionStatusCard';
 
-export interface ActivityContentManagerProps {};
+export interface ActivityContentManagerProps {
+  activityName: string,
+};
 
 function ActivityContentManager(props: ActivityContentManagerProps) {
   const {
     contentSource,
+    activityType,
+    translateActivityType,
     activityContentType,
   } = useActivityType();
 
@@ -33,6 +39,12 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     totalViews,
     maxViewers,
   } = useContext(AgendaContext);
+
+  const type = useMemo(() => {
+    if (activityType)
+      return translateActivityType(activityType);
+    return null;
+  }, [activityType]);
 
   return (
     <>
