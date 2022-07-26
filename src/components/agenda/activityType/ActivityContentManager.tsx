@@ -51,8 +51,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     <Row gutter={[16, 16]}>
       <Col span={10}>
         <Affix offsetTop={80}>
-          <></>
-          {/* Here the viewer */}
+          {type && <VideoPreviewerCard type={type} activityName={props.activityName} />}
         </Affix>
       </Col>
 
