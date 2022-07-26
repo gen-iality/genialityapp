@@ -23,7 +23,7 @@ export type ActivityTypeContextType = {
   setContentSource: (input: string) => void,
   saveActivityType: () => void,
   deleteActivityType: () => void,
-  saveActivityContent: () => void,
+  saveActivityContent: (type?: ActivitySubTypeValueType) => void,
 };
 
 export type ActivityTypeProviderProps = {
