@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { ActivitySubTypeName, ActivityTypeData, ActivityTypeName } from '../schema/structureInterfaces';
+import {
+  ActivitySubTypeName,
+  ActivityTypeData,
+  ActivityTypeName,
+  SimplifiedActivityTypeValue,
+} from '../schema/structureInterfaces';
 
 export type ProcessingType = {
   stoppingStreaming: boolean,
@@ -24,7 +29,7 @@ export type ActivityTypeContextType = {
   saveActivityType: () => void,
   deleteActivityType: () => void,
   saveActivityContent: (type?: ActivitySubTypeName) => void,
-  translateActivityType: (type: string) => string,
+  translateActivityType: (type: string) => SimplifiedActivityTypeValue,
 };
 
 export type ActivityTypeProviderProps = {

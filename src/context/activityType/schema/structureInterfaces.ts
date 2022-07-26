@@ -12,6 +12,9 @@ export type GeneralTypeValue =
   | (ActivityTypeName & string)
   | (ActivitySubTypeName & string);
 
+export type SimplifiedActivityTypeValue = '' | 'Transmisión' | 'Video' | 'reunión' | 'vimeo' | 'Youtube' | 'EviusMeet';
+export type SimplifiedActivityTypeMap = { [key in ActivitySubTypeName]: SimplifiedActivityTypeValue } & { video: SimplifiedActivityTypeValue };
+
 export enum FormType {
   INFO = 'INFO',
   UPLOAD = 'UPLOAD',

@@ -8,6 +8,7 @@ import {
   FormType,
   ActivityTypeName,
   ActivitySubTypeName,
+  SimplifiedActivityTypeMap,
 } from './structureInterfaces';
 
 export const activityTypeKeys: { [key in ActivityTypeKey]: ActivityTypeName } = {
@@ -27,9 +28,9 @@ export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubType
   meet: 'eviusMeet',
 };
 
-export const activityTypeTranslationPair: { [key in ActivitySubTypeName]: string } & { video: string } = {
+export const simplifiedActivityTypeMap: SimplifiedActivityTypeMap = {
   "": '', // What happens?
-  eviusStreaming: '', // ...here
+  eviusStreaming: 'Transmisión', // ...here
   url: 'Video',
   meeting: 'reunión',
   vimeo: 'vimeo',
