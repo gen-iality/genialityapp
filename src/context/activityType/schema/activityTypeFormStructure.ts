@@ -27,6 +27,19 @@ export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubType
   meet: 'eviusMeet',
 };
 
+export const activityTypeTranslationPair: { [key in ActivitySubTypeName]: string } & { video: string } = {
+  "": '', // What happens?
+  eviusStreaming: '', // ...here
+  url: 'Video',
+  meeting: 'reunión',
+  vimeo: 'vimeo',
+  youTube: 'Youtube',
+  eviusMeet: 'EviusMeet',
+  RTMP: 'Transmisión',
+  cargarvideo: 'Video',
+  video: 'Video',
+};
+
 const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure } = {
   url: {
     formType: FormType.INPUT,

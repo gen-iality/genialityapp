@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
 import { AgendaApi, TypesAgendaApi } from '../../helpers/request';
@@ -12,7 +12,7 @@ import {
   ActivityTypeProviderProps,
   ActivityTypeContextType,
 } from './types/types';
-import { activitySubTypeKeys, activityTypeData } from './schema/activityTypeFormStructure';
+import { activitySubTypeKeys, activityTypeData, activityTypeTranslationPair } from './schema/activityTypeFormStructure';
 // Temporally
 import { ExtendedAgendaDocumentType } from '@/components/agenda/types/AgendaDocumentType';
 
@@ -44,6 +44,14 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const [contentSource, setContentSource] = useState<string | null>(meetingId || null);
 
   const queryClient = useQueryClient();
+
+  const translateActivityType = useCallback((type: string) => {
+    const value: string = activityTypeTranslationPair[type as keyof typeof activityTypeTranslationPair];
+    if (!value) {
+      throw new Error(`transpilerActivityType cannot find {type} in {activityTypeTranslationPair}`);
+    }
+    return value;
+  }, []);
 
   const editActivityType = async (eventId: string, activityId: string, typeName: string) => {
     const createTypeActivityBody: any = { name: typeName };
@@ -272,6 +280,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setContentSource,
     saveActivityContent,
     setActivityContentType,
+    translateActivityType,
   };
 
   useEffect(() => {

@@ -24,6 +24,7 @@ export type ActivityTypeContextType = {
   saveActivityType: () => void,
   deleteActivityType: () => void,
   saveActivityContent: (type?: ActivitySubTypeName) => void,
+  translateActivityType: (type: string) => string,
 };
 
 export type ActivityTypeProviderProps = {
