@@ -18,7 +18,6 @@ export interface ActivityContentManagerProps {
 function ActivityContentManager(props: ActivityContentManagerProps) {
   const {
     contentSource,
-    activityType,
     translateActivityType,
     activityContentType,
   } = useActivityType();
@@ -41,10 +40,10 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   } = useContext(AgendaContext);
 
   const type = useMemo(() => {
-    if (activityType)
-      return translateActivityType(activityType);
+    if (activityContentType)
+      return translateActivityType(activityContentType);
     return null;
-  }, [activityType]);
+  }, [activityContentType]);
 
   return (
     <>
