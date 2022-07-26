@@ -48,7 +48,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const translateActivityType = useCallback((type: string) => {
     const value = simplifiedActivityTypeMap[type as keyof typeof simplifiedActivityTypeMap];
     if (!value) {
-      throw new Error(`transpilerActivityType cannot find {type} in {activityTypeTranslationPair}`);
+      console.error(`transpilerActivityType cannot find ${type} in ${simplifiedActivityTypeMap}`);
+      return null;
     }
     return value;
   }, []);
@@ -65,7 +66,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const saveActivityType = async () => {
     console.debug('activity type provider is saving...');
     console.debug('activityType is:', activityType);
-    if (activityType === null) {
+    if (!activityType) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
     }
