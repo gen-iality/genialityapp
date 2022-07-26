@@ -292,11 +292,8 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
-    console.log('🚀 debug ~ onFinish ~ ...initialValues, ...values', { ...initialValues, ...values });
     values = { ...initialValues, ...values };
 
-    console.log('🚀 1', basicDataUser);
-    console.log('🚀 2', Object.keys(basicDataUser));
     if (Object.keys(basicDataUser).length > 0) {
       setvalidateEventUser({
         statusFields: true,
