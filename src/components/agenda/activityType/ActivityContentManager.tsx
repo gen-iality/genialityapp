@@ -47,6 +47,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
   return (
     <>
+    <pre>Take: {activityContentType}, with source={contentSource}. {JSON.stringify(dataLive)}</pre>
     <Row gutter={[16, 16]}>
       <Col span={10}>
         <Affix offsetTop={80}>
