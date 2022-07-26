@@ -29,11 +29,11 @@ import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 
 export interface ActivityContentModalProps extends ModalWrapperUIProps {
   widget: ActivityTypeCard | FormStructure,
-  onSelecType: (selected: GeneralTypeValue) => void,
+  onSelecWidgetKey: (key: GeneralTypeValue) => void,
   //
   activityName: string,
   visible: boolean,
-  initialType: ActivitySubTypeNameType,
+  initialWidgetKey: ActivitySubTypeNameType,
   onInput?: (input: string) => void,
 };
 
@@ -41,38 +41,36 @@ function ActivityContentModal(props: ActivityContentModalProps) {
   const {
     activityName,
     visible,
-    initialType,
+    initialWidgetKey: initialType,
     onInput = () => {},
     // Inherent selectable
     widget,
-    onSelecType,
+    onSelecWidgetKey,
     // Inherent UI
     title,
     onClose = () => {},
     // onConfirm = () => {},
   } = props;
 
-  // const [widget, setWidget] = useState(initialWidget);
-  const [selected, setSelected] = useState<GeneralTypeValue | null>(null);
-  // console.log('widget ~ widget', widget)
+  const [widgetKey, setWidgetKey] = useState<GeneralTypeValue | null>(null);
 
   const handleCancel = () => onClose();
 
   const handleConfirm = () => {
-    if (selected) {
-      onSelecType(selected);
+    if (widgetKey) {
+      onSelecWidgetKey(widgetKey);
       onClose(true);
     } else {
       alert('No puede guardar dato vacío');
     }
-  }
+  };
 
-  const handleSelectChange = (newSelected: GeneralTypeValue) => {
-    console.log('selected changed to', newSelected);
-    setSelected(newSelected);
-  }
+  const handleWidgetKeyChange = (newKey: GeneralTypeValue) => {
+    console.log('selected changed to', newKey);
+    setWidgetKey(newKey);
+  };
 
-  const somethingWasSelected = useMemo(() => selected !== null, [selected]);
+  const somethingWasSelected = useMemo(() => widgetKey !== null, [widgetKey]);
 
   return (
     <Modal
@@ -83,26 +81,26 @@ function ActivityContentModal(props: ActivityContentModalProps) {
       onCancel={handleCancel}
     >
       <ActivityContentModalLayout
-        somethingWasSelected={somethingWasSelected}
+        disabledNextButton={!somethingWasSelected}
         initialType={initialType}
         title={title}
-        selected={selected} // To know what is selected
-        onSelectChange={handleSelectChange} // To update selected
+        selected={widgetKey} // To know what is selected
+        onWidgetKeyChange={handleWidgetKeyChange} // To update selected
         widget={widget} // To render from that
         onClose={onClose}
         onConfirm={handleConfirm}
-        render={(type: string | undefined, data: ActivityTypeCard | FormStructure) => {
+        render={(widgetData: ActivityTypeCard | FormStructure) => {
           // console.debug(`render(${type}, ${JSON.stringify(data)})`);
-          if ('widgetType' in data) {
-            const card: ActivityTypeCard = data;
+          if ('widgetType' in widgetData) {
+            const card: ActivityTypeCard = widgetData;
             switch (card.widgetType) {
               case WidgetType.FORM:
                 return <Alert message='Si esto se ve, se está pasando un card (que tiene un hijo form) en lugar de pasar el form...' />
               case WidgetType.CARD_SET:
                 return <ActivityTypeSelectableCards
-                  selected={selected}
+                  selected={widgetKey}
                   widget={card}
-                  onWidgetChange={(w) => handleSelectChange(w.key)}
+                  onWidgetChange={(w) => handleWidgetKeyChange(w.key)}
                 />
               case WidgetType.FINAL:
                 return <Alert type='info' message='El fin' />
@@ -116,14 +114,14 @@ function ActivityContentModal(props: ActivityContentModalProps) {
             }
           }
 
-          if ('formType' in data) {
-            const form: FormStructure = data;
+          if ('formType' in widgetData) {
+            const form: FormStructure = widgetData;
             switch (form.formType) {
               case FormType.INFO:
                 return <FullActivityTypeInfoLayout
                   form={form}
                   onLoaded={() => {
-                    handleSelectChange(form.key)
+                    handleWidgetKeyChange(form.key)
                   }}
                 />
               case FormType.INPUT:
@@ -145,7 +143,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
           return (
             <Alert
               type='error'
-              message={`No puede interpretar ${JSON.stringify(data)}`}
+              message={`No puede interpretar ${JSON.stringify(widgetData)}`}
             />
           );
         }}

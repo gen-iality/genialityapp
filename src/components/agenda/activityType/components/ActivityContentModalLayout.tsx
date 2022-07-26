@@ -70,18 +70,18 @@ const useActivityTypeData: (type: GeneralTypeValue) => ActivityTypeCard | FormSt
 export interface ActivityContentModalLayoutProps extends ModalWrapperUIProps {
   initialType: ActivitySubTypeNameType,
   selected: GeneralTypeValue | null,
-  onSelectChange: (selected: GeneralTypeValue) => void,
+  onWidgetKeyChange: (key: GeneralTypeValue) => void,
   widget: ActivityTypeCard | FormStructure,
-  somethingWasSelected: boolean,
-  render: (type: string | undefined, data: ActivityTypeCard | FormStructure) => React.ReactNode,
+  disabledNextButton: boolean,
+  render: (widgetData: ActivityTypeCard | FormStructure) => React.ReactNode,
 };
 
 function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
   const {
     initialType,
     selected,
-    onSelectChange,
-    somethingWasSelected,
+    onWidgetKeyChange,
+    disabledNextButton: enableNextButton,
     render,
     widget: initialWidget,
     // Inheret
@@ -90,60 +90,60 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
     onConfirm = () => {},
   } = props;
 
-  const [typeStack, setTypeStack] = useState<string[]>([]);
-  const [type, setType] = useState<string>(initialType);
-  const [data, setData] = useState<ActivityTypeCard | FormStructure>(initialWidget);
-  const [isTimeToCreate, setIsTimeToCreate] = useState(false);
+  const [widgetKeyStack, setWidgetKeyStack] = useState<string[]>([]);
+  const [widgetKey, setWidgetKey] = useState<string>(initialType);
+  const [widgetData, setWidgetData] = useState<ActivityTypeCard | FormStructure>(initialWidget);
 
-  useEffect(() => setData(initialWidget), [initialWidget]);
+  useEffect(() => setWidgetData(initialWidget), [initialWidget]);
 
   const handleGoBack = () => {
     // Take the last type, remove it
-    const newTypeStack = [...typeStack];
-    const lastType = newTypeStack.pop();
-    setTypeStack(newTypeStack);
-    if (lastType) onSelectChange(lastType as GeneralTypeValue);
+    const newWidgetKeyStack = [...widgetKeyStack];
+    const key = newWidgetKeyStack.pop();
+    setWidgetKeyStack(newWidgetKeyStack);
+    if (key) onWidgetKeyChange(key as GeneralTypeValue);
 
     // If no last type, close the modal
-    if (lastType === undefined) {
+    if (key === undefined) {
       onClose();
       return;
     }
 
     // The last type will be the current type
-    setType(lastType);
+    setWidgetKey(key);
     // Reload the widget according to last type
-    console.log(newTypeStack, lastType);
-    const data = useActivityTypeData(lastType as GeneralTypeValue);
+    console.log(newWidgetKeyStack, key);
+    const data = useActivityTypeData(key as GeneralTypeValue);
     console.log('go back:', data);
-    if (data) setData(data);
+    if (data) setWidgetData(data);
   };
 
   const handleGoForward = () => {
-    if (!data) {
+    if (!widgetData) {
       console.warn('options is invalid');
       return;
     }
     if (selected) {
       // Close modal and create a transmission...
       const transmissions: GeneralTypeValue[] = [
-        'RTMP', 'eviusMeet',
+        'RTMP',
+        'eviusMeet',
       ];
       if (transmissions.includes(selected) || isTimeToCreate) {
         // TODO: ok, take the data, process them, and close the modal
-        setTypeStack([]);
-        setType(initialType);
-        setData(initialWidget);
-        console.debug('confirm saving data from form')
+        setWidgetKeyStack([]);
+        setWidgetKey(initialType);
+        setWidgetData(initialWidget);
         onConfirm();
-        onClose();
+        // onClose();
+        console.debug('confirm saving data from form');
         return;
       }
 
       // The current type will be the last type. Update the type stack
-      const newTypeStack = [...typeStack, type];
-      setTypeStack(newTypeStack);
-      setType(selected);
+      const newTypeStack = [...widgetKeyStack, widgetKey];
+      setWidgetKeyStack(newTypeStack);
+      setWidgetKey(selected);
       // onSelectChange(selected)
       console.log(`useActivityTypeData (for ${selected}):`);
 
@@ -151,21 +151,18 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       console.log(newTypeStack, selected);
       const data = useActivityTypeData(selected);
       console.log('go forward:', data);
-      if (data) setData(data);
+      if (data) setWidgetData(data);
 
       // TODO: detect if it was the end to close the modal, and confirm the data type
     }
   };
 
-  useEffect(() => {
-    if ('widgetType' in data && (data.widgetType === WidgetType.FINAL || data.widgetType === WidgetType.FORM)) {
-      setIsTimeToCreate(true);
-    } else if ('formType' in data) {
-      setIsTimeToCreate(true);
-    } else {
-      setIsTimeToCreate(false);
-    }
-  }, [data]);
+  const isTimeToCreate = useMemo(() => {
+    if ('widgetType' in widgetData && (widgetData.widgetType === WidgetType.FINAL || widgetData.widgetType === WidgetType.FORM))
+      return true;
+    else if ('formType' in widgetData) return true;
+    else return false;
+  }, [widgetData]);
 
   const nextButtonString = useMemo(() => {
     if (isTimeToCreate) return 'Crear';
@@ -181,7 +178,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       </Header>
 
       <Content style={{ padding: '60px 50px 60px 50px' }}>
-        {render(type, data)}
+        {render(widgetData)}
       </Content>
 
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
@@ -193,7 +190,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
           </Col>
           <Col>
             <Button
-              disabled={!somethingWasSelected}
+              disabled={enableNextButton}
               onClick={handleGoForward}
               type='primary'
             >
