@@ -294,6 +294,10 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           'video',
         ];
 
+        const theseAreLiveToo: ActivitySubTypeValueType[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
+        const theseAreMeeting: ActivitySubTypeValueType[] = ['meeting'];
+        const theseAreVideo: ActivitySubTypeValueType[] = ['url', 'cargarvideo'];
+
         if (typeIncoming) {
           if (onlyActivityTypes.includes(typeIncoming)) {
             console.debug(typeIncoming, 'is in', onlyActivityTypes);
@@ -301,8 +305,18 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             setActivityContentType(null);
           } else {
             console.debug(typeIncoming, 'is not in', onlyActivityTypes);
-            setActivityType(null);
+
             setActivityContentType(typeIncoming as ActivitySubTypeValueType);
+
+            if (theseAreLiveToo.includes(typeIncoming as ActivitySubTypeValueType)) {
+              setActivityType('liveBroadcast');
+            } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeValueType)) {
+              setActivityType('video');
+            } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeValueType)) {
+              setActivityType('meeting');
+            } else {
+              setActivityType(null);
+            }
           }
         }
       } catch (e) {
