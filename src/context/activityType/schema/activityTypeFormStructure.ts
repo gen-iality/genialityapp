@@ -3,20 +3,20 @@ import {
   ActivityTypeCard,
   FormStructure,
   WidgetType,
-  ActivityTypeNameType,
-  ActivitySubTypeNameType,
+  ActivityTypeKey,
+  ActivitySubTypeKey,
   FormType,
   ActivityTypeValueType,
   ActivitySubTypeValueType,
 } from './structureInterfaces';
 
-export const activityTypeKeys: { [key in ActivityTypeNameType]: ActivityTypeValueType } = {
+export const activityTypeKeys: { [key in ActivityTypeKey]: ActivityTypeValueType } = {
   live: 'liveBroadcast',
   meeting: 'meeting',
   video: 'video',
 };
 
-export const activitySubTypeKeys: { [key in ActivitySubTypeNameType]: ActivitySubTypeValueType } = {
+export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubTypeValueType } = {
   meeting: 'meeting',
   streaming: 'eviusStreaming',
   vimeo: 'vimeo',

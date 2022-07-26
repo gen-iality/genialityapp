@@ -12,7 +12,7 @@ import {
   ActivitySubTypeValueType,
   FormStructure,
   ActivityTypeCard,
-  ActivitySubTypeNameType,
+  ActivitySubTypeKey,
   WidgetType,
   FormType,
   GeneralTypeValue,
@@ -33,7 +33,7 @@ export interface ActivityContentModalProps extends ModalWrapperUIProps {
   //
   activityName: string,
   visible: boolean,
-  initialWidgetKey: ActivitySubTypeNameType,
+  initialWidgetKey: ActivitySubTypeKey,
   onInput?: (input: string) => void,
 };
 

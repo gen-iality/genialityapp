@@ -13,8 +13,8 @@ import {
   ActivityTypeCard,
   FormStructure,
   GeneralTypeName,
-  ActivitySubTypeNameType,
-  ActivityTypeNameType,
+  ActivitySubTypeKey,
+  ActivityTypeKey,
   WidgetType,
   GeneralTypeValue,
 } from '@/context/activityType/schema/structureInterfaces';
@@ -68,7 +68,7 @@ const useActivityTypeData: (type: GeneralTypeValue) => ActivityTypeCard | FormSt
 }
 
 export interface ActivityContentModalLayoutProps extends ModalWrapperUIProps {
-  initialType: ActivitySubTypeNameType,
+  initialType: ActivitySubTypeKey,
   selected: GeneralTypeValue | null,
   onWidgetKeyChange: (key: GeneralTypeValue) => void,
   widget: ActivityTypeCard | FormStructure,

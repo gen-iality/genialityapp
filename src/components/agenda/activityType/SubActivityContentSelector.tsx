@@ -13,7 +13,7 @@ import {
   ActivityTypeCard,
   FormStructure,
   WidgetType,
-  ActivitySubTypeNameType,
+  ActivitySubTypeKey,
   GeneralTypeName,
   GeneralTypeValue,
 } from '@/context/activityType/schema/structureInterfaces';

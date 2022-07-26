@@ -1,12 +1,12 @@
-export type ActivityTypeNameType = 'live' | 'meeting' | 'video';
-export type ActivitySubTypeNameType = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting';
+export type ActivityTypeKey = 'live' | 'meeting' | 'video';
+export type ActivitySubTypeKey = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting';
 
 export type ActivityTypeValueType = 'liveBroadcast' | 'meeting' | 'video';
 export type ActivitySubTypeValueType = '' | 'meeting' | 'eviusStreaming' | 'vimeo' | 'youTube' | 'url' | 'cargarvideo' | 'eviusMeet' | 'RTMP';
 
 export type GeneralTypeName = 
-  | (ActivitySubTypeNameType & string)
-  | (ActivityTypeNameType & string);
+  | (ActivitySubTypeKey & string)
+  | (ActivityTypeKey & string);
 
 export type GeneralTypeValue = 
   | (ActivityTypeValueType & string)
