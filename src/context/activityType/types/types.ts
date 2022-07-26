@@ -1,22 +1,29 @@
 import * as React from 'react';
-import { ActivityTypeData, ActivityTypeValueType } from '../schema/structureInterfaces';
+import { ActivitySubTypeValueType, ActivityTypeData, ActivityTypeValueType } from '../schema/structureInterfaces';
+
+export type ProcessingType = {
+  stoppingStreaming: boolean,
+  creating: boolean,
+  saving: boolean,
+  deleting: boolean,
+  updatingActivityType: boolean,
+  updatingActivityContent: boolean,
+};
 
 export type ActivityTypeContextType = {
-  is: {
-    stoppingStreaming: boolean,
-    creating: boolean,
-    saving: boolean,
-    deleting: boolean,
-    updatingActivityType: boolean,
-  },
-
+  is: ProcessingType,
   videoObject: any | null,
+  contentSource: string | null,
   formWidgetFlow: ActivityTypeData,
-
   activityType: ActivityTypeValueType | null,
-  setActivityType: (type: ActivityTypeValueType) => void,
+  activityContentType: ActivitySubTypeValueType | null,
+
+  setActivityType: (type: ActivityTypeValueType | null) => void,
+  setActivityContentType: (type: ActivitySubTypeValueType | null) => void,
+  setContentSource: (input: string) => void,
   saveActivityType: () => void,
   deleteActivityType: () => void,
+  saveActivityContent: () => void,
 };
 
 export type ActivityTypeProviderProps = {
