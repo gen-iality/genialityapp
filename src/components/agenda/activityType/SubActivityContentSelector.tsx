@@ -104,8 +104,8 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
 
   const handleConfirm = () => {
     console.debug('confirm the selectedType:', selectedType);
-    setActivityContentType(selectedType || null);
-    saveActivityContent();
+    // setActivityContentType(selectedType || null);
+    saveActivityContent(selectedType || null);
   }
 
   const handleInput = (text: string) => {

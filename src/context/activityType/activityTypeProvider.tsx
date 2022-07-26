@@ -36,7 +36,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const [isCreatingActivityType, setIsCreatingActivityType] = useState(false);
   const [isSavingActivityType, setIsSavingActivityType] = useState(false);
   const [isDeletingActivityType, setIsDeletingActivityType] = useState(false);
-  const [isUpdatingAcctivityType, setIsUpdatingAcctivityType] = useState(false);
+  const [isUpdatingActivityType, setIsUpdatingActivityType] = useState(false);
   const [isUpdatingActivityContent, setIsUpdatingActivityContent] = useState(false);
   const [videoObject, setVideoObject] = useState<any | null>(null);
   const [activityType, setActivityType] = useState<ActivityTypeValueType | null>(null);
@@ -45,7 +45,16 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
   const queryClient = useQueryClient();
 
-  const saveActivityType = () => {
+  const editActivityType = async (eventId: string, activityId: string, typeName: string) => {
+    const createTypeActivityBody: any = { name: typeName };
+    const activityTypeDocument = await TypesAgendaApi
+      .create(cEvent.value._id, createTypeActivityBody);
+    const agenda: ExtendedAgendaDocumentType = await AgendaApi
+      .editOne({ type_id: activityTypeDocument._id }, activityId, eventId);
+    return agenda;
+  }
+
+  const saveActivityType = async () => {
     console.debug('activity type provider is saving...');
     console.debug('activityType is:', activityType);
     if (activityType === null) {
@@ -65,24 +74,20 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
     setIsSavingActivityType(true);
 
-    const promise = async () => {
-      const createTypeActivityBody: any = { name: activityType };
-      const activityTypeDocument = await TypesAgendaApi
-        .create(cEvent.value._id, createTypeActivityBody);
-      const agenda = await AgendaApi
-        .editOne({ type_id: activityTypeDocument._id }, activityEdit, cEvent.value._id);
+    try {
+      // const createTypeActivityBody: any = { name: activityType };
+      // const activityTypeDocument = await TypesAgendaApi
+      //   .create(cEvent.value._id, createTypeActivityBody);
+      // const agenda = await AgendaApi
+      //   .editOne({ type_id: activityTypeDocument._id }, activityEdit, cEvent.value._id);
+      const agenda = await editActivityType(cEvent.value._id, activityEdit, activityType);
       console.debug('activity type changes:', agenda);
-    };
-
-    promise()
-      .then(() => {
-        setIsSavingActivityType(false);
-        console.debug('AT provider stops successfully');
-      })
-      .catch((err) => {
-        console.error(err);
-        setIsSavingActivityType(false);
-      });
+      console.debug('AT provider stops successfully');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSavingActivityType(false);
+    }
   };
 
   const deleteActivityType = async () => {
@@ -112,7 +117,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
   };
 
-  const saveActivityContent = () => {
+  const saveActivityContent = async (type?: ActivitySubTypeValueType) => {
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -128,97 +133,108 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       return;
     }
 
+    if (type) setActivityContentType(type);
+    const contentType = activityContentType || type;
+
+    if (!contentType) {
+      console.error('ActivityTypeProvider.saveActivityContent: content type must not be none');
+      return;
+    }
+
+    console.debug('contentType:', contentType);
+
     setIsUpdatingActivityContent(true);
-    (async () => {
-      switch (activityContentType) {
-        case activitySubTypeKeys.url: {
-          const respUrl = await AgendaApi.editOne({ video: contentSource }, activityEdit, cEvent.value._id);
-          if (respUrl) {
-            await saveConfig({
-              platformNew: '',
-              type: activitySubTypeKeys.url,
-              habilitar_ingreso: '',
-              data: contentSource,
-            });
-            setTypeActivity(activitySubTypeKeys.url);
-            setPlatform('wowza');
-            setMeetingId(contentSource);
-          }
-          break;
-        }
-        case activitySubTypeKeys.vimeo: {
-          const resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: contentSource });
-          setTypeActivity(activitySubTypeKeys.vimeo);
-          setPlatform(activitySubTypeKeys.vimeo);
-          setMeetingId(contentSource);
-          break;
-        }
-        case activitySubTypeKeys.youtube: {
-          if (!contentSource) {
-            console.error('ActivityTypeProvider: contentSource is none');
-            return;
-          }
-          let newData = contentSource.includes('https://youtu.be/')
-            ? contentSource
-            : 'https://youtu.be/' + contentSource;
-          const resp = await saveConfig({ platformNew: 'wowza', type: activitySubTypeKeys.youtube, data: newData });
-          setTypeActivity('youTube');
-          setPlatform('wowza');
-          setMeetingId(contentSource);
-          break;
-        }
-        case activitySubTypeKeys.meeting: {
-          const resp = await saveConfig({
+
+    const agenda = await editActivityType(cEvent.value._id, activityEdit, contentType);
+
+    switch (contentType) {
+      case activitySubTypeKeys.url: {
+        const respUrl = await AgendaApi.editOne({ video: contentSource }, activityEdit, cEvent.value._id);
+        if (respUrl) {
+          await saveConfig({
             platformNew: '',
-            type: activitySubTypeKeys.meeting,
+            type: activitySubTypeKeys.url,
+            habilitar_ingreso: '',
             data: contentSource,
-            habilitar_ingreso: 'only',
           });
-          setTypeActivity(activitySubTypeKeys.meeting);
+          setTypeActivity(activitySubTypeKeys.url);
           setPlatform('wowza');
-          break;
+          setMeetingId(contentSource);
         }
-        case activitySubTypeKeys.file: {
-          if (!contentSource) {
-            console.error('ActivityTypeProvider: contentSource is none');
-            return;
-          }
-          const data = contentSource.split('*');
-          const urlVideo = data[0];
-          const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent.value._id);
-          if (respUrlVideo) {
-            const resp = await saveConfig({ platformNew: '', type: 'video', data: urlVideo, habilitar_ingreso: '' });
-            setTypeActivity('video');
-            setPlatform('wowza');
-            setMeetingId(urlVideo);
-          }
-          break;
-        }
-        case 'eviusMeet': {
-          !meetingId && executer_createStream.mutate();
-          meetingId &&
-            (await saveConfig({
-              platformNew: 'wowza',
-              type: activityContentType,
-              data: meetingId,
-            }));
-          setTypeActivity('eviusMeet');
-          setPlatform('wowza');
-          break;
-        }
-        case 'RTMP': {
-          !meetingId && executer_createStream.mutate();
-          meetingId &&
-            (await saveConfig({ platformNew: 'wowza', type: activityContentType, data: meetingId }));
-          setTypeActivity('RTMP');
-          setPlatform('wowza');
-          break;
-        }
-        default:
-          // alert(`wtf is ${activityContentType}`);
-          console.warn(`wtf is ${activityContentType}`);
+        break;
       }
-    })();
+      case activitySubTypeKeys.vimeo: {
+        const resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: contentSource });
+        setTypeActivity(activitySubTypeKeys.vimeo);
+        setPlatform(activitySubTypeKeys.vimeo);
+        setMeetingId(contentSource);
+        break;
+      }
+      case activitySubTypeKeys.youtube: {
+        if (!contentSource) {
+          console.error('ActivityTypeProvider: contentSource is none');
+          return;
+        }
+        let newData = contentSource.includes('https://youtu.be/')
+          ? contentSource
+          : 'https://youtu.be/' + contentSource;
+        const resp = await saveConfig({ platformNew: 'wowza', type: activitySubTypeKeys.youtube, data: newData });
+        setTypeActivity('youTube');
+        setPlatform('wowza');
+        setMeetingId(contentSource);
+        break;
+      }
+      case activitySubTypeKeys.meeting: {
+        const resp = await saveConfig({
+          platformNew: '',
+          type: activitySubTypeKeys.meeting,
+          data: contentSource,
+          habilitar_ingreso: 'only',
+        });
+        setTypeActivity(activitySubTypeKeys.meeting);
+        setPlatform('wowza');
+        break;
+      }
+      case activitySubTypeKeys.file: {
+        if (!contentSource) {
+          console.error('ActivityTypeProvider: contentSource is none');
+          return;
+        }
+        const data = contentSource.split('*');
+        const urlVideo = data[0];
+        const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent.value._id);
+        if (respUrlVideo) {
+          const resp = await saveConfig({ platformNew: '', type: 'video', data: urlVideo, habilitar_ingreso: '' });
+          setTypeActivity('video');
+          setPlatform('wowza');
+          setMeetingId(urlVideo);
+        }
+        break;
+      }
+      case 'eviusMeet': {
+        !meetingId && executer_createStream.mutate();
+        meetingId &&
+          (await saveConfig({
+            platformNew: 'wowza',
+            type: contentType,
+            data: meetingId,
+          }));
+        setTypeActivity('eviusMeet');
+        setPlatform('wowza');
+        break;
+      }
+      case 'RTMP': {
+        !meetingId && executer_createStream.mutate();
+        meetingId &&
+          (await saveConfig({ platformNew: 'wowza', type: contentType, data: meetingId }));
+        setTypeActivity('RTMP');
+        setPlatform('wowza');
+        break;
+      }
+      default:
+        // alert(`wtf is ${contentType}`);
+        console.warn(`wtf is ${contentType}`);
+    }
   };
 
   const executer_createStream = useMutation(() => createLiveStream(activityName), {
@@ -240,7 +256,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       creating: isCreatingActivityType,
       deleting: isDeletingActivityType,
       saving: isSavingActivityType,
-      updatingActivityType: isUpdatingAcctivityType,
+      updatingActivityType: isUpdatingActivityType,
       updatingActivityContent: isUpdatingActivityContent,
     },
     // Objects
@@ -266,7 +282,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       }
 
       try {
-        setIsUpdatingAcctivityType(true);
+        setIsUpdatingActivityType(true);
         const agendaInfo: ExtendedAgendaDocumentType = await AgendaApi
           .getOne(activityEdit, cEvent.value._id);
         // setDefinedType(agendaInfo.type?.name || null);
@@ -292,7 +308,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       } catch (e) {
         console.error(e);
       } finally {
-        setIsUpdatingAcctivityType(false);
+        setIsUpdatingActivityType(false);
       }
     };
     if (activityEdit) {
