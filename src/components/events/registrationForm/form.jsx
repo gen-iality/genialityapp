@@ -172,7 +172,7 @@ const FormRegister = ({
     handleChangeTypeModal,
     setRegister,
     helperDispatch,
-    eventIsActive,
+    // eventIsActive,
   } = useHelper();
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
@@ -292,8 +292,11 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
+    console.log('🚀 debug ~ onFinish ~ ...initialValues, ...values', { ...initialValues, ...values });
     values = { ...initialValues, ...values };
 
+    console.log('🚀 1', basicDataUser);
+    console.log('🚀 2', Object.keys(basicDataUser));
     if (Object.keys(basicDataUser).length > 0) {
       setvalidateEventUser({
         statusFields: true,
@@ -1222,7 +1225,8 @@ deberia ser solo la url de la imagen
                         style={{
                           display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
-                        disabled={!eventIsActive}
+                        // RESTRICCIONES
+                        // disabled={!eventIsActive}
                         type='primary'
                         htmlType='submit'>
                         {intl.formatMessage({ id: isRegister(initialValues, cEventUser) })}
