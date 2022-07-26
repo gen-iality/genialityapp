@@ -41,7 +41,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const [videoObject, setVideoObject] = useState<any | null>(null);
   const [activityType, setActivityType] = useState<ActivityTypeName | null>(null);
   const [activityContentType, setActivityContentType] = useState<ActivitySubTypeName | null>(null);
-  const [contentSource, setContentSource] = useState<string | null>(null);
+  const [contentSource, setContentSource] = useState<string | null>(meetingId || null);
 
   const queryClient = useQueryClient();
 
