@@ -346,6 +346,13 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
             setActivityContentType(typeIncoming as ActivitySubTypeName);
 
+            // Load the content source from agenda
+            const evalableType = typeIncoming as ActivitySubTypeName;
+            const thingsThatUseTheParamVideo: ActivitySubTypeName[] = ['cargarvideo', 'url'];
+            if (thingsThatUseTheParamVideo.includes(evalableType)) {
+              setContentSource(agendaInfo.video || null);
+            }
+
             if (theseAreLiveToo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('liveBroadcast');
             } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeName)) {
