@@ -4,6 +4,7 @@ import { message, Result, Spin, Upload } from 'antd';
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline';
 import { RcFile } from 'antd/lib/upload';
 import { deleteVideo } from '@/adaptors/gcoreStreamingApi';
+import useActivityType from '@/context/activityType/hooks/useActivityType';
 
 const urlUploadVideoGcore = 'https://webhook.evius.co/upload-video';
 
@@ -17,6 +18,7 @@ export interface ActivityVideoUploadFieldProps {
 
 function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
   // const { selectOption, typeOptions } = useTypeActivity();
+  const { setContentSource } = useActivityType();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleOnChange = async (info: any) => {
@@ -24,8 +26,9 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
     switch (status) {
       case 'done':
         // selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
-        // TODO: upload this stuffs
-        alert(`${response.video.iframe_url}*${response.video.id}`);
+        const finalURL = `${response.video.iframe_url}*${response.video.id}`;
+        setContentSource(finalURL);
+        console.debug('file uploaded to', finalURL);
         setIsLoading(false);
         break;
       case 'error':
