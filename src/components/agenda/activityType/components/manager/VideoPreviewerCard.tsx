@@ -1,3 +1,6 @@
+import * as React from 'react';
+import { useMemo } from 'react';
+
 import {
   Card,
   Typography,
@@ -24,6 +27,7 @@ import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
 import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
 import { SimplifiedActivityTypeValue } from '@/context/activityType/schema/structureInterfaces';
+import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 
 interface VideoPreviewerCardProps {
   type: SimplifiedActivityTypeValue,
@@ -54,23 +58,13 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     maxViewers,
   } = useContext(AgendaContext);
 
-  console.log('DATALIVE ===>', dataLive);
-  //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
-  const valideUrl = (url: string) => {
-    if (url.includes('Loading2')) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  console.debug('VideoPreviewerCard.dataLive:', dataLive);
 
-  //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
+  // Render the ifram or gCore component
   const renderPlayer = () => {
-    //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
-    let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
-    // console.log('🚀 debug ~ renderPlayer ~ visibleReactPlayer', visibleReactPlayer, urlVideo);
+    // Gets visibility status for the react player, and the url to render
+    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
 
-    //RENDERIZAR COMPONENTE
     return (
       <>
         {errorOcurred ? (
@@ -130,32 +124,24 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     );
   };
 
-  console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url);
+  console.debug('VideoPreviewerCard (99. data transmition):', dataLive?.live, dataLive?.hls_playlist_url);
 
-  //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
-  const filterData = data
-    ? data.toString()?.includes('https://vimeo.com/event/') || data?.toString().includes('https://youtu.be/')
-      ? data?.split('/')[data?.split('/').length - 1]
-      : data
-    : meeting_id
-    ? meeting_id
-    : null;
+  // Check IDs to split the YouTube or Vimeo URL
+  const filterData = useMemo(() => {
+    if (data) {
+      if (data.toString().includes('https://vimeo.com/event/') || data.toString().includes('https://youtu.be/'))
+        return data?.split('/')[data?.split('/').length - 1]
+      return data;
+    } else if (meeting_id) {
+      return meeting_id;
+    }
+    return null;
+  }, [meeting_id, data]);
 
   const handleDuration = (duration: number) => {
-    console.log('onDuration', duration);
+    console.debug('VideoPreviewerCard::onDuration:', duration);
     setDuration(duration);
   };
-
-  function videoDuration(seconds: number) {
-    var hour: number | string = Math.floor(seconds / 3600);
-    var minute: number | string = Math.floor((seconds / 60) % 60);
-    var second: number | string = seconds % 60;
-    hour = hour < 10 ? '0' + hour : hour;
-    minute = minute < 10 ? '0' + minute : minute;
-    second = second < 10 ? '0' + second : second;
-    if (hour == 0) return minute + ':' + second;
-    return hour + ':' + minute + ':' + second;
-  }
 
   return (
     <Card
@@ -215,7 +201,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 props.type == 'reunión' ? (
                   'Sala de reuniones'
                 ) : props.type === 'Video' ? (
-                  videoDuration(duration)
+                  convertSecondsToHourFormat(duration)
                 ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
                   'Conexión externa'
                 ) : dataLive?.active ? (
