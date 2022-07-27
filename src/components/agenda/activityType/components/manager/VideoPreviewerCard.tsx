@@ -81,6 +81,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
         ) : (
           <>
             {visibleReactPlayer && (
+              // @ts-expect-error
               <ReactPlayer
                 playing={true}
                 loop={true}
@@ -111,6 +112,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             allowFullScreen
             onLoad={(e) => {
               if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
+                // @ts-expect-error
                 setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
               }
             }}></iframe>

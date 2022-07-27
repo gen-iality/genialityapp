@@ -16,6 +16,7 @@ import {
   ActivitySubTypeKey,
   GeneralTypeName,
   GeneralTypeValue,
+  ActivitySubTypeName,
 } from '@/context/activityType/schema/structureInterfaces';
 import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
@@ -105,7 +106,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
   const handleConfirm = () => {
     console.debug('confirm the selectedType:', selectedType);
     // setActivityContentType(selectedType || null);
-    saveActivityContent(selectedType || null);
+    saveActivityContent(selectedType as ActivitySubTypeName);
   }
 
   const handleInput = (text: string) => {
@@ -142,7 +143,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
     )}
     {currentWidget !== undefined && (
     <ActivityContentModal
-      initialWidgetKey={activityContentType}
+      initialWidgetKey={activityContentType as ActivitySubTypeKey}
       visible={isModalShown}
       title={modalTitle}
       widget={currentWidget}
