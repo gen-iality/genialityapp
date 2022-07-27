@@ -121,6 +121,24 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
   };
 
+  const resetActivityType = async (type: ActivityTypeName) => {
+    if (!(cEvent?.value?._id)) {
+      console.error('ActivityTypeProvider.resetActivityType cannot get cEvent.value._id');
+      return;
+    }
+
+    if (!activityEdit) {
+      console.error('activityEdit (from AgendaContext) is none');
+      return;
+    }
+
+    console.debug('AT provider is reseting');
+
+    setIsDeletingActivityType(true);
+    setActivityContentType(null);
+    await editActivityType(cEvent.value._id, activityEdit, type);
+  }
+
   const saveActivityContent = async (type?: ActivitySubTypeName) => {
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
@@ -284,6 +302,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setActivityType,
     saveActivityType,
     deleteActivityType,
+    resetActivityType,
     setContentSource,
     saveActivityContent,
     setActivityContentType,
@@ -333,6 +352,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('meeting');
             } else {
+              console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);
             }
           }

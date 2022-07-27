@@ -28,6 +28,7 @@ export type ActivityTypeContextType = {
   setContentSource: (input: string) => void,
   saveActivityType: () => void,
   deleteActivityType: () => void,
+  resetActivityType: (type: ActivityTypeName) => void,
   saveActivityContent: (type?: ActivitySubTypeName) => void,
   translateActivityType: (type: string) => SimplifiedActivityTypeValue | null,
   visualizeVideo: (url: string | null, created_at: string | null, name: string | null) => void,
