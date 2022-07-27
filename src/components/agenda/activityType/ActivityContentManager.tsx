@@ -17,11 +17,11 @@ import VideoPreviewerCard from './components/manager/VideoPreviewerCard';
 import TransmitionStatusCard from './components/manager/TransmitionStatusCard';
 import VideoListCard from './components/manager/VideoListCard';
 import LoadingActivityType from './components/LoadingActivityType';
-import GoToEviusMeet from '../typeActivity/components/GoToEviusMeet';
 import TransmitionOptionsCard from './components/manager/TransmitionOptionsCard';
-import CardShareLinkEviusMeet from '../typeActivity/components/CardShareLinkEviusMeet';
-import CardParticipantRequests from '../typeActivity/components/CardParticipantRequests';
-import CardRTMP from '../typeActivity/components/CardRTMP';
+import ParticipantRequestsCard from './components/manager/ParticipantRequestsCard';
+import RTMPCard from './components/manager/RTMPCard';
+import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard';
+import GoToMeet from './components/manager/GoToMeet';
 
 export interface ActivityContentManagerProps {
   activityName: string,
@@ -143,7 +143,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
           {(type == 'reunión' || (type == 'EviusMeet' && dataLive?.active)) && (
             <Col span={10}>
-              <GoToEviusMeet type={type} activityId={activityEdit} />
+              <GoToMeet type={type} activityId={activityEdit} />
             </Col>
           )}
 
@@ -171,24 +171,24 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
           {type == 'reunión' ? (
             <Col span={24}>
-              <CardShareLinkEviusMeet activityId={activityEdit} />
+              <ShareMeetLinkCard activityId={activityEdit} />
             </Col>
           ) : (
             type == 'EviusMeet' && dataLive?.active && (
               <Col span={24}>
-                <CardShareLinkEviusMeet activityId={activityEdit} />
+                <ShareMeetLinkCard activityId={activityEdit} />
               </Col>
             )
           )}
 
           {type == 'EviusMeet' && dataLive?.active && (
             <Col span={24}>
-              <CardParticipantRequests request={request} setViewModal={setViewModal} />
+              <ParticipantRequestsCard request={request} setViewModal={setViewModal} />
             </Col>
           )}
 
           {(type == 'Transmisión' || type == 'EviusMeet') && dataLive?.active && (
-            <Col span={24}><CardRTMP /></Col>
+            <Col span={24}><RTMPCard/></Col>
           )}
 
           {(!!roomStatus || type === 'reunión' || type === 'Video') && (
