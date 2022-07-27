@@ -6,9 +6,10 @@ import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi'
 import { AgendaApi } from '@/helpers/request';
 import { CurrentEventContext } from '@/context/eventContext';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
+import { SimplifiedActivityTypeValue } from '@/context/activityType/schema/structureInterfaces';
 
 export interface TransmitionOptionsCardProps {
-  type: string,
+  type: SimplifiedActivityTypeValue,
 };
 
 const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
@@ -17,7 +18,12 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   } = props;
 
   const [isDeleting, setIsDeleting] = useState(false);
-  const { setActivityContentType, executer_stopStream, is } = useActivityType();
+  const {
+    is,
+    setActivityContentType,
+    executer_stopStream,
+    resetActivityType,
+  } = useActivityType();
 
   const {
     dataLive,
@@ -31,8 +37,10 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const cEvent: any = useContext(CurrentEventContext);
 
   const deleteTransmition = async () => {
+    console.debug('deleteTransmition is called');
     deleteLiveStream(meeting_id);
-    await deleteTypeActivity();
+    // await deleteTypeActivity();
+    await resetActivityType('liveBroadcast');
   };
 
   const refActivity = useMemo(() =>(
@@ -52,7 +60,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     return 'eliminar video';
   }, [type])
 
-  const handleConfirm = async () => {
+  const handleConfirmDeleting = async () => {
     setIsDeleting(true);
     if (isVisible && meeting_id) {
       await deleteAllVideos(dataLive.name, meeting_id);
@@ -61,9 +69,15 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     }
     await removeViewers(refActivityViewers);
     await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
-    await deleteTypeActivity();
+    // await deleteTypeActivity();
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
     setIsDeleting(false);
+    switch (type) {
+      case 'Video':
+        await resetActivityType('video');
+        break;
+    }
+    // Check type, await resetActivityType('liveBroadcast');
   };
 
   return (
@@ -90,7 +104,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
             {
               <Popconfirm
                 title={`¿Está seguro que desea ${deletingMessage}?`}
-                onConfirm={handleConfirm}
+                onConfirm={handleConfirmDeleting}
                 onCancel={() => console.log('cancelado')}
                 okText='Sí'
                 cancelText='No'>
