@@ -138,6 +138,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setIsDeletingActivityType(true);
     setActivityContentType(null);
     await editActivityType(cEvent.value._id, activityEdit, type);
+    setIsDeletingActivityType(false);
   }
 
   const saveActivityContent = async (type?: ActivitySubTypeName) => {
