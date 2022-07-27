@@ -8,7 +8,7 @@ export const renderTypeComponent = (type, value) => {
     case 'text':
       return <div dangerouslySetInnerHTML={{ __html: value }} />;
     case 'video':
-      return <ReactPlayer controls width={'100%'} height={'350'} style={{}} url={value} />;
+      return <ReactPlayer controls width='100%' height={null} style={{ aspectRatio: '16/9' }} url={value} />;
     default:
       return <div></div>;
   }

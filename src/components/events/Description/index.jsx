@@ -2,29 +2,24 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  FullscreenOutlined,
   PlusOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
 import {
-  Affix,
   Avatar,
   Button,
   Card,
   Col,
   ConfigProvider,
-  Divider,
-  Drawer,
   Empty,
   Image,
   message,
+  notification,
   Popconfirm,
   Popover,
   Row,
   Space,
-  Spin,
   Table,
-  Tag,
   Tooltip,
   Typography,
 } from 'antd';
@@ -38,11 +33,15 @@ import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import ImageAreaIcon from '@2fd/ant-design-icons/lib/ImageArea';
 import CardTextIcon from '@2fd/ant-design-icons/lib/CardText';
 import VideoBoxtIcon from '@2fd/ant-design-icons/lib/VideoBox';
+import ContentSaveAlertIcon from '@2fd/ant-design-icons/lib/ContentSaveAlert';
+import ContentSaveCheckIcon from '@2fd/ant-design-icons/lib/ContentSaveCheck';
+import FitToScreenIcon from '@2fd/ant-design-icons/lib/FitToScreen';
 import ModalVideoComponent from './componets/modalVideo';
 import ReactPlayer from 'react-player';
 import { EventsApi } from '@/helpers/request';
 import { CurrentEventContext } from '@/context/eventContext';
 import DrawerPreview from './componets/drawerPreview';
+import Loading from '@/components/profile/loading';
 
 const DescriptionDynamic = () => {
   //permite guardar el listado de elmentos de la descripción
@@ -50,10 +49,10 @@ const DescriptionDynamic = () => {
   const [type, setType] = useState(null);
   const [item, setItem] = useState(null);
   const [focus, setFocus] = useState(false);
-  const [loading, setLoading]=useState(false);
-  const [isOrderUpdate, setIsOrderUpdate]=useState(false);
-  const [visibleDrawer,setVisibleDrawer]=useState(false);
-  const cEvent= useContext(CurrentEventContext);
+  const [loading, setLoading] = useState(false);
+  const [isOrderUpdate, setIsOrderUpdate] = useState(false);
+  const [visibleDrawer, setVisibleDrawer] = useState(false);
+  const cEvent = useContext(CurrentEventContext);
 
   const editItem = (item) => {
     setItem(item);
@@ -165,7 +164,7 @@ const DescriptionDynamic = () => {
             />
           );
         case 'text':
-          return <div dangerouslySetInnerHTML={{ __html: value }} />;
+          return <div style={{ maxHeight: '250px', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: value }} />;
         case 'video':
           return <ReactPlayer controls width={'100%'} height={'250px'} url={value} />;
         default:
@@ -186,6 +185,13 @@ const DescriptionDynamic = () => {
       setIsOrderUpdate(true);
       setDataSource(newData);
     }
+  };
+
+  const openNotification = () => {
+    notification.info({
+      message: 'No hay más cambios que guardar',
+      placement: 'bottomRight',
+    });
   };
 
   const DraggableContainer = (props) => (
@@ -270,35 +276,34 @@ const DescriptionDynamic = () => {
     </Space>
   );
 
-  useEffect(()=>{
-    if(!cEvent.value) return;
-    obtenerDescriptionSections()
+  useEffect(() => {
+    if (!cEvent.value) return;
+    obtenerDescriptionSections();
+  }, [cEvent.value]);
 
-  },[cEvent.value])
-
-  const obtenerDescriptionSections=async ()=>{
+  const obtenerDescriptionSections = async () => {
     setLoading(true);
-   const sections= await EventsApi.getSectionsDescriptions(cEvent.value._id)
-   let dataOrder=sections.data.sort((a,b)=>a.index-b.index);
-   setDataSource(dataOrder|| []);
-   setLoading(false);
-  }
+    const sections = await EventsApi.getSectionsDescriptions(cEvent.value._id);
+    let dataOrder = sections.data.sort((a, b) => a.index - b.index);
+    setDataSource(dataOrder || []);
+    setLoading(false);
+  };
 
-  const addSectionToDescription=async (section)=>{
-    const sectionEvent={...section, event_id:cEvent.value._id}
-    const saveSection=await EventsApi.saveSections(sectionEvent);
-    if(saveSection?._id){
+  const addSectionToDescription = async (section) => {
+    const sectionEvent = { ...section, event_id: cEvent.value._id };
+    const saveSection = await EventsApi.saveSections(sectionEvent);
+    if (saveSection?._id) {
       return true;
     }
     return false;
-  }
+  };
 
   const obtenerIndex = () => {
     let data = dataSource?.sort((a, b) => a.index > b.index);
     return data?.length + 1;
   };
 
-  const updateItem = async (item) => { 
+  const updateItem = async (item) => {
     const newList = dataSource.map((data) => {
       if (data.index == item?.index) {
         return item;
@@ -306,18 +311,20 @@ const DescriptionDynamic = () => {
         return data;
       }
     });
-    const sectionUpdate=await EventsApi.updateSectionOne(item._id,item);
+    const sectionUpdate = await EventsApi.updateSectionOne(item._id, item);
     return newList;
   };
 
   const deleteItem = async (item) => {
     let newList = dataSource.filter((data) => data._id !== item._id);
-   const resp= await EventsApi.deleteSections(item._id);    
+    const resp = await EventsApi.deleteSections(item._id);
     newList = updateIndexTotal(newList);
-    await Promise.all(newList.map(async(item)=>{
-      const updateIndexSections=await EventsApi.updateSectionOne(item._id,item);
-    }))
-    setDataSource(newList);     
+    await Promise.all(
+      newList.map(async (item) => {
+        const updateIndexSections = await EventsApi.updateSectionOne(item._id, item);
+      })
+    );
+    setDataSource(newList);
   };
 
   //PERMITE ACTUALIZAR LOS INDICES
@@ -336,34 +343,89 @@ const DescriptionDynamic = () => {
     if (item && !isNumber(item.index)) {
       const itemIndex = { ...item, index: obtenerIndex() };
       newList = [...dataSource, itemIndex];
-      resp = await  addSectionToDescription(itemIndex)
+      resp = await addSectionToDescription(itemIndex);
     } else {
       resp = updateItem(item);
     }
-    if(resp){
-      setTimeout(async ()=> await obtenerDescriptionSections(),300);     
+    if (resp) {
+      setTimeout(async () => await obtenerDescriptionSections(), 300);
       setItem(null);
-    }else{
-      message.error("Error al guardar la sección")
+    } else {
+      message.error('Error al guardar la sección');
     }
-    setLoading(false)
-    
+    setLoading(false);
   };
 
-  const saveOrder=async ()=>{   
+  const saveOrder = async () => {
     const newList = updateIndexTotal(dataSource);
-    await Promise.all(newList.map(async(item)=>{
-      const updateIndexSections=await EventsApi.updateSectionOne(item._id,item);
-    }));
-    setIsOrderUpdate(false)
-    }
+    setLoading(true);
+    await Promise.all(
+      newList.map(async (item) => {
+        const updateIndexSections = await EventsApi.updateSectionOne(item._id, item);
+      })
+    );
+    setIsOrderUpdate(false);
+    setLoading(false);
+  };
   const tableFunction = useCallback(() => {
-    return (
-      !loading ?<Table
-        id='tableDescription'
+    return !loading ? (
+      <Table
+        className='viewReactQuill'
         tableLayout='auto'
         showHeader={false}
-        title={()=><Button onClick={()=>setVisibleDrawer(true)} icon={<FullscreenOutlined />} />}
+        /* title={() => (
+          <Row gutter={[16, 16]} justify='end' align='middle'>
+            <Col>
+              <Popover content={content} title={null} trigger={'focus'} overlayInnerStyle={{ padding: '20px' }}>
+                <Tooltip title='Agregar'>
+                  <Button
+                    onBlur={(e) => setFocus(false)}
+                    onFocus={(e) => setFocus(true)}
+                    shape='default'
+                    icon={
+                      <PlusOutlined
+                        className={`animate__animated animate__heartBeat animate__slow ${
+                          focus ? '' : 'animate__infinite'
+                        }`}
+                        style={{ fontSize: '30px', color: '#2698FA' }}
+                      />
+                    }
+                    style={{ height: '60px', width: '60px' }}
+                  />
+                </Tooltip>
+              </Popover>
+            </Col>
+            <Col>
+              <Tooltip title={isOrderUpdate ? 'Guardar cambios' : 'Cambios guardados'}>
+                <Button
+                  loading={loading}
+                  className='animate__animated animate__bounceIn'
+                  style={{ height: '60px', width: '60px' }}
+                  onClick={isOrderUpdate ? saveOrder : openNotification}
+                  icon={
+                    isOrderUpdate ? (
+                      <ContentSaveAlertIcon
+                        className='animate__animated animate__tada animate__slow animate__infinite '
+                        style={{ fontSize: '30px', color: '#FAAD14' }}
+                      />
+                    ) : (
+                      <ContentSaveCheckIcon style={{ fontSize: '30px', color: '#52C41A' }} />
+                    )
+                  }
+                />
+              </Tooltip>
+            </Col>
+            <Col>
+              <Tooltip title='Vista previa'>
+                <Button
+                  style={{ height: '60px', width: '60px' }}
+                  onClick={() => setVisibleDrawer(true)}
+                  icon={<FitToScreenIcon style={{ fontSize: '30px' }} />}
+                />
+              </Tooltip>
+            </Col>
+          </Row>
+        )} */
         style={{ userSelect: 'none', width: '100%' }}
         pagination={false}
         dataSource={dataSource}
@@ -375,34 +437,81 @@ const DescriptionDynamic = () => {
             row: DraggableBodyRow,
           },
         }}
-      />:<Spin />
+      />
+    ) : (
+      <Row style={{ height: '100%' }}>
+        <Loading />
+      </Row>
     );
-  }, [dataSource,loading]);
+  }, [dataSource, loading]);
   return (
     <Row gutter={[16, 16]}>
       <Col span={24}>
-      {isOrderUpdate && <Button onClick={saveOrder} >Guardar Orden</Button>}
         <Row justify='center' align='middle'>
           <ConfigProvider renderEmpty={() => <Empty />}>{tableFunction()}</ConfigProvider>
         </Row>
       </Col>
-      <Col span={24}>
-        <Row justify='center' align='middle'>
-          <Popover content={content} title={null} trigger={'focus'} overlayInnerStyle={{ padding: '20px' }}>
-            <Divider>
+
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          padding: '2px',
+          borderRadius: '5px',
+        }}>
+        <Row gutter={[16, 16]} justify='end' align='middle'>
+          <Col>
+            <Popover content={content} title={null} trigger={'focus'} overlayInnerStyle={{ padding: '20px' }}>
+              <Tooltip title='Agregar'>
+                <Button
+                  onBlur={(e) => setFocus(false)}
+                  onFocus={(e) => setFocus(true)}
+                  shape='default'
+                  icon={
+                    <PlusOutlined
+                      className={`animate__animated animate__heartBeat animate__slow ${
+                        focus ? '' : 'animate__infinite'
+                      }`}
+                      style={{ fontSize: '30px', color: '#2698FA' }}
+                    />
+                  }
+                  style={{ height: '60px', width: '60px' }}
+                />
+              </Tooltip>
+            </Popover>
+          </Col>
+          <Col>
+            <Tooltip title={isOrderUpdate ? 'Guardar cambios' : 'Cambios guardados'}>
               <Button
-                onBlur={(e) => setFocus(false)}
-                onFocus={(e) => setFocus(true)}
-                className={`animate__animated animate__heartBeat animate__slow ${focus ? '' : 'animate__infinite'}`}
-                type='dashed'
-                shape='default'
-                icon={<PlusOutlined style={{ fontSize: '30px', color: '#2698FA' }} />}
-                style={{ height: '60px', width: '60px', position: 'sticky', bottom: '10px' }}
+                loading={loading}
+                className='animate__animated animate__bounceIn'
+                style={{ height: '60px', width: '60px' }}
+                onClick={isOrderUpdate ? saveOrder : openNotification}
+                icon={
+                  isOrderUpdate ? (
+                    <ContentSaveAlertIcon
+                      className='animate__animated animate__tada animate__slow animate__infinite '
+                      style={{ fontSize: '30px', color: '#FAAD14' }}
+                    />
+                  ) : (
+                    <ContentSaveCheckIcon style={{ fontSize: '30px', color: '#52C41A' }} />
+                  )
+                }
               />
-            </Divider>
-          </Popover>
+            </Tooltip>
+          </Col>
+          <Col>
+            <Tooltip title='Vista previa'>
+              <Button
+                style={{ height: '60px', width: '60px' }}
+                onClick={() => setVisibleDrawer(true)}
+                icon={<FitToScreenIcon style={{ fontSize: '30px' }} />}
+              />
+            </Tooltip>
+          </Col>
         </Row>
-      </Col>
+      </div>
       <DrawerPreview dataSource={dataSource} visibleDrawer={visibleDrawer} setVisibleDrawer={setVisibleDrawer} />
       <ModalImageComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />
       <ModalTextComponent type={type} setType={setType} initialValue={item} saveItem={saveItem} />

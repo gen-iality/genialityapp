@@ -52,7 +52,6 @@ const ModalVideoComponent = ({ type, setType, saveItem, initialValue }) => {
         <Col span={24}>
           <Form style={{ width: '100%' }} layout='vertical' ref={formRef}>
             <Form.Item
-              name='url'
               style={{ marginBottom: '0px' }}
               rules={[
                 { type: 'url', message: 'Ingrese una url válida' },

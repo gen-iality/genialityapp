@@ -355,7 +355,7 @@ iframe {
 
 // Reglas para poder visualizar los estilos por defecto de ReactQuill en una tabla de Antd
 
-#tableDescription {
+.viewReactQuill {
   .ql-size-huge {
     font-size: 2.5em !important;
   }
@@ -411,6 +411,8 @@ iframe {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  max-height: 250px;
+  overflow: hidden;
 }
 
 .row-dragging td {
