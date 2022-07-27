@@ -20,7 +20,15 @@ export default function useDeleteActivity () {
       const configuration = await service.getConfiguration(eventId, activityId);
       if (configuration && configuration.typeActivity === 'eviusMeet') {
         await deleteAllVideos(activityName, configuration.meeting_id);
-        await deleteLiveStream(configuration.meeting_id);
+        try {
+          await deleteLiveStream(configuration.meeting_id);
+        } catch(err) {
+          DispatchMessageService({
+            type: 'error',
+            msj: handleRequestError(err).message,
+            action: 'show',
+          });
+        }
       }
       await fireRealtime.ref(refActivity).remove();
       await fireRealtime.ref(refActivityViewers).remove();
