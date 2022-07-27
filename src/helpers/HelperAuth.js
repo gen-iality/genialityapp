@@ -55,7 +55,7 @@ export const checkinAttendeeInEvent = (attende, eventId) => {
     if (doc.exists) {
       if (!doc.data().checked_in) {
         /** We register the checkIn by calling the back */
-        saveCheckInAttendee({ _id: attende._id, checked: true, notification: false });
+        saveCheckInAttendee({ _id: attende._id, checked: true, notification: false, type: 'Virtual' });
       }
     }
   });

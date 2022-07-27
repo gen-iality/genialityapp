@@ -10,11 +10,7 @@ import { Col, Row, Layout, Card, Grid, BackTop, Avatar } from 'antd';
 
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import ModalFeedback from '../authentication/ModalFeedback';
-import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 import ModalPermission from '../authentication/ModalPermission';
-import EventLanding from '../events/eventLanding';
-import ModalRegister from '../events/Landing/modalRegister';
 import InfoEvent from '../shared/infoEvent';
 import ActivityBlock from './block/activityBlock';
 import CountdownBlock from './block/countdownBlock';
@@ -31,7 +27,7 @@ const ViewPrelanding = (props) => {
   const cEventContext = useContext(CurrentEventContext);
   const cUser = useContext(CurrentUserContext);
   const cEventUser = useContext(CurrentEventUserContext);
-  const { register, setRegister } = useHelper();
+  const { setIsPrelanding } = useHelper();
 
   //History
   const history = useHistory();
@@ -48,11 +44,11 @@ const ViewPrelanding = (props) => {
 
   //PERMITE INGRESAR A LA LANDING DEL EVENTO
   useEffect(() => {
+    setIsPrelanding(true);
     // window.sessionStorage.setItem('message', true);
     if (!cEventContext.value || !cUser.value || !cEventUser.value) return;
     window.sessionStorage.setItem('session', true);
-    console.log('MATCH URL==>', matchUrl);
-    // history.replace(props.matchUrl)
+    history.replace(`/landing/${cEventContext.value?._id}`);
   }, [cEventContext, cUser, cEventUser]);
 
   /**DYNAMIC STYLES */
@@ -120,14 +116,8 @@ const ViewPrelanding = (props) => {
           backgroundImage: `url(${cBackgroundImage})`,
           backgroundAttachment: 'fixed',
         }}>
-        {/**MODALES DE LOGIN */}
-        <ModalLoginHelpers />
+        {/**MODAL INSCRIPCION EN EL EVENTO*/}
         <ModalPermission />
-        <ModalFeedback />
-        {/*update: modal de actualizar || register: modal de registro */}
-        {register !== null && (
-          <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
-        )}
         <Row gutter={[0, 16]} style={screens.xs ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
           <Col id='Franja de titulo' span={24}>
             <Row>

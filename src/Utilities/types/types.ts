@@ -57,15 +57,17 @@ export type FormEnrollAttendeeToEventPropsTypes = {
   checkInAttendeeCallbak: (attendee: any) => void;
   /** Indicates if the component will be used in the cms or in the landing */
   visibleInCms: boolean;
+  eventType: string;
   submitIcon: ReactNode;
 };
 export type saveCheckInAttendeePropsTypes = {
   _id: string;
   checked: boolean;
-  reloadComponent?: () => void;
+  reloadComponent?: (response: any) => void;
   setAttemdeeCheckIn?: (state: any) => void;
   checkInAttendeeCallbak?: (attendee: any) => void;
   notification?: boolean;
+  checkInType?: string;
 };
 
 export type aditionalFieldsPropsTypes = {
@@ -81,6 +83,12 @@ export type updateFieldsVisibilityPropsTypes = {
 };
 export type AttendeeCheckInPropsTypes = {
   attendee: any;
-  reloadComponent?: () => any;
+  reloadComponent?: (response: any) => void;
   checkInAttendeeCallbak: (attendee: any) => void;
+};
+
+export type AttendeeInformation = {
+  checkedin_type: string | null;
+  properties: {};
+  _id: string;
 };

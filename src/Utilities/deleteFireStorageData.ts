@@ -7,6 +7,20 @@ export const deleteFireStorageData = async (fileUrl: string) => {
     // Create a reference to the file to delete
     let fileRef = fireStorage.refFromURL(fileUrl);
 
+    /** Skip template directory */
+    const fileRefPath: string = fileRef.fullPath;
+    const nameFileRefDirectory: string = fileRefPath.split('/')[0];
+    if (nameFileRefDirectory === 'template') {
+      // File deleted successfully
+      theFileWasDeleted = 'file deleted successfully';
+      DispatchMessageService({
+        type: 'success',
+        msj: theFileWasDeleted,
+        action: 'show',
+      });
+      return;
+    }
+
     // Delete the file using the delete() method
     try {
       await fileRef

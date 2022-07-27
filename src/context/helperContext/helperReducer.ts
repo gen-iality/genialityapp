@@ -71,16 +71,17 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
 
     case 'eventIsActive':
       const eventId = action.eventId;
+      /** RESTRICIONES quitar negacion en action.eventIsActive para dejar el flujo de manera correcta*/
       if (eventId) {
         return {
           ...state,
           // @ts-ignore: Unreachable code error
-          eventIsActive: { ...state.eventIsActive, [eventId]: action.eventIsActive },
+          eventIsActive: { ...state.eventIsActive, [eventId]: !action.eventIsActive },
         };
       }
       return {
         ...state,
-        eventIsActive: action.eventIsActive,
+        eventIsActive: !action.eventIsActive,
       };
 
     //   case 'selectLiveBroadcast':

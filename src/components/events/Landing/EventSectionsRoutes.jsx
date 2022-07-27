@@ -83,10 +83,11 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value && cUser.value) {
       initUserPresence(props.cEvent.value._id);
     }
-    let { isBlocked, formatDate } = useBlockedEventValidator(props.cEvent, cUser);
-    if (isBlocked) {
-      history.push(`/blockedEvent/${props.cEvent.value._id}`, formatDate);
-    }
+    /** RESTRICIONES */
+    // let { isBlocked, formatDate } = useBlockedEventValidator(props.cEvent, cUser);
+    // if (isBlocked) {
+    //   history.push(`/blockedEvent/${props.cEvent.value._id}`, formatDate);
+    // }
   }, [props.cEvent.value, cUser.value]);
 
   useEffect(() => {
@@ -157,7 +158,7 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     if (cEventUser.value && props.cEvent.value) {
       // console.log(props.cEvent.value.type_event)
-      if (props.cEvent.value.type_event === 'onlineEvent') {
+      if (props.cEvent.value.type_event !== 'physicalEvent') {
         checkinAttendeeInEvent(cEventUser.value, props.cEvent.value._id);
       }
     }

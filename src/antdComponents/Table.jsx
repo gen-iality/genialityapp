@@ -315,7 +315,7 @@ const Table = (props) => {
         columns={takeOriginalHeader ? header : headerState}
         dataSource={list}
         size='small'
-        rowKey={(record) => record.index}
+        // rowKey={(record) => record.index}
         loading={loading}
         pagination={pagination}
         components={components}
@@ -330,7 +330,6 @@ const Table = (props) => {
           </Row>
         )}
         scroll={scroll}
-        // footer={footer}
         footer={() => footer}
       />
     </Suspense>

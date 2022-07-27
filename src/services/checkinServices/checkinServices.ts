@@ -119,12 +119,13 @@ export const saveCheckInAttendee = async ({
   setAttemdeeCheckIn,
   checkInAttendeeCallbak,
   notification = true,
+  checkInType = 'Virtual',
 }: saveCheckInAttendeePropsTypes) => {
   let response: any;
 
   try {
     if (checked) {
-      response = await TicketsApi.addCheckIn(_id);
+      response = await TicketsApi.addCheckIn(_id, checkInType);
       if (notification)
         DispatchMessageService({
           type: 'success',
@@ -145,7 +146,7 @@ export const saveCheckInAttendee = async ({
     if (checkInAttendeeCallbak) checkInAttendeeCallbak(response);
     /** If the component has a reload and sends it, we execute it */
     if (reloadComponent) {
-      reloadComponent();
+      reloadComponent(response);
       if (setAttemdeeCheckIn) setAttemdeeCheckIn(response.checked_in);
     }
   } catch (error) {

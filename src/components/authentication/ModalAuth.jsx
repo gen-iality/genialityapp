@@ -39,7 +39,14 @@ const ModalAuth = (props) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
-  let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
+  let {
+    handleChangeTypeModal,
+    typeModal,
+    controllerLoginVisible,
+    helperDispatch,
+    currentAuthScreen,
+    isPrelanding,
+  } = useHelper();
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
@@ -68,8 +75,9 @@ const ModalAuth = (props) => {
           break;
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setmodalVisible(true);
-          helperDispatch({ type: 'showRegister', visible: true });
+          //COMENTADO POR AHORA YA ABRE EL MODAL AUTOMÁTICAMENTE AL LLEGAR A LA PRELANDING
+          //setmodalVisible(true);
+          //helperDispatch({ type: 'showRegister', visible: true });
           break;
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
@@ -375,7 +383,7 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                {isHome() ? (
+                {isHome() && !isPrelanding ? (
                   <RegisterUser
                     screens={screens}
                     stylePaddingMobile={stylePaddingMobile}

@@ -1,15 +1,51 @@
 import moment from 'moment';
 
 const equivalentToADayInMinutes = 1440;
-const equivalentToAMinute = 60;
+const equivalentToAHourInMinute = 60;
 
 interface eventProps {
   hour_start?: string;
   date_start?: string;
   date_end?: string;
 }
+interface userConsumptionProps {
+  start_date?: string;
+  end_date?: string;
+}
 
-/** @params function Allows you to disable the days before and after a certain range based on a start date and a number of additional minutes  */
+/** @function used for input type date in which the initial date of an event is captured, this will block days before an established date  */
+export const disabledStartDate = (endValue: any, streamingHours: number, userConsumption: userConsumptionProps) => {
+  /** by default the 365 days of the year are added, this is for users without a plan or with a basic plan. */
+  let aditionalDays = 365;
+  const startDate = new Date();
+
+  const userConsumptionEndDate = userConsumption?.end_date;
+
+  /** We look for the difference between the current day and the end of the user's plan */
+  if (userConsumptionEndDate) {
+    aditionalDays = moment(userConsumptionEndDate)
+      .add(1, 'day')
+      .diff(startDate, 'days');
+  }
+
+  if (!streamingHours) return;
+
+  const addExtraTime = moment(startDate).add(aditionalDays, 'days');
+
+  if (!endValue || !startDate) {
+    return false;
+  }
+
+  /** Disable of days after the limit of the event */
+  if (endValue.valueOf() > moment(addExtraTime).valueOf()) {
+    return true;
+  }
+
+  /** Disable of days before the limit of the event */
+  return endValue.valueOf() < startDate.valueOf();
+};
+
+/** @function used for input type date in which the end date of an event is captured, this will block days before and days after an established date  */
 export const disabledEndDate = (endValue: any, event: eventProps, streamingHours: number) => {
   const startDate = event?.date_start;
 
@@ -30,15 +66,59 @@ export const disabledEndDate = (endValue: any, event: eventProps, streamingHours
   return endValue.valueOf() < startDate.valueOf();
 };
 
-/** @params feature Allows you to disable the hours before and after a certain range based on a start time and number of additional minutes  */
-const disableHoursRange = (event: eventProps, streamingHours: number) => {
+export const disabledStartDateTime = (event: {}, streamingHours: number) => ({
+  disabledHours: () => disableStartHoursRange(event, streamingHours),
+  disabledMinutes: () => disableMinutesRange(event, streamingHours),
+  // disabledSeconds: () => [55, 56],
+});
+
+export const disabledEndDateTime = (event: {}, streamingHours: number) => ({
+  disabledHours: () => disableEndHoursRange(event, streamingHours),
+  disabledMinutes: () => disableMinutesRange(event, streamingHours),
+  // disabledSeconds: () => [55, 56],
+});
+
+/** @function Allows you to disable the hours before and after a certain range based on a start time and number of additional minutes  */
+const disableStartHoursRange = (event: eventProps, streamingHours: number) => {
   const result = [];
-  const hourStart = event?.hour_start;
-  const endDate = event?.date_end;
+  const currentDate = new Date();
+  /** We set the user's current time as the start time plus 30 minutes to ensure that when we finish creating the event, it does not start with the start and end dates blocked. */
+  const hourStart = new Date(new Date().setMinutes(currentDate.getMinutes() + 30));
+
   if (!streamingHours) return;
   /** We add 60 more minutes to discriminate the current time, this affects the free plans */
   //   if(){}
-  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAMinute, 'minutes');
+  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAHourInMinute, 'minutes');
+
+  const extraTimeHour = addExtraTime.hour();
+
+  /** We iterate to be able to discriminate the hours before the start */
+  for (let InitialHour = 0; InitialHour < moment(hourStart).hour(); InitialHour++) {
+    result.push(InitialHour);
+  }
+
+  return result;
+};
+
+/** @function Allows you to disable the hours before and after a certain range based on a start time and number of additional minutes  */
+const disableEndHoursRange = (event: eventProps, streamingHours: number) => {
+  const result = [];
+  let limit = 0;
+  const hourStart = event?.hour_start;
+
+  // const endDate = event?.date_end;
+  if (!streamingHours) return;
+  /** We add 60 more minutes to discriminate the current time, this affects the free plans */
+  //   if(){}
+  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAHourInMinute, 'minutes');
+  const extraTimeHour = addExtraTime.hour();
+
+  /** This validation is carried out, since when the start date was set to more than 8 at night, an end date cannot be chosen, since the for disables all the hours */
+  if (extraTimeHour <= 2) {
+    limit = 21;
+  } else {
+    limit = 24;
+  }
 
   /** We iterate to be able to discriminate the hours before the start */
   for (let InitialHour = 0; InitialHour < moment(hourStart).hour(); InitialHour++) {
@@ -46,13 +126,14 @@ const disableHoursRange = (event: eventProps, streamingHours: number) => {
   }
 
   /** We iterate to be able to discriminate the hours after the limit */
-  for (let finalHour = addExtraTime.hour(); finalHour < 24; finalHour++) {
+  for (let finalHour = extraTimeHour; finalHour < limit; finalHour++) {
     if (streamingHours <= 120) result.push(finalHour);
   }
 
   return result;
 };
-/** @params function  Disables minutes different from those established in an initial hour */
+
+/** @function Disables minutes different from those established in an initial hour */
 const disableMinutesRange = (event: eventProps, streamingHours: number) => {
   const result = [];
   const hour_start = event.hour_start;
@@ -71,10 +152,3 @@ const disableMinutesRange = (event: eventProps, streamingHours: number) => {
 
   return result;
 };
-
-export const disabledDateTime = (event: {}, streamingHours: number) => ({
-  //debugger: console.log('event => ', event),
-  disabledHours: () => disableHoursRange(event, streamingHours),
-  disabledMinutes: () => disableMinutesRange(event, streamingHours),
-  // disabledSeconds: () => [55, 56],
-});

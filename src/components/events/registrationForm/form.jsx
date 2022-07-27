@@ -172,7 +172,7 @@ const FormRegister = ({
     handleChangeTypeModal,
     setRegister,
     helperDispatch,
-    eventIsActive,
+    // eventIsActive,
   } = useHelper();
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
@@ -1222,7 +1222,8 @@ deberia ser solo la url de la imagen
                         style={{
                           display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
-                        disabled={!eventIsActive}
+                        // RESTRICCIONES
+                        // disabled={!eventIsActive}
                         type='primary'
                         htmlType='submit'>
                         {intl.formatMessage({ id: isRegister(initialValues, cEventUser) })}

@@ -61,6 +61,8 @@ export const useHelper = () => {
     HandleControllerLoginVisible,
     controllerLoginVisible,
     eventIsActive,
+    isPrelanding,
+    setIsPrelanding
   } = useContext(HelperContext);
 
   // const helperContextDebug = useContext(HelperContext);
@@ -125,5 +127,7 @@ export const useHelper = () => {
     HandleControllerLoginVisible,
     controllerLoginVisible,
     eventIsActive,
+    isPrelanding,
+    setIsPrelanding
   };
 };
