@@ -74,7 +74,12 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     setIsDeleting(false);
     switch (type) {
       case 'Video':
+        console.debug('TransmitionOptionsCard reset AT to video');
         await resetActivityType('video');
+        break;
+      case 'reunión':
+        console.debug('TransmitionOptionsCard reset AT to meeting2');
+        await resetActivityType('meeting2');
         break;
     }
     // Check type, await resetActivityType('liveBroadcast');
