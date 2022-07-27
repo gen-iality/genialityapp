@@ -270,7 +270,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             <Typography.Text strong>ID {props.type}:</Typography.Text>
             <Typography.Text
               copyable={{
-                tooltips: ['clic para copiar', 'ID copiado!!'],
+                tooltips: ['clic para copiar', '¡ID copiado!'],
                 text: `${filterData}`,
               }}>
               {filterData}
