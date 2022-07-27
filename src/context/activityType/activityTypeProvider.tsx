@@ -16,6 +16,15 @@ import { activitySubTypeKeys, activityTypeData, simplifiedActivityTypeMap } from
 // Temporally
 import { ExtendedAgendaDocumentType } from '@/components/agenda/types/AgendaDocumentType';
 
+const onlyActivityTypes: ActivityTypeName[] = [
+  'liveBroadcast',
+  'meeting2',
+  'video',
+];
+const theseAreLiveToo: ActivitySubTypeName[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
+const theseAreMeeting: ActivitySubTypeName[] = ['meeting'];
+const theseAreVideo: ActivitySubTypeName[] = ['url', 'cargarvideo'];
+
 function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const {
     saveConfig,
@@ -327,16 +336,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         // setDefinedType(agendaInfo.type?.name || null);
         const typeIncoming = agendaInfo.type?.name as ActivityTypeName;
 
-        const onlyActivityTypes: ActivityTypeName[] = [
-          'liveBroadcast',
-          'meeting2',
-          'video',
-        ];
-
-        const theseAreLiveToo: ActivitySubTypeName[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
-        const theseAreMeeting: ActivitySubTypeName[] = ['meeting'];
-        const theseAreVideo: ActivitySubTypeName[] = ['url', 'cargarvideo'];
-
         if (typeIncoming) {
           if (onlyActivityTypes.includes(typeIncoming)) {
             console.debug(typeIncoming, 'is in', onlyActivityTypes);
@@ -348,18 +347,16 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             setActivityContentType(typeIncoming as ActivitySubTypeName);
 
             // Load the content source from agenda
-            const evalableType = typeIncoming as ActivitySubTypeName;
-            const thingsThatUseTheParamVideo: ActivitySubTypeName[] = ['cargarvideo', 'url'];
-            if (thingsThatUseTheParamVideo.includes(evalableType)) {
-              setContentSource(agendaInfo.video || null);
-            }
 
             if (theseAreLiveToo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('liveBroadcast');
+              setContentSource(meetingId);
             } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('video');
+              setContentSource(agendaInfo.video || null);
             } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('meeting2');
+              setContentSource(meetingId);
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);
@@ -376,6 +373,13 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       request().then(() => {});
     }
   }, [activityEdit]);
+
+  useEffect(() => {
+    if (!contentSource && !!meetingId && !!activityContentType && (theseAreLiveToo.includes(activityContentType) || theseAreMeeting.includes(activityContentType))) {
+      console.debug('reset contentSource to meetingId:', meetingId);
+      setContentSource(meetingId);
+    }
+  }, [meetingId]);
 
   return (
     <ActivityTypeContext.Provider value={value}>
