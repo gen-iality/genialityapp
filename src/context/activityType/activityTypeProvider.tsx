@@ -258,6 +258,19 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     },
   });
 
+  const executer_stopStream = async () => {
+    setIsStoppingStreaming(true);
+    const liveStreamresponse = await stopLiveStream(meetingId);
+    setDataLive(liveStreamresponse);
+    setIsStoppingStreaming(false);
+    setHabilitarIngreso('ended_meeting_room');
+    await saveConfig({ habilitar_ingreso: 'ended_meeting_room' });
+  };
+
+  const visualizeVideo = (url: string | null, created_at: string | null, name: string | null) => {
+    url !== null ? setVideoObject({ url, created_at, name }) : setVideoObject(null);
+  };
+
   const value: ActivityTypeContextType = {
     // Flags
     is: {
@@ -282,6 +295,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     saveActivityContent,
     setActivityContentType,
     translateActivityType,
+    visualizeVideo,
+    executer_stopStream,
   };
 
   useEffect(() => {

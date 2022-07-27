@@ -30,6 +30,8 @@ export type ActivityTypeContextType = {
   deleteActivityType: () => void,
   saveActivityContent: (type?: ActivitySubTypeName) => void,
   translateActivityType: (type: string) => SimplifiedActivityTypeValue | null,
+  visualizeVideo: (url: string | null, created_at: string | null, name: string | null) => void,
+  executer_stopStream: () => void,
 };
 
 export type ActivityTypeProviderProps = {
