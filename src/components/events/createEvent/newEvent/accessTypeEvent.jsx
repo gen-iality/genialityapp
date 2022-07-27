@@ -25,23 +25,25 @@ const AccessTypeEvent = () => {
               minHeight: '235px',
             }}>
             <Space direction='vertical'>
-              <Typography.Text strong>Evento público con registro obligatorio</Typography.Text>
-              <Divider />
-              <Typography.Text type='secondary'>
-                <ul>
-                  <li>Tiene registro para todos.</li>
+              <div onClick={() => this.changetypeEvent(0)}>
+                <Typography.Text strong>Evento público con registro obligatorio</Typography.Text>
+                <Divider />
+                <Typography.Text type='secondary'>
+                  <ul>
+                    <li>Tiene registro para todos.</li>
 
-                  <li>Tiene inicio de sesión para todos.</li>
-                </ul>
-                {state.type === 0 && (
-                  <>
-                    <Divider />
-                    <Checkbox onChange={() => dispatch({ type: 'TYPE_AUTHENTICATION' })}>
-                      Registros sin autenticación de usuario
-                    </Checkbox>
-                  </>
-                )}
-              </Typography.Text>
+                    <li>Tiene inicio de sesión para todos.</li>
+                  </ul>
+                </Typography.Text>
+              </div>
+              {state.type === 0 && (
+                <>
+                  <Divider />
+                  <Checkbox onChange={() => dispatch({ type: 'TYPE_AUTHENTICATION' })}>
+                    Registros sin autenticación de usuario
+                  </Checkbox>
+                </>
+              )}
             </Space>
           </Card>
         </Badge>

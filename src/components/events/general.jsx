@@ -1173,7 +1173,6 @@ class General extends Component {
                             )
                           }>
                           <div
-                            onClick={() => this.changetypeEvent(0)}
                             style={{
                               border: '1px solid #D3D3D3',
                               borderRadius: '5px',
@@ -1182,15 +1181,17 @@ class General extends Component {
                               minHeight: '170px',
                             }}>
                             <Space direction='vertical'>
-                              <Text strong>Evento Público con Registro</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                <ul>
-                                  <li>Tiene registro para todos.</li>
-                                  <br />
-                                  <li>Tiene inicio de sesión para todos.</li>
-                                </ul>
-                              </Text>
+                              <div onClick={() => this.changetypeEvent(0)}>
+                                <Text strong>Evento Público con Registro</Text>
+                                <Divider />
+                                <Text type='secondary'>
+                                  <ul>
+                                    <li>Tiene registro para todos.</li>
+                                    <br />
+                                    <li>Tiene inicio de sesión para todos.</li>
+                                  </ul>
+                                </Text>
+                              </div>
                               {this.state.typeEvent === 0 && (
                                 <>
                                   <Divider />
