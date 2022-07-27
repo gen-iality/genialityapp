@@ -43,7 +43,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   const cEvent = useContext(CurrentEventContext);
   const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`;
   const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${activityEdit}`;
-  const { deleteActivityType } = useActivityType();
+  const { resetActivityType } = useActivityType();
 
   useEffect(() => {
     console.debug('meeting_id is', meeting_id, 'rn');
@@ -79,7 +79,8 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     await removeAllRequest(refActivity);
     await removeViewers(refActivityViewers);
     await deleteTypeActivity();
-    deleteActivityType(); // reset the content tab?
+    // Transmition stuffs must go back to 'liveBroadcast'
+    await resetActivityType('liveBroadcast'); // reset the content tab?
     setIsLoadingDelete(false);
   };
 
