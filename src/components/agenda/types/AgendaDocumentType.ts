@@ -33,4 +33,5 @@ export default interface AgendaDocumentType {
 
 export interface ExtendedAgendaDocumentType extends AgendaDocumentType {
   type?: { name: string },
+  video?: string | null,
 };
