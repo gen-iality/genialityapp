@@ -158,6 +158,9 @@ function AgendaEdit(props: AgendaEditProps) {
           requires_registration: agendaInfo.requires_registration || false
         });
 
+        // Save the activity name
+        agendaContext.setActivityName(agendaInfo.name);
+
         // Object.keys(this.state).map((key) => (agendaInfo[key] ? this.setState({ [key]: agendaInfo[key] }) : ''));
         // Edit the current activity ID from passed activity ID via route
         setCurrentActivityID(location.state.edit);
@@ -216,6 +219,8 @@ function AgendaEdit(props: AgendaEditProps) {
     });
 
     if (validForm()) {
+      // Save the activity name
+      agendaContext.setActivityName(formdata.name);
       try {
         const builtInfo = buildInfo();
         // setIsLoading(true);
