@@ -23,11 +23,11 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
   } = props;
 
   const handleSelectButton = () => {
-    console.log('somethingWasSelected', somethingWasSelected);
+    console.debug('somethingWasSelected', somethingWasSelected);
     if (somethingWasSelected) {
       onConfirm();
       onClose(true);
-      console.log('confirm & close modal');
+      console.debug('confirm & close modal');
     }
   };
 

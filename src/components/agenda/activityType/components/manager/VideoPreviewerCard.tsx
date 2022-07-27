@@ -90,12 +90,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 height='100%'
                 url={urlVideo}
                 controls={true}
-                // onStart={() => {
-                //   setErrorOcurred(false);
-                //   setErrorMessage('');
-                // }}
                 onError={(e) => {
-                  // console.log('🚀 debug ~ renderPlayer ~ e', props.type);
                   if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
                     setErrorOcurred(true);
                     setErrorMessage(e?.message);

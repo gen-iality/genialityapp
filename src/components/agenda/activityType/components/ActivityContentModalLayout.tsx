@@ -112,9 +112,9 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
     // The last type will be the current type
     setWidgetKey(key);
     // Reload the widget according to last type
-    console.log(newWidgetKeyStack, key);
+    console.debug(newWidgetKeyStack, key);
     const data = useActivityTypeData(key as GeneralTypeValue);
-    console.log('go back:', data);
+    console.debug('go back:', data);
     if (data) setWidgetData(data);
   };
 
@@ -145,12 +145,12 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       setWidgetKeyStack(newTypeStack);
       setWidgetKey(selected);
       // onSelectChange(selected)
-      console.log(`useActivityTypeData (for ${selected}):`);
+      console.debug(`useActivityTypeData (for ${selected}):`);
 
       // Get that card/form
-      console.log(newTypeStack, selected);
+      console.debug(newTypeStack, selected);
       const data = useActivityTypeData(selected);
-      console.log('go forward:', data);
+      console.debug('go forward:', data);
       if (data) setWidgetData(data);
 
       // TODO: detect if it was the end to close the modal, and confirm the data type

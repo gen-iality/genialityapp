@@ -3,12 +3,11 @@ import { useState } from 'react';
 import { message, Result, Spin, Upload } from 'antd';
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline';
 import { RcFile } from 'antd/lib/upload';
-// import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
 import { deleteVideo } from '@/adaptors/gcoreStreamingApi';
 
 const urlUploadVideoGcore = 'https://webhook.evius.co/upload-video';
 
-const handleBeforeUpload = (file: any) => {
+const handleBeforeUpload = (file: RcFile) => {
   return file;
 };
 
@@ -25,6 +24,7 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
     switch (status) {
       case 'done':
         // selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
+        // TODO: upload this stuffs
         alert(`${response.video.iframe_url}*${response.video.id}`);
         setIsLoading(false);
         break;

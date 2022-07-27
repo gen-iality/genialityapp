@@ -84,11 +84,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setIsSavingActivityType(true);
 
     try {
-      // const createTypeActivityBody: any = { name: activityType };
-      // const activityTypeDocument = await TypesAgendaApi
-      //   .create(cEvent.value._id, createTypeActivityBody);
-      // const agenda = await AgendaApi
-      //   .editOne({ type_id: activityTypeDocument._id }, activityEdit, cEvent.value._id);
       const agenda = await editActivityType(cEvent.value._id, activityEdit, activityType);
       console.debug('activity type changes:', agenda);
       console.debug('AT provider saves successfully');
@@ -253,8 +248,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       await saveConfig({ platformNew: 'wowza', type: activityContentType, data: data.id });
       setDataLive(data);
       activityDispatch({ type: 'meeting_created', meeting_id: data.id });
-      // Invalidate and refetch
-      //queryClient.invalidateQueries('todos')
     },
   });
 

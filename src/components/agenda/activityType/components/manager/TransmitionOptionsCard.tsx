@@ -62,8 +62,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     await removeViewers(refActivityViewers);
     await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
     await deleteTypeActivity();
-    // toggleActivitySteps('initial');
-    setActivityContentType(null);
+    setActivityContentType(null); // last "toggleActivitySteps('initial')";
     setIsDeleting(false);
   };
 
