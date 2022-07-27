@@ -63,6 +63,9 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   // Render the ifram or gCore component
   const renderPlayer = () => {
     // Gets visibility status for the react player, and the url to render
+    if (!data) return (
+      <><Spin/><p>Esperando recurso...</p></>
+    );
     const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
 
     return (
