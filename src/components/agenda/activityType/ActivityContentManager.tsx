@@ -98,6 +98,12 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     getViewers(refActivityViewers);
   }, []);
 
+  if (!type) {
+    return (
+      <Typography.Title>Tipo de contenido no soportado aún</Typography.Title>
+    );
+  }
+
   return (
     <>
     <pre>
@@ -109,7 +115,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     <Row gutter={[16, 16]}>
       <Col span={10}>
         <Affix offsetTop={80}>
-          {type && <VideoPreviewerCard type={type} activityName={props.activityName} />}
+          <VideoPreviewerCard type={type} activityName={props.activityName} />
         </Affix>
       </Col>
 
@@ -149,7 +155,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
           {(((type === 'EviusMeet' || type === 'Transmisión') && dataLive?.active) || (type !== 'EviusMeet' && type !== 'Transmisión')) && (
             <Col span={type !== 'EviusMeet' && type !== 'reunión' ? 24 : 14}>
-              {type && <TransmitionOptionsCard type={type} />}
+              <TransmitionOptionsCard type={type} />
             </Col>
           )}
 
