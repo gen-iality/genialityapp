@@ -1,4 +1,7 @@
 import { CurrentEventContext } from '@/context/eventContext';
+import { CurrentEventUserContext } from '@/context/eventUserContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { CurrentUserContext } from '@/context/userContext';
 import { SectionsPrelanding } from '@/helpers/constants';
 import { EventsApi } from '@/helpers/request';
 import { ArrowUpOutlined } from '@ant-design/icons';
@@ -6,7 +9,13 @@ import { Col, Row, Layout, Card, Grid, BackTop, Avatar } from 'antd';
 /** ant design */
 
 import { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import ModalFeedback from '../authentication/ModalFeedback';
+import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
+import ModalPermission from '../authentication/ModalPermission';
 import EventLanding from '../events/eventLanding';
+import ModalRegister from '../events/Landing/modalRegister';
+import InfoEvent from '../shared/infoEvent';
 import ActivityBlock from './block/activityBlock';
 import CountdownBlock from './block/countdownBlock';
 import DescriptionBlock from './block/descriptionBlock';
@@ -18,7 +27,16 @@ const { useBreakpoint } = Grid;
 
 const ViewPrelanding = (props) => {
   const screens = useBreakpoint();
+  //CONTEXTOS
   const cEventContext = useContext(CurrentEventContext);
+  const cUser = useContext(CurrentUserContext);
+  const cEventUser = useContext(CurrentEventUserContext);
+  const { register, setRegister } = useHelper();
+
+  //History
+  const history = useHistory();
+
+  //ESTADOS
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState([]);
   console.log('Event', cEventContext);
@@ -27,6 +45,15 @@ const ViewPrelanding = (props) => {
   const cBackgroundImage = cEventContext.value?.styles?.BackgroundImage;
   const cColor1 = cEventContext.value?.styles?.toolbarDefaultBg;
   const cColor2 = cEventContext.value?.styles?.textMenu;
+
+  //PERMITE INGRESAR A LA LANDING DEL EVENTO
+  useEffect(() => {
+    // window.sessionStorage.setItem('message', true);
+    if (!cEventContext.value || !cUser.value || !cEventUser.value) return;
+    window.sessionStorage.setItem('session', true);
+    console.log('MATCH URL==>', matchUrl);
+    // history.replace(props.matchUrl)
+  }, [cEventContext, cUser, cEventUser]);
 
   /**DYNAMIC STYLES */
 
@@ -93,13 +120,19 @@ const ViewPrelanding = (props) => {
           backgroundImage: `url(${cBackgroundImage})`,
           backgroundAttachment: 'fixed',
         }}>
+        {/**MODALES DE LOGIN */}
+        <ModalLoginHelpers />
+        <ModalPermission />
+        <ModalFeedback />
+        {/*update: modal de actualizar || register: modal de registro */}
+        {register !== null && (
+          <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
+        )}
         <Row gutter={[0, 16]} style={screens.xs ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
           <Col id='Franja de titulo' span={24}>
             <Row>
               <Col span={24}>
-                <Card>
-                  <p>{cEventContext?.value?.name}</p>
-                </Card>
+                <InfoEvent paddingOff={true} />
               </Col>
             </Row>
           </Col>
