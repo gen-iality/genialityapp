@@ -6,8 +6,6 @@ import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi'
 import { AgendaApi } from '@/helpers/request';
 import { CurrentEventContext } from '@/context/eventContext';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
-// import Service from '../../../agenda/roomManager/service';
-// import { firestore } from '@/helpers/firebase';
 
 export interface TransmitionOptionsCardProps {
   type: string,
@@ -95,7 +93,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
                 title={`¿Está seguro que desea ${deletingMessage}?`}
                 onConfirm={handleConfirm}
                 onCancel={() => console.log('cancelado')}
-                okText='Si'
+                okText='Sí'
                 cancelText='No'>
                 <Button loading={isDeleting} danger>
                   Eliminar
