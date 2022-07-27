@@ -164,7 +164,12 @@ const Headers = (props) => {
             buttonlogin: true,
           });
           break;
-
+        case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
+          setshowButtons({
+            buttonregister: true,
+            buttonlogin: true,
+          });
+          break;
         case 'UN_REGISTERED_PUBLIC_EVENT':
           setshowButtons({
             buttonregister: false,

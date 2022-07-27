@@ -1,6 +1,6 @@
 import { fireRealtime, app } from '../helpers/firebase';
 import { getCurrentUser } from '../helpers/request';
-
+import { UseEventContext } from '../context/eventContext';
 let initUserPresence = async (event_id) => {
   const user = await getCurrentUser();
   if (!user) return;

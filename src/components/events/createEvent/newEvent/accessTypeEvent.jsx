@@ -1,5 +1,5 @@
 import { CheckCircleFilled } from '@ant-design/icons';
-import { Badge, Card, Col, Divider, Row, Space, Typography } from 'antd';
+import { Badge, Card, Col, Divider, Row, Space, Typography, Checkbox } from 'antd';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 
 const AccessTypeEvent = () => {
@@ -33,6 +33,14 @@ const AccessTypeEvent = () => {
 
                   <li>Tiene inicio de sesión para todos.</li>
                 </ul>
+                {state.type === 0 && (
+                  <>
+                    <Divider />
+                    <Checkbox onChange={() => dispatch({ type: 'TYPE_AUTHENTICATION' })}>
+                      Registros sin autenticación de usuario
+                    </Checkbox>
+                  </>
+                )}
               </Typography.Text>
             </Space>
           </Card>

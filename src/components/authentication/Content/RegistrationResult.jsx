@@ -7,8 +7,10 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '../../../context/MessageService';
+import { async } from 'ramda-adjunct';
+import { AttendeeApi } from '../../../helpers/request';
 
-const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
+const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEventUser }) => {
   const [fraseLoading, setfraseLoading] = useState('');
 
   useEffect(() => {
@@ -57,14 +59,14 @@ const RegistrationResult = ({ validationGeneral, basicDataUser }) => {
       ) : (
         <>
           <Result status='success' title='Inscripción exitosa!' />
-          <RedirectUser basicDataUser={basicDataUser} />
+          <RedirectUser basicDataUser={basicDataUser} cEvent={cEvent} dataEventUser={dataEventUser} />
         </>
       )}
     </>
   );
 };
 
-const RedirectUser = ({ basicDataUser }) => {
+const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
   const cEventUser = UseUserEvent();
   let { helperDispatch } = useHelper();
   const intl = useIntl();
@@ -87,9 +89,49 @@ const RedirectUser = ({ basicDataUser }) => {
           setSignInWithEmailAndPasswordError(true);
         });
     };
+    const loginFirebaseAnonymous = async () => {
+      app
+        .auth()
+        .signInAnonymously()
+        .then((response) => {
+          app
+            .auth()
+            .currentUser.updateProfile({
+              displayName: basicDataUser.names,
+              photoURL: basicDataUser.picture ? basicDataUser.picture : basicDataUser.email,
+              email: basicDataUser.email,
+            })
+            .then(async () => {
+              if (response.user) {
+                const body = {
+                  event_id: cEvent.value._id,
+                  uid: response.user?.uid,
+                  anonymous: true,
+                  properties: {
+                    email: basicDataUser.email,
+                    names: basicDataUser.names,
+                    ...dataEventUser,
+                  },
+                };
+                await app.auth().currentUser?.reload();
+                await AttendeeApi.create(cEvent.value._id, body);
+                cEventUser.setUpdateUser(true);
+                helperDispatch({ type: 'showLogin', visible: false });
+              }
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+          setSignInWithEmailAndPasswordError(true);
+        });
+    };
 
     let loginInterval = setTimeout(() => {
-      loginFirebase();
+      if (basicDataUser.password) {
+        loginFirebase();
+      } else {
+        loginFirebaseAnonymous();
+      }
     }, 5000);
 
     return () => {

@@ -4,8 +4,7 @@ import { message } from 'antd';
 import { DispatchMessageService } from '../../../context/MessageService';
 
 const createNewUser = async (props) => {
-  const { picture, email, names, password, resetFields, setModalInfo, setOpenOrCloseTheModalFeedback } = props;
-
+  const { picture, email, names, password, resetFields, setModalInfo, setOpenOrCloseTheModalFeedback, cEvent } = props;
   const pictureDefault = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
   function sendDataFinished() {
     DispatchMessageService({
@@ -32,7 +31,7 @@ const createNewUser = async (props) => {
       picture: imageUrl,
       email: email,
       names: names,
-      password: password,
+      password: password !== '' ? password : undefined,
     };
     try {
       let response = await UsersApi.createUser(body);

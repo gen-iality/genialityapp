@@ -204,7 +204,10 @@ class General extends Component {
     }
 
     //Esto es para la configuración de autenticación. Nuevo flujo de Login
-    if (this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register) {
+    if (
+      (this.state.event.visibility === 'PUBLIC' || this.state.event.visibility === 'ANONYMOUS') &&
+      this.state.event.allow_register
+    ) {
       //Evento Público con Registro
       this.setState({ typeEvent: 0 });
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
@@ -1188,6 +1191,24 @@ class General extends Component {
                                   <li>Tiene inicio de sesión para todos.</li>
                                 </ul>
                               </Text>
+                              {this.state.typeEvent === 0 && (
+                                <>
+                                  <Divider />
+                                  <Checkbox
+                                    defaultChecked={this.state.event.visibility === 'ANONYMOUS'}
+                                    onChange={(e) =>
+                                      this.setState({
+                                        event: {
+                                          ...this.state.event,
+                                          visibility: e.target.checked === true ? 'ANONYMOUS' : 'PUBLIC',
+                                          allow_register: true,
+                                        },
+                                      })
+                                    }>
+                                    Registro sin autenticación de usuario
+                                  </Checkbox>
+                                </>
+                              )}
                             </Space>
                           </div>
                         </Badge>
