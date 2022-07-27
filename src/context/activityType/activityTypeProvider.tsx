@@ -110,6 +110,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setIsDeletingActivityType(true);
 
     setContentSource(null);
+    setActivityContentType(null);
     try {
       await TypesAgendaApi.deleteOne(activityEdit, cEvent.value._id);
       console.debug('AT provider delete successfully');
