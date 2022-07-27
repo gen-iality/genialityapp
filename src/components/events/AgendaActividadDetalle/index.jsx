@@ -148,61 +148,14 @@ const AgendaActividadDetalle = (props) => {
       <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
-          {!blockActivity ? (
-            <>
-              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-                cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
-                <Alert
-                  showIcon
-                  style={{
-                    width: '100%',
-                    marginTop: 40,
-                    marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
-                  }}
-                  message={
-                    <>
-                      {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
-                    </>
-                  }
-                  type='warning'
-                />
-              ) : (
-                <HCOActividad />
-              )}
-            </>
-          ) : (
-            <>
-              <Row>
-                {/* <ImageComponentwithContext /> */}
-                <Alert
-                  showIcon
-                  style={{
-                    width: '100%',
-                    marginTop: 40,
-                    marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
-                  }}
-                  message={
-                    <>
-                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
-                        https://iberofest.co/producto/edc/
-                      </a>{' '}
-                    </>
-                  }
-                  type='warning'
-                />
-              </Row>
-            </>
-          )}
+
+          <HCOActividad activity={activity}/>
+
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
       </div>
       {/* Drawer encuestas */}
-      <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
+      {/* <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} /> */}
     </div>
   );
 };
