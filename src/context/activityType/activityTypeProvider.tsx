@@ -91,7 +91,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       //   .editOne({ type_id: activityTypeDocument._id }, activityEdit, cEvent.value._id);
       const agenda = await editActivityType(cEvent.value._id, activityEdit, activityType);
       console.debug('activity type changes:', agenda);
-      console.debug('AT provider stops successfully');
+      console.debug('AT provider saves successfully');
     } catch (err) {
       console.error(err);
     } finally {
@@ -220,7 +220,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         }
         break;
       }
-      case 'eviusMeet': {
+      case activitySubTypeKeys.meet: {
         !meetingId && executer_createStream.mutate();
         meetingId &&
           (await saveConfig({
@@ -228,15 +228,15 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             type: contentType,
             data: meetingId,
           }));
-        setTypeActivity('eviusMeet');
+        setTypeActivity(activitySubTypeKeys.meet);
         setPlatform('wowza');
         break;
       }
-      case 'RTMP': {
+      case activitySubTypeKeys.rtmp: {
         !meetingId && executer_createStream.mutate();
         meetingId &&
           (await saveConfig({ platformNew: 'wowza', type: contentType, data: meetingId }));
-        setTypeActivity('RTMP');
+        setTypeActivity(activitySubTypeKeys.rtmp);
         setPlatform('wowza');
         break;
       }
