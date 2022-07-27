@@ -27,6 +27,7 @@ import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 import DateEvent from '../dateEvent';
 import moment from 'moment';
+import { useHistory } from 'react-router';
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));
@@ -75,6 +76,9 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
+
+  //HISTORY PARA REDIRIGIR A LA PRE LANDING
+  const history = useHistory();
   let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
   useEffect(() => {
@@ -84,6 +88,14 @@ const Landing = (props) => {
       action: 'show',
     });
   }, []);
+
+  //PERMITE VALIDAR SI TIENE O NO ACCESO A LA LANDING // SE MANEJA POR SESION STORAGE
+  useEffect(() => {
+    if (!cEventContext?.value) return;
+    if (!window.window.sessionStorage?.getItem('session')) {
+      history.replace(`/${cEventContext.value?._id}`);
+    }
+  }, [window.sessionStorage, cUser.value, cEventUser.value, cEventContext.value]);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -161,7 +173,7 @@ const Landing = (props) => {
 
         if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == 'LOADED') {
           // console.log(EventContext.value.type_event);
-          if (cEventContext.value.type_event === 'onlineEvent') {
+          if (cEventContext.value.type_event !== 'physicalEvent') {
             checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id);
           }
         }

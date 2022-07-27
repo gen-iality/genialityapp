@@ -64,6 +64,7 @@ export const HelperContextProvider = ({ children }) => {
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [updateEventUser, setUpdateEventUser] = useState(false);
   const [register, setRegister] = useState(null);
+  const [isPrelanding, setIsPrelanding] = useState(false);
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -620,6 +621,8 @@ export const HelperContextProvider = ({ children }) => {
         setUpdateEventUser,
         register,
         setRegister,
+        isPrelanding,
+        setIsPrelanding,
       }}>
       {children}
     </HelperContext.Provider>

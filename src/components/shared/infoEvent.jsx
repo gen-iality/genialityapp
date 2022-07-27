@@ -8,9 +8,9 @@ import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useIntl } from 'react-intl';
 
-const InfoEvent = () => {
+const InfoEvent = ({ paddingOff }) => {
   let cEvent = UseEventContext();
-  let { handleChangeTypeModal, eventIsActive } = useHelper();
+  let { handleChangeTypeModal, helperDispatch } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
 
@@ -18,30 +18,37 @@ const InfoEvent = () => {
   return (
     <PageHeader
       style={{
-        paddingLeft: '30px',
-        paddingRight: '30px',
+        paddingLeft: paddingOff ? '' : '30px',
+        paddingRight: paddingOff ? '' : '30px',
         paddingTop: '10px',
         paddingBottom: '20px',
-        margin: '20px',
-        borderTop: `5px solid ${cEvent.value.styles.toolbarDefaultBg}`,
+        margin: paddingOff ? '' : '20px',
+        borderTop: `5px solid ${cEvent.value?.styles?.toolbarDefaultBg}`,
         borderRadius: '20px',
         backgroundColor: 'white',
       }}
-      title={cEvent.value.name}
+      title={cEvent.value?.name}
       extra={
-        recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-        cUser?.value &&
-        !cEventUser?.value && (
-          <Button
-            onClick={() => handleChangeTypeModal('registerForTheEvent')}
-            type='primary'
-            size='large'
-            disabled={!eventIsActive}>
+        recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUser?.value && !cEventUser?.value ? (
+          <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al evento',
             })}
           </Button>
+        ) : (
+          recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
+          !cUser?.value && (
+            <Button
+              onClick={() => helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })}
+              type='primary'
+              size='large'>
+              {intl.formatMessage({
+                id: 'registration.button.create',
+                defaultMessage: 'Registrarme',
+              })}
+            </Button>
+          )
         )
       }
       footer={
@@ -49,22 +56,22 @@ const InfoEvent = () => {
           <Space wrap>
             <Space>
               <CalendarOutlined />
-              <time>{Moment(cEvent.value.datetime_from).format('ll')}</time>
+              <time>{Moment(cEvent.value?.datetime_from).format('ll')}</time>
             </Space>
             <Space>
               <ClockCircleOutlined />
-              <time>{Moment(cEvent.value.datetime_from).format('LT')}</time>
+              <time>{Moment(cEvent.value?.datetime_from).format('LT')}</time>
             </Space>
           </Space>
           <Divider type='vertical'></Divider>
           <Space wrap>
             <Space>
               <CalendarOutlined />
-              <time>{Moment(cEvent.value.datetime_to).format('ll')}</time>
+              <time>{Moment(cEvent.value?.datetime_to).format('ll')}</time>
             </Space>
             <Space>
               <ClockCircleOutlined />
-              <time>{Moment(cEvent.value.datetime_to).format('LT')}</time>
+              <time>{Moment(cEvent.value?.datetime_to).format('LT')}</time>
             </Space>
           </Space>
         </Space>

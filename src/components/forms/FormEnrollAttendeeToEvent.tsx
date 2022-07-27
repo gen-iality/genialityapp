@@ -13,9 +13,10 @@ import {
   textLeft,
   assignmentOfConditionsToAdditionalFields,
 } from '@/Utilities/formUtils';
-import { FormEnrollAttendeeToEventPropsTypes } from '@/Utilities/types/types';
-import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
+import { AttendeeInformation, FormEnrollAttendeeToEventPropsTypes } from '@/Utilities/types/types';
+import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
+import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 
 const { Title } = Typography;
 
@@ -28,6 +29,7 @@ const FormEnrollAttendeeToEvent = ({
   loaderWhenSavingUpdatingOrDelete = false,
   checkInAttendeeCallbak,
   visibleInCms = false,
+  eventType = 'Virtual',
   submitIcon = <BadgeAccountOutlineIcon />,
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
@@ -35,6 +37,8 @@ const FormEnrollAttendeeToEvent = ({
   const buttonSubmit = useRef(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState<boolean>(false);
   const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
+
+  const [attendeeInformation, setAttendeeInformation] = useState<AttendeeInformation | null>(null);
 
   const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent();
   const { basicFields, thereAreExtraFields, buttonText } = formState;
@@ -44,25 +48,26 @@ const FormEnrollAttendeeToEvent = ({
     assignmentOfConditionsToAdditionalFields({ conditionalFields, allValues, fields, setValidatedFields });
   };
 
-  const componentLoad = () => {
+  const componentLoad = (attendeeData: AttendeeInformation) => {
+    setAttendeeInformation(attendeeData);
     form.resetFields();
-    formDispatch({ type: 'getBasicFields', payload: { fields, attendee } });
+    formDispatch({ type: 'getBasicFields', payload: { fields, attendeeData } });
     formDispatch({
       type: 'thereAreExtraFields',
       payload: {
         fields,
-        attendee,
+        attendeeData,
         visibleInCms,
       },
     });
-    formDispatch({ type: 'buttonText', payload: { visibleInCms, attendee } });
-    const allValues = attendee ? attendee.properties : [];
+    formDispatch({ type: 'buttonText', payload: { visibleInCms, attendeeData } });
+    const allValues = attendeeData ? attendeeData.properties : [];
 
     assigningConditionsToFields({}, allValues);
   };
 
   useEffect(() => {
-    componentLoad();
+    componentLoad(attendee);
   }, [attendee]);
 
   const showGeneralMessage = () => {
@@ -129,14 +134,27 @@ const FormEnrollAttendeeToEvent = ({
                 {loaderWhenSavingUpdatingOrDelete ? (
                   <LoadingOutlined style={{ fontSize: '50px' }} />
                 ) : (
-                  <>
-                    <Form.Item>
-                      <AttendeeCheckIn
-                        attendee={attendee}
+                  <Space direction='vertical'>
+                    {attendeeInformation?._id && eventType === 'hybridEvent' && (
+                      <b>
+                        Tipo de checkIn:{' '}
+                        {attendeeInformation?.checkedin_type ? attendeeInformation.checkedin_type : 'ninguno'}
+                      </b>
+                    )}
+
+                    <AttendeeCheckInCheckbox
+                      attendee={attendeeInformation}
+                      reloadComponent={componentLoad}
+                      checkInAttendeeCallbak={checkInAttendeeCallbak}
+                    />
+                    {eventType === 'hybridEvent' && (
+                      <AttendeeCheckInButton
+                        attendee={attendeeInformation}
                         reloadComponent={componentLoad}
                         checkInAttendeeCallbak={checkInAttendeeCallbak}
                       />
-                    </Form.Item>
+                    )}
+
                     <Form.Item>
                       <Space direction='horizontal'>
                         <Button
@@ -164,7 +182,7 @@ const FormEnrollAttendeeToEvent = ({
                           ))}
                       </Space>
                     </Form.Item>
-                  </>
+                  </Space>
                 )}
               </Col>
             </Row>

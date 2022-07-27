@@ -93,7 +93,6 @@ class Event extends Component {
   }
 
   async componentDidMount() {
-    // console.log('🚀 debug ~ Event ~ componentDidMount', {});
     const helperDispatch = this.props.cHelper.helperDispatch;
 
     try {
@@ -183,6 +182,7 @@ class Event extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   };
 
+  /** RESTRICIONES */
   theEventIsActive = (state) => {
     const eventId = this.state.event._id;
 
@@ -196,6 +196,7 @@ class Event extends Component {
   render() {
     const { match, permissions, showMenu } = this.props;
     const { error, collapsed, iMustValidate, event } = this.state;
+    const cUser = this.props.cUser?.value;
 
     if (this.state.loading || this.props.loading || permissions.loading) return <Loading />;
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
@@ -217,11 +218,16 @@ class Event extends Component {
 
     return (
       <Layout className='columns'>
-        {iMustValidate && (
+        {/* RESTRICIONES */}
+        {/* {iMustValidate && (
           <>
-            <ValidateEndEvent endDate={event.datetime_to} callBackTheEventIsActive={this.theEventIsActive} />
+            <ValidateEndEvent
+              endDate={event.datetime_to}
+              callBackTheEventIsActive={this.theEventIsActive}
+              user={cUser}
+            />
           </>
-        )}
+        )} */}
         <Sider
           style={{
             // overflow: 'auto',

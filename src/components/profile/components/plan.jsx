@@ -1,12 +1,20 @@
 import { Row, Col, Card, Typography, Divider, Space } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { useIntl } from 'react-intl';
 
 const plan = ({ plan, mine, children }) => {
+  const intl = useIntl();
   return (
     <Card style={{ borderRadius: '15px' }}>
       {mine && (
         <Divider>
-          <strong>Disponible en tu plan {plan?.name || 'Personalizado'}</strong>
+          <strong>
+            {intl.formatMessage({
+              id: 'my_plan.available.plan',
+              defaultMessage: 'Disponible en tu plan',
+            })}{' '}
+            {plan?.name || 'Personalizado'}
+          </strong>
         </Divider>
       )}
 
@@ -15,34 +23,76 @@ const plan = ({ plan, mine, children }) => {
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
           <Space direction='vertical'>
             <Space>
-              <Typography.Text strong>Organizadores: </Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.organizers',
+                  defaultMessage: 'Organizadores',
+                })}
+                :{' '}
+              </Typography.Text>
               <Typography.Text>{plan?.availables?.organizers || 'Personalizado'}</Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Tipo de acceso: </Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.access_type',
+                  defaultMessage: 'Tipo de acceso',
+                })}
+                :{' '}
+              </Typography.Text>
               <Typography.Text>{plan?.availables?.access_type || 'Personalizado'}</Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Apariencia: </Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.look_and_feel',
+                  defaultMessage: 'Apariencia',
+                })}
+                :{' '}
+              </Typography.Text>
               <Typography.Text>{plan?.availables?.look_and_feel || 'Personalizado'}</Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Salas simultáneas: </Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.simultaneous_rooms',
+                  defaultMessage: 'Salas simultáneas',
+                })}
+                :{' '}
+              </Typography.Text>
               <Typography.Text>{plan?.availables?.simultaneous_rooms || 'Personalizado'}</Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Reporte: </Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.reports',
+                  defaultMessage: 'Reporte',
+                })}
+                :{' '}
+              </Typography.Text>
               <Typography.Text>
                 {(plan?.availables?.reports === 'Basicas' && 'Básico') || 'Personalizado'}
               </Typography.Text>
             </Space>
 
             <Space>
-              <Typography.Text strong>Mini juegos: </Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.mini_games',
+                  defaultMessage: 'Mini juegos',
+                })}
+                :{' '}
+              </Typography.Text>
               <Typography.Text>{plan?.availables?.mini_games || 'Personalizado'}</Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Certificados: </Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.certificates',
+                  defaultMessage: 'Certificados',
+                })}
+                :{' '}
+              </Typography.Text>
               <Typography.Text>
                 {plan?.availables?.certificates === false ? (
                   <CloseOutlined style={{ color: 'red' }} />
@@ -53,16 +103,28 @@ const plan = ({ plan, mine, children }) => {
                 )}
               </Typography.Text>
             </Space>
-          </Space>
-          <Space>
-            <Typography.Text strong>Días posteriores: </Typography.Text>
-            <Typography.Text>{plan?.availables?.later_days || 'Personalizado'}</Typography.Text>
+            <Space>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.later_days',
+                  defaultMessage: 'Días posteriores',
+                })}
+                :{' '}
+              </Typography.Text>
+              <Typography.Text>{plan?.availables?.later_days || 'Personalizado'}</Typography.Text>
+            </Space>
           </Space>
         </Col>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
           <Space direction='vertical'>
             <Space>
-              <Typography.Text strong>Chat:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.chat',
+                  defaultMessage: 'Chat',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -78,7 +140,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Agenda:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.schedule',
+                  defaultMessage: 'Agenda',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -94,7 +162,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Muro social:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.social_wall',
+                  defaultMessage: 'Muro social',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -110,7 +184,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Dominio propio:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.domain',
+                  defaultMessage: 'Dominio propio',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -126,7 +206,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Grabación en la nube:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.cloud_recording',
+                  defaultMessage: 'Grabación en la nube',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -142,7 +228,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Comunicaciones:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.communications',
+                  defaultMessage: 'Comunicaciones',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -158,7 +250,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Checkin:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.checkin',
+                  defaultMessage: 'Checkin',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -174,7 +272,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Conferencistas:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.speakers',
+                  defaultMessage: 'Conferencistas',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -190,7 +294,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Networking:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.networking',
+                  defaultMessage: 'Networking',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -210,7 +320,13 @@ const plan = ({ plan, mine, children }) => {
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
           <Space direction='vertical'>
             <Space>
-              <Typography.Text strong>Soporte de email:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.support_email',
+                  defaultMessage: 'Soporte de email',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -226,7 +342,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Tickets:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.tickets',
+                  defaultMessage: 'Tickets',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -242,7 +364,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Documentos:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.documents',
+                  defaultMessage: 'Documentos',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -258,7 +386,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Preguntas frecuentes:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.faqs',
+                  defaultMessage: 'Preguntas frecuentes',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -274,7 +408,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Sección informativa:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.informative_section',
+                  defaultMessage: 'Sección informativa',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -290,7 +430,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Patrocinadores:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.sponsors',
+                  defaultMessage: 'Patrocinadores',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -306,7 +452,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Noticias:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.news',
+                  defaultMessage: 'Noticias',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -322,7 +474,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Productos:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.products',
+                  defaultMessage: 'Productos',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>
@@ -338,7 +496,13 @@ const plan = ({ plan, mine, children }) => {
               </Typography.Text>
             </Space>
             <Space>
-              <Typography.Text strong>Videos:</Typography.Text>
+              <Typography.Text strong>
+                {intl.formatMessage({
+                  id: 'my_plan.videos',
+                  defaultMessage: 'Videos',
+                })}
+                :
+              </Typography.Text>
               <Typography.Text>
                 {plan ? (
                   <>

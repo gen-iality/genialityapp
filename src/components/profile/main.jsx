@@ -201,6 +201,17 @@ const MainProfile = (props) => {
                 icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
                 Actividad en Evius
               </Menu.Item>
+              {/* RESTRICIONES seccion mi plan */}
+              {/* <Menu.Item
+                title={null}
+                onClick={() => {
+                  showContent('MY_PLAN');
+                  screens.xs && showSider();
+                }}
+                key={'myPlan'}
+                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
+                Mi plan
+              </Menu.Item> */}
               <Menu.Item
                 title={null}
                 onClick={() => {
@@ -220,16 +231,6 @@ const MainProfile = (props) => {
                 key={'cambiarPassword'}
                 icon={<LockOutlined style={{ fontSize: '18px' }} />}>
                 Cambiar contraseña
-              </Menu.Item>
-              <Menu.Item
-                title={null}
-                onClick={() => {
-                  showContent('MY_PLAN');
-                  screens.xs && showSider();
-                }}
-                key={'myPlan'}
-                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
-                Mi plan
               </Menu.Item>
             </Menu>
           </Col>
@@ -391,6 +392,9 @@ const MainProfile = (props) => {
                                       bordered={false}
                                       event={event}
                                       action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                      blockedEvent={
+                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                                      }
                                     />
                                   </Col>
                                 );
@@ -504,6 +508,9 @@ const MainProfile = (props) => {
                               bordered={false}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
+                              blockedEvent={
+                                props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                              }
                             />
                           </Col>
                         );

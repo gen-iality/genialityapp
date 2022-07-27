@@ -214,6 +214,8 @@ const UserStatusAndMenu = (props) => {
         /* Sending a boolean to the backend to know if the logout is manual or not. */
         logout(false);
         destroyAll();
+        //PRUEBA PARA SESION
+        window.sessionStorage.removeItem('session');
       },
       onCancel() {
         console.log('Cancel');

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
+import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '../../helpers/request';
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
@@ -38,7 +38,12 @@ import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import PreLandingSections from '../prelanding';
 import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
-import { disabledDateTime, disabledEndDate } from '@/Utilities/disableTimeAndDatePickerInEventDate';
+import {
+  disabledEndDateTime,
+  disabledEndDate,
+  disabledStartDateTime,
+  disabledStartDate,
+} from '@/Utilities/disableTimeAndDatePickerInEventDate';
 import { CurrentUserContext } from '@/context/userContext';
 import DescriptionDynamic from './Description';
 
@@ -107,7 +112,16 @@ class General extends Component {
   }
   static contextType = CurrentUserContext;
 
+  getCurrentConsumptionPlanByUsers = async () => {
+    const userContext = this.context;
+    const cUser = userContext?.value;
+    if (!cUser?._id) return;
+    const consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser?._id);
+    this.setState({ consumption });
+  };
+
   async componentDidMount() {
+    this.getCurrentConsumptionPlanByUsers();
     //inicializacion del estado de menu
     if (this.state.event.itemsMenu) {
       const { itemsMenu } = this.state.event;
@@ -665,7 +679,7 @@ class General extends Component {
       });
     }
   };
-
+  /** RESTRICIONES */
   theEventIsActive = (state) => {
     this.setState({
       iMustBlockAFunctionality: state,
@@ -691,18 +705,26 @@ class General extends Component {
       image,
       iMustBlockAFunctionality,
       iMustValidate,
+      consumption,
     } = this.state;
     const userContext = this.context;
+    /** RESTRICIONES */
+    const cUser = userContext?.value;
     const userPlan = userContext.value?.plan;
     const streamingHours = userPlan?.availables?.streaming_hours;
 
     return (
       <React.Fragment>
-        {iMustValidate && (
+        {/* RESTRICIONES */}
+        {/* {iMustValidate && (
           <>
-            <ValidateEventStart startDate={event.datetime_from} callBackTheEventIsActive={this.theEventIsActive} />
+            <ValidateEventStart
+              startDate={event.datetime_from}
+              callBackTheEventIsActive={this.theEventIsActive}
+              user={cUser}
+            />
           </>
-        )}
+        )} */}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1' onChange={(key) => this.setState({ tabActive: key })}>
@@ -815,6 +837,7 @@ class General extends Component {
                       <Option value=''>Seleccionar...</Option>
                       <Option value='physicalEvent'>Evento físico</Option>
                       <Option value='onlineEvent'>Evento virtual</Option>
+                      <Option value='hybridEvent'>Evento híbrido</Option>
                     </Select>
                   </Form.Item>
 
@@ -855,9 +878,11 @@ class General extends Component {
                     </>
                   )}
 
-                  <Form.Item label={'Especificar fechas'}>
-                    <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
-                  </Form.Item>
+                  {!cUser?.plan && (
+                    <Form.Item label={'Especificar fechas'}>
+                      <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                    </Form.Item>
+                  )}
 
                   {specificDates === false ? (
                     <div>
@@ -865,6 +890,9 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha Inicio'}>
                             <DatePicker
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -872,19 +900,15 @@ class General extends Component {
                               format={'DD/MM/YYYY'}
                               onChange={(value) => this.changeDate(value, 'date_start')}
                             />
-                            {/* <DateTimePicker
-                              value={event.date_start}
-                              format={'DD/MM/YYYY'}
-                              time={false}
-                              onChange={(value) =>
-                                this.changeDate(value, 'date_start')
-                              }
-                            /> */}
                           </Form.Item>
                         </Col>
                         <Col span={12}>
                           <Form.Item label={'Hora Inicio'}>
                             <TimePicker
+                              showNow={false}
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledTime={(time) => disabledStartDateTime(event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -908,7 +932,9 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha Fin'}>
                             <DatePicker
-                              disabledDate={(date) => disabledEndDate(date, event, streamingHours)}
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledDate={(date) => disabledEndDate(date, event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -931,7 +957,9 @@ class General extends Component {
                           <Form.Item label={'Hora Fin'}>
                             <TimePicker
                               showNow={false}
-                              disabledTime={(time) => disabledDateTime(event, streamingHours)}
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledTime={(time) => disabledEndDateTime(event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
