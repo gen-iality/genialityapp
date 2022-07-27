@@ -1,7 +1,7 @@
 export type ActivityTypeKey = 'live' | 'meeting' | 'video';
 export type ActivitySubTypeKey = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting' | 'meet' | 'rtmp';
 
-export type ActivityTypeName = 'liveBroadcast' | 'meeting' | 'video';
+export type ActivityTypeName = 'liveBroadcast' | 'meeting2' | 'video';
 export type ActivitySubTypeName = '' | 'meeting' | 'eviusStreaming' | 'vimeo' | 'youTube' | 'url' | 'cargarvideo' | 'eviusMeet' | 'RTMP';
 
 export type GeneralTypeName = 

@@ -328,7 +328,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
         const onlyActivityTypes: ActivityTypeName[] = [
           'liveBroadcast',
-          'meeting',
+          'meeting2',
           'video',
         ];
 
@@ -351,7 +351,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('video');
             } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeName)) {
-              setActivityType('meeting');
+              setActivityType('meeting2');
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);

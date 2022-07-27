@@ -13,7 +13,7 @@ import {
 
 export const activityTypeKeys: { [key in ActivityTypeKey]: ActivityTypeName } = {
   live: 'liveBroadcast',
-  meeting: 'meeting',
+  meeting: 'meeting2',
   video: 'video',
 };
 
