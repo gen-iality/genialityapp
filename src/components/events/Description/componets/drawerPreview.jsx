@@ -4,25 +4,19 @@ import CellphoneIcon from '@2fd/ant-design-icons/lib/Cellphone';
 import TabletAndroidIcon from '@2fd/ant-design-icons/lib/TabletAndroid';
 import LaptopIcon from '@2fd/ant-design-icons/lib/Laptop';
 import MonitorScreenshotIcon from '@2fd/ant-design-icons/lib/MonitorScreenshot';
-import { useContext, useEffect, useState } from 'react';
-import { CurrentEventContext } from '@/context/eventContext';
-import { obtenerDescriptionSections } from '../hooks/utils';
+import { useEffect, useState } from 'react';
+import { RenderSectios } from './renderSectios';
 
 const { useBreakpoint } = Grid;
 
 const DrawerPreview = ({ visibleDrawer, setVisibleDrawer }) => {
   const [device, setdevice] = useState({ device: 'smartphone', value: 425 });
   const screens = useBreakpoint();
-  const [dataSource, setDataSource] = useState([]);
-  const [loading, setLoading] = useState(false);
-  //CONTEXTO
-  const cEvent = useContext(CurrentEventContext);
-
-  //PERMITE OBTENER LAS SECCIONES DE LA DESCRIPCION
+  const [refreshSections, setRefreshSections] = useState(false);
   useEffect(() => {
-    if (!cEvent.value || !visibleDrawer) return;
-    obtenerDescriptionSections(setLoading, cEvent, setDataSource);
-  }, [cEvent.value, visibleDrawer]);
+    if (!visibleDrawer) setRefreshSections(false);
+    setRefreshSections(true);
+  }, [visibleDrawer]);
 
   return (
     <Drawer
@@ -61,11 +55,7 @@ const DrawerPreview = ({ visibleDrawer, setVisibleDrawer }) => {
       placement='right'
       onClose={() => setVisibleDrawer(false)}
       visible={visibleDrawer}>
-      {!loading &&
-        dataSource.map((section) => {
-          return renderTypeComponent(section.type, section.value);
-        })}
-      {loading && <Spin />}
+      {visibleDrawer ? <RenderSectios /> : <Spin />}
     </Drawer>
   );
 };

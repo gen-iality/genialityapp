@@ -23,7 +23,6 @@ import {
 } from 'antd';
 import arrayMove from 'array-move';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ModalImageComponent from './componets/modalImage';
 import ModalTextComponent from './componets/modalTextType';
 import ImageAreaIcon from '@2fd/ant-design-icons/lib/ImageArea';
@@ -34,7 +33,6 @@ import ContentSaveCheckIcon from '@2fd/ant-design-icons/lib/ContentSaveCheck';
 import FitToScreenIcon from '@2fd/ant-design-icons/lib/FitToScreen';
 import ModalVideoComponent from './componets/modalVideo';
 import ReactPlayer from 'react-player';
-import { EventsApi } from '@/helpers/request';
 import { CurrentEventContext } from '@/context/eventContext';
 import DrawerPreview from './componets/drawerPreview';
 import Loading from '@/components/profile/loading';
