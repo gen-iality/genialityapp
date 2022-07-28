@@ -28,6 +28,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const {
     dataLive,
     meeting_id,
+    setDataLive,
+    setMeetingId,
     deleteTypeActivity,
     activityEdit,
     removeAllRequest,
@@ -70,6 +72,10 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     await removeViewers(refActivityViewers);
     await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
     // await deleteTypeActivity();
+
+    setMeetingId(null);
+    setDataLive(null);
+
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
     setIsDeleting(false);
     switch (type) {
