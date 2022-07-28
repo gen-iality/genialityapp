@@ -37,7 +37,6 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     setRoomStatus,
     removeAllRequest,
     activityEdit,
-    removeViewers,
   } = useContext(AgendaContext);
 
   const cEvent = useContext(CurrentEventContext);
@@ -77,7 +76,6 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     deleteAllVideos(dataLive?.name, meeting_id); // verificar si se va a eliminar los vídeos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
     await removeAllRequest(refActivity);
-    await removeViewers(refActivityViewers);
     await deleteTypeActivity();
     // Transmition stuffs must go back to 'liveBroadcast'
     await resetActivityType('liveBroadcast'); // reset the content tab?

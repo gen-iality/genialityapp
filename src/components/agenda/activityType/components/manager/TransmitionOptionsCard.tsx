@@ -33,7 +33,6 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     deleteTypeActivity,
     activityEdit,
     removeAllRequest,
-    removeViewers,
   } = useContext(AgendaContext);
 
   const cEvent: any = useContext(CurrentEventContext);
@@ -69,7 +68,6 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
       await removeAllRequest(refActivity);
       await deleteTransmition();
     }
-    await removeViewers(refActivityViewers);
     await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
     // await deleteTypeActivity();
 

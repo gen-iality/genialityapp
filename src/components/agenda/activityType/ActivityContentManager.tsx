@@ -39,17 +39,12 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     meeting_id,
     obtainUrl,
     getRequestByActivity,
-    getViewers,
     recordings,
     startRecordTransmition,
     stopRecordTransmition,
     request,
     loadingRecord,
     record,
-    viewers,
-    viewersOnline,
-    totalViews,
-    maxViewers,
     platform,
   } = useContext(AgendaContext);
 
@@ -95,10 +90,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     if (type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
   }, [type, meeting_id]);
-
-  useEffect(() => {
-    getViewers(refActivityViewers);
-  }, []);
 
   if (!type) {
     return (
@@ -215,57 +206,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
           {(type == 'Transmisión' || type == 'EviusMeet') && dataLive?.active && (
             <Col span={24}><RTMPCard/></Col>
-          )}
-
-          {(!!roomStatus || type === 'reunión' || type === 'Video') && (
-            <Col span={24}>
-              <Card bodyStyle={{ padding: '21px' }} style={{ borderRadius: '8px' }}>
-                <Card.Meta
-                  title={
-                    <Typography.Text style={{ fontSize: '20px' }} strong>
-                      Estadísticas de la actividad
-                    </Typography.Text>
-                  }
-                />
-                <br />
-                <Row gutter={[16, 16]} wrap>
-                  <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
-                    <Statistic
-                      style={{ textAlign: 'center' }}
-                      title={<Typography.Text strong>Número de vistas totales</Typography.Text>}
-                      value={totalViews.length}
-                    />
-                  </Col>
-
-                  <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
-                    <Statistic
-                      style={{
-                        textAlign: 'center',
-                      }}
-                      title={<Typography.Text strong>Número de usuarios únicos</Typography.Text>}
-                      value={viewers.length}
-                    />
-                  </Col>
-
-                  {(roomStatus === 'open_meeting_room' || type === 'reunión' || type === 'Video') && (
-                    <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
-                      <Statistic
-                        style={{ textAlign: 'center' }}
-                        title={<Typography.Text strong>Visualizaciones en curso</Typography.Text>}
-                        value={viewersOnline.length}
-                      />
-                    </Col>
-                  )}
-                  <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
-                    <Statistic
-                      style={{ textAlign: 'center' }}
-                      title={<Typography.Text strong>Numero maximo de usuarios</Typography.Text>}
-                      value={maxViewers || 0}
-                    />
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
           )}
         </Row>
       </Col>
