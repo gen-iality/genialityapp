@@ -151,6 +151,7 @@ function EviusReactQuill(props) {
   return (
     <>
       <ReactQuill
+        style={props.styles}
         className={props.className}
         id='reactQuill'
         ref={reactQuilllRef}

@@ -48,6 +48,7 @@ const ModalImageComponent = ({
       visible={type == 'image'}
       onOk={saveImage}
       okText={'Guardar'}
+      cancelText={'Cancelar'}
       onCancel={() => setType(null)}>
       <ImageUploaderDragAndDrop
         imageDataCallBack={(imageUrl) => handleImage(imageUrl)}
