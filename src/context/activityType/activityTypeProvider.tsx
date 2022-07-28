@@ -295,6 +295,18 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     url !== null ? setVideoObject({ url, created_at, name }) : setVideoObject(null);
   };
 
+  const convertTypeToHumanizedString = (typeIncoming: string): string => {
+    type TypeIncoming = ActivityTypeName;
+    switch (typeIncoming as TypeIncoming) {
+      case 'liveBroadcast': return 'transmisión';
+      case 'meeting2': return 'reunión';
+      case 'quizing2': return 'examen';
+      case 'survey2': return 'encuesta';
+      case 'video': return 'vídeo';
+      default: return typeIncoming;
+    }
+  };
+
   const value: ActivityTypeContextType = {
     // Flags
     is: {
@@ -322,6 +334,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     translateActivityType,
     visualizeVideo,
     executer_stopStream,
+    convertTypeToHumanizedString,
   };
 
   useEffect(() => {

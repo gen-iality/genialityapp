@@ -51,6 +51,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
     setContentSource,
     saveActivityContent,
     setActivityContentType,
+    convertTypeToHumanizedString,
   } = useActivityType();
 
   useEffect(() => {
@@ -165,12 +166,14 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
     <Card>
       <Row align='middle' style={{textAlign: 'center'}}>
         <Col span={24} style={{marginBottom: '1em'}}>
-          <h2>Todavía no has agregado el contenido a la actividad</h2>
+          <h2>
+            Todavía no has agregado el contenido a la actividad
+            {activityType && ` de "${convertTypeToHumanizedString(activityType)}"`}
+          </h2>
         </Col>
         <Col span={24} style={{marginBottom: '1em'}}>
           <Button onClick={() => setIsModalShown(true)} type='primary'>
             Agregar contenido
-            {activityType && `: ${activityType}`}
           </Button>
         </Col>
         <Col span={24} style={{marginBottom: '1em'}}>
