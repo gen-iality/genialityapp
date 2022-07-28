@@ -70,7 +70,7 @@ const InfoEvent = ({ paddingOff }) => {
           visibleButton() == 'JOIN' && (
             <Button
               onClick={() => {
-                if (recordTypeForThisEvent(cEvent) === 'UN_REGISTERED_PUBLIC_EVENT') {
+                if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT') {
                   window.sessionStorage.setItem('session', true);
                   history.replace(`/landing/${cEvent.value?._id}`);
                 } else {
