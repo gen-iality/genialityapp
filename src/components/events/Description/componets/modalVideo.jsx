@@ -89,12 +89,14 @@ const ModalVideoComponent = ({
           <Col span={24}>
             {!videoerror ? (
               <ReactPlayer
+                controls
                 onError={(error) => {
                   setvideoerror(true);
                   console.log('error', error);
                 }}
                 url={videourl}
                 width={'100%'}
+                height={null}
                 style={{ aspectRatio: '16/9', borderRadius: '10px', overflow: 'hidden' }}
               />
             ) : (
