@@ -1,15 +1,30 @@
 import { LinkOutlined } from '@ant-design/icons';
 import { Col, Form, Input, message, Modal, Result, Row } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import LinkVariantOffIcon from '@2fd/ant-design-icons/lib/LinkVariantOff';
+import { CurrentEventContext } from '@/context/eventContext';
 
-const ModalVideoComponent = ({ type, setType, saveItem, initialValue }) => {
+const ModalVideoComponent = ({
+  type,
+  setType,
+  saveItem,
+  initialValue,
+  setLoading,
+  dataSource,
+  setItem,
+  setDataSource,
+}) => {
+  //REFERENCIA FORM
   const formRef = useRef();
-
+  //ESTADOS
   const [videourl, setvideourl] = useState('');
   const [videoerror, setvideoerror] = useState(false);
 
+  //CONTEXTO
+  const cEvent = useContext(CurrentEventContext);
+
+  //PERMITE SETEAR EL ESTADO INICIAL INITIALVALUE
   useEffect(() => {
     if (type !== 'video') return;
     formRef.current.setFieldsValue({ video: initialValue?.value || null });
@@ -26,7 +41,7 @@ const ModalVideoComponent = ({ type, setType, saveItem, initialValue }) => {
           type: 'video',
           value: values.video,
         };
-        saveItem(item);
+        saveItem(item, setLoading, dataSource, setItem, cEvent, setDataSource);
         setType(null);
       } else {
         message.error('Ingrese una url de video para poder guardar');

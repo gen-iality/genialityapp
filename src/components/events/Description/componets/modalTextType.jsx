@@ -1,9 +1,20 @@
 import EviusReactQuill from '@/components/shared/eviusReactQuill';
+import { CurrentEventContext } from '@/context/eventContext';
 import { Form, message, Modal } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
-const ModalTextComponent = ({ type, setType, saveItem, initialValue }) => {
+const ModalTextComponent = ({
+  type,
+  setType,
+  saveItem,
+  initialValue,
+  setLoading,
+  dataSource,
+  setItem,
+  setDataSource,
+}) => {
   const [text, setText] = useState(null);
+  const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
     if (type !== 'text') return;
@@ -17,7 +28,7 @@ const ModalTextComponent = ({ type, setType, saveItem, initialValue }) => {
         type: 'text',
         value: text,
       };
-      saveItem(item);
+      saveItem(item, setLoading, dataSource, setItem, cEvent, setDataSource);
       setType(null);
     } else {
       message.error('Ingrese un text para poder guardar');

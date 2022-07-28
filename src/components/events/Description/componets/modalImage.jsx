@@ -1,9 +1,20 @@
 import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import { CurrentEventContext } from '@/context/eventContext';
 import { message, Modal } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
-const ModalImageComponent = ({ type, setType, saveItem, initialValue }) => {
+const ModalImageComponent = ({
+  type,
+  setType,
+  saveItem,
+  initialValue,
+  setLoading,
+  dataSource,
+  setItem,
+  setDataSource,
+}) => {
   const [image, setImage] = useState(null);
+  const cEvent = useContext(CurrentEventContext);
 
   useEffect(() => {
     if (type !== 'image') return;
@@ -18,7 +29,7 @@ const ModalImageComponent = ({ type, setType, saveItem, initialValue }) => {
         type: 'image',
         value: image,
       };
-      saveItem(item);
+      saveItem(item, setLoading, dataSource, setItem, cEvent, setDataSource);
       setType(null);
     } else {
       message.error('Seleccione una imagen para poder guardar');
