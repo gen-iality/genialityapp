@@ -71,13 +71,12 @@ const ModalAuth = (props) => {
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
           setmodalVisible(true);
-          helperDispatch({ type: 'showLogin', visible: true });
+          helperDispatch({ type: 'showLogin', visible: false });
           break;
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          //COMENTADO POR AHORA YA ABRE EL MODAL AUTOMÁTICAMENTE AL LLEGAR A LA PRELANDING
-          //setmodalVisible(true);
-          //helperDispatch({ type: 'showRegister', visible: true });
+          setmodalVisible(true);
+          helperDispatch({ type: 'showRegister', visible: false });
           break;
 
         case 'UN_REGISTERED_PUBLIC_EVENT':

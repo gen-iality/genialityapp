@@ -28,6 +28,7 @@ import initBroadcastViewers from '@/containers/broadcastViewers';
 import DateEvent from '../dateEvent';
 import moment from 'moment';
 import { useHistory } from 'react-router';
+import { recordTypeForThisEvent } from './helpers/thisRouteCanBeDisplayed';
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));
@@ -82,12 +83,23 @@ const Landing = (props) => {
   let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
   useEffect(() => {
+    if (!cEventContext.value) return;
+    console.log('SESSION==>', window.window.sessionStorage?.getItem('session'));
     DispatchMessageService({
       type: 'loading',
       msj: 'Estamos configurando la mejor experiencia para tí!',
       action: 'show',
     });
-  }, []);
+    return () => {
+      if (
+        recordTypeForThisEvent(cEventContext) == 'UN_REGISTERED_PUBLIC_EVENT' &&
+        window.window.sessionStorage?.getItem('session')
+      ) {
+        console.log('REMOVER STORAGE');
+        window.sessionStorage.removeItem('session');
+      }
+    };
+  }, [cEventContext]);
 
   //PERMITE VALIDAR SI TIENE O NO ACCESO A LA LANDING // SE MANEJA POR SESION STORAGE
   useEffect(() => {

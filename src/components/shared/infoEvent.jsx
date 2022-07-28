@@ -7,12 +7,32 @@ import { UseUserEvent } from '../../context/eventUserContext';
 import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useIntl } from 'react-intl';
+import { useHistory } from 'react-router';
 
 const InfoEvent = ({ paddingOff }) => {
   let cEvent = UseEventContext();
   let { handleChangeTypeModal, helperDispatch } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
+
+  //PARA REDIRIGIR A LA LANDING
+  const history = useHistory();
+
+  //VALIDACION DE BOTONES
+  const visibleButton = () => {
+    if (
+      (recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION' || (cUser?.value && cEventUser?.value)) &&
+      !window.sessionStorage.getItem('session')
+    ) {
+      return 'JOIN';
+    }
+    if (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && !cUser?.value) {
+      return 'REGISTER';
+    }
+    if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUser?.value && !cEventUser?.value) {
+      return 'SIGNUP';
+    }
+  };
 
   const intl = useIntl();
   return (
@@ -29,24 +49,37 @@ const InfoEvent = ({ paddingOff }) => {
       }}
       title={cEvent.value?.name}
       extra={
-        recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUser?.value && !cEventUser?.value ? (
+        visibleButton() == 'SIGNUP' ? (
           <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al evento',
             })}
           </Button>
+        ) : visibleButton() == 'REGISTER' ? (
+          <Button
+            onClick={() => helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })}
+            type='primary'
+            size='large'>
+            {intl.formatMessage({
+              id: 'registration.button.create',
+              defaultMessage: 'Registrarme',
+            })}
+          </Button>
         ) : (
-          recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-          !cUser?.value && (
+          visibleButton() == 'JOIN' && (
             <Button
-              onClick={() => helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })}
+              onClick={() => {
+                if (recordTypeForThisEvent(cEvent) === 'UN_REGISTERED_PUBLIC_EVENT') {
+                  window.sessionStorage.setItem('session', true);
+                  history.replace(`/landing/${cEvent.value?._id}`);
+                } else {
+                  helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
+                }
+              }}
               type='primary'
               size='large'>
-              {intl.formatMessage({
-                id: 'registration.button.create',
-                defaultMessage: 'Registrarme',
-              })}
+              Unirme
             </Button>
           )
         )

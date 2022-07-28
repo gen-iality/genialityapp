@@ -46,11 +46,11 @@ const ViewPrelanding = (props) => {
   useEffect(() => {
     setIsPrelanding(true);
     // window.sessionStorage.setItem('message', true);
-    if (!cEventContext.value || !cUser.value || !cEventUser.value) return;
-    window.sessionStorage.setItem('session', true);
-    history.replace(`/landing/${cEventContext.value?._id}`);
+    if (!cEventContext.value) return;
+    if (window.sessionStorage.getItem('session')) {
+      history.replace(`/landing/${cEventContext.value?._id}`);
+    }
   }, [cEventContext, cUser, cEventUser]);
-
   /**DYNAMIC STYLES */
 
   const desktopBlockContainerStyle = {
