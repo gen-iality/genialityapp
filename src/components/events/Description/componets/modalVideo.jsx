@@ -59,6 +59,7 @@ const ModalVideoComponent = ({
       visible={type == 'video'}
       onOk={saveUrlVideo}
       okText={'Guardar'}
+      cancelText={'Cancelar'}
       onCancel={() => {
         setType(null);
         setvideourl('');
