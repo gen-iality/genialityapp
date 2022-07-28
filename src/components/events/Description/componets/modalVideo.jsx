@@ -61,8 +61,10 @@ const ModalVideoComponent = ({
       okText={'Guardar'}
       cancelText={'Cancelar'}
       onCancel={() => {
-        setType(null);
+        setvideoerror(true);
         setvideourl('');
+        //PERMITE CAMBIAR LOS ESTADOS Y NO SE REPRODUZCA EL VIDEO
+        setTimeout(() => setType(null), 200);
       }}>
       <Row gutter={[16, 16]} justify='center' align='middle' style={{ height: '100%' }}>
         <Col span={24}>
