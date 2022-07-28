@@ -253,7 +253,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           props.type == 'Youtube' ||
           props.type == 'EviusMeet') && (
           <Space style={{ width: '100%' }}>
-            <Typography.Text strong>ID {props.type}:</Typography.Text>
+            <Typography.Text strong>ID {props.type === 'EviusMeet' ? 'GEN Connect' : props.type}:</Typography.Text>
             <Typography.Text
               copyable={{
                 tooltips: ['clic para copiar', '¡ID copiado!'],
