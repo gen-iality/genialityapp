@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import { useIntl } from 'react-intl';
-import { Row, Card, Alert } from 'antd';
+import { Row, Card, Alert, Spin } from 'antd';
 import WithEviusContext from '../../../context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '../../../helpers/request';
@@ -20,6 +20,7 @@ import { useCheckinUser } from '../../../helpers/HelperAuth';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUserContext } from '@/context/userContext';
+import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 
 const { setHasOpenSurveys } = SurveyActions;
 
@@ -149,7 +150,7 @@ const AgendaActividadDetalle = (props) => {
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
 
-          <HCOActividad activity={activity}/>
+          {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
