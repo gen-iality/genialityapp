@@ -307,7 +307,7 @@ class ListEventUser extends Component {
                 /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
                 case 'date':
                   const date = key[item.name];
-                  const dateSplit = date ? date.split('T') : '';
+                  const dateSplit = date ? date?.split('T') : '';
                   return dateSplit[0];
 
                 case 'file':
