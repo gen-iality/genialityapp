@@ -41,7 +41,7 @@ export const getAttendeeByParameter = ({
       });
 
       searchParameter = `properties.${name}`;
-      valueParameter = String(split[0]).toLowerCase();
+      valueParameter = String(split[0]);
       names = documentInformation.names;
       email = documentInformation.email;
       checkInField = documentInformation.checkInField;
