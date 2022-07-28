@@ -15,6 +15,8 @@ export const activityTypeKeys: { [key in ActivityTypeKey]: ActivityTypeName } = 
   live: 'liveBroadcast',
   meeting: 'meeting2',
   video: 'video',
+  quizing: 'quizing2', // mockup
+  survey: 'survey2', // mockup
 };
 
 export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubTypeName } = {
@@ -26,6 +28,8 @@ export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubType
   file: 'cargarvideo',
   rtmp: 'RTMP',
   meet: 'eviusMeet',
+  quizing: 'quizing', // mockup
+  survey: 'survey', // mockup
 };
 
 export const simplifiedActivityTypeMap: SimplifiedActivityTypeMap = {
@@ -39,6 +43,8 @@ export const simplifiedActivityTypeMap: SimplifiedActivityTypeMap = {
   RTMP: 'Transmisión',
   cargarvideo: 'Video',
   video: 'Video',
+  quizing: 'Quizing', // mockup
+  survey: 'Survey', // mockup
 };
 
 const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure } = {
@@ -150,6 +156,24 @@ const meetingForm: FormStructure = {
   image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6',
 };
 
+const surveyForm: FormStructure = {
+  formType: FormType.INFO,
+  key: activitySubTypeKeys.survey,
+  MainTitle: '',
+  title: 'Encuesta',
+  description: 'Configura la encuesta.',
+  image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6',
+};
+
+const quizingForm: FormStructure = {
+  formType: FormType.INFO,
+  key: activitySubTypeKeys.quizing,
+  MainTitle: '',
+  title: 'Examen',
+  description: 'Agrega un examen.',
+  image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Furl.jpg?alt=media&token=9bcff159-2e09-4022-add6-2108ed8c6089',
+};
+
 export const activityTypeData: ActivityTypeData = {
   key: 'type',
   MainTitle: 'Escoge el tipo de actividad',
@@ -180,6 +204,24 @@ export const activityTypeData: ActivityTypeData = {
       description: 'Actividad en la que solo quieras mostrar un video para tus asistentes.',
       image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
       cards: videoActivityTypeCards,
+    },
+    {
+      widgetType: WidgetType.FORM,
+      key:  activityTypeKeys.quizing,
+      MainTitle: 'Agrega un examen',
+      title: 'Exámenes',
+      description: 'En esta opción podrás agregar exámenes.',
+      image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Ftransmision.jpg?alt=media&token=92443401-db41-485f-a411-ae113186fd9c',
+      form: quizingForm,
+    },
+    {
+      widgetType: WidgetType.FORM,
+      key:  activityTypeKeys.survey,
+      MainTitle: 'Agrega una encuesta',
+      title: 'Encuestas',
+      description: 'En esta opción podrás agregar encuestas.',
+      image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
+      form: surveyForm,
     },
   ],
 };

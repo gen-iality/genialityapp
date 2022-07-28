@@ -22,6 +22,8 @@ import ParticipantRequestsCard from './components/manager/ParticipantRequestsCar
 import RTMPCard from './components/manager/RTMPCard';
 import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard';
 import GoToMeet from './components/manager/GoToMeet';
+import { activitySubTypeKeys } from '@/context/activityType/schema/activityTypeFormStructure';
+import { ActivitySubTypeName } from '@/context/activityType/schema/structureInterfaces';
 
 export interface ActivityContentManagerProps {
   activityName: string,
@@ -101,6 +103,24 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   if (!type) {
     return (
       <Typography.Title>Tipo de contenido no soportado aún</Typography.Title>
+    );
+  }
+
+  if ([activitySubTypeKeys.survey, activitySubTypeKeys.quizing].includes(activityContentType as ActivitySubTypeName)) {
+    return (
+      <>
+      <pre>
+        Take: {activityContentType}, with source={contentSource}.<br/>
+        dataLive: {JSON.stringify(dataLive)}<br/>
+        roomStatus: {JSON.stringify(roomStatus)}<br/>
+        platform: {JSON.stringify(platform)}<br/>
+      </pre>
+
+      <div style={{textAlign: 'center', width: '100%'}}>
+        <Typography.Title>{activityContentType}</Typography.Title>
+        <Typography.Text>Página de configuración del contenido.</Typography.Text>
+      </div>
+      </>
     );
   }
 

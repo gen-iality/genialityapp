@@ -1,8 +1,8 @@
-export type ActivityTypeKey = 'live' | 'meeting' | 'video';
-export type ActivitySubTypeKey = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting' | 'meet' | 'rtmp';
+export type ActivityTypeKey = 'live' | 'meeting' | 'video' | 'quizing' | 'survey';
+export type ActivitySubTypeKey = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting' | 'meet' | 'rtmp' | 'quizing' | 'survey';
 
-export type ActivityTypeName = 'liveBroadcast' | 'meeting2' | 'video';
-export type ActivitySubTypeName = '' | 'meeting' | 'eviusStreaming' | 'vimeo' | 'youTube' | 'url' | 'cargarvideo' | 'eviusMeet' | 'RTMP';
+export type ActivityTypeName = 'liveBroadcast' | 'meeting2' | 'video' | 'quizing2' | 'survey2';
+export type ActivitySubTypeName = '' | 'meeting' | 'eviusStreaming' | 'vimeo' | 'youTube' | 'url' | 'cargarvideo' | 'eviusMeet' | 'RTMP' | 'quizing' | 'survey';
 
 export type GeneralTypeName = 
   | (ActivityTypeKey & string)
@@ -12,7 +12,7 @@ export type GeneralTypeValue =
   | (ActivityTypeName & string)
   | (ActivitySubTypeName & string);
 
-export type SimplifiedActivityTypeValue = '' | 'Transmisión' | 'Video' | 'reunión' | 'vimeo' | 'Youtube' | 'EviusMeet';
+export type SimplifiedActivityTypeValue = '' | 'Transmisión' | 'Video' | 'reunión' | 'vimeo' | 'Youtube' | 'EviusMeet' | 'Quizing' | 'Survey';
 export type SimplifiedActivityTypeMap = { [key in ActivitySubTypeName]: SimplifiedActivityTypeValue } & { video: SimplifiedActivityTypeValue };
 
 export enum FormType {

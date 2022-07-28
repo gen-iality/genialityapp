@@ -71,6 +71,12 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
       case activityTypeKeys.video:
         index = 2;
         break;
+      case activityTypeKeys.quizing:
+        index = 3;
+        break;
+      case activityTypeKeys.survey:
+        index = 4;
+        break;
       default:
         console.error(`No puede reconocer actividad de tipo "${activityType}"`);
         break;
@@ -89,6 +95,8 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
         console.debug('Whole widget was passed');
         setCurrentWidget(currentOpenedCard);
       }
+    } else {
+      console.error('Tries to understand', activityType, ' but I think weird stuffs..');
     }
   }, [shouldLoad, activityType]);
 

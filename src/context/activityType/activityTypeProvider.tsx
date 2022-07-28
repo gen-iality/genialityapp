@@ -20,6 +20,8 @@ const onlyActivityTypes: ActivityTypeName[] = [
   'liveBroadcast',
   'meeting2',
   'video',
+  'quizing2',
+  'survey2',
 ];
 const theseAreLiveToo: ActivitySubTypeName[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
 const theseAreMeeting: ActivitySubTypeName[] = ['meeting'];
@@ -357,6 +359,10 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('meeting2');
               setContentSource(meetingId);
+            } else if ((typeIncoming as ActivitySubTypeName) === 'quizing') {
+              setActivityType('quizing2');
+            } else if ((typeIncoming as ActivitySubTypeName) === 'survey') {
+              setActivityType('survey2');
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);
