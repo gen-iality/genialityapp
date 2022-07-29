@@ -38,7 +38,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   const [duration, setDuration] = useState(0);
   const [errorOcurred, setErrorOcurred] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {
+  let {
     contentSource: data,
   } = useActivityType();
   const {
@@ -59,6 +59,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   } = useContext(AgendaContext);
 
   console.debug('VideoPreviewerCard.dataLive:', dataLive);
+
+  if (!data) data = meeting_id;
 
   // Render the ifram or gCore component
   const renderPlayer = () => {
@@ -270,6 +272,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             <Select
               value={roomStatus}
               onChange={(value) => {
+                console.debug('saves value of RoomStatus:', value);
                 setRoomStatus(value);
               }}
               style={{ width: '100%' }}>
