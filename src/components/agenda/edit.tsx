@@ -434,20 +434,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
               {isEditing && (
                 <>
-                  <TabPane tab='Tipo de actividad' key='2'>
-                    <Row /* justify="center" */ wrap gutter={12}>
-                      <Col span={24}>
-                        <TipeOfActivity
-                          eventId={props.event._id}
-                          activityId={currentActivityID}
-                          activityName={formdata.name}
-                          tab={currentTab}
-                        />
-                        <BackTop />
-                      </Col>
-                    </Row>
-                  </TabPane>
-                  <TabPane tab='Contenido' key='2.1'>
+                  <TabPane tab='Contenido' key='2'>
                     <Row wrap gutter={12}>
                       <Col span={24}>
                         {currentActivityID && (
@@ -455,7 +442,7 @@ function AgendaEdit(props: AgendaEditProps) {
                           activityId={currentActivityID}
                           activityName={formdata.name}
                           eventId={props.event._id}
-                          shouldLoad={currentTab === '2.1'}
+                          shouldLoad={currentTab === '2'}
                         />
                         )}
                         <BackTop/>
