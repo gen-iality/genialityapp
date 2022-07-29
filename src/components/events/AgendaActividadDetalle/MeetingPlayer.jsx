@@ -10,9 +10,9 @@ function MeetingPlayer({ activity }) {
 
   const userContext = useContext(CurrentUserContext);
 
-  const defaultVideo = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2Fgeniality-loading-streaming.mp4?alt=media&token=97dc8cbf-dc80-477d-862c-6be0eeb11076';
+  const imageDefault = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
 
-  const eviusmeetUrl = `https://stagingeviusmeet.netlify.app/?meetingId=${activity._id}&rol=0&username=${userContext.value?.names}&email=${userContext.value?.email}&photo=${userContext.value?.picture || defaultVideo}`;
+  const eviusmeetUrl = `https://stagingeviusmeet.netlify.app/?meetingId=${activity._id}&rol=0&username=${userContext.value?.names}&email=${userContext.value?.email}&photo=${userContext.value?.picture || imageDefault}`;
 
   return (
     <>
