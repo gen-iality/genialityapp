@@ -85,7 +85,8 @@ const InfoEvent = ({ paddingOff }) => {
             <Button
               onClick={() => {
                 if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT') {
-                  window.sessionStorage.setItem('session', true);
+                  //SE GUARDA LA SESION DEL USUARIO POR EL EVENTO ACTUAL
+                  window.sessionStorage.setItem('session', cEvent.value?._id);
                   history.replace(`/landing/${cEvent.value?._id}`);
                 } else {
                   helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });

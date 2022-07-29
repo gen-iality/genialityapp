@@ -84,7 +84,6 @@ const Landing = (props) => {
 
   useEffect(() => {
     if (!cEventContext.value) return;
-    console.log('SESSION==>', window.window.sessionStorage?.getItem('session'));
     DispatchMessageService({
       type: 'loading',
       msj: 'Estamos configurando la mejor experiencia para tí!',
@@ -95,7 +94,6 @@ const Landing = (props) => {
         recordTypeForThisEvent(cEventContext) == 'UN_REGISTERED_PUBLIC_EVENT' &&
         window.window.sessionStorage?.getItem('session')
       ) {
-        console.log('REMOVER STORAGE');
         window.sessionStorage.removeItem('session');
       }
     };
@@ -104,8 +102,10 @@ const Landing = (props) => {
   //PERMITE VALIDAR SI TIENE O NO ACCESO A LA LANDING // SE MANEJA POR SESION STORAGE
   useEffect(() => {
     if (!cEventContext?.value) return;
-    if (!window.window.sessionStorage?.getItem('session')) {
-      history.replace(`/${cEventContext.value?._id}`);
+    if (window.window.sessionStorage?.getItem('session') !== props.match?.params?.event_id) {
+      //SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
+      window.sessionStorage.removeItem('session');
+      history.replace(`/${props.match?.params?.event_id}`);
     }
   }, [window.sessionStorage, cUser.value, cEventUser.value, cEventContext.value]);
 

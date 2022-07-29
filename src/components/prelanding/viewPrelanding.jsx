@@ -49,7 +49,11 @@ const ViewPrelanding = (props) => {
     setIsPrelanding(true);
     // window.sessionStorage.setItem('message', true);
     if (!cEventContext.value) return;
-    if (window.sessionStorage.getItem('session')) {
+    //SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
+    if (window.sessionStorage.getItem('session') !== cEventContext.value?._id) {
+      window.sessionStorage.removeItem('session');
+    }
+    if (window.sessionStorage.getItem('session') === cEventContext.value?._id) {
       history.replace(`/landing/${cEventContext.value?._id}`);
     }
   }, [cEventContext, cUser, cEventUser]);
