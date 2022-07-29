@@ -24,6 +24,7 @@ const { useBreakpoint } = Grid;
 
 const ViewPrelanding = (props) => {
   const screens = useBreakpoint();
+
   //CONTEXTOS
   const cEventContext = useContext(CurrentEventContext);
   const cUser = useContext(CurrentUserContext);
@@ -74,8 +75,8 @@ const ViewPrelanding = (props) => {
   };
   // Estilos para el contenido del bloque en desktop y mobile
   const desktopBlockContentStyle = {
-    paddingLeft: '25px',
-    paddingRight: '25px',
+    paddingLeft: '40px',
+    paddingRight: '40px',
     paddingTop: '40px',
     paddingBottom: '40px',
   };

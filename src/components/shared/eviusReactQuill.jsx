@@ -167,6 +167,7 @@ function EviusReactQuill(props) {
         modules={modules}
         onChange={props.handleChange}
         value={props.data}
+        placeholder={props.placeholder}
       />
       {/* {codeBlock && <TextArea value={props.data} onChange={(e) => props.handleChange(e.target.value)} autoSize />}
       {codeBlock && (

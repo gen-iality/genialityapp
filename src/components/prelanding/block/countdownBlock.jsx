@@ -32,6 +32,17 @@ const CountdownBlock = () => {
     paddingBottom: '10px',
   };
 
+  const numberBlink = (days, hours, minutes, seconds, completed) => {
+    if (completed) {
+      return false;
+    } else {
+      if (days === 0 && hours === 0 && minutes === 0 && seconds <= 10) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const renderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       // Render a completed state
@@ -88,7 +99,16 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Segundos
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(seconds)}</Typography.Text>
+                    <div
+                      className={
+                        numberBlink(days, hours, minutes, seconds, completed)
+                          ? 'animate__animated animate__flash animate__fast animate__infinite'
+                          : ''
+                      }>
+                      <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>
+                        {zeroPad(seconds)}
+                      </Typography.Text>
+                    </div>
                   </Space>
                 </Col>
               </Row>
