@@ -57,7 +57,7 @@ const InfoEvent = ({ paddingOff }) => {
             })}
           </Button>
         ) : visibleButton() == 'REGISTER' ? (
-          <Row>
+          <Space wrap>
             <Button
               style={{ marginRight: 10 }}
               onClick={() => {
@@ -79,7 +79,7 @@ const InfoEvent = ({ paddingOff }) => {
                 defaultMessage: 'Registrarme',
               })}
             </Button>
-          </Row>
+          </Space>
         ) : (
           visibleButton() == 'JOIN' && (
             <Button
@@ -93,7 +93,15 @@ const InfoEvent = ({ paddingOff }) => {
               }}
               type='primary'
               size='large'>
-              Unirme
+              {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT'
+                ? intl.formatMessage({
+                    id: 'button.join',
+                    defaultMessage: 'Unirse al evento',
+                  })
+                : intl.formatMessage({
+                    id: 'modal.title.login',
+                    defaultMessage: 'Iniciar sesión',
+                  })}
             </Button>
           )
         )

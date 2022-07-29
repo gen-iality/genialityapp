@@ -17,8 +17,8 @@ const ModalTextComponent = ({
   const cEvent = useContext(CurrentEventContext);
 
   /* const textColor = cEvent.value.styles?.textMenu;
-  const bgColor = cEvent.value.styles?.toolbarDefaultBg;
- */
+  const bgColor = cEvent.value.styles?.toolbarDefaultBg; */
+
   useEffect(() => {
     if (type !== 'text') return;
     !initialValue ? setText(null) : setText(initialValue.value);
@@ -47,7 +47,8 @@ const ModalTextComponent = ({
       bodyStyle={{
         padding: '0px',
         borderTop: '10px solid #517FD6',
-        borderRadius: '8px' /* backgroundColor: bgColor */,
+        borderRadius: '8px',
+        /*  backgroundColor: bgColor, */
       }}
       title={null}
       visible={type == 'text'}
@@ -56,7 +57,8 @@ const ModalTextComponent = ({
       cancelText={'Cancelar'}
       onCancel={() => setType(null)}>
       <EviusReactQuill
-        /* styles={{ caretColor: textColor }} */
+        /*  colors={[textColor, bgColor]}
+        styles={{ caretColor: textColor }} */
         className='insideModal'
         blockedOptions={true}
         name='Texto'

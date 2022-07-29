@@ -23,6 +23,15 @@ function EviusReactQuill(props) {
   // useEffect(() => {
   //
   // }, [props.data]);
+
+  console.log('ReactQuill', ReactQuill.Toolbar.defaultColors);
+
+  const defaultColors = ReactQuill.Toolbar.defaultColors;
+  let colors = [];
+  props?.colors?.map((color) => colors.push(color));
+
+  const colorsF = colors.concat(defaultColors.map((color) => color.value));
+
   function activeCodeBlock(code) {
     if (code) {
       setCodeBlock(!codeBlock);
@@ -95,7 +104,7 @@ function EviusReactQuill(props) {
           [{ align: [] }],
           [{ syntax: true }],
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-          [{ color: [] }, { background: [] }],
+          [{ color: colorsF }, { background: [] }],
           [{ list: 'ordered' }, { list: 'bullet' }],
           ['link', !props.blockedOptions && 'image', !props.blockedOptions && 'code-block'],
         ],
