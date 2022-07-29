@@ -25,6 +25,9 @@ export default function lessonTypeToString (inputType: string) {
     case 'eviusStreaming':
       typeName = 'GEN.iality Streaming'
       break;
+    case 'quiz':
+      typeName = 'Quiz'
+      break;
     default:
       typeName = inputType;
   }

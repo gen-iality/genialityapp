@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import { useIntl } from 'react-intl';
-import { Row, Card, Alert } from 'antd';
+import { Row, Card, Alert, Spin } from 'antd';
 import WithEviusContext from '../../../context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '../../../helpers/request';
@@ -20,6 +20,7 @@ import { useCheckinUser } from '../../../helpers/HelperAuth';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUserContext } from '@/context/userContext';
+import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 
 const { setHasOpenSurveys } = SurveyActions;
 
@@ -148,61 +149,14 @@ const AgendaActividadDetalle = (props) => {
       <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
-          {!blockActivity ? (
-            <>
-              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-                cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
-                <Alert
-                  showIcon
-                  style={{
-                    width: '100%',
-                    marginTop: 40,
-                    marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
-                  }}
-                  message={
-                    <>
-                      {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
-                    </>
-                  }
-                  type='warning'
-                />
-              ) : (
-                <HCOActividad />
-              )}
-            </>
-          ) : (
-            <>
-              <Row>
-                {/* <ImageComponentwithContext /> */}
-                <Alert
-                  showIcon
-                  style={{
-                    width: '100%',
-                    marginTop: 40,
-                    marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
-                  }}
-                  message={
-                    <>
-                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
-                        https://iberofest.co/producto/edc/
-                      </a>{' '}
-                    </>
-                  }
-                  type='warning'
-                />
-              </Row>
-            </>
-          )}
+
+          {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
+
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
       </div>
       {/* Drawer encuestas */}
-      <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
+      {/* <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} /> */}
     </div>
   );
 };
