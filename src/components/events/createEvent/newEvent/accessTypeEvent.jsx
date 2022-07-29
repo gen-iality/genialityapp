@@ -40,7 +40,7 @@ const AccessTypeEvent = () => {
                 <>
                   <Divider />
                   <Checkbox onChange={() => dispatch({ type: 'TYPE_AUTHENTICATION' })}>
-                    Registros sin autenticación de usuario
+                    Registros sin autenticación de usuario (Beta)
                   </Checkbox>
                 </>
               )}

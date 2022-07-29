@@ -1206,7 +1206,7 @@ class General extends Component {
                                         },
                                       })
                                     }>
-                                    Registro sin autenticación de usuario
+                                    Registro sin autenticación de usuario (Beta)
                                   </Checkbox>
                                 </>
                               )}
