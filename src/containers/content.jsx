@@ -22,7 +22,7 @@ import loadable from '@loadable/component';
 import ModalAuth from '../components/authentication/ModalAuth';
 import ModalNoRegister from '../components/authentication/ModalNoRegister';
 import BlockedEvent from '@/components/events/Landing/BlockedEvent';
-
+import ModalAuthAnonymous from '@/components/authentication/ModalAuthAnonymous';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../pages/home'));
@@ -135,6 +135,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
                     <Header />
                     <Component {...props} />
                     <ModalAuth />
+                    <ModalAuthAnonymous />
                     <ModalNoRegister />
                   </Layout>
                 </SurveysProvider>
@@ -166,7 +167,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                           <Component {...props} />
                         ) : cUser.value == null && cUser.status == 'LOADED' ? (
                           <>
-                            <ModalAuth />
+                            <ModalAuth isPrivateRoute={true} />
+
                             <ForbiddenPage />
                           </>
                         ) : (

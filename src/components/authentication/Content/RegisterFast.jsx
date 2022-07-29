@@ -29,22 +29,22 @@ function getBase64(img, callback) {
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
-  const [ takingPhoto, setTakingPhoto ] = useState(false);
-  const [ imageAvatar, setImageAvatar ] = useState(null);
-  const [ form ] = Form.useForm();
+  const [takingPhoto, setTakingPhoto] = useState(false);
+  const [imageAvatar, setImageAvatar] = useState(null);
+  const [form] = Form.useForm();
 
   /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
    y no se ve la imagen en el preview
   */
   useEffect(() => {
-    if (basicDataUser.picture && basicDataUser.picture[ 0 ] && basicDataUser.picture[ 0 ].originFileObj) {
-      getBase64(basicDataUser.picture[ 0 ].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-    } else if (basicDataUser.picture && basicDataUser.picture[ 0 ] && basicDataUser.picture[ 0 ].url) {
-      setImageAvatar(basicDataUser.picture[ 0 ].url);
+    if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].originFileObj) {
+      getBase64(basicDataUser.picture[0].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+    } else if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].url) {
+      setImageAvatar(basicDataUser.picture[0].url);
     } else {
       setImageAvatar(null);
     }
-  }, [ basicDataUser.picture ]);
+  }, [basicDataUser.picture]);
 
   const handleTakePhotoAnimationDone = (dataUri) => {
     let pic = [
@@ -80,7 +80,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
 
   const rulePassword = [
     {
-      required: true,
+      required: cEvent.value?.visibility !== 'ANONYMOUS' ? true : false,
       message: intl.formatMessage({
         id: 'register.rule.password.message',
         defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
@@ -96,7 +96,6 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
       }),
     },
   ];
-
   const ruleCedula = [
     { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
     {
@@ -133,68 +132,71 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         autoComplete='on'
         layout='vertical'
         onFinish={onFinish}>
-        <Form.Item>
-          <ImgCrop rotate shape='round'>
-            <Upload
-              fileList={basicDataUser.picture || []}
-              accept='image/png,image/jpeg'
-              onChange={(info) => {
-                if (info.fileList.length > 0) {
-                  getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-                  HandleHookForm(null, 'picture', info.fileList);
-                } else {
-                  HandleHookForm(null, 'picture', null);
-                  setImageAvatar(null);
-                }
-              }}
-              onRemove={() => {
-                HandleHookForm(null, 'picture', null);
-              }}
-              customRequest={uploadImagedummyRequest}
-              multiple={false}
-              listType='picture'
-              maxCount={1}>
-              {!takingPhoto && (
-                <Space direction='vertical'>
-                  <Button
-                    type='primary'
-                    shape='circle'
-                    style={{
-                      height: !imageAvatar ? '120px' : '95px',
-                      width: !imageAvatar ? '120px' : '95px',
-                    }}>
-                    {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
-                    {imageAvatar && <Avatar src={imageAvatar} size={90} />}
-                  </Button>
-                  <>
-                    {intl.formatMessage({
-                      id: 'modal.label.photo',
-                      defaultMessage: 'Subir foto',
-                    })}
-                  </>
-                </Space>
+        {cEvent.value?.visibility !== 'ANONYMOUS' && (
+          <>
+            <Form.Item>
+              <ImgCrop rotate shape='round'>
+                <Upload
+                  fileList={basicDataUser.picture || []}
+                  accept='image/png,image/jpeg'
+                  onChange={(info) => {
+                    if (info.fileList.length > 0) {
+                      getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+                      HandleHookForm(null, 'picture', info.fileList);
+                    } else {
+                      HandleHookForm(null, 'picture', null);
+                      setImageAvatar(null);
+                    }
+                  }}
+                  onRemove={() => {
+                    HandleHookForm(null, 'picture', null);
+                  }}
+                  customRequest={uploadImagedummyRequest}
+                  multiple={false}
+                  listType='picture'
+                  maxCount={1}>
+                  {!takingPhoto && (
+                    <Space direction='vertical'>
+                      <Button
+                        type='primary'
+                        shape='circle'
+                        style={{
+                          height: !imageAvatar ? '120px' : '95px',
+                          width: !imageAvatar ? '120px' : '95px',
+                        }}>
+                        {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
+                        {imageAvatar && <Avatar src={imageAvatar} size={90} />}
+                      </Button>
+                      <>
+                        {intl.formatMessage({
+                          id: 'modal.label.photo',
+                          defaultMessage: 'Subir foto',
+                        })}
+                      </>
+                    </Space>
+                  )}
+                </Upload>
+              </ImgCrop>
+            </Form.Item>
+
+            {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
+            <Form.Item>
+              {takingPhoto && (
+                <div className='avatarCamera'>
+                  <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
+                </div>
               )}
-            </Upload>
-          </ImgCrop>
-        </Form.Item>
-
-        {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
-        <Form.Item>
-          {takingPhoto && (
-            <div className='avatarCamera'>
-              <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
-            </div>
-          )}
-          <Button
-            type='primary'
-            icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
-            onClick={() => {
-              //setImageAvatar(null);
-              setTakingPhoto(!takingPhoto);
-            }}
-          />
-        </Form.Item>
-
+              <Button
+                type='primary'
+                icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
+                onClick={() => {
+                  //setImageAvatar(null);
+                  setTakingPhoto(!takingPhoto);
+                }}
+              />
+            </Form.Item>
+          </>
+        )}
         <Form.Item
           label={intl.formatMessage({
             id: 'modal.label.email',
@@ -212,46 +214,51 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        {useEventWithCedula(cEvent.value?._id).isArkmed ? (
-          <Form.Item
-            label={intl.formatMessage({
-              id: 'modal.label.cedula',
-              defaultMessage: 'Cedula',
-            })}
-            name='password'
-            hasFeedback
-            style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={ruleCedula}>
-            <Input
-              onChange={(e) => HandleHookForm(e, 'password')}
-              type='number'
-              size='large'
-              // placeholder={'Cedula del medico ó especialista'}
-              placeholder={'Cedula ó numero de identificación'}
-              prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-            />
-          </Form.Item>
-        ) : (
-          <Form.Item
-            label={intl.formatMessage({
-              id: 'modal.label.password',
-              defaultMessage: 'Contraseña',
-            })}
-            name='password'
-            hasFeedback
-            style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={rulePassword}>
-            <Input.Password
-              onChange={(e) => HandleHookForm(e, 'password')}
-              type='password'
-              size='large'
-              placeholder={intl.formatMessage({
-                id: 'modal.label.password',
-                defaultMessage: 'Contraseña',
-              })}
-              prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-            />
-          </Form.Item>
+
+        {cEvent.value?.visibility !== 'ANONYMOUS' && (
+          <>
+            {useEventWithCedula(cEvent.value?._id).isArkmed ? (
+              <Form.Item
+                label={intl.formatMessage({
+                  id: 'modal.label.cedula',
+                  defaultMessage: 'Cedula',
+                })}
+                name='password'
+                hasFeedback
+                style={{ marginBottom: '10px', textAlign: 'left' }}
+                rules={ruleCedula}>
+                <Input
+                  onChange={(e) => HandleHookForm(e, 'password')}
+                  type='number'
+                  size='large'
+                  // placeholder={'Cedula del medico ó especialista'}
+                  placeholder={'Cedula ó numero de identificación'}
+                  prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                />
+              </Form.Item>
+            ) : (
+              <Form.Item
+                label={intl.formatMessage({
+                  id: 'modal.label.password',
+                  defaultMessage: 'Contraseña',
+                })}
+                name='password'
+                hasFeedback
+                style={{ marginBottom: '10px', textAlign: 'left' }}
+                rules={rulePassword}>
+                <Input.Password
+                  onChange={(e) => HandleHookForm(e, 'password')}
+                  type='password'
+                  size='large'
+                  placeholder={intl.formatMessage({
+                    id: 'modal.label.password',
+                    defaultMessage: 'Contraseña',
+                  })}
+                  prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                />
+              </Form.Item>
+            )}
+          </>
         )}
         <Form.Item
           label={intl.formatMessage({

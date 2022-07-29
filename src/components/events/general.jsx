@@ -204,7 +204,10 @@ class General extends Component {
     }
 
     //Esto es para la configuración de autenticación. Nuevo flujo de Login
-    if (this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register) {
+    if (
+      (this.state.event.visibility === 'PUBLIC' || this.state.event.visibility === 'ANONYMOUS') &&
+      this.state.event.allow_register
+    ) {
       //Evento Público con Registro
       this.setState({ typeEvent: 0 });
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
@@ -1170,7 +1173,6 @@ class General extends Component {
                             )
                           }>
                           <div
-                            onClick={() => this.changetypeEvent(0)}
                             style={{
                               border: '1px solid #D3D3D3',
                               borderRadius: '5px',
@@ -1179,15 +1181,35 @@ class General extends Component {
                               minHeight: '170px',
                             }}>
                             <Space direction='vertical'>
-                              <Text strong>Evento Público con Registro</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                <ul>
-                                  <li>Tiene registro para todos.</li>
-                                  <br />
-                                  <li>Tiene inicio de sesión para todos.</li>
-                                </ul>
-                              </Text>
+                              <div onClick={() => this.changetypeEvent(0)}>
+                                <Text strong>Evento Público con Registro</Text>
+                                <Divider />
+                                <Text type='secondary'>
+                                  <ul>
+                                    <li>Tiene registro para todos.</li>
+                                    <br />
+                                    <li>Tiene inicio de sesión para todos.</li>
+                                  </ul>
+                                </Text>
+                              </div>
+                              {this.state.typeEvent === 0 && (
+                                <>
+                                  <Divider />
+                                  <Checkbox
+                                    defaultChecked={this.state.event.visibility === 'ANONYMOUS'}
+                                    onChange={(e) =>
+                                      this.setState({
+                                        event: {
+                                          ...this.state.event,
+                                          visibility: e.target.checked === true ? 'ANONYMOUS' : 'PUBLIC',
+                                          allow_register: true,
+                                        },
+                                      })
+                                    }>
+                                    Registro sin autenticación de usuario (Beta)
+                                  </Checkbox>
+                                </>
+                              )}
                             </Space>
                           </div>
                         </Badge>

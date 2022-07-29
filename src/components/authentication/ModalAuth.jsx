@@ -40,6 +40,7 @@ const ModalAuth = (props) => {
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
+  console.log(props);
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
@@ -51,6 +52,8 @@ const ModalAuth = (props) => {
     switch (typeEvent) {
       case 'PRIVATE_EVENT':
         return false;
+      case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
+        return props.isPrivateRoute ? true : false;
       case 'PUBLIC_EVENT_WITH_REGISTRATION':
         return true;
       default:
