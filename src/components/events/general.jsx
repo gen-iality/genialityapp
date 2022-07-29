@@ -853,7 +853,7 @@ class General extends Component {
                     </Form.Item>
                   )} */}
 
-                  {event.type_event === 'physicalEvent' && (
+                  {event.type_event !== 'onlineEvent' && (
                     <>
                       <Form.Item label={'Dirección'}>
                         <Input
