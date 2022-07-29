@@ -15,11 +15,13 @@ import {
   Switch,
   Card,
   TimePicker,
+  Modal,
 } from 'antd';
 import { Select as SelectAntd } from 'antd';
 import {
   ExclamationCircleOutlined,
   SettingOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 
 import {
@@ -49,6 +51,8 @@ import EventType from '../types/EventType';
 import AgendaDocumentType from '../types/AgendaDocumentType';
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
+
+import Speaker from '../../speakers/speaker';
 
 const { Text } = Typography;
 const { Option } = SelectAntd;
@@ -103,6 +107,9 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
+
+  // aux states
+  const [isSpeakerModalShown, setIsSpeakerModalShown] = useState(false);
 
   const history = useHistory();
   const nameInputRef = useRef<InputRef>(null);
@@ -352,7 +359,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'Nombre de la actividad requerida' }]}
+            rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
           >
             <Input
               autoFocus
@@ -361,7 +368,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               name="name"
               value={formdata.name}
               onChange={(value) => handleChangeFormData('name', value.target.value)}
-              placeholder="Nombre de la actividad"
+              placeholder="Nombre de la lección"
             />
           </Form.Item>
           <Form.Item
@@ -423,7 +430,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
           </Row>
           <Form.Item label="Conferencista">
             <Row wrap gutter={[8, 8]}>
-              <Col span={23}>
+              <Col span={22}>
                 <Select
                   isMulti
                   id="hosts"
@@ -436,10 +443,42 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               </Col>
               <Col span={1}>
                 <Button
-                  onClick={() => goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
-                  icon={<SettingOutlined />}
+                  onClick={() => {
+                    // goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })
+                    setIsSpeakerModalShown(true);
+                    console.log('Open the speaker modal');
+                  }}
+                  title="Agregar conferencista"
+                  icon={<PlusOutlined />}
                 />
               </Col>
+              <Col span={1}>
+                <Button
+                  onClick={() => goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
+                  icon={<SettingOutlined />}
+                  title="Configurar en otra página"
+                />
+              </Col>
+              {/* The speaker modal */}
+              <Modal
+                visible={isSpeakerModalShown}
+                onCancel={()=> setIsSpeakerModalShown(false)}
+                okButtonProps={{disabled: true}}
+              >
+                <Speaker
+                  eventID={props.event._id}
+                  matchUrl={props.matchUrl}
+                  onCreated={()=> {
+                    const loading = async () => {
+                      const incommingHosts = await SpeakersApi.byEvent(props.event._id);
+                      const hosts = handleSelect(incommingHosts);
+                      setAllHosts(hosts);
+                    }
+                    loading().then(() => console.log('hosts reloaded'));
+                    setIsSpeakerModalShown(false);
+                  }}
+                  justCreate />
+              </Modal>
             </Row>
           </Form.Item>
           <Form.Item label="Espacio">
@@ -474,7 +513,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   isLoading={thisIsLoading.categories}
                   options={allCategories}
                   value={formdata.selectedCategories}
-                  placeholder="Sin categoría...."
+                  placeholder="Sin categoría..."
                 />
               </Col>
               <Col span={1}>
@@ -518,7 +557,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
             <Space>
               <ExclamationCircleOutlined style={{ color: '#faad14' }} />
               <Text type="secondary">
-                Esta información no es visible en la Agenda/Actividad en versión Mobile.
+                Esta información no es visible en la Agenda/Lección en versión Mobile.
               </Text>
             </Space>
             <EviusReactQuill
