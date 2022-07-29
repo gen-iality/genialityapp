@@ -1,5 +1,5 @@
 import { UseEventContext } from '../../context/eventContext';
-import { Button, Divider, PageHeader, Space, Typography } from 'antd';
+import { Button, Divider, PageHeader, Row, Space, Typography } from 'antd';
 import Moment from 'moment';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
@@ -57,15 +57,29 @@ const InfoEvent = ({ paddingOff }) => {
             })}
           </Button>
         ) : visibleButton() == 'REGISTER' ? (
-          <Button
-            onClick={() => helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })}
-            type='primary'
-            size='large'>
-            {intl.formatMessage({
-              id: 'registration.button.create',
-              defaultMessage: 'Registrarme',
-            })}
-          </Button>
+          <Row>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
+              }}
+              type='primary'
+              size='large'>
+              {intl.formatMessage({
+                id: 'modal.title.login',
+                defaultMessage: 'Iniciar sesión',
+              })}
+            </Button>
+            <Button
+              onClick={() => helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })}
+              type='primary'
+              size='large'>
+              {intl.formatMessage({
+                id: 'registration.button.create',
+                defaultMessage: 'Registrarme',
+              })}
+            </Button>
+          </Row>
         ) : (
           visibleButton() == 'JOIN' && (
             <Button

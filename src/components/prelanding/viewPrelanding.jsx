@@ -105,11 +105,14 @@ const ViewPrelanding = (props) => {
   }, [cEventContext]);
   return (
     <Layout className='site-layout-background'>
-      <Row className='headerContainer'>
-        <Col>
-          <img src={cBanner}></img>
-        </Col>
-      </Row>
+      {(cEventContext.value?.styles?.show_banner === undefined ||
+        cEventContext.value?.styles?.show_banner === 'true') && (
+        <Row className='headerContainer'>
+          <Col>
+            <img src={cBanner}></img>
+          </Col>
+        </Row>
+      )}
       <Content
         style={{
           backgroundColor: cContainerBgColor,
