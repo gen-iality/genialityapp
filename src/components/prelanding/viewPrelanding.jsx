@@ -11,10 +11,10 @@ import { Col, Row, Layout, Card, Grid, BackTop, Avatar } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import ModalPermission from '../authentication/ModalPermission';
+import { RenderSectios } from '../events/Description/componets/renderSectios';
 import InfoEvent from '../shared/infoEvent';
 import ActivityBlock from './block/activityBlock';
 import CountdownBlock from './block/countdownBlock';
-import DescriptionBlock from './block/descriptionBlock';
 import SpeakersBlock from './block/speakersBlock';
 import MenuScrollBlock from './MenuScrollBlock';
 
@@ -39,8 +39,8 @@ const ViewPrelanding = (props) => {
   const cBanner = cEventContext.value?.styles?.banner_image;
   const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
   const cBackgroundImage = cEventContext.value?.styles?.BackgroundImage;
-  const cColor1 = cEventContext.value?.styles?.toolbarDefaultBg;
-  const cColor2 = cEventContext.value?.styles?.textMenu;
+  const bgColor = cEventContext.value?.styles?.toolbarDefaultBg;
+  const textColor = cEventContext.value?.styles?.textMenu;
 
   //PERMITE INGRESAR A LA LANDING DEL EVENTO
   useEffect(() => {
@@ -51,8 +51,9 @@ const ViewPrelanding = (props) => {
       history.replace(`/landing/${cEventContext.value?._id}`);
     }
   }, [cEventContext, cUser, cEventUser]);
-  /**DYNAMIC STYLES */
 
+  /**DYNAMIC STYLES */
+  // Estilos para el contenedor de bloques en desktop y mobile
   const desktopBlockContainerStyle = {
     paddingLeft: '60px',
     paddingRight: '60px',
@@ -65,7 +66,21 @@ const ViewPrelanding = (props) => {
     paddingTop: '40px',
     paddingBottom: '40px',
   };
+  // Estilos para el contenido del bloque en desktop y mobile
+  const desktopBlockContentStyle = {
+    paddingLeft: '25px',
+    paddingRight: '25px',
+    paddingTop: '40px',
+    paddingBottom: '40px',
+  };
+  const mobileBlockContentStyle = {
+    paddingLeft: '25px',
+    paddingRight: '25px',
+    paddingTop: '25px',
+    paddingBottom: '25px',
+  };
 
+  // Funciones para el render
   const obtenerOrder = (name) => {
     if (sections) {
       return sections && sections.filter((section) => section.name == name)[0]?.index + 2;
@@ -153,12 +168,13 @@ const ViewPrelanding = (props) => {
                 <Col order={obtenerOrder('Descripción')} span={24}>
                   <Card
                     id='Descripción_block'
+                    className='viewReactQuill'
+                    bodyStyle={screens.xs ? mobileBlockContentStyle : desktopBlockContentStyle}
                     style={{
                       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                      height: '300px',
                       borderRadius: '20px',
                     }}>
-                    <DescriptionBlock />
+                    <RenderSectios />
                   </Card>
                 </Col>
               )}
@@ -191,7 +207,12 @@ const ViewPrelanding = (props) => {
           shape='square'
           icon={<ArrowUpOutlined />}
           size={{ xs: 50, sm: 50, md: 50, lg: 50, xl: 50, xxl: 50 }}
-          style={{ color: '#FFFFFF', backgroundColor: '#000000', borderRadius: '8px' }}></Avatar>
+          style={{
+            color: textColor,
+            backgroundColor: bgColor,
+            borderRadius: '8px',
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+          }}></Avatar>
       </BackTop>
     </Layout>
   );
