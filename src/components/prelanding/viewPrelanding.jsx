@@ -12,6 +12,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import ModalPermission from '../authentication/ModalPermission';
 import { RenderSectios } from '../events/Description/componets/renderSectios';
+import EviusFooter from '../events/Landing/EviusFooter';
 import InfoEvent from '../shared/infoEvent';
 import ActivityBlock from './block/activityBlock';
 import CountdownBlock from './block/countdownBlock';
@@ -37,6 +38,7 @@ const ViewPrelanding = (props) => {
   const [sections, setSections] = useState([]);
   console.log('Event', cEventContext);
   const cBanner = cEventContext.value?.styles?.banner_image;
+  const cFooter = cEventContext.value?.styles?.banner_footer;
   const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
   const cBackgroundImage = cEventContext.value?.styles?.BackgroundImage;
   const bgColor = cEventContext.value?.styles?.toolbarDefaultBg;
@@ -55,8 +57,8 @@ const ViewPrelanding = (props) => {
   /**DYNAMIC STYLES */
   // Estilos para el contenedor de bloques en desktop y mobile
   const desktopBlockContainerStyle = {
-    paddingLeft: '60px',
-    paddingRight: '60px',
+    paddingLeft: '160px',
+    paddingRight: '160px',
     paddingTop: '40px',
     paddingBottom: '40px',
   };
@@ -119,7 +121,7 @@ const ViewPrelanding = (props) => {
     }
   }, [cEventContext]);
   return (
-    <Layout className='site-layout-background'>
+    <Layout>
       {(cEventContext.value?.styles?.show_banner === undefined ||
         cEventContext.value?.styles?.show_banner === 'true') && (
         <Row className='headerContainer'>
@@ -201,7 +203,19 @@ const ViewPrelanding = (props) => {
             </Row>
           </Col>
         </Row>
+        <>
+          {cFooter && (
+            <div style={{ textAlign: 'center' }}>
+              <img
+                alt='footer'
+                src={cFooter}
+                style={{ width: '100%', maxWidth: '100%', maxHeight: '255px', objectFit: 'cover' }}
+              />
+            </div>
+          )}
+        </>
       </Content>
+
       <BackTop>
         <Avatar
           shape='square'
