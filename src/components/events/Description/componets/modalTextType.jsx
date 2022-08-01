@@ -1,5 +1,6 @@
 import EviusReactQuill from '@/components/shared/eviusReactQuill';
 import { CurrentEventContext } from '@/context/eventContext';
+import { EventsApi } from '@/helpers/request';
 import { Form, message, Modal } from 'antd';
 import { useState, useEffect, useContext } from 'react';
 
@@ -15,15 +16,23 @@ const ModalTextComponent = ({
 }) => {
   const [text, setText] = useState(null);
   const cEvent = useContext(CurrentEventContext);
-
-  const textColor = cEvent.value.styles?.textMenu;
-  const bgColor = cEvent.value.styles?.toolbarDefaultBg;
+  const [textColor, setTextColor] = useState(null);
+  const [bgColor, setBgColor] = useState(null);
 
   useEffect(() => {
     if (type !== 'text') return;
     !initialValue ? setText(null) : setText(initialValue.value);
+    obtenerEvento();
+    async function obtenerEvento() {
+      const event = await EventsApi.landingEvent(cEvent.value._id);
+      if (event) {
+        setBgColor(event.styles?.toolbarDefaultBg);
+        setTextColor(event.styles?.textMenu);
+      }
+    }
     return () => setType(null);
   }, [type]);
+
   const saveText = () => {
     if (text) {
       const item = {

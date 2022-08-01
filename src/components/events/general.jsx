@@ -331,7 +331,7 @@ class General extends Component {
 
   validateTabs = () => {
     const { event } = this.props;
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       firestore
         .collection('events')
         .doc(event._id)
@@ -356,7 +356,7 @@ class General extends Component {
     const { tabs } = this.state;
     let response = await this.validateTabs();
 
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve) {
       if (response) {
         let updateData = { ...response, tabs: { ...tabs } };
 
@@ -1053,7 +1053,7 @@ class General extends Component {
                       selectedOptions={selectedCategories}
                       selectOption={this.selectCategory}
                       options={categories}
-                    /* required={true} */
+                      /* required={true} */
                     />
                   </Form.Item>
 
@@ -1064,7 +1064,7 @@ class General extends Component {
                       selectedOptions={selectedType}
                       selectOption={this.selectType}
                       options={types}
-                    /* required={true} */
+                      /* required={true} */
                     />
                   </Form.Item>
 

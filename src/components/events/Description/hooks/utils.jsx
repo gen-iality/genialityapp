@@ -2,6 +2,7 @@ import { EventsApi } from '@/helpers/request';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { isNumber } from 'ramda-adjunct';
+import { notification } from 'antd';
 
 export const messageDinamic = (type) => {
   switch (type) {
