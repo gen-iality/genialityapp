@@ -36,7 +36,8 @@ export type newData = {
 export type FormEnrollAttendeeToEventPropsTypes = {
   fields: any;
   conditionalFields: any;
-  attendee: any;
+  //Only send to edit attendee
+  attendee?: any;
   /** Receive an array of options, example:
      const options = [
     {
@@ -47,17 +48,24 @@ export type FormEnrollAttendeeToEventPropsTypes = {
     },
   ];
    */
-  options: any;
+  options?: any;
   /** It allows to send a function to which the information of the event attendee will be passed and it will allow to create or update it */
   saveAttendee: (attendee: any) => void;
-  loaderWhenSavingUpdatingOrDelete: boolean;
+  loaderWhenSavingUpdatingOrDelete?: boolean;
   /** Allows setting the state for a loader. */
-  checkInAttendeeCallbak: (attendee: any) => void;
+  checkInAttendeeCallbak?: (attendee: any) => void;
   /** Indicates if the component will be used in the cms or in the landing */
-  visibleInCms: boolean;
-  eventType: string;
-  submitIcon: ReactNode;
+  visibleInCms?: boolean;
+  eventType?: string;
+  submitButtonProps?: submitButtonPropsTypes;
 };
+
+export type submitButtonPropsTypes = {
+  icon?: ReactNode;
+  styles?: object;
+  text?: string;
+};
+
 export type saveCheckInAttendeePropsTypes = {
   _id: string;
   checked: boolean;

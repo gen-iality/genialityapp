@@ -90,6 +90,7 @@ export const SearchUserbyEmail = (email) => {
 
 //BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
 export const getCurrentUser = async () => {
+  
   let token = await GetTokenUserFirebase();
 
   return new Promise(async (resolve) => {
