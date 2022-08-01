@@ -65,16 +65,18 @@ const ModalTextComponent = ({
       okText={'Guardar'}
       cancelText={'Cancelar'}
       onCancel={() => setType(null)}>
-      <EviusReactQuill
-        placeholder='Ingresa aquí la descripción'
-        colors={[textColor, bgColor]}
-        styles={{ caretColor: textColor }}
-        className='insideModal'
-        blockedOptions={true}
-        name='Texto'
-        data={text}
-        handleChange={(value) => handleText(value)}
-      />
+      {textColor && bgColor && (
+        <EviusReactQuill
+          placeholder='Ingresa aquí la descripción'
+          colors={[textColor, bgColor]}
+          styles={{ caretColor: textColor }}
+          className='insideModal'
+          blockedOptions={true}
+          name='Texto'
+          data={text}
+          handleChange={(value) => handleText(value)}
+        />
+      )}
     </Modal>
   );
 };
