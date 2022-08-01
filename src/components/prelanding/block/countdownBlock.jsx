@@ -9,6 +9,8 @@ const CountdownBlock = () => {
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
   const [dateLimitContador, setDateLimitContador] = useState(null);
+  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
+  const textColor = cEvent.value?.styles?.textMenu;
   useEffect(() => {
     if (!cEvent.value) return;
     //PERMITE FORMATEAR LA FECHA PARA PODER INICIALIZAR EL CONTADOR
@@ -20,12 +22,14 @@ const CountdownBlock = () => {
   const stylesSubtitle = {
     fontSize: '12px',
     textTransform: 'uppercase',
+    color: bgColor,
+    fontWeight: '500',
   };
 
-  const stylesNumeric = {
+  const stylesContainerNumeric = {
     width: '120px',
     textAlign: 'center',
-    backgroundColor: '#F9FAFE',
+    backgroundColor: textColor,
     paddingLeft: '10px',
     paddingRight: '10px',
     borderRadius: '10px',
@@ -50,7 +54,7 @@ const CountdownBlock = () => {
         <Row gutter={[0, 16]} justify='center' align='middle' style={{ height: '100%' }}>
           <Col span={24}>
             <Row justify='center' align='middle'>
-              <Typography.Text strong style={{ textAlign: 'center' }}>
+              <Typography.Text strong style={{ textAlign: 'center', fontSize: '18px', color: textColor }}>
                 {cEvent?.value?.countdownFinalMessage}
               </Typography.Text>
             </Row>
@@ -63,39 +67,47 @@ const CountdownBlock = () => {
         <Row gutter={[0, 16]} justify='center' align='middle' style={{ height: '100%' }}>
           <Col span={24}>
             <Row justify='center' align='middle'>
-              <Typography.Text style={{ textAlign: 'center' }}>{cEvent?.value?.countdownMessage}</Typography.Text>
+              <Typography.Text style={{ textAlign: 'center', fontSize: '18px', color: textColor }}>
+                {cEvent?.value?.countdownMessage}
+              </Typography.Text>
             </Row>
           </Col>
           <Col span={24}>
             <Typography.Text strong style={{ fontSize: '38px' }}>
               <Row gutter={[16, 16]} justify='center' align='middle'>
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesNumeric}>
+                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Dias
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(days)}</Typography.Text>
+                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: bgColor }}>
+                      {zeroPad(days)}
+                    </Typography.Text>
                   </Space>
                 </Col>
 
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesNumeric}>
+                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Horas
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(hours)}</Typography.Text>
+                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: bgColor }}>
+                      {zeroPad(hours)}
+                    </Typography.Text>
                   </Space>
                 </Col>
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesNumeric}>
+                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Minutos
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>{zeroPad(minutes)}</Typography.Text>
+                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: bgColor }}>
+                      {zeroPad(minutes)}
+                    </Typography.Text>
                   </Space>
                 </Col>
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesNumeric}>
+                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Segundos
                     </Typography.Text>
@@ -105,7 +117,7 @@ const CountdownBlock = () => {
                           ? 'animate__animated animate__flash animate__fast animate__infinite'
                           : ''
                       }>
-                      <Typography.Text style={{ fontVariantNumeric: 'tabular-nums' }}>
+                      <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: bgColor }}>
                         {zeroPad(seconds)}
                       </Typography.Text>
                     </div>

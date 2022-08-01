@@ -334,13 +334,15 @@ iframe {
 
 // Estilos para la caja de colores en reactQuill, modifica los dos primero colores
 
-.ql-picker-item:nth-child(-n + 2) {
-  width: 47% !important;
-  height: 20px !important;
-  border: 1px solid #c4c4c4 !important;
-}
-.ql-picker-item:nth-child(-n + 2):hover {
-  border: 1px solid #000000 !important;
+.ql-color-picker {
+  .ql-picker-item:nth-child(-n + 2) {
+    width: 47% !important;
+    height: 20px !important;
+    border: 1px solid #c4c4c4 !important;
+  }
+  .ql-picker-item:nth-child(-n + 2):hover {
+    border: 1px solid #000000 !important;
+  }
 }
 
 // Estilos para el reactQuill que se llama desde un modal

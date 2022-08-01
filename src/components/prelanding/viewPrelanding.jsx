@@ -155,7 +155,14 @@ const ViewPrelanding = (props) => {
             <Row gutter={[0, 16]} align='stretch' justify='center'>
               <Col span={24} order={1}>
                 {isVisibleCardSections() ? (
-                  <Card style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: '10px' }}>
+                  <Card
+                    style={{
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      borderRadius: '10px',
+                      color: textColor,
+                      backgroundColor: bgColor,
+                      border: 'none',
+                    }}>
                     <Row justify='center' align='middle'>
                       <MenuScrollBlock sections={sections && sections} />
                     </Row>
@@ -166,7 +173,14 @@ const ViewPrelanding = (props) => {
                 <Col order={obtenerOrder('Contador')} span={24}>
                   <Card
                     id='Contador_block'
-                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: 'auto', borderRadius: '20px' }}>
+                    style={{
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      height: 'auto',
+                      borderRadius: '20px',
+                      color: textColor,
+                      backgroundColor: bgColor,
+                      border: 'none',
+                    }}>
                     <CountdownBlock />
                   </Card>
                 </Col>
@@ -180,6 +194,9 @@ const ViewPrelanding = (props) => {
                     style={{
                       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                       borderRadius: '20px',
+                      color: textColor,
+                      backgroundColor: bgColor,
+                      border: 'none',
                     }}>
                     <RenderSectios />
                   </Card>
@@ -190,7 +207,14 @@ const ViewPrelanding = (props) => {
                   <Card
                     id='Conferencistas_block'
                     bodyStyle={{ height: '100%', padding: screens.xs ? '10px' : '24px' }}
-                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '450px', borderRadius: '20px' }}>
+                    style={{
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      height: '450px',
+                      borderRadius: '20px',
+                      color: textColor,
+                      backgroundColor: bgColor,
+                      border: 'none',
+                    }}>
                     <SpeakersBlock />
                   </Card>
                 </Col>
@@ -200,7 +224,14 @@ const ViewPrelanding = (props) => {
                   <Card
                     id='Actividades_block'
                     bodyStyle={{ height: '100%' }}
-                    style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', height: '100%', borderRadius: '20px' }}>
+                    style={{
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      height: '100%',
+                      borderRadius: '20px',
+                      color: textColor,
+                      backgroundColor: bgColor,
+                      border: 'none',
+                    }}>
                     <ActivityBlock />
                   </Card>
                 </Col>
@@ -225,7 +256,7 @@ const ViewPrelanding = (props) => {
         <Avatar
           shape='square'
           icon={<ArrowUpOutlined />}
-          size={{ xs: 50, sm: 50, md: 50, lg: 50, xl: 50, xxl: 50 }}
+          size={50}
           style={{
             color: textColor,
             backgroundColor: bgColor,
