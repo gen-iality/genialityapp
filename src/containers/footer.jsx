@@ -92,7 +92,7 @@ const Footer = () => {
           lg={{ order: 1 }}
           xl={{ order: 1 }}
           xxl={{ order: 1 }}>
-          <img src={imageUtils.LogoSvg} width={200} />
+          <img src={import.meta.env.VITE_IMAGE_FOOTER} width={200} />
         </Col>
         <Col
           xs={{ order: 1 }}
