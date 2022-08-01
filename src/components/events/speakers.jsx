@@ -4,8 +4,9 @@ import { Component } from 'react';
 import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpers/request';
 import Moment from 'moment';
 import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { CloseOutlined, UserOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
+import ReactQuill from 'react-quill';
 
 const { Meta } = Card;
 const { Paragraph, Text, Title } = Typography;
@@ -210,6 +211,7 @@ class Speakers extends Component {
                                         /* paddingLeft: '50px',
                                         paddingRight: '50px', */
                                         minHeight: '428px',
+                                        backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg,
                                       }}
                                       cover={
                                         speaker.image ? (
@@ -248,8 +250,14 @@ class Speakers extends Component {
                                           <div
                                             key={'speaker-description  ' + key}
                                             style={{ minHeight: '100px', textAlign: 'center' }}>
-                                            <Title level={4}>{speaker.name}</Title>
-                                            <Paragraph>{speaker.profession}</Paragraph>
+                                            <Title
+                                              level={4}
+                                              style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                                              {speaker.name}
+                                            </Title>
+                                            <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                                              {speaker.profession}
+                                            </Paragraph>
                                             {/* <p
                                               style={{
                                                 textOverflow: 'ellipsis',
@@ -312,6 +320,7 @@ class Speakers extends Component {
                         /* paddingLeft: '50px',
                           paddingRight: '50px', */
                         minHeight: '428px',
+                        backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg,
                       }}
                       cover={
                         speaker.image ? (
@@ -351,8 +360,12 @@ class Speakers extends Component {
                           ]} */
                         description={[
                           <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
-                            <Title level={4}>{speaker.name}</Title>
-                            <Paragraph>{speaker.profession}</Paragraph>
+                            <Title level={4} style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                              {speaker.name}
+                            </Title>
+                            <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                              {speaker.profession}
+                            </Paragraph>
                             {/* <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                 <Tooltip placement='bottomLeft' title={speaker.profession}>
                                   <span>{speaker.profession}</span>
@@ -372,22 +385,20 @@ class Speakers extends Component {
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
 
         <Modal
-          title={
+          closeIcon={<CloseOutlined style={{ color: this.props.cEvent.value?.styles?.textMenu }} />}
+          bodyStyle={{ backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg }}
+          /* title={
             infoSpeaker.category
               ? infoSpeaker.category
               : this.props.cEvent.value._id !== '60cb7c70a9e4de51ac7945a2'
               ? 'Conferencista'
               : 'Artista'
-          }
+          } */
           centered
           width={1000}
           visible={this.state.modalVisible}
           onCancel={() => this.setModalVisible(false)}
-          footer={[
-            <Button key='cerrar' type='primary' onClick={() => this.setModalVisible(false)}>
-              Cerrar
-            </Button>,
-          ]}>
+          footer={null}>
           <Row>
             {/* Imagen del conferencista */}
 
@@ -410,8 +421,24 @@ class Speakers extends Component {
                 </span>
                 <br />
                 <br />
-                <div style={{ width: '90%' }} dangerouslySetInnerHTML={{ __html: infoSpeaker.descripcion }} />
+                <Row justify='center'>
+                  <Col span={24} id='img-description'>
+                    <ReactQuill
+                      value={infoSpeaker.descripcion}
+                      readOnly={true}
+                      className='hide-toolbar ql-toolbar'
+                      theme='bubble'
+                    />
+                  </Col>
+                </Row>
               </p>
+            </Col>
+            <Col span={24}>
+              <Row justify='end'>
+                <Button key='cerrar' size='large' type='primary' onClick={() => this.setModalVisible(false)}>
+                  Cerrar
+                </Button>
+              </Row>
             </Col>
           </Row>
           {infoSpeaker.description_activity === 'true' && (
@@ -431,7 +458,16 @@ class Speakers extends Component {
                       </p>
                       <p>{activities.name}</p>
                       <br />
-                      <div dangerouslySetInnerHTML={{ __html: activities.description }} />
+                      <Row justify='center'>
+                        <Col span={24} id='img-description'>
+                          <ReactQuill
+                            value={activities.description}
+                            readOnly={true}
+                            className='hide-toolbar ql-toolbar'
+                            theme='bubble'
+                          />
+                        </Col>
+                      </Row>
                     </div>
                   </Card>
                 </div>

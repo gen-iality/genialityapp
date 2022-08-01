@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import ModalSpeaker from '../modalSpeakers';
 import DocumentsList from '../../documents/documentsList';
 import { UserOutlined } from '@ant-design/icons';
+import ReactQuill from 'react-quill';
 const { TabPane } = Tabs;
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -42,10 +43,18 @@ const AditionalInformation = (props) => {
               </>
             }
             key='description'>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: currentActivity && currentActivity.description,
-              }}></div>
+            <Row justify='center'>
+              <Col span={24} id='img-description'>
+                {currentActivity?.description && (
+                  <ReactQuill
+                    value={currentActivity?.description}
+                    readOnly={true}
+                    className='hide-toolbar ql-toolbar'
+                    theme='bubble'
+                  />
+                )}
+              </Col>
+            </Row>
             <br />
             {(currentActivity !== null && currentActivity.hosts.length === 0) ||
             props.cEvent.value._id === '601470367711a513cc7061c2' ? (
