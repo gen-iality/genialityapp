@@ -54,7 +54,7 @@ const CountdownBlock = () => {
         <Row gutter={[0, 16]} justify='center' align='middle' style={{ height: '100%' }}>
           <Col span={24}>
             <Row justify='center' align='middle'>
-              <Typography.Text strong style={{ textAlign: 'center', fontSize: '18px', color: textColor }}>
+              <Typography.Text strong style={{ textAlign: 'center', fontSize: '24px', color: textColor }}>
                 {cEvent?.value?.countdownFinalMessage}
               </Typography.Text>
             </Row>

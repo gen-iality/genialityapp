@@ -11,6 +11,8 @@ const ActivityBlock = () => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
   const mode = 'alternate';
+  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
+  const textColor = cEvent.value?.styles?.textMenu;
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -72,9 +74,10 @@ const ActivityBlock = () => {
       case 'cargarvideo':
         return (
           <Tag
-            color='#87d068'
+            color={textColor}
             style={{
               userSelect: 'none',
+              color: bgColor,
             }}>
             Video
           </Tag>
@@ -84,9 +87,10 @@ const ActivityBlock = () => {
       case 'youTube':
         return (
           <Tag
-            color='#87d068'
+            color={textColor}
             style={{
               userSelect: 'none',
+              color: bgColor,
             }}>
             Transmisión
           </Tag>
@@ -94,9 +98,10 @@ const ActivityBlock = () => {
       case 'meeting':
         return (
           <Tag
-            color='#87d068'
+            color={textColor}
             style={{
               userSelect: 'none',
+              color: bgColor,
             }}>
             Reunión
           </Tag>
@@ -111,46 +116,40 @@ const ActivityBlock = () => {
         {activities.map((activity, index) => {
           return (
             <Timeline.Item
+              color={textColor}
               label={activity?.type && determineType(activity.type.name)}
               style={index === 0 ? { marginTop: '20px' } : {}}
-              dot={activities.length === index + 1 && <FlagCheckeredIcon style={{ fontSize: '20px' }} />}
+              dot={
+                activities.length === index + 1 && <FlagCheckeredIcon style={{ fontSize: '20px', color: textColor }} />
+              }
               key={activity?._id}>
-              <Popover
-                overlayStyle={{ maxWidth: '400px' }}
-                content={
-                  activity?.description !== '<p><br></p>' && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: activity?.description,
-                      }}></div>
-                  )
-                }
-                title={null}>
-                <Space
-                  className='ant-card-grid-hoverable'
-                  size={0}
-                  direction='vertical'
+              <Space
+                className='ant-card-grid-hoverable'
+                size={0}
+                direction='vertical'
+                style={{
+                  padding: '10px',
+                  border: '1px solid #0000000f',
+                  borderRadius: '5px',
+                  transition: 'all 500ms ease-in-out',
+                  backgroundColor: textColor,
+                }}>
+                <Typography.Text
+                  strong
                   style={{
-                    padding: '10px',
-                    border: '1px solid #0000000f',
-                    borderRadius: '5px',
-                    transition: 'all 500ms ease-in-out',
+                    userSelect: 'none',
+                    color: bgColor,
                   }}>
-                  <Typography.Text
-                    strong
-                    style={{
-                      userSelect: 'none',
-                    }}>
-                    {activity?.datetime_start}
-                  </Typography.Text>
-                  <Typography.Text
-                    style={{
-                      userSelect: 'none',
-                    }}>
-                    {activity?.name}
-                  </Typography.Text>
-                </Space>
-              </Popover>
+                  {activity?.datetime_start}
+                </Typography.Text>
+                <Typography.Text
+                  style={{
+                    userSelect: 'none',
+                    color: bgColor,
+                  }}>
+                  {activity?.name}
+                </Typography.Text>
+              </Space>
             </Timeline.Item>
           );
         })}

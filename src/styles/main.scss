@@ -332,6 +332,10 @@ iframe {
   --animate-delay: 0.2s;
 }
 
+.ant-timeline-item-head {
+  background-color: transparent !important;
+}
+
 // Estilos para la caja de colores en reactQuill, modifica los dos primero colores
 
 .ql-color-picker {
