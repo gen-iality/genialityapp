@@ -1,29 +1,33 @@
+import { ActivitySubTypeName, ActivityTypeName } from "@/context/activityType/schema/structureInterfaces";
+
 export default function lessonTypeToString (inputType: string) {
   let typeName = '';
-  switch (inputType) {
-    case 'cargarvideo':
-      typeName = 'Vídeo cargado';
-      break;
+  switch (inputType as ActivityTypeName & ActivitySubTypeName & 'quiz') {
     case 'meeting':
+    case 'meeting2':
       typeName = 'Reunión';
       break;
+    case 'cargarvideo':
     case 'url':
-      typeName = 'Vídeo'; // desde URL
+    case 'video':
+      typeName = 'Video'; // desde URL
       break;
     case 'vimeo':
-      typeName = 'Transmisión';
-      break;
     case 'youTube':
-      typeName = 'Transmisión';
-      break;
     case 'RTMP':
-      typeName = 'Transmisión';
-      break;
     case 'eviusMeet':
+    case 'eviusStreaming':
+    case 'liveBroadcast':
       typeName = 'Transmisión';
       break;
-    case 'eviusStreaming':
-      typeName = 'GEN.iality Streaming'
+    case 'quiz':
+    case 'quizing':
+    case 'quizing2':
+      typeName = 'Quiz'
+      break;
+    case 'survey':
+    case 'survey2':
+      typeName = 'Encuesta'
       break;
     default:
       typeName = inputType;

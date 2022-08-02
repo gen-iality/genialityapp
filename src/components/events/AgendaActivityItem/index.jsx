@@ -461,7 +461,7 @@ function AgendaActivityItem(props) {
                       <Row gutter={[10, 10]}>
                         <Col span={24} style={{ paddingLeft: '0px' }}>
                           <div className='titulo'>{item.name}.</div>
-                          <div className="lesson">{lessonTypeToString(item.type?.name || 'Tipo genérico')}</div>
+                          <div className="lesson">{lessonTypeToString(item.type?.name || 'Contenido genérico')}</div>
                           <span className='lugar'>{item && item.space && item.space.name}</span>
                         </Col>
                         <Row style={{ width: '100%' }}>

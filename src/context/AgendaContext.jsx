@@ -290,8 +290,7 @@ export const AgendaContextProvider = ({ children }) => {
   const obtainUrl = (type, data) => {
     /* const previewBaseUrlVideo =
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'; */
-      const previewBaseUrlVideo =
-      'https://firebasestorage.googleapis.com/v0/b/eviusauthdev.appspot.com/o/documents%2F62b626e0a83d687b9112bd54%2F2022-28-06-geniality.mp4?alt=media&token=c4a35dd7-0344-47b7-a9db-5662ec2fe67b';
+      const previewBaseUrlVideo = import.meta.env.VITE_PLACEHOLDER_LIVE_TRANSMITION;
     let urlVideo;
     switch (type) {
       case 'vimeo':

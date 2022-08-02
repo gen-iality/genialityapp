@@ -1,27 +1,39 @@
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import ImageComponentwithContext from './ImageComponent';
 import RenderComponent from './RenderComponent';
+import StreamingActivity from './ActivityTypes/StreamingActivity';
+import MeetingActivity from './ActivityTypes/MeetingActivity';
+import QuizActivity from './ActivityTypes/QuizActivity';
+import VideoActivity from './ActivityTypes/VideoActivity';
+import GenericActivity from './ActivityTypes/GenericActivity';
 
-const HCOActividad = () => {
-  let { currentActivity } = useHelper();
-  const imageVisible = () => {
-    if (
-      ((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null) &&
-        (currentActivity?.video == null || !currentActivity?.video)) ||
-      (!currentActivity?.habilitar_ingreso && !currentActivity?.video)
-    ) {
-      return true;
-    }
-    return false;
-  };
+function ActivityTypeSwitch({ activity }) {
+  console.debug(activity)
+  let activityType = activity.type ? activity.type.name : 'generic';
+  console.debug('HOC: activityType', activityType);
+  switch(activityType) {
+    case 'generic':
+      return (<GenericActivity />);
+    case 'eviusMeet':
+    case 'vimeo':
+    case 'youTube':
+      return (<StreamingActivity />);
+    case 'meeting':
+      return (<MeetingActivity />);
+    case 'url':
+    case 'cargarvideo':
+      return (<VideoActivity />);
+    case 'quiz':
+    case 'quizing':
+      return (<QuizActivity />);
+    default: return <GenericActivity />;
+  }
+}
+
+const HCOActividad = ({ activity }) => {
+
   return (
     <header>
       <div>
-        <RenderComponent />
-
-        {/* {currentActivity && currentActivity.secondvideo && <SecondVideoActivity />} */}
-
-        {/* {imageVisible() && <ImageComponentwithContext />} */}
+        <ActivityTypeSwitch activity={activity} />
       </div>
     </header>
   );
