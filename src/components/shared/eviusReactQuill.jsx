@@ -24,7 +24,7 @@ function EviusReactQuill(props) {
   //
   // }, [props.data]);
 
-  console.log('ReactQuill', ReactQuill.Toolbar.defaultColors);
+  //console.log('ReactQuill', ReactQuill.Toolbar.defaultColors);
 
   const defaultColors = ReactQuill.Toolbar.defaultColors;
   let colors = [];

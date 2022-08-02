@@ -346,13 +346,22 @@ export const NewEventProvider = ({ children }) => {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);
               }
               if (template) {
+                const data = {
+                  useCountdown: true,
+                  dateLimit: selectedDateEvent?.from + ':00',
+                  countdownMessage: 'El evento inicia en',
+                  countdownFinalMessage: 'Ha terminado el evento',
+                };
+                const respApi = await EventsApi.editOne(data, result._id);
                 // console.log("RESPUESTA TEMPLATE==>",template)
-                DispatchMessageService({
-                  type: 'success',
-                  msj: 'Evento creado correctamente...',
-                  action: 'show',
-                });
-                window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
+                if (respApi?._id) {
+                  DispatchMessageService({
+                    type: 'success',
+                    msj: 'Evento creado correctamente...',
+                    action: 'show',
+                  });
+                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
+                }
               } else {
                 DispatchMessageService({
                   type: 'error',

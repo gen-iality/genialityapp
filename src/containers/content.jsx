@@ -59,7 +59,6 @@ const ContentContainer = () => {
       }}>
       <main className='main'>
         <Switch>
-          <RouteContext exact path={'/:event_id'} component={ViewPrelanding} />
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
           {/*Ruta para ver resumen */}
           <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
@@ -69,6 +68,7 @@ const ContentContainer = () => {
             <PrivateRoute exact path='/myprofile' component={MainProfile} />
           )}
           <PrivateRoute exact path='/myprofile' component={MainProfile} />
+          <RouteContext exact path={'/:event_id'} component={ViewPrelanding} />
 
           <Route path='/social/:event_id' component={socialZone} />
           {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}

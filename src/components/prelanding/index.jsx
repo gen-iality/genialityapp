@@ -4,13 +4,11 @@ import {
   Button,
   Card,
   Col,
-  DatePicker,
-  Form,
-  Input,
   Layout,
   List,
   message,
   Modal,
+  Popover,
   Row,
   Space,
   Spin,
@@ -18,17 +16,17 @@ import {
   Table,
   Tag,
 } from 'antd';
-import { EyeInvisibleOutlined, EyeOutlined, MenuOutlined, OrderedListOutlined } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeOutlined, InfoCircleOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 import { useContext, useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { SectionsPrelanding } from '@/helpers/constants';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import { CurrentEventContext } from '@/context/eventContext';
-import { EventsApi } from '@/helpers/request';
-import { async } from 'ramda-adjunct';
-import moment from 'moment';
+import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import ModalContador from './modalContador';
+import { useHistory } from 'react-router';
+import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
 const DragHandle = SortableHandle(() => (
   <DragIcon
     style={{
@@ -42,11 +40,16 @@ const DragHandle = SortableHandle(() => (
 const SortableItem = SortableElement((props) => <tr {...props} />);
 const SortableBody = SortableContainer((props) => <tbody {...props} />);
 
-const PreLandingSections = ({ tabActive }) => {
+const PreLandingSections = ({ tabActive, changeTab }) => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [description, setDescription] = useState([]);
+  const [speakers, setSpeakers] = useState([]);
+  const [agenda, setAgenda] = useState([]);
+
   const cEvent = useContext(CurrentEventContext);
+  const history = useHistory();
 
   useEffect(() => {
     if (!cEvent.value || tabActive !== '3') return;
@@ -57,6 +60,10 @@ const PreLandingSections = ({ tabActive }) => {
       const previews = await EventsApi.getPreviews(cEvent.value._id);
       //SE ORDENAN LAS SECCIONES POR INDEX
       const sections = previews.data.length > 0 ? previews.data.sort((a, b) => a.index - b.index) : SectionsPrelanding;
+      const { speakers, agenda, description } = await obtenerData(cEvent);
+      setDescription(description);
+      setAgenda(agenda);
+      setSpeakers(speakers);
       setDataSource(sections);
       setLoading(false);
     }
@@ -143,19 +150,17 @@ const PreLandingSections = ({ tabActive }) => {
               unCheckedChildren={<EyeInvisibleOutlined />}
               checked={val}
             />
-            <Button onClick={() => settingsSection(item)}>Configurar</Button>
+            <Button onClick={() => settingsSection(item, cEvent, history, setVisible, changeTab)}>Configurar</Button>
+            {visibleAlert(item, description, speakers, agenda) && (
+              <Popover content={<div>Sin configurar</div>} title=''>
+                <InfoCircleOutlined style={{ color: 'red' }} />
+              </Popover>
+            )}
           </Space>
         );
       },
     },
   ];
-
-  //SETTINGS SECTIONS
-  const settingsSection = (section) => {
-    if (section.name === 'Contador') {
-      setVisible(true);
-    }
-  };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {

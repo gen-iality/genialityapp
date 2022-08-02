@@ -14,7 +14,9 @@ const CountdownBlock = () => {
   useEffect(() => {
     if (!cEvent.value) return;
     //PERMITE FORMATEAR LA FECHA PARA PODER INICIALIZAR EL CONTADOR
-    const dateSplit = cEvent.value?.dateLimit ? cEvent.value?.dateLimit.split(' ') : ['2022-12-12', '10:00:00'];
+    const dateSplit = cEvent.value?.dateLimit
+      ? cEvent.value?.dateLimit.split(' ')
+      : cEvent.value?.datetime_from.split(' ');
     const dateFormat = dateSplit.join('T');
     setDateLimitContador(dateFormat);
   }, [cEvent.value]);

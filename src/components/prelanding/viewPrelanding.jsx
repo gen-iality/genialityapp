@@ -3,7 +3,7 @@ import { CurrentEventUserContext } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { CurrentUserContext } from '@/context/userContext';
 import { SectionsPrelanding } from '@/helpers/constants';
-import { EventsApi } from '@/helpers/request';
+import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import { Col, Row, Layout, Card, Grid, BackTop, Avatar } from 'antd';
 /** ant design */
@@ -37,7 +37,14 @@ const ViewPrelanding = (props) => {
   //ESTADOS
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState([]);
-  console.log('Event', cEventContext);
+  // PERMITE VALIDAR SI EXISTE DESCRIPCION
+  const [description, setDescription] = useState([]);
+  //PERMITE VALIDAR SI EXISTE CONFERENCISTAS
+  const [speakers, setSpeakers] = useState([]);
+  //PERMITE VALIDAR SI EXISTEN ACTIVIDADES
+  const [agenda, setAgenda] = useState([]);
+
+  //console.log('Event', cEventContext);
   const cBanner = cEventContext.value?.styles?.banner_image;
   const cFooter = cEventContext.value?.styles?.banner_footer;
   const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
@@ -125,6 +132,19 @@ const ViewPrelanding = (props) => {
       setLoading(false);
     }
   }, [cEventContext]);
+  //OBTENER  DATA DEL EVENTO PARA VALIDACIONES
+  useEffect(() => {
+    if (!cEventContext.value) return;
+    obtenerData();
+    async function obtenerData() {
+      const sectionsDescription = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
+      let speakers = await SpeakersApi.byEvent(cEventContext?.value._id);
+      const agenda = await AgendaApi.byEvent(cEventContext?.value._id);
+      setDescription(sectionsDescription?.data || []);
+      setSpeakers(speakers || []);
+      setAgenda(agenda?.data || []);
+    }
+  }, [cEventContext.value]);
   return (
     <Layout>
       {(cEventContext.value?.styles?.show_banner === undefined ||
@@ -164,7 +184,12 @@ const ViewPrelanding = (props) => {
                       border: 'none',
                     }}>
                     <Row justify='center' align='middle'>
-                      <MenuScrollBlock sections={sections && sections} />
+                      <MenuScrollBlock
+                        sections={sections && sections}
+                        vdescription={description}
+                        vspeakers={speakers}
+                        vactividades={agenda}
+                      />
                     </Row>
                   </Card>
                 ) : null}
@@ -185,7 +210,7 @@ const ViewPrelanding = (props) => {
                   </Card>
                 </Col>
               )}
-              {visibleSection('Descripción') && (
+              {visibleSection('Descripción') && description.length > 0 && (
                 <Col order={obtenerOrder('Descripción')} span={24}>
                   <Card
                     id='Descripción_block'
@@ -202,7 +227,7 @@ const ViewPrelanding = (props) => {
                   </Card>
                 </Col>
               )}
-              {visibleSection('Conferencistas') && (
+              {visibleSection('Conferencistas') && speakers.length > 0 && (
                 <Col span={24} order={obtenerOrder('Conferencistas')}>
                   <Card
                     id='Conferencistas_block'
@@ -219,7 +244,7 @@ const ViewPrelanding = (props) => {
                   </Card>
                 </Col>
               )}
-              {visibleSection('Actividades') && (
+              {visibleSection('Actividades') && agenda.length > 0 && (
                 <Col span={24} order={obtenerOrder('Actividades')}>
                   <Card
                     id='Actividades_block'

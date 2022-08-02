@@ -34,7 +34,9 @@ const ModalContador = ({ setVisible, visible }) => {
       const event = await EventsApi.getOne(cEvent.value._id);
       if (event._id) {
         const initialValueEvent = {
-          date: event?.dateLimit ? moment(event?.dateLimit, 'YYYY/MM/DD HH:mm:ss') : moment(),
+          date: event?.dateLimit
+            ? moment(event?.dateLimit, 'YYYY/MM/DD HH:mm:ss')
+            : moment(cEvent.value?.datetime_from, 'YYYY/MM/DD HH:mm:ss'),
           messageIn: event?.countdownMessage || '',
           messageFinish: event?.countdownFinalMessage || '',
         };

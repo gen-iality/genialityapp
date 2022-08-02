@@ -112,6 +112,12 @@ class General extends Component {
   }
   static contextType = CurrentUserContext;
 
+  changeTab = (tab) => {
+    this.setState({
+      tabActive: tab,
+    });
+  };
+
   getCurrentConsumptionPlanByUsers = async () => {
     const userContext = this.context;
     const cUser = userContext?.value;
@@ -727,7 +733,7 @@ class General extends Component {
         )} */}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
-          <Tabs defaultActiveKey='1' onChange={(key) => this.setState({ tabActive: key })}>
+          <Tabs activeKey={this.state.tabActive} onChange={(key) => this.setState({ tabActive: key })}>
             <Tabs.TabPane tab='General' key='1'>
               <Row justify='center' wrap gutter={[8, 8]}>
                 <Col span={16}>
@@ -1272,7 +1278,7 @@ class General extends Component {
               tab='Landing informativa'
               key='3'
               style={{ paddingLeft: '25px', paddingRight: '25px', paddingBottom: '30px' }}>
-              <PreLandingSections tabActive={this.state.tabActive} />
+              <PreLandingSections tabActive={this.state.tabActive} changeTab={this.changeTab} />
             </Tabs.TabPane>
             <Tabs.TabPane
               tab='Descripción'
