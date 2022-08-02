@@ -307,7 +307,7 @@ function AgendaEdit(props: AgendaEditProps) {
   };
 
   const handleDocumentChange = (value: any) => {
-    setFormData((previous) => ({ ...previous, selectedDocuments: value }));
+    setFormData((previous) => ({ ...previous, selectedDocuments: value || [] }));
   };
 
   // Encargado de gestionar los tabs de la video conferencia
