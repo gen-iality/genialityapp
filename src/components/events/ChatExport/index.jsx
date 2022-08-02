@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Tag, Button, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { utils, writeFileXLSX } from 'xlsx';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { getColumnSearchProps } from '../../../components/speakers/getColumnSearch';
 import Table from '../../../antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
@@ -37,7 +37,7 @@ const ChatExport = ({ eventId, event }) => {
       <Tag color='#3895FA'>{record.text}</Tag>
     </Tooltip>
   );
-  const renderFecha = (val, item) => <p>{moment(val).format('DD/MM/YYYY HH:mm')}</p>;
+  const renderFecha = (val, item) => <p>{dayjs(val).format('DD/MM/YYYY HH:mm')}</p>;
   const columns = [
     {
       title: 'Usuario',
@@ -123,7 +123,7 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let conversion = moment(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
+          let conversion = dayjs(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
           let msjnew = {
             chatId: doc.id,
             name: doc.data().name,

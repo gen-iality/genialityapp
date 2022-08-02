@@ -29,7 +29,7 @@ import withContext from '../../context/withContext';
 import { EventsApi, TicketsApi, OrganizationApi } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Loading from './loading';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
@@ -69,7 +69,7 @@ const MainProfile = (props) => {
 
   const eventsIHaveCreated = async () => {
     const events = await EventsApi.mine();
-    const eventsDataSorted = events.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
+    const eventsDataSorted = events.sort((a, b) => dayjs(b.datetime_from) - dayjs(a.datetime_from));
     setevents(eventsDataSorted);
     seteventsLimited(events.slice(0, 3));
     setEventsIHaveCreatedIsLoading(false);
@@ -83,7 +83,7 @@ const MainProfile = (props) => {
       setEventsThatIHaveParticipatedIsLoading(false);
       return;
     }
-    const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+    const ticketsDataSorted = ticketsall.sort((a, b) => dayjs(b.created_at) - dayjs(a.created_at));
     const usersInscription = [];
     ticketsDataSorted.forEach(async (element) => {
       const eventByTicket = await EventsApi.getOne(element.event_id);
@@ -99,7 +99,7 @@ const MainProfile = (props) => {
   const myOrganizations = async () => {
     const organizations = await OrganizationApi.mine();
     const organizationsFilter = organizations.filter((orgData) => orgData.id);
-    const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+    const organizationDataSorted = organizationsFilter.sort((a, b) => dayjs(b.created_at) - dayjs(a.created_at));
     setorganizations(organizationDataSorted);
     setorganizationsLimited(organizationDataSorted.slice(0, 5));
     setOrganizationsIsLoading(false);

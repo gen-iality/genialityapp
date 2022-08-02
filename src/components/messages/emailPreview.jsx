@@ -1,6 +1,6 @@
 import { Row, Col, Tag, Image } from 'antd';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 
 const EmailPrev = (props) => {
   const icon =
@@ -21,28 +21,28 @@ const EmailPrev = (props) => {
               {' '}
               <CalendarOutlined /> Fecha inicio
             </p>
-            <p>{Moment(props.event.datetime_from).format('DD MMM, YYYY')}</p>
+            <p>{dayjs(props.event.datetime_from).format('DD MMM, YYYY')}</p>
           </Col>
           <Col span={12}>
             <p>
               {' '}
               <FieldTimeOutlined /> Hora
             </p>
-            <p>{Moment(props.event.datetime_from).format('HH:mm')}</p>
+            <p>{dayjs(props.event.datetime_from).format('HH:mm')}</p>
           </Col>
           <Col span={12}>
             <p>
               {' '}
               <CalendarOutlined /> Fecha fin
             </p>
-            <p>{Moment(props.event.datetime_to).format('DD MMM, YYYY')}</p>
+            <p>{dayjs(props.event.datetime_to).format('DD MMM, YYYY')}</p>
           </Col>
           <Col span={12}>
             <p>
               {' '}
               <FieldTimeOutlined /> Hora
             </p>
-            <p>{Moment(props.event.datetime_to).format('HH:mm')}</p>
+            <p>{dayjs(props.event.datetime_to).format('HH:mm')}</p>
           </Col>
         </Row>
         <p className='has-text-primary'>

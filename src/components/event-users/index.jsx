@@ -7,7 +7,7 @@ import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import {
   Button,
   Card,
@@ -211,7 +211,7 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      return <p>{Moment(item.created_at).format('D/MMM/YY h:mm:ss A ')}</p>;
+      return <p>{dayjs(item.created_at).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -230,7 +230,7 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      return <p>{Moment(item.updated_at).format('D/MMM/YY h:mm:ss A ')}</p>;
+      return <p>{dayjs(item.updated_at).format('D/MMM/YY h:mm:ss A ')}</p>;
     } else {
       return '';
     }
@@ -240,7 +240,7 @@ class ListEventUser extends Component {
   checkedincomponent = (text, item, index) => {
     var self = this;
     return item.checkedin_at || item.properties?.checkedin_at ? (
-      <p>{Moment(item.checkedin_at || item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
+      <p>{dayjs(item.checkedin_at || item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
         <Checkbox

@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { OrganizationFuction } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import ModalAuth from '../authentication/ModalAuth';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 import {
@@ -46,9 +46,9 @@ class EventOrganization extends Component {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
     let proximos = [];
     let pasados = [];
-    let fechaActual = moment();
+    let fechaActual = dayjs();
     events.map((event) => {
-      if (moment(event.datetime_from).isAfter(fechaActual)) {
+      if (dayjs(event.datetime_from).isAfter(fechaActual)) {
         proximos.push(event);
       } else {
         pasados.push(event);

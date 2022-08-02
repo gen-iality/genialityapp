@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
 import ErrorServe from '../modal/serverError';
@@ -37,7 +37,7 @@ import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 
-Moment.locale('es');
+dayjs.locale('es');
 const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
@@ -288,9 +288,9 @@ class General extends Component {
       event: { date_end },
     } = this.state;
     if (name === 'date_start') {
-      const diff = Moment(value).diff(Moment(date_end), 'days');
+      const diff = dayjs(value).diff(dayjs(date_end), 'days');
       if (diff >= 0)
-        date_end = Moment(date_end)
+        date_end = dayjs(date_end)
           .add(diff, 'days')
           .toDate();
       this.setState({
@@ -422,12 +422,12 @@ class General extends Component {
     const { event, path, image } = this.state;
     const self = this;
     //this.setState({loading:true});
-    const hour_start = Moment(event.hour_start).format('HH:mm');
-    const date_start = Moment(event.date_start).format('YYYY-MM-DD');
-    const hour_end = Moment(event.hour_end).format('HH:mm');
-    const date_end = Moment(event.date_end).format('YYYY-MM-DD');
-    const datetime_from = Moment(date_start + ' ' + hour_start, 'YYYY-MM-DD HH:mm');
-    const datetime_to = Moment(date_end + ' ' + hour_end, 'YYYY-MM-DD HH:mm');
+    const hour_start = dayjs(event.hour_start).format('HH:mm');
+    const date_start = dayjs(event.date_start).format('YYYY-MM-DD');
+    const hour_end = dayjs(event.hour_end).format('HH:mm');
+    const date_end = dayjs(event.date_end).format('YYYY-MM-DD');
+    const datetime_from = dayjs(date_start + ' ' + hour_start, 'YYYY-MM-DD HH:mm');
+    const datetime_to = dayjs(date_end + ' ' + hour_end, 'YYYY-MM-DD HH:mm');
     const categories = this.state.selectedCategories.map((item) => {
       return item.value;
     });
@@ -837,7 +837,7 @@ class General extends Component {
                             <DatePicker
                               style={{ width: '100%' }}
                               allowClear={false}
-                              value={Moment(event.date_start)}
+                              value={dayjs(event.date_start)}
                               format={'DD/MM/YYYY'}
                               onChange={(value) => this.changeDate(value, 'date_start')}
                             />
@@ -856,7 +856,7 @@ class General extends Component {
                             <TimePicker
                               style={{ width: '100%' }}
                               allowClear={false}
-                              value={Moment(event.hour_start)}
+                              value={dayjs(event.hour_start)}
                               use12Hours
                               format='h:mm a'
                               onChange={(value) => this.changeDate(value, 'hour_start')}
@@ -878,7 +878,7 @@ class General extends Component {
                             <DatePicker
                               style={{ width: '100%' }}
                               allowClear={false}
-                              value={Moment(event.date_end)}
+                              value={dayjs(event.date_end)}
                               format={'DD/MM/YYYY'}
                               onChange={(value) => this.changeDate(value, 'date_end')}
                             />
@@ -898,7 +898,7 @@ class General extends Component {
                             <TimePicker
                               style={{ width: '100%' }}
                               allowClear={false}
-                              value={Moment(event.hour_end)}
+                              value={dayjs(event.hour_end)}
                               use12Hours
                               format='h:mm a'
                               onChange={(value) => this.changeDate(value, 'hour_end')}

@@ -14,7 +14,7 @@ import {
   Divider,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { find, map, mergeRight, path, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useMemo, useState } from 'react';
@@ -185,7 +185,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
         <Tabs>
           {eventDatesRange.map((eventDate, eventDateIndex) => {
             const dayAgendas = acceptedAgendas.filter(({ timestamp_start }) => {
-              const agendaDate = moment(timestamp_start).format('YYYY-MM-DD');
+              const agendaDate = dayjs(timestamp_start).format('YYYY-MM-DD');
               return agendaDate === eventDate;
             });
 
@@ -193,7 +193,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
               <TabPane
                 tab={
                   <div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                    {moment(eventDate).format('MMMM DD')}
+                    {dayjs(eventDate).format('MMMM DD')}
                   </div>
                 }
                 key={`event-date-${eventDateIndex}-${eventDate}`}>
@@ -264,9 +264,9 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   };
 
   const validDateRoom = (room) => {
-    let dateFrom = moment(room.timestamp_start).format('YYYY-MM-DD');
+    let dateFrom = dayjs(room.timestamp_start).format('YYYY-MM-DD');
 
-    if (moment().format('YYYY-MM-DD') == dateFrom) {
+    if (dayjs().format('YYYY-MM-DD') == dateFrom) {
       return true;
     }
     return false;
@@ -292,12 +292,12 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         }
         title={
           <Space wrap>
-            {/* <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div> */}
+            {/* <div style={{ textTransform: 'capitalize' }}>{dayjs(data.timestamp_start).format('MMMM DD')}</div> */}
             <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
-              {moment(data.timestamp_start).format('hh:mm a')}
+              {dayjs(data.timestamp_start).format('hh:mm a')}
             </Typography.Text>
             <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
-              {moment(data.timestamp_end).format('hh:mm a')}
+              {dayjs(data.timestamp_end).format('hh:mm a')}
             </Typography.Text>
           </Space>
         }>

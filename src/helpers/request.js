@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ApiDEVUrl, ApiUrl, ApiEviusZoomSurvey } from './constants';
 import { handleSelect } from './utils';
 import { firestore } from './firebase';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import { GetTokenUserFirebase } from './HelperAuth';
 import { DispatchMessageService } from '../context/MessageService';
 
@@ -500,7 +500,7 @@ export const TicketsApi = {
     let token = await GetTokenUserFirebase();
     let data = {
       event: event_id,
-      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
+      checkedin_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     };
     return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, data);
   },
@@ -1074,7 +1074,7 @@ export const Activity = {
     let data = {
       user_id,
       activity_id,
-      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
+      checkedin_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     };
     let result = await Actions.put(`api/events/${event_id}/activities_attendees/checkin?token=${token}`, data);
     return result;
