@@ -509,13 +509,13 @@ export const SectionsPrelanding = [
   {
     key: '2',
     name: 'Descripción',
-    status: true,
+    status: false,
     index: 1,
   },
   {
     key: '3',
     name: 'Conferencistas',
-    status: true,
+    status: false,
     index: 2,
   },
   {

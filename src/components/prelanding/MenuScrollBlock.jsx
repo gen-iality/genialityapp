@@ -1,10 +1,31 @@
+import { CurrentEventContext } from '@/context/eventContext';
 import { Button, Divider, Grid, Space } from 'antd';
+import { useContext } from 'react';
 import ScrollIntoView from 'react-scroll-into-view';
 
 const { useBreakpoint } = Grid;
 
-const MenuScrollBlock = ({ sections }) => {
+const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades }) => {
+  //CONTEXTO
+  const cEvent = useContext(CurrentEventContext);
+
   const screens = useBreakpoint();
+  //PERMITE CONTROLAR SI LA SECCION TIENE CONTENIDO O NO
+  const visibleSeccion = (name) => {
+    if (name == 'Descripción' && vdescription.length > 0) {
+      return true;
+    }
+    if (name == 'Conferencistas' && vspeakers.length > 0) {
+      return true;
+    }
+    if (name == 'Contador') {
+      return true;
+    }
+    if (name == 'Actividades' && vactividades.length > 0) {
+      return true;
+    }
+    return false;
+  };
 
   const createLabel = (name) => {
     let label;
@@ -34,11 +55,13 @@ const MenuScrollBlock = ({ sections }) => {
           .filter((section) => section?.status)
           .map((section) => {
             return (
-              <ScrollIntoView alignToTop={true} selector={`#${section.name}_block`}>
-                <Button type='text' size='large'>
-                  {createLabel(section.name)}
-                </Button>
-              </ScrollIntoView>
+              visibleSeccion(section.name) && (
+                <ScrollIntoView key={`section-${section.name}`} alignToTop={true} selector={`#${section.name}_block`}>
+                  <Button type='text' size='large'>
+                    {createLabel(section.name)}
+                  </Button>
+                </ScrollIntoView>
+              )
             );
           })}
     </Space>
