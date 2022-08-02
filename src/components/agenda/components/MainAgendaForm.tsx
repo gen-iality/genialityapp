@@ -1,5 +1,5 @@
-import * as Moment from 'moment';
 import * as React from 'react';
+import dayjs from 'dayjs';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -65,8 +65,8 @@ export interface FormDataType {
   description: string,
   space_id: string,
   image: string,
-  hour_start: Moment.Moment | string,
-  hour_end: Moment.Moment | string,
+  hour_start: dayjs.Dayjs | string,
+  hour_end: dayjs.Dayjs | string,
   isPhysical: boolean,
   length: string,
   latitude: string,
@@ -136,20 +136,20 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       // If dates exist, then iterate the specific dates array, formating specially.
       if (props.event.dates && props.event.dates.length > 0) {
         const newDays = props.event.dates.map((dates) => {
-          const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
+          const formatDate = dayjs(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
           return { value: formatDate, label: formatDate };
         });
         setAllDays(newDays);
       } else {
         // Si no, recibe la fecha inicio y la fecha fin y le da el formato
         // especifico a mostrar
-        const initMoment = Moment(props.event.date_start);
-        const endMoment = Moment(props.event.date_end);
+        const initMoment = dayjs(props.event.date_start);
+        const endMoment = dayjs(props.event.date_end);
         const dayDiff = endMoment.diff(initMoment, 'days');
         // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
         const newDays = [];
         for (let i = 0; i < dayDiff + 1; i++) {
-          const formatDate = Moment(initMoment)
+          const formatDate = dayjs(initMoment)
             .add(i, 'd')
             .format('YYYY-MM-DD');
           newDays.push({ value: formatDate, label: formatDate });
@@ -196,8 +196,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       description: agenda.description,
       image: agenda.image,
       space_id: agenda.space_id || '',
-      hour_start: Moment(processedDate.hour_start),
-      hour_end: Moment(processedDate.hour_end),
+      hour_start: dayjs(processedDate.hour_start),
+      hour_end: dayjs(processedDate.hour_end),
       length: agenda.length,
       latitude: agenda.latitude,
       selectedTickets: agenda.selectedTicket ? agenda.selectedTicket : [],
@@ -258,7 +258,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const hourWithAdditionalMinutes = (minutes: number) => {
     const fecha = new Date();
     fecha.setMinutes(fecha.getMinutes() + minutes);
-    return Moment(fecha, 'HH:mm:ss');
+    return dayjs(fecha, 'HH:mm:ss');
   };
 
   const goSection = (path: string, state?: any) => {
@@ -326,8 +326,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   };
 
   const currentHourStart = useMemo(() => {
-    if (formdata.hour_start instanceof Moment) {
-      return Moment(formdata.hour_start, 'HH:mm:ss');
+    if (!!formdata.hour_start) {
+      return dayjs(formdata.hour_start, 'HH:mm:ss');
     }
     const newHour = hourWithAdditionalMinutes(1);
     setFormData((previous) => ({ ...previous, hour_start: newHour }));
@@ -335,8 +335,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   }, [formdata.hour_start])
 
   const currentHourEnd = useMemo(() => {
-    if (formdata.hour_end instanceof Moment) {
-      return Moment(formdata.hour_end, 'HH:mm:ss');
+    if (!!formdata.hour_end) {
+      return dayjs(formdata.hour_end, 'HH:mm:ss');
     }
     const newHour = hourWithAdditionalMinutes(5);
     setFormData((previous) => ({ ...previous, hour_end: newHour }));
@@ -402,7 +402,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   format="h:mm a"
                   allowClear={false}
                   style={{ width: '100%' }}
-                  value={currentHourStart}
+                  value={currentHourStart as any}
                   onChange={(value) => handleChangeFormData('hour_start', value)}
                 />
               </Form.Item>
@@ -421,7 +421,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   use12Hours
                   style={{ width: '100%' }}
                   allowClear={false}
-                  value={currentHourEnd}
+                  value={currentHourEnd as any}
                   format="h:mm a"
                   onChange={(value) => handleChangeFormData('hour_end', value)}
                 />

@@ -1,5 +1,5 @@
 import { withRouter } from 'react-router-dom';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import { useRequest } from '../../services/useRequest';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import LoadingEvent from '@/components/loaders/loadevent';
 import ErrorServe from '@/components/modal/serverError';
 import EventCard from '@/components/shared/eventCard';
 import { useApiMultiple } from '@/services/hooks/useApiMultiple';
-Moment.locale('es');
+dayjs.locale('es');
 momentLocalizer();
 
 const Home = () => {

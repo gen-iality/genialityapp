@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SpacesApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const Espacios = (props) => {
   let [columnsData, setColumnsData] = useState({});
@@ -24,7 +24,7 @@ const Espacios = (props) => {
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
         return (
-          <div>{moment(item.created_at).format('DD/MM/YYYY')}</div>
+          <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>
         )
       },
     }

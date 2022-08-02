@@ -1,5 +1,5 @@
 import { firestore, fireRealtime } from '../../helpers/firebase';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 
 const refSurvey = firestore.collection('surveys');
 
@@ -75,7 +75,7 @@ export const getAnswersByQuestion = (surveyId, questionId) => {
           resolve(false);
         }
         result.forEach((infoDoc) => {
-          let creation_date_text = Moment.unix(infoDoc.data().created.seconds).format('DD MMM YYYY hh:mm a');
+          let creation_date_text = dayjs.unix(infoDoc.data().created.seconds).format('DD MMM YYYY hh:mm a');
           docs.push({ ...infoDoc.data(), creation_date_text });
         });
         resolve(docs);
@@ -97,7 +97,7 @@ export const getTriviaRanking = (surveyId) => {
       .then((result) => {
         if (!result.empty) {
           result.forEach((item) => {
-            let registerDate = Moment.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm:ss a');
+            let registerDate = dayjs.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm:ss a');
 
             list.push({ ...item.data(), registerDate });
           });

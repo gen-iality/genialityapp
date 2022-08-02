@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, Col, Divider, notification, Row, Spin } from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { find, map, pathOr, propEq, props } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
@@ -222,9 +222,9 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                   )}
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-                  <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
-                  <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
-                  <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
+                  <div style={{ textTransform: 'capitalize' }}>{dayjs(data.timestamp_start).format('MMMM DD')}</div>
+                  <div>{dayjs(data.timestamp_start).format('hh:mm a')}</div>
+                  <div>{dayjs(data.timestamp_end).format('hh:mm a')}</div>
                 </Col>
               </Row>
               {!requestResponse ? (

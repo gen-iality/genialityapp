@@ -5,7 +5,7 @@
 // import { UseCurrentUser } from './userContext';
 // import { notification, Button, Row, Col } from 'antd';
 // import { MessageOutlined, SendOutlined } from '@ant-design/icons';
-// import moment from 'moment';
+// import dayjs from 'dayjs';
 
 // export const TabsContext = createContext();
 
@@ -104,7 +104,7 @@
 //         <Row justify='space-between'>
 //           <Col style={{ fontWeight: 'bold' }}>{data.remitente}</Col>
 
-//           <Col>{moment().format('h:mm A')}</Col>
+//           <Col>{dayjs().format('h:mm A')}</Col>
 //         </Row>
 //       ),
 //       description: <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>,

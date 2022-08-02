@@ -9,7 +9,7 @@ import BackTop from '../../antdComponents/BackTop';
 import ReactQuill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { toolbarEditor } from '../../helpers/constants';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { firestore } from '../../helpers/firebase';
 import { withRouter } from 'react-router-dom';
 import { DispatchMessageService } from '../../context/MessageService';
@@ -233,8 +233,8 @@ const Certificado = (props) => {
   };
 
   const generate = () => {
-    props.event.datetime_from = moment(props.event.datetime_from).format('DD-MM-YYYY');
-    props.event.datetime_to = moment(props.event.datetime_to).format('DD-MM-YYYY');
+    props.event.datetime_from = dayjs(props.event.datetime_from).format('DD-MM-YYYY');
+    props.event.datetime_to = dayjs(props.event.datetime_to).format('DD-MM-YYYY');
     let content = certificado.content;
     const userRef = firestore.collection(`${props.event._id}_event_attendees`);
     userRef

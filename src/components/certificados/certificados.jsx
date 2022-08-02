@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const Certificados = (props) => {
   let [columnsData, setColumnsData] = useState({});
@@ -36,7 +36,7 @@ const Certificados = (props) => {
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
         return (
-          <div>{moment(item.created_at).format('YYYY-DD-MM')}</div>
+          <div>{dayjs(item.created_at).format('YYYY-DD-MM')}</div>
         )
       },
     }

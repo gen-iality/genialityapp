@@ -6,7 +6,7 @@ import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin, Progress 
 import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { fireStorage } from '@/helpers/firebase';
 import Header from '../../antdComponents/Header';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const { confirm } = Modal;
@@ -193,7 +193,7 @@ const Document = (props) => {
     setFiles(e.file.originFileObj);
 
     //Se crea el nombre con base a la fecha y nombre del archivo
-    const name = moment().format('YYYY-DD-MM') + '-' + files.name;
+    const name = dayjs().format('YYYY-DD-MM') + '-' + files.name;
     setFileName(name);
     //Se extrae la extencion del archivo por necesidad del aplicativo
 

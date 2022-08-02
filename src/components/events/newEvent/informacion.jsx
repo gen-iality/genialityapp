@@ -21,7 +21,7 @@ import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
 import { DispatchMessageService } from '../../../context/MessageService';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const { Text, Link, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -387,7 +387,7 @@ const Informacion = (props) => {
                     <TimePicker
                       allowClear={false}
                       use12Hours
-                      value={moment(selectedHours.from)}
+                      value={dayjs(selectedHours.from)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
                     />
                   </Space>
@@ -400,7 +400,7 @@ const Informacion = (props) => {
                     <TimePicker
                       allowClear={false}
                       use12Hours
-                      value={moment(selectedHours.at)}
+                      value={dayjs(selectedHours.at)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}
                     />
                   </Space>
