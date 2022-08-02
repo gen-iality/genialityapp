@@ -444,6 +444,10 @@ iframe {
 
 //--------------------------------------------------------------
 
+.ant-drawer-content {
+  border-radius: 8px !important;
+}
+
 @import 'react-widgets/lib/scss/react-widgets';
 @import 'react-quill/dist/quill.snow.css';
 @import 'react-quill/dist/quill.bubble.css';

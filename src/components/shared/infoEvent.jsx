@@ -10,10 +10,13 @@ import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
 const InfoEvent = ({ paddingOff }) => {
-  let cEvent = UseEventContext();
+  const cEvent = UseEventContext();
   let { handleChangeTypeModal, helperDispatch } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
+
+  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
+  const textColor = cEvent.value?.styles?.textMenu;
 
   //PARA REDIRIGIR A LA LANDING
   const history = useHistory();
@@ -43,14 +46,21 @@ const InfoEvent = ({ paddingOff }) => {
         paddingTop: '10px',
         paddingBottom: '20px',
         margin: paddingOff ? '' : '20px',
-        borderTop: `5px solid ${cEvent.value?.styles?.toolbarDefaultBg}`,
         borderRadius: '20px',
-        backgroundColor: 'white',
+        backgroundColor: bgColor,
       }}
-      title={cEvent.value?.name}
+      title={
+        <Typography.Title level={4} style={{ color: textColor }}>
+          {cEvent.value?.name}
+        </Typography.Title>
+      }
       extra={
         visibleButton() == 'SIGNUP' ? (
-          <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
+          <Button
+            style={{ color: bgColor, backgroundColor: textColor }}
+            onClick={() => handleChangeTypeModal('registerForTheEvent')}
+            type='primary'
+            size='large'>
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al evento',
@@ -59,7 +69,7 @@ const InfoEvent = ({ paddingOff }) => {
         ) : visibleButton() == 'REGISTER' ? (
           <Space wrap>
             <Button
-              style={{ marginRight: 10 }}
+              style={{ marginRight: 10, color: bgColor, backgroundColor: textColor }}
               onClick={() => {
                 helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
               }}
@@ -71,6 +81,7 @@ const InfoEvent = ({ paddingOff }) => {
               })}
             </Button>
             <Button
+              style={{ color: bgColor, backgroundColor: textColor }}
               onClick={() => helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })}
               type='primary'
               size='large'>
@@ -83,6 +94,7 @@ const InfoEvent = ({ paddingOff }) => {
         ) : (
           visibleButton() == 'JOIN' && (
             <Button
+              style={{ color: bgColor, backgroundColor: textColor }}
               onClick={() => {
                 if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT') {
                   //SE GUARDA LA SESION DEL USUARIO POR EL EVENTO ACTUAL
@@ -108,7 +120,7 @@ const InfoEvent = ({ paddingOff }) => {
         )
       }
       footer={
-        <Space>
+        <Space style={{ color: textColor }}>
           <Space wrap>
             <Space>
               <CalendarOutlined />

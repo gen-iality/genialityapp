@@ -51,6 +51,7 @@ const ModalTextComponent = ({
   };
   return (
     <Modal
+      width={720}
       maskClosable={false}
       closable={false}
       bodyStyle={{

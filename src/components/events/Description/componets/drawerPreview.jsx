@@ -4,8 +4,9 @@ import CellphoneIcon from '@2fd/ant-design-icons/lib/Cellphone';
 import TabletAndroidIcon from '@2fd/ant-design-icons/lib/TabletAndroid';
 import LaptopIcon from '@2fd/ant-design-icons/lib/Laptop';
 import MonitorScreenshotIcon from '@2fd/ant-design-icons/lib/MonitorScreenshot';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { RenderSectios } from './renderSectios';
+import { CurrentEventContext } from '@/context/eventContext';
 
 const { useBreakpoint } = Grid;
 
@@ -13,6 +14,9 @@ const DrawerPreview = ({ visibleDrawer, setVisibleDrawer }) => {
   const [device, setdevice] = useState({ device: 'smartphone', value: 425 });
   const screens = useBreakpoint();
   const [refreshSections, setRefreshSections] = useState(false);
+  const cEvent = useContext(CurrentEventContext);
+  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
+  const textColor = cEvent.value?.styles?.textMenu;
   useEffect(() => {
     if (!visibleDrawer) setRefreshSections(false);
     setRefreshSections(true);
@@ -20,8 +24,8 @@ const DrawerPreview = ({ visibleDrawer, setVisibleDrawer }) => {
 
   return (
     <Drawer
-      contentWrapperStyle={{ transition: 'all 500ms ease 0s' }}
-      /* drawerStyle={{ backgroundColor: '#000000' }} aqui se puede simular el color de fondo  */
+      contentWrapperStyle={{ transition: 'all 500ms ease 0s', backgroundColor: 'transparent' }}
+      drawerStyle={{ backgroundColor: bgColor }}
       extra={
         <Space>
           <Button

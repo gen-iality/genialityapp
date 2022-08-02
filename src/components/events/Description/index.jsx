@@ -60,6 +60,8 @@ const DescriptionDynamic = () => {
   const [isOrderUpdate, setIsOrderUpdate] = useState(false);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const cEvent = useContext(CurrentEventContext);
+  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
+  const textColor = cEvent.value?.styles?.textMenu;
 
   const columns = [
     {
@@ -135,9 +137,22 @@ const DescriptionDynamic = () => {
             />
           );
         case 'text':
-          return <div style={{ maxHeight: '250px', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: value }} />;
+          return (
+            <div
+              style={{ maxHeight: '250px', overflow: 'hidden', backgroundColor: bgColor + 'F2', borderRadius: '5px' }}
+              dangerouslySetInnerHTML={{ __html: value }}
+            />
+          );
         case 'video':
-          return <ReactPlayer controls width={'100%'} height={'250px'} url={value} />;
+          return (
+            <ReactPlayer
+              controls
+              width={'100%'}
+              height={'250px'}
+              url={value}
+              style={{ borderRadius: '5px', overflow: 'hidden' }}
+            />
+          );
         default:
           return <div></div>;
       }
@@ -171,7 +186,7 @@ const DescriptionDynamic = () => {
   const content = (
     <Space size={20} id='content-block-description'>
       <Card
-        className='animate__animated animate__bounceIn '
+        className='animate__animated animate__jackInTheBox '
         hoverable={true}
         style={styleCardButton}
         onClick={() => {
@@ -193,7 +208,7 @@ const DescriptionDynamic = () => {
         </Space>
       </Card>
       <Card
-        className='animate__animated animate__bounceIn '
+        className='animate__animated animate__jackInTheBox '
         hoverable={true}
         style={styleCardButton}
         onClick={() => {
@@ -219,7 +234,7 @@ const DescriptionDynamic = () => {
           setItem(null);
           setType('video');
         }}
-        className='animate__animated animate__bounceIn '
+        className='animate__animated animate__jackInTheBox '
         hoverable={true}
         style={styleCardButton}>
         <Space size={8} style={{ textAlign: 'center' }} direction='vertical'>
@@ -286,7 +301,12 @@ const DescriptionDynamic = () => {
         }}>
         <Row gutter={[16, 16]} justify='end' align='middle'>
           <Col>
-            <Popover content={content} title={null} trigger={'focus'} overlayInnerStyle={{ padding: '20px' }}>
+            <Popover
+              placement='topLeft'
+              content={content}
+              title={null}
+              trigger={'focus'}
+              overlayInnerStyle={{ padding: '20px' }}>
               <Tooltip title='Agregar'>
                 <Button
                   onBlur={(e) => setFocus(false)}
