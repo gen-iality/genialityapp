@@ -22,7 +22,7 @@ const { addLoginInformation, showMenu } = userActions;
 
 const { Header } = Layout;
 const zIndex = {
-  zIndex: '1',
+  zIndex: '2',
 };
 const initialDataGeneral = {
   selection: [],

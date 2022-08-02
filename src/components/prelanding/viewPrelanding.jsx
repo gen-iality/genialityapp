@@ -255,13 +255,14 @@ const ViewPrelanding = (props) => {
       <BackTop>
         <Avatar
           shape='square'
-          icon={<ArrowUpOutlined />}
+          icon={<ArrowUpOutlined className='animate__animated animate__bounce animate__slower animate__infinite' />}
           size={50}
           style={{
             color: textColor,
             backgroundColor: bgColor,
             borderRadius: '8px',
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            overflow: 'visible',
           }}></Avatar>
       </BackTop>
     </Layout>

@@ -56,7 +56,7 @@ const ModalTextComponent = ({
       bodyStyle={{
         padding: '0px',
         borderTop: '10px solid #517FD6',
-        borderRadius: '8px',
+        borderRadius: '8px 8px 0px 0px',
         backgroundColor: bgColor,
       }}
       title={null}

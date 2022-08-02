@@ -17,6 +17,9 @@ const SpeakersBlock = () => {
   const [disabledPlus, setDisabledPlus] = useState(false);
   const [disabledMinus, setDisabledMinus] = useState(false);
 
+  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
+  const textColor = cEvent.value?.styles?.textMenu;
+
   useEffect(() => {
     if (!cEvent.value) return;
 
@@ -59,14 +62,15 @@ const SpeakersBlock = () => {
   return (
     <div style={{ height: '100%' }}>
       <Row gutter={[8, 8]} style={{ height: '100%' }}>
-        <Col style={{ zIndex: '100' }} span={!disabledMinus ? 1 : 0}>
+        <Col style={{ zIndex: '1' }} span={!disabledMinus ? 1 : 0}>
           <Row align='middle' justify='center' style={{ height: '100%' }}>
             <Space>
               <Button
+                style={{ backgroundColor: textColor }}
                 shape='circle'
                 disabled={disabledMinus}
                 size='large'
-                icon={<CaretLeftFilled />}
+                icon={<CaretLeftFilled style={{ color: bgColor }} />}
                 onClick={() => scrollMinus()}></Button>
             </Space>
           </Row>
@@ -115,13 +119,13 @@ const SpeakersBlock = () => {
                         paddingLeft: '15px',
                         paddingRight: '15px',
                         paddingBottom: '15px',
-                        background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 65.94%, rgba(0, 0, 0, 020) 100%)`,
+                        background: `linear-gradient(180deg, ${bgColor + '00'} 65.94%, ${bgColor + '66'} 100%)`,
                       }}>
                       <Space size={0} direction='vertical'>
                         <Typography.Text
                           strong
                           style={{
-                            color: '#FFFFFF',
+                            color: textColor,
                             textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
                             userSelect: 'none',
                           }}>
@@ -129,7 +133,7 @@ const SpeakersBlock = () => {
                         </Typography.Text>
                         <Typography.Text
                           style={{
-                            color: '#FFFFFF',
+                            color: textColor,
                             textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
                             userSelect: 'none',
                           }}>
@@ -146,10 +150,11 @@ const SpeakersBlock = () => {
           <Row align='middle' justify='center' style={{ height: '100%' }}>
             <Space>
               <Button
+                style={{ backgroundColor: textColor }}
                 shape='circle'
                 disabled={disabledPlus}
                 size='large'
-                icon={<CaretRightFilled />}
+                icon={<CaretRightFilled style={{ color: bgColor }} />}
                 onClick={() => scrollPlus()}></Button>
             </Space>
           </Row>
