@@ -30,6 +30,7 @@
     "chart.js": "^3.4.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "classnames": "^2.2.6",
+    "compressorjs": "^1.1.1",
     "core-js": "^3.21.1",
     "craco-antd": "^1.19",
     "cypress-file-upload": "^5.0.8",

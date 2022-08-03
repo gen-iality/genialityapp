@@ -6,6 +6,7 @@ import { ImageUploaderDragAndDropType } from '../../Utilities/types/types';
 import { uploadImageData } from '@/Utilities/uploadImageData';
 import { fireStorage } from '@/helpers/firebase';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
+import Compressor from 'compressorjs';
 
 const ImageUploaderDragAndDrop = ({
   imageDataCallBack,
@@ -53,11 +54,18 @@ const ImageUploaderDragAndDrop = ({
           // readUrlImg({ files: file.originFileObj, setImage });
           /** este callback nos servira para cuando se saque el guardado en base de datos de este componente */
           // imageDataCallBack(file.originFileObj);
-
-          const imagenUrl = await uploadImageData(file.originFileObj);
-          setImage(imagenUrl);
-          imageDataCallBack(imagenUrl);
-          setIsUploading(false);
+          new Compressor(file.originFileObj, {
+            quality: 0.8,
+            minWidth: width as number,
+            minHeight: height as number,
+            convertSize: 5000000,
+            success: async (result) => {
+              const imagenUrl = await uploadImageData(result);
+              setImage(imagenUrl);
+              imageDataCallBack(imagenUrl);
+              setIsUploading(false);
+            },
+          });
           break;
 
         case 'error':
