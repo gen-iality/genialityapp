@@ -115,8 +115,8 @@ const ActivityBlock = () => {
     }
   };
   return (
-    <Row style={{ height: '100%' }} justify='center' align='middle'>
-      <Timeline style={{ width: '100%' }} mode={screens.xs ? 'left' : 'alternate'}>
+    <Row style={{ height: '100%' }} justify={activities.length < 2 ? 'start' : 'center'} align='middle'>
+      <Timeline style={{ width: '100%' }} mode={screens.xs ? 'left' : activities.length < 2 ? 'left' : 'alternate'}>
         {activities.map((activity, index) => {
           return (
             <Timeline.Item
@@ -137,6 +137,7 @@ const ActivityBlock = () => {
                   borderRadius: '5px',
                   transition: 'all 500ms ease-in-out',
                   backgroundColor: textColor,
+                  width: activities.length < 2 ? '100%' : 'auto',
                 }}>
                 <Space size={0} direction='vertical'>
                   <Typography.Text

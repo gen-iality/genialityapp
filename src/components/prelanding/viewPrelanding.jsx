@@ -150,7 +150,7 @@ const ViewPrelanding = (props) => {
       {(cEventContext.value?.styles?.show_banner === undefined ||
         cEventContext.value?.styles?.show_banner === 'true') && (
         <Row className='headerContainer'>
-          <Col>
+          <Col span={24}>
             <img src={cBanner}></img>
           </Col>
         </Row>

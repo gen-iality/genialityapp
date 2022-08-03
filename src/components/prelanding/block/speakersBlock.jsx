@@ -1,3 +1,4 @@
+import Loading from '@/components/profile/loading';
 import { CurrentEventContext } from '@/context/eventContext';
 import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
 import { CaretLeftFilled, CaretRightFilled, UserOutlined } from '@ant-design/icons';
@@ -68,13 +69,14 @@ const SpeakersBlock = () => {
               <Button
                 style={{ backgroundColor: textColor }}
                 shape='circle'
-                disabled={disabledMinus}
+                disabled={disabledMinus || speakersWithoutCategory.length === 1}
                 size='large'
                 icon={<CaretLeftFilled style={{ color: bgColor }} />}
                 onClick={() => scrollMinus()}></Button>
             </Space>
           </Row>
         </Col>
+
         <Col span={!disabledMinus || !disabledPlus ? 22 : 23} style={{ height: '100%' }}>
           <Row
             id='carrusel-speakers'
@@ -96,63 +98,66 @@ const SpeakersBlock = () => {
               touchAction: 'auto',
               scrollBehavior: 'smooth',
             }}>
-            {speakersWithoutCategory.length > 0 && !loading
-              ? speakersWithoutCategory.map((speaker, key) => (
-                  <div
-                    key={key}
+            {speakersWithoutCategory.length > 0 && !loading ? (
+              speakersWithoutCategory.map((speaker, key) => (
+                <div
+                  key={key}
+                  style={{
+                    height: '100%',
+                    aspectRatio: '3/4',
+                    borderRadius: '10px',
+                    backgroundImage: `url(${speaker.image})`,
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    scrollSnapAlign: 'center',
+                  }}>
+                  <Row
+                    justify='start'
+                    align='bottom'
                     style={{
                       height: '100%',
-                      aspectRatio: '3/4',
+                      widows: '100%',
                       borderRadius: '10px',
-                      backgroundImage: `url(${speaker.image})`,
-                      backgroundSize: 'cover',
-                      backgroundRepeat: 'no-repeat',
-                      scrollSnapAlign: 'center',
+                      paddingLeft: '15px',
+                      paddingRight: '15px',
+                      paddingBottom: '15px',
+                      background: `linear-gradient(180deg,rgb(0,0,0,0) 65.94%, rgb(0,0,0,0.4) 100%)`,
                     }}>
-                    <Row
-                      justify='start'
-                      align='bottom'
-                      style={{
-                        height: '100%',
-                        widows: '100%',
-                        borderRadius: '10px',
-                        paddingLeft: '15px',
-                        paddingRight: '15px',
-                        paddingBottom: '15px',
-                        background: `linear-gradient(180deg, ${bgColor + '00'} 65.94%, ${bgColor + '66'} 100%)`,
-                      }}>
-                      <Space size={0} direction='vertical'>
-                        <Typography.Text
-                          strong
-                          style={{
-                            color: textColor,
-                            textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
-                            userSelect: 'none',
-                          }}>
-                          {speaker.name}
-                        </Typography.Text>
-                        <Typography.Text
-                          style={{
-                            color: textColor,
-                            textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
-                            userSelect: 'none',
-                          }}>
-                          {speaker.profession}
-                        </Typography.Text>
-                      </Space>
-                    </Row>
-                  </div>
-                ))
-              : 'nada'}
+                    <Space size={0} direction='vertical'>
+                      <Typography.Text
+                        strong
+                        style={{
+                          color: '#FFFFFF',
+                          textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
+                          userSelect: 'none',
+                        }}>
+                        {speaker.name}
+                      </Typography.Text>
+                      <Typography.Text
+                        style={{
+                          color: '#FFFFFF',
+                          textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
+                          userSelect: 'none',
+                        }}>
+                        {speaker.profession}
+                      </Typography.Text>
+                    </Space>
+                  </Row>
+                </div>
+              ))
+            ) : (
+              <Loading />
+            )}
           </Row>
         </Col>
+
         <Col span={!disabledPlus ? 1 : 0}>
           <Row align='middle' justify='center' style={{ height: '100%' }}>
             <Space>
               <Button
                 style={{ backgroundColor: textColor }}
                 shape='circle'
-                disabled={disabledPlus}
+                disabled={disabledPlus || speakersWithoutCategory.length === 1}
                 size='large'
                 icon={<CaretRightFilled style={{ color: bgColor }} />}
                 onClick={() => scrollPlus()}></Button>

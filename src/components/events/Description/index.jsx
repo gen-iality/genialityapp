@@ -30,7 +30,7 @@ import CardTextIcon from '@2fd/ant-design-icons/lib/CardText';
 import VideoBoxtIcon from '@2fd/ant-design-icons/lib/VideoBox';
 import ContentSaveAlertIcon from '@2fd/ant-design-icons/lib/ContentSaveAlert';
 import ContentSaveCheckIcon from '@2fd/ant-design-icons/lib/ContentSaveCheck';
-import FitToScreenIcon from '@2fd/ant-design-icons/lib/FitToScreen';
+import EyeIcon from '@2fd/ant-design-icons/lib/Eye';
 import ModalVideoComponent from './componets/modalVideo';
 import ReactPlayer from 'react-player';
 import { CurrentEventContext } from '@/context/eventContext';
@@ -352,7 +352,7 @@ const DescriptionDynamic = () => {
               <Button
                 style={{ height: '60px', width: '60px' }}
                 onClick={() => setVisibleDrawer(true)}
-                icon={<FitToScreenIcon style={{ fontSize: '30px' }} />}
+                icon={<EyeIcon style={{ fontSize: '30px' }} />}
               />
             </Tooltip>
           </Col>

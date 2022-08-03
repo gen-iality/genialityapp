@@ -1,6 +1,7 @@
 import {
   Affix,
   Avatar,
+  Badge,
   Button,
   Card,
   Col,
@@ -15,6 +16,7 @@ import {
   Switch,
   Table,
   Tag,
+  Tooltip,
 } from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined, InfoCircleOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
@@ -22,6 +24,7 @@ import { useContext, useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { SectionsPrelanding } from '@/helpers/constants';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
+import InformationIcon from '@2fd/ant-design-icons/lib/Information';
 import { CurrentEventContext } from '@/context/eventContext';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import ModalContador from './modalContador';
@@ -79,6 +82,32 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
     setDataSource(newDataSource);
     setLoading(false);
   };
+
+  const validateBlockState = (block) => {
+    if (block.status === true && !visibleAlert(block, description, speakers, agenda)) {
+      return 'VISIBLE_BLOCK';
+    } else if (block.status === true && visibleAlert(block, description, speakers, agenda)) {
+      return 'BLOCK_LOCKED';
+    } else {
+      return 'HIDDEN_BLOCK';
+    }
+  };
+
+  const stateOrStateColor = (block, iWantColor) => {
+    const state = validateBlockState(block);
+
+    switch (state) {
+      case 'VISIBLE_BLOCK':
+        return iWantColor ? '#52C41A' : 'Visible';
+      case 'BLOCK_LOCKED':
+        return iWantColor ? '#FAAD14' : 'Sin contenido';
+      case 'HIDDEN_BLOCK':
+        return iWantColor ? '#FF4D4F' : 'Oculto';
+      default:
+        return iWantColor ? '#FF4D4F' : 'Oculto';
+    }
+  };
+
   //PERMITE GUARDAR STATUS DE LAS SECCIONES EN BD
   const saveSections = async () => {
     if (dataSource) {
@@ -133,7 +162,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       title: 'Estado',
       dataIndex: 'status',
       render: (val, item) => {
-        return <Tag color={item.status === true ? 'green' : 'red'}>{item.status === true ? 'Visible' : 'Oculto'} </Tag>;
+        return <Tag color={stateOrStateColor(item, true)}>{stateOrStateColor(item)}</Tag>;
       },
     },
     {
@@ -150,12 +179,18 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
               unCheckedChildren={<EyeInvisibleOutlined />}
               checked={val}
             />
-            <Button onClick={() => settingsSection(item, cEvent, history, setVisible, changeTab)}>Configurar</Button>
-            {visibleAlert(item, description, speakers, agenda) && (
-              <Popover content={<div>Sin configurar</div>} title=''>
-                <InfoCircleOutlined style={{ color: 'red' }} />
-              </Popover>
-            )}
+            <Badge
+              count={
+                visibleAlert(item, description, speakers, agenda) ? (
+                  <Tooltip title={'Debe configurar el contenido para que se visualice en la landing'}>
+                    <InformationIcon style={{ color: '#FAAD14', fontSize: '20px' }} />
+                  </Tooltip>
+                ) : (
+                  0
+                )
+              }>
+              <Button onClick={() => settingsSection(item, cEvent, history, setVisible, changeTab)}>Configurar</Button>
+            </Badge>
           </Space>
         );
       },
