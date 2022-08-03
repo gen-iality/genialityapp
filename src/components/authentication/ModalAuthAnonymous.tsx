@@ -114,7 +114,6 @@ const ModalAuthAnonymous = (props: any) => {
     modalVisible && (
       <Modal
         maskStyle={props.organization === 'organization' ? { backgroundColor: '#333333' } : {}}
-        bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
         footer={null}
         zIndex={1000}
@@ -125,10 +124,6 @@ const ModalAuthAnonymous = (props: any) => {
             style={{
               height: 'auto',
               overflowY: 'hidden',
-              paddingLeft: '5px',
-              paddingRight: '5px',
-              paddingTop: '0px',
-              paddingBottom: '0px',
             }}>
             <RegisterUserAndEventUserAnonymous
               screens={screens}

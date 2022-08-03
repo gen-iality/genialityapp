@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Steps, Button, Alert } from 'antd';
+import { Steps, Button, Alert, Typography } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -17,11 +17,14 @@ import FormEnrollAttendeeToEvent from '@/components/forms/FormEnrollAttendeeToEv
 import { fieldNameEmailFirst } from '@/helpers/utils';
 import { app } from '../../helpers/firebase';
 import { AttendeeApi } from '@/helpers/request';
+import { UseUserEvent } from '@/context/eventUserContext';
 const { Step } = Steps;
+const { Title } = Typography;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
+  const cEventUser = UseUserEvent();
   let { helperDispatch } = useHelper();
   const [loading, setLoading] = useState(false);
   const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {};
@@ -40,18 +43,24 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             photoURL: values.email,
           })
           .then(async () => {
-            const body = {
-              event_id: cEvent.value._id,
-              uid: user.user?.uid,
-              anonymous: true,
-              properties: {
-                ...values,
-              },
-            };
-            await app.auth().currentUser?.reload();
-            await AttendeeApi.create(cEvent.value._id, body);
-            cEvent.setUpdateUser(true);
-            helperDispatch({ type: 'showLogin', visible: false });
+            console.log('response', user);
+            if (user.user) {
+              const body = {
+                event_id: cEvent.value._id,
+                uid: user.user?.uid,
+                anonymous: true,
+                properties: {
+                  ...values,
+                },
+              };
+              await app.auth().currentUser?.reload();
+              AttendeeApi.create(cEvent.value._id, body).then((data) => {
+                console.log('response', data);
+                cEventUser.setUpdateUser(true);
+                helperDispatch({ type: 'showLogin', visible: false });
+                setLoading(false);
+              });
+            }
           });
       })
       .catch((err) => {
@@ -61,15 +70,18 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           msj: 'Ha ocurrido un error',
           action: 'show',
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
   console.log('current', cEvent);
   return (
-    <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+    <div>
+      <Title level={3} style={{ textAlign: 'center' }}>
+        {intl.formatMessage({
+          id: 'modal.title.registerevent..',
+          defaultMessage: 'Información para el evento',
+        })}
+      </Title>
       <FormEnrollAttendeeToEvent
         saveAttendee={handleSubmit}
         fields={fields}
