@@ -25,8 +25,11 @@ import GoToMeet from './components/manager/GoToMeet';
 import { activitySubTypeKeys } from '@/context/activityType/schema/activityTypeFormStructure';
 import { ActivitySubTypeName } from '@/context/activityType/schema/structureInterfaces';
 
+import TriviaEdit from '../../trivia/edit';
+
 export interface ActivityContentManagerProps {
   activityName: string,
+  matchUrl: string,
 };
 
 function ActivityContentManager(props: ActivityContentManagerProps) {
@@ -35,6 +38,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     activityEdit,
     roomStatus,
     setRoomStatus,
+    saveConfig,
     dataLive,
     meeting_id,
     obtainUrl,
@@ -60,6 +64,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     contentSource,
     translateActivityType,
     activityContentType,
+    saveActivityContent,
   } = useActivityType();
 
   const type = useMemo(() => {
@@ -85,7 +90,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   };
 
   useEffect(() => {
-    meeting_id && getVideoList();
+    meeting_id && !(['quiz', 'quizing', 'survey'].includes(activityContentType!)) && getVideoList();
 
     if (type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
@@ -112,6 +117,17 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <Typography.Title>{activityContentType}</Typography.Title>
         <Typography.Text>Página de configuración del contenido.</Typography.Text>
       </div>
+      <TriviaEdit
+        inserted
+        savedSurveyId={contentSource}
+        activityId={activityEdit}
+        event={eventContext.value}
+        matchUrl={props.matchUrl}
+        onSave={(surveyId: string) => {
+          console.debug('call onSave from TriviaEdit. surveyId will be', surveyId);
+          saveActivityContent(activityContentType as ActivitySubTypeName, surveyId);
+        }}
+      />
       </>
     );
   }

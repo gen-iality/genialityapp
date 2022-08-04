@@ -28,6 +28,7 @@ export interface SubActivityContentSelectorProps {
   eventId: string,
   activityName: string,
   shouldLoad: boolean,
+  matchUrl: string,
 };
 
 function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
@@ -35,7 +36,8 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
     activityId,
     eventId,
     activityName,
-    shouldLoad
+    shouldLoad,
+    matchUrl,
   } = props;
 
   const [modalTitle, setModalTitle] = useState('Contenido');
@@ -137,7 +139,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
         >
           Eliminar contenido
         </Button> */}
-        <ActivityContentManager activityName={activityName}/>
+        <ActivityContentManager activityName={activityName} matchUrl={props.matchUrl} />
       </>
     );
   }
