@@ -26,8 +26,11 @@ import { activitySubTypeKeys } from '@/context/activityType/schema/activityTypeF
 import { ActivitySubTypeName } from '@/context/activityType/schema/structureInterfaces';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 
+import TriviaEdit from '../../trivia/edit';
+
 export interface ActivityContentManagerProps {
   activityName: string,
+  matchUrl: string,
 };
 
 function ActivityContentManager(props: ActivityContentManagerProps) {
@@ -61,6 +64,8 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     contentSource,
     translateActivityType,
     activityContentType,
+    saveActivityContent,
+    resetActivityType,
   } = useActivityType();
 
   const type = useMemo(() => {
@@ -86,7 +91,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   };
 
   useEffect(() => {
-    meeting_id && getVideoList();
+    meeting_id && !(['quiz', 'quizing', 'survey'].includes(activityContentType!)) && getVideoList();
 
     if (type !== 'EviusMeet') return;
     getRequestByActivity(refActivity);
@@ -113,6 +118,31 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <Typography.Title>{activityContentType}</Typography.Title>
         <Typography.Text>Página de configuración del contenido.</Typography.Text>
       </div>
+      <TriviaEdit
+        inserted
+        savedSurveyId={contentSource}
+        activityId={activityEdit}
+        event={eventContext.value}
+        matchUrl={props.matchUrl}
+        onSave={(surveyId: string) => {
+          console.debug('call onSave from TriviaEdit. surveyId will be', surveyId);
+          saveActivityContent(activityContentType as ActivitySubTypeName, surveyId);
+        }}
+        onDelete={() => {
+          console.debug('survey delete')
+          switch (activityContentType as ActivitySubTypeName) {
+            case 'survey':
+              resetActivityType('survey2');
+              break;
+            case 'quizing':
+              resetActivityType('quizing2');
+              break;
+            default:
+              console.error('Cant reset activity type from content type:', activityContentType);
+          }
+          // saveActivityContent(activityContentType as ActivitySubTypeName, null);
+        }}
+      />
       </>
     );
   }

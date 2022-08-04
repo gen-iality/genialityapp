@@ -153,7 +153,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setIsDeletingActivityType(false);
   }
 
-  const saveActivityContent = async (type?: ActivitySubTypeName, data?: string | null) => {
+  const saveActivityContent = async (type?: ActivitySubTypeName | null, data?: string | null) => {
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -169,8 +169,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       return;
     }
 
-    if (type) setActivityContentType(type);
-    if (data) setContentSource(data);
+    if (type !== undefined) setActivityContentType(type);
+    if (data !== undefined) setContentSource(data);
     const contentType = activityContentType || type;
     const inputContentSource = contentSource || data;
 

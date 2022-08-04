@@ -48,11 +48,12 @@ class triviaEdit extends Component {
     super(props);
     this.formEditRef = React.createRef();
     this.state = {
+      idSurvey: this.props.savedSurveyId,
       isLoading: true,
       loading: false,
       redirect: false,
       survey: '',
-      activity_id: '',
+      activity_id: props.activityId || '',
       dataAgenda: [],
       quantityQuestions: 0,
       listQuestions: [],
@@ -103,64 +104,73 @@ class triviaEdit extends Component {
     this.setState({ [name]: value });
   };
 
+  async getSurveyFromEditing(surveyId, isCreated) {
+    console.debug('getSurveyFromEditing is called', surveyId, isCreated);
+    //Se obtiene el estado y la confiugracion de la encuesta de Firebase
+    const firebaseSurvey = await getSurveyConfiguration(surveyId);
+
+    //Consulta  a Mongo del información del curso
+    const Update = await SurveysApi.getOne(this.props.event._id, surveyId);
+
+    //Se obtiene el listado de lecciones del curso para listarlas en la lista desplegable para relacionar la encuesta con una lección
+    const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
+
+    //Se envian al estado para poderlos utilizar en el markup
+    this.setState({
+      isLoading: false,
+      idSurvey: Update._id,
+      _id: Update._id,
+
+      // Survey Config
+      allow_anonymous_answers: firebaseSurvey.allow_anonymous_answers || this.state.allow_anonymous_answers,
+      allow_gradable_survey: firebaseSurvey.allow_gradable_survey
+        ? firebaseSurvey.allow_gradable_survey
+        : 'false' || this.state.allow_gradable_survey,
+      hasMinimumScore: firebaseSurvey.hasMinimumScore || this.state.hasMinimumScore,
+      isGlobal: firebaseSurvey.isGlobal || this.state.isGlobal,
+      showNoVotos: firebaseSurvey.showNoVotos || this.state.showNoVotos,
+
+      // Survey State
+      freezeGame: firebaseSurvey.freezeGame || this.state.freezeGame,
+      openSurvey: firebaseSurvey.isOpened || this.state.openSurvey,
+      publish: firebaseSurvey.isPublished || this.state.publish,
+
+      survey: Update.survey,
+      show_horizontal_bar: Update.show_horizontal_bar || true,
+      graphyType: Update.graphyType ? Update.graphyType : 'y',
+      allow_vote_value_per_user: Update.allow_vote_value_per_user || 'false',
+      activity_id: Update.activity_id,
+      dataAgenda: dataAgenda.data,
+      points: Update.points ? Update.points : 1,
+      initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, '\n') : null,
+      time_limit: Update.time_limit ? parseInt(Update.time_limit) : 0,
+      win_Message: Update.win_Message ? Update.win_Message : '',
+      neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
+      lose_Message: Update.lose_Message ? Update.lose_Message : '',
+      ranking: Update.rankingVisible ? Update.rankingVisible : 'false',
+      displayGraphsInSurveys: Update.displayGraphsInSurveys ? Update.displayGraphsInSurveys : 'false',
+
+      minimumScore: Update.minimumScore ? Update.minimumScore : 0,
+    });
+
+    if (!isCreated) await this.getQuestions();
+  }
+
   async componentDidMount() {
-    if (this.props.location.state.new) {
+    if (this.props.location.state.new || this.props.inserted) {
       this.setState({
         isLoading: false,
       });
     }
     //Se consultan las api para traer en primera los datos de la encuesta para actualizar y en segunda los datos la agenda
-    if (this.props.location.state.edit) {
-      const surveyId = this.props.location.state.edit;
-
-      //Se obtiene el estado y la confiugracion de la encuesta de Firebase
-      const firebaseSurvey = await getSurveyConfiguration(surveyId);
-
-      //Consulta  a Mongo del información del curso
-      const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
-
-      //Se obtiene el listado de lecciones del curso para listarlas en la lista desplegable para relacionar la encuesta con una lección
-      const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
-
-      //Se envian al estado para poderlos utilizar en el markup
-      this.setState({
-        isLoading: false,
-        idSurvey: Update._id,
-        _id: Update._id,
-
-        // Survey Config
-        allow_anonymous_answers: firebaseSurvey.allow_anonymous_answers || this.state.allow_anonymous_answers,
-        allow_gradable_survey: firebaseSurvey.allow_gradable_survey
-          ? firebaseSurvey.allow_gradable_survey
-          : 'false' || this.state.allow_gradable_survey,
-        hasMinimumScore: firebaseSurvey.hasMinimumScore || this.state.hasMinimumScore,
-        isGlobal: firebaseSurvey.isGlobal || this.state.isGlobal,
-        showNoVotos: firebaseSurvey.showNoVotos || this.state.showNoVotos,
-
-        // Survey State
-        freezeGame: firebaseSurvey.freezeGame || this.state.freezeGame,
-        openSurvey: firebaseSurvey.isOpened || this.state.openSurvey,
-        publish: firebaseSurvey.isPublished || this.stata.publish,
-
-        survey: Update.survey,
-        show_horizontal_bar: Update.show_horizontal_bar || true,
-        graphyType: Update.graphyType ? Update.graphyType : 'y',
-        allow_vote_value_per_user: Update.allow_vote_value_per_user || 'false',
-        activity_id: Update.activity_id,
-        dataAgenda: dataAgenda.data,
-        points: Update.points ? Update.points : 1,
-        initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, '\n') : null,
-        time_limit: Update.time_limit ? parseInt(Update.time_limit) : 0,
-        win_Message: Update.win_Message ? Update.win_Message : '',
-        neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
-        lose_Message: Update.lose_Message ? Update.lose_Message : '',
-        ranking: Update.rankingVisible ? Update.rankingVisible : 'false',
-        displayGraphsInSurveys: Update.displayGraphsInSurveys ? Update.displayGraphsInSurveys : 'false',
-
-        minimumScore: Update.minimumScore ? Update.minimumScore : 0,
-      });
-
-      this.getQuestions();
+    if (this.props.location.state.edit || (this.props.inserted && this.props.savedSurveyId)) {
+      if (this.props.inserted && this.props.savedSurveyId) {
+        console.debug('will get survey from props (inserted mode), survey ID:', this.props.savedSurveyId);
+      }
+      console.debug('this.props.savedSurveyId:', this.props.savedSurveyId);
+      console.debug('this.props.location.state.edit:', this.props.location.state.edit);
+      const surveyId = this.props.inserted ? this.props.savedSurveyId : this.props.location.state.edit;
+      await this.getSurveyFromEditing(surveyId);
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
       /* console.log(dataAgenda, 'dataAgenda'); */
@@ -171,7 +181,12 @@ class triviaEdit extends Component {
   }
 
   async getQuestions() {
-    const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
+    console.debug('this.props.savedSurveyId:', this.props.savedSurveyId);
+    console.debug('this.props.location.state.edit:', this.props.location.state.edit);
+    const surveyId = this.props.inserted ? this.props.savedSurveyId : this.props.location.state.edit;
+
+    console.debug('call getQuestions surveyId:', surveyId);
+    const Update = await SurveysApi.getOne(this.props.event._id, surveyId);
 
     const question = [];
     for (const prop in Update.questions) {
@@ -186,6 +201,7 @@ class triviaEdit extends Component {
 
   //Funcion para guardar los datos a actualizar
   async submit() {
+    console.debug('call submit this.state.survey =', this.state.survey);
     if (this.state.survey) {
       DispatchMessageService({
         type: 'loading',
@@ -250,6 +266,12 @@ class triviaEdit extends Component {
         );
 
         await this.setState({ idSurvey });
+
+        if (this.props.inserted && this.props.onSave) {
+          await this.getSurveyFromEditing(idSurvey, true);
+          this.props.onSave(idSurvey);
+        }
+
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
@@ -281,6 +303,7 @@ class triviaEdit extends Component {
 
   async submitWithQuestions(e) {
     //Se recogen los datos a actualizar
+    console.debug('call submitWithQuestions');
 
     if (this.state.publish === 'true' && this.state.question.length === 0)
       return DispatchMessageService({
@@ -378,7 +401,7 @@ class triviaEdit extends Component {
             },
             { eventId: this.props.event._id, name: data.survey, category: 'none' }
           );
-          this.goBack();
+          if (!this.props.inserted) this.goBack();
           DispatchMessageService({
             key: 'updating',
             action: 'destroy',
@@ -511,6 +534,7 @@ class triviaEdit extends Component {
   };
 
   sendForm = () => {
+    console.debug('call sendForm, this.formEditRef.current =', this.formEditRef.current);
     this.setState({ confirmLoading: true });
     if (this.formEditRef.current) {
       this.formEditRef.current.submit();
@@ -638,31 +662,20 @@ class triviaEdit extends Component {
       okText: 'Borrar',
       okType: 'danger',
       cancelText: 'Cancelar',
-      onOk() {
+      onOk: () => {
         const onHandlerRemove = async () => {
           try {
             await SurveysApi.deleteOne(self.state.idSurvey, self.props.event._id);
             await deleteSurvey(self.state.idSurvey);
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            });
-            self.goBack();
+            DispatchMessageService({ key: 'loading', action: 'destroy' });
+            DispatchMessageService({ type: 'success', msj: 'Se eliminó la información correctamente!', action: 'show' });
+            if (!this.props.inserted) self.goBack();
+            if (this.props.inserted && this.props.onDelete) {
+              this.props.onDelete();
+            }
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            });
+            DispatchMessageService({ key: 'loading', action: 'destroy' });
+            DispatchMessageService({ type: 'error', msj: handleRequestError(e).message, action: 'show' });
           }
         };
         onHandlerRemove();
@@ -728,9 +741,7 @@ class triviaEdit extends Component {
         title: '# de posibles respuestas',
         key: 'choices',
         align: 'center',
-        render: (e) => {
-          return <div>{e.choices?.length}</div>;
-        },
+        render: (e) => <div>{e.choices?.length}</div>,
       },
       {
         title: 'Opciones',
@@ -768,9 +779,11 @@ class triviaEdit extends Component {
       <Form onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit} {...formLayout}>
         <Header
           title={'Evaluaciones'}
-          back
-          save
-          form
+          back={!this.props.inserted}
+          save={!this.props.inserted || this.state.idSurvey}
+          form={!this.props.inserted}
+          saveMethod={this.props.inserted && this.state.idSurvey ? this.submitWithQuestions : undefined}
+          addFn={this.props.inserted && !this.state.idSurvey ? this.submit : undefined}
           remove={this.remove}
           edit={this.state.idSurvey}
           extra={
@@ -915,6 +928,7 @@ class triviaEdit extends Component {
                         <>
                           <Form.Item label={'Relacionar esta evaluación a una lección'}>
                             <Select
+                              disabled={this.props.inserted}
                               name={'activity_id'}
                               value={activity_id || ''}
                               onChange={(relation) => {

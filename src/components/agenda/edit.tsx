@@ -443,6 +443,7 @@ function AgendaEdit(props: AgendaEditProps) {
                           activityName={formdata.name}
                           eventId={props.event._id}
                           shouldLoad={currentTab === '2'}
+                          matchUrl={props.matchUrl}
                         />
                         )}
                         <BackTop/>
