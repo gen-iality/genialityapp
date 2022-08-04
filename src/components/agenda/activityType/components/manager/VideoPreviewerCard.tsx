@@ -279,7 +279,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                   .then(() => console.log('config saved - habilitar_ingreso:', value));
               }}
               style={{ width: '100%' }}>
-              <Select.Option value=''>Actividad creada</Select.Option>
+              <Select.Option value='created_meeting_room'>Actividad creada</Select.Option>
               <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
               <Select.Option value='open_meeting_room'>En vivo</Select.Option>
               <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
