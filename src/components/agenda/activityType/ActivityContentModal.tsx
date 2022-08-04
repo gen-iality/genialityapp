@@ -9,7 +9,6 @@ import ActivityContentModalLayout from './components/ActivityContentModalLayout'
 
 import { ModalWrapperUIProps} from './interfaces/ModalWrapperUIProps';
 import {
-  ActivitySubTypeName,
   FormStructure,
   ActivityTypeCard,
   ActivitySubTypeKey,
@@ -17,12 +16,7 @@ import {
   FormType,
   GeneralTypeValue,
 } from  '@/context/activityType/schema/structureInterfaces';
-import {
-  activityTypeKeys,
-  activitySubTypeKeys,
-} from  '@/context/activityType/schema/activityTypeFormStructure';
 import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout';
-import { FullActivityTypeInfoLayoutProps } from './components/FullActivityTypeInfoLayout';
 
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';

@@ -24,6 +24,7 @@ import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard';
 import GoToMeet from './components/manager/GoToMeet';
 import { activitySubTypeKeys } from '@/context/activityType/schema/activityTypeFormStructure';
 import { ActivitySubTypeName } from '@/context/activityType/schema/structureInterfaces';
+import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 
 export interface ActivityContentManagerProps {
   activityName: string,
@@ -204,6 +205,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         </Row>
       </Col>
     </Row>
+    <ModalListRequestsParticipate handleModal={setViewModal} visible={viewModal} refActivity={refActivity}/>
     </>
   );
 }

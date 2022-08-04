@@ -7,12 +7,13 @@ import AgendaContext from '../AgendaContext';
 import { CurrentEventContext } from '../eventContext';
 
 import ActivityTypeContext from './activityTypeContext';
-import { ActivitySubTypeName, ActivityTypeName } from './schema/structureInterfaces';
+import { ActivitySubTypeName, ActivityTypeCard, ActivityTypeName, FormStructure, WidgetType } from './schema/structureInterfaces';
 import {
   ActivityTypeProviderProps,
   ActivityTypeContextType,
+  OpenedWidget,
 } from './types/types';
-import { activitySubTypeKeys, activityTypeData, simplifiedActivityTypeMap } from './schema/activityTypeFormStructure';
+import { activitySubTypeKeys, activityTypeData, activityTypeKeys, simplifiedActivityTypeMap } from './schema/activityTypeFormStructure';
 // Temporally
 import { ExtendedAgendaDocumentType } from '@/components/agenda/types/AgendaDocumentType';
 
@@ -152,7 +153,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setIsDeletingActivityType(false);
   }
 
-  const saveActivityContent = async (type?: ActivitySubTypeName) => {
+  const saveActivityContent = async (type?: ActivitySubTypeName, data?: string | null) => {
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -169,7 +170,9 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
 
     if (type) setActivityContentType(type);
+    if (data) setContentSource(data);
     const contentType = activityContentType || type;
+    const inputContentSource = contentSource || data;
 
     if (!contentType) {
       console.error('ActivityTypeProvider.saveActivityContent: content type must not be none');
@@ -180,50 +183,50 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
     setIsUpdatingActivityContent(true);
 
-    const agenda = await editActivityType(cEvent.value._id, activityEdit, contentType);
+    /* const agenda = */ editActivityType(cEvent.value._id, activityEdit, contentType).then(() => console.debug('editActivityType called during saving'));
 
     switch (contentType) {
       case activitySubTypeKeys.url: {
-        const respUrl = await AgendaApi.editOne({ video: contentSource }, activityEdit, cEvent.value._id);
+        const respUrl = await AgendaApi.editOne({ video: inputContentSource }, activityEdit, cEvent.value._id);
         if (respUrl) {
           await saveConfig({
             platformNew: '',
             type: activitySubTypeKeys.url,
             habilitar_ingreso: '',
-            data: contentSource,
+            data: inputContentSource,
           });
           setTypeActivity(activitySubTypeKeys.url);
           setPlatform('wowza');
-          setMeetingId(contentSource);
+          setMeetingId(inputContentSource);
         }
         break;
       }
       case activitySubTypeKeys.vimeo: {
-        const resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: contentSource });
+        const resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: inputContentSource });
         setTypeActivity(activitySubTypeKeys.vimeo);
         setPlatform(activitySubTypeKeys.vimeo);
-        setMeetingId(contentSource);
+        setMeetingId(inputContentSource);
         break;
       }
       case activitySubTypeKeys.youtube: {
-        if (!contentSource) {
+        if (!inputContentSource) {
           console.error('ActivityTypeProvider: contentSource is none');
           return;
         }
-        let newData = contentSource.includes('https://youtu.be/')
-          ? contentSource
-          : 'https://youtu.be/' + contentSource;
+        let newData = inputContentSource.includes('https://youtu.be/')
+          ? inputContentSource
+          : 'https://youtu.be/' + inputContentSource;
         const resp = await saveConfig({ platformNew: 'wowza', type: activitySubTypeKeys.youtube, data: newData });
         setTypeActivity('youTube');
         setPlatform('wowza');
-        setMeetingId(contentSource);
+        setMeetingId(inputContentSource);
         break;
       }
       case activitySubTypeKeys.meeting: {
         const resp = await saveConfig({
           platformNew: '',
           type: activitySubTypeKeys.meeting,
-          data: contentSource,
+          data: inputContentSource,
           habilitar_ingreso: 'only',
         });
         setTypeActivity(activitySubTypeKeys.meeting);
@@ -231,11 +234,11 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         break;
       }
       case activitySubTypeKeys.file: {
-        if (!contentSource) {
+        if (!inputContentSource) {
           console.error('ActivityTypeProvider: contentSource is none');
           return;
         }
-        const data = contentSource.split('*');
+        const data = inputContentSource.split('*');
         const urlVideo = data[0];
         const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent.value._id);
         if (respUrlVideo) {
@@ -266,11 +269,63 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         setPlatform('wowza');
         break;
       }
+      case activitySubTypeKeys.survey: {
+        if (!inputContentSource) {
+          console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
+          return;
+        }
+        await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
+        setTypeActivity(activitySubTypeKeys.survey);
+        setMeetingId(inputContentSource);
+        break;
+      }
       default:
         // alert(`wtf is ${contentType}`);
         console.warn(`wtf is ${contentType}`);
     }
   };
+
+  const getOpenedWidget: (currentActivityType: ActivityTypeName) => [string, OpenedWidget | undefined] = (currentActivityType: ActivityTypeName) => {
+    let index;
+    switch (currentActivityType) {
+      case activityTypeKeys.live:
+        index = 0;
+        break;
+      case activityTypeKeys.meeting:
+        index = 1;
+        break;
+      case activityTypeKeys.video:
+        index = 2;
+        break;
+      case activityTypeKeys.quizing:
+        index = 3;
+        break;
+      case activityTypeKeys.survey:
+        index = 4;
+        break;
+      default:
+        console.error(`No puede reconocer actividad de tipo "${currentActivityType}"`);
+        break;
+    }
+
+    if (index !== undefined) {
+      // Set the title, and the data to the views
+      const currentOpenedCard: ActivityTypeCard = activityTypeData.cards[index];
+      console.debug('opened widget is:', currentOpenedCard);
+      const title = currentOpenedCard.MainTitle;
+
+      if (currentOpenedCard.widgetType === WidgetType.FORM) {
+        console.debug('Pass the form widget')
+        return [title, currentOpenedCard.form];
+      } else {
+        console.debug('Whole widget was passed');
+        return [title, currentOpenedCard];
+      }
+    } else {
+      console.error('Tries to understand', currentActivityType, ' but I think weird stuffs..');
+      return ['', undefined];
+    }
+  }
 
   const executer_createStream = useMutation(() => createLiveStream(activityName), {
     onSuccess: async (data: any) => {
@@ -335,9 +390,11 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     visualizeVideo,
     executer_stopStream,
     convertTypeToHumanizedString,
+    getOpenedWidget,
   };
 
   useEffect(() => {
+    console.debug('activityEdit changed, refresh activityTypeProvider data');
     const request = async () => {
       if (!(cEvent?.value?._id)) {
         console.error('ActivityTypeProvider.saveActivityType cannot get cEvent.value._id');
@@ -366,16 +423,23 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             if (theseAreLiveToo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('liveBroadcast');
               setContentSource(meetingId);
+              console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('video');
               setContentSource(agendaInfo.video || null);
+              console.debug('from beginning contentSource is going to be:', agendaInfo.video || null);
             } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('meeting2');
               setContentSource(meetingId);
-            } else if ((typeIncoming as ActivitySubTypeName) === 'quizing') {
+              console.debug('from beginning contentSource is going to be:', meetingId);
+            } else if (['quizing', 'quiz'].includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('quizing2');
+              setContentSource(meetingId);
+              console.debug('from beginning contentSource is going to be:', meetingId);
             } else if ((typeIncoming as ActivitySubTypeName) === 'survey') {
               setActivityType('survey2');
+              setContentSource(meetingId);
+              console.debug('from beginning contentSource is going to be:', meetingId);
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);
@@ -394,7 +458,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   }, [activityEdit]);
 
   useEffect(() => {
-    if (!contentSource && !!meetingId && !!activityContentType && (theseAreLiveToo.includes(activityContentType) || theseAreMeeting.includes(activityContentType))) {
+    if (!contentSource && !!meetingId && !!activityContentType && (theseAreLiveToo.includes(activityContentType) || theseAreMeeting.includes(activityContentType) || ['survey', 'quiz', 'quizing'].includes(activityContentType))) {
       console.debug('reset contentSource to meetingId:', meetingId);
       setContentSource(meetingId);
     }

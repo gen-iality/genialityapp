@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {
   ActivitySubTypeName,
+  ActivityTypeCard,
   ActivityTypeData,
   ActivityTypeName,
+  FormStructure,
   SimplifiedActivityTypeValue,
 } from '../schema/structureInterfaces';
 
@@ -14,6 +16,8 @@ export type ProcessingType = {
   updatingActivityType: boolean,
   updatingActivityContent: boolean,
 };
+
+export type OpenedWidget = ActivityTypeCard | FormStructure;
 
 export type ActivityTypeContextType = {
   is: ProcessingType,
@@ -29,11 +33,12 @@ export type ActivityTypeContextType = {
   saveActivityType: () => void,
   deleteActivityType: () => void,
   resetActivityType: (type: ActivityTypeName) => void,
-  saveActivityContent: (type?: ActivitySubTypeName) => void,
+  saveActivityContent: (type?: ActivitySubTypeName, data?: string |  null) => void,
   translateActivityType: (type: string) => SimplifiedActivityTypeValue | null,
   visualizeVideo: (url: string | null, created_at: string | null, name: string | null) => void,
   executer_stopStream: () => void,
   convertTypeToHumanizedString: (type: string) => string,
+  getOpenedWidget: (currentActivityType: ActivityTypeName) => [string, OpenedWidget | undefined],
 };
 
 export type ActivityTypeProviderProps = {
