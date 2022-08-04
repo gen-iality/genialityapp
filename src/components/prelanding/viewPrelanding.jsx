@@ -17,6 +17,7 @@ import InfoEvent from '../shared/infoEvent';
 import ActivityBlock from './block/activityBlock';
 import CountdownBlock from './block/countdownBlock';
 import SpeakersBlock from './block/speakersBlock';
+import { obtenerConfigActivity } from './hooks/helperFunction';
 import MenuScrollBlock from './MenuScrollBlock';
 
 const { Content } = Layout;
@@ -140,9 +141,13 @@ const ViewPrelanding = (props) => {
       const sectionsDescription = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
       let speakers = await SpeakersApi.byEvent(cEventContext?.value._id);
       const agenda = await AgendaApi.byEvent(cEventContext?.value._id);
+      const speakersFiltered=speakers.filter((speaker)=>speaker.published || speaker.published=="undefined")
+      const agendaConfig=await obtenerConfigActivity(cEventContext.value?._id,agenda.data);
+      const agendaFiltered= agendaConfig.filter((agendaCfg)=>agendaCfg.isPublished || agendaCfg.isPublished==undefined)
       setDescription(sectionsDescription?.data || []);
-      setSpeakers(speakers || []);
-      setAgenda(agenda?.data || []);
+      setSpeakers(speakersFiltered || []);
+      setAgenda(agendaFiltered || []);
+    
     }
   }, [cEventContext.value]);
   return (

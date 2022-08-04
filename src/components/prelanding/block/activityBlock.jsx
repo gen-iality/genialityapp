@@ -167,7 +167,7 @@ const ActivityBlock = () => {
                     activity.hosts.map((host) => <Avatar icon={<UserOutlined />} src={host.image && host.image} />)}
                 </Avatar.Group>
                 {activities.length < 2 && (
-                  <span style={{ position: 'relative', float: 'right' }}>{determineType(activity.type.name)}</span>
+                  <span style={{ position: 'relative', float: 'right' }}>{determineType(activity?.type?.name)}</span>
                 )}
               </Space>
             </Timeline.Item>

@@ -526,8 +526,9 @@ function AgendaEdit(props: AgendaEditProps) {
 
   // @testable
   // Método para guarda la información de la configuración
-  const saveConfig = async () => {
+  const saveConfig = async (value?:any) => {
     const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
+     roomInfo.isPublished=value!==undefined?value:roomInfo.isPublished
     const activity_id = agendaContext.activityEdit || idNewlyCreatedActivity;
     try {
       const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
@@ -622,7 +623,7 @@ function AgendaEdit(props: AgendaEditProps) {
                   checked={agendaContext.isPublished}
                   onChange={(value) => {
                     agendaContext.setIsPublished(value);
-                    saveConfig();
+                    setTimeout(()=>{saveConfig(value);console.log(agendaContext.isPublished)},400);
                     // this.setState({ isPublished: value }, async () => await this.saveConfig());
                   }}
                 />
