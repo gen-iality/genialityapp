@@ -7,6 +7,9 @@ import { UseUserEvent } from '../../context/eventUserContext';
 import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useIntl } from 'react-intl';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+
+dayjs.extend(localizedFormat);
 
 const InfoEvent = () => {
   let cEvent = UseEventContext();
