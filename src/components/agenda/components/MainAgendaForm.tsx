@@ -22,14 +22,8 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
-import {
-  RolAttApi,
-  SpacesApi,
-  SpeakersApi,
-  CategoriesAgendaApi,
-  eventTicketsApi,
-} from '@/helpers/request';
-import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
+import { CategoriesAgendaApi } from '@/helpers/request';
+import { fieldsSelect, handleRequestError } from '@/helpers/utils';
 
 import Select from 'react-select';
 import Creatable from 'react-select';
@@ -49,6 +43,7 @@ import EventType from '../types/EventType';
 import AgendaDocumentType from '../types/AgendaDocumentType';
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
+import useLoadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
 
 const { Text } = Typography;
 const { Option } = SelectAntd;
@@ -72,6 +67,8 @@ export interface FormDataType {
   selectedTickets: SelectOptionType[],
   selectedDocuments: SelectOptionType[],
 };
+
+// NOTE: mmm... what's happen with selectedRol and allRoles? where are they used and how?
 
 export interface MainAgendaFormProps {
   agendaContext: any,
@@ -113,59 +110,14 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (!props.event?._id) return;
 
     const loading = async () => {
-      try {
-        // NOTE: The tickets are not used
-        const remoteTickets = await eventTicketsApi.getAll(props.event?._id);
-        const newAllTickets = remoteTickets.map((ticket: any) => ({
-          item: ticket,
-          label: ticket.title,
-          value: ticket._id,
-        }));
-        setAllTickets(newAllTickets);
-      } catch (e) {
-        console.error(e);
-      }
-
-      // If dates exist, then iterate the specific dates array, formating specially.
-      if (props.event.dates && props.event.dates.length > 0) {
-        const newDays = props.event.dates.map((dates) => {
-          const formatDate = Moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
-          return { value: formatDate, label: formatDate };
-        });
-        setAllDays(newDays);
-      } else {
-        // Si no, recibe la fecha inicio y la fecha fin y le da el formato
-        // especifico a mostrar
-        const initMoment = Moment(props.event.date_start);
-        const endMoment = Moment(props.event.date_end);
-        const dayDiff = endMoment.diff(initMoment, 'days');
-        // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-        const newDays = [];
-        for (let i = 0; i < dayDiff + 1; i++) {
-          const formatDate = Moment(initMoment)
-            .add(i, 'd')
-            .format('YYYY-MM-DD');
-          newDays.push({ value: formatDate, label: formatDate });
-        }
-        setAllDays(newDays);
-      }
-
-      // Get more data from this event
-      const remoteHosts = await SpeakersApi.byEvent(props.event._id);
-      const remoteRoles = await RolAttApi.byEvent(props.event._id);
-      const remoteSpaces = await SpacesApi.byEvent(props.event._id);
-      const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
-
-      // The object struct should be like [{ label, value }] for the Select components
-      const newAllHosts = handleSelect(remoteHosts) || [];
-      const newAllRoles = handleSelect(remoteRoles) || [];
-      const newAllSpaces = handleSelect(remoteSpaces) || [];
-      const newAllCategories = handleSelect(remoteCategories) || [];
-
-      setAllHosts(newAllHosts);
-      setAllRoles(newAllRoles);
-      setAllSpaces(newAllSpaces);
-      setAllCategories(newAllCategories);
+      useLoadExtraAgendaData(props.event, {
+        setCategories: setAllCategories,
+        setDays: setAllDays,
+        setHosts: setAllHosts,
+        setRoles: setAllRoles,
+        setSpaces: setAllSpaces,
+        setTickets: setAllTickets,
+      });
 
       setIsLoaded(true);
 
