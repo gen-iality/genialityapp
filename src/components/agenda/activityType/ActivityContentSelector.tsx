@@ -1,20 +1,14 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { Card, Result, Button, Alert, Row, Col, Space } from 'antd';
+import { Card, Button, Alert, Row, Col, Space } from 'antd';
 
 import InitialSVG from '../typeActivity/components/svg/InitialSVG';
 
 import {
-  activitySubTypeKeys,
-  activityTypeKeys,
-} from '@/context/activityType/schema/activityTypeFormStructure';
-import {
   ActivityTypeCard,
   FormStructure,
-  WidgetType,
   ActivitySubTypeKey,
-  GeneralTypeName,
   GeneralTypeValue,
   ActivitySubTypeName,
 } from '@/context/activityType/schema/structureInterfaces';
@@ -30,10 +24,8 @@ export interface SubActivityContentSelectorProps {
   shouldLoad: boolean,
 };
 
-function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
+function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const {
-    activityId,
-    eventId,
     activityName,
     shouldLoad
   } = props;
@@ -46,11 +38,9 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
   const {
     activityType,
     activityContentType,
-    formWidgetFlow,
-    contentSource,
     setContentSource,
     saveActivityContent,
-    setActivityContentType,
+    getOpenedWidget,
   } = useActivityType();
 
   useEffect(() => {
@@ -60,44 +50,9 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
       return;
     }
 
-    let index;
-    switch (activityType) {
-      case activityTypeKeys.live:
-        index = 0;
-        break;
-      case activityTypeKeys.meeting:
-        index = 1;
-        break;
-      case activityTypeKeys.video:
-        index = 2;
-        break;
-      case activityTypeKeys.quizing:
-        index = 3;
-        break;
-      case activityTypeKeys.survey:
-        index = 4;
-        break;
-      default:
-        console.error(`No puede reconocer actividad de tipo "${activityType}"`);
-        break;
-    }
-
-    if (index !== undefined) {
-      // Set the title, and the data to the views
-      const currentOpenedCard: ActivityTypeCard = formWidgetFlow.cards[index];
-      console.debug('opened widget is:', currentOpenedCard);
-      setModalTitle(currentOpenedCard.MainTitle);
-
-      if (currentOpenedCard.widgetType === WidgetType.FORM) {
-        console.debug('Pass the form widget')
-        setCurrentWidget(currentOpenedCard.form);
-      } else {
-        console.debug('Whole widget was passed');
-        setCurrentWidget(currentOpenedCard);
-      }
-    } else {
-      console.error('Tries to understand', activityType, ' but I think weird stuffs..');
-    }
+    const [title, widget] = getOpenedWidget(activityType);
+    if (title) setModalTitle(title);
+    if (widget) setCurrentWidget(widget);
   }, [shouldLoad, activityType]);
 
   useEffect(() => {
@@ -107,9 +62,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
     }
   }, [selectedType]);
 
-  const handleCloseModal = (success: boolean = false) => {
-    setIsModalShown(false);
-  };
+  const handleCloseModal = (success: boolean = false) => setIsModalShown(false);
 
   const handleConfirm = () => {
     console.debug('confirm the selectedType:', selectedType);
@@ -130,10 +83,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
     return (
         <>
         {/* <p>Contenido: {activityContentType}</p>
-        <Button
-          danger
-          onClick={() => setActivityContentType(null)}
-        >
+        <Button danger onClick={() => setActivityContentType(null)}>
           Eliminar contenido
         </Button> */}
         <ActivityContentManager activityName={activityName}/>
@@ -144,10 +94,7 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
   return (
     <>
     {currentWidget === undefined && (
-      <Alert
-        type='error'
-        message='No puede cargar el tipo de actividad'
-      />
+      <Alert type='error' message='No puede cargar el tipo de actividad' />
     )}
     {currentWidget !== undefined && (
     <ActivityContentModal
@@ -159,7 +106,6 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
       onClose={handleCloseModal}
       onSelecWidgetKey={setSelectedType}
       onInput={handleInput}
-      // onConfirm={handleConfirm}
     />
     )}
     <Card>
@@ -182,4 +128,4 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
   );
 }
 
-export default SubActivityContentSelector;
+export default ActivityContentSelector;
