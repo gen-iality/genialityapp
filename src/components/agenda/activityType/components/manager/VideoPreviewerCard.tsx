@@ -56,6 +56,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     viewersOnline,
     totalViews,
     maxViewers,
+    saveConfig,
   } = useContext(AgendaContext);
 
   console.debug('VideoPreviewerCard.dataLive:', dataLive);
@@ -273,7 +274,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
               value={roomStatus}
               onChange={(value) => {
                 console.debug('saves value of RoomStatus:', value);
-                setRoomStatus(value);
+                saveConfig({ habilitar_ingreso: value })
+                  .then(() => console.log('config saved - habilitar_ingreso:', value));
               }}
               style={{ width: '100%' }}>
               <Select.Option value=''>Actividad creada</Select.Option>
