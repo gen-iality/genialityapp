@@ -121,7 +121,13 @@ const ActivityBlock = () => {
           return (
             <Timeline.Item
               color={textColor}
-              label={!screens.xs ? activity?.type && determineType(activity.type.name) : null}
+              label={
+                activities.length > 1
+                  ? !screens.xs
+                    ? activity?.type && determineType(activity.type.name)
+                    : null
+                  : null
+              }
               style={index === 0 ? { marginTop: '20px' } : {}}
               dot={
                 activities.length === index + 1 && <FlagCheckeredIcon style={{ fontSize: '20px', color: textColor }} />
@@ -160,6 +166,9 @@ const ActivityBlock = () => {
                   {activity.hosts.length > 0 &&
                     activity.hosts.map((host) => <Avatar icon={<UserOutlined />} src={host.image && host.image} />)}
                 </Avatar.Group>
+                {activities.length < 2 && (
+                  <span style={{ position: 'relative', float: 'right' }}>{determineType(activity.type.name)}</span>
+                )}
               </Space>
             </Timeline.Item>
           );
