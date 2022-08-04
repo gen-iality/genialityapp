@@ -152,7 +152,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setIsDeletingActivityType(false);
   }
 
-  const saveActivityContent = async (type?: ActivitySubTypeName) => {
+  const saveActivityContent = async (type?: ActivitySubTypeName, data?: string | null) => {
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -169,7 +169,9 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
 
     if (type) setActivityContentType(type);
+    if (data) setContentSource(data);
     const contentType = activityContentType || type;
+    const inputContentSource = contentSource || data;
 
     if (!contentType) {
       console.error('ActivityTypeProvider.saveActivityContent: content type must not be none');
@@ -180,50 +182,50 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
     setIsUpdatingActivityContent(true);
 
-    const agenda = await editActivityType(cEvent.value._id, activityEdit, contentType);
+    /* const agenda = */ editActivityType(cEvent.value._id, activityEdit, contentType).then(() => console.debug('editActivityType called during saving'));
 
     switch (contentType) {
       case activitySubTypeKeys.url: {
-        const respUrl = await AgendaApi.editOne({ video: contentSource }, activityEdit, cEvent.value._id);
+        const respUrl = await AgendaApi.editOne({ video: inputContentSource }, activityEdit, cEvent.value._id);
         if (respUrl) {
           await saveConfig({
             platformNew: '',
             type: activitySubTypeKeys.url,
             habilitar_ingreso: '',
-            data: contentSource,
+            data: inputContentSource,
           });
           setTypeActivity(activitySubTypeKeys.url);
           setPlatform('wowza');
-          setMeetingId(contentSource);
+          setMeetingId(inputContentSource);
         }
         break;
       }
       case activitySubTypeKeys.vimeo: {
-        const resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: contentSource });
+        const resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: inputContentSource });
         setTypeActivity(activitySubTypeKeys.vimeo);
         setPlatform(activitySubTypeKeys.vimeo);
-        setMeetingId(contentSource);
+        setMeetingId(inputContentSource);
         break;
       }
       case activitySubTypeKeys.youtube: {
-        if (!contentSource) {
+        if (!inputContentSource) {
           console.error('ActivityTypeProvider: contentSource is none');
           return;
         }
-        let newData = contentSource.includes('https://youtu.be/')
-          ? contentSource
-          : 'https://youtu.be/' + contentSource;
+        let newData = inputContentSource.includes('https://youtu.be/')
+          ? inputContentSource
+          : 'https://youtu.be/' + inputContentSource;
         const resp = await saveConfig({ platformNew: 'wowza', type: activitySubTypeKeys.youtube, data: newData });
         setTypeActivity('youTube');
         setPlatform('wowza');
-        setMeetingId(contentSource);
+        setMeetingId(inputContentSource);
         break;
       }
       case activitySubTypeKeys.meeting: {
         const resp = await saveConfig({
           platformNew: '',
           type: activitySubTypeKeys.meeting,
-          data: contentSource,
+          data: inputContentSource,
           habilitar_ingreso: 'only',
         });
         setTypeActivity(activitySubTypeKeys.meeting);
@@ -231,11 +233,11 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         break;
       }
       case activitySubTypeKeys.file: {
-        if (!contentSource) {
+        if (!inputContentSource) {
           console.error('ActivityTypeProvider: contentSource is none');
           return;
         }
-        const data = contentSource.split('*');
+        const data = inputContentSource.split('*');
         const urlVideo = data[0];
         const respUrlVideo = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent.value._id);
         if (respUrlVideo) {
@@ -264,6 +266,16 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           (await saveConfig({ platformNew: 'wowza', type: contentType, data: meetingId }));
         setTypeActivity(activitySubTypeKeys.rtmp);
         setPlatform('wowza');
+        break;
+      }
+      case activitySubTypeKeys.survey: {
+        if (!inputContentSource) {
+          console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
+          return;
+        }
+        await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
+        setTypeActivity(activitySubTypeKeys.survey);
+        setMeetingId(inputContentSource);
         break;
       }
       default:
@@ -338,6 +350,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   };
 
   useEffect(() => {
+    console.debug('activityEdit changed, refresh activityTypeProvider data');
     const request = async () => {
       if (!(cEvent?.value?._id)) {
         console.error('ActivityTypeProvider.saveActivityType cannot get cEvent.value._id');
@@ -366,16 +379,23 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             if (theseAreLiveToo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('liveBroadcast');
               setContentSource(meetingId);
+              console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (theseAreVideo.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('video');
               setContentSource(agendaInfo.video || null);
+              console.debug('from beginning contentSource is going to be:', agendaInfo.video || null);
             } else if (theseAreMeeting.includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('meeting2');
               setContentSource(meetingId);
-            } else if ((typeIncoming as ActivitySubTypeName) === 'quizing') {
+              console.debug('from beginning contentSource is going to be:', meetingId);
+            } else if (['quizing', 'quiz'].includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('quizing2');
+              setContentSource(meetingId);
+              console.debug('from beginning contentSource is going to be:', meetingId);
             } else if ((typeIncoming as ActivitySubTypeName) === 'survey') {
               setActivityType('survey2');
+              setContentSource(meetingId);
+              console.debug('from beginning contentSource is going to be:', meetingId);
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);
@@ -394,7 +414,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   }, [activityEdit]);
 
   useEffect(() => {
-    if (!contentSource && !!meetingId && !!activityContentType && (theseAreLiveToo.includes(activityContentType) || theseAreMeeting.includes(activityContentType))) {
+    if (!contentSource && !!meetingId && !!activityContentType && (theseAreLiveToo.includes(activityContentType) || theseAreMeeting.includes(activityContentType) || ['survey', 'quiz', 'quizing'].includes(activityContentType))) {
       console.debug('reset contentSource to meetingId:', meetingId);
       setContentSource(meetingId);
     }
