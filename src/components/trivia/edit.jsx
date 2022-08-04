@@ -662,14 +662,17 @@ class triviaEdit extends Component {
       okText: 'Borrar',
       okType: 'danger',
       cancelText: 'Cancelar',
-      onOk() {
+      onOk: () => {
         const onHandlerRemove = async () => {
           try {
             await SurveysApi.deleteOne(self.state.idSurvey, self.props.event._id);
             await deleteSurvey(self.state.idSurvey);
             DispatchMessageService({ key: 'loading', action: 'destroy' });
             DispatchMessageService({ type: 'success', msj: 'Se eliminó la información correctamente!', action: 'show' });
-            self.goBack();
+            if (!this.props.inserted) self.goBack();
+            if (this.props.inserted && this.props.onDelete) {
+              this.props.onDelete();
+            }
           } catch (e) {
             DispatchMessageService({ key: 'loading', action: 'destroy' });
             DispatchMessageService({ type: 'error', msj: handleRequestError(e).message, action: 'show' });

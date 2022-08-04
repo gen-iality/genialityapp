@@ -65,6 +65,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     translateActivityType,
     activityContentType,
     saveActivityContent,
+    resetActivityType,
   } = useActivityType();
 
   const type = useMemo(() => {
@@ -126,6 +127,20 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         onSave={(surveyId: string) => {
           console.debug('call onSave from TriviaEdit. surveyId will be', surveyId);
           saveActivityContent(activityContentType as ActivitySubTypeName, surveyId);
+        }}
+        onDelete={() => {
+          console.debug('survey delete')
+          switch (activityContentType as ActivitySubTypeName) {
+            case 'survey':
+              resetActivityType('survey2');
+              break;
+            case 'quizing':
+              resetActivityType('quizing2');
+              break;
+            default:
+              console.error('Cant reset activity type from content type:', activityContentType);
+          }
+          // saveActivityContent(activityContentType as ActivitySubTypeName, null);
         }}
       />
       </>
