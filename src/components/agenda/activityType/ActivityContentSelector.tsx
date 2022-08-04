@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { Card, Button, Alert, Row, Col, Space } from 'antd';
+import { Card, Button, Alert, Row, Col } from 'antd';
 
 import InitialSVG from '../typeActivity/components/svg/InitialSVG';
 

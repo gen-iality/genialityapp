@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { Card, Result, Button, Alert, Spin, Row, Col } from 'antd';
+import { Button, Alert, Spin, Row, Col } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
 // import InitialSVG from './components/svg/InitialSVG';
 
-import { AgendaApi } from '@/helpers/request';
 import ActivityTypeModal from './ActivityTypeModal';
-import { ExtendedAgendaDocumentType } from '../types/AgendaDocumentType';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
 import { ActivityTypeName } from '@/context/activityType/schema/structureInterfaces';
 
 export interface SubActivityTypeSelectorProps {};
 
-function SubActivityTypeSelector(props: SubActivityTypeSelectorProps) {
+function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   const [isModalShown, setIsModalShown] = useState(false);
 
   const [selected, setSelected] = useState<ActivityTypeName | null>(null);
@@ -90,4 +88,4 @@ function SubActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   );
 }
 
-export default SubActivityTypeSelector;
+export default ActivityTypeSelector;

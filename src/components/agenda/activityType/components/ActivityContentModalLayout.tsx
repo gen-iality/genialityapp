@@ -22,24 +22,6 @@ import {
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
-const useGetNextElement = (item: ActivityTypeCard) => {
-  let result: ActivityTypeCard[] | FormStructure | null = null;
-  switch (item.widgetType) {
-    case WidgetType.CARD_SET:
-      result = item.cards;
-      break;
-    case WidgetType.FORM:
-      result = item.form;
-      break;
-    case WidgetType.FINAL:
-      result = null;
-      break;
-    default:
-      new Error(`The widgetType (${item}) is invalid`);
-  }
-  return result;
-}
-
 const useActivityTypeData: (type: GeneralTypeValue) => ActivityTypeCard | FormStructure | null = (type) => {
   switch (type) {
     case activityTypeKeys.live:
