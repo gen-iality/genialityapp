@@ -129,13 +129,13 @@ function SubActivityContentSelector(props: SubActivityContentSelectorProps) {
   if (activityContentType) {
     return (
         <>
-        <p>Contenido: {activityContentType}</p>
+        {/* <p>Contenido: {activityContentType}</p>
         <Button
           danger
           onClick={() => setActivityContentType(null)}
         >
           Eliminar contenido
-        </Button>
+        </Button> */}
         <ActivityContentManager activityName={activityName}/>
       </>
     );

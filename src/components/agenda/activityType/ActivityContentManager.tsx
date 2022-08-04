@@ -98,6 +98,11 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
   useEffect(() => {
     getViewers(refActivityViewers);
+    console.debug('ActivityContentManager - take:', activityContentType);
+    console.debug('ActivityContentManager - with source =', contentSource)
+    console.debug('ActivityContentManager - dataLive:', JSON.stringify(dataLive));
+    console.debug('ActivityContentManager - roomStatus:', JSON.stringify(roomStatus));
+    console.debug('ActivityContentManager - platform:', JSON.stringify(platform));
   }, []);
 
   if (!type) {
@@ -109,13 +114,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   if ([activitySubTypeKeys.survey, activitySubTypeKeys.quizing].includes(activityContentType as ActivitySubTypeName)) {
     return (
       <>
-      <pre>
-        Take: {activityContentType}, with source={contentSource}.<br/>
-        dataLive: {JSON.stringify(dataLive)}<br/>
-        roomStatus: {JSON.stringify(roomStatus)}<br/>
-        platform: {JSON.stringify(platform)}<br/>
-      </pre>
-
       <div style={{textAlign: 'center', width: '100%'}}>
         <Typography.Title>{activityContentType}</Typography.Title>
         <Typography.Text>Página de configuración del contenido.</Typography.Text>
@@ -126,12 +124,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
   return (
     <>
-    <pre>
-      Take: {activityContentType}, with source={contentSource}.<br/>
-      dataLive: {JSON.stringify(dataLive)}<br/>
-      roomStatus: {JSON.stringify(roomStatus)}<br/>
-      platform: {JSON.stringify(platform)}<br/>
-    </pre>
     <Row gutter={[16, 16]}>
       <Col span={10}>
         <Affix offsetTop={80}>
@@ -141,7 +133,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
       <Col span={14}>
         <Row gutter={[16, 16]}>
-          <p>"{type}"</p>
           {(type == 'Transmisión' || type == 'EviusMeet') && !dataLive?.active && (
             <Col span={24}>
               <TransmitionStatusCard type={type} />
