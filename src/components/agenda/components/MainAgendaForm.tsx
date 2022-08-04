@@ -154,10 +154,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       const remoteCategories = await CategoriesAgendaApi.byEvent(props.event._id);
 
       // The object struct should be like [{ label, value }] for the Select components
-      const newAllHosts = handleSelect(remoteHosts);
-      const newAllRoles = handleSelect(remoteRoles);
-      const newAllSpaces = handleSelect(remoteSpaces);
-      const newAllCategories = handleSelect(remoteCategories);
+      const newAllHosts = handleSelect(remoteHosts) || [];
+      const newAllRoles = handleSelect(remoteRoles) || [];
+      const newAllSpaces = handleSelect(remoteSpaces) || [];
+      const newAllCategories = handleSelect(remoteCategories) || [];
 
       setAllHosts(newAllHosts);
       setAllRoles(newAllRoles);
@@ -191,10 +191,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       length: agenda.length,
       latitude: agenda.latitude,
       selectedTickets: agenda.selectedTicket ? agenda.selectedTicket : [],
-      selectedDocuments: agenda.selected_document,
-      selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories),
-      selectedHosts: fieldsSelect(agenda.host_ids, allHosts),
-      selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles),
+      selectedDocuments: agenda.selected_document || [],
+      selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories) || [],
+      selectedHosts: fieldsSelect(agenda.host_ids, allHosts) || [],
+      selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles) || [],
     }));
 
   }, [agenda, allCategories, allHosts, allRoles]);
