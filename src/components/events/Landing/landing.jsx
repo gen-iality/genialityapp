@@ -178,10 +178,12 @@ const Landing = (props) => {
       {/* <ModalAuth /> */}
 
       <ModalLoginHelpers />
-      <ModalPermission />
+      {cEventContext.value.visibility !== 'ANONYMOUS' && <ModalPermission />}
       <ModalFeedback />
       {/*update: modal de actualizar || register: modal de registro */}
-      {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
+      {register !== null && cEventContext.value.visibility !== 'ANONYMOUS' && (
+        <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
+      )}
       <Layout>
         <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}

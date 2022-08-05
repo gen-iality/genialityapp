@@ -6,6 +6,7 @@ import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import { CurrentUserContext } from '@/context/userContext';
+import { CurrentEventContext } from '@/context/eventContext';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -373,6 +374,7 @@ class menuLanding extends Component {
   }
   render() {
     const userContext = this.context;
+    console.log('props', this.props.event.visibility);
     const userPlan = userContext.value?.plan;
     return (
       <Fragment>
@@ -395,49 +397,55 @@ class menuLanding extends Component {
                     {/* {this.state.menu[key].section === 'networking' && !userPlan?.availables?.networking ? (
                       <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
                     ) : ( */}
-                    <>
-                      <Form.Item name={this.state.menu[key].name}>
-                        <Button
-                          onClick={() => {
-                            this.mapActiveItemsToAvailable(key);
-                          }}>
-                          {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                        </Button>
-                      </Form.Item>
-                      <Form.Item label={'Cambiar nombre de la sección'}>
-                        <Input
-                          name={`name${index}`}
-                          disabled={this.state.menu[key].checked === true ? false : true}
-                          //value={this.state.menu[key].name}
-                          onChange={(e) => {
-                            this.changeNameMenu(key, e.target.value);
-                          }}
-                          placeholder={this.state.menu[key].name}
-                        />
-                      </Form.Item>
-                      <Form.Item label={'Permisos para la sección'}>
-                        <Select
-                          name={`permissions${index}`}
-                          key={this.state.keySelect}
-                          disabled={this.state.menu[key].checked === true ? false : true}
-                          value={this.state.menu[key].permissions}
-                          onChange={(e) => {
-                            this.changePermissions(key, e);
-                          }}>
-                          <Option value='public'>Abierto para todos</Option>
-                          <Option value='assistants'>Usuarios inscritos al evento</Option>
-                        </Select>
-                      </Form.Item>
-                      <Form.Item label={'Posición en el menú'}>
-                        <InputNumber
-                          name={`position${index}`}
-                          disabled={this.state.menu[key].checked === true ? false : true}
-                          value={this.state.menu[key].position}
-                          onChange={(e) => this.orderPosition(key, e)}
-                        />
-                      </Form.Item>
-                    </>
-                    {/* )} */}
+                    {(this.state.menu[key].section === 'networking' ||
+                      this.state.menu[key].section === 'interviews' ||
+                      this.state.menu[key].section === 'my_sesions') &&
+                    this.props.event?.visibility === 'ANONYMOUS' ? (
+                      <Result title={'No está disponible para este tipo de acceso del evento'} icon={<></>} />
+                    ) : (
+                      <>
+                        <Form.Item name={this.state.menu[key].name}>
+                          <Button
+                            onClick={() => {
+                              this.mapActiveItemsToAvailable(key);
+                            }}>
+                            {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                          </Button>
+                        </Form.Item>
+                        <Form.Item label={'Cambiar nombre de la sección'}>
+                          <Input
+                            name={`name${index}`}
+                            disabled={this.state.menu[key].checked === true ? false : true}
+                            //value={this.state.menu[key].name}
+                            onChange={(e) => {
+                              this.changeNameMenu(key, e.target.value);
+                            }}
+                            placeholder={this.state.menu[key].name}
+                          />
+                        </Form.Item>
+                        <Form.Item label={'Permisos para la sección'}>
+                          <Select
+                            name={`permissions${index}`}
+                            key={this.state.keySelect}
+                            disabled={this.state.menu[key].checked === true ? false : true}
+                            value={this.state.menu[key].permissions}
+                            onChange={(e) => {
+                              this.changePermissions(key, e);
+                            }}>
+                            <Option value='public'>Abierto para todos</Option>
+                            <Option value='assistants'>Usuarios inscritos al evento</Option>
+                          </Select>
+                        </Form.Item>
+                        <Form.Item label={'Posición en el menú'}>
+                          <InputNumber
+                            name={`position${index}`}
+                            disabled={this.state.menu[key].checked === true ? false : true}
+                            value={this.state.menu[key].position}
+                            onChange={(e) => this.orderPosition(key, e)}
+                          />
+                        </Form.Item>
+                      </>
+                    )}
                   </Card>
                 </Col>
               ))}
