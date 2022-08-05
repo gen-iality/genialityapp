@@ -397,8 +397,11 @@ class menuLanding extends Component {
                     {/* {this.state.menu[key].section === 'networking' && !userPlan?.availables?.networking ? (
                       <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
                     ) : ( */}
-                    {this.state.menu[key].section === 'networking' && this.props.event?.visibility === 'ANONYMOUS' ? (
-                      <Result title={'No se encuentra disponible en eventos anomimos'} icon={<></>} />
+                    {(this.state.menu[key].section === 'networking' ||
+                      this.state.menu[key].section === 'interviews' ||
+                      this.state.menu[key].section === 'my_sesions') &&
+                    this.props.event?.visibility === 'ANONYMOUS' ? (
+                      <Result title={'No está disponible para este tipo de acceso del evento'} icon={<></>} />
                     ) : (
                       <>
                         <Form.Item name={this.state.menu[key].name}>

@@ -422,6 +422,9 @@ class ListEventUser extends Component {
                   updatedAttendees[i][key.name] === undefined
                 )
               ) {
+                {
+                  console.log('entro', updatedAttendees[i].user ? updatedAttendees[i].user[key.name] : '');
+                }
                 updatedAttendees[i]['properties'][key.name] =
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }
