@@ -87,7 +87,7 @@ const StreamingActivity = (props) => {
             <Result icon={<SmileOutlined />} title='La transmisión ha terminado!' />
           </>
         );
-      case '':
+      case 'created_meeting_room':
         return (
           <>
             <ImageComponentwithContext />

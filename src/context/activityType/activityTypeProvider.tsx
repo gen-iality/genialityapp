@@ -7,12 +7,13 @@ import AgendaContext from '../AgendaContext';
 import { CurrentEventContext } from '../eventContext';
 
 import ActivityTypeContext from './activityTypeContext';
-import { ActivitySubTypeName, ActivityTypeName } from './schema/structureInterfaces';
+import { ActivitySubTypeName, ActivityTypeCard, ActivityTypeName, FormStructure, WidgetType } from './schema/structureInterfaces';
 import {
   ActivityTypeProviderProps,
   ActivityTypeContextType,
+  OpenedWidget,
 } from './types/types';
-import { activitySubTypeKeys, activityTypeData, simplifiedActivityTypeMap } from './schema/activityTypeFormStructure';
+import { activitySubTypeKeys, activityTypeData, activityTypeKeys, simplifiedActivityTypeMap } from './schema/activityTypeFormStructure';
 // Temporally
 import { ExtendedAgendaDocumentType } from '@/components/agenda/types/AgendaDocumentType';
 
@@ -168,7 +169,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       return;
     }
 
-    if (type!== undefined) setActivityContentType(type);
+    if (type !== undefined) setActivityContentType(type);
     if (data !== undefined) setContentSource(data);
     const contentType = activityContentType || type;
     const inputContentSource = contentSource || data;
@@ -284,6 +285,48 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
   };
 
+  const getOpenedWidget: (currentActivityType: ActivityTypeName) => [string, OpenedWidget | undefined] = (currentActivityType: ActivityTypeName) => {
+    let index;
+    switch (currentActivityType) {
+      case activityTypeKeys.live:
+        index = 0;
+        break;
+      case activityTypeKeys.meeting:
+        index = 1;
+        break;
+      case activityTypeKeys.video:
+        index = 2;
+        break;
+      case activityTypeKeys.quizing:
+        index = 3;
+        break;
+      case activityTypeKeys.survey:
+        index = 4;
+        break;
+      default:
+        console.error(`No puede reconocer actividad de tipo "${currentActivityType}"`);
+        break;
+    }
+
+    if (index !== undefined) {
+      // Set the title, and the data to the views
+      const currentOpenedCard: ActivityTypeCard = activityTypeData.cards[index];
+      console.debug('opened widget is:', currentOpenedCard);
+      const title = currentOpenedCard.MainTitle;
+
+      if (currentOpenedCard.widgetType === WidgetType.FORM) {
+        console.debug('Pass the form widget')
+        return [title, currentOpenedCard.form];
+      } else {
+        console.debug('Whole widget was passed');
+        return [title, currentOpenedCard];
+      }
+    } else {
+      console.error('Tries to understand', currentActivityType, ' but I think weird stuffs..');
+      return ['', undefined];
+    }
+  }
+
   const executer_createStream = useMutation(() => createLiveStream(activityName), {
     onSuccess: async (data: any) => {
       queryClient.setQueryData('livestream', data);
@@ -347,6 +390,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     visualizeVideo,
     executer_stopStream,
     convertTypeToHumanizedString,
+    getOpenedWidget,
   };
 
   useEffect(() => {
