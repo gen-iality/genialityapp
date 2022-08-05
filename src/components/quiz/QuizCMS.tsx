@@ -2,6 +2,7 @@ import * as React from 'react';
 import TriviaEdit from '../trivia/edit';
 
 export interface QuizCMSProps {
+  title: string,
   event: any,
   activityId: string,
   matchUrl: string,

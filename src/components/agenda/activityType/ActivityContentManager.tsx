@@ -121,6 +121,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       </div>
       {activityContentType === activitySubTypeKeys.quizing && (
         <QuizCMS
+          title={'Evaluación'}
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}
@@ -137,6 +138,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       )}
       {activityContentType === activitySubTypeKeys.survey && (
         <SurveyCMS
+          title={'Encuesta'}
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}
