@@ -52,6 +52,8 @@ function reducer(state, action) {
           return { ...state, type: action.payload.type, allow_register: false, visibility: 'PRIVATE' };
       }
       break;
+    case 'TYPE_AUTHENTICATION':
+      return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' };
     default:
       throw new Error();
   }
@@ -62,9 +64,10 @@ export const NewEventProvider = ({ children }) => {
   const [typeTransmission, setTypeTransmission] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState(new Date());
-  const fechaActual = new Date();
-  const fechaInicialFin = new Date(new Date().setHours(fechaActual.getHours() + 1));
-  const [selectedHours, setSelectedHours] = useState({ from: fechaActual, at: fechaInicialFin });
+  const currentDate = new Date();
+  const calculatedStartDate = new Date(new Date().setMinutes(currentDate.getMinutes() + 30));
+  const calculatedEndDate = new Date(new Date().setMinutes(currentDate.getMinutes() + 90));
+  const [selectedHours, setSelectedHours] = useState({ from: calculatedStartDate, at: calculatedEndDate });
   const [dateEvent, setDateEvent] = useState();
   const [selectedDateEvent, setSelectedDateEvent] = useState();
   const [valueInputs, setValueInputs] = useState({});

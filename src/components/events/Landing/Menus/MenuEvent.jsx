@@ -34,7 +34,12 @@ const MenuEvent = ({ isMobile }) => {
                 return <></>;
               }
 
-              let IconoComponente = iconComponents[event.itemsMenu[key].icon];
+              let icon =
+                event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
+                  ? 'RocketOutlined'
+                  : event.itemsMenu[key].icon;
+
+              let IconoComponente = iconComponents[icon];
 
               return key == 'networking' ? (
                 <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
@@ -94,7 +99,14 @@ const MenuEvent = ({ isMobile }) => {
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
-                let IconoComponente = iconComponents[event.itemsMenu[key].icon];
+                //CAMBIO DE ICONO TRIPULACIÓN KELLOGS
+                let icon =
+                  event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
+                    ? 'RocketOutlined'
+                    : event.itemsMenu[key].icon;
+
+                let IconoComponente = iconComponents[icon];
+
                 if (!event.itemsMenu[key].name || !event.itemsMenu[key].section) {
                   return <></>;
                 }

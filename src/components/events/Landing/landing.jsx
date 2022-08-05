@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../context/userContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 
 /** ant design */
-import { Layout, Spin, notification, Button } from 'antd';
+import { Layout, Spin, notification, Button, Result } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 const { Content } = Layout;
 
@@ -25,6 +25,8 @@ import WithEviusContext from '../../../context/withContext';
 import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import initBroadcastViewers from '@/containers/broadcastViewers';
+import DateEvent from '../dateEvent';
+import moment from 'moment';
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));
@@ -70,6 +72,11 @@ const IconRender = (type) => {
 };
 
 const Landing = (props) => {
+  let cEventContext = UseEventContext();
+  let cUser = UseCurrentUser();
+  let cEventUser = UseUserEvent();
+  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
+
   useEffect(() => {
     DispatchMessageService({
       type: 'loading',
@@ -77,11 +84,6 @@ const Landing = (props) => {
       action: 'show',
     });
   }, []);
-
-  let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
-  let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -159,7 +161,7 @@ const Landing = (props) => {
 
         if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == 'LOADED') {
           // console.log(EventContext.value.type_event);
-          if (cEventContext.value.type_event === 'onlineEvent') {
+          if (cEventContext.value.type_event !== 'physicalEvent') {
             checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id);
           }
         }
@@ -174,11 +176,14 @@ const Landing = (props) => {
       {/* <ModalFeedback /> */}
       {/* <ModalNoRegister /> */}
       {/* <ModalAuth /> */}
+
       <ModalLoginHelpers />
-      <ModalPermission />
+      {cEventContext.value.visibility !== 'ANONYMOUS' && <ModalPermission />}
       <ModalFeedback />
       {/*update: modal de actualizar || register: modal de registro */}
-      {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
+      {register !== null && cEventContext.value.visibility !== 'ANONYMOUS' && (
+        <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
+      )}
       <Layout>
         <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}

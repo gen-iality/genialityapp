@@ -16,11 +16,15 @@ import { sortableHandle } from 'react-sortable-hoc';
 import moment from 'moment';
 import { Suspense } from 'react';
 import { ExportExcel } from '../components/newComponent/ExportExcel';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
+//import { UseCurrentUser } from '../context/userContext';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = (props) => {
+  //let cUser = UseCurrentUser();
+  const { eventIsActive } = useHelper();
   let {
     header,
     list,
@@ -70,7 +74,6 @@ const Table = (props) => {
       fixed: 'right',
       width: widthAction ? widthAction : 110,
       render(val, item) {
-        console.log(item);
         return (
           <Row wrap gutter={[8, 8]}>
             {extraFn && (
@@ -83,6 +86,7 @@ const Table = (props) => {
                     icon={extraFnIcon ? extraFnIcon : <SettingOutlined />}
                     type={extraFnType ? extraFnType : 'primary'}
                     size='small'
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -94,7 +98,9 @@ const Table = (props) => {
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
                     to={
-                      !extraPathStateName
+                      /* !eventIsActive && window.location.toString().includes('eventadmin')
+                        ? {}
+                        : */ !extraPathStateName
                         ? { pathname: `${extraPath}/${item._id}`, state: { item: item } }
                         : { pathname: `${extraPath}`, state: { report: item._id } }
                     }>
@@ -102,6 +108,7 @@ const Table = (props) => {
                       icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
                       type={extraPathType ? extraPathType : 'primary'}
                       size='small'
+                      /* !eventIsActive === false && window.location.toString().includes('eventadmin')} */
                     />
                   </Link>
                 </Tooltip>
@@ -185,6 +192,7 @@ const Table = (props) => {
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -307,7 +315,7 @@ const Table = (props) => {
         columns={takeOriginalHeader ? header : headerState}
         dataSource={list}
         size='small'
-        rowKey={(record) => record.index}
+        // rowKey={(record) => record.index}
         loading={loading}
         pagination={pagination}
         components={components}
@@ -322,7 +330,6 @@ const Table = (props) => {
           </Row>
         )}
         scroll={scroll}
-        // footer={footer}
         footer={() => footer}
       />
     </Suspense>

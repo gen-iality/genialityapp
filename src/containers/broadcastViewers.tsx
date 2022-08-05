@@ -9,7 +9,6 @@ let initBroadcastViewers = async (
   userContext: any,
   state?: string
 ) => {
-  console.log('auiiiiiiiiiiiiiii2223', userContext);
   const userAnonimo = localStorage.getItem('userAnonimo');
   if (!userContext.value) {
     if (userAnonimo) {

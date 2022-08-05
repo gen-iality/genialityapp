@@ -172,6 +172,7 @@ const FormRegister = ({
     handleChangeTypeModal,
     setRegister,
     helperDispatch,
+    // eventIsActive,
   } = useHelper();
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
@@ -473,7 +474,30 @@ const FormRegister = ({
                       }
                     });
                 };
-                loginFirebase();
+                cEvent?.value?.visibility !== 'ANONYMOUS' && loginFirebase();
+                const loginFirebaseAnonymous = async () => {
+                  app
+                    .auth()
+                    .signInAnonymously()
+                    .then((user) => {
+                      if (user) {
+                        cEventUser.setUpdateUser(true);
+                        handleChangeTypeModal(null);
+                        setSubmittedForm(false);
+                        switch (typeModal) {
+                          case 'registerForTheEvent':
+                            setRegister(2);
+                            break;
+
+                          case 'update':
+                            setRegister(4);
+                            break;
+                        }
+                        // }
+                      }
+                    });
+                };
+                cEvent?.value?.visibility === 'ANONYMOUS' && loginFirebaseAnonymous();
               } else {
                 window.location.replace(
                   `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
@@ -1221,6 +1245,8 @@ deberia ser solo la url de la imagen
                         style={{
                           display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
+                        // RESTRICCIONES
+                        // disabled={!eventIsActive}
                         type='primary'
                         htmlType='submit'>
                         {intl.formatMessage({ id: isRegister(initialValues, cEventUser) })}

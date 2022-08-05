@@ -9,6 +9,8 @@ export type HelperAction = {
   currentActivity?: object;
   showNotification?: boolean | any;
   params?: object | any;
+  eventIsActive?: boolean;
+  eventId?: string;
 };
 
 export type HelperContextProps = any;

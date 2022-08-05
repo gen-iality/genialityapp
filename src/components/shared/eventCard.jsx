@@ -3,11 +3,15 @@ import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Card, Space, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
+import { HelperContext } from '@/context/helperContext/helperContext';
+
 const EventImage = imageUtils.EventImage;
+const { Meta } = Card;
 class EventCard extends Component {
+  static contextType = HelperContext;
   render() {
-    const { event, bordered, right, loading, isAdmin } = this.props;
-    const { Meta } = Card;
+    const { event, bordered, right, loading, isAdmin, blockedEvent } = this.props;
+    const { eventIsActive } = this.context;
 
     const styleNormal = {
       fontWeight: 'bold',
@@ -17,6 +21,14 @@ class EventCard extends Component {
       fontWeight: 'bold',
       width: '250px',
     };
+
+    //Esto sólo va a aplicar para cuando el usuario tiene un plan
+    //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
+    let actualDate = new Date(event.datetime_to);
+    //aqui  tiene que venir ahora unos minutos en caso de tener plan
+    let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
+    let formatDate = Moment(blockedDate).format('DD MMM YYYY');
+
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -95,6 +107,17 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
+                  {/* RESTRICIONES */}
+                  {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
+                    <Typography.Paragraph style={{ color: 'red' }}>
+                      {blockedEvent && (
+                        <small>
+                          Tu evento está bloqueado desde el {Moment(event.datetime_to).format('DD MMM YYYY')}
+                          <br /> En la landing estará bloqueado a partir de el {formatDate}
+                        </small>
+                      )}
+                    </Typography.Paragraph>
+                  )} */}
                 </Space>
               }
             />

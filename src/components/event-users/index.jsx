@@ -7,23 +7,7 @@ import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
 import Moment from 'moment';
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Drawer,
-  Image,
-  message,
-  Row,
-  Statistic,
-  Typography,
-  Tag,
-  Input,
-  Space,
-  Tooltip,
-  Select,
-} from 'antd';
+import { Button, Card, Col, Drawer, Image, Row, Statistic, Typography, Tag, Input, Space, Tooltip, Select } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
@@ -45,7 +29,9 @@ import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import moment from 'moment';
-import AttendeeCheckIn from '../checkIn/AttendeeCheckIn';
+import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
+import { HelperContext } from '@/context/helperContext/helperContext';
+import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -105,12 +91,20 @@ class ListEventUser extends Component {
       qrModalOpen: false,
     };
   }
+  static contextType = HelperContext;
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
+    const { eventIsActive } = this.context;
     return (
       <Tooltip placement='topLeft' title='Editar'>
-        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
+        <Button
+          type={'primary'}
+          icon={<EditOutlined />}
+          size='small'
+          onClick={() => this.openEditModalUser(item)}
+          disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+        />
       </Tooltip>
     );
   };
@@ -118,8 +112,9 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      const createdAt = item.created_at;
-      return <p>{Moment(createdAt).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const createdAt = typeof item?.created_at === 'object' ? item?.created_at?.toDate() : item?.created_at;
+
+      return <>{createdAt ? <p>{Moment(createdAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
       return '';
     }
@@ -138,8 +133,9 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      const updatedAt = item.created_at;
-      return <p>{Moment(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p>;
+      const updatedAt = typeof item?.created_at === 'object' ? item?.updated_at?.toDate() : item?.updated_at;
+
+      return <>{updatedAt ? <p>{Moment(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
       return '';
     }
@@ -147,7 +143,15 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    return <AttendeeCheckIn attendee={item} />;
+    return <AttendeeCheckInCheckbox attendee={item} />;
+  };
+
+  physicalCheckInComponent = (text, item, index) => {
+    return <AttendeeCheckInButton attendee={item} />;
+  };
+
+  checkInTypeComponent = (text, item, index) => {
+    return <>{item?.checkedin_type ? <b>{item?.checkedin_type}</b> : <b>Ninguno</b>}</>;
   };
 
   addDefaultLabels = (extraFields) => {
@@ -253,6 +257,26 @@ class ListEventUser extends Component {
         ...self.getColumnSearchProps('checkedin_at'),
         render: self.checkedincomponent,
       };
+
+      let checkInType = {
+        title: 'Tipo de checkIn',
+        dataIndex: 'checkedin_type',
+        key: 'checkedin_type',
+        width: '120px',
+        ellipsis: true,
+        ...self.getColumnSearchProps('checkedin_type'),
+        render: self.checkInTypeComponent,
+      };
+
+      let physicalCheckIn = {
+        title: 'Registrar checkIn físico',
+        dataIndex: 'physicalCheckIn',
+        key: 'physicalCheckIn',
+        width: '120px',
+        ellipsis: true,
+        render: self.physicalCheckInComponent,
+      };
+
       let editColumn = {
         title: 'Editar',
         key: 'edit',
@@ -261,6 +285,9 @@ class ListEventUser extends Component {
         render: self.editcomponent,
       };
       /* columns.push(editColumn); */
+      /** Additional columns for hybrid events */
+      if (self.props.event?.type_event === 'hybridEvent') columns.push(checkInType, physicalCheckIn);
+
       columns.push(checkInColumn);
 
       let extraColumns = extraFields
@@ -280,7 +307,7 @@ class ListEventUser extends Component {
                 /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
                 case 'date':
                   const date = key[item.name];
-                  const dateSplit = date ? date.split('T') : '';
+                  const dateSplit = date ? date?.split('T') : '';
                   return dateSplit[0];
 
                 case 'file':
@@ -395,6 +422,9 @@ class ListEventUser extends Component {
                   updatedAttendees[i][key.name] === undefined
                 )
               ) {
+                {
+                  console.log('entro', updatedAttendees[i].user ? updatedAttendees[i].user[key.name] : '');
+                }
                 updatedAttendees[i]['properties'][key.name] =
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }
@@ -762,7 +792,8 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
-    const { event, type, loading, componentKey } = this.props;
+    const { type, loading, componentKey } = this.props;
+    const { eventIsActive } = this.context;
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
@@ -886,14 +917,27 @@ class ListEventUser extends Component {
                 )}
               </Col>
               <Col>
-                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                <Link
+                  to={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                      ? ''
+                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
+                  }>
+                  <Button
+                    type='primary'
+                    icon={<UploadOutlined />}
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     Importar usuarios
                   </Button>
                 </Link>
               </Col>
               <Col>
-                <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addUser}>
+                <Button
+                  type='primary'
+                  icon={<PlusCircleOutlined />}
+                  size='middle'
+                  onClick={this.addUser}
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   {'Agregar Usuario'}
                 </Button>
               </Col>

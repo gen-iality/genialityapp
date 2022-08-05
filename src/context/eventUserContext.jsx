@@ -27,6 +27,7 @@ export function CurrentUserEventProvider({ children }) {
     async function asyncdata() {
       try {
         EventsApi.getStatusRegister(event_id, cUser.value.email).then((responseStatus) => {
+          console.log('responseStatus ', responseStatus, 'upadateUser ', updateUser);
           if (responseStatus.data.length > 0) {
             setuserEvent({ status: 'LOADED', value: responseStatus.data[0] });
           } else {

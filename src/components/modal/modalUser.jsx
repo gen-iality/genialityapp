@@ -17,6 +17,7 @@ import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
+import { handleRequestError } from '@/helpers/utils';
 
 const { confirm } = Modal;
 
@@ -269,12 +270,21 @@ class UserModal extends Component {
         if (!this.props.edit) {
           try {
             resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
-          } catch (e) {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Usuario ya registrado en el evento',
-              action: 'show',
-            });
+          } catch (error) {
+            if (handleRequestError(error).message === 'users limit exceeded') {
+              DispatchMessageService({
+                type: 'error',
+                msj: 'Ha exedido el límite de usuarios en el plan',
+                action: 'show',
+              });
+            } else {
+              DispatchMessageService({
+                type: 'error',
+                msj: 'Usuario ya registrado en el evento',
+                action: 'show',
+              });
+            }
+
             respActivity = false;
           }
         } else {
@@ -378,6 +388,7 @@ class UserModal extends Component {
               saveAttendee={this.saveUser}
               loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
               visibleInCms
+              eventType={this.props.cEvent?.value?.type_event}
             />
           ) : (
             <FormComponent
