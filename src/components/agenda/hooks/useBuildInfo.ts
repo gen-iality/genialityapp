@@ -1,8 +1,12 @@
 import * as Moment from 'moment';
 import AgendaDocumentType from '../types/AgendaDocumentType';
-import { FormularyType } from '../components/AgendaFormulary';
+import { FormDataType } from '../components/MainAgendaForm';
 
-export default function useBuildInfo (formulary: FormularyType, info: AgendaDocumentType) {
+export default function useBuildInfo (
+  formdata: FormDataType,
+  agenda: AgendaDocumentType | null,
+  defaultAgenda: AgendaDocumentType,
+) {
   const buildInfo = () => {
     const {
       name,
@@ -18,7 +22,7 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
       image,
       length,
       latitude,
-    } = formulary;
+    } = formdata;
 
     const {
       meeting_id,
@@ -38,7 +42,7 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
       subtitle,
       bigmaker_meeting_id,
       has_date,
-    } = info;
+    } = agenda || defaultAgenda;
 
     // const registration_message_storage = window.sessionStorage.getItem('registration_message');
     // const description_storage = window.sessionStorage.getItem('description');

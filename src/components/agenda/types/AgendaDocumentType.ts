@@ -29,6 +29,9 @@ export default interface AgendaDocumentType {
   host_ids: any[] | null,
   length: string,
   latitude: string,
-  date_start_zoom?: string,
-  date_end_zoom?: string,
+};
+
+export interface ExtendedAgendaDocumentType extends AgendaDocumentType {
+  type?: { name: string },
+  video?: string | null,
 };
