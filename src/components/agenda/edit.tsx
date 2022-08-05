@@ -252,7 +252,7 @@ function AgendaEdit(props: AgendaEditProps) {
           agendaContext.setActivityEdit(agenda._id);
           setCurrentActivityID(agenda._id);
           setIsEditing(true);
-          setLoadedAgenda({ ...agenda, isPublished: false });
+          setLoadedAgenda({ ...agenda, isPublished: true });
           await saveConfig();
         } else if (changePathWithoutSaving) {
           history.push(`${props.matchUrl}`);
