@@ -1,56 +1,52 @@
+import type { ActivityType } from '../types/activityType';
 import {
-  ActivityTypeData,
-  ActivityTypeCard,
-  FormStructure,
-  WidgetType,
-  ActivityTypeKey,
-  ActivitySubTypeKey,
   FormType,
-  ActivityTypeName,
-  ActivitySubTypeName,
-  SimplifiedActivityTypeMap,
-} from './structureInterfaces';
+  WidgetType,
+  MainUI,
+  DeepUI,
+  TypeDisplayment,
+} from '@/context/activityType/constants/enum';
 
-export const activityTypeKeys: { [key in ActivityTypeKey]: ActivityTypeName } = {
-  live: 'liveBroadcast',
-  meeting: 'meeting2',
-  video: 'video',
-  quizing: 'quizing2', // mockup
-  survey: 'survey2', // mockup
+export const activityTypeNames: { [key in ActivityType.MainUIKey]: ActivityType.Name } = {
+  live: MainUI.LIVE,
+  meeting: MainUI.MEETING,
+  video: MainUI.VIDEO,
+  quizing: MainUI.EXAM, // mockup
+  survey: MainUI.SURVEY, // mockup
 };
 
-export const activitySubTypeKeys: { [key in ActivitySubTypeKey]: ActivitySubTypeName } = {
-  meeting: 'meeting',
-  streaming: 'eviusStreaming',
-  vimeo: 'vimeo',
-  youtube: 'youTube',
-  url: 'url',
-  file: 'cargarvideo',
-  rtmp: 'RTMP',
-  meet: 'eviusMeet',
-  quizing: 'quizing', // mockup
-  survey: 'survey', // mockup
+export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityType.ContentValue } = {
+  meeting: DeepUI.MEETING,
+  streaming: DeepUI.STREAMING,
+  vimeo: DeepUI.VIMEO,
+  youtube: DeepUI.YOUTUBE,
+  url: DeepUI.URL,
+  file: DeepUI.FILE,
+  rtmp: DeepUI.RTMP,
+  meet: DeepUI.MEET,
+  quizing: DeepUI.EXAM, // mockup
+  survey: DeepUI.SURVEY, // mockup
 };
 
-export const simplifiedActivityTypeMap: SimplifiedActivityTypeMap = {
+export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
   "": '', // What happens?
-  eviusStreaming: 'Transmisión', // ...here
-  url: 'Video',
-  meeting: 'reunión',
-  vimeo: 'vimeo',
-  youTube: 'Youtube',
-  eviusMeet: 'EviusMeet',
-  RTMP: 'Transmisión',
-  cargarvideo: 'Video',
-  video: 'Video',
-  quizing: 'Quizing', // mockup
-  survey: 'Survey', // mockup
+  eviusStreaming: TypeDisplayment.TRANSMISSION, // ...here
+  url: TypeDisplayment.VIDEO,
+  meeting: TypeDisplayment.MEETING,
+  vimeo: TypeDisplayment.VIMEO,
+  youTube: TypeDisplayment.YOUTUBE,
+  eviusMeet: TypeDisplayment.EVIUS_MEET,
+  RTMP: TypeDisplayment.TRANSMISSION,
+  cargarvideo: TypeDisplayment.VIDEO,
+  video: TypeDisplayment.VIDEO,
+  quizing: TypeDisplayment.EXAM, // mockup
+  survey: TypeDisplayment.SURVEY, // mockup
 };
 
-const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure } = {
+const urlInputForms: { [key in keyof typeof activityContentValues]?: ActivityType.FormUI } = {
   url: {
     formType: FormType.INPUT,
-    key: activitySubTypeKeys.url,
+    key: activityContentValues.url,
     title: ' ',
     image: '',
     addonBefore: '🔗',
@@ -59,7 +55,7 @@ const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure
   },
   vimeo: {
     formType: FormType.INPUT,
-    key: activitySubTypeKeys.vimeo,
+    key: activityContentValues.vimeo,
     title: 'Vimeo icon',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
     addonBefore: 'ID',
@@ -68,7 +64,7 @@ const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure
   },
   youtube: {
     formType: FormType.INPUT,
-    key: activitySubTypeKeys.youtube,
+    key: activityContentValues.youtube,
     title: 'YouTube icon',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
     addonBefore: 'https://youtu.be/',
@@ -77,10 +73,10 @@ const urlInputForms: { [key in keyof typeof activitySubTypeKeys]?: FormStructure
   },
 };
 
-const liveBroadcastTransmissionCards: ActivityTypeCard[] = [
+const liveBroadcastTransmissionCards: ActivityType.CardUI[] = [
   {
     widgetType: WidgetType.FINAL,
-    key: activitySubTypeKeys.meet,
+    key: activityContentValues.meet,
     title: 'GEN Connect',
     description: 'La herramienta ideal para realizar tus transmisiones en vivo.',
     image: import.meta.env.VITE_IMAGE_MEETING_OPTION,
@@ -89,7 +85,7 @@ const liveBroadcastTransmissionCards: ActivityTypeCard[] = [
   },
   {
     widgetType: WidgetType.FINAL,
-    key: activitySubTypeKeys.rtmp,
+    key: activityContentValues.rtmp,
     title: 'RTMP',
     description: 'El Protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet.',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2FRTMP.jpg?alt=media&token=d0c74ddc-5ad6-49bf-ad57-c1d0c02a1ee6',
@@ -97,10 +93,10 @@ const liveBroadcastTransmissionCards: ActivityTypeCard[] = [
   },
 ];
 
-const liveBroadcastCards: ActivityTypeCard[] = [
+const liveBroadcastCards: ActivityType.CardUI[] = [
   {
     widgetType: WidgetType.CARD_SET,
-    key: activitySubTypeKeys.streaming,
+    key: activityContentValues.streaming,
     title: 'GEN.iality streaming',
     MainTitle: 'Escoge el origen de transmisión',
     description: 'Configura de forma fácil y rápida una transmisión con la tecnología de GEN.iality.',
@@ -110,79 +106,79 @@ const liveBroadcastCards: ActivityTypeCard[] = [
   },
   {
     widgetType: WidgetType.FORM,
-    key: activitySubTypeKeys.vimeo,
+    key: activityContentValues.vimeo,
     title: 'Vimeo',
     MainTitle: 'Ingrese el identificador de la conferencia/streaming',
     description: 'Si posees una transmisión ya configurada en Vimeo, puedes enlazarlo a GEN.iality proporcionando el ID de transmisión.',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvimeo.jpg?alt=media&token=87b4e1e3-99dd-43e8-b6bd-a68fc03db35b',
-    form: urlInputForms.vimeo as FormStructure,
+    form: urlInputForms.vimeo as ActivityType.FormUI,
   },
   {
     widgetType: WidgetType.FORM,
-    key: activitySubTypeKeys.youtube,
+    key: activityContentValues.youtube,
     title: 'YouTube',
     MainTitle: 'Ingrese el identificador de la conferencia/streaming',
     description: 'Si posees una transmisión ya configurada en Youtube, puedes enlazarlo a GEN.iality proporcionando el ID de transmisión.',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
-    form: urlInputForms.youtube as FormStructure,
+    form: urlInputForms.youtube as ActivityType.FormUI,
   },
 ];
 
-const videoActivityTypeCards: ActivityTypeCard[] = [
+const videoActivityTypeCards: ActivityType.CardUI[] = [
   {
     widgetType: WidgetType.FORM,
-    key: activitySubTypeKeys.url,
+    key: activityContentValues.url,
     title: 'URL',
     MainTitle: 'Agregar URL del video',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Furl.jpg?alt=media&token=9bcff159-2e09-4022-add6-2108ed8c6089',
     description: '',
-    form: urlInputForms.url as FormStructure,
+    form: urlInputForms.url as ActivityType.FormUI,
   },
   {
     widgetType: WidgetType.FORM,
-    key: activitySubTypeKeys.file,
+    key: activityContentValues.file,
     title: 'Cargar video',
     description: '',
     MainTitle: 'Cargue un video desde su equipo',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fcargar_video.jpg?alt=media&token=b0990943-3563-4004-9e15-cf9dfea6805c',
-    form: { formType: FormType.UPLOAD, key: activitySubTypeKeys.file, MainTitle: 'Cargue un video desde su equipo'}
+    form: { formType: FormType.UPLOAD, key: activityContentValues.file, MainTitle: 'Cargue un video desde su equipo'}
   },
 ];
 
-const meetingForm: FormStructure = {
+const meetingForm: ActivityType.FormUI = {
   formType: FormType.INFO,
-  key: activitySubTypeKeys.meeting,
+  key: activityContentValues.meeting,
   MainTitle: '',
   title: 'GEN Connect',
   description: 'La herramienta para videoconferencias, comparte tu cámara, habla con tus participantes y presenta lo que quieras desde tu PC. Puedes personalizar el escenario a tu gusto, imágenes de fondo, recuadros o marcos para el escenario, muestra mensajes para todos, usa los colores de tu marca. Controla el acceso y lo que comparten tus participantes. Descubre esto y mucho más con GEN Connect.',
   image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6',
 };
 
-const surveyForm: FormStructure = {
+const surveyForm: ActivityType.FormUI = {
   formType: FormType.INFO,
-  key: activitySubTypeKeys.survey,
+  key: activityContentValues.survey,
   MainTitle: '',
   title: 'Encuesta',
   description: 'Configura la encuesta.',
   image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6',
 };
 
-const quizingForm: FormStructure = {
+const quizingForm: ActivityType.FormUI = {
   formType: FormType.INFO,
-  key: activitySubTypeKeys.quizing,
+  key: activityContentValues.quizing,
   MainTitle: '',
   title: 'Examen',
   description: 'Agrega un examen.',
   image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Furl.jpg?alt=media&token=9bcff159-2e09-4022-add6-2108ed8c6089',
 };
 
-export const activityTypeData: ActivityTypeData = {
+export const formWidgetFlow: ActivityType.MainUI = {
   key: 'type',
   MainTitle: 'Escoge el tipo de lección',
   cards: [
     {
       widgetType: WidgetType.CARD_SET,
-      key: activityTypeKeys.live,
+      key: activityTypeNames.live,
       MainTitle: 'Escoge el tipo de transmisión',
       title: 'Transmisión en vivo',
       description: 'Lección en la que quieras presentar un en vivo para tus asistentes.',
@@ -191,7 +187,7 @@ export const activityTypeData: ActivityTypeData = {
     },
     {
       widgetType: WidgetType.FORM,
-      key: activityTypeKeys.meeting,
+      key: activityTypeNames.meeting,
       MainTitle: 'Crear reuniones interactivas y personalizadas con todo el poder de GEN.iality',
       title: 'Reunión',
       description: 'Lección en la que quieras tener una reunión virtual con tus asistentes.',
@@ -200,7 +196,7 @@ export const activityTypeData: ActivityTypeData = {
     },
     {
       widgetType: WidgetType.CARD_SET,
-      key: activityTypeKeys.video,
+      key: activityTypeNames.video,
       MainTitle: 'Asignar video para la lección',
       title: 'Video',
       description: 'Lección en la que solo quieras mostrar un video para tus asistentes.',
@@ -209,7 +205,7 @@ export const activityTypeData: ActivityTypeData = {
     },
     {
       widgetType: WidgetType.FORM,
-      key:  activityTypeKeys.quizing,
+      key:  activityTypeNames.quizing,
       MainTitle: 'Agrega un examen',
       title: 'Exámenes',
       description: 'Examen para evaluar el conocimiento de tus asistentes.',
@@ -218,7 +214,7 @@ export const activityTypeData: ActivityTypeData = {
     },
     {
       widgetType: WidgetType.FORM,
-      key:  activityTypeKeys.survey,
+      key:  activityTypeNames.survey,
       MainTitle: 'Agrega una encuesta',
       title: 'Encuestas',
       description: 'En esta opción podrás agregar encuestas.',

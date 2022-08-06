@@ -5,57 +5,50 @@ import { Typography, Layout, Row, Col, Button, } from 'antd';
 
 import { ModalWrapperUIProps } from '../interfaces/ModalWrapperUIProps';
 import {
-  activityTypeKeys,
-  activityTypeData,
-  activitySubTypeKeys,
-} from '@/context/activityType/schema/activityTypeFormStructure';
-import {
-  ActivityTypeCard,
-  FormStructure,
-  GeneralTypeName,
-  ActivitySubTypeKey,
-  ActivityTypeKey,
-  WidgetType,
-  GeneralTypeValue,
-} from '@/context/activityType/schema/structureInterfaces';
+  activityTypeNames,
+  formWidgetFlow,
+  activityContentValues,
+} from '@/context/activityType/constants/ui';
+import type { ActivityType } from '@/context/activityType/types/activityType';
+import { WidgetType } from '@/context/activityType/constants/enum';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
-const useActivityTypeData: (type: GeneralTypeValue) => ActivityTypeCard | FormStructure | null = (type) => {
+const useActivityTypeData: (type: ActivityType.GeneralTypeValue) => ActivityType.CardUI | ActivityType.FormUI | null = (type) => {
   switch (type) {
-    case activityTypeKeys.live:
-      return activityTypeData.cards[0];
+    case activityTypeNames.live:
+      return formWidgetFlow.cards[0];
 
     // liveBroadcastCards
-    case activitySubTypeKeys.streaming:
-      return (activityTypeData.cards[0].cards as ActivityTypeCard[])[0] as ActivityTypeCard;
-    case activitySubTypeKeys.vimeo:
-      return (activityTypeData.cards[0].cards as ActivityTypeCard[])[1].form as FormStructure;
-    case activitySubTypeKeys.youtube:
-      return (activityTypeData.cards[0].cards as ActivityTypeCard[])[2].form as FormStructure;
+    case activityContentValues.streaming:
+      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[0] as ActivityType.CardUI;
+    case activityContentValues.vimeo:
+      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[1].form as ActivityType.FormUI;
+    case activityContentValues.youtube:
+      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[2].form as ActivityType.FormUI;
 
-    case activityTypeKeys.meeting:
-      return activityTypeData.cards[1].form as FormStructure;
+    case activityTypeNames.meeting:
+      return formWidgetFlow.cards[1].form as ActivityType.FormUI;
 
-    case activityTypeKeys.video:
-      return activityTypeData.cards[2];
-    case activitySubTypeKeys.url:
-      return (activityTypeData.cards[2].cards as ActivityTypeCard[])[0].form as FormStructure;
-    case activitySubTypeKeys.file:
-      return (activityTypeData.cards[2].cards as ActivityTypeCard[])[1].form as FormStructure;
+    case activityTypeNames.video:
+      return formWidgetFlow.cards[2];
+    case activityContentValues.url:
+      return (formWidgetFlow.cards[2].cards as ActivityType.CardUI[])[0].form as ActivityType.FormUI;
+    case activityContentValues.file:
+      return (formWidgetFlow.cards[2].cards as ActivityType.CardUI[])[1].form as ActivityType.FormUI;
     default:
       return null;
   }
 }
 
 export interface ActivityContentModalLayoutProps extends ModalWrapperUIProps {
-  initialType: ActivitySubTypeKey,
-  selected: GeneralTypeValue | null,
-  onWidgetKeyChange: (key: GeneralTypeValue) => void,
-  widget: ActivityTypeCard | FormStructure,
+  initialType: ActivityType.DeepUIKey,
+  selected: ActivityType.GeneralTypeValue | null,
+  onWidgetKeyChange: (key: ActivityType.GeneralTypeValue) => void,
+  widget: ActivityType.CardUI | ActivityType.FormUI,
   disabledNextButton: boolean,
-  render: (widgetData: ActivityTypeCard | FormStructure) => React.ReactNode,
+  render: (widgetData: ActivityType.CardUI | ActivityType.FormUI) => React.ReactNode,
 };
 
 function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
@@ -74,7 +67,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
 
   const [widgetKeyStack, setWidgetKeyStack] = useState<string[]>([]);
   const [widgetKey, setWidgetKey] = useState<string>(initialType);
-  const [widgetData, setWidgetData] = useState<ActivityTypeCard | FormStructure>(initialWidget);
+  const [widgetData, setWidgetData] = useState<ActivityType.CardUI | ActivityType.FormUI>(initialWidget);
 
   useEffect(() => setWidgetData(initialWidget), [initialWidget]);
 
@@ -83,7 +76,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
     const newWidgetKeyStack = [...widgetKeyStack];
     const key = newWidgetKeyStack.pop();
     setWidgetKeyStack(newWidgetKeyStack);
-    if (key) onWidgetKeyChange(key as GeneralTypeValue);
+    if (key) onWidgetKeyChange(key as ActivityType.GeneralTypeValue);
 
     // If no last type, close the modal
     if (key === undefined) {
@@ -95,7 +88,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
     setWidgetKey(key);
     // Reload the widget according to last type
     console.debug(newWidgetKeyStack, key);
-    const data = useActivityTypeData(key as GeneralTypeValue);
+    const data = useActivityTypeData(key as ActivityType.GeneralTypeValue);
     console.debug('go back:', data);
     if (data) setWidgetData(data);
   };
@@ -107,7 +100,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
     }
     if (selected) {
       // Close modal and create a transmission...
-      const transmissions: GeneralTypeValue[] = [
+      const transmissions: ActivityType.GeneralTypeValue[] = [
         'RTMP',
         'eviusMeet',
       ];

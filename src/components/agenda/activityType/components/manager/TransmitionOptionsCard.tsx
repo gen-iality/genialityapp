@@ -6,10 +6,10 @@ import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi'
 import { AgendaApi } from '@/helpers/request';
 import { CurrentEventContext } from '@/context/eventContext';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
-import { SimplifiedActivityTypeValue } from '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from '@/context/activityType/types/activityType';
 
 export interface TransmitionOptionsCardProps {
-  type: SimplifiedActivityTypeValue,
+  type: ActivityType.TypeAsDisplayment,
 };
 
 const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {

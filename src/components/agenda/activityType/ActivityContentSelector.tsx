@@ -5,13 +5,7 @@ import { Card, Button, Alert, Row, Col } from 'antd';
 
 import InitialSVG from '../typeActivity/components/svg/InitialSVG';
 
-import {
-  ActivityTypeCard,
-  FormStructure,
-  ActivitySubTypeKey,
-  GeneralTypeValue,
-  ActivitySubTypeName,
-} from '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from '@/context/activityType/types/activityType';
 import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
 
@@ -34,8 +28,8 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
 
   const [modalTitle, setModalTitle] = useState('Contenido');
   const [isModalShown, setIsModalShown] = useState(false);
-  const [selectedType, setSelectedType] = useState<GeneralTypeValue | undefined>(undefined);
-  const [currentWidget, setCurrentWidget] = useState<ActivityTypeCard | FormStructure | undefined>(undefined);
+  const [selectedType, setSelectedType] = useState<ActivityType.GeneralTypeValue | undefined>(undefined);
+  const [currentWidget, setCurrentWidget] = useState<ActivityType.CardUI | ActivityType.FormUI | undefined>(undefined);
 
   const {
     activityType,
@@ -71,7 +65,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const handleConfirm = () => {
     console.debug('confirm the selectedType:', selectedType);
     // setActivityContentType(selectedType || null);
-    saveActivityContent(selectedType as ActivitySubTypeName);
+    saveActivityContent(selectedType as ActivityType.ContentValue);
   }
 
   const handleInput = (text: string) => {
@@ -102,7 +96,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     )}
     {currentWidget !== undefined && (
     <ActivityContentModal
-      initialWidgetKey={activityContentType as ActivitySubTypeKey}
+      initialWidgetKey={activityContentType as ActivityType.DeepUIKey}
       visible={isModalShown}
       title={modalTitle}
       widget={currentWidget}

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import ActivityTypeContext from '../activityTypeContext';
-import { ActivityTypeContextType } from '../types/types';
+import { ActivityTypeContextType } from '../types/contextType';
 
 type hookType = ActivityTypeContextType;
 

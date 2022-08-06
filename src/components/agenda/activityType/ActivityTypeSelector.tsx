@@ -7,7 +7,7 @@ import { WarningOutlined } from '@ant-design/icons';
 
 import ActivityTypeModal from './ActivityTypeModal';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
-import { ActivityTypeName } from '@/context/activityType/schema/structureInterfaces';
+import { ActivityTypeName } from '@/context/activityType/types/activityType';
 
 export interface SubActivityTypeSelectorProps {};
 

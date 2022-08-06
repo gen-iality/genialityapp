@@ -8,26 +8,21 @@ import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCard
 import ActivityContentModalLayout from './components/ActivityContentModalLayout';
 
 import { ModalWrapperUIProps} from './interfaces/ModalWrapperUIProps';
-import {
-  FormStructure,
-  ActivityTypeCard,
-  ActivitySubTypeKey,
-  WidgetType,
-  FormType,
-  GeneralTypeValue,
-} from  '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from  '@/context/activityType/types/activityType';
+import { FormType, WidgetType } from '@/context/activityType/constants/enum';
+
 import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout';
 
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 
 export interface ActivityContentModalProps extends ModalWrapperUIProps {
-  widget: ActivityTypeCard | FormStructure,
-  onSelecWidgetKey: (key: GeneralTypeValue) => void,
+  widget: ActivityType.CardUI | ActivityType.FormUI,
+  onSelecWidgetKey: (key: ActivityType.GeneralTypeValue) => void,
   //
   activityName: string,
   visible: boolean,
-  initialWidgetKey: ActivitySubTypeKey,
+  initialWidgetKey: ActivityType.DeepUIKey,
   onInput?: (input: string) => void,
 };
 
@@ -46,7 +41,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
     // onConfirm = () => {},
   } = props;
 
-  const [widgetKey, setWidgetKey] = useState<GeneralTypeValue | null>(null);
+  const [widgetKey, setWidgetKey] = useState<ActivityType.GeneralTypeValue | null>(null);
 
   const handleCancel = () => onClose();
 
@@ -59,7 +54,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
     }
   };
 
-  const handleWidgetKeyChange = (newKey: GeneralTypeValue) => {
+  const handleWidgetKeyChange = (newKey: ActivityType.GeneralTypeValue) => {
     console.log('selected changed to', newKey);
     setWidgetKey(newKey);
   };
@@ -83,10 +78,10 @@ function ActivityContentModal(props: ActivityContentModalProps) {
         widget={widget} // To render from that
         onClose={onClose}
         onConfirm={handleConfirm}
-        render={(widgetData: ActivityTypeCard | FormStructure) => {
+        render={(widgetData: ActivityType.CardUI | ActivityType.FormUI) => {
           // console.debug(`render(${type}, ${JSON.stringify(data)})`);
           if ('widgetType' in widgetData) {
-            const card: ActivityTypeCard = widgetData;
+            const card: ActivityType.CardUI = widgetData;
             switch (card.widgetType) {
               case WidgetType.FORM:
                 return <Alert message='Si esto se ve, se está pasando un card (que tiene un hijo form) en lugar de pasar el form...' />
@@ -101,7 +96,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
               default:
                 return (
                   <Alert
-                    message={`Tipo de widget ${(card as ActivityTypeCard).widgetType} es desconocido`}
+                    message={`Tipo de widget ${(card as ActivityType.CardUI).widgetType} es desconocido`}
                     type='error'
                   />
                 );
@@ -109,7 +104,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
           }
 
           if ('formType' in widgetData) {
-            const form: FormStructure = widgetData;
+            const form: ActivityType.FormUI = widgetData;
             switch (form.formType) {
               case FormType.INFO:
                 return <FullActivityTypeInfoLayout

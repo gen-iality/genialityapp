@@ -1,13 +1,13 @@
 import dayjs from 'dayjs';
-import AgendaDocumentType from '../types/AgendaDocumentType';
+import AgendaType from '@Utilities/types/AgendaType';
 import { FormDataType } from '../components/MainAgendaForm';
 
 export default function useBuildInfo (
   formdata: FormDataType,
-  agenda: AgendaDocumentType | null,
-  defaultAgenda: AgendaDocumentType,
+  agenda: AgendaType | null,
+  defaultAgenda: AgendaType,
 ) {
-  const buildInfo: () => AgendaDocumentType = () => {
+  const buildInfo: () => AgendaType = () => {
     const {
       name,
       hour_start,

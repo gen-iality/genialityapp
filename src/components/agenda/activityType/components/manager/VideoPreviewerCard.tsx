@@ -26,11 +26,11 @@ import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
 import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
-import { SimplifiedActivityTypeValue } from '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from '@/context/activityType/types/activityType';
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 
 interface VideoPreviewerCardProps {
-  type: SimplifiedActivityTypeValue,
+  type: ActivityType.TypeAsDisplayment,
   activityName: string,
 };
 

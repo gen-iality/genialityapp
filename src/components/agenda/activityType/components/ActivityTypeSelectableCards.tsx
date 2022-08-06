@@ -3,15 +3,13 @@ import * as React from 'react';
 import { Row, Col, Alert } from 'antd';
 
 import SelectableCard from './SelectableCard';
-import {
-  ActivityTypeCard,
-  ActivityTypeData,
-  WidgetType,
-} from '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from '@/context/activityType/types/activityType';
+
+import { WidgetType } from '@/context/activityType/constants/enum';
 
 export interface ActivityTypeSelectableCardsProps {
-  widget: ActivityTypeCard | ActivityTypeData, // Only here
-  onWidgetChange: (widget: ActivityTypeCard) => void,
+  widget: ActivityType.CardUI | ActivityType.MainUI, // Only here
+  onWidgetChange: (widget: ActivityType.CardUI) => void,
   selected: string | null, // TODO: define the right type
 };
 
@@ -22,16 +20,16 @@ function ActivityTypeSelectableCards(props: ActivityTypeSelectableCardsProps) {
     selected,
   } = props;
 
-  const buildSelectionHandler = (selectedWidget: ActivityTypeCard) => () => onWidgetChange(selectedWidget);
+  const buildSelectionHandler = (selectedWidget: ActivityType.CardUI) => () => onWidgetChange(selectedWidget);
 
   if (widget.key !== 'type') {
-    // Then widget is ActivityTypeCard, not ActivityTypeData
+    // Then widget is ActivityTypeCard, not FormWidgetFlow
     if (widget.widgetType !== WidgetType.CARD_SET) {
       return <Alert message='Imposible de mostrar' type='error' />
     }
   }
 
-  const cards: ActivityTypeCard[] = widget.cards;
+  const cards: ActivityType.CardUI[] = widget.cards;
 
   return (
     <Row justify='center' gutter={[16, 16]}>
