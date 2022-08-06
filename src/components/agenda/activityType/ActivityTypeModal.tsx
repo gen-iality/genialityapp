@@ -5,18 +5,17 @@ import { Modal } from 'antd';
 
 import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCards';
 import ActivityTypeModalLayout from './components/ActivityTypeModalLayout';
-import { ActivityTypeName } from '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from '@/context/activityType/types/activityType';
 import useActivityType from '@/context/activityType/hooks/useActivityType';
-// import { ActivityTypeCard } from '@/context/activityType/schema/structureInterfaces';
 
 export interface ActivityTypeModalProps {
   visible: boolean,
   onClose: (success?: boolean) => void,
-  onSelectionChange: (selected: ActivityTypeName) => void,
+  onSelectionChange: (selected: ActivityType.Name) => void,
 };
 
 function ActivityTypeModal(props: ActivityTypeModalProps) {
-  const [selected, setSelected] = useState<ActivityTypeName | null>(null);
+  const [selected, setSelected] = useState<ActivityType.Name | null>(null);
 
   const { formWidgetFlow } = useActivityType();
   
@@ -34,7 +33,7 @@ function ActivityTypeModal(props: ActivityTypeModalProps) {
     }
   }
 
-  const handleSelectChange = (newSelected: ActivityTypeName) => {
+  const handleSelectChange = (newSelected: ActivityType.Name) => {
     console.log('selected changed to', newSelected);
     setSelected(newSelected);
   }
@@ -63,7 +62,7 @@ function ActivityTypeModal(props: ActivityTypeModalProps) {
           widget={formWidgetFlow}
           onWidgetChange={(widget) => {
             // In this case, the keys are the same of the activity type value
-            handleSelectChange(widget.key as ActivityTypeName);
+            handleSelectChange(widget.key as ActivityType.Name);
           }}
         />}
       />

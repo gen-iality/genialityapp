@@ -2,7 +2,7 @@
 // _id,name,subtitle,bigmaker_meeting_id,datetime_start,datetime_end,space_id,image,description,registration_message,capacity,activity_categories_ids,access_restriction_type,access_restriction_rol_ids,has_date,meeting_id,vimeo_id,platform,start_url,join_url,requires_registration,host_ids,length,latitude,selected_document,event_id,date_start_zoom,date_end_zoom,updated_at,created_at,role_attendee_ids,access_restriction_types_available,activity_categories,space,hosts,type,access_restriction_roles
 // NOTE: where is real the agenda schema?
 
-export default interface AgendaDocumentType {
+export default interface AgendaType {
   _id?: string,
   name: string,
   subtitle: string,
@@ -34,7 +34,7 @@ export default interface AgendaDocumentType {
   latitude: string,
 };
 
-export interface ExtendedAgendaDocumentType extends AgendaDocumentType {
+export interface ExtendedAgendaType extends AgendaType {
   type?: { name: string },
   video?: string | null,
 };

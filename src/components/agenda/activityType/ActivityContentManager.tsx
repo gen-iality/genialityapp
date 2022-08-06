@@ -22,8 +22,8 @@ import ParticipantRequestsCard from './components/manager/ParticipantRequestsCar
 import RTMPCard from './components/manager/RTMPCard';
 import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard';
 import GoToMeet from './components/manager/GoToMeet';
-import { activitySubTypeKeys } from '@/context/activityType/schema/activityTypeFormStructure';
-import { ActivitySubTypeName } from '@/context/activityType/schema/structureInterfaces';
+import { activityContentValues } from '@/context/activityType/constants/ui';
+import type { ActivityType } from '@/context/activityType/types/activityType';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 
 export interface ActivityContentManagerProps {
@@ -112,7 +112,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     );
   }
 
-  if ([activitySubTypeKeys.survey, activitySubTypeKeys.quizing].includes(activityContentType as ActivitySubTypeName)) {
+  if ([activityContentValues.survey, activityContentValues.quizing].includes(activityContentType as ActivityType.ContentValue)) {
     return (
       <>
       <div style={{textAlign: 'center', width: '100%'}}>

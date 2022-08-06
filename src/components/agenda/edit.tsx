@@ -31,7 +31,7 @@ import useBuildInfo from './hooks/useBuildInfo';
 import useValidForm from './hooks/useValidAgendaForm';
 import useDeleteActivity from './hooks/useDeleteActivity';
 import EventType from './types/EventType';
-import AgendaDocumentType from './types/AgendaDocumentType';
+import AgendaType from '@Utilities/types/AgendaType';
 import AgendaDocumentForm from './components/AgendaDocumentForm';
 
 import ActivityContentSelector from './activityType/ActivityContentSelector';
@@ -53,7 +53,7 @@ export interface AgendaEditProps {
   matchUrl: string;
 }
 
-const initialInfoState: AgendaDocumentType = {
+const initialInfoState: AgendaType = {
   name: '',
   subtitle: '',
   bigmaker_meeting_id: null,
@@ -113,7 +113,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
 
-  const [loadedAgenda, setLoadedAgenda] = useState<AgendaDocumentType | null>(null);
+  const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null);
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
   const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType);
 
@@ -148,7 +148,7 @@ function AgendaEdit(props: AgendaEditProps) {
         agendaContext.setActivityEdit(location.state.edit);
 
         // Get the agenda document from current activity_id
-        const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
+        const agendaInfo: AgendaType = await AgendaApi.getOne(location.state.edit, props.event._id);
         
         // Take the vimeo_id and save in info.
         const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
@@ -226,7 +226,7 @@ function AgendaEdit(props: AgendaEditProps) {
       try {
         const builtInfo = buildInfo();
         // setIsLoading(true);
-        let agenda: AgendaDocumentType | null = null;
+        let agenda: AgendaType | null = null;
         if (location.state.edit || currentActivityID) {
           const data = {
             activity_id: location.state.edit || currentActivityID,
