@@ -53,7 +53,7 @@ export interface AgendaEditProps {
   matchUrl: string;
 }
 
-const initialInfoState = {
+const initialInfoState: AgendaDocumentType = {
   name: '',
   subtitle: '',
   bigmaker_meeting_id: null,
@@ -79,11 +79,10 @@ const initialInfoState = {
   name_host: null,
   key: '',
   requires_registration: false,
-  isPublished: true,
   host_ids: [],
   length: '',
   latitude: '',
-} as AgendaDocumentType;
+};
 
 const initialFormDataState = {
   name: '',
@@ -125,9 +124,9 @@ function AgendaEdit(props: AgendaEditProps) {
   const [surveys, setSurveys] = useState<boolean>(false);
   const [games, setGames] = useState<boolean>(false);
   const [attendees, setAttendees] = useState<boolean>(false);
-
+  
   const agendaContext = useContext(AgendaContext);
-
+  
   const location = useLocation<LocationStateType>();
   const history = useHistory();
 
@@ -180,16 +179,20 @@ function AgendaEdit(props: AgendaEditProps) {
     };
   }, [props.event]);
 
+  // This exists to enable to call saveConfig (who reads from AgendaContext),
+  // when the AgendaContext data are written.
+  // NOTE: AgendaContext has a method called saveConfig, but the old edit.jsx
+  //       had its own implementation of saveConfig. So confusing!
   useEffect(() => {
     saveConfig();
-  }, [attendees, games, surveys, chat, avalibleGames]);
+  }, [attendees, games, surveys, chat, avalibleGames, agendaContext.isPublished]);
 
   const validateRoom = async () => {
-    const activity_id = agendaContext.activityEdit;
-    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activity_id);
+    const activityId = agendaContext.activityEdit;
+    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activityId);
 
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(props.event._id, activity_id);
+      const configuration = await service.getConfiguration(props.event._id, activityId);
       setFormData((previous) => ({
         ...previous,
         platform: configuration.platform || null,
@@ -198,10 +201,7 @@ function AgendaEdit(props: AgendaEditProps) {
       }));
 
       if (loadedAgenda !== null) {
-        setLoadedAgenda({
-          ...loadedAgenda,
-          isPublished: !!configuration.isPublished,
-        });
+        setLoadedAgenda(loadedAgenda);
       }
 
       setAvalibleGames(configuration.avalibleGames || []);
@@ -249,10 +249,14 @@ function AgendaEdit(props: AgendaEditProps) {
           /** Si es un evento recien creado se envia a la misma ruta con el
            * estado edit el cual tiene el id de la actividad para poder editar
            * */
+          console.debug('created agenda is used from origin');
           agendaContext.setActivityEdit(agenda._id);
           setCurrentActivityID(agenda._id);
           setIsEditing(true);
-          setLoadedAgenda({ ...agenda, isPublished: false });
+
+          agendaContext.setIsPublished(true);
+
+          setLoadedAgenda(agenda);
           await saveConfig();
         } else if (changePathWithoutSaving) {
           history.push(`${props.matchUrl}`);
@@ -293,6 +297,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
     if (status === 'newOrUpdate') {
+      agendaContext.setAvailableGames(listOfGames);
       setAvalibleGames(listOfGames);
       // await saveConfig(); // did by useEffect (avalibleGames)
     } else {
@@ -393,7 +398,7 @@ function AgendaEdit(props: AgendaEditProps) {
                   checked={agendaContext.isPublished}
                   onChange={(value) => {
                     agendaContext.setIsPublished(value);
-                    saveConfig();
+                    // saveConfig(); did by useEffect (isPublished)
                   }}
                 />
               </Form.Item>
