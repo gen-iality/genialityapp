@@ -7,7 +7,7 @@ export default function useBuildInfo (
   agenda: AgendaDocumentType | null,
   defaultAgenda: AgendaDocumentType,
 ) {
-  const buildInfo = () => {
+  const buildInfo: () => AgendaDocumentType = () => {
     const {
       name,
       hour_start,
@@ -34,7 +34,6 @@ export default function useBuildInfo (
       name_host,
       key,
       requires_registration,
-      isPublished,
       registration_message,
       // selected_document,
       capacity,
@@ -85,12 +84,11 @@ export default function useBuildInfo (
       name_host,
       key,
       requires_registration,
-      isPublished,
       host_ids,
       length,
       latitude,
       selected_document: selectedDocuments,
-    } as AgendaDocumentType;
+    };
   };
 
   return buildInfo;
