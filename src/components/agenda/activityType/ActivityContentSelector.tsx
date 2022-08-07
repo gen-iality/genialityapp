@@ -29,14 +29,13 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const [modalTitle, setModalTitle] = useState('Contenido');
   const [isModalShown, setIsModalShown] = useState(false);
   const [selectedType, setSelectedType] = useState<ActivityType.GeneralTypeValue | undefined>(undefined);
-  const [currentWidget, setCurrentWidget] = useState<ActivityType.CardUI | ActivityType.FormUI | undefined>(undefined);
+  const [widget, setWidget] = useState<ActivityType.CardUI | ActivityType.FormUI | undefined>(undefined);
 
   const {
     activityType,
     activityContentType,
     setContentSource,
     saveActivityContent,
-    setActivityContentType,
     convertTypeToHumanizedString,
     getOpenedWidget,
   } = useActivityType();
@@ -50,23 +49,20 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
 
     const [title, widget] = getOpenedWidget(activityType);
     if (title) setModalTitle(title);
-    if (widget) setCurrentWidget(widget);
+    if (widget) setWidget(widget);
   }, [shouldLoad, activityType]);
 
   useEffect(() => {
     if (selectedType !== undefined) {
-      console.debug('we can work with', selectedType);
-      handleConfirm();
+      console.debug('confirm the selectedType:', selectedType);
+      saveActivityContent(selectedType as ActivityType.ContentValue);
     }
   }, [selectedType]);
 
-  const handleCloseModal = (success: boolean = false) => setIsModalShown(false);
-
-  const handleConfirm = () => {
-    console.debug('confirm the selectedType:', selectedType);
-    // setActivityContentType(selectedType || null);
-    saveActivityContent(selectedType as ActivityType.ContentValue);
-  }
+  const handleCloseModal = (success: boolean = false) => {
+    console.debug('modal is hidden', success ? 'successfully' : 'failurely');
+    setIsModalShown(false);
+  };
 
   const handleInput = (text: string) => {
     console.debug('text will:', text);
@@ -80,10 +76,12 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   if (activityContentType) {
     return (
         <>
-        {/* <p>Contenido: {activityContentType}</p>
+        {/*
+        <p>Contenido: {activityContentType}</p>
         <Button danger onClick={() => setActivityContentType(null)}>
           Eliminar contenido
-        </Button> */}
+        </Button>
+        */}
         <ActivityContentManager activityName={activityName} matchUrl={props.matchUrl} />
       </>
     );
@@ -91,18 +89,17 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
 
   return (
     <>
-    {currentWidget === undefined && (
+    {widget === undefined && (
       <Alert type='error' message='No puede cargar el tipo de actividad' />
     )}
-    {currentWidget !== undefined && (
+    {widget !== undefined && (
     <ActivityContentModal
-      initialWidgetKey={activityContentType as ActivityType.DeepUIKey}
-      visible={isModalShown}
+      isVisible={isModalShown}
       title={modalTitle}
-      widget={currentWidget}
+      widget={widget}
       activityName={props.activityName}
       onClose={handleCloseModal}
-      onSelecWidgetKey={setSelectedType}
+      onConfirmType={setSelectedType}
       onInput={handleInput}
     />
     )}
