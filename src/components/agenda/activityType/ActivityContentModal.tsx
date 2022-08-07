@@ -8,8 +8,8 @@ import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCard
 import ActivityContentModalLayout from './components/ActivityContentModalLayout';
 
 import { ModalWrapperUIProps} from './interfaces/ModalWrapperUIProps';
-import type { ActivityType } from  '@/context/activityType/types/activityType';
-import { FormType, WidgetType } from '@/context/activityType/constants/enum';
+import type { ActivityType } from  '@context/activityType/types/activityType';
+import { FormType, WidgetType } from '@context/activityType/constants/enum';
 
 import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout';
 

@@ -7,7 +7,7 @@ import {
   Typography,
 } from 'antd';
 
-import { FormStructure } from '@/context/activityType/types/activityType';
+import { FormStructure } from '@context/activityType/types/activityType';
 
 const {
   Title,

@@ -4,7 +4,7 @@ import { message, Result, Spin, Upload } from 'antd';
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline';
 import { RcFile } from 'antd/lib/upload';
 import { deleteVideo } from '@/adaptors/gcoreStreamingApi';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
 
 const urlUploadVideoGcore = 'https://webhook.evius.co/upload-video';
 

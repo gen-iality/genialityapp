@@ -1,12 +1,12 @@
 import { Card, Button, Space, Typography, Spin, Popconfirm } from 'antd';
 import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { useContext, useState, useMemo } from 'react';
 import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
 import { AgendaApi } from '@/helpers/request';
-import { CurrentEventContext } from '@/context/eventContext';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
-import type { ActivityType } from '@/context/activityType/types/activityType';
+import { CurrentEventContext } from '@context/eventContext';
+import useActivityType from '@context/activityType/hooks/useActivityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
 
 export interface TransmitionOptionsCardProps {
   type: ActivityType.TypeAsDisplayment,

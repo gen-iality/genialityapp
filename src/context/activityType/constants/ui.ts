@@ -5,7 +5,7 @@ import {
   MainUI,
   DeepUI,
   TypeDisplayment,
-} from '@/context/activityType/constants/enum';
+} from '@context/activityType/constants/enum';
 
 export const activityTypeNames: { [key in ActivityType.MainUIKey]: ActivityType.Name } = {
   live: MainUI.LIVE,

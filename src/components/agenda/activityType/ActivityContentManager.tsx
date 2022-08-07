@@ -9,9 +9,9 @@ import {
   Typography,
   Statistic,
 } from 'antd';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
-import AgendaContext from '@/context/AgendaContext';
-import { CurrentEventContext } from '@/context/eventContext';
+import useActivityType from '@context/activityType/hooks/useActivityType';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventContext } from '@context/eventContext';
 import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
 import VideoPreviewerCard from './components/manager/VideoPreviewerCard';
 import TransmitionStatusCard from './components/manager/TransmitionStatusCard';
@@ -22,8 +22,8 @@ import ParticipantRequestsCard from './components/manager/ParticipantRequestsCar
 import RTMPCard from './components/manager/RTMPCard';
 import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard';
 import GoToMeet from './components/manager/GoToMeet';
-import { activityContentValues } from '@/context/activityType/constants/ui';
-import type { ActivityType } from '@/context/activityType/types/activityType';
+import { activityContentValues } from '@context/activityType/constants/ui';
+import type { ActivityType } from '@context/activityType/types/activityType';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 
 import TriviaEdit from '../../trivia/edit';

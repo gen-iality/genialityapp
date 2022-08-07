@@ -8,9 +8,9 @@ import {
   activityTypeNames,
   formWidgetFlow,
   activityContentValues,
-} from '@/context/activityType/constants/ui';
-import type { ActivityType } from '@/context/activityType/types/activityType';
-import { WidgetType } from '@/context/activityType/constants/enum';
+} from '@context/activityType/constants/ui';
+import type { ActivityType } from '@context/activityType/types/activityType';
+import { WidgetType } from '@context/activityType/constants/enum';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
