@@ -155,7 +155,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setIsDeletingActivityType(false);
   }
 
-  const saveActivityContent = async (type?: ActivitySubTypeName | null, data?: string | null) => {
+  const saveActivityContent = async (type?: ActivityType.ContentValue | null, data?: string | null) => {
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -353,7 +353,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   };
 
   const convertTypeToHumanizedString = (typeIncoming: string): string => {
-    type TypeIncoming = ActivityTypeName;
+    type TypeIncoming = ActivityType.Name;
     switch (typeIncoming as TypeIncoming) {
       case 'liveBroadcast': return 'transmisión';
       case 'meeting2': return 'reunión';
