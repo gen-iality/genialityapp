@@ -31,7 +31,6 @@ export type ActivityTypeContextType = {
   visualizeVideo: (url: string | null, created_at: string | null, name: string | null) => void,
   executer_stopStream: () => void,
   convertTypeToHumanizedString: (type: string) => string,
-  getOpenedWidget: (currentActivityType: ActivityType.Name) => [string, OpenedWidget | undefined],
 };
 
 export type ActivityTypeProviderProps = {
