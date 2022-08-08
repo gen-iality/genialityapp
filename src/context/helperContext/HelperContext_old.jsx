@@ -7,7 +7,7 @@ import { UseCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
 import { maleIcons, femaleicons } from '../../helpers/constants';
@@ -335,7 +335,7 @@ export const HelperContextProvider = ({ children }) => {
         <Row justify='space-between'>
           <Col style={{ fontWeight: 'bold' }}>{data.remitente}</Col>
 
-          <Col>{moment().format('h:mm A')}</Col>
+          <Col>{dayjs().format('h:mm A')}</Col>
         </Row>
       ),
       description: isAnImage ? (

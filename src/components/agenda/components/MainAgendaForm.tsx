@@ -1,4 +1,4 @@
-import moment, { Moment } from 'moment';
+import dayjs from 'dayjs';
 import { SetStateAction, Dispatch } from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -36,24 +36,22 @@ const { Option } = SelectAntd;
 const creatableStyles = { menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }) };
 
 export interface FormDataType {
-  name: string;
-  date: string;
-  description: string;
-  space_id: string;
-  image: string;
-  hour_start: Moment | string;
-  hour_end: Moment | string;
-  isPhysical: boolean;
-  length: string;
-  latitude: string;
-  selectedCategories: SelectOptionType[];
-  selectedHosts: SelectOptionType[];
-  selectedRol: SelectOptionType[];
-  selectedTickets: SelectOptionType[];
-  selectedDocuments: SelectOptionType[];
-}
-
-// NOTE: mmm... what's happen with selectedRol and allRoles? where are they used and how?
+  name: string,
+  date: string,
+  description: string,
+  space_id: string,
+  image: string,
+  hour_start: dayjs.Dayjs | string,
+  hour_end: dayjs.Dayjs | string,
+  isPhysical: boolean,
+  length: string,
+  latitude: string,
+  selectedCategories: SelectOptionType[],
+  selectedHosts: SelectOptionType[],
+  selectedRol: SelectOptionType[],
+  selectedTickets: SelectOptionType[],
+  selectedDocuments: SelectOptionType[],
+};
 
 export interface MainAgendaFormProps {
   agendaContext: any;
@@ -119,8 +117,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       description: agenda.description,
       image: agenda.image,
       space_id: agenda.space_id || '',
-      hour_start: moment(processedDate.hour_start),
-      hour_end: moment(processedDate.hour_end),
+      hour_start: dayjs(processedDate.hour_start),
+      hour_end: dayjs(processedDate.hour_end),
       length: agenda.length,
       latitude: agenda.latitude,
       selectedTickets: agenda.selectedTicket ? agenda.selectedTicket : [],
@@ -176,7 +174,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const hourWithAdditionalMinutes = (minutes: number) => {
     const fecha = new Date();
     fecha.setMinutes(fecha.getMinutes() + minutes);
-    return moment(fecha, 'HH:mm:ss');
+    return dayjs(fecha, 'HH:mm:ss');
   };
 
   const goSection = (path: string, state?: any) => {
@@ -244,8 +242,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   };
 
   const currentHourStart = useMemo(() => {
-    if (formdata.hour_start instanceof moment) {
-      return moment(formdata.hour_start, 'HH:mm:ss');
+    if (!!formdata.hour_start) {
+      return dayjs(formdata.hour_start, 'HH:mm:ss');
     }
     const newHour = hourWithAdditionalMinutes(1);
     setFormData((previous) => ({ ...previous, hour_start: newHour }));
@@ -253,8 +251,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   }, [formdata.hour_start]);
 
   const currentHourEnd = useMemo(() => {
-    if (formdata.hour_end instanceof moment) {
-      return moment(formdata.hour_end, 'HH:mm:ss');
+    if (!!formdata.hour_end) {
+      return dayjs(formdata.hour_end, 'HH:mm:ss');
     }
     const newHour = hourWithAdditionalMinutes(5);
     setFormData((previous) => ({ ...previous, hour_end: newHour }));

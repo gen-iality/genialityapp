@@ -3,7 +3,7 @@ import { AgendaApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import { Tag } from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const Agenda = (props) => {
   let [columnsData, setColumnsData] = useState({});
@@ -16,7 +16,7 @@ const Agenda = (props) => {
       sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
       ...getColumnSearchProps('datetime_start', columnsData),
       render(record, key) {
-        return <div>{moment(record).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(record).format('DD/MM/YYYY')}</div>;
       },
     },
     {
@@ -26,7 +26,7 @@ const Agenda = (props) => {
       sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),
       ...getColumnSearchProps('datetime_end', columnsData),
       render(record, key) {
-        return <div>{moment(record).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(record).format('DD/MM/YYYY')}</div>;
       },
     },
     {

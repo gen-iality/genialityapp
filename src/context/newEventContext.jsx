@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useReducer, useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { DispatchMessageService } from '../context/MessageService';
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/request';
 import { GetTokenUserFirebase } from '../helpers/HelperAuth';
@@ -151,8 +151,8 @@ export const NewEventProvider = ({ children }) => {
     } else {*/
     setIsModalVisible(false);
     setSelectedDateEvent({
-      from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
-      at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
+      from: dayjs(selectedDay).format('YYYY-MM-DD') + ' ' + dayjs(selectedHours.from).format('HH:mm'),
+      at: dayjs(selectedDay).format('YYYY-MM-DD') + ' ' + dayjs(selectedHours.at).format('HH:mm'),
     });
     //};
   };
@@ -232,8 +232,8 @@ export const NewEventProvider = ({ children }) => {
   useEffect(() => {
     if (!selectedDay || !selectedHours) return;
     setSelectedDateEvent({
-      from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
-      at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
+      from: dayjs(selectedDay).format('YYYY-MM-DD') + ' ' + dayjs(selectedHours.from).format('HH:mm'),
+      at: dayjs(selectedDay).format('YYYY-MM-DD') + ' ' + dayjs(selectedHours.at).format('HH:mm'),
     });
   }, [selectedDay, selectedHours]);
   const saveEvent = async () => {

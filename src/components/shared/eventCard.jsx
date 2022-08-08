@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Card, Space, Typography } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';
@@ -92,9 +92,9 @@ class EventCard extends Component {
                   <span style={{ fontSize: '12px' }}>
                     <Space>
                       <i className='fas fa-calendar-alt' />
-                      <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+                      <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>
                       {'-'}
-                      <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM YYYY')}</time>
+                      <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
                     </Space>
                   </span>
                   <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>

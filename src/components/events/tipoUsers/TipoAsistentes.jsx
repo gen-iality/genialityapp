@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import { RolAttApi } from '../../../helpers/request';
 import EvenTable from '../shared/table';
 import TableAction from '../shared/tableAction';
@@ -17,7 +17,7 @@ const TipoAsistentes = (props) => {
       dataIndex: 'created_at',
       width: 160,
       render(val, item) {
-        return <div>{Moment(item.created_at).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>;
       },
     },
   ];
