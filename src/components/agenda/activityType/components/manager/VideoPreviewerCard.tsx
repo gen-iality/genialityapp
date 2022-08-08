@@ -28,6 +28,7 @@ import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gc
 import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
 import type { ActivityType } from '@context/activityType/types/activityType';
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
+import { TypeDisplayment } from '@context/activityType/constants/enum'
 
 interface VideoPreviewerCardProps {
   type: ActivityType.TypeAsDisplayment,
@@ -91,14 +92,14 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
               <ReactPlayer
                 playing={true}
                 loop={true}
-                onDuration={props.type === 'Video' ? handleDuration : undefined}
+                onDuration={props.type === TypeDisplayment.VIDEO ? handleDuration : undefined}
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
                 width='100%'
                 height='100%'
                 url={urlVideo}
                 controls={true}
                 onError={(e) => {
-                  if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
+                  if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
                     setErrorOcurred(true);
                     setErrorMessage(e?.message);
                   }
@@ -117,7 +118,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             allow='autoplay; encrypted-media'
             allowFullScreen
             onLoad={(e) => {
-              if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
+              if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
                 // @ts-expect-error
                 setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
               }
@@ -149,7 +150,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   return (
     <Card
       cover={
-        props.type === 'reunión' && (
+        props.type === TypeDisplayment.MEETING && (
           <img
             style={{ objectFit: 'cover' }}
             height={'250px'}
@@ -161,35 +162,35 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
       style={{ borderRadius: '8px', overflow: 'hidden' }}>
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
-          {props?.type !== 'reunión' && renderPlayer()}
+          {props?.type !== TypeDisplayment.MEETING && renderPlayer()}
         </div>
         <Row align='top' justify='space-between'>
           <Col span={dataLive?.live && dataLive?.active ? 16 : 24}>
             <Comment
               avatar={
-                props.type === 'reunión' || props.type === 'Video' ? null : (
+                props.type === TypeDisplayment.MEETING || props.type === TypeDisplayment.VIDEO ? null : (
                   <Avatar
                     icon={
-                      props.type === 'EviusMeet' || props.type === 'Transmisión' ? (
+                      props.type === TypeDisplayment.EVIUS_MEET || props.type === TypeDisplayment.TRANSMISSION ? (
                         dataLive?.active ? (
                           <CheckCircleOutlined />
                         ) : (
                           <StopOutlined />
                         )
-                      ) : props.type === 'vimeo' ? (
+                      ) : props.type === TypeDisplayment.VIMEO ? (
                         <VimeoIcon />
                       ) : (
-                        props.type === 'Youtube' && <YoutubeFilled />
+                        props.type === TypeDisplayment.YOUTUBE && <YoutubeFilled />
                       )
                     }
                     style={
-                      props.type === 'EviusMeet' || props.type === 'Transmisión'
+                      props.type === TypeDisplayment.EVIUS_MEET || props.type === TypeDisplayment.TRANSMISSION
                         ? dataLive?.active
                           ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
                           : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
-                        : props.type === 'vimeo'
+                        : props.type === TypeDisplayment.VIMEO
                         ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
-                        : (props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
+                        : (props.type === TypeDisplayment.YOUTUBE && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
                           undefined
                     }
                   />
@@ -201,11 +202,11 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 </Typography.Text>
               }
               content={
-                props.type == 'reunión' ? (
+                props.type == TypeDisplayment.MEETING ? (
                   'Sala de reuniones'
-                ) : props.type === 'Video' ? (
+                ) : props.type === TypeDisplayment.VIDEO ? (
                   convertSecondsToHourFormat(duration)
-                ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
+                ) : props.type === TypeDisplayment.VIMEO || props.type == TypeDisplayment.YOUTUBE ? (
                   'Conexión externa'
                 ) : dataLive?.active ? (
                   <Typography.Text type='success'>Iniciado</Typography.Text>
@@ -251,12 +252,12 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           ) : null}
         </Row>
 
-        {(props.type === 'Transmisión' ||
-          props.type === 'vimeo' ||
-          props.type == 'Youtube' ||
-          props.type == 'EviusMeet') && (
+        {(props.type === TypeDisplayment.TRANSMISSION ||
+          props.type === TypeDisplayment.VIMEO ||
+          props.type == TypeDisplayment.YOUTUBE ||
+          props.type == TypeDisplayment.EVIUS_MEET) && (
           <Space style={{ width: '100%' }}>
-            <Typography.Text strong>ID {props.type === 'EviusMeet' ? 'GEN Connect' : props.type}:</Typography.Text>
+            <Typography.Text strong>ID {props.type === TypeDisplayment.EVIUS_MEET ? 'GEN Connect' : props.type}:</Typography.Text>
             <Typography.Text
               copyable={{
                 tooltips: ['clic para copiar', '¡ID copiado!'],
@@ -266,8 +267,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             </Typography.Text>
           </Space>
         )}
-        {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
-          (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'reunión' && props.type !== 'Video')) && (
+        {((dataLive?.active && (props.type === TypeDisplayment.TRANSMISSION || props.type === TypeDisplayment.EVIUS_MEET)) ||
+          (props.type !== TypeDisplayment.TRANSMISSION && props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.MEETING && props.type !== TypeDisplayment.VIDEO)) && (
           <Space direction='vertical' style={{ width: '100%' }}>
             <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
             <Select
@@ -286,12 +287,12 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             </Select>
           </Space>
         )}
-        {/* {(roomStatus != '' || props.type === 'reunión' || props.type === 'Video') && (
+        {/* {(roomStatus != '' || props.type === TypeDisplayment.MEETING || props.type === TypeDisplayment.VIDEO) && (
           <Space direction='vertical'>
             <Typography.Text strong>Estadisticas de la actividad:</Typography.Text>
             <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
             <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
-            {(roomStatus === 'open_meeting_room' || props.type === 'reunión' || props.type === 'Video') && (
+            {(roomStatus === 'open_meeting_room' || props.type === TypeDisplayment.MEETING || props.type === TypeDisplayment.VIDEO) && (
               <Typography.Text strong>Visualizaciones en curso: {viewersOnline.length}</Typography.Text>
             )}
             <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
