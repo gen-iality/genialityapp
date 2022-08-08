@@ -10,6 +10,7 @@ import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
 
 import useActivityType from '@context/activityType/hooks/useActivityType';
+import { useGetWidgetForActivityType } from '@/context/activityType/hooks/useGetWidgetForActivityType';
 
 export interface SubActivityContentSelectorProps {
   activityId: string,
@@ -34,7 +35,6 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     activityContentType,
     setContentSource,
     saveActivityContent,
-    getOpenedWidget,
   } = useActivityType();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
       return;
     }
 
-    const [title, widget] = getOpenedWidget(activityType);
+    const [title, widget] = useGetWidgetForActivityType(activityType);
     if (title) setModalTitle(title);
     if (widget) setWidget(widget);
   }, [shouldLoad, activityType]);

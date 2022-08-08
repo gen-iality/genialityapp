@@ -16,38 +16,7 @@ import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout'
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 
-import {
-  activityTypeNames,
-  formWidgetFlow,
-  activityContentValues,
-} from '@context/activityType/constants/ui';
-
-const useActivityTypeData: (type: ActivityType.GeneralTypeValue) => ActivityType.CardUI | ActivityType.FormUI | null = (type) => {
-  switch (type) {
-    case activityTypeNames.live:
-      return formWidgetFlow.cards[0];
-
-    // liveBroadcastCards
-    case activityContentValues.streaming:
-      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[0] as ActivityType.CardUI;
-    case activityContentValues.vimeo:
-      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[1].form as ActivityType.FormUI;
-    case activityContentValues.youtube:
-      return (formWidgetFlow.cards[0].cards as ActivityType.CardUI[])[2].form as ActivityType.FormUI;
-
-    case activityTypeNames.meeting:
-      return formWidgetFlow.cards[1].form as ActivityType.FormUI;
-
-    case activityTypeNames.video:
-      return formWidgetFlow.cards[2];
-    case activityContentValues.url:
-      return (formWidgetFlow.cards[2].cards as ActivityType.CardUI[])[0].form as ActivityType.FormUI;
-    case activityContentValues.file:
-      return (formWidgetFlow.cards[2].cards as ActivityType.CardUI[])[1].form as ActivityType.FormUI;
-    default:
-      return null;
-  }
-}
+import { useGetWidgetForContentType } from '@/context/activityType/hooks/useGetWidgetForContentType';
 
 export interface ActivityContentModalProps extends ModalWrapperUIProps {
   widget: ActivityType.CardUI | ActivityType.FormUI,
@@ -104,7 +73,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
    * When the widgetKey changes we have to get the next widget data.
    */
   useEffect(() => {
-    const data = useActivityTypeData(widgetKey as ActivityType.GeneralTypeValue);
+    const data = useGetWidgetForContentType(widgetKey as ActivityType.GeneralTypeValue);
     if (data) setWidgetData(data);
     console.debug('get data to key', widgetKey, ':', data);
   }, [widgetKey]);
