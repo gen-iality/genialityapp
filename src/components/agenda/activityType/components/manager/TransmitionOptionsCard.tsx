@@ -7,6 +7,7 @@ import { AgendaApi } from '@/helpers/request';
 import { CurrentEventContext } from '@context/eventContext';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import type { ActivityType } from '@context/activityType/types/activityType';
+import { TypeDisplayment } from '@/context/activityType/constants/enum';
 
 export interface TransmitionOptionsCardProps {
   type: ActivityType.TypeAsDisplayment,
@@ -50,14 +51,14 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const refActivityViewers = useMemo(() =>(
     `viewers/${cEvent.value?._id}/activities/${activityEdit}`), [cEvent, activityEdit]);
   const isVisible = useMemo(
-    () => type === 'Transmisión' || type === 'EviusMeet',
+    () => type === TypeDisplayment.TRANSMISSION || type === TypeDisplayment.EVIUS_MEET,
     [type],
   );
 
   const deletingMessage = useMemo(() => {
-    if (type === 'Transmisión' || type === 'EviusMeet' || type === 'vimeo' || type === 'Youtube')
+    if (type === TypeDisplayment.TRANSMISSION || type === TypeDisplayment.EVIUS_MEET || type === TypeDisplayment.VIMEO || type === TypeDisplayment.YOUTUBE)
       return 'eliminar transmisión';
-    if (type === 'reunión')
+    if (type === TypeDisplayment.MEETING)
       return 'eliminar sala de reunión';
     return 'eliminar video';
   }, [type])
@@ -79,18 +80,18 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
     setIsDeleting(false);
     switch (type) {
-      case 'Video':
+      case TypeDisplayment.VIDEO:
         console.debug('TransmitionOptionsCard reset AT to video');
         await resetActivityType('video');
         break;
-      case 'reunión':
+      case TypeDisplayment.MEETING:
         console.debug('TransmitionOptionsCard reset AT to meeting2');
         await resetActivityType('meeting2');
         break;
-      case 'Transmisión':
-      case 'EviusMeet':
-      case 'vimeo':
-      case 'Youtube':
+      case TypeDisplayment.TRANSMISSION:
+      case TypeDisplayment.EVIUS_MEET:
+      case TypeDisplayment.VIMEO:
+      case TypeDisplayment.YOUTUBE:
         console.debug('TransmitionOptionsCard reset AT to liveBroadcast');
         await resetActivityType('liveBroadcast');
     }
