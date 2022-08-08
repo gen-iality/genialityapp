@@ -246,7 +246,7 @@ const MainProfile = (props) => {
                 // bottom: `${screens.xs ? '4%' : '6%'}`,
                 // right: `${screens.xs ? '10%' : '22%'}`,
               }}
-              src={imageUtils.LogoSvg}
+              src={import.meta.env.VITE_LOGO_SVG}
               alt='logo'
             />
           </Col>

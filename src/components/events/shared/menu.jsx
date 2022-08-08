@@ -74,7 +74,7 @@ const MenuConfig = (props) => {
               width: '80%',
               marginBottom: '15px',
             }}
-            src={`${imageUtils.LogoSinFondo}`}
+            src={`${import.meta.env.VITE_LOGO_SVG_DARK}`}
           />
         </Col>
         <Col span={24}>
