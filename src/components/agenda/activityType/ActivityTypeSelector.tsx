@@ -7,15 +7,15 @@ import { WarningOutlined } from '@ant-design/icons';
 
 import ActivityTypeModal from './ActivityTypeModal';
 import useActivityType from '@context/activityType/hooks/useActivityType';
-import { ActivityTypeName } from '@context/activityType/types/activityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
 
 export interface SubActivityTypeSelectorProps {};
 
 function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   const [isModalShown, setIsModalShown] = useState(false);
 
-  const [selected, setSelected] = useState<ActivityTypeName | null>(null);
-  const [confirmedSelection, setConfirmedSelection] = useState<ActivityTypeName | null>(null);
+  const [selected, setSelected] = useState<ActivityType.Name | null>(null);
+  const [confirmedSelection, setConfirmedSelection] = useState<ActivityType.Name | null>(null);
 
   const {
     is,
@@ -34,7 +34,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     setIsModalShown(true);
   };
 
-  const handleSelectionChange = (selected: ActivityTypeName) => {
+  const handleSelectionChange = (selected: ActivityType.Name) => {
     console.log('[activity type modal] selected changes:', selected);
     setSelected(selected);
   };

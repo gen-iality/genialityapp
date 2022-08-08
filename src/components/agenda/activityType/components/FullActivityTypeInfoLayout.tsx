@@ -7,7 +7,7 @@ import {
   Typography,
 } from 'antd';
 
-import { FormStructure } from '@context/activityType/types/activityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
 
 const {
   Title,
@@ -15,7 +15,7 @@ const {
 } = Typography;
 
 export interface FullActivityTypeInfoLayoutProps {
-  form: FormStructure,
+  form: ActivityType.FormUI,
   onLoaded: () => void,
 };
 
