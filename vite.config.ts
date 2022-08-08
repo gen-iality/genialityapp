@@ -66,6 +66,7 @@ export default defineConfig(({ mode }) => {
       ],
     },
     build: {
+      minify: false,
       manifest: true,
       chunkSizeWarningLimit: 1600,
       commonjsOptions: {
