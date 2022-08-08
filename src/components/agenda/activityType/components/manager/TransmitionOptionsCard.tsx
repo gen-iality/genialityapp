@@ -87,6 +87,12 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
         console.debug('TransmitionOptionsCard reset AT to meeting2');
         await resetActivityType('meeting2');
         break;
+      case 'Transmisión':
+      case 'EviusMeet':
+      case 'vimeo':
+      case 'Youtube':
+        console.debug('TransmitionOptionsCard reset AT to liveBroadcast');
+        await resetActivityType('liveBroadcast');
     }
     // Check type, await resetActivityType('liveBroadcast');
   };
