@@ -1,98 +1,135 @@
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Modal } from 'antd';
 
 import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCards';
 // import { ActivityTypeSelectableCardsProps } from './components/ActivityTypeSelectableCards';
 
-import ActivityContentModalLayout from './components/ActivityContentModalLayout';
+import ActivityContentModalLayout, { WidgetData } from './components/ActivityContentModalLayout';
 
 import { ModalWrapperUIProps} from './interfaces/ModalWrapperUIProps';
-import {
-  FormStructure,
-  ActivityTypeCard,
-  ActivitySubTypeKey,
-  WidgetType,
-  FormType,
-  GeneralTypeValue,
-} from  '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from  '@context/activityType/types/activityType';
+import { FormType, WidgetType } from '@context/activityType/constants/enum';
+
 import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout';
 
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 
+import { useGetWidgetForContentType } from '@/context/activityType/hooks/useGetWidgetForContentType';
+
 export interface ActivityContentModalProps extends ModalWrapperUIProps {
-  widget: ActivityTypeCard | FormStructure,
-  onSelecWidgetKey: (key: GeneralTypeValue) => void,
+  widget: ActivityType.CardUI | ActivityType.FormUI,
+  onConfirmType: (key: ActivityType.GeneralTypeValue) => void,
   //
+  isVisible: boolean,
   activityName: string,
-  visible: boolean,
-  initialWidgetKey: ActivitySubTypeKey,
   onInput?: (input: string) => void,
 };
 
 function ActivityContentModal(props: ActivityContentModalProps) {
   const {
+    isVisible,
     activityName,
-    visible,
-    initialWidgetKey: initialType,
     onInput = () => {},
     // Inherent selectable
     widget,
-    onSelecWidgetKey,
+    onConfirmType,
     // Inherent UI
     title,
     onClose = () => {},
-    // onConfirm = () => {},
   } = props;
 
-  const [widgetKey, setWidgetKey] = useState<GeneralTypeValue | null>(null);
+  const [selected, setSelected] = useState<ActivityType.GeneralTypeValue | null>(null);
+  const [widgetKeyStack, setWidgetKeyStack] = useState<ActivityType.GeneralTypeValue[]>([widget.key]);
+  const [widgetKey, setWidgetKey] = useState<ActivityType.GeneralTypeValue | null>(widget.key);
+  const [widgetData, setWidgetData] = useState<WidgetData | null>(widget);
 
   const handleCancel = () => onClose();
 
+  /**
+   * Save the last selected type as confirmed type. After close the modal.
+   */
   const handleConfirm = () => {
-    if (widgetKey) {
-      onSelecWidgetKey(widgetKey);
+    if (selected) {
+      onConfirmType(selected);
       onClose(true);
+      console.log('confirm content type as', selected);
     } else {
       alert('No puede guardar dato vacío');
     }
   };
 
-  const handleWidgetKeyChange = (newKey: GeneralTypeValue) => {
+  /**
+   * Receive a content type as widget key and save it in selected.
+   * @param newKey new widget key that is equal to a content type.
+   */
+  const handleWidgetKeyChange = (newKey: ActivityType.GeneralTypeValue) => {
     console.log('selected changed to', newKey);
-    setWidgetKey(newKey);
+    setSelected(newKey);
   };
 
-  const somethingWasSelected = useMemo(() => widgetKey !== null, [widgetKey]);
+  /**
+   * When the widgetKey changes we have to get the next widget data.
+   */
+  useEffect(() => {
+    const data = useGetWidgetForContentType(widgetKey as ActivityType.GeneralTypeValue);
+    if (data) setWidgetData(data);
+    console.debug('get data to key', widgetKey, ':', data);
+  }, [widgetKey]);
+
+  /**
+   * When the navigation of widgets change we have to take the last item as current item.
+   */
+  useEffect(() => {
+    if (widgetKeyStack.length) {
+      const [newWidgetKey] = widgetKeyStack.slice(-1);
+      setWidgetKey(newWidgetKey);
+      console.debug('current widget key is', newWidgetKey);
+    }
+  }, [widgetKeyStack]);
+
+  /**
+   * When the modal is hidden, reset all the states.
+   */
+  useEffect(() => {
+    if (!isVisible) {
+      setSelected(null);
+      setWidgetData(widget);
+      setWidgetKey(widget.key);
+      setWidgetKeyStack([widget.key]);
+      console.debug('reset modal states');
+    }
+  }, [isVisible]);
 
   return (
     <Modal
       centered
       width={1200}
       footer={null}
-      visible={visible}
+      visible={isVisible}
       onCancel={handleCancel}
     >
       <ActivityContentModalLayout
-        disabledNextButton={!somethingWasSelected}
-        initialType={initialType}
+        disabledNextButton={selected === null}
         title={title}
-        selected={widgetKey} // To know what is selected
-        onWidgetKeyChange={handleWidgetKeyChange} // To update selected
-        widget={widget} // To render from that
+        selected={selected} // To know what is selected
         onClose={onClose}
         onConfirm={handleConfirm}
-        render={(widgetData: ActivityTypeCard | FormStructure) => {
+        // ...
+        widgetKeyStack={widgetKeyStack}
+        setWidgetKeyStack={setWidgetKeyStack}
+        widgetData={widgetData}
+        render={(widgetData: ActivityType.CardUI | ActivityType.FormUI) => {
           // console.debug(`render(${type}, ${JSON.stringify(data)})`);
           if ('widgetType' in widgetData) {
-            const card: ActivityTypeCard = widgetData;
+            const card: ActivityType.CardUI = widgetData;
             switch (card.widgetType) {
               case WidgetType.FORM:
                 return <Alert message='Si esto se ve, se está pasando un card (que tiene un hijo form) en lugar de pasar el form...' />
               case WidgetType.CARD_SET:
                 return <ActivityTypeSelectableCards
-                  selected={widgetKey}
+                  selected={selected}
                   widget={card}
                   onWidgetChange={(w) => handleWidgetKeyChange(w.key)}
                 />
@@ -101,7 +138,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
               default:
                 return (
                   <Alert
-                    message={`Tipo de widget ${(card as ActivityTypeCard).widgetType} es desconocido`}
+                    message={`Tipo de widget ${(card as ActivityType.CardUI).widgetType} es desconocido`}
                     type='error'
                   />
                 );
@@ -109,7 +146,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
           }
 
           if ('formType' in widgetData) {
-            const form: FormStructure = widgetData;
+            const form: ActivityType.FormUI = widgetData;
             switch (form.formType) {
               case FormType.INFO:
                 return <FullActivityTypeInfoLayout

@@ -9,9 +9,9 @@ import {
   Typography,
   Statistic,
 } from 'antd';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
-import AgendaContext from '@/context/AgendaContext';
-import { CurrentEventContext } from '@/context/eventContext';
+import useActivityType from '@context/activityType/hooks/useActivityType';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventContext } from '@context/eventContext';
 import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
 import VideoPreviewerCard from './components/manager/VideoPreviewerCard';
 import TransmitionStatusCard from './components/manager/TransmitionStatusCard';
@@ -22,9 +22,10 @@ import ParticipantRequestsCard from './components/manager/ParticipantRequestsCar
 import RTMPCard from './components/manager/RTMPCard';
 import ShareMeetLinkCard from './components/manager/ShareMeetLinkCard';
 import GoToMeet from './components/manager/GoToMeet';
-import { activitySubTypeKeys } from '@/context/activityType/schema/activityTypeFormStructure';
-import { ActivitySubTypeName } from '@/context/activityType/schema/structureInterfaces';
+import { activityContentValues } from '@context/activityType/constants/ui';
+import type { ActivityType } from '@context/activityType/types/activityType';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
+import { TypeDisplayment } from '@/context/activityType/constants/enum';
 
 export interface ActivityContentManagerProps {
   activityName: string,
@@ -68,14 +69,14 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     activityContentType,
   } = useActivityType();
 
-  const type = useMemo(() => {
+  const type = useMemo<ActivityType.TypeAsDisplayment | null>(() => {
     if (activityContentType)
       return translateActivityType(activityContentType);
     return null;
   }, [activityContentType]);
 
   const videoURL = useMemo(() => {
-    if (type !== 'Video') return contentSource;
+    if (type !== TypeDisplayment.VIDEO) return contentSource;
     if (contentSource?.includes('youtube')) {
       return contentSource;
     }
@@ -93,7 +94,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   useEffect(() => {
     meeting_id && getVideoList();
 
-    if (type !== 'EviusMeet') return;
+    if (type !== TypeDisplayment.EVIUS_MEET) return;
     getRequestByActivity(refActivity);
   }, [type, meeting_id]);
 
@@ -112,7 +113,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     );
   }
 
-  if ([activitySubTypeKeys.survey, activitySubTypeKeys.quizing].includes(activityContentType as ActivitySubTypeName)) {
+  if ([activityContentValues.survey, activityContentValues.quizing].includes(activityContentType as ActivityType.ContentValue)) {
     return (
       <>
       <div style={{textAlign: 'center', width: '100%'}}>
@@ -134,13 +135,13 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
       <Col span={14}>
         <Row gutter={[16, 16]}>
-          {(type == 'Transmisión' || type == 'EviusMeet') && !dataLive?.active && (
+          {(type == TypeDisplayment.TRANSMISSION || type == TypeDisplayment.EVIUS_MEET) && !dataLive?.active && (
             <Col span={24}>
               <TransmitionStatusCard type={type} />
             </Col>
           )}
 
-          {(type === 'Transmisión' || type === 'EviusMeet') &&
+          {(type === TypeDisplayment.TRANSMISSION || type === TypeDisplayment.EVIUS_MEET) &&
             !dataLive?.active &&
             (videos ? (
               <Col span={24}>
@@ -159,19 +160,19 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
             ))}
           
 
-          {(type == 'reunión' || (type == 'EviusMeet' && dataLive?.active)) && (
+          {(type == TypeDisplayment.MEETING || (type == TypeDisplayment.EVIUS_MEET && dataLive?.active)) && (
             <Col span={10}>
               <GoToMeet type={type} activityId={activityEdit} />
             </Col>
           )}
 
-          {(((type === 'EviusMeet' || type === 'Transmisión') && dataLive?.active) || (type !== 'EviusMeet' && type !== 'Transmisión')) && (
-            <Col span={type !== 'EviusMeet' && type !== 'reunión' ? 24 : 14}>
+          {(((type === TypeDisplayment.EVIUS_MEET || type === TypeDisplayment.TRANSMISSION) && dataLive?.active) || (type !== TypeDisplayment.EVIUS_MEET && type !== TypeDisplayment.TRANSMISSION)) && (
+            <Col span={type !== TypeDisplayment.EVIUS_MEET && type !== TypeDisplayment.MEETING ? 24 : 14}>
               <TransmitionOptionsCard type={type} />
             </Col>
           )}
 
-          {type == 'Video' && (
+          {type == TypeDisplayment.VIDEO && (
             <Col span={24}>
               <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
                 <Card.Meta
@@ -187,25 +188,25 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
             </Col>
           )}
 
-          {type == 'reunión' ? (
+          {type == TypeDisplayment.MEETING ? (
             <Col span={24}>
               <ShareMeetLinkCard activityId={activityEdit} />
             </Col>
           ) : (
-            type == 'EviusMeet' && dataLive?.active && (
+            type == TypeDisplayment.EVIUS_MEET && dataLive?.active && (
               <Col span={24}>
                 <ShareMeetLinkCard activityId={activityEdit} />
               </Col>
             )
           )}
 
-          {type == 'EviusMeet' && dataLive?.active && (
+          {type == TypeDisplayment.EVIUS_MEET && dataLive?.active && (
             <Col span={24}>
               <ParticipantRequestsCard request={request} setViewModal={setViewModal} />
             </Col>
           )}
 
-          {(type == 'Transmisión' || type == 'EviusMeet') && dataLive?.active && (
+          {(type == TypeDisplayment.TRANSMISSION || type == TypeDisplayment.EVIUS_MEET) && dataLive?.active && (
             <Col span={24}><RTMPCard/></Col>
           )}
 

@@ -6,16 +6,16 @@ import { WarningOutlined } from '@ant-design/icons';
 // import InitialSVG from './components/svg/InitialSVG';
 
 import ActivityTypeModal from './ActivityTypeModal';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
-import { ActivityTypeName } from '@/context/activityType/schema/structureInterfaces';
+import useActivityType from '@context/activityType/hooks/useActivityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
 
 export interface SubActivityTypeSelectorProps {};
 
 function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   const [isModalShown, setIsModalShown] = useState(false);
 
-  const [selected, setSelected] = useState<ActivityTypeName | null>(null);
-  const [confirmedSelection, setConfirmedSelection] = useState<ActivityTypeName | null>(null);
+  const [selected, setSelected] = useState<ActivityType.Name | null>(null);
+  const [confirmedSelection, setConfirmedSelection] = useState<ActivityType.Name | null>(null);
 
   const {
     is,
@@ -23,6 +23,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     deleteActivityType,
     activityType,
     setActivityType,
+    humanizeActivityType,
   } = useActivityType();
 
   const handleCloseModal = (success: boolean = false) => {
@@ -34,7 +35,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     setIsModalShown(true);
   };
 
-  const handleSelectionChange = (selected: ActivityTypeName) => {
+  const handleSelectionChange = (selected: ActivityType.Name) => {
     console.log('[activity type modal] selected changes:', selected);
     setSelected(selected);
   };
@@ -66,7 +67,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
         type='info'
         showIcon={is.deleting}
         icon={<Spin/>}
-        message={`Actividad de tipo: ${activityType}`}
+        message={`Actividad de tipo: ${humanizeActivityType(activityType)}`}
         onClose={deleteActivityType}
       />
     ) : (

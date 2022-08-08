@@ -18,7 +18,7 @@ export default function usePrepareRoomInfoData (context: any) {
   const roomInfo = {
     platform,
     meeting_id,
-    isPublished: isPublished ? isPublished : false,
+    isPublished: !!isPublished,
     host_id,
     host_name,
     avalibleGames,

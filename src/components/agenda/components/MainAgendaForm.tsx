@@ -40,7 +40,7 @@ import RequiredStar from './RequiredStar';
 
 import SelectOptionType from '../types/SelectOptionType';
 import EventType from '../types/EventType';
-import AgendaDocumentType from '../types/AgendaDocumentType';
+import AgendaType from '@Utilities/types/AgendaType';
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
 import useLoadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
@@ -77,7 +77,7 @@ export interface MainAgendaFormProps {
   activityId: string | null,
   formdata: FormDataType,
   savedFormData: FormDataType,
-  agenda: AgendaDocumentType | null,
+  agenda: AgendaType | null,
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>,
   setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
 };

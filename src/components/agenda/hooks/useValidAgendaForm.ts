@@ -1,5 +1,5 @@
 import { FormDataType } from '../components/MainAgendaForm';
-import { DispatchMessageService } from '@/context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 export default function useValidAgendaForm (formdata: FormDataType)  {
   const validForm: () => boolean = () => {

@@ -5,17 +5,12 @@ import { Card, Button, Alert, Row, Col } from 'antd';
 
 import InitialSVG from '../typeActivity/components/svg/InitialSVG';
 
-import {
-  ActivityTypeCard,
-  FormStructure,
-  ActivitySubTypeKey,
-  GeneralTypeValue,
-  ActivitySubTypeName,
-} from '@/context/activityType/schema/structureInterfaces';
+import type { ActivityType } from '@context/activityType/types/activityType';
 import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
 
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
+import { useGetWidgetForActivityType } from '@/context/activityType/hooks/useGetWidgetForActivityType';
 
 export interface SubActivityContentSelectorProps {
   activityId: string,
@@ -32,15 +27,15 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
 
   const [modalTitle, setModalTitle] = useState('Contenido');
   const [isModalShown, setIsModalShown] = useState(false);
-  const [selectedType, setSelectedType] = useState<GeneralTypeValue | undefined>(undefined);
-  const [currentWidget, setCurrentWidget] = useState<ActivityTypeCard | FormStructure | undefined>(undefined);
+  const [selectedType, setSelectedType] = useState<ActivityType.GeneralTypeValue | undefined>(undefined);
+  const [widget, setWidget] = useState<ActivityType.CardUI | ActivityType.FormUI | undefined>(undefined);
 
   const {
     activityType,
     activityContentType,
     setContentSource,
     saveActivityContent,
-    getOpenedWidget,
+    humanizeActivityType,
   } = useActivityType();
 
   useEffect(() => {
@@ -50,25 +45,22 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
       return;
     }
 
-    const [title, widget] = getOpenedWidget(activityType);
+    const [title, widget] = useGetWidgetForActivityType(activityType);
     if (title) setModalTitle(title);
-    if (widget) setCurrentWidget(widget);
+    if (widget) setWidget(widget);
   }, [shouldLoad, activityType]);
 
   useEffect(() => {
     if (selectedType !== undefined) {
-      console.debug('we can work with', selectedType);
-      handleConfirm();
+      console.debug('confirm the selectedType:', selectedType);
+      saveActivityContent(selectedType as ActivityType.ContentValue);
     }
   }, [selectedType]);
 
-  const handleCloseModal = (success: boolean = false) => setIsModalShown(false);
-
-  const handleConfirm = () => {
-    console.debug('confirm the selectedType:', selectedType);
-    // setActivityContentType(selectedType || null);
-    saveActivityContent(selectedType as ActivitySubTypeName);
-  }
+  const handleCloseModal = (success: boolean = false) => {
+    console.debug('modal is hidden', success ? 'successfully' : 'failurely');
+    setIsModalShown(false);
+  };
 
   const handleInput = (text: string) => {
     console.debug('text will:', text);
@@ -82,10 +74,12 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   if (activityContentType) {
     return (
         <>
-        {/* <p>Contenido: {activityContentType}</p>
+        {/*
+        <p>Contenido: {activityContentType}</p>
         <Button danger onClick={() => setActivityContentType(null)}>
           Eliminar contenido
-        </Button> */}
+        </Button>
+        */}
         <ActivityContentManager activityName={activityName}/>
       </>
     );
@@ -93,30 +87,31 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
 
   return (
     <>
-    {currentWidget === undefined && (
+    {widget === undefined && (
       <Alert type='error' message='No puede cargar el tipo de actividad' />
     )}
-    {currentWidget !== undefined && (
+    {widget !== undefined && (
     <ActivityContentModal
-      initialWidgetKey={activityContentType as ActivitySubTypeKey}
-      visible={isModalShown}
+      isVisible={isModalShown}
       title={modalTitle}
-      widget={currentWidget}
+      widget={widget}
       activityName={props.activityName}
       onClose={handleCloseModal}
-      onSelecWidgetKey={setSelectedType}
+      onConfirmType={setSelectedType}
       onInput={handleInput}
     />
     )}
     <Card>
       <Row align='middle' style={{textAlign: 'center'}}>
         <Col span={24} style={{marginBottom: '1em'}}>
-          <h2>Todavía no has agregado el contenido a la actividad</h2>
+          <h2>
+          Todavía no has agregado el contenido a la actividad
+          {activityType && ` de "${humanizeActivityType(activityType)}"`}
+          </h2>
         </Col>
         <Col span={24} style={{marginBottom: '1em'}}>
           <Button onClick={() => setIsModalShown(true)} type='primary'>
             Agregar contenido
-            {activityType && `: ${activityType}`}
           </Button>
         </Col>
         <Col span={24} style={{marginBottom: '1em'}}>

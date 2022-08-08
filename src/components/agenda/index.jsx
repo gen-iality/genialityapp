@@ -4,7 +4,7 @@ import Agenda from './agenda';
 import AgendaEdit from './edit';
 import AgendaTypeCat from './typecat';
 import AgendaTypeCatCE from './AgendaTypeCatCE';
-import ActivityTypeProvider from '@/context/activityType/activityTypeProvider';
+import ActivityTypeProvider from '@context/activityType/activityTypeProvider';
 /* import AgendaEditLanguage from "./editLanguage_old";
  */
 function AgendaRoutes({ ...props }) {
