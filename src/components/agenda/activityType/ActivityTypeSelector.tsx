@@ -6,8 +6,8 @@ import { WarningOutlined } from '@ant-design/icons';
 // import InitialSVG from './components/svg/InitialSVG';
 
 import ActivityTypeModal from './ActivityTypeModal';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
-import { ActivityTypeName } from '@/context/activityType/types/activityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
+import { ActivityTypeName } from '@context/activityType/types/activityType';
 
 export interface SubActivityTypeSelectorProps {};
 

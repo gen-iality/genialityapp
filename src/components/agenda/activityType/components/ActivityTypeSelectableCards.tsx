@@ -3,9 +3,9 @@ import * as React from 'react';
 import { Row, Col, Alert } from 'antd';
 
 import SelectableCard from './SelectableCard';
-import type { ActivityType } from '@/context/activityType/types/activityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
 
-import { WidgetType } from '@/context/activityType/constants/enum';
+import { WidgetType } from '@context/activityType/constants/enum';
 
 export interface ActivityTypeSelectableCardsProps {
   widget: ActivityType.CardUI | ActivityType.MainUI, // Only here

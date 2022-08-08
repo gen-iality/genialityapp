@@ -5,11 +5,11 @@ import { Card, Button, Alert, Row, Col } from 'antd';
 
 import InitialSVG from '../typeActivity/components/svg/InitialSVG';
 
-import type { ActivityType } from '@/context/activityType/types/activityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
 import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
 
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
 
 export interface SubActivityContentSelectorProps {
   activityId: string,

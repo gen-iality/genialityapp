@@ -1,7 +1,7 @@
 import { deleteVideo } from '@/adaptors/gcoreStreamingApi';
-import AgendaContext from '@/context/AgendaContext';
-import { CurrentEventContext } from '@/context/eventContext';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventContext } from '@context/eventContext';
+import useActivityType from '@context/activityType/hooks/useActivityType';
 import { milisegundosTohour } from '@/helpers/helperFormatMseconds';
 import { AgendaApi } from '@/helpers/request';
 import {

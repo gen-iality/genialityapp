@@ -1,7 +1,7 @@
 import { useContext, useState, useMemo } from 'react';
 import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd';
 import LoadingActivityType from '../LoadingActivityType';
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { useEffect } from 'react';
 import {
   deleteLiveStream,
@@ -11,9 +11,9 @@ import {
   deleteAllVideos,
 } from '@/adaptors/gcoreStreamingApi';
 import { useQueryClient } from 'react-query';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { CurrentEventContext } from '@/context/eventContext';
+import { CurrentEventContext } from '@context/eventContext';
 
 const { confirm } = Modal;
 

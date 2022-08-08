@@ -19,14 +19,14 @@ import {
 } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
 import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
 import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
 import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
-import type { ActivityType } from '@/context/activityType/types/activityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 
 interface VideoPreviewerCardProps {

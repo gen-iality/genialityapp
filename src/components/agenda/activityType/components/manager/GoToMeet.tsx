@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useMemo } from 'react';
 
 import { Button, Card, Typography } from 'antd';
-import { UseCurrentUser } from '@/context/userContext';
+import { UseCurrentUser } from '@context/userContext';
 import { useContext } from 'react';
-import AgendaContext from '@/context/AgendaContext';
-import type { ActivityType } from '@/context/activityType/types/activityType';
+import AgendaContext from '@context/AgendaContext';
+import type { ActivityType } from '@context/activityType/types/activityType';
 
 export interface GoToMeetProps {
   activityId: string,

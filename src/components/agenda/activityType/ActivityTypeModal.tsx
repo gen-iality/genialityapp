@@ -5,8 +5,8 @@ import { Modal } from 'antd';
 
 import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCards';
 import ActivityTypeModalLayout from './components/ActivityTypeModalLayout';
-import type { ActivityType } from '@/context/activityType/types/activityType';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
 
 export interface ActivityTypeModalProps {
   visible: boolean,
