@@ -1,5 +1,5 @@
-import moment from 'moment';
-import * as React from 'react';
+import moment, { Moment } from 'moment';
+import { SetStateAction, Dispatch } from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -41,8 +41,8 @@ export interface FormDataType {
   description: string;
   space_id: string;
   image: string;
-  hour_start: moment.Moment | string;
-  hour_end: moment.Moment | string;
+  hour_start: Moment | string;
+  hour_end: Moment | string;
   isPhysical: boolean;
   length: string;
   latitude: string;
@@ -63,8 +63,8 @@ export interface MainAgendaFormProps {
   formdata: FormDataType;
   savedFormData: FormDataType;
   agenda: AgendaType | null;
-  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
-  setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setFormData: Dispatch<SetStateAction<FormDataType>>;
+  setShowPendingChangesModal: Dispatch<SetStateAction<boolean>>;
 }
 
 function MainAgendaForm(props: MainAgendaFormProps) {
