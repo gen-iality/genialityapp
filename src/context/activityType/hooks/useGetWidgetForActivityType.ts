@@ -1,5 +1,5 @@
-import { ActivityType } from "../types/activityType";
-import { OpenedWidget } from '../types/contextType';
+import type { ActivityType } from "../types/activityType";
+import type { OpenedWidget } from '../types/contextType';
 import { formWidgetFlow, activityTypeNames } from '../constants/ui';
 import { WidgetType } from '../constants/enum';
 

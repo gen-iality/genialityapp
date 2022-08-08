@@ -1,5 +1,5 @@
 import { formWidgetFlow, activityTypeNames, activityContentValues } from '../constants/ui';
-import { ActivityType } from '../types/activityType';
+import type { ActivityType } from '../types/activityType';
 
 export function useGetWidgetForContentType (type: ActivityType.GeneralTypeValue): ActivityType.CardUI | ActivityType.FormUI | null {
   switch (type) {

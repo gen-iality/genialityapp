@@ -126,11 +126,11 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         matchUrl={props.matchUrl}
         onSave={(surveyId: string) => {
           console.debug('call onSave from TriviaEdit. surveyId will be', surveyId);
-          saveActivityContent(activityContentType as ActivitySubTypeName, surveyId);
+          saveActivityContent(activityContentType as ActivityType.ContentValue, surveyId);
         }}
         onDelete={() => {
           console.debug('survey delete')
-          switch (activityContentType as ActivitySubTypeName) {
+          switch (activityContentType as ActivityType.ContentValue) {
             case 'survey':
               resetActivityType('survey2');
               break;
@@ -140,7 +140,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
             default:
               console.error('Cant reset activity type from content type:', activityContentType);
           }
-          // saveActivityContent(activityContentType as ActivitySubTypeName, null);
+          // saveActivityContent(activityContentType as ActivityType.ContentValue, null);
         }}
       />
       </>
