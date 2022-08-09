@@ -54,7 +54,11 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     if (selectedType !== undefined) {
       console.debug('confirm the selectedType:', selectedType);
       saveActivityContent(selectedType as ActivityType.ContentValue);
-    }
+      setTimeout(() => {
+        setSelectedType(undefined);
+        console.debug('reset selectedType because it matters');
+      }, 1000);
+    } else console.debug('selectedType is undefined again');
   }, [selectedType]);
 
   const handleCloseModal = (success: boolean = false) => {
