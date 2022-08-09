@@ -1,20 +1,6 @@
-#[build]
-#command = "yarn build"
-#publish = "dist"
-
-
-[context.production]
-  publish = "dist"
-  command = "vite --mode prod_evius"
-  # environment = { NOT_PRIVATE_STUFFS = "totally not top secret", NODE_VERSION = "14.15.3", API_KEY = "abc1234teeheehee" }
-
-[context.stagingv2.1] # “staging” is a branch name
-  publish = "dist"
-  command = "vite --mode staging"
-  base = "staging"
-  # environment = { SOME_KEY = "t0te5Important5tuff" }
-
-
+[build]
+command = "yarn build"
+publish = "dist"
   [build.environment]
   # cache Cypress binary in local "node_modules" folder
   # so Netlify caches it
