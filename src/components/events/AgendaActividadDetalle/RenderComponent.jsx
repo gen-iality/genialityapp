@@ -116,6 +116,7 @@ const RenderComponent = (props) => {
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
+          case 'created_meeting_room':
             return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
@@ -139,6 +140,7 @@ const RenderComponent = (props) => {
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
+          case 'created_meeting_room':
             return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
@@ -162,6 +164,7 @@ const RenderComponent = (props) => {
           case 'ended_meeting_room':
             return <VideoActivity />;
           case '':
+          case 'created_meeting_room':
             return currentActivity?.video ? <VideoActivity /> : <ImageComponentwithContext />;
         }
 
@@ -208,6 +211,7 @@ const RenderComponent = (props) => {
               <VideoActivity />
             );
           case '':
+          case 'created_meeting_room':
             return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : currentActivity?.video ? (

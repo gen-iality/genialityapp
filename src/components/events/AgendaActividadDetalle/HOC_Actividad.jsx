@@ -6,7 +6,7 @@ const HCOActividad = () => {
   let { currentActivity } = useHelper();
   const imageVisible = () => {
     if (
-      ((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null) &&
+      ((currentActivity?.habilitar_ingreso == '' || currentActivity?.habilitar_ingreso == null || currentActivity?.habilitar_ingreso === 'created_meeting_room') &&
         (currentActivity?.video == null || !currentActivity?.video)) ||
       (!currentActivity?.habilitar_ingreso && !currentActivity?.video)
     ) {
