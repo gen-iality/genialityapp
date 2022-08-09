@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { useTypeActivity } from '@/context/typeactivity/hooks/useTypeActivity';
 import { Col, Comment, Modal, Row, Typography } from 'antd';
-import moment from 'moment';
-import React from 'react';
+import dayjs from 'dayjs';
 import ReactPlayer from 'react-player';
 
 const ModalPreviewVideo = () => {
@@ -20,7 +20,7 @@ const ModalPreviewVideo = () => {
         <Col>
           <Comment
             author={<Typography.Text style={{ fontSize: '16px' }}>{videoObject?.name as string}</Typography.Text>}
-            datetime={videoObject && moment(videoObject?.created_at).format('MMMM Do YYYY, h:mm:ss a')}
+            datetime={videoObject && dayjs(videoObject?.created_at).format('MMMM Do YYYY, h:mm:ss a')}
             content={''}
           />
         </Col>

@@ -1,5 +1,5 @@
 //Función para generar UUID
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Actions } from './request';
 import { Modal, Spin } from 'antd';
 
@@ -90,7 +90,7 @@ export async function parseData2Excel(data, fields, roles = null) {
       item.checkedin_at !== 'null' && item.checkedin_at != null && item.checkedin_at != '' ? 'TRUE' : 'FALSE';
 
     info[key]['Hora checkIn'] = item.checkedin_at
-      ? moment(item.checkedin_at.toDate()).format('DD/MM/YYYY H:mm:ss A')
+      ? dayjs(item.checkedin_at.toDate()).format('DD/MM/YYYY H:mm:ss A')
       : '';
     fields.map(({ name, type, label, _id }) => {
       let str;
@@ -194,8 +194,8 @@ export const sweetAlert = {
 };
 
 export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-MM-DD') {
-  const startDate = moment(rangeStartDate);
-  const endDate = moment(rangeEndDate);
+  const startDate = dayjs(rangeStartDate);
+  const endDate = dayjs(rangeEndDate);
 
   if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate)) {
     const datesRange = [startDate.format(dateFormat)];

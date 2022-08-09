@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import { firestore } from '../../helpers/firebase';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import { Button, Card, Col, Alert, Modal, Spin, Row } from 'antd';
@@ -116,8 +116,8 @@ class CertificadoLanding extends Component {
 
     const certs = await CertsApi.byEvent(this.props.cEvent.value._id);
     const roles = await RolAttApi.byEvent(this.props.cEvent.value._id);
-    this.props.cEvent.value.datetime_from = Moment(this.props.cEvent.value.datetime_from).format('DD/MM/YYYY');
-    this.props.cEvent.value.datetime_to = Moment(this.props.cEvent.value.datetime_to).format('DD/MM/YYYY');
+    this.props.cEvent.value.datetime_from = dayjs(this.props.cEvent.value.datetime_from).format('DD/MM/YYYY');
+    this.props.cEvent.value.datetime_to = dayjs(this.props.cEvent.value.datetime_to).format('DD/MM/YYYY');
     //Por defecto se trae el certificado sin rol
     let rolCert = certs.find((cert) => !cert.rol_id);
     //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado

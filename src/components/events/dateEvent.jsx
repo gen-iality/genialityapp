@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { EventsApi } from '../../helpers/request';
 import { Button, notification } from 'antd';
 
@@ -41,8 +41,8 @@ class DateEvent extends React.Component {
       this.setState({
         currentChannel: dates?.length || 0,
         dates: date,
-        month: parseInt(moment(dates[dates?.length - 1]).format('M') - 1) || '',
-        year: parseInt(moment(dates[dates?.length - 1]).format('YYYY')) || '',
+        month: parseInt(dayjs(dates[dates?.length - 1]).format('M') - 1) || '',
+        year: parseInt(dayjs(dates[dates?.length - 1]).format('YYYY')) || '',
       });
     }
   }

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import useDeepStateEqualityValidation from './useDeepStateEqualityValidation';
 import { FormDataType } from '../components/MainAgendaForm';
 
@@ -27,8 +27,8 @@ function useValideChangesInFormData(
       isPhysical,
     } = modified;
 
-    const initialHour = moment(hour_start).format('HH:mm');
-    const finalHour = moment(hour_end).format('HH:mm');
+    const initialHour = dayjs(hour_start).format('HH:mm');
+    const finalHour = dayjs(hour_end).format('HH:mm');
 
     const formattedModified = {
       name,

@@ -1,6 +1,6 @@
 import { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import { utils, writeFileXLSX } from 'xlsx';
 
 import { getTriviaRanking } from './services';
@@ -82,7 +82,7 @@ class Ranking extends Component {
     utils.book_append_sheet(wb, ws, `${'ranking'}`);
     const name = `${this.props.match.params.id}`;
 
-    writeFileXLSX(wb, `ranking_${name}_${Moment().format('DDMMYY')}.xls`);
+    writeFileXLSX(wb, `ranking_${name}_${dayjs().format('DDMMYY')}.xls`);
   };
 
   goBack = () => this.props.history.goBack();

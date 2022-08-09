@@ -1,5 +1,5 @@
 import { EventsApi } from "../../helpers/request";
-import moment from "moment";
+import dayjs from 'dayjs';
 import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
 
 //METRICAS QUE SE PUEDEN OBTENER
@@ -64,7 +64,7 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 
 export const metricasRegisterByDate = async (eventId) => {
   let listmetric = [];
-  let fechaActual = moment().format("YYYY-MM-DD");
+  let fechaActual = dayjs().format("YYYY-MM-DD");
   let metrics = await EventsApi.metricsRegisterBydate(
     eventId,
     "created_at",
@@ -72,7 +72,7 @@ export const metricasRegisterByDate = async (eventId) => {
     fechaActual
   );
   metrics.map((metric) => {
-    metric = { ...metric, date: moment(metric.date).format("YYYY/MM/DD") };
+    metric = { ...metric, date: dayjs(metric.date).format("YYYY/MM/DD") };
     listmetric.push(metric);
   });
 
@@ -90,7 +90,7 @@ export const metricasCheckedByDate = async (eventId) => {
 //Esta funcion realiza la consulta de los datos a la API de analytics
 export const queryReportGnal = async (eventID) => {
   const devEvius = "https://api.evius.co/api/googleanalytics";
-  let fechaActual = moment().format("YYYY-MM-DD");
+  let fechaActual = dayjs().format("YYYY-MM-DD");
   const data = {
     startDate: "2021-06-01",
     endDate: fechaActual,
@@ -133,7 +133,7 @@ export const queryReportGnal = async (eventID) => {
 //Esta funcion trae datos por fecha
 export const queryReportGnalByMoth = async (eventID) => {
   const devEvius = "https://api.evius.co/api/googleanalytics";
-  let fechaActual = moment().format("YYYY-MM-DD");
+  let fechaActual = dayjs().format("YYYY-MM-DD");
   const data = {
     startDate: "2019-01-01",
     endDate: fechaActual,
@@ -157,7 +157,7 @@ export const queryReportGnalByMoth = async (eventID) => {
   let totalMetrics = [];
   datos.map((dat) => {
     let metric = {
-      month: moment(dat[0]).format("YYYY/MM/DD"),
+      month: dayjs(dat[0]).format("YYYY/MM/DD"),
       view: dat[2],
       time: dat[1] ? parseInt(dat[1]) : 0,
     };
@@ -201,7 +201,7 @@ export const exportDataReport = (datos, type) => {
     if (type == "views") {
       data = datos.map((item) => {
         return {
-          fecha: moment(item.month).format("YYYY-MM-DD"),
+          fecha: dayjs(item.month).format("YYYY-MM-DD"),
           "Número de usuarios": item.view,
         };
       });
@@ -210,7 +210,7 @@ export const exportDataReport = (datos, type) => {
     if (type == "time") {
       data = datos.map((item) => {
         return {
-          fecha: moment(item.month).format("YYYY-MM-DD"),
+          fecha: dayjs(item.month).format("YYYY-MM-DD"),
           "Número de visitas": parseFloat(item.time).toFixed(0),
         };
       });

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import AgendaType from '@Utilities/types/AgendaType';
 import { FormDataType } from '../components/MainAgendaForm';
 
@@ -42,8 +42,8 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
     // const registration_message_storage = window.sessionStorage.getItem('registration_message');
     // const description_storage = window.sessionStorage.getItem('description');
     /* console.log(date, '========================== date'); */
-    const datetime_start = date + ' ' + moment(hour_start).format('HH:mm');
-    const datetime_end = date + ' ' + moment(hour_end).format('HH:mm');
+    const datetime_start = date + ' ' + dayjs(hour_start).format('HH:mm');
+    const datetime_end = date + ' ' + dayjs(hour_end).format('HH:mm');
 
     const activity_categories_ids =
       selectedCategories !== undefined && selectedCategories !== null

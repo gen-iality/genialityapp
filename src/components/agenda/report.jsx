@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import { AgendaApi } from '../../helpers/request';
 import { Select, Table as TableA, Row, Col } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
@@ -18,7 +18,7 @@ const ReportList = (props) => {
       ellipsis: true,
       sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
       ...getColumnSearchProps('datetime_start', columnsData),
-      render: (text) => <>{Moment(text).format('YYYY-MM-DD HH:mm')}</>,
+      render: (text) => <>{dayjs(text).format('YYYY-MM-DD HH:mm')}</>,
     },
     {
       title: 'Fecha fin',
@@ -26,7 +26,7 @@ const ReportList = (props) => {
       ellipsis: true,
       sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),
       ...getColumnSearchProps('datetime_end', columnsData),
-      render: (text) => <>{Moment(text).format('YYYY-MM-DD HH:mm')}</>,
+      render: (text) => <>{dayjs(text).format('YYYY-MM-DD HH:mm')}</>,
     },
     {
       title: 'Actividad',

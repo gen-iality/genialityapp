@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import { eventTicketsApi } from '../../helpers/request';
-import Moment from 'moment';
+import dayjs from 'dayjs';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
@@ -37,7 +37,7 @@ const Tickets = (props) => {
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
-        return <div>{Moment(item.created_at).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>;
       },
     },
   ];
