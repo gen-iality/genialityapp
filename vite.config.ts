@@ -66,7 +66,7 @@ export default defineConfig(({ mode }) => {
       ],
     },
     build: {
-      // minify: false,  /** Use this comand in comand line to create build whitout minify code: node --max_old_space_size=16384 ./node_modules/vite/bin/vite.js build*/
+      // minify: false,  /** Use this comand in comand line to create build whitout minify code: node --max_old_space_size=16384 ./node_modules/vite/bin/vite.js build */
       manifest: true,
       chunkSizeWarningLimit: 1600,
       commonjsOptions: {
