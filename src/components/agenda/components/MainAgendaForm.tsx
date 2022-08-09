@@ -63,12 +63,14 @@ export interface MainAgendaFormProps {
   formdata: FormDataType;
   savedFormData: FormDataType;
   agenda: AgendaType | null;
-  setFormData: Dispatch<SetStateAction<FormDataType>>;
-  setShowPendingChangesModal: Dispatch<SetStateAction<boolean>>;
+  setFormData: (x: FormDataType) => void;
+  previousFormData: FormDataType,
+  setShowPendingChangesModal: (b: boolean) => void;
 }
 
 function MainAgendaForm(props: MainAgendaFormProps) {
   const { agendaContext, formdata, savedFormData, agenda, setFormData, setShowPendingChangesModal } = props;
+  const { previousFormData } = props;
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
@@ -112,8 +114,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
     const processedDate = processDateFromAgendaDocument(agenda);
 
-    setFormData((previous) => ({
-      ...previous,
+    setFormData({
+      ...previousFormData,
       name: agenda.name,
       date: processedDate.date,
       description: agenda.description,
@@ -128,7 +130,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories) || [],
       selectedHosts: fieldsSelect(agenda.host_ids, allHosts) || [],
       selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles) || [],
-    }));
+    });
   }, [agenda, allCategories, allHosts, allRoles]);
 
   useEffect(() => {
@@ -157,19 +159,20 @@ function MainAgendaForm(props: MainAgendaFormProps) {
    * @param value The value.
    */
   const handleChangeFormData = (name: keyof FormDataType, value: any) => {
-    setFormData((previous) => {
-      const newFormData: FormDataType = { ...previous };
-      newFormData[name] = value as never; // ignore it
-      return newFormData;
-    });
+    const newFormData: FormDataType = { ...previousFormData };
+    newFormData[name] = value as never; // ignore it
+    setFormData(newFormData);
     valideChangesInFormData();
   };
 
   const handleChangeReactQuill = (value: string, target: string) => {
     if (target === 'description') {
-      setFormData((previous) => ({ ...previous, description: value }));
+      setFormData({ ...previousFormData, description: value });
     } else if (target === 'registration_message') {
-      setFormData((previous) => ({ ...previous, registration_message: value }));
+      // It seems be never used, the value should be save in `agenda` but this
+      // component don't receive a setter for agenda. Something like:
+      // setAgenda({ ...previousAgenda, registration_message: value });
+      console.warn(`ignored handleChangeReactQuill("${value}", "${target}")`);
     }
   };
 
@@ -190,7 +193,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       msj: 'Por favor espere mientras carga la imagen...',
       action: 'show',
     });
-    setFormData((previous) => ({ ...previous, image: files }));
+    setFormData({ ...previousFormData, image: files });
   };
 
   /**
@@ -198,7 +201,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
    * @param selectedCategories SelectOptionType[].
    */
   const onSelectedCategoryChange = (selectedCategories: any[]) => {
-    setFormData((previous) => ({ ...previous, selectedCategories }));
+    setFormData({ ...previousFormData, selectedCategories });
   };
 
   const handlerCreateCategories = async (value: any, name: string) => {
@@ -227,10 +230,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
       // Update categories list
       setAllCategories((previous) => [...previous, newOption]);
-      setFormData((previous) => ({
-        ...previous,
-        selectedCategories: [...previous.selectedCategories, newOption],
-      }));
+      setFormData({
+        ...previousFormData,
+        selectedCategories: [...previousFormData.selectedCategories, newOption],
+      });
 
       // Show this messages
       DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
@@ -248,7 +251,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       return moment(formdata.hour_start, 'HH:mm:ss');
     }
     const newHour = hourWithAdditionalMinutes(1);
-    setFormData((previous) => ({ ...previous, hour_start: newHour }));
+    setFormData({ ...previousFormData, hour_start: newHour });
     return newHour;
   }, [formdata.hour_start]);
 
@@ -257,7 +260,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       return moment(formdata.hour_end, 'HH:mm:ss');
     }
     const newHour = hourWithAdditionalMinutes(5);
-    setFormData((previous) => ({ ...previous, hour_end: newHour }));
+    setFormData({ ...previousFormData, hour_end: newHour });
     return newHour;
   }, [formdata.hour_end]);
 
