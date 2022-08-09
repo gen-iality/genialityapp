@@ -11,7 +11,7 @@ export const activityTypeNames: { [key in ActivityType.MainUIKey]: ActivityType.
   live: MainUI.LIVE,
   meeting: MainUI.MEETING,
   video: MainUI.VIDEO,
-  quizing: MainUI.EXAM, // mockup
+  quizing: MainUI.QUIZ, // mockup
   survey: MainUI.SURVEY, // mockup
 };
 
@@ -24,7 +24,7 @@ export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityT
   file: DeepUI.FILE,
   rtmp: DeepUI.RTMP,
   meet: DeepUI.MEET,
-  quizing: DeepUI.EXAM, // mockup
+  quizing: DeepUI.QUIZ, // mockup
   survey: DeepUI.SURVEY, // mockup
 };
 
@@ -175,8 +175,8 @@ const quizingForm: ActivityType.FormUI = {
   formType: FormType.INFO,
   key: activityContentValues.quizing,
   MainTitle: '',
-  title: 'Examen',
-  description: 'Agrega un examen.',
+  title: 'Quiz',
+  description: 'Agrega un quiz.',
   image:
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Furl.jpg?alt=media&token=9bcff159-2e09-4022-add6-2108ed8c6089',
 };
@@ -218,9 +218,9 @@ export const formWidgetFlow: ActivityType.MainUI = {
     // {
     //   widgetType: WidgetType.FORM,
     //   key:  activityTypeNames.quizing,
-    //   MainTitle: 'Agrega un examen',
-    //   title: 'Exámenes',
-    //   description: 'En esta opción podrás agregar exámenes.',
+    //   MainTitle: 'Agrega un quiz',
+    //   title: 'Quizzes',
+    //   description: 'En esta opción podrás agregar quizzes.',
     //   image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Ftransmision.jpg?alt=media&token=92443401-db41-485f-a411-ae113186fd9c',
     //   form: quizingForm,
     // },
