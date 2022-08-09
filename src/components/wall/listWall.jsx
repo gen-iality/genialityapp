@@ -7,7 +7,7 @@ import Comments from './comments';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
 import withContext from '../../context/withContext';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 import { WallContextProvider } from '../../context/WallContext';
 import { DispatchMessageService } from '../../context/MessageService';
@@ -258,9 +258,9 @@ class WallList extends Component {
                         title={<span>{item.authorName}</span>}
                         description={
                           <div style={{ marginTop: '-10px' }}>
-                            <Tooltip title={dayjs(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
+                            <Tooltip title={Moment(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
                               {/* <TimeStamp date={item.datePost.seconds} /> */}
-                              <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span>
+                              <span>{Moment(Moment(new Date(item.datePost.toMillis()))).from(Moment(new Date()))}</span>
                             </Tooltip>
                           </div>
                         }

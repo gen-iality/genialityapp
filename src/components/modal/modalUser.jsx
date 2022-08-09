@@ -6,6 +6,7 @@ import QRCode from 'qrcode.react';
 import { icon } from '../../helpers/constants';
 import { Redirect } from 'react-router-dom';
 import { Actions } from '../../helpers/request';
+import Moment from 'moment';
 import FormComponent from '../events/registrationForm/form';
 import { Modal } from 'antd';
 import withContext from '../../context/withContext';

@@ -26,7 +26,7 @@ import {
 import 'chartjs-plugin-datalabels';
 import { Bar, Line } from 'react-chartjs-2';
 import ReactToPrint from 'react-to-print';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import { utils, writeFileXLSX } from 'xlsx';
 import API from '../../helpers/request';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
@@ -142,7 +142,7 @@ class DashboardEvent extends Component {
       const ws = utils.json_to_sheet(data);
       const wb = utils.book_new();
       utils.book_append_sheet(wb, ws, `${namesheet}`);
-      writeFileXLSX(wb, `${name}_${this.props.eventId}_${dayjs().format('DDMMYY')}.xls`);
+      writeFileXLSX(wb, `${name}_${this.props.eventId}_${Moment().format('DDMMYY')}.xls`);
     } else {
       DispatchMessageService({
         type: 'error',

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { Avatar, List, Card, Spin, Row, Comment, Tooltip, Typography, Divider } from 'antd';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import withContext from '../../context/withContext';
 import { UsersApi } from '@/helpers/request';
 
@@ -98,9 +98,9 @@ class CommentsList extends Component {
                   }
                   author={<Typography.Paragraph style={{ fontSize: '14px' }}>{item.authorName}</Typography.Paragraph>}
                   datetime={
-                    <Tooltip title={dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
+                    <Tooltip title={Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
                       {/* <span>{Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD')}</span> */}
-                      <span>{dayjs(dayjs(new Date(item.date.toMillis()))).from(dayjs(new Date()))}</span>
+                      <span>{Moment(Moment(new Date(item.date.toMillis()))).from(Moment(new Date()))}</span>
                     </Tooltip>
                   }
                   content={item.comment}

@@ -1,5 +1,5 @@
 import { Button, Col, Input, List, Modal, notification, Row, Select, Spin } from 'antd';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
@@ -192,7 +192,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
               {eventDatesRange &&
                 eventDatesRange.map((eventDate) => (
                   <Option value={eventDate} key={eventDate}>
-                    {dayjs(eventDate).format('D MMMM')}
+                    {moment(eventDate).format('D MMMM')}
                   </Option>
                 ))}
             </Select>
@@ -214,7 +214,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                     <Row align='middle'>
                       <Col xs={16}>
                         <Row justify='center'>
-                          {`${dayjs(timetableItem.timestamp_start).format('hh:mm a')} - ${dayjs(
+                          {`${moment(timetableItem.timestamp_start).format('hh:mm a')} - ${moment(
                             timetableItem.timestamp_end
                           ).format('hh:mm a')}`}
                         </Row>

@@ -6,7 +6,7 @@ import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import { Button, Card, Col, Drawer, Image, Row, Statistic, Typography, Tag, Input, Space, Tooltip, Select } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
@@ -28,6 +28,7 @@ import TableA from '../../antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
+import moment from 'moment';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
@@ -113,7 +114,7 @@ class ListEventUser extends Component {
     if (item.created_at !== null) {
       const createdAt = typeof item?.created_at === 'object' ? item?.created_at?.toDate() : item?.created_at;
 
-      return <>{createdAt ? <p>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
+      return <>{createdAt ? <p>{Moment(createdAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
       return '';
     }
@@ -134,7 +135,7 @@ class ListEventUser extends Component {
     if (item.updated_at !== null) {
       const updatedAt = typeof item?.created_at === 'object' ? item?.updated_at?.toDate() : item?.updated_at;
 
-      return <>{updatedAt ? <p>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
+      return <>{updatedAt ? <p>{Moment(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
       return '';
     }

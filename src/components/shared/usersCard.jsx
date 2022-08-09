@@ -7,7 +7,7 @@ import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { UseCurrentUser } from '../../context/userContext';
 import { UseEventContext } from '../../context/eventContext';
 import { imageforDefaultProfile } from '@/helpers/constants';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 const { Paragraph, Title, Text } = Typography;
 

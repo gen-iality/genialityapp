@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Redirect, Link, withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import 'moment/locale/es-us';
 import { EventsApi } from '../../helpers/request';
 /* import { toast } from 'react-toastify';
@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Button, Checkbox, Row, Col, Form, Input, Modal, Spin, Card, Typography } from 'antd';
-dayjs.locale('es-us');
+Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
@@ -257,28 +257,28 @@ class SendRsvp extends Component {
                         {' '}
                         <CalendarOutlined /> Fecha Inicio
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
+                      <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <FieldTimeOutlined /> Hora
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_from).format('HH:mm')}</p>
+                      <p className='date'>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <CalendarOutlined /> Fecha Fin
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
+                      <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <FieldTimeOutlined /> Hora
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_to).format('HH:mm')}</p>
+                      <p className='date'>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
                     </Col>
                   </Row>
                 )}

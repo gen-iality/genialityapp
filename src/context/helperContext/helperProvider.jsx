@@ -8,7 +8,7 @@ import { UseCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
 import { maleIcons, femaleicons, imageforDefaultProfile } from '../../helpers/constants';
 import { useHistory } from 'react-router-dom';
@@ -180,7 +180,7 @@ export const HelperContextProvider = ({ children }) => {
         <Row justify='space-between'>
           <Col style={{ fontWeight: 'bold' }}>{data.remitente}</Col>
 
-          <Col>{dayjs().format('h:mm A')}</Col>
+          <Col>{moment().format('h:mm A')}</Col>
         </Row>
       ),
       description: isAnImage ? (

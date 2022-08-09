@@ -1,6 +1,6 @@
 import { Card, Space, Typography, Badge } from 'antd';
 import { Link } from 'react-router-dom';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import './videoCard.css';
 import { UseEventContext } from '../../context/eventContext';
 import ReactPlayer from 'react-player';
@@ -60,7 +60,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
                     <span style={{ fontSize: '10px' }}>
                       <Space size='small'>
                         <CalendarOutlined style={{ fontSize: '14px' }} />
-                        <time>{dayjs(activity.datetime_end).format('DD MMM YYYY')}</time>
+                        <time>{Moment(activity.datetime_end).format('DD MMM YYYY')}</time>
                       </Space>
                     </span>
                     <span
@@ -105,7 +105,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
                     <span style={{ fontSize: '10px' }}>
                       <Space size='small'>
                         <CalendarOutlined style={{ fontSize: '14px' }} />
-                        <time>{dayjs(activity.datetime_end).format('DD MMM YYYY')}</time>
+                        <time>{Moment(activity.datetime_end).format('DD MMM YYYY')}</time>
                       </Space>
                     </span>
                   </Space>

@@ -36,7 +36,6 @@
     "core-js": "^3.21.1",
     "craco-antd": "^1.19",
     "cypress-file-upload": "^5.0.8",
-    "dayjs": "^1.11.4",
     "eslint-import-resolver-typescript": "^2.5.0",
     "file-loader": "^6.2.0",
     "firebase": "^9.6.8",

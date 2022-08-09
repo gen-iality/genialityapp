@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { NewsFeed } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { Col, Row, Input, Form, DatePicker, Modal } from 'antd';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { useHistory } from 'react-router-dom';
@@ -302,7 +302,7 @@ const NewCE = (props) => {
               <DatePicker
                 name={'time'}
                 format='YYYY-DD-MM'
-                value={notice && dayjs(notice.time)}
+                value={notice && moment(notice.time)}
                 onChange={onChangeDate}
               />
             </Form.Item>

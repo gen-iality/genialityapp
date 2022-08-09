@@ -1,6 +1,6 @@
 import { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import { utils, writeFileXLSX } from 'xlsx';
 import { getAnswersByQuestion } from './services';
 import Header from '../../antdComponents/Header';
@@ -67,7 +67,7 @@ class ReportQuestion extends Component {
     utils.book_append_sheet(wb, ws, `${sheetName}`);
     const name = `${match.params.id}`;
 
-    writeFileXLSX(wb, `${sheetName}-${name}${dayjs().format('DDMMYY')}.xls`);
+    writeFileXLSX(wb, `${sheetName}-${name}${Moment().format('DDMMYY')}.xls`);
   };
 
   goBack = () => this.props.history.goBack();

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Modal } from 'antd';
 import RoomConfig from './config';
 import Service from './service';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import AgendaContext from '../../../context/AgendaContext';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -397,7 +397,7 @@ class RoomManager extends Component {
       });
       return false;
     }
-    if (!dayjs(this.props.date_start_zoom).isValid()) {
+    if (!Moment(this.props.date_start_zoom).isValid()) {
       DispatchMessageService({
         type: 'error',
         msj: 'La fecha de inicio no es valida',
@@ -405,7 +405,7 @@ class RoomManager extends Component {
       });
       return false;
     }
-    if (!dayjs(this.props.date_end_zoom).isValid()) {
+    if (!Moment(this.props.date_end_zoom).isValid()) {
       DispatchMessageService({
         type: 'error',
         msj: 'La fecha de finalización no es valida',

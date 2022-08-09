@@ -6,7 +6,7 @@ import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 import { OrganizationApi, PlansApi } from '../../../../helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import {
   disabledEndDateTime,
   disabledStartDate,
@@ -163,7 +163,7 @@ const Informacion = (props) => {
               style={{ width: '100%', marginTop: '20px' }}
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               allowClear={false}
-              value={dayjs(selectedDay)}
+              value={moment(selectedDay)}
               format={'DD/MM/YYYY'}
               onChange={(value) => changeSelectDay(value.toDate())}
             />
@@ -194,7 +194,7 @@ const Informacion = (props) => {
                       // }}
                       allowClear={false}
                       use12Hours
-                      value={dayjs(selectedHours.from)}
+                      value={moment(selectedHours.from)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours, at: hours })}
                     />
                   </Space>
@@ -214,7 +214,7 @@ const Informacion = (props) => {
                       // }}
                       allowClear={false}
                       use12Hours
-                      value={dayjs(selectedHours.at)}
+                      value={moment(selectedHours.at)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}
                     />
                   </Space>

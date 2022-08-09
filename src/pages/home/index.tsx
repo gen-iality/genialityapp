@@ -1,5 +1,5 @@
 import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { useRequest } from '../../services/useRequest';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ import { useApiMultiple } from '@/services/hooks/useApiMultiple';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
 import { async } from 'ramda-adjunct';
 import { UseCurrentUserContext } from '@/context/userContext';
-dayjs.locale('es');
+Moment.locale('es');
 momentLocalizer();
 
 const Home = () => {

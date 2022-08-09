@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 //custom
 import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpers/request';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
 import { CloseOutlined, UserOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
@@ -452,8 +452,8 @@ class Speakers extends Component {
                     <div>
                       <p>
                         <b>
-                          {dayjs(activities.datetime_start).format('lll')} -{' '}
-                          {dayjs(activities.datetime_end).format('lll')}
+                          {Moment(activities.datetime_start).format('lll')} -{' '}
+                          {Moment(activities.datetime_end).format('lll')}
                         </b>
                       </p>
                       <p>{activities.name}</p>

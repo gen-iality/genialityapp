@@ -1,6 +1,6 @@
 import Datos from '@/components/events/datos';
 import { OrganizationApi } from '../../helpers/request';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 function MemberSettings(props) {
   const organizationId = props.org._id;
@@ -16,8 +16,8 @@ function MemberSettings(props) {
     //FORMATEAR FECHA CREATED Y UPDATED AT
     fieldData = {
       ...fieldData,
-      updated_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     };
     await OrganizationApi.createOneUserProperties(organizationId, fieldData);
   }

@@ -16,7 +16,7 @@ import {
   CalendarOutlined,
 } from '@ant-design/icons';
 import { Card, List, Button, Image, Tooltip, Typography, message, Spin, Popconfirm, Tag, Space, Skeleton } from 'antd';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 
 const CardListVideo = (props: any) => {
@@ -160,7 +160,7 @@ const CardListVideo = (props: any) => {
                   item?.status === 'ready' && (
                     <Space direction='vertical'>
                       <Tag icon={<ClockCircleOutlined />}>{milisegundosTohour(item?.duration)}</Tag>
-                      <Tag icon={<CalendarOutlined />}>{dayjs(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</Tag>
+                      <Tag icon={<CalendarOutlined />}>{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</Tag>
                     </Space>
                   )
                 }

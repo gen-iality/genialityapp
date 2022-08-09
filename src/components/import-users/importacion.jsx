@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { utils, writeFileXLSX, read } from 'xlsx';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { Row, Col, Button, Divider, Upload } from 'antd';
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
 import content from '@/containers/content';
 
-dayjs.locale('es');
+Moment.locale('es');
 momentLocalizer();
 
 const Importacion = (props) => {
@@ -114,7 +114,7 @@ const Importacion = (props) => {
     name = props.event ? name + '_' + props.event.name : name;
 
     utils.book_append_sheet(wb, ws, 'Template');
-    writeFileXLSX(wb, `${name}${dayjs().format('DDMMYY')}.xls`);
+    writeFileXLSX(wb, `${name}${Moment().format('DDMMYY')}.xls`);
   };
 
   /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */

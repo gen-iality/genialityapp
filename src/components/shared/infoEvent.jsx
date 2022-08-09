@@ -1,6 +1,6 @@
 import { UseEventContext } from '../../context/eventContext';
 import { Button, Divider, PageHeader, Space, Typography } from 'antd';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '../../context/eventUserContext';
@@ -53,22 +53,22 @@ const InfoEvent = () => {
           <Space wrap>
             <Space>
               <CalendarOutlined />
-              <time>{dayjs(cEvent.value.datetime_from).format('ll')}</time>
+              <time>{Moment(cEvent.value.datetime_from).format('ll')}</time>
             </Space>
             <Space>
               <ClockCircleOutlined />
-              <time>{dayjs(cEvent.value.datetime_from).format('LT')}</time>
+              <time>{Moment(cEvent.value.datetime_from).format('LT')}</time>
             </Space>
           </Space>
           <Divider type='vertical'></Divider>
           <Space wrap>
             <Space>
               <CalendarOutlined />
-              <time>{dayjs(cEvent.value.datetime_to).format('ll')}</time>
+              <time>{Moment(cEvent.value.datetime_to).format('ll')}</time>
             </Space>
             <Space>
               <ClockCircleOutlined />
-              <time>{dayjs(cEvent.value.datetime_to).format('LT')}</time>
+              <time>{Moment(cEvent.value.datetime_to).format('LT')}</time>
             </Space>
           </Space>
         </Space>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { InvitationsApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 const Report = (props) => {
   let [columnsData, setColumnsData] = useState({});
@@ -65,7 +65,7 @@ const Report = (props) => {
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
         return (
-          <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>
+          <div>{moment(item.created_at).format('DD/MM/YYYY')}</div>
         )
       }
     },

@@ -18,7 +18,7 @@ import {
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import UserModal from '../modal/modalUser';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 import { DispatchMessageService } from '../../context/MessageService';
@@ -176,7 +176,7 @@ class CheckAgenda extends Component {
     //console.log('ITEM==>', item);
     const self = this;
     return item.checkedin_at || item.properties?.checkedin_at ? (
-      <p>{dayjs(item.checkedin_at || item.properties?.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
+      <p>{Moment(item.checkedin_at || item.properties?.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
         <Checkbox

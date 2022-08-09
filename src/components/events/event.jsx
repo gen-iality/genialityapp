@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Route, Redirect, Switch, Link } from 'react-router-dom';
-import dayjs from 'dayjs';
+import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Loading from '../loaders/loading';
 import { EventsApi } from '../../helpers/request';
@@ -65,7 +65,7 @@ const Wall = loadable(() => import('../wall/index'));
 const FAQS = loadable(() => import('../faqs'));
 const EventsTicket = loadable(() => import('../ticketsEvent'));
 
-dayjs.locale('es');
+Moment.locale('es');
 momentLocalizer();
 
 class Event extends Component {
@@ -124,10 +124,10 @@ class Event extends Component {
   addNewFieldsToEvent(event) {
     const dateFrom = event.datetime_from.split(' ');
     const dateTo = event.datetime_to.split(' ');
-    event.hour_start = dayjs(dateFrom[1], 'HH:mm').toDate();
-    event.hour_end = dayjs(dateTo[1], 'HH:mm').toDate();
-    event.date_start = dayjs(dateFrom[0], 'YYYY-MM-DD').toDate();
-    event.date_end = dayjs(dateTo[0], 'YYYY-MM-DD').toDate();
+    event.hour_start = Moment(dateFrom[1], 'HH:mm').toDate();
+    event.hour_end = Moment(dateTo[1], 'HH:mm').toDate();
+    event.date_start = Moment(dateFrom[0], 'YYYY-MM-DD').toDate();
+    event.date_end = Moment(dateTo[0], 'YYYY-MM-DD').toDate();
     event.address = event.address ? event.address : '';
 
     return event;

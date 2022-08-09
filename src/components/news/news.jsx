@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NewsFeed } from '../../helpers/request';
 import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
@@ -24,7 +24,7 @@ const News = (props) => {
       sorter: (a, b) => a.time.localeCompare(b.time),
       ...getColumnSearchProps('time', columnsData),
       render(val, item) {
-        return <div>{dayjs(item.time).format('YYYY-DD-MM')}</div>;
+        return <div>{moment(item.time).format('YYYY-DD-MM')}</div>;
       },
     },
   ];

@@ -7,7 +7,7 @@ import { Table, Button, Row, Col, Tag } from 'antd';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
 import ModalMembers from '@/components/modal/modalMembers';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 import Header from '../../antdComponents/Header';
@@ -74,7 +74,7 @@ function OrgMembers(props) {
     const ws = utils.json_to_sheet(membersData);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
-    writeFileXLSX(wb, `Miembros_${dayjs().format('l')}.xlsx`);
+    writeFileXLSX(wb, `Miembros_${moment().format('l')}.xlsx`);
   }
 
   function closeOrOpenModalMembers() {

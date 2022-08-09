@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Form, Button, InputNumber, Card, Tag } from 'antd';
 import { firestore } from '../../../../helpers/firebase';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 function QueryTesting() {
   /** Ruta para escritura y lectura de respuestas en firebase */
@@ -57,13 +57,13 @@ function QueryTesting() {
   /** inicia el cronometro */
   function startTimer() {
     setTotalTime(null);
-    const startTimer = dayjs(new Date());
+    const startTimer = moment(new Date());
     setValidationStartTime(startTimer);
   }
 
   /** detiene el cronometro */
   function endTimer() {
-    const endTime = dayjs(new Date());
+    const endTime = moment(new Date());
     const seconds = endTime.diff(validationStartTime);
     setTotalTime(seconds);
   }
