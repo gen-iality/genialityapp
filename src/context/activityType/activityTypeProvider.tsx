@@ -8,7 +8,7 @@ import { CurrentEventContext } from '../eventContext';
 
 import ActivityTypeContext from './activityTypeContext';
 import type { ActivityType } from './types/activityType';
-import { WidgetType } from './constants/enum';
+import { WidgetType, MainUI } from './constants/enum';
 
 import {
   ActivityTypeProviderProps,
@@ -71,11 +71,11 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const humanizeActivityType = useCallback((typeIncoming: string): string => {
     type TypeIncoming = ActivityType.Name;
     switch (typeIncoming as TypeIncoming) {
-      case 'liveBroadcast': return 'transmisión';
-      case 'meeting2': return 'reunión';
-      case 'quizing2': return 'quiz';
-      case 'survey2': return 'encuesta';
-      case 'video': return 'vídeo';
+      case MainUI.LIVE: return 'transmisión';
+      case MainUI.MEETING: return 'reunión';
+      case MainUI.QUIZ: return 'quiz';
+      case MainUI.SURVEY: return 'encuesta';
+      case MainUI.VIDEO: return 'vídeo';
       default: return typeIncoming;
     }
   }, []);
@@ -380,23 +380,23 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             // Load the content source from agenda
 
             if (theseAreLiveToo.includes(typeIncoming as ActivityType.ContentValue)) {
-              setActivityType('liveBroadcast');
+              setActivityType(MainUI.LIVE);
               setContentSource(meetingId);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (theseAreVideo.includes(typeIncoming as ActivityType.ContentValue)) {
-              setActivityType('video');
+              setActivityType(MainUI.VIDEO);
               setContentSource(agendaInfo.video || null);
               console.debug('from beginning contentSource is going to be:', agendaInfo.video || null);
             } else if (theseAreMeeting.includes(typeIncoming as ActivityType.ContentValue)) {
-              setActivityType('meeting2');
+              setActivityType(MainUI.MEETING);
               setContentSource(meetingId);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (['quizing', 'quiz'].includes(typeIncoming as ActivityType.ContentValue)) {
-              setActivityType('quizing2');
+              setActivityType(MainUI.QUIZ);
               setContentSource(meetingId);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if ((typeIncoming as ActivityType.ContentValue) === 'survey') {
-              setActivityType('survey2');
+              setActivityType(MainUI.SURVEY);
               setContentSource(meetingId);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else {
