@@ -44,7 +44,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const deleteTransmition = async () => {
     console.debug('deleteTransmition is called');
     deleteLiveStream(meeting_id);
-    // await deleteTypeActivity();
+    setDataLive(null);
     await resetActivityType('liveBroadcast');
   };
 
@@ -82,6 +82,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     const value = 'created_meeting_room';
     console.debug('saves value of RoomStatus:', value);
     setRoomStatus(value);
+    setMeetingId(null);
     await saveConfig({ habilitar_ingreso: value });
     console.log('config saved - habilitar_ingreso:', value);
 
