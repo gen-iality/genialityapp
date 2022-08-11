@@ -73,7 +73,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     switch (typeIncoming as TypeIncoming) {
       case 'liveBroadcast': return 'transmisión';
       case 'meeting2': return 'reunión';
-      case 'quizing2': return 'examen';
+      case 'quizing2': return 'quiz';
       case 'survey2': return 'encuesta';
       case 'video': return 'vídeo';
       default: return typeIncoming;

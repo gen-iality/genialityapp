@@ -14,7 +14,7 @@ export enum MainUI {
   LIVE = 'liveBroadcast',
   MEETING = 'meeting2',
   VIDEO = 'video',
-  EXAM = 'quizing2',
+  QUIZ = 'quizing2',
   SURVEY = 'survey2',
 };
 
@@ -27,7 +27,7 @@ export enum DeepUI {
   FILE = 'cargarvideo',
   RTMP = 'RTMP',
   MEET = 'eviusMeet',
-  EXAM = 'quizing',
+  QUIZ = 'quizing',
   SURVEY = 'survey',
 };
 
