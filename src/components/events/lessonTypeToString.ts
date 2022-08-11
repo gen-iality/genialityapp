@@ -1,8 +1,8 @@
-import { ActivitySubTypeName, ActivityTypeName } from "@/context/activityType/schema/structureInterfaces";
+import { ActivityType } from "@/context/activityType/types/activityType";
 
 export default function lessonTypeToString (inputType: string) {
   let typeName = '';
-  switch (inputType as ActivityTypeName & ActivitySubTypeName & 'quiz') {
+  switch (inputType as ActivityType.Name & ActivityType.ContentValue & 'quiz') {
     case 'meeting':
     case 'meeting2':
       typeName = 'Reunión';
