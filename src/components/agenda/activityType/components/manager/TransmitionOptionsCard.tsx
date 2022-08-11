@@ -74,14 +74,13 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
     // await deleteTypeActivity();
 
-    setMeetingId(null);
     setDataLive(null);
 
     const value = 'created_meeting_room';
     console.debug('saves value of RoomStatus:', value);
     setRoomStatus(value);
     setMeetingId(null);
-    await saveConfig({ habilitar_ingreso: value });
+    await saveConfig({ habilitar_ingreso: value, data: null });
     console.log('config saved - habilitar_ingreso:', value);
 
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
