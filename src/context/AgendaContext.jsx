@@ -279,8 +279,12 @@ export const AgendaContextProvider = ({ children }) => {
 
       liveLocal = live_stream_status?.live;
     } catch (e) {}
-    const timer_id = setTimeout(executer_startMonitorStatus, 5000);
-    setTimerId(timer_id);
+    if (!!live_stream_status?.active) {
+      const timer_id = setTimeout(executer_startMonitorStatus, 5000);
+      setTimerId(timer_id);
+    } else {
+      setDataLive(null);
+    }
     if (!live_stream_status?.active) {
       setDataLive(null);
       clearTimeout(timer_id);
