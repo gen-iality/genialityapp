@@ -5,7 +5,7 @@ import { Alert, Modal } from 'antd';
 import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCards';
 // import { ActivityTypeSelectableCardsProps } from './components/ActivityTypeSelectableCards';
 
-import ActivityContentModalLayout, { WidgetData } from './components/ActivityContentModalLayout';
+import ActivityContentModalLayout, { WidgetData }, { WidgetData } from './components/ActivityContentModalLayout';
 
 import { ModalWrapperUIProps} from './interfaces/ModalWrapperUIProps';
 import type { ActivityType } from  '@context/activityType/types/activityType';

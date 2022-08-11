@@ -77,6 +77,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     return (
         <>
         {/*
+       
         <p>Contenido: {activityContentType}</p>
         <Button danger onClick={() => setActivityContentType(null)}>
           Eliminar contenido
