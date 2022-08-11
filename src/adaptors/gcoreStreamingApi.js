@@ -4,7 +4,7 @@ const gCoreCLient = axios.create({
   //BASE URL WOWZA
   //baseURL: "https://api.cloud.wowza.com/api/v1.7/",
   baseURL: 'https://api.gcdn.co/vp/api',
-  timeout: 2000,
+  timeout: 5000,
   headers: {
     Authorization:
       'APIKey 1203$1032b84618ac0c687a026a037185e55c6930e0c006783a9d86b211f2114644c1a16836c730f4934df8559bc31952228999f371a694e788aeab756b2d0e253f45',
