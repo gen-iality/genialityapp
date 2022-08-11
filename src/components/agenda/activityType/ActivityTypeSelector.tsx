@@ -63,12 +63,12 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
 
     {activityType !== null ? (
       <Alert
-        closable
+        // closable
         type='info'
         showIcon={is.deleting}
         icon={<Spin/>}
         message={`Actividad de tipo: ${humanizeActivityType(activityType)}`}
-        onClose={deleteActivityType}
+        // onClose={deleteActivityType}
       />
     ) : (
     <Row>
