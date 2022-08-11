@@ -396,10 +396,6 @@ export const AgendaContextProvider = ({ children }) => {
     } else {
       setDataLive(null);
     }
-    if (!live_stream_status?.active) {
-      setDataLive(null);
-      clearTimeout(timer_id);
-    }
   };
 
   const obtainUrl = (type, data) => {
