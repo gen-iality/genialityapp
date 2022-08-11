@@ -66,6 +66,11 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   }, [type])
 
   const handleConfirmDeleting = async () => {
+    try {
+      executer_stopStream();
+    } catch (e) {
+      console.error('handleConfirmDeleting', e);
+    }
     setIsDeleting(true);
     if (isVisible && meeting_id) {
       await deleteAllVideos(dataLive.name, meeting_id);
@@ -86,7 +91,6 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     console.log('config saved - habilitar_ingreso:', value);
 
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
-    setIsDeleting(false);
     switch (type) {
       case TypeDisplayment.VIDEO:
         console.debug('TransmitionOptionsCard reset AT to video');
@@ -103,7 +107,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
         console.debug('TransmitionOptionsCard reset AT to liveBroadcast');
         await resetActivityType(MainUI.LIVE);
     }
-    // Check type, await resetActivityType('liveBroadcast');
+    setIsDeleting(false);
   };
 
   return (
