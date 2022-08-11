@@ -7,7 +7,7 @@ import { AgendaApi } from '@/helpers/request';
 import { CurrentEventContext } from '@context/eventContext';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import type { ActivityType } from '@context/activityType/types/activityType';
-import { TypeDisplayment } from '@context/activityType/constants/enum';
+import { TypeDisplayment, MainUI } from '@/context/activityType/constants/enum';
 
 export interface TransmitionOptionsCardProps {
   type: ActivityType.TypeAsDisplayment,
@@ -89,18 +89,18 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     switch (type) {
       case TypeDisplayment.VIDEO:
         console.debug('TransmitionOptionsCard reset AT to video');
-        await resetActivityType('video');
+        await resetActivityType(MainUI.VIDEO);
         break;
       case TypeDisplayment.MEETING:
         console.debug('TransmitionOptionsCard reset AT to meeting2');
-        await resetActivityType('meeting2');
+        await resetActivityType(MainUI.MEETING);
         break;
       case TypeDisplayment.TRANSMISSION:
       case TypeDisplayment.EVIUS_MEET:
       case TypeDisplayment.VIMEO:
       case TypeDisplayment.YOUTUBE:
         console.debug('TransmitionOptionsCard reset AT to liveBroadcast');
-        await resetActivityType('liveBroadcast');
+        await resetActivityType(MainUI.LIVE);
     }
     // Check type, await resetActivityType('liveBroadcast');
   };
