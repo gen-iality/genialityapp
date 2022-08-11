@@ -15,20 +15,20 @@ class Service {
         .doc(activity_id)
         .get()
         .then((activity) => {
-          console.log('ACTIVITY==>', activity);
+          // console.log('ACTIVITY==>', activity);
           if (!activity.exists) {
-            console.log('ACTIVITY UPDATE==>', activity);
+            // console.log('ACTIVITY UPDATE==>', activity);
             resolve(false);
           }
-          console.log('ACTIVITY UPDATE==>', activity);
+          // console.log('ACTIVITY UPDATE==>', activity);
           resolve(true);
         });
     });
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
-    //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA LECCIÓN
-    console.log('***SE EJECUTA LA ACTUALIZACION***');
+    //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
+    // console.log('***SE EJECUTA LA ACTUALIZACION***');
     if (activity_id) {
       console.log(event_id, activity_id, roomInfo, tabs, 'service');
       const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
@@ -67,7 +67,7 @@ class Service {
                 avalibleGames: roomInfo?.avalibleGames || [],
               })
               .then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }))
-              .catch((err) => console.log('11. ERROR==>', err));
+              .catch((err) => console.error('11. ERROR==>', err));
           } else {
             this.firestore
               .collection('events')
@@ -87,7 +87,7 @@ class Service {
                 roomState: roomState || null,
               })
               .then(() => resolve({ message: 'Configuración creada', state: 'created' }))
-              .catch((err) => console.log('11. ERROR==>', err));
+              .catch((err) => console.error('11. ERROR==>', err));
           }
         });
       });
