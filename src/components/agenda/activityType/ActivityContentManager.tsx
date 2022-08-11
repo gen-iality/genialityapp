@@ -25,7 +25,7 @@ import GoToMeet from './components/manager/GoToMeet';
 import { activityContentValues } from '@context/activityType/constants/ui';
 import type { ActivityType } from '@context/activityType/types/activityType';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
-import { TypeDisplayment } from '@/context/activityType/constants/enum';
+import { TypeDisplayment } from '@context/activityType/constants/enum';
 
 import TriviaEdit from '../../trivia/edit';
 
