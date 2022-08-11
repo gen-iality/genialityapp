@@ -14,8 +14,8 @@ import { useQueryClient } from 'react-query';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { CurrentEventContext } from '@context/eventContext';
-import type { ActivityType } from '@/context/activityType/types/activityType';
-import { TypeDisplayment } from '@/context/activityType/constants/enum';
+import type { ActivityType } from '@context/activityType/types/activityType';
+import { TypeDisplayment } from '@context/activityType/constants/enum';
 
 const { confirm } = Modal;
 

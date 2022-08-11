@@ -7,7 +7,7 @@ import { AgendaApi } from '@/helpers/request';
 import { CurrentEventContext } from '@context/eventContext';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import type { ActivityType } from '@context/activityType/types/activityType';
-import { TypeDisplayment } from '@/context/activityType/constants/enum';
+import { TypeDisplayment } from '@context/activityType/constants/enum';
 
 export interface TransmitionOptionsCardProps {
   type: ActivityType.TypeAsDisplayment,
