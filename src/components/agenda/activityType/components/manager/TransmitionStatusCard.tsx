@@ -40,6 +40,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     setRoomStatus,
     removeAllRequest,
     activityEdit,
+    setMeetingId,
   } = useContext(AgendaContext);
 
   const cEvent = useContext(CurrentEventContext);
@@ -75,14 +76,26 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   }, [meeting_id]);
 
   const deleteStreaming = async () => {
+    console.log('TransmitionStatusCard.deleteStreaming() called');
     setIsLoadingDelete(true);
     deleteAllVideos(dataLive?.name, meeting_id); // verificar si se va a eliminar los vídeos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
     await removeAllRequest(refActivity);
     await deleteTypeActivity();
+    {
+      // await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
+      const value = 'created_meeting_room';
+      console.debug('saves value of RoomStatus:', value);
+      setRoomStatus(value);
+      setMeetingId(null);
+      await saveConfig({ habilitar_ingreso: value, data: null });
+      console.log('config saved - habilitar_ingreso:', value);
+    }
     // Transmition stuffs must go back to 'liveBroadcast'
     await resetActivityType('liveBroadcast'); // reset the content tab?
+    setMeetingId(null);
     setIsLoadingDelete(false);
+    console.info('deleteStreaming called');
   };
 
   const executer_startStream = async () => {
