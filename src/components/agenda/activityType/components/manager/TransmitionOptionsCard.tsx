@@ -34,6 +34,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     deleteTypeActivity,
     activityEdit,
     removeAllRequest,
+    saveConfig,
+    setRoomStatus,
   } = useContext(AgendaContext);
 
   const cEvent: any = useContext(CurrentEventContext);
@@ -41,7 +43,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const deleteTransmition = async () => {
     console.debug('deleteTransmition is called');
     deleteLiveStream(meeting_id);
-    // await deleteTypeActivity();
+    setDataLive(null);
     await resetActivityType('liveBroadcast');
   };
 
@@ -74,6 +76,13 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
 
     setMeetingId(null);
     setDataLive(null);
+
+    const value = 'created_meeting_room';
+    console.debug('saves value of RoomStatus:', value);
+    setRoomStatus(value);
+    setMeetingId(null);
+    await saveConfig({ habilitar_ingreso: value });
+    console.log('config saved - habilitar_ingreso:', value);
 
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
     setIsDeleting(false);
