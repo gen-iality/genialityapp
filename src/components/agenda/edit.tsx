@@ -426,7 +426,8 @@ function AgendaEdit(props: AgendaEditProps) {
                   formdata={formdata}
                   agenda={loadedAgenda}
                   savedFormData={savedFormData}
-                  setFormData={setFormData}
+                  setFormData={(a: FormDataType) => setFormData(a)}
+                  previousFormData={formdata}
                   setShowPendingChangesModal={setShowPendingChangesModal}
                   agendaContext={agendaContext}
                   matchUrl={props.matchUrl}
