@@ -68,6 +68,18 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     return value;
   }, []);
 
+  const humanizeActivityType = useCallback((typeIncoming: string): string => {
+    type TypeIncoming = ActivityType.Name;
+    switch (typeIncoming as TypeIncoming) {
+      case 'liveBroadcast': return 'transmisión';
+      case 'meeting2': return 'reunión';
+      case 'quizing2': return 'examen';
+      case 'survey2': return 'encuesta';
+      case 'video': return 'vídeo';
+      default: return typeIncoming;
+    }
+  }, []);
+
   const editActivityType = async (eventId: string, activityId: string, typeName: string) => {
     const createTypeActivityBody: any = { name: typeName };
     const activityTypeDocument = await TypesAgendaApi
@@ -310,18 +322,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     url !== null ? setVideoObject({ url, created_at, name }) : setVideoObject(null);
   };
 
-  const convertTypeToHumanizedString = (typeIncoming: string): string => {
-    type TypeIncoming = ActivityType.Name;
-    switch (typeIncoming as TypeIncoming) {
-      case 'liveBroadcast': return 'transmisión';
-      case 'meeting2': return 'reunión';
-      case 'quizing2': return 'examen';
-      case 'survey2': return 'encuesta';
-      case 'video': return 'vídeo';
-      default: return typeIncoming;
-    }
-  };
-
   const value: ActivityTypeContextType = {
     // Flags
     is: {
@@ -349,7 +349,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     translateActivityType,
     visualizeVideo,
     executer_stopStream,
-    convertTypeToHumanizedString,
+    humanizeActivityType,
   };
 
   useEffect(() => {

@@ -37,7 +37,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     activityContentType,
     setContentSource,
     saveActivityContent,
-    convertTypeToHumanizedString,
+    humanizeActivityType,
   } = useActivityType();
 
   useEffect(() => {

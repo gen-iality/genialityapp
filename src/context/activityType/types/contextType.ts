@@ -30,7 +30,7 @@ export type ActivityTypeContextType = {
   translateActivityType: (type: string) => ActivityType.TypeAsDisplayment | null,
   visualizeVideo: (url: string | null, created_at: string | null, name: string | null) => void,
   executer_stopStream: () => void,
-  convertTypeToHumanizedString: (type: string) => string,
+  humanizeActivityType: (type: string) => string,
 };
 
 export type ActivityTypeProviderProps = {

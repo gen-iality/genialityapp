@@ -23,7 +23,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     deleteActivityType,
     activityType,
     setActivityType,
-    convertTypeToHumanizedString,
+    humanizeActivityType,
   } = useActivityType();
 
   const handleCloseModal = (success: boolean = false) => {
@@ -67,7 +67,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
         type='info'
         showIcon={is.deleting}
         icon={<Spin/>}
-        message={`Actividad de tipo: ${convertTypeToHumanizedString(activityType)}`}
+        message={`Actividad de tipo: ${humanizeActivityType(activityType)}`}
         onClose={deleteActivityType}
       />
     ) : (
