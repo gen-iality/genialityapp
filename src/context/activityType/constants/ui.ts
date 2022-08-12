@@ -90,7 +90,7 @@ const liveBroadcastTransmissionCards: ActivityType.CardUI[] = [
     key: activityContentValues.rtmp,
     title: 'RTMP',
     description:
-      'El Protocolo de mensajería en tiempo real te permite transmitir audio, video y datos a través de Internet.',
+      'El Protocolo de mensajería en tiempo real te permite transmitir audio, vídeo y datos a través de Internet.',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2FRTMP.jpg?alt=media&token=d0c74ddc-5ad6-49bf-ad57-c1d0c02a1ee6',
     MainTitle: '',
@@ -133,7 +133,7 @@ const videoActivityTypeCards: ActivityType.CardUI[] = [
     widgetType: WidgetType.FORM,
     key: activityContentValues.url,
     title: 'Url',
-    MainTitle: 'Agregar URL del video',
+    MainTitle: 'Agregar URL del vídeo',
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Furl.jpg?alt=media&token=9bcff159-2e09-4022-add6-2108ed8c6089',
     description: '',
@@ -142,11 +142,11 @@ const videoActivityTypeCards: ActivityType.CardUI[] = [
   {
     widgetType: WidgetType.FORM,
     key: activityContentValues.file,
-    title: 'Cargar video',
+    title: 'Cargar vídeo',
     description: '',
     MainTitle: 'Cargue un video desde su equipo',
     image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fcargar_video.jpg?alt=media&token=b0990943-3563-4004-9e15-cf9dfea6805c',
-    form: { formType: FormType.UPLOAD, key: activityContentValues.file, MainTitle: 'Cargue un video desde su equipo'}
+    form: { formType: FormType.UPLOAD, key: activityContentValues.file, MainTitle: 'Cargue un vídeo desde su equipo'}
   },
 ];
 
@@ -208,9 +208,9 @@ export const formWidgetFlow: ActivityType.MainUI = {
     {
       widgetType: WidgetType.CARD_SET,
       key: activityTypeNames.video,
-      MainTitle: 'Asignar video para la actividad',
-      title: 'Video',
-      description: 'Actividad en la que solo quieras mostrar un video para tus asistentes.',
+      MainTitle: 'Asignar vídeo para la actividad',
+      title: 'Vídeo',
+      description: 'Actividad en la que solo quieras mostrar un vídeo para tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
       cards: videoActivityTypeCards,
