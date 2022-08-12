@@ -85,9 +85,15 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
   const getVideoList = async () => {
     setVideos(null);
-    const videoList = await obtenerVideos(props.activityName, meeting_id);
-    if (videoList) {
-      setVideos(videoList);
+    try {
+      const videoList = await obtenerVideos(props.activityName, meeting_id);
+      if (videoList) {
+        setVideos(videoList);
+      }
+    } catch (err) {
+      // Convert url and cargarvideo to VIDEO was an error I did think
+      // pd: cargarvideo is a awful name
+      console.error('Not watch if VIDEO is url or cargarvideo, then error', err);
     }
   };
 
