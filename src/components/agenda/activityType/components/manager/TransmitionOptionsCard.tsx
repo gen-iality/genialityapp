@@ -44,6 +44,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const deleteTransmition = async () => {
     console.debug('deleteTransmition is called');
     deleteLiveStream(meeting_id);
+    console.debug('will call deleteLiveStream with meeting_id:', meeting_id);
     setDataLive(null);
     await resetActivityType('liveBroadcast');
   };
@@ -66,18 +67,22 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   }, [type])
 
   const handleConfirmDeleting = async () => {
-    try {
-      executer_stopStream();
-    } catch (e) {
-      console.error('handleConfirmDeleting', e);
-    }
     setIsDeleting(true);
     if (isVisible && meeting_id) {
+      try {
+        executer_stopStream();
+      } catch (e) {
+        console.error('handleConfirmDeleting', e);
+      }
       await deleteAllVideos(dataLive.name, meeting_id);
       await removeAllRequest(refActivity);
       await deleteTransmition();
     }
-    await removeViewers(refActivityViewers);
+    try {
+      await removeViewers(refActivityViewers);
+    } catch (err) {
+      console.error('Error to try to call removeViewers', err)
+    }
     await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
     // await deleteTypeActivity();
 
@@ -87,8 +92,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     console.debug('saves value of RoomStatus:', value);
     setRoomStatus(value);
     setMeetingId(null);
-    await saveConfig({ habilitar_ingreso: value, data: null });
-    console.log('config saved - habilitar_ingreso:', value);
+    await saveConfig({ habilitar_ingreso: value, data: null, type: 'delete' });
+    console.debug('config saved - habilitar_ingreso:', value);
 
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
     switch (type) {
