@@ -29,6 +29,7 @@ import AgendaType from '@Utilities/types/AgendaType';
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
 import useLoadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
+import useHourWithAdditionalMinutes from '../hooks/useHourWithAdditionalMinutes';
 
 const { Text } = Typography;
 const { Option } = SelectAntd;
@@ -85,6 +86,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const nameInputRef = useRef<InputRef>(null);
 
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
+  const hourWithAdditionalMinutes = useHourWithAdditionalMinutes();
 
   useEffect(() => {
     if (!props.event?._id) return;
@@ -176,12 +178,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     }
   };
 
-  const hourWithAdditionalMinutes = (minutes: number) => {
-    const fecha = new Date();
-    fecha.setMinutes(fecha.getMinutes() + minutes);
-    return moment(fecha, 'HH:mm:ss');
-  };
-
   const goSection = (path: string, state?: any) => {
     history.push(path, state);
   };
@@ -247,19 +243,31 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   };
 
   const currentHourStart = useMemo(() => {
-    if (formdata.hour_start instanceof moment) {
+    if (typeof formdata.hour_start === 'string' && formdata.hour_start.trim() !== '') {
       return moment(formdata.hour_start, 'HH:mm:ss');
     }
-    const newHour = hourWithAdditionalMinutes(1);
+    if (typeof formdata.hour_start === 'object' && formdata.hour_start !== null) {
+      if (formdata.hour_start.isValid && !formdata.hour_start.isValid()) {
+        return moment(formdata.hour_start, 'HH:mm:ss');
+      }
+      return formdata.hour_start;
+    }
+    const newHour = hourWithAdditionalMinutes(10);
     setFormData({ ...previousFormData, hour_start: newHour });
     return newHour;
   }, [formdata.hour_start]);
 
   const currentHourEnd = useMemo(() => {
-    if (formdata.hour_end instanceof moment) {
+    if (typeof formdata.hour_end === 'string' && formdata.hour_end.trim() !== '') {
       return moment(formdata.hour_end, 'HH:mm:ss');
     }
-    const newHour = hourWithAdditionalMinutes(5);
+    if (typeof formdata.hour_end === 'object' && formdata.hour_end !== null) {
+      if (formdata.hour_end.isValid && !formdata.hour_end.isValid()) {
+        return moment(formdata.hour_end, 'HH:mm:ss');
+      }
+      return formdata.hour_end;
+    }
+    const newHour = hourWithAdditionalMinutes(15);
     setFormData({ ...previousFormData, hour_end: newHour });
     return newHour;
   }, [formdata.hour_end]);
