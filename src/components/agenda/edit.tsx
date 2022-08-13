@@ -36,6 +36,8 @@ import AgendaDocumentForm from './components/AgendaDocumentForm';
 
 import ActivityContentSelector from './activityType/ActivityContentSelector';
 
+import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 
@@ -89,8 +91,8 @@ const initialFormDataState = {
   // date: Moment(new Date()).format('YYYY-MM-DD')??new Date().,
   date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
   space_id: '',
-  hour_end: '',
-  hour_start: '',
+  hour_end: hourWithAdditionalMinutes(5),
+  hour_start: hourWithAdditionalMinutes(1),
   isPhysical: false,
   length: '',
   latitude: '',
