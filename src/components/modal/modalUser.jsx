@@ -15,6 +15,8 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
+import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
+import { handleRequestError } from '@/helpers/utils';
 
 const { confirm } = Modal;
 
@@ -129,6 +131,7 @@ class UserModal extends Component {
           msj: ' Por favor espere mientras se borra la información...',
           action: 'show',
         });
+        self.setState({ loadingregister: true });
         const onHandlerRemove = async () => {
           try {
             let token = await GetTokenUserFirebase();
@@ -173,12 +176,13 @@ class UserModal extends Component {
                 //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
                 //substractSyncQuantity();
               });
-
             setTimeout(() => {
               messages.class = messages.content = '';
+              self.setState({ loadingregister: false });
               self.closeModal();
             }, 500);
           } catch (e) {
+            self.setState({ loadingregister: false });
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
@@ -255,13 +259,9 @@ class UserModal extends Component {
     let resp;
     let respActivity = true;
     if (values) {
-      if (values?.checked_in) {
-        values.checkedin_at = new Date();
-      } else {
-        values.checkedin_at = '';
-      }
       /* console.log("ACA VALUES==>",values) */
       const snap = { properties: values };
+
       if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
         /* console.log("10. resp ", resp) */
@@ -269,12 +269,21 @@ class UserModal extends Component {
         if (!this.props.edit) {
           try {
             resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
-          } catch (e) {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Usuario ya registrado en el curso',
-              action: 'show',
-            });
+          } catch (error) {
+            if (handleRequestError(error).message === 'users limit exceeded') {
+              DispatchMessageService({
+                type: 'error',
+                msj: 'Ha exedido el límite de usuarios en el plan',
+                action: 'show',
+              });
+            } else {
+              DispatchMessageService({
+                type: 'error',
+                msj: 'Usuario ya registrado en el curso',
+                action: 'show',
+              });
+            }
+
             respActivity = false;
           }
         } else {
@@ -287,6 +296,7 @@ class UserModal extends Component {
         /* console.log("10. USERADD==>",resp) */
       }
 
+      /**FIXME: No se esta guardando la informacion al actualizar un usuario desde el panel de checkIn por actividad*/
       if (this.props.byActivity && (resp?.data?._id || resp?._id) && !this.props.edit) {
         respActivity = await Activity.Register(
           this.props.cEvent?.value?._id,
@@ -355,7 +365,7 @@ class UserModal extends Component {
 
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
-    const { modal } = this.props;
+    const { modal, componentKey } = this.props;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
@@ -368,16 +378,30 @@ class UserModal extends Component {
             paddingBottom: '0px',
             marginTop: '30px',
           }}>
-          <FormComponent
-            conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
-            initialOtherValue={this.props.value || {}}
-            eventUserOther={user || {}}
-            fields={this.props.extraFields}
-            organization={true}
-            options={this.options}
-            callback={this.saveUser}
-            loadingregister={this.state.loadingregister}
-          />
+          {componentKey === 'event-checkin' ? (
+            <FormEnrollAttendeeToEvent
+              fields={this.props.extraFields}
+              conditionalFields={this.props.cEvent?.value?.fields_conditions}
+              attendee={this.props.value}
+              options={this.options}
+              saveAttendee={this.saveUser}
+              loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
+              visibleInCms
+              eventType={this.props.cEvent?.value?.type_event}
+            />
+          ) : (
+            <FormComponent
+              conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
+              initialOtherValue={this.props.value || {}}
+              eventUserOther={user || {}}
+              fields={this.props.extraFields}
+              organization={true}
+              options={this.options}
+              callback={this.saveUser}
+              loadingregister={this.state.loadingregister}
+              usedInCms={true}
+            />
+          )}
         </div>
       </Modal>
     );

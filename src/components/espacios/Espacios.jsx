@@ -13,25 +13,23 @@ const Espacios = (props) => {
       dataIndex: 'name',
       ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps('name', columnsData)
+      ...getColumnSearchProps('name', columnsData),
     },
     {
       title: 'Fecha de creación',
       dataIndex: 'created_at',
       ellipsis: true,
-      width: 110,
+      width: 180,
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
-        return (
-          <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>
-        )
+        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>;
       },
-    }
+    },
   ];
 
   return (
-    <CMS 
+    <CMS
       API={SpacesApi}
       eventId={props.event._id}
       title={'Espacios'}
@@ -49,6 +47,6 @@ const Espacios = (props) => {
       setColumnsData={setColumnsData}
     />
   );
-}
+};
 
 export default Espacios;

@@ -1,4 +1,3 @@
-// import './preloader.css';
 export const PreloaderApp = () => {
   return (
     <div className='preloaderBg'>

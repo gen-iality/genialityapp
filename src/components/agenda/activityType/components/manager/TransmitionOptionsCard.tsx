@@ -66,13 +66,13 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   }, [type])
 
   const handleConfirmDeleting = async () => {
+    try {
+      executer_stopStream();
+    } catch (e) {
+      console.error('handleConfirmDeleting', e);
+    }
     setIsDeleting(true);
     if (isVisible && meeting_id) {
-      try {
-        executer_stopStream();
-      } catch (e) {
-        console.error('handleConfirmDeleting', e);
-      }
       await deleteAllVideos(dataLive.name, meeting_id);
       await removeAllRequest(refActivity);
       await deleteTransmition();

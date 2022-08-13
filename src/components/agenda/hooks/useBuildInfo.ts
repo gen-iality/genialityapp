@@ -2,11 +2,7 @@ import dayjs from 'dayjs';
 import AgendaType from '@Utilities/types/AgendaType';
 import { FormDataType } from '../components/MainAgendaForm';
 
-export default function useBuildInfo (
-  formdata: FormDataType,
-  agenda: AgendaType | null,
-  defaultAgenda: AgendaType,
-) {
+export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType | null, defaultAgenda: AgendaType) {
   const buildInfo: () => AgendaType = () => {
     const {
       name,

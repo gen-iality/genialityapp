@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
-import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePicker } from 'antd';
+import { useEffect, useState } from 'react';
+import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePicker, DatePicker } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
-import { OrganizationApi } from '../../../../helpers/request';
+import { OrganizationApi, PlansApi } from '../../../../helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
 import dayjs from 'dayjs';
+import {
+  disabledEndDateTime,
+  disabledStartDate,
+  disabledStartDateTime,
+} from '@/Utilities/disableTimeAndDatePickerInEventDate';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -31,10 +36,25 @@ const Informacion = (props) => {
     dispatch,
     state,
   } = useContextNewEvent();
+  const cUser = props?.currentUser;
+  const eventDateStart = { date_start: selectedDay };
+  const eventHourStart = { hour_start: selectedHours.from };
 
+  const [userConsumption, setUserConsumption] = useState({});
   const handleChange = (value) => {
     selectTemplate(value);
   };
+
+  const getCurrentConsumptionPlanByUsers = async () => {
+    if (!cUser?._id) return;
+
+    const consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser?._id);
+    setUserConsumption(consumption);
+  };
+
+  useEffect(() => {
+    getCurrentConsumptionPlanByUsers();
+  }, [cUser]);
 
   {
     useEffect(() => {
@@ -127,9 +147,33 @@ const Informacion = (props) => {
         width={600}>
         <Row gutter={[16, 16]} justify='center' align='top'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} />
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <Title level={4} type='secondary'>
+              Asignar fecha
+            </Title>
+
+            <DatePicker
+              inputReadOnly={true}
+              //RESTRICIONES
+              // disabledDate={(date) => {
+              //   if (cUser?.plan?._id) {
+              //     const streamingHours = cUser?.plan?.availables?.streaming_hours;
+              //     return disabledStartDate(date, streamingHours, userConsumption);
+              //   }
+              // }}
+              style={{ width: '100%', marginTop: '20px' }}
+              /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
+              allowClear={false}
+              value={moment(selectedDay)}
+              format={'DD/MM/YYYY'}
+              onChange={(value) => changeSelectDay(value.toDate())}
+            />
+
+            {userConsumption?.end_date && (
+              <Typography.Text strong type='secondary'>
+                <small>Su plan finaliza el dia {userConsumption?.end_date}</small>
+              </Typography.Text>
+            )}
+
             <Title level={4} type='secondary'>
               Asignar hora
             </Title>
@@ -141,10 +185,17 @@ const Informacion = (props) => {
                       <span>de</span>
                     </div>
                     <TimePicker
+                      showNow={false}
+                      inputReadOnly={true}
+                      //RESTRICIONES
+                      // disabledTime={(time) => {
+                      //   const streamingHours = cUser?.plan?.availables?.streaming_hours;
+                      //   return disabledStartDateTime(eventHourStart, streamingHours);
+                      // }}
                       allowClear={false}
                       use12Hours
                       value={dayjs(selectedHours.from)}
-                      onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
+                      onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours, at: hours })}
                     />
                   </Space>
                 </div>
@@ -154,6 +205,13 @@ const Informacion = (props) => {
                       <span>a</span>
                     </div>
                     <TimePicker
+                      showNow={false}
+                      inputReadOnly={true}
+                      //RESTRICIONES
+                      // disabledTime={(time) => {
+                      //   const streamingHours = cUser?.plan?.availables?.streaming_hours;
+                      //   return disabledEndDateTime(eventHourStart, streamingHours);
+                      // }}
                       allowClear={false}
                       use12Hours
                       value={dayjs(selectedHours.at)}

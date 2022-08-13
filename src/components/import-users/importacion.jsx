@@ -40,6 +40,10 @@ const Importacion = (props) => {
             for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
               const secondCell = sheetObj[utils.encode_cell({ r: rowNum, c: colNum })];
               let val = secondCell ? secondCell.v : undefined;
+              /** Validation so that the checkIn field saves its value as a string and not as an integer, when Excel is imported */
+              props.extraFields.map((field) => {
+                if (field.type === 'checkInField' && field.name === key) val = val?.toString();
+              });
               fields[colNum].list.push(val);
             }
           }

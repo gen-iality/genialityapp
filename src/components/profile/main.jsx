@@ -33,7 +33,12 @@ import dayjs from 'dayjs';
 import Loading from './loading';
 import ChangePassword from './components/changePassword';
 import EditInformation from './components/EditInformation';
+import MyPlan from './components/myPlan';
 import { imageUtils } from '../../Utilities/ImageUtils';
+import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
+import eventCard from '../shared/eventCard';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -54,6 +59,7 @@ const MainProfile = (props) => {
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
+  const { helperDispatch } = useHelper();
 
   const showSider = () => {
     if (!collapsed) {
@@ -69,7 +75,13 @@ const MainProfile = (props) => {
 
   const eventsIHaveCreated = async () => {
     const events = await EventsApi.mine();
-    const eventsDataSorted = events.sort((a, b) => dayjs(b.datetime_from) - dayjs(a.datetime_from));
+
+    if (events.length > 0) {
+      events.map((event) => {
+        featureBlockingListener(event._id, helperDispatch, 'map');
+      });
+    }
+    const eventsDataSorted = events.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
     setevents(eventsDataSorted);
     seteventsLimited(events.slice(0, 3));
     setEventsIHaveCreatedIsLoading(false);
@@ -83,7 +95,12 @@ const MainProfile = (props) => {
       setEventsThatIHaveParticipatedIsLoading(false);
       return;
     }
-    const ticketsDataSorted = ticketsall.sort((a, b) => dayjs(b.created_at) - dayjs(a.created_at));
+
+    ticketsall.map((event) => {
+      featureBlockingListener(event.event_id, helperDispatch, 'map');
+    });
+
+    const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     const usersInscription = [];
     ticketsDataSorted.forEach(async (element) => {
       const eventByTicket = await EventsApi.getOne(element.event_id);
@@ -99,7 +116,7 @@ const MainProfile = (props) => {
   const myOrganizations = async () => {
     const organizations = await OrganizationApi.mine();
     const organizationsFilter = organizations.filter((orgData) => orgData.id);
-    const organizationDataSorted = organizationsFilter.sort((a, b) => dayjs(b.created_at) - dayjs(a.created_at));
+    const organizationDataSorted = organizationsFilter.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     setorganizations(organizationDataSorted);
     setorganizationsLimited(organizationDataSorted.slice(0, 5));
     setOrganizationsIsLoading(false);
@@ -184,6 +201,17 @@ const MainProfile = (props) => {
                 icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
                 Lección en GEN.iality
               </Menu.Item>
+              {/* RESTRICIONES seccion mi plan */}
+              {/* <Menu.Item
+                title={null}
+                onClick={() => {
+                  showContent('MY_PLAN');
+                  screens.xs && showSider();
+                }}
+                key={'myPlan'}
+                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
+                Mi plan
+              </Menu.Item> */}
               <Menu.Item
                 title={null}
                 onClick={() => {
@@ -336,6 +364,9 @@ const MainProfile = (props) => {
                                           </Link>
                                         </div>,
                                       ]}
+                                      blockedEvent={
+                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                                      }
                                     />
                                   </Col>
                                 );
@@ -361,6 +392,9 @@ const MainProfile = (props) => {
                                       bordered={false}
                                       event={event}
                                       action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                      blockedEvent={
+                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                                      }
                                     />
                                   </Col>
                                 );
@@ -451,6 +485,9 @@ const MainProfile = (props) => {
                                 </Link>
                               </div>,
                             ]}
+                            blockedEvent={
+                              props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                            }
                           />
                         </Col>
                       );
@@ -471,6 +508,9 @@ const MainProfile = (props) => {
                               bordered={false}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
+                              blockedEvent={
+                                props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                              }
                             />
                           </Col>
                         );
@@ -485,6 +525,7 @@ const MainProfile = (props) => {
               </TabPane>
             </Tabs>
           )}
+          {content === 'MY_PLAN' && <MyPlan cUser={props.cUser} />}
         </Content>
       </Layout>
     </Layout>

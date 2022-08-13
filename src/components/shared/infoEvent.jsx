@@ -12,10 +12,11 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(localizedFormat);
 
 const InfoEvent = () => {
-  let cEvent = UseEventContext();
-  let { handleChangeTypeModal } = useHelper();
+  const cEvent = UseEventContext();
+  let { handleChangeTypeModal, eventIsActive } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
+
   const intl = useIntl();
   return (
     <PageHeader
@@ -25,16 +26,24 @@ const InfoEvent = () => {
         paddingTop: '10px',
         paddingBottom: '20px',
         margin: '20px',
-        borderTop: `5px solid ${cEvent.value.styles.toolbarDefaultBg}`,
+        border: `2px solid ${cEvent.value.styles.textMenu}`,
         borderRadius: '20px',
-        backgroundColor: 'white',
+        backgroundColor: cEvent.value.styles.toolbarDefaultBg,
       }}
-      title={cEvent.value.name}
+      title={
+        <Typography.Title level={4} style={{ color: cEvent.value.styles.textMenu }}>
+          {cEvent.value.name}
+        </Typography.Title>
+      }
       extra={
         recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
         cUser?.value &&
         !cEventUser?.value && (
-          <Button onClick={() => handleChangeTypeModal('registerForTheEvent')} type='primary' size='large'>
+          <Button
+            onClick={() => handleChangeTypeModal('registerForTheEvent')}
+            type='primary'
+            size='large'
+            disabled={!eventIsActive}>
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al curso',
@@ -43,7 +52,7 @@ const InfoEvent = () => {
         )
       }
       footer={
-        <Space>
+        <Space style={{ color: cEvent.value.styles.textMenu }}>
           <Space wrap>
             <Space>
               <CalendarOutlined />

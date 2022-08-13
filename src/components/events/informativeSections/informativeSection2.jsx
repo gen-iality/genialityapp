@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Card, Row, Col } from 'antd';
+import { Card, Row, Col, Typography } from 'antd';
 import Parser from 'html-react-parser';
 import ReactPlayer from 'react-player';
 import withContext from '../../../context/withContext';
@@ -30,12 +30,21 @@ class InformativeSection2 extends Component {
               {this.props.cEvent.value._id != '609180c6013150612044b547' &&
                 this.props.cEvent.value._id != '60797bfb2a9cc06ce973a1f4' && (
                   <Card
+                    style={{
+                      backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                    }}
                     title={
-                      informativeSection1 && informativeSection1.name ? informativeSection1.name : 'Sección informativa'
+                      <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                        {informativeSection1 && informativeSection1.name
+                          ? informativeSection1.name
+                          : 'Sección informativa'}
+                      </Typography.Title>
                     }
                     bordered={false} /* style={{ width: 1000 }} */
                   >
-                    <div id='img-informative'>{markup != null && Parser(markup)}</div>
+                    <div id='img-informative' style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                      {markup != null && Parser(markup)}
+                    </div>
                   </Card>
                 )}
 

@@ -288,9 +288,8 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const obtainUrl = (type, data) => {
-    /* const previewBaseUrlVideo =
-      'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'; */
-      const previewBaseUrlVideo = import.meta.env.VITE_PLACEHOLDER_LIVE_TRANSMITION;
+    const previewBaseUrlVideo = import.meta.env.VITE_PLACEHOLDER_LIVE_TRANSMITION;
+    // 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
     let urlVideo;
     switch (type) {
       case 'vimeo':

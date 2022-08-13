@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import dayjs from 'dayjs';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from '../../helpers/request';
+import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '../../helpers/request';
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
@@ -36,6 +36,14 @@ import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
+import {
+  disabledEndDateTime,
+  disabledEndDate,
+  disabledStartDateTime,
+  disabledStartDate,
+} from '@/Utilities/disableTimeAndDatePickerInEventDate';
+import { CurrentUserContext } from '@/context/userContext';
 
 dayjs.locale('es');
 const { Title, Text } = Typography;
@@ -47,7 +55,6 @@ const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
-
 class General extends Component {
   constructor(props) {
     super(props);
@@ -92,14 +99,26 @@ class General extends Component {
       },
       typeEvent: 0,
       image: this.props.event.picture,
+      iMustBlockAFunctionality: false,
+      iMustValidate: true,
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.getInitialPage = this.getInitialPage.bind(this);
   }
+  static contextType = CurrentUserContext;
+
+  getCurrentConsumptionPlanByUsers = async () => {
+    const userContext = this.context;
+    const cUser = userContext?.value;
+    if (!cUser?._id) return;
+    const consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser?._id);
+    this.setState({ consumption });
+  };
 
   async componentDidMount() {
+    this.getCurrentConsumptionPlanByUsers();
     //inicializacion del estado de menu
     if (this.state.event.itemsMenu) {
       const { itemsMenu } = this.state.event;
@@ -185,8 +204,11 @@ class General extends Component {
     }
 
     //Esto es para la configuración de autenticación. Nuevo flujo de Login
-    if (this.state.event.visibility === 'PUBLIC' && this.state.event.allow_register) {
-      //Cursos Público con Registro
+    if (
+      (this.state.event.visibility === 'PUBLIC' || this.state.event.visibility === 'ANONYMOUS') &&
+      this.state.event.allow_register
+    ) {
+      //Evento Público con Registro
       this.setState({ typeEvent: 0 });
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Cursos Público sin Registro
@@ -295,7 +317,12 @@ class General extends Component {
           .toDate();
       this.setState({
         minDate: value,
-        event: { ...this.state.event, date_end: date_end, date_start: value },
+        event: { ...this.state.event, date_start: value, date_end: value },
+      });
+    } else if (name === 'hour_start') {
+      this.setState({
+        minDate: value,
+        event: { ...this.state.event, hour_start: value, hour_end: value },
       });
     } else this.setState({ event: { ...this.state.event, [name]: value } });
   };
@@ -652,6 +679,13 @@ class General extends Component {
       });
     }
   };
+  /** RESTRICIONES */
+  theEventIsActive = (state) => {
+    this.setState({
+      iMustBlockAFunctionality: state,
+      iMustValidate: false,
+    });
+  };
 
   render() {
     if (this.state.loading) return <Loading />;
@@ -669,10 +703,28 @@ class General extends Component {
       specificDates,
       registerForm,
       image,
+      iMustBlockAFunctionality,
+      iMustValidate,
+      consumption,
     } = this.state;
+    const userContext = this.context;
+    /** RESTRICIONES */
+    const cUser = userContext?.value;
+    const userPlan = userContext.value?.plan;
+    const streamingHours = userPlan?.availables?.streaming_hours;
 
     return (
       <React.Fragment>
+        {/* RESTRICIONES */}
+        {/* {iMustValidate && (
+          <>
+            <ValidateEventStart
+              startDate={event.datetime_from}
+              callBackTheEventIsActive={this.theEventIsActive}
+              user={cUser}
+            />
+          </>
+        )} */}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1'>
@@ -785,6 +837,7 @@ class General extends Component {
                       <Option value=''>Seleccionar...</Option>
                       <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO */}
                       <Option value='onlineEvent'>Actualización </Option> {/* TODO */}
+                      <Option value='hybridEvent'>Evento híbrido</Option>
                     </Select>
                   </Form.Item>
 
@@ -803,7 +856,7 @@ class General extends Component {
                     </Form.Item>
                   )} */}
 
-                  {event.type_event === 'physicalEvent' && (
+                  {event.type_event !== 'onlineEvent' && (
                     <>
                       <Form.Item label={'Dirección'}>
                         <Input
@@ -825,9 +878,11 @@ class General extends Component {
                     </>
                   )}
 
-                  <Form.Item label={'Especificar fechas'}>
-                    {/* <Switch defaultChecked onChange={this.specificDates} checked={specificDates} /> */}
-                  </Form.Item>
+                  {!cUser?.plan && (
+                    <Form.Item label={'Especificar fechas'}>
+                      {/* <Switch defaultChecked onChange={this.specificDates} checked={specificDates} /> */}
+                    </Form.Item>
+                  )}
 
                   {specificDates === false ? (
                     <div>
@@ -835,25 +890,26 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha inicio'}>
                             <DatePicker
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.date_start)}
                               format={'DD/MM/YYYY'}
                               onChange={(value) => this.changeDate(value, 'date_start')}
                             />
-                            {/* <DateTimePicker
-                              value={event.date_start}
-                              format={'DD/MM/YYYY'}
-                              time={false}
-                              onChange={(value) =>
-                                this.changeDate(value, 'date_start')
-                              }
-                            /> */}
                           </Form.Item>
                         </Col>
                         <Col span={12}>
                           <Form.Item label={'Hora inicio'}>
                             <TimePicker
+                              showNow={false}
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledTime={(time) => disabledStartDateTime(event, streamingHours)}
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.hour_start)}
@@ -876,6 +932,10 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha fin'}>
                             <DatePicker
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledDate={(date) => disabledEndDate(date, event, streamingHours)}
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.date_end)}
@@ -896,6 +956,11 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Hora fin'}>
                             <TimePicker
+                              showNow={false}
+                              inputReadOnly={true}
+                              //RESTRICIONES
+                              // disabledTime={(time) => disabledEndDateTime(event, streamingHours)}
+                              disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.hour_end)}
@@ -1110,7 +1175,6 @@ class General extends Component {
                             )
                           }>
                           <div
-                            onClick={() => this.changetypeEvent(0)}
                             style={{
                               border: '1px solid #D3D3D3',
                               borderRadius: '5px',
@@ -1119,15 +1183,35 @@ class General extends Component {
                               minHeight: '170px',
                             }}>
                             <Space direction='vertical'>
-                              <Text strong>Cursos Público con Registro</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                <ul>
-                                  <li>Tiene registro para todos.</li>
-                                  <br />
-                                  <li>Tiene inicio de sesión para todos.</li>
-                                </ul>
-                              </Text>
+                              <div onClick={() => this.changetypeEvent(0)}>
+                                <Text strong>Cursos Público con Registro</Text>
+                                <Divider />
+                                <Text type='secondary'>
+                                  <ul>
+                                    <li>Tiene registro para todos.</li>
+                                    <br />
+                                    <li>Tiene inicio de sesión para todos.</li>
+                                  </ul>
+                                </Text>
+                              </div>
+                              {this.state.typeEvent === 0 && (
+                                <>
+                                  <Divider />
+                                  <Checkbox
+                                    defaultChecked={this.state.event.visibility === 'ANONYMOUS'}
+                                    onChange={(e) =>
+                                      this.setState({
+                                        event: {
+                                          ...this.state.event,
+                                          visibility: e.target.checked === true ? 'ANONYMOUS' : 'PUBLIC',
+                                          allow_register: true,
+                                        },
+                                      })
+                                    }>
+                                    Registro sin autenticación de usuario (Beta)
+                                  </Checkbox>
+                                </>
+                              )}
                             </Space>
                           </div>
                         </Badge>

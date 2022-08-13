@@ -46,7 +46,7 @@ export default function RoomController(props) {
   }
 
   useEffect(() => {
-    getGamesData();
+    (listOfGames != avalibleGames) && getGamesData();
   }, [avalibleGames]);
 
   const columns = [

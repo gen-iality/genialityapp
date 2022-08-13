@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button } from 'antd';
+import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, Typography } from 'antd';
 import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
@@ -22,7 +22,7 @@ const { useBreakpoint } = Grid;
 
 function AgendaActivityItem(props) {
   let history = useHistory();
-  let cEvent = UseEventContext();
+  const cEvent = UseEventContext();
   let urlactivity =
     cEvent && !cEvent?.isByname ? `/landing/${props.event._id}/activity/` : `/event/${cEvent?.nameEvent}/activity/`;
   const screens = useBreakpoint();
@@ -153,16 +153,18 @@ function AgendaActivityItem(props) {
               }>
               <Card
                 hoverable
+                style={{ backgroundColor: 'transparent' }}
                 className='card-agenda-mobile agendaHover efect-scale'
                 bodyStyle={{
                   padding: '10px',
-                  border: `solid 2px ${event.styles.toolbarDefaultBg}`,
+                  border: `solid 2px ${cEvent.value.styles.textMenu}`,
                   borderRadius: '15px',
+                  backgroundColor: cEvent.value.styles.toolbarDefaultBg,
                 }}>
                 <Row gutter={[8, 8]}>
                   <Col span={6}>
                     {!props.hasDate && (
-                      <div className='agenda-hora'>
+                      <div className='agenda-hora' style={{ color: cEvent.value.styles.textMenu }}>
                         {item.datetime_start
                           ? Moment.tz(
                               item.datetime_start,
@@ -198,16 +200,22 @@ function AgendaActivityItem(props) {
                               }}
                             />
                           ) : meetingState == 'closed_meeting_room' ? (
-                            <LoadingOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                            <LoadingOutlined
+                              style={{ fontSize: '35px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
+                            />
                           ) : meetingState == 'ended_meeting_room' && item.video ? (
-                            <CaretRightOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                            <CaretRightOutlined
+                              style={{ fontSize: '35px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
+                            />
                           ) : meetingState == 'ended_meeting_room' ? (
-                            <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                            <CheckCircleOutlined
+                              style={{ fontSize: '35px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
+                            />
                           ) : (
                             <></>
                           )}
 
-                          <span style={{ fontSize: '10px' }}>
+                          <span style={{ fontSize: '10px', color: cEvent.value.styles.textMenu }}>
                             {meetingState == 'open_meeting_room'
                               ? intl.formatMessage({ id: 'live' })
                               : meetingState == 'ended_meeting_room' && item.video
@@ -226,8 +234,12 @@ function AgendaActivityItem(props) {
                     <Space direction='vertical'>
                       <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
                         <Col span={24}>
-                          <div className='tituloM'>{item.name}.</div>
-                          <span className='lugarM'>{item && item.space && item.space.name}</span>
+                          <div className='tituloM' style={{ color: cEvent.value.styles.textMenu }}>
+                            {item.name}.
+                          </div>
+                          <span className='lugarM' style={{ color: cEvent.value.styles.textMenu }}>
+                            {item && item.space && item.space.name}
+                          </span>
                         </Col>
                       </Row>
                       <Row gutter={[4, 4]}>
@@ -294,21 +306,25 @@ function AgendaActivityItem(props) {
               <Card
                 style={{
                   borderRadius: '15px',
-                  border: `solid 2px ${event.styles.toolbarDefaultBg}`,
+                  border: `solid 2px ${cEvent.value.styles.textMenu}`,
                   maxHeight: '280px',
                   minHeight: '187px',
                 }}
                 hoverable
                 className='card-agenda-desktop agendaHover efect-scale'
-                bodyStyle={{ padding: '10px' }}>
+                bodyStyle={{
+                  padding: '10px',
+                  borderRadius: '15px',
+                  backgroundColor: cEvent.value.styles.toolbarDefaultBg,
+                }}>
                 <Row gutter={[8, 8]}>
                   <Col md={4} lg={4} xl={4} className='agenda-hora'>
                     <div>
                       {!props.hasDate && item.datetime_end ? (
                         <Timeline>
                           <Timeline.Item
-                            color={!validateTypeActivity(typeActivity) ? 'transparent' : event.styles.toolbarDefaultBg}>
-                            <div>
+                            color={!validateTypeActivity(typeActivity) ? 'transparent' : cEvent.value.styles.textMenu}>
+                            <div style={{ color: cEvent.value.styles.textMenu }}>
                               {!props.hasDate && item.datetime_start && validateTypeActivity(typeActivity)
                                 ? Moment.tz(
                                     item.datetime_start,
@@ -319,7 +335,7 @@ function AgendaActivityItem(props) {
                                     .format('h:mm a')
                                 : ''}
                               {!props.hasDate && item.datetime_start && validateTypeActivity(typeActivity) && (
-                                <p className='ultrasmall'>
+                                <p className='ultrasmall' style={{ color: cEvent.value.styles.textMenu }}>
                                   {Moment.tz(
                                     item.datetime_start,
                                     'YYYY-MM-DD HH:mm',
@@ -347,6 +363,7 @@ function AgendaActivityItem(props) {
                                       style={{
                                         fontSize: '45px',
                                         marginTop: '10px',
+                                        color: cEvent.value.styles.textMenu,
                                       }}
                                     />
                                   ) : meetingState == 'ended_meeting_room' && item.video ? (
@@ -354,6 +371,7 @@ function AgendaActivityItem(props) {
                                       style={{
                                         fontSize: '45px',
                                         marginTop: '10px',
+                                        color: cEvent.value.styles.textMenu,
                                       }}
                                     />
                                   ) : meetingState == 'ended_meeting_room' ? (
@@ -361,6 +379,7 @@ function AgendaActivityItem(props) {
                                       style={{
                                         fontSize: '45px',
                                         marginTop: '10px',
+                                        color: cEvent.value.styles.textMenu,
                                       }}
                                     />
                                   ) : (
@@ -368,7 +387,7 @@ function AgendaActivityItem(props) {
                                   )}
 
                                   {(meetingState == '' || meetingState == null) && <></>}
-                                  <p style={{ fontSize: '12px' }}>
+                                  <p style={{ fontSize: '12px', color: cEvent.value.styles.textMenu }}>
                                     {meetingState == 'open_meeting_room'
                                       ? intl.formatMessage({ id: 'live' })
                                       : meetingState == 'ended_meeting_room' && item.video
@@ -388,7 +407,9 @@ function AgendaActivityItem(props) {
                             </div>
                           </Timeline.Item>
                           {validateTypeActivity(typeActivity) && (
-                            <Timeline.Item color={event.styles.toolbarDefaultBg} style={{ paddingBottom: '5px' }}>
+                            <Timeline.Item
+                              color={event.styles.toolbarDefaultBg}
+                              style={{ paddingBottom: '5px', color: cEvent.value.styles.textMenu }}>
                               {!props.hasDate &&
                                 item.datetime_end &&
                                 Moment.tz(
@@ -431,17 +452,23 @@ function AgendaActivityItem(props) {
                               }}
                             />
                           ) : meetingState == 'closed_meeting_room' ? (
-                            <LoadingOutlined style={{ fontSize: '60px', marginTop: '10px' }} />
+                            <LoadingOutlined
+                              style={{ fontSize: '60px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
+                            />
                           ) : meetingState == 'ended_meeting_room' && item.video ? (
-                            <CaretRightOutlined style={{ fontSize: '60px', marginTop: '10px' }} />
+                            <CaretRightOutlined
+                              style={{ fontSize: '60px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
+                            />
                           ) : meetingState == 'ended_meeting_room' ? (
-                            <CheckCircleOutlined style={{ fontSize: '60px', marginTop: '10px' }} />
+                            <CheckCircleOutlined
+                              style={{ fontSize: '60px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
+                            />
                           ) : (
                             <></>
                           )}
 
                           {(meetingState == '' || meetingState == null) && <></>}
-                          <p style={{ fontSize: '16px' }}>
+                          <p style={{ fontSize: '16px', color: cEvent.value.styles.textMenu }}>
                             {meetingState == 'open_meeting_room'
                               ? intl.formatMessage({ id: 'live' })
                               : meetingState == 'ended_meeting_room' && item.video
@@ -460,9 +487,13 @@ function AgendaActivityItem(props) {
                     <Space direction='vertical'>
                       <Row gutter={[10, 10]}>
                         <Col span={24} style={{ paddingLeft: '0px' }}>
-                          <div className='titulo'>{item.name}.</div>
-                          <div className="lesson">{lessonTypeToString(item.type?.name || 'Contenido genérico')}</div>
-                          <span className='lugar'>{item && item.space && item.space.name}</span>
+                          <div className='titulo' style={{ color: cEvent.value.styles.textMenu }}>
+                            {item.name}.
+                          </div>
+                          <div className='lesson'>{lessonTypeToString(item.type?.name || 'Contenido genérico')}</div>
+                          <span className='lugar' style={{ color: cEvent.value.styles.textMenu }}>
+                            {item && item.space && item.space.name}
+                          </span>
                         </Col>
                         <Row style={{ width: '100%' }}>
                           {item.description !== null && item.description !== '<p><br></p>' && (
@@ -476,18 +507,21 @@ function AgendaActivityItem(props) {
                                   <Comment
                                     className='descripcion'
                                     content={
-                                      <div
-                                        style={{
-                                          overflow: 'hidden',
-                                          display: '-webkit-box',
-                                          WebkitLineClamp: '3',
-                                          WebkitBoxOrient: 'vertical',
-                                          width: '100%',
-                                        }}
-                                        dangerouslySetInnerHTML={{
-                                          __html: item.description,
-                                        }}
-                                      />
+                                      cEvent.value?._id !== '62c5e89176dfb307163c05a9' && (
+                                        <div
+                                          style={{
+                                            overflow: 'hidden',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: '3',
+                                            WebkitBoxOrient: 'vertical',
+                                            width: '100%',
+                                            color: cEvent.value.styles.textMenu,
+                                          }}
+                                          dangerouslySetInnerHTML={{
+                                            __html: item.description,
+                                          }}
+                                        />
+                                      )
                                     }
                                   />
                                 </>
@@ -502,7 +536,9 @@ function AgendaActivityItem(props) {
                                 {item.hosts.map((speaker, key) => (
                                   <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
                                     <Avatar size={40} src={speaker.image} />
-                                    {speaker.name}
+                                    <Typography.Text style={{ color: cEvent.value.styles.textMenu }}>
+                                      {speaker.name}
+                                    </Typography.Text>
                                     {/* <table>
                                     <tr>
                                       <th>

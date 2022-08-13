@@ -40,22 +40,36 @@ const MenuConfig = (props) => {
   const handleClick = (e) => {
     if (!navigator.onLine) e.preventDefault();
   };
-
+  // cosole.log('Test request');
   return (
-    <Fragment>
-      <Menu
-        defaultSelectedKeys={['datos-evento']}
-        // defaultOpenKeys={['main']}
-        theme='dark'
-        style={{
-          overflow: 'auto',
-          background: '#1B1E28',
-        }}
-        inlineCollapsed={controller.collapsed}>
-        <Row justify='center' style={{ padding: 10 }}>
+    <Menu
+      // defaultOpenKeys={['main']}
+      mode='vertical'
+      theme='dark'
+      style={{
+        overflow: 'auto',
+        background: '#1B1E28',
+      }}
+      inlineCollapsed={props.collapsed}>
+      <div style={{ textAlign: 'end', marginBottom: '15px', marginTop: '15px' }}>
+        <Button
+          type='primary'
+          onClick={props.collapseMenu}
+          style={{ width: '100%', textAlign: 'end', background: '#1B1E28', border: 'none' }}>
+          {props.collapsed ? (
+            <RightOutlined style={{ fontSize: '20px' }} />
+          ) : (
+            <LeftOutlined style={{ fontSize: '20px' }} />
+          )}
+        </Button>
+      </div>
+
+      <Row justify='center' style={{ textAlign: 'center' }}>
+        <Col span={24}>
           <img
             style={{
-              width: '50%',
+              width: '80%',
+              marginBottom: '15px',
             }}
             src={`${import.meta.env.VITE_LOGO_SVG_DARK}`}
           />

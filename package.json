@@ -3,7 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode staging",
+    "prod": "vite --mode prod_evius",
+    "devgeniality": "vite --mode geniality_staging",
+    "prodgeniality": "vite --mode geniality_production",
     "build": "vite build",
     "preview": "vite preview",
     "vite:start": "vite",

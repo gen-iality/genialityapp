@@ -35,6 +35,8 @@ import NoMatchPage from '../notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms';
 import { DispatchMessageService } from '@/context/MessageService';
 import { handleRequestError } from '@/helpers/utils';
+import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
+import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -84,17 +86,22 @@ class Event extends Component {
       FAQS: true,
       Trivia: true,
       event: null,
+      collapsed: false,
+      iMustValidate: true,
     };
     this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this);
   }
 
   async componentDidMount() {
+    const helperDispatch = this.props.cHelper.helperDispatch;
+
     try {
       await this.props.dispatch(fetchRol());
       let eventId = this.props.match.params.event;
       await this.props.dispatch(fetchPermissions(eventId));
       const event = await EventsApi.getOne(eventId);
       const eventWithExtraFields = this.addNewFieldsToEvent(event);
+      featureBlockingListener(eventId, helperDispatch);
       this.setState({ event: eventWithExtraFields, loading: false });
     } catch (e) {
       DispatchMessageService({
@@ -171,9 +178,26 @@ class Event extends Component {
     return encodedUrl;
   }
 
+  collapseMenu = () => {
+    this.setState({ collapsed: !this.state.collapsed });
+  };
+
+  /** RESTRICIONES */
+  theEventIsActive = (state) => {
+    const eventId = this.state.event._id;
+
+    featureBlockingStatusSave(eventId, state);
+
+    this.setState({
+      iMustValidate: false,
+    });
+  };
+
   render() {
     const { match, permissions, showMenu } = this.props;
-    const { error } = this.state;
+    const { error, collapsed, iMustValidate, event } = this.state;
+    const cUser = this.props.cUser?.value;
+
     if (this.state.loading || this.props.loading || permissions.loading) return <Loading />;
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
     if (error)
@@ -193,14 +217,25 @@ class Event extends Component {
       );
 
     return (
-      <Layout style={{ minHeight: '100vh' }} className='columns'>
+      <Layout className='columns'>
+        {/* RESTRICIONES */}
+        {/* {iMustValidate && (
+          <>
+            <ValidateEndEvent
+              endDate={event.datetime_to}
+              callBackTheEventIsActive={this.theEventIsActive}
+              user={cUser}
+            />
+          </>
+        )} */}
         <Sider
           style={{
             overflow: 'auto',
             background: '#1B1E28',
           }}
-          className={` menu event-aside `}>
-          <Menu match={match} />
+          width={250}
+          collapsed={collapsed}>
+          <Menu match={match} collapseMenu={this.collapseMenu} collapsed={collapsed} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
           <Row gutter={[16, 16]} wrap>
@@ -224,8 +259,8 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/main`}
                 component={General}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 updateEvent={this.updateEvent}
                 componentKey='main'
               />
@@ -233,74 +268,69 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/wall`}
                 component={Wall}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='wall'
               />
               <Protected
                 path={`${match.url}/datos`}
                 component={Datos}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='datos'
               />
               <Protected
                 path={`${match.url}/agenda`}
                 component={AgendaRoutes}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 updateEvent={this.updateEvent}
                 componentKey='agenda'
               />
               <Protected
                 path={`${match.url}/adminUsers`}
                 component={AdminUsers}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='adminUsers'
               />
               <Protected
                 path={`${match.url}/empresas`}
                 component={EmpresasRoutes}
-                event={this.state.event}
+                event={event}
                 componentKey='empresas'
               />
-              <Protected
-                path={`${match.url}/trivia`}
-                component={TriviaRoutes}
-                event={this.state.event}
-                componentKey='trivia'
-              />
+              <Protected path={`${match.url}/trivia`} component={TriviaRoutes} event={event} componentKey='trivia' />
               <Protected
                 path={`${match.url}/documents`}
                 component={DocumentsRoutes}
-                event={this.state.event}
+                event={event}
                 componentKey='documents'
               />
               {/* esta ruta carga en blanco */}
               <Protected
                 path={`${match.url}/conference`}
                 component={ConferenceRoute}
-                event={this.state.event}
+                event={event}
                 componentKey='conference'
               />
               <Protected
                 path={`${match.url}/menuLanding`}
                 component={MenuLanding}
-                event={this.state.event}
+                event={event}
                 componentKey='menuLanding'
               />
               <Protected
                 path={`${match.url}/reportNetworking`}
                 component={ReportNetworking}
-                event={this.state.event}
+                event={event}
                 componentKey='reportNetworking'
               />
               <Protected
                 path={`${match.url}/assistants`}
                 component={ListEventUser}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 url={match.url}
                 shownAll
               />
@@ -308,16 +338,16 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/chatexport`}
                 component={ChatExport}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 url={match.url}
               />
 
               <Protected
                 path={`${match.url}/checkin/:id`}
                 component={ListEventUser}
-                event={this.state.event}
-                eventId={this.state.event._id}
+                event={event}
+                eventId={event._id}
                 url={match.url}
                 componentKey='checkin'
                 type='activity'
@@ -327,8 +357,8 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/checkin-actividad`}
                 component={ReportList}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 url={match.url}
                 componentKey='checkin-actividad'
               />
@@ -336,34 +366,29 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/informativesection`}
                 component={Informativesection}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 url={match.url}
               />
               {/** AÚN NO TIENEN PERMISOS */}
               <Protected
                 path={`${match.url}/invitados`}
                 component={InvitedUsers}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='invitados'
               />
-              <Protected
-                path={`${match.url}/messages`}
-                component={Messages}
-                event={this.state.event}
-                componentKey='messages'
-              />
+              <Protected path={`${match.url}/messages`} component={Messages} event={event} componentKey='messages' />
               <Protected
                 path={`${match.url}/confirmacion-registro`}
                 component={ConfirmacionRegistro}
-                event={this.state.event}
+                event={event}
                 componentKey='tconfirmacion-registro'
               />
               <Protected
                 path={`${match.url}/tipo-asistentes`}
                 component={TipoAsistentes}
-                event={this.state.event}
+                event={event}
                 componentKey='tipo-asistentes'
               />
               {/* <Protected
@@ -375,27 +400,22 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/dashboard`}
                 component={DashboardEvent}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='dashboard'
               />
-              <Protected
-                path={`${match.url}/orders`}
-                component={OrdersEvent}
-                event={this.state.event}
-                componentKey='orders'
-              />
+              <Protected path={`${match.url}/orders`} component={OrdersEvent} event={event} componentKey='orders' />
               <Protected
                 path={`${match.url}/certificados`}
                 component={ListCertificados}
-                event={this.state.event}
+                event={event}
                 componentKey='certificados'
               />
               <Protected
                 path={`${match.url}/espacios`}
                 component={Espacios}
                 matchUrl={match.url}
-                event={this.state.event}
+                event={event}
                 componentKey='espacios'
               />
               {/* <Protected
@@ -407,16 +427,16 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/speakers`}
                 component={Speakers}
-                event={this.state.event}
-                eventID={this.state.event._id}
+                event={event}
+                eventID={event._id}
                 componentKey='speakers'
               />
 
               <Protected
                 path={`${match.url}/styles`}
                 component={Styles}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='styles'
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
@@ -430,44 +450,44 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/notificationsApp`}
                 component={NotificationsApp}
-                event={this.state.event}
+                event={event}
                 componentKey='notificationsApp'
               />
               <Protected
                 path={`${match.url}/news`}
                 component={NewsSectionRoutes}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='news'
               />
               <Protected
                 path={`${match.url}/product`}
                 component={ProductSectionRoutes}
-                eventId={this.state.event._id}
-                event={this.state.event}
+                eventId={event._id}
+                event={event}
                 componentKey='product'
               />
               <Protected
                 path={`${match.url}/faqs`}
                 matchUrl={match.url}
                 component={FAQS}
-                event={this.state.event}
+                event={event}
                 componentKey='faqs'
               />
               <Protected
                 path={`${match.url}/ticketsEvent`}
                 matchUrl={match.url}
                 component={EventsTicket}
-                event={this.state.event}
-                eventId={this.state.event._id}
+                event={event}
+                eventId={event._id}
                 componentKey='ticketsEvent'
               />
               {/* Este componente se muestra si una ruta no coincide */}
               <Protected
                 path={`${match.url}`}
                 component={NoMatchPage}
-                event={this.state.event}
-                eventId={this.state.event._id}
+                event={event}
+                eventId={event._id}
                 componentKey='NoMatch'
               />
             </Switch>

@@ -19,6 +19,7 @@ import { useEffect } from 'react';
 import { firestore } from '../../helpers/firebase';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const { confirm } = Modal;
 
@@ -29,6 +30,7 @@ const tableLocale = {
 function Empresas({ event, match }) {
   const [companies, loadingCompanies] = useGetEventCompanies(event._id);
   const [companyList, setCompanyList] = useState([]);
+  const { eventIsActive } = useHelper();
 
   useEffect(() => {
     if (companies.length > 0) {
@@ -154,7 +156,7 @@ function Empresas({ event, match }) {
       width: 30,
       className: 'drag-visible',
       render(companyName, record) {
-        return <DragHandle />;
+        return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
       },
     },
     {
@@ -215,6 +217,7 @@ function Empresas({ event, match }) {
                   icon={<DeleteOutlined />}
                   type='danger'
                   size='small'
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 />
               </Tooltip>
             </Col>
@@ -260,7 +263,11 @@ function Empresas({ event, match }) {
         extra={
           <Row wrap gutter={[8, 8]}>
             <Col>
-              <Button onClick={() => orderCompany()} type='primary' icon={<SaveOutlined />}>
+              <Button
+                onClick={() => orderCompany()}
+                type='primary'
+                icon={<SaveOutlined />}
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                 {'Guardar orden'}
               </Button>
             </Col>

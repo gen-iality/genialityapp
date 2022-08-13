@@ -10,7 +10,7 @@ import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
 
 import useActivityType from '@context/activityType/hooks/useActivityType';
-import { useGetWidgetForActivityType } from '@context/activityType/hooks/useGetWidgetForActivityType';
+import { useGetWidgetForActivityType } from '@/context/activityType/hooks/useGetWidgetForActivityType';
 
 export interface SubActivityContentSelectorProps {
   activityId: string,
@@ -81,11 +81,11 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     return (
         <>
         {/*
-       
         <p>Contenido: {activityContentType}</p>
         <Button danger onClick={() => setActivityContentType(null)}>
           Eliminar contenido
         </Button>
+       
         */}
         <ActivityContentManager activityName={activityName} matchUrl={props.matchUrl} />
       </>
@@ -112,8 +112,8 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
       <Row align='middle' style={{textAlign: 'center'}}>
         <Col span={24} style={{marginBottom: '1em'}}>
           <h2>
-            Todavía no has agregado el contenido a la actividad
-            {activityType && ` de "${convertTypeToHumanizedString(activityType)}"`}
+          Todavía no has agregado el contenido a la actividad
+          {activityType && ` de "${humanizeActivityType(activityType)}"`}
           </h2>
         </Col>
         <Col span={24} style={{marginBottom: '1em'}}>

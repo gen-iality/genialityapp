@@ -39,9 +39,7 @@ const liveBroadcastTransmissionOriginType: OriginOptions[] = [
     key: 'eviusMeet',
     title: 'GEN Connect',
     description: 'La herramienta ideal para realizar tus transmisiones en vivo.',
-    image:
-      import.meta.env.VITE_IMAGE_MEETING_OPTION,
-      // 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fevius_streaming.jpg?alt=media&token=3bdcd392-143f-4958-a1c2-f5663ff0f650',
+    image: import.meta.env.VITE_IMAGE_MEETING_OPTION,
   },
   {
     key: 'RTMP',
@@ -59,10 +57,8 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
     key: 'eviusStreaming',
     title: 'GEN.iality streaming',
     MainTitle: 'Escoge el origen de transmisión',
-    description: 'Configura de forma fácil y rápida una transmisión con la tecnología de GEN.iality.',
+    description: 'Configura de forma fácil y rápida una transmisión con la tecnología de Evius.',
     image: import.meta.env.VITE_IMAGE_STREAMING_OPTION,
-    // image:
-    //   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fevius_streaming.jpg?alt=media&token=3bdcd392-143f-4958-a1c2-f5663ff0f650',
     typeOptions: liveBroadcastTransmissionOriginType,
   },
   {

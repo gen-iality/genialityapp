@@ -1,8 +1,8 @@
-import { notification, List, Avatar, Button } from 'antd';
+import { notification, List, Avatar, Button, Typography } from 'antd';
 import { Component } from 'react';
 import { getFiles } from '../services';
 import { Col, Card, Result, Row, Space } from 'antd';
-import { CloudDownloadOutlined } from '@ant-design/icons';
+import { CloudDownloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Loading from '../../loaders/loading';
 import DocumentsList from '../documentsList';
 import { DocumentsApi } from '../../../helpers/request';
@@ -77,22 +77,71 @@ class documentsDetail extends Component {
 
     return (
       <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
-        <Tabs defaultActiveKey='1'>
-          <TabPane tab='Documentos del evento' key='1'>
+        <Tabs
+          defaultActiveKey='1'
+          tabBarStyle={{
+            backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+            borderRadius: '10px',
+            paddingLeft: '25px',
+          }}>
+          <TabPane
+            tab={
+              <Typography.Text
+                style={{
+                  color: this.props.cEvent.value.styles.textMenu,
+                  backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                }}>
+                Documentos del evento
+              </Typography.Text>
+            }
+            key='1'>
             <Col xs={24} sm={20} md={20} lg={20} xl={20} style={{ margin: '0 auto' }}>
-              {folders && folders.length > 0 && <DocumentsList data={folders} files={data} />}
+              {folders && folders.length > 0 && (
+                <DocumentsList
+                  colors={{
+                    texto: this.props.cEvent.value.styles.textMenu,
+                    backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                  }}
+                  data={folders}
+                  files={data}
+                />
+              )}
 
               {(!folders || !folders.length) && (
                 <div className='site-card-border-less-wrapper'>
-                  <Card title='' bordered={false}>
-                    <Result title='Aún no se han agregado archivos.' />
+                  <Card
+                    title=''
+                    bordered={false}
+                    style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}>
+                    <Result
+                      title={
+                        <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                          Aún no se han agregado archivos.
+                        </Typography.Title>
+                      }
+                      icon={<ExclamationCircleOutlined style={{ color: this.props.cEvent.value.styles.textMenu }} />}
+                    />
                   </Card>
                 </div>
               )}
             </Col>
           </TabPane>
           {this.props.cEventUser?.value && (
-            <TabPane tab={`Mis documentos`} key='2'>
+            <TabPane
+              tab={
+                <Typography.Text
+                  style={{
+                    color: this.props.cEvent.value.styles.textMenu,
+                    backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                  }}>
+                  Mis documentos
+                </Typography.Text>
+              }
+              key='2'
+              style={{
+                color: this.props.cEvent.value.styles.textMenu,
+                backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+              }}>
               {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
                 <List
                   style={{ padding: 10 }}
@@ -134,8 +183,18 @@ class documentsDetail extends Component {
               ) : (
                 this.props.cEventUser?.value?.properties?.documents_user == undefined && (
                   <div className='site-card-border-less-wrapper'>
-                    <Card title='' bordered={false}>
-                      <Result title={`Hola, No tienes documentos asignados`} />
+                    <Card
+                      title=''
+                      bordered={false}
+                      style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}>
+                      <Result
+                        icon={<ExclamationCircleOutlined style={{ color: this.props.cEvent.value.styles.textMenu }} />}
+                        title={
+                          <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                            Hola, No tienes documentos asignados
+                          </Typography.Title>
+                        }
+                      />
                     </Card>
                   </div>
                 )

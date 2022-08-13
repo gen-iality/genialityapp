@@ -21,6 +21,8 @@ import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 import Header from '../../../antdComponents/Header';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../../context/MessageService';
+import { createFieldForCheckInPerDocument } from './utils';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -96,6 +98,15 @@ class Datos extends Component {
         fields.map((field) => {
           if (/* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !== 'avatar') {
             fieldsReplace.push(field);
+          }
+          if (
+            field.type === 'checkInField' ||
+            field.name === 'birthdate' ||
+            field.name === 'bloodtype' ||
+            field.name === 'gender'
+          ) {
+            checkInFieldsIds.push(field._id);
+            this.setState({ checkInExists: true, checkInFieldsIds: checkInFieldsIds });
           }
         });
         fields = this.orderFieldsByWeight(fieldsReplace);
@@ -270,6 +281,43 @@ class Datos extends Component {
   //Borrar dato de la lista
   removeField = async (item) => {
     let self = this;
+
+    const onHandlerRemove = async () => {
+      try {
+        const organizationId = self.organization?._id;
+        if (organizationId) {
+          await self.props.deleteField(item, self.state.isEditTemplate, self.updateTable);
+        } else {
+          await EventFieldsApi.deleteOne(item, self.eventId);
+        }
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Se eliminó la información correctamente!',
+          action: 'show',
+        });
+        await self.fetchFields();
+      } catch (e) {
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
+          action: 'show',
+        });
+      }
+    };
+
+    if (checkInFieldsDelete) {
+      onHandlerRemove();
+      return;
+    }
+
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -284,36 +332,6 @@ class Datos extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        const onHandlerRemove = async () => {
-          try {
-            const organizationId = self.organization?._id;
-            if (organizationId) {
-              await self.props.deleteField(item, self.state.isEditTemplate, self.updateTable);
-            } else {
-              await EventFieldsApi.deleteOne(item, self.eventId);
-            }
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            });
-            await self.fetchFields();
-          } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
-              action: 'show',
-            });
-          }
-        };
         //self.onHandlerRemove(loading, item);
         onHandlerRemove();
       },
@@ -520,7 +538,12 @@ class Datos extends Component {
             name='visibleByContacts'
             onChange={() => this.changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
             checked={record}
-            /* disabled={key.name === 'contrasena' || key.type === 'password'} */
+            disabled={
+              key.type === 'checkInField' ||
+              key.name === 'birthdate' ||
+              key.name === 'bloodtype' ||
+              key.name === 'gender'
+            }
           />
         ),
       },
@@ -533,7 +556,12 @@ class Datos extends Component {
             name='sensibility'
             onChange={() => this.changeCheckBox(key, 'sensibility')}
             checked={record}
-            /* disabled={key.name === 'contrasena' || key.type === 'password'} */
+            disabled={
+              key.type === 'checkInField' ||
+              key.name === 'birthdate' ||
+              key.name === 'bloodtype' ||
+              key.name === 'gender'
+            }
           />
         ),
       },
@@ -556,35 +584,63 @@ class Datos extends Component {
       {
         title: 'Opciones',
         dataIndex: '',
-        render: (key) => (
-          <Row wrap gutter={[8, 8]}>
-            <Col>
-              {key.name !== 'email' /* && key.name !== 'contrasena' */ && (
-                <Tooltip placement='topLeft' title='Editar'>
-                  <Button
-                    key={`editAction${key.index}`}
-                    id={`editAction${key.index}`}
-                    onClick={() => this.editField(key)}
-                    icon={<EditOutlined />}
-                    type='primary'
-                    size='small'
-                  />
-                </Tooltip>
+        render: (key) => {
+          const { eventIsActive } = useHelper();
+
+          return (
+            <Row wrap gutter={[8, 8]}>
+              <Col>
+                {key.name !== 'email' /* && key.name !== 'contrasena' */ && (
+                  <Tooltip placement='topLeft' title='Editar'>
+                    <Button
+                      key={`editAction${key.index}`}
+                      id={`editAction${key.index}`}
+                      onClick={() => this.editField(key)}
+                      icon={<EditOutlined />}
+                      type='primary'
+                      size='small'
+                      disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    />
+                  </Tooltip>
+                )}
+              </Col>
+              <Col>
+                {key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
+                  <Tooltip placement='topLeft' title='Eliminar'>
+                    <Button
+                      key={`removeAction${key.index}`}
+                      id={`removeAction${key.index}`}
+                      onClick={() => this.removeField(key._id || key.name)}
+                      icon={<DeleteOutlined />}
+                      type='danger'
+                      size='small'
+                      disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    />
+                  </Tooltip>
+                )}
+              </Col>
+              {/* {key.name !== 'email' && key.name !== 'contrasena' && (
+                <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
               )}
             </Col>
             <Col>
-              {key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
-                <Tooltip placement='topLeft' title='Eliminar'>
-                  <Button
-                    key={`removeAction${key.index}`}
-                    id={`removeAction${key.index}`}
-                    onClick={() => this.removeField(key._id || key.name)}
-                    icon={<DeleteOutlined />}
-                    type='danger'
-                    size='small'
-                  />
-                </Tooltip>
-              )}
+              {key.name !== 'email' &&
+                key.name !== 'names' &&
+                key.type !== 'checkInField' &&
+                key.name !== 'birthdate' &&
+                key.name !== 'bloodtype' &&
+                key.name !== 'gender' && (
+                  <Tooltip placement='topLeft' title='Eliminar'>
+                    <Button
+                      key={`removeAction${key.index}`}
+                      id={`removeAction${key.index}`}
+                      onClick={() => this.removeField(key._id || key.name)}
+                      icon={<DeleteOutlined />}
+                      type='danger'
+                      size='small'
+                    />
+                  </Tooltip>
+                )}
             </Col>
             {/* {key.name !== 'email' && key.name !== 'contrasena' && (
               <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
@@ -595,8 +651,9 @@ class Datos extends Component {
                 onClick={() => this.setState({ deleteModal: key._id || key.name })}
               />
             )} */}
-          </Row>
-        ),
+            </Row>
+          );
+        },
       },
     ];
 
@@ -650,6 +707,21 @@ class Datos extends Component {
                   }}
                   title={() => (
                     <Row justify='end' wrap gutter={[8, 8]}>
+                      <Col>
+                        <Checkbox
+                          name='checkInByDocument'
+                          onChange={(value) =>
+                            createFieldForCheckInPerDocument({
+                              value,
+                              checkInFieldsIds,
+                              save: this.saveField,
+                              remove: this.removeField,
+                            })
+                          }
+                          checked={checkInExists}>
+                          CheckIn por documento
+                        </Checkbox>
+                      </Col>
                       <Col>
                         <Button
                           disabled={this.state.available}

@@ -4921,9 +4921,9 @@ clean-css@^4.2.3:
     source-map "~0.6.0"
 
 clean-css@^5.2.2:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-5.3.0.tgz#ad3d8238d5f3549e83d5f87205189494bc7cbb59"
-  integrity sha512-YYuuxv4H/iNb1Z/5IbMRoxgrzjWGhOEFfd+groZ5dMCVkpENiMZmwspdrzBo9286JjM1gZJPAyL7ZIdzuvu2AQ==
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-5.3.1.tgz#d0610b0b90d125196a2894d35366f734e5d7aa32"
+  integrity sha512-lCr8OHhiWCTw4v8POJovCoh4T7I9U11yVsPjMWWnnMmp9ZowCxyad1Pathle/9HjaDp+fdQKjO9fQydE6RHTZg==
   dependencies:
     source-map "~0.6.0"
 
@@ -16667,9 +16667,9 @@ terser@^4.1.2, terser@^4.6.2, terser@^4.6.3:
     source-map-support "~0.5.12"
 
 terser@^5.10.0:
-  version "5.14.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.14.1.tgz#7c95eec36436cb11cf1902cc79ac564741d19eca"
-  integrity sha512-+ahUAE+iheqBTDxXhTisdA8hgvbEG1hHOQ9xmNjeUJSoi6DU/gMrKNcfZjHkyY6Alnuyc+ikYJaxxfHkT3+WuQ==
+  version "5.14.2"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.14.2.tgz#9ac9f22b06994d736174f4091aa368db896f1c10"
+  integrity sha512-oL0rGeM/WFQCUd0y2QrWxYnq7tfSuKBiqTjRPWrRgB46WD/kiwHwF8T23z78H6Q6kGCuuHcPB+KULHRdxvVGQA==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"

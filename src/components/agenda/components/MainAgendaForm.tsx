@@ -1,28 +1,12 @@
-import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { c } from 'dayjs';
+import { SetStateAction, Dispatch } from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import {
-  Row,
-  Col,
-  Space,
-  Typography,
-  Button,
-  Form,
-  Input,
-  InputRef,
-  Switch,
-  Card,
-  TimePicker,
-  Modal,
+import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Card, TimePicker   Modal,
 } from 'antd';
 import { Select as SelectAntd } from 'antd';
-import {
-  ExclamationCircleOutlined,
-  SettingOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { ExclamationCircleOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
@@ -56,22 +40,22 @@ const { Option } = SelectAntd;
 const creatableStyles = { menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }) };
 
 export interface FormDataType {
-  name: string,
-  date: string,
-  description: string,
-  space_id: string,
-  image: string,
-  hour_start: dayjs.Dayjs | string,
-  hour_end: dayjs.Dayjs | string,
-  isPhysical: boolean,
-  length: string,
-  latitude: string,
-  selectedCategories: SelectOptionType[],
-  selectedHosts: SelectOptionType[],
-  selectedRol: SelectOptionType[],
-  selectedTickets: SelectOptionType[],
-  selectedDocuments: SelectOptionType[],
-};
+  name: string;
+  date: string;
+  description: string;
+  space_id: string;
+  image: string;
+  hour_start: Dayjs | string;
+  hour_end: Dayjs | string;
+  isPhysical: boolean;
+  length: string;
+  latitude: string;
+  selectedCategories: SelectOptionType[];
+  selectedHosts: SelectOptionType[];
+  selectedRol: SelectOptionType[];
+  selectedTickets: SelectOptionType[];
+  selectedDocuments: SelectOptionType[];
+}
 
 // NOTE: mmm... what's happen with selectedRol and allRoles? where are they used and how?
 
@@ -84,7 +68,7 @@ export interface MainAgendaFormProps {
   savedFormData: FormDataType;
   agenda: AgendaType | null;
   setFormData: (x: FormDataType) => void;
-  previousFormData: FormDataType;
+  previousFormData: FormDataType,
   setShowPendingChangesModal: (b: boolean) => void;
 }
 
@@ -175,10 +159,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   /**
    * This method edit the state info, that has various attributes.
-   * 
+   *
    * You have to pass the name of this attribute to edit, and the value. This
    * method overwrite the attribute asked only.
-   * 
+   *
    * @param name The key name.
    * @param value The value.
    */
@@ -277,7 +261,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     const newHour = hourWithAdditionalMinutes(10);
     setFormData({ ...previousFormData, hour_start: newHour });
     return newHour;
-  }, [formdata.hour_start])
+  }, [formdata.hour_start]);
 
   const currentHourEnd = useMemo(() => {
     if (typeof formdata.hour_end === 'string' && formdata.hour_end.trim() !== '') {

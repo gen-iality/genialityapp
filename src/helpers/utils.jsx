@@ -78,7 +78,7 @@ export function handleRequestError(error) {
   return info;
 }
 
-export function parseData2Excel(data, fields, roles = null) {
+export async function parseData2Excel(data, fields, roles = null) {
   let info = [];
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
@@ -160,8 +160,9 @@ export function parseData2Excel(data, fields, roles = null) {
     });
     if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
     info[key]['Tipo asistente'] = roles?.filter((role) => role._id == item.rol_id)[0]?.name;
-    info[key]['Actualizado'] = item.updated_at;
-    info[key]['Creado'] = item.created_at;
+    info[key]['Actualizado'] = item.updated_at?.toDate();
+    info[key]['Creado'] = item.created_at?.toDate();
+    info[key]['Tipo de checkIn'] = item.checkedin_type;
     return info;
   });
   return info;
