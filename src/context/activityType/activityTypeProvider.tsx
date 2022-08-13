@@ -311,8 +311,10 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
   const executer_stopStream = async () => {
     setIsStoppingStreaming(true);
-    const liveStreamresponse = await stopLiveStream(meetingId);
-    setDataLive(liveStreamresponse);
+    if (!!meetingId) {
+      const liveStreamresponse = await stopLiveStream(meetingId);
+      setDataLive(liveStreamresponse);
+    }
     setIsStoppingStreaming(false);
     setHabilitarIngreso('ended_meeting_room');
     await saveConfig({ habilitar_ingreso: 'ended_meeting_room' });
