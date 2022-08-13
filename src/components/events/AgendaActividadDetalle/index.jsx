@@ -13,7 +13,7 @@ import { UseSurveysContext } from '../../../context/surveysContext';
 import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
-import HCOActividad from './HOC_Actividad';
+import HOCActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import { useCheckinUser } from '../../../helpers/HelperAuth';
@@ -150,7 +150,7 @@ const AgendaActividadDetalle = (props) => {
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
 
-          {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
+          {activity.type === undefined ? (<PreloaderApp />) : (<HOCActividad activity={activity}/>)}
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
