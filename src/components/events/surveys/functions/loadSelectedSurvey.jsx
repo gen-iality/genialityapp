@@ -1,12 +1,8 @@
 import { SurveysApi } from '../../../../helpers/request';
-import * as Survey from 'survey-react';
 
-async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
+async function LoadSelectedSurvey(eventId, idSurvey) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
 
-  // Esto permite que el json pueda asignar el id a cada pregunta
-  Survey.JsonObject.metaData.addProperty('question', 'id');
-  Survey.JsonObject.metaData.addProperty('question', 'points');
 
   let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
@@ -84,8 +80,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
   // Se excluyen las propiedades
   const exclude = ({ survey, id, questions, ...rest }) => rest;
 
-  surveyData = exclude(dataSurvey);
-  return surveyData;
+  return exclude(dataSurvey);
 }
 
 export default LoadSelectedSurvey;

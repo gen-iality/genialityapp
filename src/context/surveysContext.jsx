@@ -151,6 +151,7 @@ export function SurveysProvider({ children }) {
 
     async function fetchSurveys() {
       //  console.log('surveyContext', 'inicialize');
+        console.log('ESTE ES EL STATE', state);
       listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
       InitSurveysCompletedListener(cUser, dispatch);
     }
@@ -180,6 +181,7 @@ export function SurveysProvider({ children }) {
 
 export function UseSurveysContext() {
   const contextsurveys = React.useContext(SurveysContext);
+  console.log('contextsurveys', contextsurveys);
   if (!contextsurveys) {
     throw new Error('eventContext debe estar dentro del proveedor');
   }

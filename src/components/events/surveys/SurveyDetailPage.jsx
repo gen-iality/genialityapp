@@ -4,15 +4,22 @@ import Graphics from './graphics';
 import SurveyComponent from './surveyComponent';
 import { Card, Result, Divider } from 'antd';
 import ClosedSurvey from './components/closedSurvey';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 /** Context´s */
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
+import { UseEventContext } from '../../../context/eventContext';
+
 
 function SurveyDetailPage(props) {
+
   let cSurveys = UseSurveysContext();
   const currentUser = UseCurrentUser();
+
   const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
+
+  let { currentActivity } = useHelper();
 
   useEffect(() => {
     if (showSurveyTemporarily === true) {
@@ -23,17 +30,34 @@ function SurveyDetailPage(props) {
   }, [showSurveyTemporarily]);
 
   if (!cSurveys.currentSurvey) {
-    return <h1>No hay nada publicado</h1>;
+    return <Result title='No hay nada publicado' />;
   }
+
+  console.log('400. currentSurvey', cSurveys.currentSurvey);
+  console.log('400. currentActivity', currentActivity);
 
   return (
     <div>
-      {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
-        <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
+      {console.log('Este es el objeto Encuesta:', cSurveys)}
+      {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (currentActivity.type.name === 'survey' ?
+        <Result style={{ height: '50%', padding: '100px' }} status='success' title='Ya has contestado esta Encuesta' />
+        : <Result style={{ height: '50%', padding: '100px' }} status='success' title='Ya has contestado este Quiz' />
       )}
-      {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
+
+      {cSurveys.shouldDisplaySurveyClosedMenssage() && (currentActivity.type.name === 'survey' ?
+        <Result title='Esta encuesta ha sido cerrada' />
+        : <Result title='Este quiz ha sido cerrado' />
+      )}
+
       {(cSurveys.shouldDisplaySurvey() || showSurveyTemporarily) && (
         <Card className='survyCard'>
+          {/* <SurveyComponent
+            idSurvey={props.activityId ? cSurveys.surveys.filter(survey => survey.activity_id === props.activityId).map(survey => survey._id)[0] : cSurveys.currentSurvey._id}
+            eventId={cSurveys.currentSurvey.eventId}
+            currentUser={currentUser}
+            setShowSurveyTemporarily={setShowSurveyTemporarily}
+            operation='participationPercentage'
+          /> */}
           <SurveyComponent
             idSurvey={cSurveys.currentSurvey._id}
             eventId={cSurveys.currentSurvey.eventId}
