@@ -1,9 +1,9 @@
 import { useEffect, useReducer } from 'react';
-import { listenSurveysData } from '../helpers/helperEvent';
-import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
-import { UseEventContext } from './eventContext';
-import { UseCurrentUser } from './userContext';
-export const SurveysContext = React.createContext();
+import { listenSurveysData } from '@/helpers/helperEvent';
+import InitSurveysCompletedListener from '@/components/events/surveys/functions/initSurveyCompletedListener';
+import { UseEventContext } from '@/context/eventContext';
+import { UseCurrentUser } from '@/context/userContext';
+export const SurveyContext = React.createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
 let initialContextState = {
@@ -50,10 +50,12 @@ const reducer = (state, action) => {
   }
 };
 
-export function SurveysProvider({ children }) {
-  //  console.group('surveyContext');
+export function SurveyProvider({ props, children }) {
+
+  console.log('SurveyProvider', props)
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
+
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   /** ACTION DISPACHERS **/
@@ -72,10 +74,9 @@ export function SurveysProvider({ children }) {
     if (!state.currentSurvey) {
       return false;
     }
-    console.log('state.currentSurvey', state.currentSurvey);
     return (
-      (state.currentSurvey.isOpened === 'true' || state.currentSurvey.open === 'true') &&
-      (state.currentSurvey.isPublished === 'true' || state.currentSurvey.publish === 'true') &&
+      state.currentSurvey.isOpened === 'true' &&
+      state.currentSurvey.isPublished === 'true' &&
       attendeeAllReadyAnswered()
     );
   }
@@ -160,7 +161,7 @@ export function SurveysProvider({ children }) {
   }, [cEventContext, cUser]);
   //  console.groupEnd('surveyContext');
   return (
-    <SurveysContext.Provider
+    <SurveyContext.Provider
       value={{
         ...state,
         select_survey,
@@ -176,18 +177,17 @@ export function SurveysProvider({ children }) {
         shouldDisplaysurveyAssignedToThisActivity,
       }}>
       {children}
-    </SurveysContext.Provider>
+    </SurveyContext.Provider>
   );
 }
 
-export function UseSurveysContext() {
-  const contextsurveys = React.useContext(SurveysContext);
-  console.log('contextsurveys', contextsurveys);
-  if (!contextsurveys) {
-    throw new Error('eventContext debe estar dentro del proveedor');
+export function UseSurveyContext() {
+  const contextsurvey = React.useContext(SurveyContext);
+  console.log('contextsurvey', contextsurvey);
+  if (!contextsurvey) {
+    throw new Error('SurveyContext debe estar dentro del proveedor');
   }
-
-  return contextsurveys;
+  return contextsurvey;
 }
 
 function shouldActivateUpdatedSurvey(state, surveyChangedNew) {

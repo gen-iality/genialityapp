@@ -3,23 +3,54 @@ import { connect } from 'react-redux';
 import Graphics from './graphics';
 import SurveyComponent from './surveyComponent';
 import { Card, Result, Divider } from 'antd';
+
+
 import ClosedSurvey from './components/closedSurvey';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import WithEviusContext from '@/context/withContext';
+import LoadSelectedSurvey from './functions/loadSelectedSurvey';
+import initRealTimeSurveyListening from "./functions/initRealTimeSurveyListening";
 
 /** Context´s */
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
-import { UseEventContext } from '../../../context/eventContext';
 
-
-function SurveyDetailPage(props) {
-
+function SurveyDetailPage({ surveyId, cEvent }) {
   let cSurveys = UseSurveysContext();
-  const currentUser = UseCurrentUser();
 
+  const currentUser = UseCurrentUser();
   const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
 
-  let { currentActivity } = useHelper();
+  //Effect for when prop.idSurvey changes
+  useEffect(() => {
+    if (!surveyId) return;
+
+    let unsubscribe;
+    (async () => {
+      let loadedSurvey = await LoadSelectedSurvey(cEvent.value._id, surveyId);
+      //listener que nos permite saber los cambios de la encuesta en tiempo real
+      unsubscribe = initRealTimeSurveyListening(surveyId, currentUser, loadedSurvey, updateSurveyData);
+
+      // Esto permite obtener datos para la grafica de gamificacion
+      //UserGamification.getListPoints(eventId, setRankingList);
+      //Se obtiene el EventUser para los casos que se necesite saber el peso voto
+      //await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
+    })();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [surveyId]);
+
+  function updateSurveyData(surveyConfig) {
+    if (!surveyConfig) return;
+    /*  surveyData.open = surveyRealTime.isOpened;
+     surveyData.publish = surveyRealTime.isPublished;
+     surveyData.freezeGame = surveyRealTime.freezeGame; */
+    // setSurveyData((previusSurveyConfig) => {
+    //   return { ...previusSurveyConfig, ...surveyConfig };
+    // });
+    cSurveys.select_survey(surveyConfig);
+  }
+
 
   useEffect(() => {
     if (showSurveyTemporarily === true) {
@@ -29,55 +60,32 @@ function SurveyDetailPage(props) {
     }
   }, [showSurveyTemporarily]);
 
-
-  //event_id = 62f863debc55ce1e6b689683
-
-  // if (!cSurveys.currentSurvey) {
-  //   return <Result title='No hay nada publicado' />;
-  // }
-
-  console.log('400. currentSurvey', cSurveys.currentSurvey);
-  console.log('400. currentActivity', currentActivity);
+  if (!cSurveys.currentSurvey) {
+    return <h1>No hay nada publicado{surveyId}</h1>;
+  }
 
   return (
     <div>
-      {console.log('Este es el objeto Encuesta:', cSurveys)}
-      {/* {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (currentActivity.type.name === 'survey' ?
-        <Result style={{ height: '50%', padding: '100px' }} status='success' title='Ya has contestado esta Encuesta' />
-        : <Result style={{ height: '50%', padding: '100px' }} status='success' title='Ya has contestado este Quiz' />
+      {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
+        <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
       )}
+      {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
 
-      {cSurveys.shouldDisplaySurveyClosedMenssage() && (currentActivity.type.name === 'survey' ?
-        <Result title='Esta encuesta ha sido cerrada' />
-        : <Result title='Este quiz ha sido cerrado' />
-      )} */}
-
-      {/* {(cSurveys.shouldDisplaySurvey() || showSurveyTemporarily) && ( */}
+      {(cSurveys.shouldDisplaySurvey() || showSurveyTemporarily) && (
         <Card className='survyCard'>
-          {/* <SurveyComponent
-            idSurvey={props.activityId ? cSurveys.surveys.filter(survey => survey.activity_id === props.activityId).map(survey => survey._id)[0] : cSurveys.currentSurvey._id}
-            eventId={cSurveys.currentSurvey.eventId}
-            currentUser={currentUser}
-            setShowSurveyTemporarily={setShowSurveyTemporarily}
-            operation='participationPercentage'
-          /> */}
           <SurveyComponent
-            idSurvey={"62f863debc55ce1e6b689683"}
-            eventId={"62cef516a293dc537935b072"}
+            idSurvey={surveyId}
+            eventId={cEvent._id}
             currentUser={currentUser}
             setShowSurveyTemporarily={setShowSurveyTemporarily}
             operation='participationPercentage'
           />
         </Card>
-      {/* // )} */}
+      )}
       {cSurveys.shouldDisplayGraphics() && (
         <>
           <Divider />
-          <Graphics
-            idSurvey={cSurveys.currentSurvey._id}
-            eventId={cSurveys.currentSurvey.eventId}
-            operation='participationPercentage'
-          />
+          <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
         </>
       )}
       {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
@@ -89,4 +97,4 @@ const mapStateToProps = (state) => ({
   isVisible: state.survey.data.surveyVisible,
 });
 
-export default connect(mapStateToProps)(SurveyDetailPage);
+export default connect(mapStateToProps)(WithEviusContext(SurveyDetailPage));
