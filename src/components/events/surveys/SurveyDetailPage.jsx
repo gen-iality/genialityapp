@@ -29,9 +29,12 @@ function SurveyDetailPage(props) {
     }
   }, [showSurveyTemporarily]);
 
-  if (!cSurveys.currentSurvey) {
-    return <Result title='No hay nada publicado' />;
-  }
+
+  //event_id = 62f863debc55ce1e6b689683
+
+  // if (!cSurveys.currentSurvey) {
+  //   return <Result title='No hay nada publicado' />;
+  // }
 
   console.log('400. currentSurvey', cSurveys.currentSurvey);
   console.log('400. currentActivity', currentActivity);
@@ -39,7 +42,7 @@ function SurveyDetailPage(props) {
   return (
     <div>
       {console.log('Este es el objeto Encuesta:', cSurveys)}
-      {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (currentActivity.type.name === 'survey' ?
+      {/* {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (currentActivity.type.name === 'survey' ?
         <Result style={{ height: '50%', padding: '100px' }} status='success' title='Ya has contestado esta Encuesta' />
         : <Result style={{ height: '50%', padding: '100px' }} status='success' title='Ya has contestado este Quiz' />
       )}
@@ -47,9 +50,9 @@ function SurveyDetailPage(props) {
       {cSurveys.shouldDisplaySurveyClosedMenssage() && (currentActivity.type.name === 'survey' ?
         <Result title='Esta encuesta ha sido cerrada' />
         : <Result title='Este quiz ha sido cerrado' />
-      )}
+      )} */}
 
-      {(cSurveys.shouldDisplaySurvey() || showSurveyTemporarily) && (
+      {/* {(cSurveys.shouldDisplaySurvey() || showSurveyTemporarily) && ( */}
         <Card className='survyCard'>
           {/* <SurveyComponent
             idSurvey={props.activityId ? cSurveys.surveys.filter(survey => survey.activity_id === props.activityId).map(survey => survey._id)[0] : cSurveys.currentSurvey._id}
@@ -59,14 +62,14 @@ function SurveyDetailPage(props) {
             operation='participationPercentage'
           /> */}
           <SurveyComponent
-            idSurvey={cSurveys.currentSurvey._id}
-            eventId={cSurveys.currentSurvey.eventId}
+            idSurvey={"62f863debc55ce1e6b689683"}
+            eventId={"62cef516a293dc537935b072"}
             currentUser={currentUser}
             setShowSurveyTemporarily={setShowSurveyTemporarily}
             operation='participationPercentage'
           />
         </Card>
-      )}
+      {/* // )} */}
       {cSurveys.shouldDisplayGraphics() && (
         <>
           <Divider />

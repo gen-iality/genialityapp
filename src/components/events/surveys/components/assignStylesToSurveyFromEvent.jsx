@@ -1,7 +1,7 @@
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
 
-function InternarlSurveyStyles(eventStyles) {
+function assignStylesToSurveyFromEvent(eventStyles) {
   /** extrae las propiedades por defecto del thema 'modern' para modificarl los colores */
   var defaultThemeColors = Survey.StylesManager.ThemeColors['modern'];
   // Validacion para evitar el color blanco en la ui de la encuesta
@@ -35,4 +35,4 @@ function InternarlSurveyStyles(eventStyles) {
   Survey.StylesManager.applyTheme('modern');
 }
 
-export default InternarlSurveyStyles;
+export default assignStylesToSurveyFromEvent;
