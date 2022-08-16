@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const equivalentToADayInMinutes = 1440;
 const equivalentToAHourInMinute = 60;
@@ -23,21 +23,21 @@ export const disabledStartDate = (endValue: any, streamingHours: number, userCon
 
   /** We look for the difference between the current day and the end of the user's plan */
   if (userConsumptionEndDate) {
-    aditionalDays = moment(userConsumptionEndDate)
+    aditionalDays = dayjs(userConsumptionEndDate)
       .add(1, 'day')
       .diff(startDate, 'days');
   }
 
   if (!streamingHours) return;
 
-  const addExtraTime = moment(startDate).add(aditionalDays, 'days');
+  const addExtraTime = dayjs(startDate).add(aditionalDays, 'days');
 
   if (!endValue || !startDate) {
     return false;
   }
 
   /** Disable of days after the limit of the event */
-  if (endValue.valueOf() > moment(addExtraTime).valueOf()) {
+  if (endValue.valueOf() > dayjs(addExtraTime).valueOf()) {
     return true;
   }
 
@@ -51,14 +51,14 @@ export const disabledEndDate = (endValue: any, event: eventProps, streamingHours
 
   if (!streamingHours) return;
 
-  const addExtraTime = moment(startDate).add(streamingHours - equivalentToADayInMinutes, 'minutes');
+  const addExtraTime = dayjs(startDate).add(streamingHours - equivalentToADayInMinutes, 'minutes');
 
   if (!endValue || !startDate) {
     return false;
   }
 
   /** Disable of days after the limit of the event */
-  if (endValue.valueOf() > moment(addExtraTime).valueOf()) {
+  if (endValue.valueOf() > dayjs(addExtraTime).valueOf()) {
     return true;
   }
 
@@ -88,12 +88,12 @@ const disableStartHoursRange = (event: eventProps, streamingHours: number) => {
   if (!streamingHours) return;
   /** We add 60 more minutes to discriminate the current time, this affects the free plans */
   //   if(){}
-  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAHourInMinute, 'minutes');
+  const addExtraTime = dayjs(hourStart).add(streamingHours + equivalentToAHourInMinute, 'minutes');
 
   const extraTimeHour = addExtraTime.hour();
 
   /** We iterate to be able to discriminate the hours before the start */
-  for (let InitialHour = 0; InitialHour < moment(hourStart).hour(); InitialHour++) {
+  for (let InitialHour = 0; InitialHour < dayjs(hourStart).hour(); InitialHour++) {
     result.push(InitialHour);
   }
 
@@ -110,7 +110,7 @@ const disableEndHoursRange = (event: eventProps, streamingHours: number) => {
   if (!streamingHours) return;
   /** We add 60 more minutes to discriminate the current time, this affects the free plans */
   //   if(){}
-  const addExtraTime = moment(hourStart).add(streamingHours + equivalentToAHourInMinute, 'minutes');
+  const addExtraTime = dayjs(hourStart).add(streamingHours + equivalentToAHourInMinute, 'minutes');
   const extraTimeHour = addExtraTime.hour();
 
   /** This validation is carried out, since when the start date was set to more than 8 at night, an end date cannot be chosen, since the for disables all the hours */
@@ -121,7 +121,7 @@ const disableEndHoursRange = (event: eventProps, streamingHours: number) => {
   }
 
   /** We iterate to be able to discriminate the hours before the start */
-  for (let InitialHour = 0; InitialHour < moment(hourStart).hour(); InitialHour++) {
+  for (let InitialHour = 0; InitialHour < dayjs(hourStart).hour(); InitialHour++) {
     result.push(InitialHour);
   }
 
@@ -139,9 +139,9 @@ const disableMinutesRange = (event: eventProps, streamingHours: number) => {
   const hour_start = event.hour_start;
   if (!streamingHours) return;
   /** A minute is added to be able to show the current minute of the start date available */
-  const addExtraTime = moment(hour_start).add(1, 'minutes');
+  const addExtraTime = dayjs(hour_start).add(1, 'minutes');
   /** We iterate to be able to discriminate the minutes before the start */
-  for (let initialMinutes = 0; initialMinutes < moment(hour_start).minute(); initialMinutes++) {
+  for (let initialMinutes = 0; initialMinutes < dayjs(hour_start).minute(); initialMinutes++) {
     result.push(initialMinutes);
   }
 

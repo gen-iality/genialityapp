@@ -60,6 +60,7 @@ const Table = (props) => {
     extraPathUpdateTitle,
     updateMails,
     takeOriginalHeader,
+    footer = undefined,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');

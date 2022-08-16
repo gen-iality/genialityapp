@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Checkbox, Modal } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { AttendeeCheckInPropsTypes } from '@/Utilities/types/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
@@ -63,7 +63,7 @@ const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCal
         <Checkbox checked={attemdeeCheckIn} onChange={saveAttemdeeCheckIn}>
           <b>
             {attemdeeCheckIn
-              ? `Checked at: ${moment(attemdeeCheckedinAt).format('D/MMM/YY H:mm:ss A')}`
+              ? `Checked at: ${dayjs(attemdeeCheckedinAt).format('D/MMM/YY H:mm:ss A')}`
               : 'Registrar ingreso'}
           </b>
         </Checkbox>

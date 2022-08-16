@@ -1,6 +1,6 @@
 import { fireRealtime, app } from '../helpers/firebase';
 import { uniqueID } from '@/helpers/utils';
-import momemt from 'moment';
+import dayjs from 'dayjs';
 
 let initBroadcastViewers = async (
   event_id: string,
@@ -39,7 +39,7 @@ let initBroadcastViewers = async (
 
 let initUserPresenceInner = async (user: any, event_id: string, activity_id: string, state?: string) => {
   let uid = user._id;
-  let time = uid + momemt().format('HH:mm:ss');
+  let time = uid + dayjs().format('HH:mm:ss');
   var uniqueUsers = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/uniqueUsers/${uid}`);
   var totalViews = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/total/${time}`);
 
@@ -64,7 +64,7 @@ let initUserPresenceInner = async (user: any, event_id: string, activity_id: str
     names: user.names || '',
     email: user.email || '',
     id: user._id || '',
-    date: momemt().format('YYYY-MM-DD HH:mm:ss'),
+    date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
   };
   if (state) {
     uniqueUsers.set(isOfflineForDatabase);

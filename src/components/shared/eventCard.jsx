@@ -7,6 +7,8 @@ import { HelperContext } from '@/context/helperContext/helperContext';
 
 import StudentGeneralCourseProgress from '../../components/StudentProgress/StudentGeneralCourseProgress';
 
+const { Meta } = Card;
+
 const EventImage = imageUtils.EventImage;
 
 class EventCard extends Component {
@@ -29,7 +31,7 @@ class EventCard extends Component {
     let actualDate = new Date(event.datetime_to);
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
-    let formatDate = Moment(blockedDate).format('DD MMM YYYY');
+    let formatDate = dayjs(blockedDate).format('DD MMM YYYY');
 
     return (
       <div className='animate__animated animate__fadeIn'>
@@ -116,7 +118,7 @@ class EventCard extends Component {
                     <Typography.Paragraph style={{ color: 'red' }}>
                       {blockedEvent && (
                         <small>
-                          Tu evento está bloqueado desde el {Moment(event.datetime_to).format('DD MMM YYYY')}
+                          Tu evento está bloqueado desde el {dayjs(event.datetime_to).format('DD MMM YYYY')}
                           <br /> En la landing estará bloqueado a partir de el {formatDate}
                         </small>
                       )}

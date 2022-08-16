@@ -1,6 +1,6 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { AlertsPlanApi } from '@/helpers/request';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export const useBlockedEventValidator = (event: any, cUser: any) => {
   if (!event) return null;
@@ -11,7 +11,7 @@ export const useBlockedEventValidator = (event: any, cUser: any) => {
   let dayUserOrEvent = cUser?.value?.plan ? cUser?.value?.plan?.availables?.later_days : event.value?.later_days;
 
   let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + dayUserOrEvent));
-  let formatDate = moment(blockedDate).format('DD-MM-YYYY');
+  let formatDate = dayjs(blockedDate).format('DD-MM-YYYY');
   const blockedEventDate = formatDate;
 
   if (new Date() > blockedDate) {

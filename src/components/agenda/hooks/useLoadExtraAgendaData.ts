@@ -1,6 +1,6 @@
 import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from "@/helpers/request";
 import { handleSelect } from "@/helpers/utils";
-import moment from "moment";
+import dayjs from "dayjs";
 import EventType from "../types/EventType";
 import SelectOptionType from "../types/SelectOptionType";
 
@@ -32,20 +32,20 @@ export default async function useLoadExtraAgendaData (event: EventType, callback
   // If dates exist, then iterate the specific dates array, formating specially.
   if (event.dates && event.dates.length > 0) {
     const newDays = event.dates.map((dates) => {
-      const formatDate = moment(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
+      const formatDate = dayjs(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
       return { value: formatDate, label: formatDate };
     });
     callbacks.setDays(newDays);
   } else {
     // Si no, recibe la fecha inicio y la fecha fin y le da el formato
     // especifico a mostrar
-    const initMoment = moment(event.date_start);
-    const endMoment = moment(event.date_end);
+    const initMoment = dayjs(event.date_start);
+    const endMoment = dayjs(event.date_end);
     const dayDiff = endMoment.diff(initMoment, 'days');
     // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
     const newDays = [];
     for (let i = 0; i < dayDiff + 1; i++) {
-      const formatDate = moment(initMoment)
+      const formatDate = dayjs(initMoment)
         .add(i, 'd')
         .format('YYYY-MM-DD');
       newDays.push({ value: formatDate, label: formatDate });

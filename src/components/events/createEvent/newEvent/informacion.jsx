@@ -163,7 +163,7 @@ const Informacion = (props) => {
               style={{ width: '100%', marginTop: '20px' }}
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               allowClear={false}
-              value={moment(selectedDay)}
+              value={dayjs(selectedDay)}
               format={'DD/MM/YYYY'}
               onChange={(value) => changeSelectDay(value.toDate())}
             />

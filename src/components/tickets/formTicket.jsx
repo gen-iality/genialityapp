@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import 'moment/locale/es';
+import 'dayjs/locale/es';
 import { Actions } from '../../helpers/request';
 import UserRegistration from '../events/userRegistration';
 import withContext from '../../context/withContext';

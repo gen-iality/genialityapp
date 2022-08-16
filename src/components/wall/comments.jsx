@@ -99,7 +99,7 @@ class CommentsList extends Component {
                   author={<Typography.Paragraph style={{ fontSize: '14px' }}>{item.authorName}</Typography.Paragraph>}
                   datetime={
                     <Tooltip title={dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                      {/* <span>{Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD')}</span> */}
+                      {/* <span>{dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD')}</span> */}
                       <span>{dayjs(dayjs(new Date(item.date.toMillis()))).from(dayjs(new Date()))}</span>
                     </Tooltip>
                   }
@@ -122,7 +122,7 @@ class CommentsList extends Component {
               //     title={
               //       <Row justify='space-between'>
               //         <span>{item.authorName}</span>{' '}
-              //         <small>{Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')} </small>{' '}
+              //         <small>{dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')} </small>{' '}
               //       </Row>
               //     }
               //     description={item.comment}

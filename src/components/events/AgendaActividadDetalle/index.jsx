@@ -16,7 +16,7 @@ import SurveyDrawer from '../surveys/components/surveyDrawer';
 import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
-import { useCheckinUser } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUserContext } from '@/context/userContext';
@@ -84,7 +84,7 @@ const AgendaActividadDetalle = (props) => {
       cSurveys.set_current_activity(currentActivity);
       // console.log(cEvent.value.type_event)
       if (cEvent.value.type_event === "onlineEvent") {
-        useCheckinUser(cEventUser.value, props.match.params.activity_id, 'activity');
+        checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id);
       }
     }
   }, [ currentActivity, cEventUser.status ]);
@@ -144,13 +144,62 @@ const AgendaActividadDetalle = (props) => {
     }
   }, [ cEvent.value, cEventUser.value, cUser.value ]);
 
+  // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
   return (
     <div>
       <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
-
-          {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
+          {!blockActivity ? (
+            <>
+              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
+              cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+                <Alert
+                  showIcon
+                  style={{
+                    width: '100%',
+                    marginTop: 40,
+                    marginBottom: 40,
+                    textAlign: 'center',
+                    fontSize: '19px',
+                  }}
+                  message={
+                    <>
+                      {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
+                    </>
+                  }
+                  type='warning'
+                />
+              ) : (
+                activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)
+              )}
+            </>
+          ) : (
+            <>
+              <Row>
+                {/* <ImageComponentwithContext /> */}
+                <Alert
+                  showIcon
+                  style={{
+                    width: '100%',
+                    marginTop: 40,
+                    marginBottom: 40,
+                    textAlign: 'center',
+                    fontSize: '19px',
+                  }}
+                  message={
+                    <>
+                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
+                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
+                        https://iberofest.co/producto/edc/
+                      </a>{' '}
+                    </>
+                  }
+                  type='warning'
+                />
+              </Row>
+            </>
+          )}
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>

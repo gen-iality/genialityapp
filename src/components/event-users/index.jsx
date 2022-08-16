@@ -202,8 +202,8 @@ class ListEventUser extends Component {
 
       if (!aParameter) return 1;
       if (!bParameter) return -1;
-      if (moment(aParameter) === moment(bParameter)) return 0;
-      return moment(aParameter) > moment(bParameter) ? -1 : 1;
+      if (dayjs(aParameter) === dayjs(bParameter)) return 0;
+      return dayjs(aParameter) > dayjs(bParameter) ? -1 : 1;
     });
 
     return sortedResult;

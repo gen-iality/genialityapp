@@ -1,12 +1,13 @@
 import { Fragment, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Divider, Menu, Row } from 'antd';
+import { Button, Col, Divider, Menu, Row } from 'antd';
 import { EventsApi } from '../../../helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
-import { ApartmentOutlined } from '@ant-design/icons';
+import { ApartmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { imageUtils } from '../../../Utilities/ImageUtils';
+import OpenInNewIcon from '@2fd/ant-design-icons/lib/OpenInNew';
 
 const { SubMenu } = Menu;
 
@@ -24,6 +25,8 @@ const MenuConfig = (props) => {
     collapsed: false,
     organizationId: '',
   });
+
+  const eventId = props.match.params.event;
 
   const eventOrganization = async (eventId) => {
     const currentEvent = await EventsApi.getOne(eventId);
@@ -73,25 +76,35 @@ const MenuConfig = (props) => {
             }}
             src={`${import.meta.env.VITE_LOGO_SVG_DARK}`}
           />
-          <Divider style={{ background: 'gray' }} />
-        </Row>
-        {renderMenuItems(controller, props)}
+        </Col>
+        <Col span={24}>
+          <Button
+            icon={props.collapsed ? <OpenInNewIcon /> : ''}
+            type='primary'
+            size='middle'
+            target='_blank'
+            href={`${window.location.origin}/landing/${eventId}`}>
+            {props.collapsed ? '' : 'Ir al evento'}
+          </Button>
+        </Col>
+        <Divider style={{ background: 'gray' }} />
+      </Row>
+      {renderMenuItems(controller, props)}
 
-        <SubMenu
-          key='sub9'
-          title={
-            <span>
-              <ApartmentOutlined />
-              <span>Administrar organizaciones</span>
-            </span>
-          }>
-          <Menu.Item key='30'>
-            Panel de administración
-            <NavLink onClick={handleClick} to={`/admin/organization/${controller.organizationId}`}></NavLink>
-          </Menu.Item>
-        </SubMenu>
-      </Menu>
-    </Fragment>
+      <SubMenu
+        key='sub9'
+        title={
+          <span>
+            <ApartmentOutlined />
+            <span>Administrar organizaciones</span>
+          </span>
+        }>
+        <Menu.Item key='30'>
+          Panel de administración
+          <NavLink onClick={handleClick} to={`/admin/organization/${controller.organizationId}`}></NavLink>
+        </Menu.Item>
+      </SubMenu>
+    </Menu>
   );
 };
 

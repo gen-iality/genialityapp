@@ -7,7 +7,6 @@ import { getColumnSearchProps } from '../../../components/speakers/getColumnSear
 import Table from '../../../antdComponents/Table';
 import { handleRequestError } from '../../../helpers/utils';
 import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
-import { UseEventContext } from '../../../context/eventContext';
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
 import Account from '@2fd/ant-design-icons/lib/Account';
 import { DispatchMessageService } from '../../../context/MessageService';

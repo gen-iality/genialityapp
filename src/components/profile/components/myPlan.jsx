@@ -15,7 +15,7 @@ import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
 import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@/context/MessageService';
 import { handleRequestError } from '@/helpers/utils';
@@ -140,7 +140,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
-        const date = moment(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
+        const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
 
         return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
       },
@@ -258,7 +258,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
-        const date = moment(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
+        const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
 
         return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
       },
@@ -675,8 +675,8 @@ const myPlan = ({ cUser }) => {
                   {consumption?.start_date && consumption?.end_date && (
                     <Typography.Text>
                       Tu plan se encuentra activo desde{' '}
-                      {consumption?.start_date && moment(consumption?.start_date).format('DD-MM-YYYY')} hasta el{' '}
-                      {consumption?.end_date && moment(consumption?.end_date).format('DD-MM-YYYY')}
+                      {consumption?.start_date && dayjs(consumption?.start_date).format('DD-MM-YYYY')} hasta el{' '}
+                      {consumption?.end_date && dayjs(consumption?.end_date).format('DD-MM-YYYY')}
                     </Typography.Text>
                   )}
                   {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users > 0 && (
