@@ -55,6 +55,94 @@ import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
+const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentUser}) => {
+  const [loaded, setLoaded] = useState(false);
+  const [activities, setActivities] = useState([]);
+
+  useEffect(async () => {
+    if (!currentUser) return;
+    console.log(allActivities, 'xd', attendee)
+    if (allActivities.length == 0) return;
+
+    const existentActivities = await allActivities.map(async (activity) => {
+      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(currentUser._id).get();
+      if (activity_attendee.exists) {
+        return activity;
+      }
+      return null;
+    });
+    // Filter non-null result that means that the user attendees them
+    const viewedActivities = (await Promise.all(existentActivities)).filter((item) => item !== null);
+    setActivities(viewedActivities.map((activity) => activity.name))
+    setLoaded(true);
+  }, [allActivities, attendee, currentUser]);
+
+  const Content = () => {
+    if (attendee.length === 0) {
+      return <p>No ha visto ningún curso</p>;
+    }
+
+    if (loaded) {
+      if (activities.length) {
+        return (
+          <List
+            header={<Text strong>Cursos vistos</Text>}
+            // bordered
+            dataSource={activities}
+            renderItem={(item) => <List.Item><CheckOutlined /> {item}</List.Item>}
+          />
+        );
+        // return (activities.map((activity) => <p>{activity}</p>));
+      }
+      return <p>Nada para mostrar</p>
+    }
+
+    return <p>Cargando...</p>
+  }
+
+  return (
+    <Modal centered footer={null} visible={show} closable={true} onCancel={onHidden}>
+      <Space direction='vertical'>
+        <Content/>
+      </Space>
+    </Modal>
+  );
+}
+
+const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee, updateCurrentUser, ...props }) => {
+  const [attendee, setAttendee] = useState([]);
+  useEffect(async () => {
+    // Get all existent activities, after will filter it
+    const existentActivities = await allActivities.map(async (activity) => {
+      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(item._id).get();
+      if (activity_attendee.exists) {
+        return activity_attendee.data();
+      }
+      return null;
+    });
+    // Filter non-null result that means that the user attendees them
+    const gotAttendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
+    setAttendee (gotAttendee);
+  }, []);
+
+  if (!onOpen) onOpen = () => {}
+
+  if (shownAll) {
+    return (
+      <Button
+        onClick={() => {
+          updateAttendee(attendee);
+          updateCurrentUser(item);
+          onOpen();
+        }}
+      >
+        {`${attendee.length || 0}/${allActivities.length || 0}`}
+     </Button>
+    );
+  }
+  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
+};
+
 class ListEventUser extends Component {
   constructor(props) {
     super(props);
@@ -465,6 +553,9 @@ class ListEventUser extends Component {
                   updatedAttendees[i][key.name] === undefined
                 )
               ) {
+                {
+                  console.log('entro', updatedAttendees[i].user ? updatedAttendees[i].user[key.name] : '');
+                }
                 updatedAttendees[i]['properties'][key.name] =
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }
@@ -829,6 +920,7 @@ class ListEventUser extends Component {
       disabledPersistence,
       nameActivity,
       columns,
+      fieldsForm,
     } = this.state;
 
     const { type, loading, componentKey } = this.props;

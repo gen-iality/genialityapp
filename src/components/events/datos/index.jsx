@@ -77,6 +77,7 @@ class Datos extends Component {
       const organizationId = this?.organization?._id;
       let fields = [];
       let fieldsReplace = [];
+      let checkInFieldsIds = [];
       if (
         (organizationId && !this.props.eventId && this.props.edittemplate) ||
         (organizationId && !this.props.eventId && !this.props.edittemplate)
@@ -92,6 +93,7 @@ class Datos extends Component {
         fields = this.orderFieldsByWeight(fieldsReplace);
         fields = this.updateIndex(fieldsReplace);
       } else if (!this.props.edittemplate) {
+        this.setState({ checkInExists: false, checkInFieldsIds: [] });
         fields = await EventFieldsApi.getAll(this.props.eventId);
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
         //Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
@@ -279,7 +281,7 @@ class Datos extends Component {
     this.setState({ info: {}, modal: false, edit: false });
   };
   //Borrar dato de la lista
-  removeField = async (item) => {
+  removeField = async (item, checkInFieldsDelete) => {
     let self = this;
 
     const onHandlerRemove = async () => {
@@ -479,7 +481,7 @@ class Datos extends Component {
   };
 
   render() {
-    const { fields, modal, edit, info, value } = this.state;
+    const { fields, modal, edit, info, value, checkInExists, checkInFieldsIds } = this.state;
     const columns = [
       {
         title: '',
