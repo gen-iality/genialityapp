@@ -29,12 +29,13 @@ function SurveyActivity(props) {
       });
   }
   useEffect(() => {
+    console.log('100.currentActivity', currentActivity)
     if (!currentActivity || !props.cEvent) return;
 
     async function GetStateStreamingRoom() {
       const service = new Service(firestore);
       await listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id);
-      console.log('configuration', configuration);
+      console.log('100.configuration', configuration);
     }
 
     if (currentActivity != null) {
@@ -50,6 +51,7 @@ function SurveyActivity(props) {
         </div>
       )}
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      {console.log('100.activityState', activityState)}
       <SurveyDetailPage surveyId={activityState?.meeting_id} />
     </>
   );

@@ -15,6 +15,8 @@ function QuizActivity(props) {
 
   async function listeningStateStreamingRoom(event_id, activity_id) {
 
+    console.log('100.listeningStateStreamingRoom - event_id - activity_id', event_id, activity_id);
+
     firestore
       .collection('events')
       .doc(event_id)
@@ -24,9 +26,9 @@ function QuizActivity(props) {
 
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
-        const { habilitar_ingreso, meeting_id } = data;
+        //const { habilitar_ingreso, meeting_id } = data;
         console.log('realtime', data);
-        //setactivityState(habilitar_ingreso);
+        setactivityState(data);
         //setmeetingId(meeting_id);
         //setTransmition(data.transmition);
 
@@ -34,13 +36,15 @@ function QuizActivity(props) {
 
   }
   useEffect(() => {
+    console.log('100.currentActivity', currentActivity);
+    console.log('100.props.cEvent', props.cEvent);
     if (!currentActivity || !props.cEvent) return;
 
     async function GetStateStreamingRoom() {
 
       const service = new Service(firestore);
       await listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id);
-      console.log('configuration', configuration);
+      console.log('100.configuration', configuration);
 
     }
 
@@ -52,9 +56,10 @@ function QuizActivity(props) {
   return (
     <>
 
-      {currentActivity && <div>{currentActivity._id}{console.log('currentActivityx', currentActivity)}</div>}
+      {currentActivity && (<div>{currentActivity._id}{console.log('currentActivityx', currentActivity)}</div>)}
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      <SurveyDetailPage />
+      {console.log('100.activityState', activityState)}
+      <SurveyDetailPage surveyId={activityState?.meeting_id} />
     </>
   )
 }
