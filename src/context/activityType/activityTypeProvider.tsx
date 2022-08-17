@@ -288,7 +288,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         }
         const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
         await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
-        setTypeActivity(activitySubTypeKeys.survey);
+        setTypeActivity(activitySubTypeKeys.quizing);
         setMeetingId(inputContentSource);
         break;
       }
@@ -447,11 +447,11 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (['quizing', 'quiz'].includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('quizing2');
-              setContentSource(meetingId);
+              setContentSource(agendaInfo.meeting_id || null);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if ((typeIncoming as ActivitySubTypeName) === 'survey') {
               setActivityType('survey2');
-              setContentSource(meetingId);
+              setContentSource(agendaInfo.meeting_id || null);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
