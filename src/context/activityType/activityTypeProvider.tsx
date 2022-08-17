@@ -279,6 +279,16 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         setMeetingId(inputContentSource);
         break;
       }
+      case activitySubTypeKeys.quizing: {
+        if (!inputContentSource) {
+          console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
+          return;
+        }
+        await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
+        setTypeActivity(activitySubTypeKeys.survey);
+        setMeetingId(inputContentSource);
+        break;
+      }
       default:
         // alert(`wtf is ${contentType}`);
         console.warn(`wtf is ${contentType}`);
