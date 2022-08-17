@@ -125,10 +125,15 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}
+          savedSurveyId={contentSource!}
           inserted
           onSave={(quizId: string) => {
-            console.debug('call onSave from QuizCMS. surveyId will be', quizId);
-            saveActivityContent(activityContentType as ActivitySubTypeName, quizId);
+            console.debug('call onSave from QuizCMS. quizId will be', quizId);
+            if (contentSource !== quizId) {
+              saveActivityContent(activityContentType as ActivitySubTypeName, quizId);
+            } else {
+              console.info(`Resaving stopped because contentSource = quizId ${quizId}`);
+            }
           }}
           onDelete={() => {
             console.debug('quiz will delete');
@@ -142,10 +147,15 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}
+          savedSurveyId={contentSource!}
           inserted
           onSave={(surveyId: string) => {
             console.debug('call onSave from SurveyCMS. surveyId will be', surveyId);
-            saveActivityContent(activityContentType as ActivitySubTypeName, surveyId);
+            if (contentSource !== surveyId) {
+              saveActivityContent(activityContentType as ActivitySubTypeName, surveyId);
+            } else {
+              console.info(`Resaving stopped because contentSource = surveyId ${surveyId}`);
+            }
           }}
           onDelete={() => {
             console.debug('survey will delete');

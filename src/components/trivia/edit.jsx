@@ -227,7 +227,7 @@ class triviaEdit extends Component {
 
         // Survey Config
         allow_anonymous_answers: 'false',
-        allow_gradable_survey: 'false',
+        allow_gradable_survey: !!this.props.quizable ? 'true' : 'false',
         hasMinimumScore: false,
         isGlobal: false,
         showNoVotos: false,

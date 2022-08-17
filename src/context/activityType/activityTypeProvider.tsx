@@ -72,6 +72,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       .create(cEvent.value._id, createTypeActivityBody);
     const agenda: ExtendedAgendaDocumentType = await AgendaApi
       .editOne({ type_id: activityTypeDocument._id }, activityId, eventId);
+    console.debug('editActivityType returns', agenda);
     return agenda;
   }
 
@@ -274,8 +275,20 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
           return;
         }
+        const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
         await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
         setTypeActivity(activitySubTypeKeys.survey);
+        setMeetingId(inputContentSource);
+        break;
+      }
+      case activitySubTypeKeys.quizing: {
+        if (!inputContentSource) {
+          console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
+          return;
+        }
+        const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
+        await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
+        setTypeActivity(activitySubTypeKeys.quizing);
         setMeetingId(inputContentSource);
         break;
       }
