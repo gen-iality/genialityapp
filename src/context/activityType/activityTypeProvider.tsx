@@ -447,11 +447,11 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (['quizing', 'quiz'].includes(typeIncoming as ActivitySubTypeName)) {
               setActivityType('quizing2');
-              setContentSource(agendaInfo.meeting_id || null);
+              setContentSource(meetingId);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if ((typeIncoming as ActivitySubTypeName) === 'survey') {
               setActivityType('survey2');
-              setContentSource(agendaInfo.meeting_id || null);
+              setContentSource(meetingId);
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
