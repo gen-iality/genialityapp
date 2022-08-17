@@ -15,7 +15,7 @@ export interface QuizCMSProps {
 
 function QuizCMS(props: QuizCMSProps) {
   return (
-    <TriviaEdit {...props} />
+    <TriviaEdit {...props} quizable />
   );
 }
 
