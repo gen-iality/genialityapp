@@ -278,7 +278,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
         await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
         setTypeActivity(activitySubTypeKeys.survey);
-        setMeetingId(inputContentSource);
+        if (!!inputContentSource) setMeetingId(inputContentSource);
         break;
       }
       case activitySubTypeKeys.quizing: {
@@ -289,7 +289,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
         await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
         setTypeActivity(activitySubTypeKeys.quizing);
-        setMeetingId(inputContentSource);
+        if (!!inputContentSource) setMeetingId(inputContentSource);
         break;
       }
       default:
