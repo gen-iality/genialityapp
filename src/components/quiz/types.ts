@@ -49,3 +49,9 @@ export type Response = {
   user_email: string;
   user_name: string;
 };
+
+export type QuizStats = {
+  totalAmount: number;
+  passedAmount: number;
+  winnedPoints: number;
+};
