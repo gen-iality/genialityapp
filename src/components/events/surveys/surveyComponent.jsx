@@ -51,12 +51,13 @@ function SurveyComponent(props) {
 
     //Configuración para poder relacionar el id de la pregunta en la base de datos
     //con la encuesta visible. para poder almacenar las respuestas
-    Survey.JsonObject.metaData.addProperty('question', 'id');
-    Survey.JsonObject.metaData.addProperty('question', 'points');
+    /* Survey.JsonObject.metaData.addProperty('question', 'id');
+    Survey.JsonObject.metaData.addProperty('question', 'points'); */
   }, [])
 
   //Effect for when prop.idSurvey changes
   useEffect(() => {
+    console.log('11.USUARIOid', currentUser.value._id);
     if (!idSurvey) return;
 
     let unsubscribe;
@@ -200,19 +201,19 @@ function SurveyComponent(props) {
   }
 
   /* handler cuando la encuesta cambio de pregunta */
-  function onCurrentSurveyPageChanged() {
-    if (!onCurrentPageChanged?.options?.oldCurrentPage) return;
+  function onCurrentSurveyPageChanged(sender, options) {
+    if (!sender?.options?.oldCurrentPage) return;
     let secondsToGo =
-      onCurrentPageChanged.surveyModel.maxTimeToFinishPage - onCurrentPageChanged.options.oldCurrentPage.timeSpent;
-    const status = onCurrentPageChanged.surveyModel.state;
+      sender.surveyModel.maxTimeToFinishPage - sender.options.oldCurrentPage.timeSpent;
+    const status = sender.surveyModel.state;
 
     if (surveyData.allow_gradable_survey === "true") {
       setShowOrHideSurvey(false);
       setFeedbackMessage({ icon: loaderIcon });
       if (status === "running") {
-        // onCurrentPageChanged.surveyModel.stopTimer();
+        // sender.surveyModel.stopTimer();
         TimerAndMessageForTheNextQuestion(
-          onCurrentPageChanged.surveyModel,
+          sender.surveyModel,
           secondsToGo,
           setTimerPausa,
           setFeedbackMessage,
@@ -227,10 +228,6 @@ function SurveyComponent(props) {
     }
   }
 
-  useEffect(() => {
-    onCurrentSurveyPageChanged();
-  }, [onCurrentPageChanged]);
-
   /**
    * Render del componente
    **/
@@ -238,6 +235,7 @@ function SurveyComponent(props) {
   if (!surveyData) return <Spin tip={"Cargando..."} />;
   return (
     <div>
+      {console.log('11.USUARIOid', currentUser.value._id)}
       {!showOrHideSurvey && surveyData.allow_gradable_survey === "true" && (
         <Result className="animate__animated animate__fadeIn" {...feedbackMessage} extra={null} />
       )}
@@ -277,8 +275,11 @@ function SurveyComponent(props) {
                   onCompleting={(surveyModel) => MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)}
                   onTimerPanelInfoText={TimeLimitPerQuestion}
                   onStarted={onStartedSurvey}
-                  onCurrentPageChanged={(surveyModel, options) =>
-                    setOnCurrentPageChanged({ surveyModel, options }, setShowOrHideSurvey(true))
+                  onCurrentPageChanged={(sender, options) => {
+                    // setOnCurrentPageChanged(sender);
+                    onCurrentSurveyPageChanged();
+                    return true;
+                  }
                   }
                 />
               </div>
