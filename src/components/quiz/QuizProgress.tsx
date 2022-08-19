@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react';
 
 import {
   Typography,
@@ -15,18 +15,17 @@ import QuizStatusMessage from './quizStatus';
 import {
   Response,
   Survey,
+  QuizStatus,
+  QuizStatusRequestData,
 } from './types';
 import QuizBadge from './QuizBadge';
-
+import useRequestQuizStatus from './useRequestQuizStatus';
+import useAsyncQuizStatusRequesting from './useAsyncQuizStatusRequesting';
 interface QuizProgressProps {
   /**
    * The event ID
    */
   eventId: string,
-  /**
-   * The activity ID
-   */
-  activityId: string,
   /**
    * The current survey ID
    */
@@ -37,7 +36,7 @@ interface QuizProgressProps {
   userId: string,
 }
 
-const QuizProgress: React.FunctionComponent<QuizProgressProps> = (props) => {
+function QuizProgress(props: QuizProgressProps) {
   const [totalAnswers, setTotalAnswers] = useState(0);
   const [goodAnswers, setGoodAnswers] = useState(0);
   const [isPassedQuiz, setIsPassedQuiz] = useState<boolean | undefined>(undefined);
@@ -50,42 +49,32 @@ const QuizProgress: React.FunctionComponent<QuizProgressProps> = (props) => {
   }, [isPassedQuiz, totalAnswers]);
 
   useEffect(() => {
-    (async () => {
-      console.debug('finding eventId', props.eventId, 'with activityId', props.surveyId);
-      const survey: Survey = await SurveysApi.getOne(props.eventId, props.surveyId);
-
-      let totalResponses = survey.questions.length;
-      let goodResponses = 0;
-      let winnedPoints = 0;
-
-      // Find in each question all answers.
-      // NOTE: not try to optimize using .forEach or .map at least that you know to use Promise.all
-      console.debug('The survey\'s questions are:');
-      for (let i = 0; i < survey.questions.length; i++) {
-        const question = survey.questions[i];
-        const stats = await useQuizQuestionStats(survey, question, props.userId);
-        goodResponses = goodResponses + stats.passedAmount
-        winnedPoints = winnedPoints + stats.winnedPoints;
-      }
-
-      // Update stats
-      setTotalAnswers(totalResponses);
-      setGoodAnswers(goodResponses);
-      setIsPassedQuiz(winnedPoints >= survey.minimumScore);
-    })().catch((err) => console.error('Cannot request with SurveysApi or Firestore:', err));
-  }, []);
+    useAsyncQuizStatusRequesting(props.eventId, props.surveyId, props.userId)
+      .then((stats: QuizStatusRequestData) => {
+        // Update stats
+        setTotalAnswers(stats.total);
+        setGoodAnswers(stats.right);
+        setIsPassedQuiz(stats.right >= stats.minimum);
+      })
+      .catch((err: any) => {
+        console.error('Cannot request with SurveysApi or Firestore:', err);
+      });
+  }, [props.eventId, props.surveyId, props.userId]);
 
   /**
    * The stats message that says how many answers were responsed rightly
    */
    const statsMessage = useMemo(() => {
-    if (isPassedQuiz === undefined) return 'N de M';
+    if (isPassedQuiz === undefined) {
+      return 'N de M';
+    }
+
     return `${goodAnswers} de ${totalAnswers}`;
   }, [isPassedQuiz, totalAnswers, goodAnswers]);
 
   return (
     <Space>
-      <QuizBadge isPassedQuiz={isPassedQuiz} passedMessage={passedMessage} />
+      <QuizBadge isRight={isPassedQuiz} message={passedMessage} />
       {' '}
       <Typography.Text strong>{statsMessage}</Typography.Text>
     </Space>
