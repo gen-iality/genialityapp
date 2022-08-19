@@ -1,26 +1,18 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import { useState, useEffect, useMemo } from 'react';
 
 import {
   Typography,
-  Badge,
   Space,
 } from 'antd';
 
-import { SurveysApi } from '@/helpers/request';
 
-import useQuizQuestionStats from './useQuizQuestionStats';
 import QuizStatusMessage from './quizStatus';
 import {
-  Response,
-  Survey,
-  QuizStatus,
-  QuizStatusRequestData,
+  QuizStats,
 } from './types';
 import QuizBadge from './QuizBadge';
-import useRequestQuizStatus from './useRequestQuizStatus';
-import useAsyncQuizStatusRequesting from './useAsyncQuizStatusRequesting';
+import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
 interface QuizProgressProps {
   /**
    * The event ID
@@ -49,8 +41,8 @@ function QuizProgress(props: QuizProgressProps) {
   }, [isPassedQuiz, totalAnswers]);
 
   useEffect(() => {
-    useAsyncQuizStatusRequesting(props.eventId, props.surveyId, props.userId)
-      .then((stats: QuizStatusRequestData) => {
+    useAsyncPrepareQuizStats(props.eventId, props.surveyId, props.userId)
+      .then((stats: QuizStats) => {
         // Update stats
         setTotalAnswers(stats.total);
         setGoodAnswers(stats.right);

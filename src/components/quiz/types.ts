@@ -38,31 +38,15 @@ export type Survey = {
   created_at: Dayjs;
   questions: Question[];
   displayGraphsInSurveys: 'false' | 'true'; // That's awful
-  rankingVisible: "true"};
-
-export type Response = {
-  correctAnswer: boolean;
-  created: Dayjs;
-  id_survey: string;
-  id_user: string;
-  response: string;
-  user_email: string;
-  user_name: string;
-};
-
-export type QuizStats = {
-  totalAmount: number;
-  passedAmount: number;
-  winnedPoints: number;
+  rankingVisible: 'true' | 'false',
 };
 
 export type QuizStatus = {
   surveyCompleted: string,
-  total: number,
   right: number,
 };
 
-export type QuizStatusRequestData = {
+export type QuizStats = {
   total: number,
   right: number,
   minimum: number,

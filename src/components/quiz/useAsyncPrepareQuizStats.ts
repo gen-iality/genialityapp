@@ -1,5 +1,5 @@
 import { SurveysApi } from "@/helpers/request";
-import { QuizStatus, QuizStatusRequestData, Survey } from "./types";
+import { QuizStatus, QuizStats, Survey } from "./types";
 import useRequestQuizStatus from "./useRequestQuizStatus";
 
 /**
@@ -7,9 +7,10 @@ import useRequestQuizStatus from "./useRequestQuizStatus";
  * @param eventId The event ID.
  * @param surveyId The survey ID.
  * @param userId The user ID.
+ * @param [survey] Optional survey object
  * @returns ({total: number, right: number, minimum: number})
  */
-export default async function useQuizStatusRequesting(eventId: string, surveyId: string, userId: string) {
+export default async function useQuizStatusRequesting(eventId: string, surveyId: string, userId: string, survey?: Survey) {
   console.debug(
     'finding quiz status for userId', userId,
     'with surveyId', surveyId,
@@ -19,7 +20,6 @@ export default async function useQuizStatusRequesting(eventId: string, surveyId:
   let quizStatus: QuizStatus = {
     right: 0,
     surveyCompleted: '',
-    total: 0,
   };
 
   const result = await getMethod();
@@ -34,16 +34,17 @@ export default async function useQuizStatusRequesting(eventId: string, surveyId:
 
   try {
     console.debug('finding eventId', eventId, 'with activityId', surveyId);
-    const survey: Survey = await SurveysApi.getOne(eventId, surveyId);
-    console.debug(survey);
 
-    minimumScore = survey.minimumScore;
-    questionLength = survey.questions.length;
+    let surveyIn: Survey = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
+    console.debug(surveyIn);
+
+    minimumScore = surveyIn.minimumScore;
+    questionLength = surveyIn.questions.length;
   } catch (err) {
     console.error('SurveysApi.getOne', err);
   }
 
-  const stats: QuizStatusRequestData = {
+  const stats: QuizStats = {
     total: questionLength,
     right: quizStatus.right,
     minimum: minimumScore,

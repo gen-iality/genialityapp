@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Table, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table'
+import type { ColumnsType } from 'antd/es/table';
 
-import { SurveysApi } from '@/helpers/request';
-import { Question, Survey } from './types';
-import useQuizQuestionStats from './useQuizQuestionStats';
+import { Survey } from './types';
 import QuizStatusMessage from './quizStatus';
 import QuizBadge from './QuizBadge';
+import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
+import { SurveysApi } from '@/helpers/request';
 
 type RowData = {
   surveyTitle: string,
+  requiredMessage: string,
   status: {
     isPassed?: boolean,
     message: string,
@@ -23,10 +24,6 @@ export interface QuizzesProgressProps {
    * The event ID
    */
    eventId: string,
-   /**
-    * The activity ID
-    */
-   activityId: string,
    /**
     * The current user ID
     */
@@ -45,7 +42,7 @@ const columns: ColumnsType<RowData> = [
     dataIndex: 'status',
     key: 'status',
     render: ({isPassed, message}) => (
-      <QuizBadge isPassedQuiz={isPassed} passedMessage={message}/>
+      <QuizBadge isRight={isPassed} message={message}/>
     ),
   },
   {
@@ -54,6 +51,12 @@ const columns: ColumnsType<RowData> = [
     key: 'statsMessage',
     render: (text) => <Typography.Text strong>{text}</Typography.Text>,
   },
+  {
+    title: 'Requerido',
+    dataIndex: 'requiredMessage',
+    key: 'requiredMessage',
+    render: (text) => <p>{text}</p>
+  }
 ];
 
 const generatePassedMessage = (isPassedQuiz: boolean, totalAnswers: number) => {
@@ -63,7 +66,7 @@ const generatePassedMessage = (isPassedQuiz: boolean, totalAnswers: number) => {
   return QuizStatusMessage.NOT_PASSED;
 };
 
-const QuizzesProgress: React.FunctionComponent<QuizzesProgressProps> = (props) => {
+function QuizzesProgress(props: QuizzesProgressProps) {
   const [rows, setRows] = useState<RowData[]>([]);
 
   useEffect(() => {
@@ -74,38 +77,23 @@ const QuizzesProgress: React.FunctionComponent<QuizzesProgressProps> = (props) =
       const caughtRows: RowData[] = [];
 
       for (let i = 0; i < surveys.length; i++) {
-        const survey: Survey = surveys[i];
-        const questions: Question[] = survey.questions || [];
-
-        let totalResponses = questions.length;
-        let goodResponses = 0;
-        let winnedPoints = 0;
-
-        // Find in each question all answers.
-        // NOTE: not try to optimize using .forEach or .map at least that you know to use Promise.all
-        console.debug('The survey\'s questions are:');
-        for (let j = 0; j < questions.length; j++) {
-          const question = questions[j];
-          const stats = await useQuizQuestionStats(survey, question, props.userId);
-          goodResponses = goodResponses + stats.passedAmount
-          winnedPoints = winnedPoints + parseInt(stats.winnedPoints as any);
-        }
-
-        console.debug(survey.survey, 'winnedPoints >= survey.minimumScore', winnedPoints, survey.minimumScore);
+        const survey: Survey = surveys[i] as never;
+        const stats = await useAsyncPrepareQuizStats(props.eventId, survey._id!, props.userId, survey);
 
         let isPassed = undefined;
-        if (totalResponses > 0) {
-          isPassed = winnedPoints >= survey.minimumScore;
+        if (stats.total > 0) {
+          isPassed = stats.right >= stats.minimum;
         }
 
         const rowData: RowData = {
           surveyTitle: survey.survey,
-          statsMessage: `${goodResponses} de ${totalResponses}`,
+          statsMessage: `${stats.right} de ${stats.total}`,
+          requiredMessage: `Requeridos ${stats.minimum}`,
           status: {
             isPassed,
             message: generatePassedMessage(
-              winnedPoints >= survey.minimumScore,
-              totalResponses,
+              stats.right >= stats.minimum,
+              stats.total,
             )
           },
         };
