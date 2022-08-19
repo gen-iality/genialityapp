@@ -55,3 +55,15 @@ export type QuizStats = {
   passedAmount: number;
   winnedPoints: number;
 };
+
+export type QuizStatus = {
+  surveyCompleted: string,
+  total: number,
+  right: number,
+};
+
+export type QuizStatusRequestData = {
+  total: number,
+  right: number,
+  minimum: number,
+};
