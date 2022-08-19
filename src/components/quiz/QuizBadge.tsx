@@ -3,14 +3,14 @@ import { useMemo } from 'react';
 import { Badge } from 'antd';
 
 interface QuizBadgetProps {
-  isPassedQuiz?: boolean,
-  passedMessage: string,
+  isRight?: boolean,
+  message: string,
 };
 
 function QuizBadge(props: QuizBadgetProps) {
   const {
-    isPassedQuiz,
-    passedMessage,
+    isRight,
+    message,
   } = props;
 
   /**
@@ -18,12 +18,12 @@ function QuizBadge(props: QuizBadgetProps) {
    */
    const badgetColor = useMemo(() => {
     // Check out the 3 status
-    if (isPassedQuiz === undefined) return '#7D7D7D';
-    return isPassedQuiz ? '#5EB841' : '#B8415A';
-  }, [isPassedQuiz]);
+    if (isRight === undefined) return '#7D7D7D';
+    return isRight ? '#5EB841' : '#B8415A';
+  }, [isRight]);
 
   return (
-    <Badge count={passedMessage} style={{ backgroundColor: badgetColor }}/>
+    <Badge count={message} style={{ backgroundColor: badgetColor }}/>
   );
 }
 
