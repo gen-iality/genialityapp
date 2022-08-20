@@ -1,6 +1,10 @@
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import ImageComponentwithContext from './ImageComponent';
 import RenderComponent from './RenderComponent';
+import StreamingActivity from './ActivityTypes/StreamingActivity';
+import MeetingActivity from './ActivityTypes/MeetingActivity';
+import QuizActivity from './ActivityTypes/QuizActivity';
+import VideoActivity from './ActivityTypes/VideoActivity';
+import GenericActivity from './ActivityTypes/GenericActivity';
+import SurveyActivity from './ActivityTypes/SurveyActivity';
 
 function ActivityTypeSwitch({ activity }) {
   console.debug(activity)
@@ -21,11 +25,13 @@ function ActivityTypeSwitch({ activity }) {
     case 'quiz':
     case 'quizing':
       return (<QuizActivity />);
+    case 'survey':
+      return (<SurveyActivity/>);
     default: return <GenericActivity />;
   }
 }
 
-const HCOActividad = ({ activity }) => {
+const HOCActividad = ({ activity }) => {
 
   return (
     <header>
@@ -36,4 +42,4 @@ const HCOActividad = ({ activity }) => {
   );
 };
 
-export default HCOActividad;
+export default HOCActividad;

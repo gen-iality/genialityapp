@@ -27,7 +27,8 @@ import type { ActivityType } from '@context/activityType/types/activityType';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 import { TypeDisplayment } from '@context/activityType/constants/enum';
 
-import TriviaEdit from '../../trivia/edit';
+import QuizCMS from '../../quiz/QuizCMS';
+import SurveyCMS from '../../survey/SurveyCMS';
 
 export interface ActivityContentManagerProps {
   activityName: string,
@@ -125,31 +126,50 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <Typography.Title>{activityContentType}</Typography.Title>
         <Typography.Text>Página de configuración del contenido.</Typography.Text>
       </div>
-      <TriviaEdit
-        inserted
-        savedSurveyId={contentSource}
-        activityId={activityEdit}
-        event={eventContext.value}
-        matchUrl={props.matchUrl}
-        onSave={(surveyId: string) => {
-          console.debug('call onSave from TriviaEdit. surveyId will be', surveyId);
-          saveActivityContent(activityContentType as ActivityType.ContentValue, surveyId);
-        }}
-        onDelete={() => {
-          console.debug('survey delete')
-          switch (activityContentType as ActivityType.ContentValue) {
-            case 'survey':
-              resetActivityType('survey2');
-              break;
-            case 'quizing':
-              resetActivityType('quizing2');
-              break;
-            default:
-              console.error('Cant reset activity type from content type:', activityContentType);
-          }
-          // saveActivityContent(activityContentType as ActivityType.ContentValue, null);
-        }}
-      />
+      {activityContentType === activityContentValues.quizing && (
+        <QuizCMS
+          title={'Evaluación'}
+          activityId={activityEdit}
+          event={eventContext.value}
+          matchUrl={props.matchUrl}
+          savedSurveyId={contentSource!}
+          inserted
+          onSave={(quizId: string) => {
+            console.debug('call onSave from QuizCMS. quizId will be', quizId);
+            if (contentSource !== quizId) {
+              saveActivityContent(activityContentType, quizId);
+            } else {
+              console.info(`Resaving stopped because contentSource = quizId ${quizId}`);
+            }
+          }}
+          onDelete={() => {
+            console.debug('quiz will delete');
+            resetActivityType('quizing2');
+          }}
+        />
+      )}
+      {activityContentType === activityContentValues.survey && (
+        <SurveyCMS
+          title={'Encuesta'}
+          activityId={activityEdit}
+          event={eventContext.value}
+          matchUrl={props.matchUrl}
+          savedSurveyId={contentSource!}
+          inserted
+          onSave={(surveyId: string) => {
+            console.debug('call onSave from SurveyCMS. surveyId will be', surveyId);
+            if (contentSource !== surveyId) {
+              saveActivityContent(activityContentType, surveyId);
+            } else {
+              console.info(`Resaving stopped because contentSource = surveyId ${surveyId}`);
+            }
+          }}
+          onDelete={() => {
+            console.debug('survey will delete');
+            resetActivityType('survey2');
+          }}
+        />
+      )}
       </>
     );
   }

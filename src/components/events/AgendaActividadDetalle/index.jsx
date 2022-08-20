@@ -13,7 +13,7 @@ import { UseSurveysContext } from '../../../context/surveysContext';
 import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
-import HCOActividad from './HOC_Actividad';
+import HOCActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
@@ -150,56 +150,8 @@ const AgendaActividadDetalle = (props) => {
       <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
-          {!blockActivity ? (
-            <>
-              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-              cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
-                <Alert
-                  showIcon
-                  style={{
-                    width: '100%',
-                    marginTop: 40,
-                    marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
-                  }}
-                  message={
-                    <>
-                      {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
-                    </>
-                  }
-                  type='warning'
-                />
-              ) : (
-                activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)
-              )}
-            </>
-          ) : (
-            <>
-              <Row>
-                {/* <ImageComponentwithContext /> */}
-                <Alert
-                  showIcon
-                  style={{
-                    width: '100%',
-                    marginTop: 40,
-                    marginBottom: 40,
-                    textAlign: 'center',
-                    fontSize: '19px',
-                  }}
-                  message={
-                    <>
-                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
-                        https://iberofest.co/producto/edc/
-                      </a>{' '}
-                    </>
-                  }
-                  type='warning'
-                />
-              </Row>
-            </>
-          )}
+
+          {activity.type === undefined ? (<PreloaderApp />) : (<HOCActividad activity={activity}/>)}
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>

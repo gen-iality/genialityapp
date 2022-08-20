@@ -3,16 +3,54 @@ import { connect } from 'react-redux';
 import Graphics from './graphics';
 import SurveyComponent from './surveyComponent';
 import { Card, Result, Divider } from 'antd';
+
+
 import ClosedSurvey from './components/closedSurvey';
+import WithEviusContext from '@/context/withContext';
+import LoadSelectedSurvey from './functions/loadSelectedSurvey';
+import initRealTimeSurveyListening from "./functions/initRealTimeSurveyListening";
 
 /** Context´s */
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
 
-function SurveyDetailPage(props) {
+function SurveyDetailPage({ surveyId, cEvent }) {
   let cSurveys = UseSurveysContext();
+
   const currentUser = UseCurrentUser();
   const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
+
+  //Effect for when prop.idSurvey changes
+  useEffect(() => {
+    if (!surveyId) return;
+
+    let unsubscribe;
+    (async () => {
+      let loadedSurvey = await LoadSelectedSurvey(cEvent.value._id, surveyId);
+      //listener que nos permite saber los cambios de la encuesta en tiempo real
+      unsubscribe = initRealTimeSurveyListening(surveyId, currentUser, loadedSurvey, updateSurveyData);
+
+      // Esto permite obtener datos para la grafica de gamificacion
+      //UserGamification.getListPoints(eventId, setRankingList);
+      //Se obtiene el EventUser para los casos que se necesite saber el peso voto
+      //await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
+    })();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [surveyId]);
+
+  function updateSurveyData(surveyConfig) {
+    if (!surveyConfig) return;
+    /*  surveyData.open = surveyRealTime.isOpened;
+     surveyData.publish = surveyRealTime.isPublished;
+     surveyData.freezeGame = surveyRealTime.freezeGame; */
+    // setSurveyData((previusSurveyConfig) => {
+    //   return { ...previusSurveyConfig, ...surveyConfig };
+    // });
+    cSurveys.select_survey(surveyConfig);
+  }
+
 
   useEffect(() => {
     if (showSurveyTemporarily === true) {
@@ -23,7 +61,7 @@ function SurveyDetailPage(props) {
   }, [showSurveyTemporarily]);
 
   if (!cSurveys.currentSurvey) {
-    return <h1>No hay nada publicado</h1>;
+    return <h1>No hay nada publicado{surveyId}</h1>;
   }
 
   return (
@@ -32,11 +70,12 @@ function SurveyDetailPage(props) {
         <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
       )}
       {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
+
       {(cSurveys.shouldDisplaySurvey() || showSurveyTemporarily) && (
         <Card className='survyCard'>
           <SurveyComponent
-            idSurvey={cSurveys.currentSurvey._id}
-            eventId={cSurveys.currentSurvey.eventId}
+            idSurvey={surveyId}
+            eventId={cEvent._id}
             currentUser={currentUser}
             setShowSurveyTemporarily={setShowSurveyTemporarily}
             operation='participationPercentage'
@@ -46,11 +85,7 @@ function SurveyDetailPage(props) {
       {cSurveys.shouldDisplayGraphics() && (
         <>
           <Divider />
-          <Graphics
-            idSurvey={cSurveys.currentSurvey._id}
-            eventId={cSurveys.currentSurvey.eventId}
-            operation='participationPercentage'
-          />
+          <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
         </>
       )}
       {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
@@ -62,4 +97,4 @@ const mapStateToProps = (state) => ({
   isVisible: state.survey.data.surveyVisible,
 });
 
-export default connect(mapStateToProps)(SurveyDetailPage);
+export default connect(mapStateToProps)(WithEviusContext(SurveyDetailPage));

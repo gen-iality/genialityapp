@@ -49,6 +49,7 @@ class triviaEdit extends Component {
     super(props);
     this.formEditRef = React.createRef();
     this.state = {
+      title: props.title || 'Evaluación',
       idSurvey: this.props.savedSurveyId,
       isLoading: true,
       loading: false,
@@ -227,7 +228,7 @@ class triviaEdit extends Component {
 
         // Survey Config
         allow_anonymous_answers: 'false',
-        allow_gradable_survey: 'false',
+        allow_gradable_survey: !!this.props.quizable ? 'true' : 'false',
         hasMinimumScore: false,
         isGlobal: false,
         showNoVotos: false,
@@ -279,7 +280,7 @@ class triviaEdit extends Component {
         });
         DispatchMessageService({
           type: 'success',
-          msj: 'La evaluación se guardó correctamente!',
+          msj: `La ${this.state.title.toLowerCase()} se guardó correctamente!`,
           action: 'show',
         });
       } catch (e) {
@@ -310,7 +311,7 @@ class triviaEdit extends Component {
       return DispatchMessageService({
         type: 'error',
         /* key: 'updating', */
-        msj: 'Esta evaluación no cuenta con respuestas posibles',
+        msj: `Esta ${this.state.title.toLowerCase()} no cuenta con respuestas posibles`,
         action: 'show',
       });
 
@@ -430,7 +431,7 @@ class triviaEdit extends Component {
         });
         DispatchMessageService({
           type: 'error',
-          msj: 'Esta evaluación es calificable, hay preguntas sin respuesta correcta asignada',
+          msj: `Esta ${this.state.title.toLowerCase()} es calificable, hay preguntas sin respuesta correcta asignada`,
           action: 'show',
         });
       }
@@ -441,7 +442,7 @@ class triviaEdit extends Component {
         });
         DispatchMessageService({
           type: 'error',
-          msj: 'Esta evaluación es calificable, debe asignar un mensaje inicial',
+          msj: `Esta ${this.state.title.toLowerCase()} es calificable, debe asignar un mensaje inicial`,
           action: 'show',
         });
       }
@@ -785,7 +786,7 @@ class triviaEdit extends Component {
     return (
       <Form onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit} {...formLayout}>
         <Header
-          title={'Evaluaciones'}
+          title={this.state.title}
           back={!this.props.inserted}
           save={!this.props.inserted || this.state.idSurvey}
           form={!this.props.inserted}
@@ -840,7 +841,7 @@ class triviaEdit extends Component {
                     rules={[{ required: true, message: 'El nombre es requerido' }]}>
                     <Input
                       value={survey}
-                      placeholder={'Nombre de la evaluación'}
+                      placeholder={`Nombre de la ${this.state.title.toLowerCase()}`}
                       name={'survey'}
                       onChange={this.changeInput}
                     />
@@ -872,7 +873,7 @@ class triviaEdit extends Component {
                     </Form.Item>
                   </Col> */}
                         {/* <Col>
-                    <Form.Item label={'Publicar evaluación'}>
+                    <Form.Item label={`Publicar ${this.state.title.toLowerCase()}`}>
                       <Switch
                         name={'publish'}
                         checked={publish === 'true' || publish === true}
@@ -881,7 +882,7 @@ class triviaEdit extends Component {
                     </Form.Item>
                   </Col> */}
                         <Col>
-                          <Form.Item label={'Mostar gráficas en las evaluaciones'}>
+                          <Form.Item label={`Mostar gráficas en cada ${this.state.title.toLowerCase()}`}>
                             <Switch
                               name={'displayGraphsInSurveys'}
                               checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
@@ -890,7 +891,7 @@ class triviaEdit extends Component {
                           </Form.Item>
                         </Col>
                         {/* <Col>
-                          <Form.Item label={'Evaluación abierta'}>
+                          <Form.Item label={`${this.state.title} abierta`}>
                             <Switch
                               name={'openSurvey'}
                               checked={openSurvey === 'true'}
@@ -923,7 +924,7 @@ class triviaEdit extends Component {
                           </>
                         ))}
 
-                      <Form.Item label={'Evaluación global (visible en todas las lecciones)'}>
+                      <Form.Item label={`${this.state.title} global (visible en todas las lecciones)`}>
                         <Switch
                           name={'isGlobal'}
                           checked={isGlobal === 'true' || isGlobal === true}
@@ -933,7 +934,7 @@ class triviaEdit extends Component {
 
                       {(isGlobal === 'false' || isGlobal === false) && (
                         <>
-                          <Form.Item label={'Relacionar esta evaluación a una lección'}>
+                          <Form.Item label={`Relacionar esta ${this.state.title.toLowerCase()} a una lección`}>
                             <Select
                               disabled={this.props.inserted}
                               name={'activity_id'}
@@ -959,7 +960,7 @@ class triviaEdit extends Component {
                           onChange={(checked) => this.toggleSwitch('allow_vote_value_per_user', checked)}
                         />
                       </Form.Item>
-                      <Form.Item label={'Evaluación calificable'}>
+                      <Form.Item label={`${this.state.title} calificable`}>
                         <Switch
                           name={'allow_gradable_survey'}
                           checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
@@ -996,7 +997,8 @@ class triviaEdit extends Component {
                             <Form.Item
                               label={
                                 <label style={{ marginTop: '2%' }}>
-                                  {'Mensaje pantalla inicial de la evaluación'}{' '}
+                                  {'Mensaje pantalla inicial de la'}
+                                  {` ${this.state.title.toLowerCase()} `}
                                   <label style={{ color: 'red' }}>*</label>
                                 </label>
                               }>
@@ -1008,7 +1010,7 @@ class triviaEdit extends Component {
                                 onChange={this.onChange}
                               />
                             </Form.Item>
-                            <Form.Item label={'Mensaje pantalla final de la evaluación'}>
+                            <Form.Item label={`Mensaje pantalla final de la ${this.state.title.toLowerCase()}`}>
                               <ReactQuill
                                 name={'neutral_Message'}
                                 id={'neutral_Message'}
