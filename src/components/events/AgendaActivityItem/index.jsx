@@ -16,6 +16,7 @@ import { UseEventContext } from '../../../context/eventContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
+import QuizProgress from '@/components/quiz/QuizProgress';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -36,6 +37,7 @@ function AgendaActivityItem(props) {
   const [typeActivity, setTypeActivity] = useState(null);
   const intl = useIntl();
   const [isTaken, setIsTaken] = useState(false);
+  const [meetingId, setMeetingId] = useState(null);
 
   const timeZone = Moment.tz.guess();
   let { item, event_image, registerStatus, event } = props;
@@ -60,6 +62,21 @@ function AgendaActivityItem(props) {
     loadData();
     return () => {};
   }, [props.data, cEventUser.value]);
+
+  useEffect(() => {
+    if (!item._id || !cEvent.value) return;
+    (async () => {
+      const document = await firestore
+        .collection('events')
+        .doc(cEvent.value._id)
+        .collection('activities')
+        .doc(`${item._id}`)
+        .get();
+      const activity = document.data();    
+      console.log('This activity is', activity);
+      setMeetingId(activity.meeting_id);
+    })();
+  }, [item._id, cEvent.value]);
 
   useEffect(() => {
     if (registerStatus) {
@@ -489,6 +506,11 @@ function AgendaActivityItem(props) {
                         <Col span={24} style={{ paddingLeft: '0px' }}>
                           <div className='titulo' style={{ color: cEvent.value.styles.textMenu }}>
                             {item.name}.
+                          </div>
+                          <div>
+                            {meetingId && ['quizing', 'survey', 'quiz'].includes(item.type?.name) && (
+                              <QuizProgress eventId={cEvent.value._id} userId={cEventUser.value._id} surveyId={meetingId} />
+                            )}
                           </div>
                           <div className='lesson'>{lessonTypeToString(item.type?.name || 'Contenido genérico')}</div>
                           <span className='lugar' style={{ color: cEvent.value.styles.textMenu }}>
