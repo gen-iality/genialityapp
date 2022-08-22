@@ -37,6 +37,7 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { handleRequestError } from '@/helpers/utils';
 import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
 import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
+import IsolatedRoutes from '../isolated/IsolatedRoutes';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -481,6 +482,12 @@ class Event extends Component {
                 event={event}
                 eventId={event._id}
                 componentKey='ticketsEvent'
+              />
+              <Protected
+                path={`${match.url}/isolated`}
+                component={IsolatedRoutes}
+                event={this.state.event}
+                componentKey='isolated'
               />
               {/* Este componente se muestra si una ruta no coincide */}
               <Protected
