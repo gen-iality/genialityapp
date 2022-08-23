@@ -29,7 +29,7 @@ export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityT
 };
 
 export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
-  "": '', // What happens?
+  '': '', // What happens?
   eviusStreaming: TypeDisplayment.TRANSMISSION, // ...here
   url: TypeDisplayment.VIDEO,
   meeting: TypeDisplayment.MEETING,
