@@ -39,6 +39,7 @@ import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
 import eventCard from '../shared/eventCard';
+import QuizzesProgress from '../quiz/QuizzesProgress';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -521,6 +522,21 @@ const MainProfile = (props) => {
                       </Col>
                     )}
                   </Row>
+                )}
+              </TabPane>
+              <TabPane tab='Calificaciones' key='5'>
+                {events.length === 0 && (
+                  <Typography.Text strong>Sin eventos</Typography.Text>
+                )}
+                {!(props?.cUser?.value?._id) ? (
+                  <Loading />
+                ) : (
+                  events.map((event) => (
+                    <>
+                    <Typography.Text strong>{event.name}:</Typography.Text>
+                    <QuizzesProgress eventId={event._id} userId={props?.cUser?.value?._id} />
+                    </>
+                  ))
                 )}
               </TabPane>
             </Tabs>
