@@ -17,6 +17,7 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
 import QuizProgress from '@/components/quiz/QuizProgress';
+import { activityContentValues } from '@/context/activityType/constants/ui';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -508,7 +509,7 @@ function AgendaActivityItem(props) {
                             {item.name}.
                           </div>
                           <div>
-                            {meetingId && ['quizing', 'survey', 'quiz'].includes(item.type?.name) && (
+                            {meetingId && [activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) && (
                               <QuizProgress eventId={cEvent.value._id} userId={cEventUser.value._id} surveyId={meetingId} />
                             )}
                           </div>
