@@ -158,6 +158,14 @@ class triviaEdit extends Component {
     if (!isCreated) await this.getQuestions();
   }
 
+  async UNSAFE_componentWillUpdate(nextProps, nextState) {
+    if (nextProps.savedSurveyId !== this.props.savedSurveyId) {
+      if (nextProps.savedSurveyId) {
+        await this.getSurveyFromEditing(nextProps.savedSurveyId);
+      }
+    }
+  }
+
   async componentDidMount() {
     if (this.props.location.state.new || this.props.inserted) {
       this.setState({
