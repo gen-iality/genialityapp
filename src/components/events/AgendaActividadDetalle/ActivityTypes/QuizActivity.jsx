@@ -44,8 +44,6 @@ function QuizActivity(props) {
 
       const service = new Service(firestore);
       await listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id);
-      console.log('100.configuration', configuration);
-
     }
 
     if (currentActivity != null) {
