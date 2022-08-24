@@ -38,6 +38,7 @@ const MenuConfig = (props) => {
     const { pathname } = props.location;
     const splitted = pathname.split('/');
     eventOrganization(splitted[2]);
+    props.collapseMenu();
   }, []);
 
   const handleClick = (e) => {
