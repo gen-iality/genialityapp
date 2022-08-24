@@ -26,11 +26,13 @@ function SurveyComponent(props) {
   const cEvent = UseEventContext();
 
 
+  //surveyData tiene la definición de la encuesta/examen
   const [surveyData, setSurveyData] = useState(null);
+  //SurveyModel es usado por el modulo de SurveyJS
   const [initialSurveyModel, setInitialSurveyModel] = useState(null);
+  //Estado de la encuesta/examen por ejemplo si esta abierta
   const [surveyStatus, setSurveyStatus] = useState(null);
 
-  let surveyModel = null;
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: "#2bf4d5" }} />;
@@ -48,24 +50,17 @@ function SurveyComponent(props) {
   let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
   let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
 
-  //open, publish, freezeGame
-  function updateSurveyData(surveyStatus) {
-    if (!surveyStatus) return;
-    setSurveyStatus((previusSurveyStatus) => {
-      return { ...previusSurveyStatus, ...surveyStatus };
-    });
-  }
+
   useEffect(() => {
     //asigna los colores configurables a  la UI de la encuesta
     assignStylesToSurveyFromEvent(eventStyles);
-
     //Configuración para poder relacionar el id de la pregunta en la base de datos
     //con la encuesta visible. para poder almacenar las respuestas
-    /* Survey.JsonObject.metaData.addProperty('question', 'id');
-    Survey.JsonObject.metaData.addProperty('question', 'points'); */
+    Survey.JsonObject.metaData.addProperty('question', 'id');
+    Survey.JsonObject.metaData.addProperty('question', 'points');
   }, [])
 
-  //Effect for when prop.idSurvey changes 
+  //Effect to load the syrvey  when prop.idSurvey gets a value 
   useEffect(() => {
     console.log('11.USUARIOid', currentUser.value._id);
     if (!idSurvey) return;
@@ -73,24 +68,20 @@ function SurveyComponent(props) {
     let unsubscribe;
     (async () => {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
-
-      if (currentUser && currentUser.value._id) {
-        let currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser.value._id);
-        loadedSurvey.currentPage = currentPageNo ? currentPageNo : 0;
-      }
+      loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id)
 
       setSurveyData(loadedSurvey);
-
       setInitialSurveyModel(createSurveyModel(loadedSurvey));
 
       //listener que nos permite saber los cambios de la encuesta en tiempo real
-      unsubscribe = initRealTimeSurveyListening(idSurvey, updateSurveyData);
+      unsubscribe = initRealTimeSurveyListening(idSurvey, updateSurveyStatus);
 
 
+      //--> Esto esta pendiente por refactorizar 24 Agosto
       // Esto permite obtener datos para la grafica de gamificacion
-      UserGamification.getListPoints(eventId, setRankingList);
+      //UserGamification.getListPoints(eventId, setRankingList);
       //Se obtiene el EventUser para los casos que se necesite saber el peso voto
-      await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
+      //await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
     })();
     return () => {
       if (unsubscribe) unsubscribe();
@@ -113,18 +104,32 @@ function SurveyComponent(props) {
   }, [initialSurveyModel, idSurvey, timerPausa]);
 
 
+  //open, publish, freezeGame
+  function updateSurveyStatus(surveyStatus) {
+    if (!surveyStatus) return;
+    setSurveyStatus((previusSurveyStatus) => {
+      return { ...previusSurveyStatus, ...surveyStatus };
+    });
+  }
 
   function createSurveyModel(survey) {
     //setFreezeGame(surveyRealTime.freezeGame);
     /* Survey.StylesManager.applyTheme("darkblue"); */
     let surveyModelData = new Survey.Model(survey);
-    /* console.log(surveyModelData) */
     surveyModelData.currentPageNo = survey.currentPage;
     surveyModelData.locale = "es";
     //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
     //uno en el header y otro encima del botón de inicio de encuesta
     delete surveyModelData.localizableStrings.title.values.default;
     return surveyModelData;
+  }
+
+  async function getUserCurrentSurveyPage(idSurvey, user_id) {
+    let currentPageNo = 0;
+    if (idSurvey && user_id) {
+      currentPageNo = await SurveyPage.getCurrentPage(idSurvey, user_id);
+    }
+    return currentPageNo;
   }
 
   // Funcion para enviar la informacion de las respuestas
