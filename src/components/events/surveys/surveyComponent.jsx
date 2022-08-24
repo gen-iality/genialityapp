@@ -24,8 +24,11 @@ function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
 
   const cEvent = UseEventContext();
+
+
   const [surveyData, setSurveyData] = useState(null);
   const [initialSurveyModel, setInitialSurveyModel] = useState(null);
+  const [surveyStatus, setSurveyStatus] = useState(null);
 
   let surveyModel = null;
 
@@ -45,6 +48,13 @@ function SurveyComponent(props) {
   let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
   let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
 
+  //open, publish, freezeGame
+  function updateSurveyData(surveyStatus) {
+    if (!surveyStatus) return;
+    setSurveyStatus((previusSurveyStatus) => {
+      return { ...previusSurveyStatus, ...surveyStatus };
+    });
+  }
   useEffect(() => {
     //asigna los colores configurables a  la UI de la encuesta
     assignStylesToSurveyFromEvent(eventStyles);
@@ -55,7 +65,7 @@ function SurveyComponent(props) {
     Survey.JsonObject.metaData.addProperty('question', 'points'); */
   }, [])
 
-  //Effect for when prop.idSurvey changes
+  //Effect for when prop.idSurvey changes 
   useEffect(() => {
     console.log('11.USUARIOid', currentUser.value._id);
     if (!idSurvey) return;
@@ -63,8 +73,19 @@ function SurveyComponent(props) {
     let unsubscribe;
     (async () => {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
+
+      if (currentUser && currentUser.value._id) {
+        let currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser.value._id);
+        loadedSurvey.currentPage = currentPageNo ? currentPageNo : 0;
+      }
+
+      setSurveyData(loadedSurvey);
+
+      setInitialSurveyModel(createSurveyModel(loadedSurvey));
+
       //listener que nos permite saber los cambios de la encuesta en tiempo real
-      unsubscribe = initRealTimeSurveyListening(idSurvey, currentUser, loadedSurvey, updateSurveyData);
+      unsubscribe = initRealTimeSurveyListening(idSurvey, updateSurveyData);
+
 
       // Esto permite obtener datos para la grafica de gamificacion
       UserGamification.getListPoints(eventId, setRankingList);
@@ -76,13 +97,6 @@ function SurveyComponent(props) {
     };
   }, [idSurvey]);
 
-  /**
-   * Effect to syncronize SurveyModel state used by the SurveyLibrary with the SurveyData
-   * that is stored in database and used to control the survey Configurationx
-   */
-  useEffect(() => {
-    setInitialSurveyModel(createSurveyModel(surveyData));
-  }, [surveyData]);
 
   useEffect(() => {
     /**
@@ -98,22 +112,14 @@ function SurveyComponent(props) {
     }
   }, [initialSurveyModel, idSurvey, timerPausa]);
 
-  function updateSurveyData(surveyConfig) {
-    if (!surveyConfig) return;
-    /*  surveyData.open = surveyRealTime.isOpened;
-     surveyData.publish = surveyRealTime.isPublished;
-     surveyData.freezeGame = surveyRealTime.freezeGame; */
-    setSurveyData((previusSurveyConfig) => {
-      return { ...previusSurveyConfig, ...surveyConfig };
-    });
-  }
 
-  function createSurveyModel() {
+
+  function createSurveyModel(survey) {
     //setFreezeGame(surveyRealTime.freezeGame);
     /* Survey.StylesManager.applyTheme("darkblue"); */
-    let surveyModelData = new Survey.Model(surveyData);
+    let surveyModelData = new Survey.Model(survey);
     /* console.log(surveyModelData) */
-    //surveyModelData.currentPageNo = surveyRealTime.currentPage;
+    surveyModelData.currentPageNo = survey.currentPage;
     surveyModelData.locale = "es";
     //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
     //uno en el header y otro encima del botón de inicio de encuesta
@@ -232,7 +238,7 @@ function SurveyComponent(props) {
    * Render del componente
    **/
 
-  if (!surveyData) return <Spin tip={"Cargando..."} />;
+  if (!initialSurveyModel || !surveyData || !surveyStatus) return <Spin tip={"Cargando..."} />;
   return (
     <div>
       {console.log('11.USUARIOid', currentUser.value._id)}
@@ -241,7 +247,8 @@ function SurveyComponent(props) {
       )}
       <div>LA</div>
       {console.log("surveyData", surveyData)}
-      {surveyData.publish && <div>published</div>}
+      {surveyStatus.isPublished && <div>published</div>}
+
       {surveyData.currentPage && <div>{surveyData.currentPage}</div>}
       {surveyData.allow_anonymous_answers && <div>allow_anonymous_answers</div>}
 
@@ -249,8 +256,8 @@ function SurveyComponent(props) {
         surveyData &&
           (surveyData.allow_anonymous_answers === "true" ||
             surveyData.allow_anonymous_answers === true ||
-            surveyData.publish === "true" ||
-            surveyData.publish === true) ? (
+            surveyStatus.isPublished === "true" ||
+            surveyStatus.isPublished === true) ? (
           <div style={{ display: showOrHideSurvey ? "block" : "none" }}>
             {console.log("initialSurveyModel", initialSurveyModel)}
             {initialSurveyModel && (
@@ -266,10 +273,10 @@ function SurveyComponent(props) {
                               </Button>
                            </div>
                         )} */}
-                {console.log("initialSurveyModel2", initialSurveyModel)}
+                {console.log("initialSurveyModel2", surveyData, initialSurveyModel)}
                 <Survey.Survey
                   className="notranslate"
-                  model={createSurveyModel()}
+                  model={initialSurveyModel}
                   onComplete={(surveyModel) => sendData(surveyModel, "completed")}
                   onPartialSend={(surveyModel) => sendData(surveyModel, "partial")}
                   onCompleting={(surveyModel) => MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)}
