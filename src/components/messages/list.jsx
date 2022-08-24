@@ -54,21 +54,23 @@ function InvitationsList(props) {
       dataIndex: 'created_at',
       key: 'created_at',
       render: (text) => <span>{text} </span>,
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
     },
   ];
 
   return (
     <>
-      <CMS 
+      <CMS
         API={MessageApi}
         eventId={props.eventId}
         title={'Comunicaciones Enviadas'}
-        description={(
+        description={
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />
             <Text type='secondary'>La información en la tabla puede demorar un tiempo en reflejarse.</Text>
           </Space>
-        )}
+        }
         columns={columns}
         actions
         noRemove
@@ -79,7 +81,7 @@ function InvitationsList(props) {
         extraPathUpdateTitle={'Actualizar métricas'}
         exportData
         fileName={'ComunicacionesEnviadas'}
-        titleTable={(
+        titleTable={
           <Row gutter={[8, 8]} wrap>
             <Col>
               <Button
@@ -92,7 +94,7 @@ function InvitationsList(props) {
               </Button>
             </Col>
           </Row>
-        )}
+        }
       />
     </>
   );
