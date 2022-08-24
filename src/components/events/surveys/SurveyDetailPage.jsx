@@ -23,7 +23,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   //Effect for when prop.idSurvey changes
   useEffect(() => {
     if (!surveyId) return;
-
+    console.log('survey surveyid userid', surveyId, currentUser)
     let unsubscribe;
     (async () => {
       let loadedSurvey = await LoadSelectedSurvey(cEvent.value._id, surveyId);

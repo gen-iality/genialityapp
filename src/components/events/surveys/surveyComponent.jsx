@@ -62,14 +62,14 @@ function SurveyComponent(props) {
 
   //Effect to load the syrvey  when prop.idSurvey gets a value 
   useEffect(() => {
-    console.log('11.USUARIOid', currentUser.value._id);
+
     if (!idSurvey) return;
 
     let unsubscribe;
     (async () => {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
-      loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id)
-
+      loadedSurvey.currentPage = 0;// await getUserCurrentSurveyPage(idSurvey, currentUser.value._id)
+      console.log('survey_variables', idSurvey, currentUser, loadedSurvey);
       setSurveyData(loadedSurvey);
       setInitialSurveyModel(createSurveyModel(loadedSurvey));
 
@@ -143,6 +143,7 @@ function SurveyComponent(props) {
     }
     let question;
     let surveyQuestions = surveyModel.currentPage.questions;
+    console.log("surveyQuestions", surveyQuestions);
     if (surveyQuestions.length === 1) {
       question = surveyModel.currentPage.questions[0];
     } else {
@@ -213,18 +214,18 @@ function SurveyComponent(props) {
 
   /* handler cuando la encuesta cambio de pregunta */
   function onCurrentSurveyPageChanged(sender, options) {
-    if (!sender?.options?.oldCurrentPage) return;
+    if (!options?.oldCurrentPage) return;
     let secondsToGo =
-      sender.surveyModel.maxTimeToFinishPage - sender.options.oldCurrentPage.timeSpent;
-    const status = sender.surveyModel.state;
-
-    if (surveyData.allow_gradable_survey === "true") {
+      sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+    const status = sender.state;///
+    console.log('onCurrentSurveyPageChanged surveyData', surveyData);
+    if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
       setShowOrHideSurvey(false);
       setFeedbackMessage({ icon: loaderIcon });
       if (status === "running") {
-        // sender.surveyModel.stopTimer();
+        sender.stopTimer();
         TimerAndMessageForTheNextQuestion(
-          sender.surveyModel,
+          sender,
           secondsToGo,
           setTimerPausa,
           setFeedbackMessage,
@@ -237,6 +238,7 @@ function SurveyComponent(props) {
         setShowOrHideSurvey(true);
       }
     }
+    return true;
   }
 
   /**
@@ -287,12 +289,7 @@ function SurveyComponent(props) {
                   onCompleting={(surveyModel) => MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)}
                   onTimerPanelInfoText={TimeLimitPerQuestion}
                   onStarted={onStartedSurvey}
-                  onCurrentPageChanged={(sender, options) => {
-                    // setOnCurrentPageChanged(sender);
-                    onCurrentSurveyPageChanged();
-                    return true;
-                  }
-                  }
+                  onCurrentPageChanged={(sender, options) => onCurrentSurveyPageChanged(sender, options)}
                 />
               </div>
             )}
