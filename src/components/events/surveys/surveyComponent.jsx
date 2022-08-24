@@ -44,7 +44,7 @@ function SurveyComponent(props) {
   const [showMessageOnComplete, setShowMessageOnComplete] = useState(false);
   const [timerPausa, setTimerPausa] = useState(null);
 
-  const [rankingPoints, setRankingPoints] = useState(null);
+  const [rankingPoints, setRankingPoints] = useState();
   const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
   let [totalPoints, setTotalPoints] = useState(0);
   let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
@@ -178,17 +178,17 @@ function SurveyComponent(props) {
     }
   }
 
-  async function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
-    console.log('200.registerRankingPoints rankingPoints', rankingPoints);
+  async function registerRankingPoints(points, surveyModel, surveyData, currentUser, eventId) {
+    console.log('200.registerRankingPoints points', points);
 
     console.log('200.Entró a la función registerRankingPoints');
-    if (rankingPoints === undefined || rankingPoints === 0) return;
+    if (points === undefined || points === 0) return;
     if (surveyData.allow_gradable_survey !== "true") return;
 
     console.log('200.Despues de validación en función registerRankingPoints');
 
     //para guardar el score en el ranking
-    totalPoints += rankingPoints;
+    totalPoints += points;
     setTotalPoints(totalPoints);
 
     console.log('200.registerRankingPoints ¿Esto se ejecuta?');
@@ -198,7 +198,7 @@ function SurveyComponent(props) {
       user_id: currentUser._id,
       user_name: currentUser.names,
       user_email: currentUser.email,
-      points: rankingPoints,
+      points: points,
     });
 
     console.log('200.registerRankingPoints - Despues de función de UserGamification');
@@ -206,13 +206,13 @@ function SurveyComponent(props) {
     setUserPointsPerSurvey(
       surveyData._id,
       currentUser,
-      rankingPoints,
+      points,
       surveyModel.getAllQuestions().length - 1,
       surveyModel?.timeSpent
     );
 
     console.log('200.registerRankingPoints - Despues de función setUserPointsPerSurvey');
-    console.log('200.registerRankingPoints rankingPoints', rankingPoints);
+    console.log('200.registerRankingPoints points', points);
 
     // message.success({ content: responseMessage });
   }
