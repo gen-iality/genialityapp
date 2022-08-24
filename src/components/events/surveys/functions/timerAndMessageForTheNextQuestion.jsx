@@ -14,6 +14,8 @@ function TimerAndMessageForTheNextQuestion(
    messageType
 ) {
 
+   console.log('200.TimerAndMessageForTheNextQuestion rankingPoints', rankingPoints);
+
    // secondsToGo = secondsToGo ? secondsToGo : 0;
    // secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
    secondsToGo = MIN_ANSWER_FEEDBACK_TIME;

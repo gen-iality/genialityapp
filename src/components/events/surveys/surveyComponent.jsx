@@ -68,7 +68,7 @@ function SurveyComponent(props) {
     let unsubscribe;
     (async () => {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
-      loadedSurvey.currentPage = 0;// await getUserCurrentSurveyPage(idSurvey, currentUser.value._id)
+      loadedSurvey.currentPage = 0; // await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
       console.log('survey_variables', idSurvey, currentUser, loadedSurvey);
       setSurveyData(loadedSurvey);
       setInitialSurveyModel(createSurveyModel(loadedSurvey));
@@ -134,8 +134,14 @@ function SurveyComponent(props) {
 
   // Funcion para enviar la informacion de las respuestas
   async function sendData(surveyModel) {
+    console.log('200.Aqui entró en SendData');
+    console.log('200.sendData rankingPoints', rankingPoints);
+
     setRankingPoints(null);
+    console.log('200.sendData rankingPoints despues de setRankingPoints', rankingPoints);
+
     const status = surveyModel.state;
+    console.log('200.sendData status', status);
 
     SetCurrentUserSurveyStatus(surveyData, currentUser, status);
     if (status === "completed") {
@@ -143,17 +149,20 @@ function SurveyComponent(props) {
     }
     let question;
     let surveyQuestions = surveyModel.currentPage.questions;
-    console.log("surveyQuestions", surveyQuestions);
+    console.log("200.sendData surveyModel", surveyModel);
+    console.log("200.sendData surveyQuestions", surveyQuestions);
     if (surveyQuestions.length === 1) {
       question = surveyModel.currentPage.questions[0];
     } else {
       question = surveyModel.currentPage.questions[1];
     }
 
-    console.log('sendData question', question)
+    console.log('200.sendData question', question)
     const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
+    console.log('200.sendData pointsForCorrectAnswer', pointsForCorrectAnswer);
 
     setRankingPoints(pointsForCorrectAnswer);
+
     await registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
     if (!(Object.keys(currentUser).length === 0)) {
       //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
@@ -170,12 +179,19 @@ function SurveyComponent(props) {
   }
 
   async function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
+    console.log('200.registerRankingPoints rankingPoints', rankingPoints);
+
+    console.log('200.Entró a la función registerRankingPoints');
     if (rankingPoints === undefined || rankingPoints === 0) return;
     if (surveyData.allow_gradable_survey !== "true") return;
+
+    console.log('200.Despues de validación en función registerRankingPoints');
 
     //para guardar el score en el ranking
     totalPoints += rankingPoints;
     setTotalPoints(totalPoints);
+
+    console.log('200.registerRankingPoints ¿Esto se ejecuta?');
 
     // Ejecuta serivicio para registrar puntos
     await UserGamification.registerPoints(eventId, {
@@ -185,6 +201,8 @@ function SurveyComponent(props) {
       points: rankingPoints,
     });
 
+    console.log('200.registerRankingPoints - Despues de función de UserGamification');
+
     setUserPointsPerSurvey(
       surveyData._id,
       currentUser,
@@ -192,16 +210,25 @@ function SurveyComponent(props) {
       surveyModel.getAllQuestions().length - 1,
       surveyModel?.timeSpent
     );
+
+    console.log('200.registerRankingPoints - Despues de función setUserPointsPerSurvey');
+    console.log('200.registerRankingPoints rankingPoints', rankingPoints);
+
     // message.success({ content: responseMessage });
   }
 
   /* handler cuando la encuesta inicia, este sirve para retomar la encuesta donde vayan todos los demas usuarios */
-  function onStartedSurvey(initialSurveyModel) {
+  function onStartedSurvey(sender) {
+    console.log('200.Aqui entró en OnStarted');
+    console.log('200.onStartedSurvey sender', sender);
+
     if (surveyData.allow_gradable_survey === "true") {
+      console.log('200.onStartedSurvey Primer If');
       if (freezeGame === "true") {
-        // initialSurveyModel.stopTimer();
+        console.log('200.Segundo If');
+        // sender.stopTimer();
         TimerAndMessageForTheNextQuestion(
-          initialSurveyModel,
+          sender,
           0,
           setTimerPausa,
           setFeedbackMessage,
@@ -216,17 +243,20 @@ function SurveyComponent(props) {
 
   /* handler cuando la encuesta cambio de pregunta */
   function onCurrentSurveyPageChanged(sender, options) {
+    console.log('200.Aqui entró en OnCurrent');
+    console.log('200.onCurrentSurveyPageChanged rankingPoints', rankingPoints);
+
     if (!options?.oldCurrentPage) return;
     let secondsToGo =
       sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
     const status = sender.state;///
-    console.log('onCurrentSurveyPageChanged surveyData', surveyData);
+    console.log('200.onCurrentSurveyPageChanged surveyData', surveyData);
 
     if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
       setShowOrHideSurvey(false);
       setFeedbackMessage({ icon: loaderIcon });
       if (status === "running") {
-        sender.stopTimer();
+        //sender.stopTimer();
         TimerAndMessageForTheNextQuestion(
           sender,
           secondsToGo,
@@ -291,7 +321,8 @@ function SurveyComponent(props) {
                   onPartialSend={(surveyModel) => sendData(surveyModel, "partial")}
                   onCompleting={(surveyModel) => MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)}
                   onTimerPanelInfoText={TimeLimitPerQuestion}
-                  onStarted={onStartedSurvey}
+                  //onStarted={onStartedSurvey}
+                  onStarted={(sender) => onStartedSurvey(sender)}
                   onCurrentPageChanged={(sender, options) => onCurrentSurveyPageChanged(sender, options)}
                 />
               </div>

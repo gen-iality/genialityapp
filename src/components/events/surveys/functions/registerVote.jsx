@@ -9,6 +9,8 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
 
    // Asigna puntos si la encuesta tiene
    let surveyPoints = question.points ? parseInt(question.points) : 1;
+   console.log('200.RegisterVote question.points', question.points);
+   console.log('200.RegisterVote surveyPoints', surveyPoints);
    let pointsForCorrectAnswer = 0;
 
    //Validacion para permitir preguntas tipo texto (abiertas)
@@ -16,8 +18,10 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
    if (question.inputType === 'text') {
    } else {
       // Funcion que retorna si la opcion escogida es la respuesta correcta
-      console.log('RegisterVote question ', question, question.correctAnswer, question.value, 'escorrecta', question.isAnswerCorrect())
+      console.log('200.RegisterVote question ', question, question.correctAnswer, question.value, '¿Es_correcta?', question.isAnswerCorrect())
       correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+      console.log('200.RegisterVote correctAnswer', correctAnswer);
+
       /** Si la respuesta es correcta se asignan los puntos */
       if (correctAnswer) pointsForCorrectAnswer += surveyPoints;
       /** funcion para validar tipo de respuesta multiple o unica */
