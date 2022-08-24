@@ -21,6 +21,7 @@ import {
   Typography,
   Card,
   Space,
+  Spin,
 } from 'antd';
 import {
   CheckCircleOutlined,
@@ -49,6 +50,7 @@ class triviaEdit extends Component {
     super(props);
     this.formEditRef = React.createRef();
     this.state = {
+      isUserUnconsciousReloading: false,
       title: props.title || 'Evaluación',
       idSurvey: this.props.savedSurveyId,
       isLoading: true,
@@ -161,7 +163,9 @@ class triviaEdit extends Component {
   async UNSAFE_componentWillUpdate(nextProps, nextState) {
     if (nextProps.savedSurveyId !== this.props.savedSurveyId) {
       if (nextProps.savedSurveyId) {
+        this.setState({ isUserUnconsciousReloading: true });
         await this.getSurveyFromEditing(nextProps.savedSurveyId);
+        this.setState({ isUserUnconsciousReloading: false });
       }
     }
   }
@@ -840,6 +844,7 @@ class triviaEdit extends Component {
             ) : (
               <>
                 <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                  {this.state.isUserUnconsciousReloading && <Spin/> }
                   <Form.Item
                     label={
                       <label style={{ marginTop: '2%' }}>
