@@ -149,6 +149,8 @@ function SurveyComponent(props) {
     } else {
       question = surveyModel.currentPage.questions[1];
     }
+
+    console.log('sendData question', question)
     const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
 
     setRankingPoints(pointsForCorrectAnswer);
@@ -219,6 +221,7 @@ function SurveyComponent(props) {
       sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
     const status = sender.state;///
     console.log('onCurrentSurveyPageChanged surveyData', surveyData);
+
     if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
       setShowOrHideSurvey(false);
       setFeedbackMessage({ icon: loaderIcon });

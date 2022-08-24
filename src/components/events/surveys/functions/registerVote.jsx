@@ -16,6 +16,7 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
    if (question.inputType === 'text') {
    } else {
       // Funcion que retorna si la opcion escogida es la respuesta correcta
+      console.log('RegisterVote question ', question, question.correctAnswer, question.value, 'escorrecta', question.isAnswerCorrect())
       correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
       /** Si la respuesta es correcta se asignan los puntos */
       if (correctAnswer) pointsForCorrectAnswer += surveyPoints;
