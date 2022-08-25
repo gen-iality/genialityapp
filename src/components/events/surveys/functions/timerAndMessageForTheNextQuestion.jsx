@@ -30,6 +30,8 @@ function TimerAndMessageForTheNextQuestion(
          messageType = rankingPoints > 0 ? 'success' : 'error';
       }
 
+      console.log('200.TimerAndMessageForTheNextQuestion rankingPoints 2.0', rankingPoints);
+
       let mensaje = StateMessages(messageType, rankingPoints);
       let mensaje_espera = `${mensaje.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
       let mensaje_congelado = `El juego se encuentra en pausa. Espera hasta que el moderador  reanude el juego`;

@@ -179,13 +179,34 @@ function SurveyComponent(props) {
   }
 
   async function registerRankingPoints(points, surveyModel, surveyData, currentUser, eventId) {
+    console.log('200.Entró a la función registerRankingPoints');
     console.log('200.registerRankingPoints points', points);
 
-    console.log('200.Entró a la función registerRankingPoints');
-    if (points === undefined || points === 0) return;
+    if (points === undefined) return;
     if (surveyData.allow_gradable_survey !== "true") return;
 
     console.log('200.Despues de validación en función registerRankingPoints');
+
+    if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
+      console.log('200.Entró al if? registerRankingPoints');
+
+      let secondsToGo = surveyModel.maxTimeToFinishPage;
+
+      setShowOrHideSurvey(false);
+      setFeedbackMessage({ icon: loaderIcon });
+
+      TimerAndMessageForTheNextQuestion(
+        surveyModel,
+        secondsToGo,
+        setTimerPausa,
+        setFeedbackMessage,
+        setShowMessageOnComplete,
+        points,
+        freezeGame,
+        setShowOrHideSurvey
+      );
+    }
+
 
     //para guardar el score en el ranking
     totalPoints += points;
@@ -252,7 +273,7 @@ function SurveyComponent(props) {
     const status = sender.state;///
     console.log('200.onCurrentSurveyPageChanged surveyData', surveyData);
 
-    if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
+    /* if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
       setShowOrHideSurvey(false);
       setFeedbackMessage({ icon: loaderIcon });
       if (status === "running") {
@@ -270,7 +291,7 @@ function SurveyComponent(props) {
       } else if (status === "completed") {
         setShowOrHideSurvey(true);
       }
-    }
+    } */
     return true;
   }
 
