@@ -78,7 +78,7 @@ async function LoadSelectedSurvey(eventId, idSurvey) {
   });
 
   // Se excluyen las propiedades
-  const exclude = ({ survey, id, questions, ...rest }) => rest;
+  const exclude = ({ survey, id, ...rest }) => rest;
 
   return exclude(dataSurvey);
 }
