@@ -260,7 +260,7 @@ class UserModal extends Component {
     let respActivity = true;
     if (values) {
       /* console.log("ACA VALUES==>",values) */
-      const snap = { properties: values };
+      const snap = { rol_id: values.rol_id, properties: values };
 
       if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);

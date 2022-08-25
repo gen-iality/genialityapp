@@ -231,6 +231,7 @@ class ListEventUser extends Component {
     if (this.state.rolesList) {
       for (let role of this.state.rolesList) {
         if (item.rol_id == role._id) {
+          item['rol_name'] = role.name;
           return <p>{role.name}</p>;
         }
       }
@@ -463,7 +464,7 @@ class ListEventUser extends Component {
         key: 'rol_id',
         ellipsis: true,
         sorter: (a, b) => a.rol_id.length - b.rol_id.length,
-        ...self.getColumnSearchProps('rol_id'),
+        ...self.getColumnSearchProps('rol_name'),
         render: self.rol_component,
       };
 
