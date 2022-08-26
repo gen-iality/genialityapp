@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import dayjs from 'dayjs';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '../../helpers/request';
@@ -58,6 +58,7 @@ const formLayout = {
 class General extends Component {
   constructor(props) {
     super(props);
+    this.nameInputRef = createRef();
     this.state = {
       event: this.props.event,
       optionForm: [],
@@ -217,6 +218,9 @@ class General extends Component {
       //Cursos privado con Invitación
       this.setState({ typeEvent: 2 });
     }
+
+    if (this.nameInputRef.current) this.nameInputRef.current.focus();
+    window.scrollTo(0, 0);
   }
 
   //*********** FUNCIONES DEL FORMULARIO
@@ -714,7 +718,7 @@ class General extends Component {
     const streamingHours = userPlan?.availables?.streaming_hours;
 
     return (
-      <React.Fragment>
+      <>
         {/* RESTRICIONES */}
         {/* {iMustValidate && (
           <>
@@ -739,6 +743,7 @@ class General extends Component {
                     }
                     rules={[{ required: true, message: 'El nombre es requerido' }]}>
                     <Input
+                      ref={this.nameInputRef}
                       autoFocus={true}
                       name={'name'}
                       placeholder={'Nombre del curso'}
@@ -1293,7 +1298,7 @@ class General extends Component {
           {serverError && <ErrorServe errorData={errorData} />}
           {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
         </Form>
-      </React.Fragment>
+      </>
     );
   }
 }
