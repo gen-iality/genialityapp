@@ -83,6 +83,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
+  const [isNameInputFocused, setIsNameInputFocused] = useState(false);
 
   // aux states
   const [isSpeakerModalShown, setIsSpeakerModalShown] = useState(false);
@@ -142,8 +143,12 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   useEffect(() => {
     // Focus the first field
-    if (!formdata.name) nameInputRef.current?.focus();
-  }, [nameInputRef.current]);
+    if (nameInputRef.current && !isNameInputFocused) {
+      nameInputRef.current?.focus();
+      setIsNameInputFocused(true);
+      window.scrollTo(0, 0);
+    }
+  }, [nameInputRef.current, isNameInputFocused]);
 
   /**
    * Custom hooks
@@ -467,7 +472,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
           <>
           <Form.Item label="Longitud">
             <Input
-              autoFocus
               type="number"
               name="length"
               value={formdata.length}
@@ -477,7 +481,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
           </Form.Item>
           <Form.Item label="Latitud">
             <Input
-              autoFocus
               type="number"
               name="latitude"
               value={formdata.latitude}
