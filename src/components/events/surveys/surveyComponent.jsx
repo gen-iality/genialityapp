@@ -19,6 +19,7 @@ import initRealTimeSurveyListening from "./functions/initRealTimeSurveyListening
 import TimeLimitPerQuestion from "./functions/timeLimitPerQuestion";
 import SetCurrentUserSurveyStatus from "./functions/setCurrentUserSurveyStatus";
 import { async } from "ramda-adjunct";
+import { saveAcumulativePoints } from "./functions/saveAcumulativePoints";
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -143,7 +144,7 @@ function SurveyComponent(props) {
     const status = surveyModel.state;
     console.log('200.sendData status', status);
 
-    SetCurrentUserSurveyStatus(surveyData, currentUser, status);
+    await SetCurrentUserSurveyStatus(surveyData, currentUser, status);
     if (status === "completed") {
       props.setShowSurveyTemporarily(true);
     }
@@ -158,6 +159,7 @@ function SurveyComponent(props) {
     }
 
     console.log('200.sendData question', question)
+    await saveAcumulativePoints(surveyData._id, currentUser.value._id, parseInt(question.points) || 0);
     const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
     console.log('200.sendData pointsForCorrectAnswer', pointsForCorrectAnswer);
 
