@@ -64,10 +64,10 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
 
   return (
     <CourseProgress
-      hasProgressLabel={hasProgressLabel}
-      progressStats={progressStats}
-      progressPercentValue={progressPercentValue}
-      progressType={progressType}
+      hasLabel={hasProgressLabel}
+      stats={progressStats || <Spin/>}
+      percentValue={progressPercentValue}
+      type={progressType}
     />
   );
 }

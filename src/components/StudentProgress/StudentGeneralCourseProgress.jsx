@@ -96,10 +96,10 @@ function StudentGeneralCourseProgress(props) {
 
   return (
     <CourseProgress
-      hasProgressLabel={hasProgressLabel}
-      progressStats={progressStats}
-      progressPercentValue={progressPercentValue}
-      progressType={progressType}
+      hasLabel={hasProgressLabel}
+      stats={progressStats}
+      percentValue={progressPercentValue}
+      type={progressType}
       noProgressSymbol
     />
   );

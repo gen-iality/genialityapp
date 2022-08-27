@@ -1,60 +1,61 @@
+import { memo, ReactNode } from 'react';
 import { Progress } from 'antd';
 
 export interface CourseProgressProps {
-  progressType: 'circle' | 'block',
-  hasProgressLabel?: boolean,
-  progressPercentValue: number,
-  progressStats?: string,
+  type: 'circle' | 'block',
+  hasLabel?: boolean,
+  percentValue: number,
+  stats?: string | ReactNode,
   steps?: number,
 };
 
-export interface SteppedCourseProgressProps extends Omit<CourseProgressProps, 'progressType'> {
-  progressType: 'steps',
+export interface SteppedCourseProgressProps extends Omit<CourseProgressProps, 'type'> {
+  type: 'steps',
   steps: number
 };
 
 function CourseProgress(props: CourseProgressProps | SteppedCourseProgressProps) {
   const {
-    progressType,
-    hasProgressLabel = false,
-    progressPercentValue,
-    progressStats,
+    type,
+    hasLabel = false,
+    percentValue,
+    stats,
   } = props;
 
   return (
     <div style={{ color: '#AAA' }}>
-      {hasProgressLabel && <p style={{ color: 'black', fontWeight: 'bold' }}>Mi progreso:</p>}
+      {hasLabel && <p style={{ color: 'black', fontWeight: 'bold' }}>Mi progreso:</p>}
 
-      {progressType === 'circle' && (
+      {type === 'circle' && (
       <Progress
         type='circle'
-        percent={progressPercentValue}
-        format={progressStats ? (percent) => progressStats : undefined}
+        percent={percentValue}
+        format={() => stats}
       />
       )}
 
-      {progressType === 'steps' && (
+      {type === 'steps' && (
       <Progress
-        percent={progressPercentValue}
+        percent={percentValue}
         steps={props.steps || 0}
-        format={progressStats ? (percent) => progressStats : undefined}
+        format={() => stats}
       />
       )}
 
-      {progressType === 'block' || progressType === undefined && (
+      {type === 'block' || type === undefined && (
       <Progress
         strokeColor={{
           from: '#f7981d', //'#108ee9',
           to: '#FFB453', //'#87d068',
         }}
         trailColor='#E6E6E6'
-        percent={progressPercentValue}
+        percent={percentValue}
         status='active'
-        format={progressStats ? (percent) => progressStats : undefined}
+        format={() => stats}
       />
       )}
     </div>
   );
 }
 
-export default CourseProgress;
+export default memo(CourseProgress);
