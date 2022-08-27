@@ -1,11 +1,23 @@
-import { Progress, Row, Col } from 'antd';
+import { Progress } from 'antd';
 
-function CourseProgress(props) {
+export interface CourseProgressProps {
+  progressType: 'circle' | 'block',
+  hasProgressLabel?: boolean,
+  progressPercentValue: number,
+  progressStats?: string,
+  steps?: number,
+};
+
+export interface SteppedCourseProgressProps extends Omit<CourseProgressProps, 'progressType'> {
+  progressType: 'steps',
+  steps: number
+};
+
+function CourseProgress(props: CourseProgressProps | SteppedCourseProgressProps) {
   const {
     progressType,
     hasProgressLabel = false,
     progressPercentValue,
-    noProgressSymbol = false,
     progressStats,
   } = props;
 
@@ -17,15 +29,15 @@ function CourseProgress(props) {
       <Progress
         type='circle'
         percent={progressPercentValue}
-        format={noProgressSymbol ? (percent) => progressStats : null}
+        format={progressStats ? (percent) => progressStats : undefined}
       />
       )}
 
       {progressType === 'steps' && (
       <Progress
         percent={progressPercentValue}
-        steps={activities.length || 0}
-        format={noProgressSymbol ? (percent) => progressStats : null}
+        steps={props.steps || 0}
+        format={progressStats ? (percent) => progressStats : undefined}
       />
       )}
 
@@ -38,7 +50,7 @@ function CourseProgress(props) {
         trailColor='#E6E6E6'
         percent={progressPercentValue}
         status='active'
-        format={noProgressSymbol ? (percent) => progressStats : null}
+        format={progressStats ? (percent) => progressStats : undefined}
       />
       )}
     </div>
