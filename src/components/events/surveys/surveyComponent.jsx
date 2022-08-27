@@ -1,42 +1,37 @@
-import { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { Result, Spin } from "antd";
-import { ConsoleSqlOutlined, LoadingOutlined } from "@ant-design/icons";
-import { SurveyPage } from "./services/services";
-import UserGamification from "./services/userGamificationService";
-import getCurrentEvenUser from "./services/getCurrentEventUserService";
-import setUserPointsPerSurvey from "./services/setUserPointsPerSurveyService";
-import Graphics from "./graphics";
-import { UseEventContext } from "../../../context/eventContext";
-import * as Survey from "survey-react";
-import assignStylesToSurveyFromEvent from "./components/assignStylesToSurveyFromEvent";
-import LoadSelectedSurvey from "./functions/loadSelectedSurvey";
-import RegisterVote from "./functions/registerVote";
-import TimerAndMessageForTheNextQuestion from "./functions/timerAndMessageForTheNextQuestion";
-import HelpFiftyFifty from "./functions/helpFiftyFifty";
-import MessageWhenCompletingSurvey from "./functions/messageWhenCompletingSurvey";
-import initRealTimeSurveyListening from "./functions/initRealTimeSurveyListening";
-import TimeLimitPerQuestion from "./functions/timeLimitPerQuestion";
-import SetCurrentUserSurveyStatus from "./functions/setCurrentUserSurveyStatus";
-import { async } from "ramda-adjunct";
-import { saveAcumulativePoints } from "./functions/saveAcumulativePoints";
+import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Result, Spin } from 'antd';
+import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
+import { SurveyPage } from './services/services';
+import UserGamification from './services/userGamificationService';
+import setUserPointsPerSurvey from './services/setUserPointsPerSurveyService';
+import Graphics from './graphics';
+import { UseEventContext } from '../../../context/eventContext';
+import * as Survey from 'survey-react';
+import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
+import RegisterVote from './functions/registerVote';
+import TimerAndMessageForTheNextQuestion from './functions/timerAndMessageForTheNextQuestion';
+import HelpFiftyFifty from './functions/helpFiftyFifty';
+import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
+
+import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
+import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
+import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
+import useSurveyQuery from './hooks/useSurveyQuery';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
-
+  console.log('updateSurveyStatusx0', eventId, idSurvey);
   const cEvent = UseEventContext();
+  //query.data tiene la definición de la encuesta/examen
+  let query = useSurveyQuery(eventId, idSurvey);
+  console.log('pruebashook', query);
 
-
-  //surveyData tiene la definición de la encuesta/examen
-  const [surveyData, setSurveyData] = useState(null);
   //SurveyModel es usado por el modulo de SurveyJS
   const [initialSurveyModel, setInitialSurveyModel] = useState(null);
-  //Estado de la encuesta/examen por ejemplo si esta abierta
-  const [surveyStatus, setSurveyStatus] = useState(null);
-
 
   const eventStyles = cEvent.value.styles;
-  const loaderIcon = <LoadingOutlined style={{ color: "#2bf4d5" }} />;
+  const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
   const [rankingList, setRankingList] = useState([]); // Este estado se usa para gamification
   const [feedbackMessage, setFeedbackMessage] = useState();
   const [eventUsers, setEventUsers] = useState([]);
@@ -51,7 +46,6 @@ function SurveyComponent(props) {
   let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
   let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
 
-
   useEffect(() => {
     //asigna los colores configurables a  la UI de la encuesta
     assignStylesToSurveyFromEvent(eventStyles);
@@ -59,41 +53,28 @@ function SurveyComponent(props) {
     //con la encuesta visible. para poder almacenar las respuestas
     Survey.JsonObject.metaData.addProperty('question', 'id');
     Survey.JsonObject.metaData.addProperty('question', 'points');
-  }, [])
+  }, []);
 
-  //Effect to load the syrvey  when prop.idSurvey gets a value 
+  //Effect to load the syrvey  when prop.idSurvey gets a value
   useEffect(() => {
-
-    if (!idSurvey) return;
-
-    let unsubscribe;
+    if (!query.data) return;
+    setInitialSurveyModel(createSurveyModel(query.data));
     (async () => {
-      let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
-      loadedSurvey.currentPage = 0; // await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
-      console.log('survey_variables', idSurvey, currentUser, loadedSurvey);
-      setSurveyData(loadedSurvey);
-      setInitialSurveyModel(createSurveyModel(loadedSurvey));
-
-      //listener que nos permite saber los cambios de la encuesta en tiempo real
-      unsubscribe = initRealTimeSurveyListening(idSurvey, updateSurveyStatus);
-
-
+      //
+      return true;
       //--> Esto esta pendiente por refactorizar 24 Agosto
       // Esto permite obtener datos para la grafica de gamificacion
       //UserGamification.getListPoints(eventId, setRankingList);
       //Se obtiene el EventUser para los casos que se necesite saber el peso voto
       //await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
     })();
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [idSurvey]);
-
+    return () => {};
+  }, [query.data]);
 
   useEffect(() => {
     /**
-     * Timers para controlar el tiempo por pregunta, 
-     * estos se deben detener o el quiz seguira avanzando errando la logica 
+     * Timers para controlar el tiempo por pregunta,
+     * estos se deben detener o el quiz seguira avanzando errando la logica
      * ya que cambia la pregunta que se esta respondiendo
      */
     if (initialSurveyModel) {
@@ -104,21 +85,12 @@ function SurveyComponent(props) {
     }
   }, [initialSurveyModel, idSurvey, timerPausa]);
 
-
-  //open, publish, freezeGame
-  function updateSurveyStatus(surveyStatus) {
-    if (!surveyStatus) return;
-    setSurveyStatus((previusSurveyStatus) => {
-      return { ...previusSurveyStatus, ...surveyStatus };
-    });
-  }
-
   function createSurveyModel(survey) {
     //setFreezeGame(surveyRealTime.freezeGame);
     /* Survey.StylesManager.applyTheme("darkblue"); */
     let surveyModelData = new Survey.Model(survey);
     surveyModelData.currentPageNo = survey.currentPage;
-    surveyModelData.locale = "es";
+    surveyModelData.locale = 'es';
     //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
     //uno en el header y otro encima del botón de inicio de encuesta
     delete surveyModelData.localizableStrings.title.values.default;
@@ -145,51 +117,50 @@ function SurveyComponent(props) {
     console.log('200.sendData status', status);
 
     await SetCurrentUserSurveyStatus(surveyData, currentUser, status);
-    if (status === "completed") {
+    if (status === 'completed') {
       props.setShowSurveyTemporarily(true);
     }
     let question;
     let surveyQuestions = surveyModel.currentPage.questions;
-    console.log("200.sendData surveyModel", surveyModel);
-    console.log("200.sendData surveyQuestions", surveyQuestions);
+    console.log('200.sendData surveyModel', surveyModel);
+    console.log('200.sendData surveyQuestions', surveyQuestions);
     if (surveyQuestions.length === 1) {
       question = surveyModel.currentPage.questions[0];
     } else {
       question = surveyModel.currentPage.questions[1];
     }
 
-    console.log('200.sendData question', question)
+    console.log('200.sendData question', question);
     await saveAcumulativePoints(surveyData._id, currentUser.value._id, parseInt(question.points) || 0);
     const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
-    console.log('200.sendData pointsForCorrectAnswer', pointsForCorrectAnswer);
 
     setRankingPoints(pointsForCorrectAnswer);
 
-    await registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
+    await registerRankingPoints(pointsForCorrectAnswer, surveyModel, query.data, currentUser.value, eventId);
     if (!(Object.keys(currentUser).length === 0)) {
       //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-      SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
+      SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
     }
 
     let isLastPage = surveyModel.isLastPage;
 
-    if (surveyData.allow_gradable_survey === "true") {
+    if (query.data.allow_gradable_survey === 'true') {
       if (isLastPage) {
         setShowMessageOnComplete(false);
       }
     }
   }
 
-  async function registerRankingPoints(points, surveyModel, surveyData, currentUser, eventId) {
+  async function registerRankingPoints(points, surveyModel, survey, currentUser, eventId) {
     console.log('200.Entró a la función registerRankingPoints');
     console.log('200.registerRankingPoints points', points);
 
     if (points === undefined) return;
-    if (surveyData.allow_gradable_survey !== "true") return;
+    if (survey.allow_gradable_survey !== 'true') return;
 
     console.log('200.Despues de validación en función registerRankingPoints');
 
-    if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
+    if (survey.allow_gradable_survey === 'true' || survey.allow_gradable_survey === true) {
       console.log('200.Entró al if? registerRankingPoints');
 
       let secondsToGo = surveyModel.maxTimeToFinishPage;
@@ -209,7 +180,6 @@ function SurveyComponent(props) {
       );
     }
 
-
     //para guardar el score en el ranking
     totalPoints += points;
     setTotalPoints(totalPoints);
@@ -227,7 +197,7 @@ function SurveyComponent(props) {
     console.log('200.registerRankingPoints - Despues de función de UserGamification');
 
     setUserPointsPerSurvey(
-      surveyData._id,
+      query.data._id,
       currentUser,
       points,
       surveyModel.getAllQuestions().length - 1,
@@ -245,9 +215,9 @@ function SurveyComponent(props) {
     console.log('200.Aqui entró en OnStarted');
     console.log('200.onStartedSurvey sender', sender);
 
-    if (surveyData.allow_gradable_survey === "true") {
+    if (query.data.allow_gradable_survey === 'true') {
       console.log('200.onStartedSurvey Primer If');
-      if (freezeGame === "true") {
+      if (freezeGame === 'true') {
         console.log('200.Segundo If');
         // sender.stopTimer();
         TimerAndMessageForTheNextQuestion(
@@ -258,7 +228,7 @@ function SurveyComponent(props) {
           setShowMessageOnComplete,
           rankingPoints,
           freezeGame,
-          "info"
+          'info'
         );
       }
     }
@@ -270,12 +240,11 @@ function SurveyComponent(props) {
     console.log('200.onCurrentSurveyPageChanged rankingPoints', rankingPoints);
 
     if (!options?.oldCurrentPage) return;
-    let secondsToGo =
-      sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-    const status = sender.state;///
-    console.log('200.onCurrentSurveyPageChanged surveyData', surveyData);
+    let secondsToGo = sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+    const status = sender.state; ///
+    console.log('200.onCurrentSurveyPageChanged query.data', query.data);
 
-    /* if (surveyData.allow_gradable_survey === "true" || surveyData.allow_gradable_survey === true) {
+    /* if (query.data.allow_gradable_survey === "true" || query.data.allow_gradable_survey === true) {
       setShowOrHideSurvey(false);
       setFeedbackMessage({ icon: loaderIcon });
       if (status === "running") {
@@ -301,32 +270,32 @@ function SurveyComponent(props) {
    * Render del componente
    **/
 
-  if (!initialSurveyModel || !surveyData || !surveyStatus) return <Spin tip={"Cargando..."} />;
+  if (!initialSurveyModel || !query.data || query.loading) return <Spin tip={'Cargando..x.'} />;
   return (
     <div>
       {console.log('11.USUARIOid', currentUser.value._id)}
-      {!showOrHideSurvey && surveyData.allow_gradable_survey === "true" && (
-        <Result className="animate__animated animate__fadeIn" {...feedbackMessage} extra={null} />
+      {!showOrHideSurvey && query.data.allow_gradable_survey === 'true' && (
+        <Result className='animate__animated animate__fadeIn' {...feedbackMessage} extra={null} />
       )}
       <div>LA</div>
-      {console.log("surveyData", surveyData)}
-      {surveyStatus.isPublished && <div>published</div>}
+      {console.log('query.data', query.data)}
+      {query.data.isPublished && <div>published</div>}
 
-      {surveyData.currentPage && <div>{surveyData.currentPage}</div>}
-      {surveyData.allow_anonymous_answers && <div>allow_anonymous_answers</div>}
+      {query.data.currentPage && <div>{query.data.currentPage}</div>}
+      {query.data.allow_anonymous_answers && <div>allow_anonymous_answers</div>}
 
       {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
-        surveyData &&
-          (surveyData.allow_anonymous_answers === "true" ||
-            surveyData.allow_anonymous_answers === true ||
-            surveyStatus.isPublished === "true" ||
-            surveyStatus.isPublished === true) ? (
-          <div style={{ display: showOrHideSurvey ? "block" : "none" }}>
-            {console.log("initialSurveyModel", initialSurveyModel)}
-            {initialSurveyModel && (
-              <div className="animate__animated animate__backInUp notranslate">
-                {/* animate__bounceInDown */}
-                {/* {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
+      query.data &&
+      (query.data.allow_anonymous_answers === 'true' ||
+        query.data.allow_anonymous_answers === true ||
+        query.data.isPublished === 'true' ||
+        query.data.isPublished === true) ? (
+        <div style={{ display: showOrHideSurvey ? 'block' : 'none' }}>
+          {console.log('initialSurveyModel', initialSurveyModel)}
+          {initialSurveyModel && (
+            <div className='animate__animated animate__backInUp notranslate'>
+              {/* animate__bounceInDown */}
+              {/* {query.data.allow_gradable_survey === 'true' && !fiftyfitfyused && (
                            <div
                               className='survy-comodin'
                               onClick={() => HelpFiftyFifty(setFiftyfitfyused, initialSurveyModel)}>
@@ -336,26 +305,26 @@ function SurveyComponent(props) {
                               </Button>
                            </div>
                         )} */}
-                {console.log("initialSurveyModel2", surveyData, initialSurveyModel)}
-                <Survey.Survey
-                  className="notranslate"
-                  model={initialSurveyModel}
-                  onComplete={(surveyModel) => sendData(surveyModel, "completed")}
-                  onPartialSend={(surveyModel) => sendData(surveyModel, "partial")}
-                  onCompleting={(surveyModel) => MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)}
-                  onTimerPanelInfoText={TimeLimitPerQuestion}
-                  //onStarted={onStartedSurvey}
-                  onStarted={(sender) => onStartedSurvey(sender)}
-                  onCurrentPageChanged={(sender, options) => onCurrentSurveyPageChanged(sender, options)}
-                />
-              </div>
-            )}
-          </div>
-        ) : (
-          <div style={{ textAlign: "center" }}>
-            <Result title="No hay nada publicado..." />
-          </div>
-        )}
+              {console.log('initialSurveyModel2', query.data, initialSurveyModel)}
+              <Survey.Survey
+                className='notranslate'
+                model={initialSurveyModel}
+                onComplete={(surveyModel) => sendData(surveyModel, 'completed')}
+                onPartialSend={(surveyModel) => sendData(surveyModel, 'partial')}
+                onCompleting={(surveyModel) => MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints)}
+                onTimerPanelInfoText={TimeLimitPerQuestion}
+                //onStarted={onStartedSurvey}
+                onStarted={(sender) => onStartedSurvey(sender)}
+                onCurrentPageChanged={(sender, options) => onCurrentSurveyPageChanged(sender, options)}
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center' }}>
+          <Result title='No hay nada publicado...' />
+        </div>
+      )}
     </div>
   );
 }
