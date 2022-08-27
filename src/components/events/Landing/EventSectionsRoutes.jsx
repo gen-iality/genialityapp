@@ -15,7 +15,7 @@ import withContext from '../../../context/withContext';
 import { UseCurrentUser } from '@/context/userContext';
 import { Row, Col } from 'antd';
 
-import StudentSelfCourseProgress from '../../StudentProgress/StudentSelfCourseProgress';
+import StudentSelfCourseProgress from '@components/StudentProgress/StudentSelfCourseProgress';
 
 //Code spliting
 const DocumentsForm = loadable(() => import('../../documents/front/documentsLanding'));
