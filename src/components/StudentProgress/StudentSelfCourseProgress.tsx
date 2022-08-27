@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo, memo, ReactNode } from 'react';
 import { firestore } from '@helpers/firebase';
 import { AgendaApi } from '@helpers/request';
 
@@ -8,6 +8,7 @@ import { UseEventContext } from '@context/eventContext';
 import { UseUserEvent } from '@context/eventUserContext';
 
 import type AgendaType from '@Utilities/types/AgendaType';
+import { Spin } from 'antd';
 
 type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
@@ -25,8 +26,9 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
   const cEventContext = UseEventContext();
   const cEventUser = UseUserEvent();
 
-  let [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>([]);
-  let [allActivities, setAllActivities] = useState<AgendaType[]>([]);
+  const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>([]);
+  const [allActivities, setAllActivities] = useState<AgendaType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Take data
   useEffect(() => {
@@ -51,16 +53,16 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
         (await Promise.all(existentActivities)).filter((item) => !!item)
       );
     };
-    loadData();
+    loadData().then(() => setIsLoading(false));
   }, [cEventContext.value, cEventUser.value]);
 
   const progressPercentValue: number = useMemo(() => (
     Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100)
   ), [activitiesAttendee, allActivities]);
 
-  const progressStats: string = useMemo(() => (
-    `${activitiesAttendee.length || 0}/${allActivities.length || 0}`
-  ), [activitiesAttendee, allActivities]);
+  const progressStats = useMemo(() => (
+    isLoading ? <Spin/> : `${activitiesAttendee.length || 0}/${allActivities.length || 0}`
+  ), [isLoading, activitiesAttendee, allActivities]);
 
   return (
     <CourseProgress
