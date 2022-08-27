@@ -2,10 +2,10 @@ import { Component } from 'react';
 import dayjs from 'dayjs';
 import { Link, withRouter } from 'react-router-dom';
 import { Badge, Card, Space, Typography } from 'antd';
-import { imageUtils } from '../../Utilities/ImageUtils';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import { imageUtils } from '@Utilities/ImageUtils';
+import { HelperContext } from '@context/helperContext/helperContext';
 
-import StudentGeneralCourseProgress from '../../components/StudentProgress/StudentGeneralCourseProgress';
+import StudentGeneralCourseProgress from '@components/StudentProgress/StudentGeneralCourseProgress';
 
 const { Meta } = Card;
 
