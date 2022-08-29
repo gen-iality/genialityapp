@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Table, Typography } from 'antd';
+import { Table, Typography, Alert } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { Survey } from './types';
@@ -75,6 +75,7 @@ const generatePassedMessage = (isPassedQuiz: boolean, totalAnswers: number) => {
 
 function QuizzesProgress(props: QuizzesProgressProps) {
   const [rows, setRows] = useState<RowData[]>([]);
+  const [notPassedCount, setNotPassedCount] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -100,6 +101,12 @@ function QuizzesProgress(props: QuizzesProgressProps) {
           isPassed = stats.right >= stats.minimum;
         }
 
+        if (stats.minimum > 0) {
+          if (stats.right < stats.minimum) {
+            setNotPassedCount((previous) => previous + 1);
+          }
+        }
+
         const rowData: RowData = {
           surveyTitle: survey.survey,
           status: {
@@ -122,6 +129,8 @@ function QuizzesProgress(props: QuizzesProgressProps) {
   return (
     <section>
       <Typography.Text strong>Progreso de quices</Typography.Text>
+      <br />
+      {notPassedCount > 0 && <Alert message='Curso reprobado' type='error' />}
       <Table dataSource={rows} columns={columns} />
     </section>
   );
