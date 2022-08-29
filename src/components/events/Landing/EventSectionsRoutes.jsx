@@ -25,6 +25,7 @@ const FaqsForm = loadable(() => import('../../faqsLanding'));
 const Partners = loadable(() => import('../Partners'));
 const Agenda = loadable(() => import('../agendaLanding'));
 const EventHome = loadable(() => import('../eventHome'));
+const Certificate = loadable(() => import('../certificate'));
 const WallForm = loadable(() => import('../../wall/index'));
 const Ferias = loadable(() => import('../ferias/index'));
 const VirtualConferenceBig = loadable(() => import('../virtualConferenceBig'));
@@ -207,6 +208,12 @@ const EventSectionRoutes = (props) => {
       <Switch>
         <Route exact path={`${path}/`}>
           {props.cEvent.value?.itemsMenu && <Redirect to={validateTypeUrl()} />}
+        </Route>
+
+        <Route path={`${path}/certificate`}>
+          <ThisRouteCanBeDisplayed>
+            <Certificate key='certificate'/>
+          </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/documents`}>
