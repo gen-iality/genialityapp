@@ -21,6 +21,7 @@ import {
   Typography,
   Card,
   Space,
+  Spin,
 } from 'antd';
 import {
   CheckCircleOutlined,
@@ -34,6 +35,7 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import Loading from '../profile/loading';
 import { DispatchMessageService } from '../../context/MessageService';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -48,6 +50,7 @@ class triviaEdit extends Component {
     super(props);
     this.formEditRef = React.createRef();
     this.state = {
+      isUserUnconsciousReloading: false,
       title: props.title || 'Evaluación',
       idSurvey: this.props.savedSurveyId,
       isLoading: true,
@@ -155,6 +158,16 @@ class triviaEdit extends Component {
     });
 
     if (!isCreated) await this.getQuestions();
+  }
+
+  async UNSAFE_componentWillUpdate(nextProps, nextState) {
+    if (nextProps.savedSurveyId !== this.props.savedSurveyId) {
+      if (nextProps.savedSurveyId) {
+        this.setState({ isUserUnconsciousReloading: true });
+        await this.getSurveyFromEditing(nextProps.savedSurveyId);
+        this.setState({ isUserUnconsciousReloading: false });
+      }
+    }
   }
 
   async componentDidMount() {
@@ -747,32 +760,38 @@ class triviaEdit extends Component {
       {
         title: 'Opciones',
         key: 'action',
-        render: (text, record) => (
-          <Row gutter={[8, 8]}>
-            <Col>
-              <Tooltip placement='topLeft' title='Editar'>
-                <Button
-                  icon={<EditOutlined />}
-                  type='primary'
-                  size='small'
-                  onClick={() => this.editQuestion(record.id)}
-                />
-              </Tooltip>
-            </Col>
-            <Col>
-              <Tooltip placement='topLeft' title='Eliminar'>
-                <Button
-                  key={`removeAction${record.index}`}
-                  id={`removeAction${record.index}`}
-                  onClick={() => this.deleteOneQuestion(record.id)}
-                  icon={<DeleteOutlined />}
-                  type='danger'
-                  size='small'
-                />
-              </Tooltip>
-            </Col>
-          </Row>
-        ),
+        render: (text, record) => {
+          const { eventIsActive } = useHelper();
+          const cEventIsActive = eventIsActive;
+          return (
+            <Row gutter={[8, 8]}>
+              <Col>
+                <Tooltip placement='topLeft' title='Editar'>
+                  <Button
+                    icon={<EditOutlined />}
+                    type='primary'
+                    size='small'
+                    onClick={() => this.editQuestion(record.id)}
+                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                  />
+                </Tooltip>
+              </Col>
+              <Col>
+                <Tooltip placement='topLeft' title='Eliminar'>
+                  <Button
+                    key={`removeAction${record.index}`}
+                    id={`removeAction${record.index}`}
+                    onClick={() => this.deleteOneQuestion(record.id)}
+                    icon={<DeleteOutlined />}
+                    type='danger'
+                    size='small'
+                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                  />
+                </Tooltip>
+              </Col>
+            </Row>
+          );
+        },
       },
     ];
 
@@ -825,6 +844,7 @@ class triviaEdit extends Component {
             ) : (
               <>
                 <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                  {this.state.isUserUnconsciousReloading && <Spin/> }
                   <Form.Item
                     label={
                       <label style={{ marginTop: '2%' }}>

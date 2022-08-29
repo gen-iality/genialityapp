@@ -13,6 +13,7 @@ import { firestore } from '../../helpers/firebase';
 import { SketchPicker } from 'react-color';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -28,6 +29,7 @@ const Stands = (props) => {
   const [colorStand, setColorStand] = useState('#2C2A29');
   const [viewModalColor, setViewModalColor] = useState(false);
   const [noValid, setNoValid] = useState(false);
+  const { eventIsActive } = useHelper();
 
   let columns = [
     {
@@ -79,6 +81,7 @@ const Stands = (props) => {
                     icon={<EditOutlined />}
                     type='primary'
                     size='small'
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -93,6 +96,7 @@ const Stands = (props) => {
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -299,7 +303,11 @@ const Stands = (props) => {
               <Option value='list'>Listado</Option>
               <Option value='stand'>Stand</Option>
             </Select>
-            <Button onClick={() => saveConfiguration()} type='primary' icon={<SaveOutlined />}>
+            <Button
+              onClick={() => saveConfiguration()}
+              type='primary'
+              icon={<SaveOutlined />}
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
               {'Guardar'}
             </Button>
           </Row>
@@ -318,7 +326,8 @@ const Stands = (props) => {
                   obtenerStand(null);
                 }}
                 type='primary'
-                icon={<PlusCircleOutlined />}>
+                icon={<PlusCircleOutlined />}
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                 {'Agregar'}
               </Button>
             }
@@ -367,7 +376,6 @@ const Stands = (props) => {
                           }}
                         />
                         <Button style={{ marginTop: 20 }} onClick={() => setViewModalColor(false)}>
-                          {' '}
                           Aceptar
                         </Button>
                       </Card>

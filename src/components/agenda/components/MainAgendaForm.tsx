@@ -1,28 +1,11 @@
-import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { SetStateAction, Dispatch } from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import {
-  Row,
-  Col,
-  Space,
-  Typography,
-  Button,
-  Form,
-  Input,
-  InputRef,
-  Switch,
-  Card,
-  TimePicker,
-  Modal,
-} from 'antd';
+import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Card, TimePicker, Modal } from 'antd';
 import { Select as SelectAntd } from 'antd';
-import {
-  ExclamationCircleOutlined,
-  SettingOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { ExclamationCircleOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
@@ -42,12 +25,13 @@ import RequiredStar from './RequiredStar';
 
 import SelectOptionType from '../types/SelectOptionType';
 import EventType from '../types/EventType';
-import AgendaDocumentType from '../types/AgendaDocumentType';
+import AgendaType from '@Utilities/types/AgendaType';
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
 
 import Speaker from '../../speakers/speaker';
 import useLoadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
+import useHourWithAdditionalMinutes from '../hooks/useHourWithAdditionalMinutes';
 
 const { Text } = Typography;
 const { Option } = SelectAntd;
@@ -55,46 +39,41 @@ const { Option } = SelectAntd;
 const creatableStyles = { menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }) };
 
 export interface FormDataType {
-  name: string,
-  date: string,
-  description: string,
-  space_id: string,
-  image: string,
-  hour_start: dayjs.Dayjs | string,
-  hour_end: dayjs.Dayjs | string,
-  isPhysical: boolean,
-  length: string,
-  latitude: string,
-  selectedCategories: SelectOptionType[],
-  selectedHosts: SelectOptionType[],
-  selectedRol: SelectOptionType[],
-  selectedTickets: SelectOptionType[],
-  selectedDocuments: SelectOptionType[],
-};
+  name: string;
+  date: string;
+  description: string;
+  space_id: string;
+  image: string;
+  hour_start: Dayjs | string;
+  hour_end: Dayjs | string;
+  isPhysical: boolean;
+  length: string;
+  latitude: string;
+  selectedCategories: SelectOptionType[];
+  selectedHosts: SelectOptionType[];
+  selectedRol: SelectOptionType[];
+  selectedTickets: SelectOptionType[];
+  selectedDocuments: SelectOptionType[];
+}
 
 // NOTE: mmm... what's happen with selectedRol and allRoles? where are they used and how?
 
 export interface MainAgendaFormProps {
-  agendaContext: any,
-  matchUrl: string,
-  event: EventType,
-  activityId: string | null,
-  formdata: FormDataType,
-  savedFormData: FormDataType,
-  agenda: AgendaDocumentType | null,
-  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>,
-  setShowPendingChangesModal: React.Dispatch<React.SetStateAction<boolean>>,
-};
+  agendaContext: any;
+  matchUrl: string;
+  event: EventType;
+  activityId: string | null;
+  formdata: FormDataType;
+  savedFormData: FormDataType;
+  agenda: AgendaType | null;
+  setFormData: (x: FormDataType) => void;
+  previousFormData: FormDataType,
+  setShowPendingChangesModal: (b: boolean) => void;
+}
 
 function MainAgendaForm(props: MainAgendaFormProps) {
-  const {
-    agendaContext,
-    formdata,
-    savedFormData,
-    agenda,
-    setFormData,
-    setShowPendingChangesModal,
-  } = props;
+  const { agendaContext, formdata, savedFormData, agenda, setFormData, setShowPendingChangesModal } = props;
+  const { previousFormData } = props;
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
@@ -104,6 +83,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
+  const [isNameInputFocused, setIsNameInputFocused] = useState(false);
 
   // aux states
   const [isSpeakerModalShown, setIsSpeakerModalShown] = useState(false);
@@ -112,6 +92,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const nameInputRef = useRef<InputRef>(null);
 
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
+  const hourWithAdditionalMinutes = useHourWithAdditionalMinutes();
 
   useEffect(() => {
     if (!props.event?._id) return;
@@ -124,13 +105,13 @@ function MainAgendaForm(props: MainAgendaFormProps) {
         setRoles: setAllRoles,
         setSpaces: setAllSpaces,
         setTickets: setAllTickets,
-        });
+      });
 
       setIsLoaded(true);
 
       // Finish loading this:
       setThisIsLoading((previous) => ({ ...previous, categories: false }));
-    }
+    };
 
     loading().then();
   }, [props.event]);
@@ -141,8 +122,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
     const processedDate = processDateFromAgendaDocument(agenda);
 
-    setFormData((previous) => ({
-      ...previous,
+    setFormData({
+      ...previousFormData,
       name: agenda.name,
       date: processedDate.date,
       description: agenda.description,
@@ -157,60 +138,54 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories) || [],
       selectedHosts: fieldsSelect(agenda.host_ids, allHosts) || [],
       selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles) || [],
-    }));
-
+    });
   }, [agenda, allCategories, allHosts, allRoles]);
 
   useEffect(() => {
     // Focus the first field
-    if (!formdata.name) nameInputRef.current?.focus();
-  }, [nameInputRef.current]);
+    if (nameInputRef.current && !isNameInputFocused) {
+      nameInputRef.current?.focus();
+      setIsNameInputFocused(true);
+      window.scrollTo(0, 0);
+    }
+  }, [nameInputRef.current, isNameInputFocused]);
 
   /**
    * Custom hooks
    */
-   const catStyles = useCreatableStyles();
-   const valideChangesInFormData = useValideChangesInFormData(
-     savedFormData, // The order matter
-     formdata,
-     agendaContext.isPublished,
-     setShowPendingChangesModal,
-   );
+  const catStyles = useCreatableStyles();
+  const valideChangesInFormData = useValideChangesInFormData(
+    savedFormData, // The order matter
+    formdata,
+    agendaContext.isPublished,
+    setShowPendingChangesModal
+  );
 
   /**
    * This method edit the state info, that has various attributes.
-   * 
+   *
    * You have to pass the name of this attribute to edit, and the value. This
    * method overwrite the attribute asked only.
-   * 
+   *
    * @param name The key name.
    * @param value The value.
    */
-   const handleChangeFormData = (name: keyof FormDataType, value: any) => {
-    setFormData((previous) => {
-      const newFormData: FormDataType = { ...previous };
-      newFormData[name] = value as never; // ignore it
-      return newFormData;
-    })
+  const handleChangeFormData = (name: keyof FormDataType, value: any) => {
+    const newFormData: FormDataType = { ...previousFormData };
+    newFormData[name] = value as never; // ignore it
+    setFormData(newFormData);
     valideChangesInFormData();
-  }
+  };
 
   const handleChangeReactQuill = (value: string, target: string) => {
     if (target === 'description') {
-      setFormData((previous) => (
-        { ...previous, description: value}
-      ))
+      setFormData({ ...previousFormData, description: value });
     } else if (target === 'registration_message') {
-      setFormData((previous) => (
-        { ...previous, registration_message: value}
-      ))
+      // It seems be never used, the value should be save in `agenda` but this
+      // component don't receive a setter for agenda. Something like:
+      // setAgenda({ ...previousAgenda, registration_message: value });
+      console.warn(`ignored handleChangeReactQuill("${value}", "${target}")`);
     }
-  };
-
-  const hourWithAdditionalMinutes = (minutes: number) => {
-    const fecha = new Date();
-    fecha.setMinutes(fecha.getMinutes() + minutes);
-    return dayjs(fecha, 'HH:mm:ss');
   };
 
   const goSection = (path: string, state?: any) => {
@@ -224,16 +199,16 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       msj: 'Por favor espere mientras carga la imagen...',
       action: 'show',
     });
-    setFormData((previous) => ({ ...previous, image: files }));
-  }
-  
+    setFormData({ ...previousFormData, image: files });
+  };
+
   /**
    * Mask as select a category.
    * @param selectedCategories SelectOptionType[].
    */
   const onSelectedCategoryChange = (selectedCategories: any[]) => {
-    setFormData((previous) => ({ ...previous, selectedCategories }));
-  }
+    setFormData({ ...previousFormData, selectedCategories });
+  };
 
   const handlerCreateCategories = async (value: any, name: string) => {
     // Last handleCreate method
@@ -261,10 +236,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
       // Update categories list
       setAllCategories((previous) => [...previous, newOption]);
-      setFormData((previous) => ({
-        ...previous,
-        selectedCategories: [...previous.selectedCategories, newOption],
-      }));
+      setFormData({
+        ...previousFormData,
+        selectedCategories: [...previousFormData.selectedCategories, newOption],
+      });
 
       // Show this messages
       DispatchMessageService({ type: 'loading', msj: '', key: 'loading', action: 'destroy' });
@@ -278,22 +253,34 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   };
 
   const currentHourStart = useMemo(() => {
-    if (!!formdata.hour_start) {
+    if (typeof formdata.hour_start === 'string' && formdata.hour_start.trim() !== '') {
       return dayjs(formdata.hour_start, 'HH:mm:ss');
     }
-    const newHour = hourWithAdditionalMinutes(1);
-    setFormData((previous) => ({ ...previous, hour_start: newHour }));
+    if (typeof formdata.hour_start === 'object' && formdata.hour_start !== null) {
+      if (formdata.hour_start.isValid && !formdata.hour_start.isValid()) {
+        return dayjs(formdata.hour_start, 'HH:mm:ss');
+      }
+      return formdata.hour_start;
+    }
+    const newHour = hourWithAdditionalMinutes(10);
+    setFormData({ ...previousFormData, hour_start: newHour });
     return newHour;
-  }, [formdata.hour_start])
+  }, [formdata.hour_start]);
 
   const currentHourEnd = useMemo(() => {
-    if (!!formdata.hour_end) {
+    if (typeof formdata.hour_end === 'string' && formdata.hour_end.trim() !== '') {
       return dayjs(formdata.hour_end, 'HH:mm:ss');
     }
-    const newHour = hourWithAdditionalMinutes(5);
-    setFormData((previous) => ({ ...previous, hour_end: newHour }));
+    if (typeof formdata.hour_end === 'object' && formdata.hour_end !== null) {
+      if (formdata.hour_end.isValid && !formdata.hour_end.isValid()) {
+        return dayjs(formdata.hour_end, 'HH:mm:ss');
+      }
+      return formdata.hour_end;
+    }
+    const newHour = hourWithAdditionalMinutes(15);
+    setFormData({ ...previousFormData, hour_end: newHour });
     return newHour;
-  }, [formdata.hour_end])
+  }, [formdata.hour_end]);
 
   return (
     <>
@@ -485,7 +472,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
           <>
           <Form.Item label="Longitud">
             <Input
-              autoFocus
               type="number"
               name="length"
               value={formdata.length}
@@ -495,7 +481,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
           </Form.Item>
           <Form.Item label="Latitud">
             <Input
-              autoFocus
               type="number"
               name="latitude"
               value={formdata.latitude}

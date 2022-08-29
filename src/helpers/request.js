@@ -90,6 +90,7 @@ export const SearchUserbyEmail = (email) => {
 
 //BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
 export const getCurrentUser = async () => {
+  
   let token = await GetTokenUserFirebase();
 
   return new Promise(async (resolve) => {
@@ -496,13 +497,16 @@ export const TicketsApi = {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
   },
 
-  checkInAttendee: async (event_id, eventUser_id) => {
+  addCheckIn: async (eventUser_id, checkInType) => {
     let token = await GetTokenUserFirebase();
-    let data = {
-      event: event_id,
-      checkedin_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-    };
-    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, data);
+    const checkedin_type = checkInType;
+    return await Actions.put(`/api/eventUsers/${eventUser_id}/checkin/?token=${token}`, { checkedin_type }, true);
+  },
+
+  deleteCheckIn: async (eventUser_id) => {
+    let token = await GetTokenUserFirebase();
+
+    return await Actions.put(`/api/eventUsers/${eventUser_id}/uncheck/?token=${token}`, {}, true);
   },
 };
 
@@ -1018,6 +1022,60 @@ export const SpeakersApi = {
   create: async (event, data) => {
     let token = await GetTokenUserFirebase();
     return await Actions.create(`api/events/${event}/host?token=${token}`, data, true);
+  },
+};
+
+export const PlansApi = {
+  getAll: async () => {
+    return await Actions.getAll(`api/plans`, true);
+  },
+  getOne: async (id) => {
+    return await Actions.getOne(`api/plans/`, id);
+  },
+  getTotalRegisterdUsers: async () => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/users/me/totaluser?token=${token}`, true);
+  },
+  getCurrentConsumptionPlanByUsers: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/users/${userId}/currentPlan?token=${token}`, true);
+  },
+};
+
+export const AlertsPlanApi = {
+  getAll: async () => {
+    return await Actions.getAll(`api/notfitications`, true);
+  },
+  getByUser: async (userId) => {
+    //1ra objeto es el ultimo que se creo
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/users/${userId}/notifications?token=${token}`, true);
+  },
+  getOne: async (id) => {
+    return await Actions.getOne(`api/notifications/`, id);
+  },
+
+  createOne: async (data) => {
+    return await Actions.post(`api/notifications/`, data, true);
+  },
+
+  editOne: async (id, data) => {
+    return await Actions.put(`api/notifications/${id}`, data, true);
+  },
+
+  deleteOne: async (userId, eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/users/${userId}/notifications/${eventId}`, `${userId}?token=${token}`);
+  },
+};
+
+export const BillssPlanApi = {
+  getByUser: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/users/${userId}/billings?token=${token}`, true);
+  },
+  getAddonByUser: async (userId) => {
+    return await Actions.get(`api/users/${userId}/addons`);
   },
 };
 

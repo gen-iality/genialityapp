@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
@@ -7,14 +7,15 @@ import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
 import { UseUserEvent } from '../../../context/eventUserContext';
-import { useCheckinUser } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
+import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { UseCurrentUser } from '@/context/userContext';
 import { Row, Col } from 'antd';
 
-import StudentSelfCourseProgress from '../../StudentProgress/StudentSelfCourseProgress';
+import StudentSelfCourseProgress from '@components/StudentProgress/StudentSelfCourseProgress';
 
 //Code spliting
 const DocumentsForm = loadable(() => import('../../documents/front/documentsLanding'));
@@ -49,6 +50,7 @@ const EventSectionRoutes = (props) => {
   let { GetPermissionsEvent } = useHelper();
   let cEventUser = UseUserEvent();
   let cUser = UseCurrentUser();
+  let history = useHistory();
 
   //redirigir a curso Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -64,15 +66,15 @@ const EventSectionRoutes = (props) => {
     if (firstroute && firstrouteValues) {
       if (firstroute.length > 0 && firstrouteValues.length > 0) {
         for (let i = 0; i < firstrouteValues.length; i++) {
-          if (firstrouteValues[ i ]?.position == '1') {
+          if (firstrouteValues[i]?.position == '1') {
             index = i;
             break;
           }
         }
         if (index > -1) {
-          return firstroute[ index ];
+          return firstroute[index];
         } else {
-          return firstroute[ 0 ];
+          return firstroute[0];
         }
       }
     }
@@ -83,7 +85,69 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value && cUser.value) {
       initUserPresence(props.cEvent.value._id);
     }
-  }, [ props.cEvent.value, cUser.value ]);
+    /** RESTRICIONES */
+    // let { isBlocked, formatDate } = useBlockedEventValidator(props.cEvent, cUser);
+    // if (isBlocked) {
+    //   history.push(`/blockedEvent/${props.cEvent.value._id}`, formatDate);
+    // }
+  }, [props.cEvent.value, cUser.value]);
+
+  useEffect(() => {
+    // seperar la url en un arrary
+
+    /* console.log(props); */
+
+    if (props.cEvent.value && props.currentActivity) {
+      if (props.location.pathname !== `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {
+        initBroadcastViewers(
+          props.cEvent.value._id,
+          props.currentActivity._id,
+          props.currentActivity.name,
+          cUser,
+          true
+        );
+      }
+    }
+  }, [props.location.pathname]);
+
+  useEffect(() => {
+    //presencia de usuario en la
+    if (props.cEvent.value && props.currentActivity) {
+      if (props.location.pathname === `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {
+        if (props.currentActivity.type) {
+          if (
+            (props.currentActivity.type.name === 'youTube' ||
+              props.currentActivity.type.name === 'eviusMeet' ||
+              props.currentActivity.type.name === 'RTMP' ||
+              props.currentActivity.type.name === 'vimeo') &&
+            props.currentActivity.habilitar_ingreso === 'open_meeting_room'
+          ) {
+            console.log('Llegue aqui 3');
+            initBroadcastViewers(props.cEvent.value._id, props.currentActivity._id, props.currentActivity.name, cUser);
+          }
+        }
+      }
+    }
+  }, [props.cEvent.value, props.currentActivity?._id, props.currentActivity?.habilitar_ingreso]);
+
+  useEffect(() => {
+    //presencia de usuario en la
+    if (props.cEvent.value && props.currentActivity) {
+      if (props.location.pathname === `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {
+        if (props.currentActivity.type) {
+          if (
+            props.currentActivity.type.name === 'video' ||
+            props.currentActivity.type.name === 'url' ||
+            props.currentActivity.type.name === 'meeting' ||
+            props.currentActivity.type.name === 'cargarvideo'
+          ) {
+            console.log('Llegue aqui 4');
+            initBroadcastViewers(props.cEvent.value._id, props.currentActivity._id, props.currentActivity.name, cUser);
+          }
+        }
+      }
+    }
+  }, [props.cEvent.value, props.currentActivity?._id]);
 
   useEffect(() => {
     GetPermissionsEvent();
@@ -96,11 +160,11 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     if (cEventUser.value && props.cEvent.value) {
       // console.log(props.cEvent.value.type_event)
-      if (props.cEvent.value.type_event === "onlineEvent") {
-        useCheckinUser(cEventUser.value, props.cEvent.value._id);
+      if (props.cEvent.value.type_event !== 'physicalEvent') {
+        checkinAttendeeInEvent(cEventUser.value, props.cEvent.value._id);
       }
     }
-  }, [ cEventUser.status, props.cEvent.value ]);
+  }, [cEventUser.status, props.cEvent.value]);
 
   const validateTypeUrl = () => {
     let url;
@@ -120,7 +184,7 @@ const EventSectionRoutes = (props) => {
           <Row justify='start'>
             <Col span={24}>
               <div style={{ padding: '25px' }}>
-                {(props.location?.pathname || '').endsWith('evento') && (
+                {(props.location?.pathname || '').endsWith('evento') || (props.location?.pathname || '').endsWith('curso') && (
                 <StudentSelfCourseProgress hasProgressLabel />
                 )}
               </div>

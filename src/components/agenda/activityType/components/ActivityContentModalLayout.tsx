@@ -1,103 +1,57 @@
 import * as React from 'react';
-import { useState, useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 
 import { Typography, Layout, Row, Col, Button, } from 'antd';
 
 import { ModalWrapperUIProps } from '../interfaces/ModalWrapperUIProps';
-import {
-  activityTypeKeys,
-  activityTypeData,
-  activitySubTypeKeys,
-} from '@/context/activityType/schema/activityTypeFormStructure';
-import {
-  ActivityTypeCard,
-  FormStructure,
-  GeneralTypeName,
-  ActivitySubTypeKey,
-  ActivityTypeKey,
-  WidgetType,
-  GeneralTypeValue,
-} from '@/context/activityType/schema/structureInterfaces';
+
+import type { ActivityType } from '@context/activityType/types/activityType';
+import { WidgetType } from '@context/activityType/constants/enum';
+
+export type WidgetData = ActivityType.CardUI | ActivityType.FormUI;
+export type WidgetKeyStack = ActivityType.GeneralTypeValue[];
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
-const useActivityTypeData: (type: GeneralTypeValue) => ActivityTypeCard | FormStructure | null = (type) => {
-  switch (type) {
-    case activityTypeKeys.live:
-      return activityTypeData.cards[0];
-
-    // liveBroadcastCards
-    case activitySubTypeKeys.streaming:
-      return (activityTypeData.cards[0].cards as ActivityTypeCard[])[0] as ActivityTypeCard;
-    case activitySubTypeKeys.vimeo:
-      return (activityTypeData.cards[0].cards as ActivityTypeCard[])[1].form as FormStructure;
-    case activitySubTypeKeys.youtube:
-      return (activityTypeData.cards[0].cards as ActivityTypeCard[])[2].form as FormStructure;
-
-    case activityTypeKeys.meeting:
-      return activityTypeData.cards[1].form as FormStructure;
-
-    case activityTypeKeys.video:
-      return activityTypeData.cards[2];
-    case activitySubTypeKeys.url:
-      return (activityTypeData.cards[2].cards as ActivityTypeCard[])[0].form as FormStructure;
-    case activitySubTypeKeys.file:
-      return (activityTypeData.cards[2].cards as ActivityTypeCard[])[1].form as FormStructure;
-    default:
-      return null;
-  }
-}
-
 export interface ActivityContentModalLayoutProps extends ModalWrapperUIProps {
-  initialType: ActivitySubTypeKey,
-  selected: GeneralTypeValue | null,
-  onWidgetKeyChange: (key: GeneralTypeValue) => void,
-  widget: ActivityTypeCard | FormStructure,
+  selected: ActivityType.GeneralTypeValue | null,
   disabledNextButton: boolean,
-  render: (widgetData: ActivityTypeCard | FormStructure) => React.ReactNode,
+  render: (widgetData: ActivityType.CardUI | ActivityType.FormUI) => React.ReactNode,
+  // Internal inhereted states
+  widgetKeyStack: WidgetKeyStack,
+  setWidgetKeyStack: (x: WidgetKeyStack) => void,
+  widgetData: WidgetData | null,
 };
 
 function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
   const {
-    initialType,
+    disabledNextButton,
     selected,
-    onWidgetKeyChange,
-    disabledNextButton: enableNextButton,
     render,
-    widget: initialWidget,
     // Inheret
     title,
     onClose = () => {},
     onConfirm = () => {},
+    // ...
+    widgetKeyStack,
+    setWidgetKeyStack,
+    widgetData,
   } = props;
-
-  const [widgetKeyStack, setWidgetKeyStack] = useState<string[]>([]);
-  const [widgetKey, setWidgetKey] = useState<string>(initialType);
-  const [widgetData, setWidgetData] = useState<ActivityTypeCard | FormStructure>(initialWidget);
-
-  useEffect(() => setWidgetData(initialWidget), [initialWidget]);
 
   const handleGoBack = () => {
     // Take the last type, remove it
     const newWidgetKeyStack = [...widgetKeyStack];
-    const key = newWidgetKeyStack.pop();
+    newWidgetKeyStack.pop(); // Delete the last
     setWidgetKeyStack(newWidgetKeyStack);
-    if (key) onWidgetKeyChange(key as GeneralTypeValue);
-
+    
     // If no last type, close the modal
-    if (key === undefined) {
+    if (widgetKeyStack.length <= 1) {
       onClose();
       return;
     }
-
-    // The last type will be the current type
-    setWidgetKey(key);
-    // Reload the widget according to last type
-    console.debug(newWidgetKeyStack, key);
-    const data = useActivityTypeData(key as GeneralTypeValue);
-    console.debug('go back:', data);
-    if (data) setWidgetData(data);
+    
+    console.debug('go back', widgetKeyStack);
   };
 
   const handleGoForward = () => {
@@ -107,39 +61,28 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
     }
     if (selected) {
       // Close modal and create a transmission...
-      const transmissions: GeneralTypeValue[] = [
+      const transmissions: ActivityType.GeneralTypeValue[] = [
         'RTMP',
         'eviusMeet',
       ];
       if (transmissions.includes(selected) || isTimeToCreate) {
-        // TODO: ok, take the data, process them, and close the modal
-        setWidgetKeyStack([]);
-        setWidgetKey(initialType);
-        setWidgetData(initialWidget);
         onConfirm();
-        // onClose();
         console.debug('confirm saving data from form');
         return;
       }
 
       // The current type will be the last type. Update the type stack
-      const newTypeStack = [...widgetKeyStack, widgetKey];
+      const newTypeStack = [...widgetKeyStack, selected];
       setWidgetKeyStack(newTypeStack);
-      setWidgetKey(selected);
-      // onSelectChange(selected)
-      console.debug(`useActivityTypeData (for ${selected}):`);
 
       // Get that card/form
       console.debug(newTypeStack, selected);
-      const data = useActivityTypeData(selected);
-      console.debug('go forward:', data);
-      if (data) setWidgetData(data);
-
-      // TODO: detect if it was the end to close the modal, and confirm the data type
+      console.debug('go forward:', widgetKeyStack);
     }
   };
 
   const isTimeToCreate = useMemo(() => {
+    if (!widgetData) return false;
     if ('widgetType' in widgetData && (widgetData.widgetType === WidgetType.FINAL || widgetData.widgetType === WidgetType.FORM))
       return true;
     else if ('formType' in widgetData) return true;
@@ -160,7 +103,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       </Header>
 
       <Content style={{ padding: '60px 50px 60px 50px' }}>
-        {render(widgetData)}
+        {widgetData && render(widgetData)}
       </Content>
 
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
@@ -172,7 +115,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
           </Col>
           <Col>
             <Button
-              disabled={enableNextButton}
+              disabled={disabledNextButton}
               onClick={handleGoForward}
               type='primary'
             >

@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
 import useDeepStateEqualityValidation from './useDeepStateEqualityValidation';
-import { FormDataType } from "../components/MainAgendaForm";
+import { FormDataType } from '../components/MainAgendaForm';
 
 function useValideChangesInFormData(
   saved: FormDataType,
   modified: FormDataType,
   isPublished: boolean,
-  setWasChanged: (was: boolean) => void,
+  setWasChanged: (was: boolean) => void
 ) {
-  const deepStateEqualityValidation = useDeepStateEqualityValidation(); 
+  const deepStateEqualityValidation = useDeepStateEqualityValidation();
   const valideChangesInFormData = () => {
     if (!saved) return;
     const {
@@ -48,7 +48,7 @@ function useValideChangesInFormData(
 
     const equalityValidation = deepStateEqualityValidation(modified, formattedModified);
     console.log('equalityValidation:', equalityValidation);
-    setWasChanged(equalityValidation === false)
+    setWasChanged(equalityValidation === false);
   };
 
   return valideChangesInFormData;

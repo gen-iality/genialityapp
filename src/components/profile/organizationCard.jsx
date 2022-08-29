@@ -38,7 +38,7 @@ const OrganizationCard = (props) => {
         {props.data ? (
           <Avatar
             size={{ xs: 100, sm: 100, md: 100, lg: 100, xl: 100, xxl: 100 }}
-            src={props.data?.styles?.event_image || 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=Image'}
+            src={props.data?.styles?.event_image || 'https://via.placeholder.com/500.png/50D3C9/FFFFFF?text=Image'}
           />
         ) : (
           <Skeleton.Avatar active={true} size={100} shape='circle' />

@@ -25,7 +25,7 @@
       "@antdComponents/*": ["./antdComponents/*"],
       "@App/*": ["./App/*"],
       "@containers/*": ["./containers/*"],
-      "@contexts/*": ["./contexts/*"],
+      "@context/*": ["./context/*"],
       "@exhibitors/*": ["./exhibitors/*"],
       "@helpers/*": ["./helpers/*"],
       "@PreloaderApp/*": ["./PreloaderApp/*"],

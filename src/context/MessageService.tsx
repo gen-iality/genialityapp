@@ -7,8 +7,8 @@ const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry'];
 const LoadingAnswer = ['Cargando', 'Procesando', 'Espérame'];
 
 interface PropsOptions {
-  type: 'success' | 'error' | 'warning' | 'info' | 'loading';
-  msj: string;
+  type?: 'success' | 'error' | 'warning' | 'info' | 'loading';
+  msj?: string;
   duration?: number;
   action: 'show' | 'hide' | 'destroy';
   key?: string;

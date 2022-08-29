@@ -16,7 +16,7 @@ import SurveyDrawer from '../surveys/components/surveyDrawer';
 import HOCActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
-import { useCheckinUser } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUserContext } from '@/context/userContext';
@@ -84,7 +84,7 @@ const AgendaActividadDetalle = (props) => {
       cSurveys.set_current_activity(currentActivity);
       // console.log(cEvent.value.type_event)
       if (cEvent.value.type_event === "onlineEvent") {
-        useCheckinUser(cEventUser.value, props.match.params.activity_id, 'activity');
+        checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id);
       }
     }
   }, [ currentActivity, cEventUser.status ]);
@@ -144,6 +144,7 @@ const AgendaActividadDetalle = (props) => {
     }
   }, [ cEvent.value, cEventUser.value, cUser.value ]);
 
+  // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
   return (
     <div>
       <div className=' container_agenda-information container-calendar2'>

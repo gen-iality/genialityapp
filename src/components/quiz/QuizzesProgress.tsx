@@ -72,6 +72,14 @@ function QuizzesProgress(props: QuizzesProgressProps) {
   useEffect(() => {
     (async () => {
       const surveys: Survey[] = await SurveysApi.byEvent(props.eventId);
+      // const surveys = [
+      //   {
+      //     survey: 'survey 2',
+      //     _id: 'survey-2',
+      //     minimumScore: 7,
+      //     questions: { length: 10 },
+      //   },
+      // ];
       console.debug('surveys', surveys);
 
       const caughtRows: RowData[] = [];

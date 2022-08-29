@@ -6,11 +6,11 @@ import { Redirect, useLocation, useHistory } from 'react-router-dom';
 import { Tabs, Row, Col, Form, Switch, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import Header from '@/antdComponents/Header';
 import BackTop from '@/antdComponents/BackTop';
 import { RouterPrompt } from '@/antdComponents/RoutePrompt';
-import { DispatchMessageService } from '@/context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 import { handleRequestError } from '@/helpers/utils';
 import {
@@ -31,10 +31,12 @@ import useBuildInfo from './hooks/useBuildInfo';
 import useValidForm from './hooks/useValidAgendaForm';
 import useDeleteActivity from './hooks/useDeleteActivity';
 import EventType from './types/EventType';
-import AgendaDocumentType from './types/AgendaDocumentType';
+import AgendaType from '@Utilities/types/AgendaType';
 import AgendaDocumentForm from './components/AgendaDocumentForm';
 
 import ActivityContentSelector from './activityType/ActivityContentSelector';
+
+import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -53,7 +55,7 @@ export interface AgendaEditProps {
   matchUrl: string;
 }
 
-const initialInfoState = {
+const initialInfoState: AgendaType = {
   name: '',
   subtitle: '',
   bigmaker_meeting_id: null,
@@ -79,19 +81,18 @@ const initialInfoState = {
   name_host: null,
   key: '',
   requires_registration: false,
-  isPublished: true,
   host_ids: [],
   length: '',
   latitude: '',
-} as AgendaDocumentType;
+};
 
 const initialFormDataState = {
   name: '',
   // date: Moment(new Date()).format('YYYY-MM-DD')??new Date().,
   date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
   space_id: '',
-  hour_end: '',
-  hour_start: '',
+  hour_end: hourWithAdditionalMinutes(5),
+  hour_start: hourWithAdditionalMinutes(1),
   isPhysical: false,
   length: '',
   latitude: '',
@@ -114,7 +115,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
 
-  const [loadedAgenda, setLoadedAgenda] = useState<AgendaDocumentType | null>(null);
+  const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null);
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
   const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType);
 
@@ -125,9 +126,9 @@ function AgendaEdit(props: AgendaEditProps) {
   const [surveys, setSurveys] = useState<boolean>(false);
   const [games, setGames] = useState<boolean>(false);
   const [attendees, setAttendees] = useState<boolean>(false);
-
+  
   const agendaContext = useContext(AgendaContext);
-
+  
   const location = useLocation<LocationStateType>();
   const history = useHistory();
 
@@ -149,7 +150,7 @@ function AgendaEdit(props: AgendaEditProps) {
         agendaContext.setActivityEdit(location.state.edit);
 
         // Get the agenda document from current activity_id
-        const agendaInfo: AgendaDocumentType = await AgendaApi.getOne(location.state.edit, props.event._id);
+        const agendaInfo: AgendaType = await AgendaApi.getOne(location.state.edit, props.event._id);
         
         // Take the vimeo_id and save in info.
         const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
@@ -180,16 +181,20 @@ function AgendaEdit(props: AgendaEditProps) {
     };
   }, [props.event]);
 
+  // This exists to enable to call saveConfig (who reads from AgendaContext),
+  // when the AgendaContext data are written.
+  // NOTE: AgendaContext has a method called saveConfig, but the old edit.jsx
+  //       had its own implementation of saveConfig. So confusing!
   useEffect(() => {
     saveConfig();
-  }, [attendees, games, surveys, chat, avalibleGames]);
+  }, [attendees, games, surveys, chat, avalibleGames, agendaContext.isPublished]);
 
   const validateRoom = async () => {
-    const activity_id = agendaContext.activityEdit;
-    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activity_id);
+    const activityId = agendaContext.activityEdit;
+    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activityId);
 
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(props.event._id, activity_id);
+      const configuration = await service.getConfiguration(props.event._id, activityId);
       setFormData((previous) => ({
         ...previous,
         platform: configuration.platform || null,
@@ -198,10 +203,7 @@ function AgendaEdit(props: AgendaEditProps) {
       }));
 
       if (loadedAgenda !== null) {
-        setLoadedAgenda({
-          ...loadedAgenda,
-          isPublished: !!configuration.isPublished,
-        });
+        setLoadedAgenda(loadedAgenda);
       }
 
       setAvalibleGames(configuration.avalibleGames || []);
@@ -226,7 +228,7 @@ function AgendaEdit(props: AgendaEditProps) {
       try {
         const builtInfo = buildInfo();
         // setIsLoading(true);
-        let agenda: AgendaDocumentType | null = null;
+        let agenda: AgendaType | null = null;
         if (location.state.edit || currentActivityID) {
           const data = {
             activity_id: location.state.edit || currentActivityID,
@@ -249,10 +251,14 @@ function AgendaEdit(props: AgendaEditProps) {
           /** Si es un evento recien creado se envia a la misma ruta con el
            * estado edit el cual tiene el id de la actividad para poder editar
            * */
+          console.debug('created agenda is used from origin');
           agendaContext.setActivityEdit(agenda._id);
           setCurrentActivityID(agenda._id);
           setIsEditing(true);
-          setLoadedAgenda({ ...agenda, isPublished: false });
+
+          agendaContext.setIsPublished(true);
+
+          setLoadedAgenda(agenda);
           await saveConfig();
         } else if (changePathWithoutSaving) {
           history.push(`${props.matchUrl}`);
@@ -293,6 +299,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
     if (status === 'newOrUpdate') {
+      agendaContext.setAvailableGames(listOfGames);
       setAvalibleGames(listOfGames);
       // await saveConfig(); // did by useEffect (avalibleGames)
     } else {
@@ -393,7 +400,7 @@ function AgendaEdit(props: AgendaEditProps) {
                   checked={agendaContext.isPublished}
                   onChange={(value) => {
                     agendaContext.setIsPublished(value);
-                    saveConfig();
+                    // saveConfig(); did by useEffect (isPublished)
                   }}
                 />
               </Form.Item>
@@ -421,7 +428,8 @@ function AgendaEdit(props: AgendaEditProps) {
                   formdata={formdata}
                   agenda={loadedAgenda}
                   savedFormData={savedFormData}
-                  setFormData={setFormData}
+                  setFormData={(a: FormDataType) => setFormData(a)}
+                  previousFormData={formdata}
                   setShowPendingChangesModal={setShowPendingChangesModal}
                   agendaContext={agendaContext}
                   matchUrl={props.matchUrl}

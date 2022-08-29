@@ -1,15 +1,16 @@
 import { Card, Button, Space, Typography, Spin, Popconfirm } from 'antd';
 import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { useContext, useState, useMemo } from 'react';
 import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
 import { AgendaApi } from '@/helpers/request';
-import { CurrentEventContext } from '@/context/eventContext';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
-import { SimplifiedActivityTypeValue } from '@/context/activityType/schema/structureInterfaces';
+import { CurrentEventContext } from '@context/eventContext';
+import useActivityType from '@context/activityType/hooks/useActivityType';
+import type { ActivityType } from '@context/activityType/types/activityType';
+import { TypeDisplayment, MainUI } from '@/context/activityType/constants/enum';
 
 export interface TransmitionOptionsCardProps {
-  type: SimplifiedActivityTypeValue,
+  type: ActivityType.TypeAsDisplayment,
 };
 
 const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
@@ -33,6 +34,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     deleteTypeActivity,
     activityEdit,
     removeAllRequest,
+    saveConfig,
+    setRoomStatus,
   } = useContext(AgendaContext);
 
   const cEvent: any = useContext(CurrentEventContext);
@@ -40,7 +43,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const deleteTransmition = async () => {
     console.debug('deleteTransmition is called');
     deleteLiveStream(meeting_id);
-    // await deleteTypeActivity();
+    console.debug('will call deleteLiveStream with meeting_id:', meeting_id);
+    setDataLive(null);
     await resetActivityType('liveBroadcast');
   };
 
@@ -49,14 +53,14 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const refActivityViewers = useMemo(() =>(
     `viewers/${cEvent.value?._id}/activities/${activityEdit}`), [cEvent, activityEdit]);
   const isVisible = useMemo(
-    () => type === 'Transmisión' || type === 'EviusMeet',
+    () => type === TypeDisplayment.TRANSMISSION || type === TypeDisplayment.EVIUS_MEET,
     [type],
   );
 
   const deletingMessage = useMemo(() => {
-    if (type === 'Transmisión' || type === 'EviusMeet' || type === 'vimeo' || type === 'Youtube')
+    if (type === TypeDisplayment.TRANSMISSION || type === TypeDisplayment.EVIUS_MEET || type === TypeDisplayment.VIMEO || type === TypeDisplayment.YOUTUBE)
       return 'eliminar transmisión';
-    if (type === 'reunión')
+    if (type === TypeDisplayment.MEETING)
       return 'eliminar sala de reunión';
     return 'eliminar video';
   }, [type])
@@ -64,6 +68,11 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const handleConfirmDeleting = async () => {
     setIsDeleting(true);
     if (isVisible && meeting_id) {
+      try {
+        executer_stopStream();
+      } catch (e) {
+        console.error('handleConfirmDeleting', e);
+      }
       await deleteAllVideos(dataLive.name, meeting_id);
       await removeAllRequest(refActivity);
       await deleteTransmition();
@@ -71,22 +80,33 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
     // await deleteTypeActivity();
 
-    setMeetingId(null);
     setDataLive(null);
 
+    const value = 'created_meeting_room';
+    console.debug('saves value of RoomStatus:', value);
+    setRoomStatus(value);
+    setMeetingId(null);
+    await saveConfig({ habilitar_ingreso: value, data: null, type: 'delete' });
+    console.debug('config saved - habilitar_ingreso:', value);
+
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
-    setIsDeleting(false);
     switch (type) {
-      case 'Video':
+      case TypeDisplayment.VIDEO:
         console.debug('TransmitionOptionsCard reset AT to video');
-        await resetActivityType('video');
+        await resetActivityType(MainUI.VIDEO);
         break;
-      case 'reunión':
+      case TypeDisplayment.MEETING:
         console.debug('TransmitionOptionsCard reset AT to meeting2');
-        await resetActivityType('meeting2');
+        await resetActivityType(MainUI.MEETING);
         break;
+      case TypeDisplayment.TRANSMISSION:
+      case TypeDisplayment.EVIUS_MEET:
+      case TypeDisplayment.VIMEO:
+      case TypeDisplayment.YOUTUBE:
+        console.debug('TransmitionOptionsCard reset AT to liveBroadcast');
+        await resetActivityType(MainUI.LIVE);
     }
-    // Check type, await resetActivityType('liveBroadcast');
+    setIsDeleting(false);
   };
 
   return (

@@ -23,6 +23,8 @@ export function recordTypeForThisEvent(cEvent) {
   if (event?.visibility === 'PUBLIC' && event?.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
   if (event?.visibility === 'PRIVATE' && event?.allow_register === false) return 'PRIVATE_EVENT';
+  if (event?.visibility === 'ANONYMOUS' && event?.allow_register === true)
+    return 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS';
 }
 
 function ThisRouteCanBeDisplayed({ children }) {
@@ -34,8 +36,9 @@ function ThisRouteCanBeDisplayed({ children }) {
   let { handleChangeTypeModal } = useHelper();
 
   useEffect(() => {
-    /** Abrir modal de registro al curso automaticamente para cursos con registro obligatorio */
-    recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
+    /** Abrir modal de registro al evento automaticamente para eventos con registro obligatorio */
+    (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' ||
+      recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS') &&
       iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' &&
       handleChangeTypeModal('registerForTheEvent');
   }, [cEvent, eventUserId, eventUserStatus]);
@@ -169,6 +172,13 @@ function ThisRouteCanBeDisplayed({ children }) {
           ? showComponentForprivateEvent(children)
           : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED'
           ? showComponentForprivateEvent(children)
+          : iAmRegisteredInThisEvent(cEventUser) === 'REGISTERED' && children)}
+
+      {recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' &&
+        (iAmRegisteredInThisEvent(cEventUser) === 'LOADING'
+          ? showComponentForPublicEventWithRegistration(children, 'LOADING')
+          : iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED'
+          ? showComponentForPublicEventWithRegistration(children)
           : iAmRegisteredInThisEvent(cEventUser) === 'REGISTERED' && children)}
     </>
   );

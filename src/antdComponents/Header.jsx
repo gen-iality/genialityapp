@@ -1,11 +1,16 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
+import { UseEventContext } from '@/context/eventContext';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
+//import { UseCurrentUser } from '../context/userContext';
 
 const { Title } = Typography;
 
 const Header = (props) => {
   const history = useHistory();
+  //let cUser = UseCurrentUser();
+  const { eventIsActive } = useHelper();
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
@@ -23,6 +28,8 @@ const Header = (props) => {
     loadingSave,
     saveNameIcon,
     customBack,
+    /* listLenght,
+    messageHeaderAlert, */
   } = props;
 
   return (
@@ -41,23 +48,45 @@ const Header = (props) => {
           {title}
         </Tooltip>
       </Title>
+      {/* <small>
+        {listLenght?.length === cUser.value.plan.availables.speakers && (
+          <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
+        )}
+        {messageHeaderAlert && (
+          <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
+        )}
+      </small> */}
+      {!eventIsActive && window.location.toString().includes('eventadmin') && (
+        <Typography.Text style={{ color: 'red' }}>Tu evento se encuentra bloqueado</Typography.Text>
+      )}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
+        {/* {listLenght?.length !== cUser.value.plan.availables.speakers && ( */}
         <Col>
           {addUrl && (
             <Link to={addUrl}>
-              <Button type='primary' icon={<PlusCircleOutlined />} size='middle'>
+              <Button
+                type='primary'
+                icon={<PlusCircleOutlined />}
+                size='middle'
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                 {'Agregar'}
               </Button>
             </Link>
           )}
           {addFn && (
-            <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={addFn}>
+            <Button
+              type='primary'
+              icon={<PlusCircleOutlined />}
+              size='middle'
+              onClick={addFn}
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
               {'Agregar'}
             </Button>
           )}
         </Col>
+        {/* )} */}
         <Col>
           {save && (
             <Button
@@ -67,14 +96,20 @@ const Header = (props) => {
               size='middle'
               htmlType={form ? 'submit' : 'button'}
               loading={loadingSave}
-              disabled={loadingSave}>
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin') ? true : loadingSave}>
               {saveName ? saveName : 'Guardar'}
             </Button>
           )}
         </Col>
         <Col>
           {edit && (
-            <Button id='removeHeader' onClick={remove} type='link' danger icon={<DeleteOutlined />}>
+            <Button
+              id='removeHeader'
+              onClick={remove}
+              type='link'
+              danger
+              icon={<DeleteOutlined />}
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
               {'Eliminar'}
             </Button>
           )}

@@ -14,13 +14,13 @@ const News = (props) => {
       dataIndex: 'title',
       ellipsis: true,
       sorter: (a, b) => a.title.localeCompare(b.title),
-      ...getColumnSearchProps('title', columnsData)
+      ...getColumnSearchProps('title', columnsData),
     },
     {
       title: 'Fecha de Publicación',
       dataIndex: 'time',
       ellipsis: true,
-      width: 200,
+      width: 210,
       sorter: (a, b) => a.time.localeCompare(b.time),
       ...getColumnSearchProps('time', columnsData),
       render(val, item) {

@@ -89,7 +89,8 @@
 
 .preloader {
   margin: auto;
-  background: url('https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Public%2FnewLogoEvius.svg?alt=media&token=0f24d024-6115-467e-9d64-307ee13d69d3') no-repeat center;
+  background: url('https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Public%2FnewLogoEvius.svg?alt=media&token=0f24d024-6115-467e-9d64-307ee13d69d3')
+    no-repeat center;
   background-size: 200px;
   width: 300px;
   height: 300px;

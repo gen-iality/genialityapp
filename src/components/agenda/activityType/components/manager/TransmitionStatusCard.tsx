@@ -1,7 +1,7 @@
 import { useContext, useState, useMemo } from 'react';
 import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd';
 import LoadingActivityType from '../LoadingActivityType';
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { useEffect } from 'react';
 import {
   deleteLiveStream,
@@ -11,14 +11,17 @@ import {
   deleteAllVideos,
 } from '@/adaptors/gcoreStreamingApi';
 import { useQueryClient } from 'react-query';
-import useActivityType from '@/context/activityType/hooks/useActivityType';
+import useActivityType from '@context/activityType/hooks/useActivityType';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { CurrentEventContext } from '@/context/eventContext';
+import { CurrentEventContext } from '@context/eventContext';
+import type { ActivityType } from '@context/activityType/types/activityType';
+import { TypeDisplayment } from '@context/activityType/constants/enum';
 
 const { confirm } = Modal;
 
+// TypeDisplayment.EVIUS_MEET | TypeDisplayment.TRANSMISSION
 interface TransmitionStatusCardProps {
-  type: 'EviusMeet' | 'Transmisión',
+  type: ActivityType.TypeAsDisplayment,
 };
 
 const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
@@ -37,6 +40,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     setRoomStatus,
     removeAllRequest,
     activityEdit,
+    setMeetingId,
   } = useContext(AgendaContext);
 
   const cEvent = useContext(CurrentEventContext);
@@ -72,14 +76,26 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   }, [meeting_id]);
 
   const deleteStreaming = async () => {
+    console.log('TransmitionStatusCard.deleteStreaming() called');
     setIsLoadingDelete(true);
     deleteAllVideos(dataLive?.name, meeting_id); // verificar si se va a eliminar los vídeos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
     await removeAllRequest(refActivity);
     await deleteTypeActivity();
+    {
+      // await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
+      const value = 'created_meeting_room';
+      console.debug('saves value of RoomStatus:', value);
+      setRoomStatus(value);
+      setMeetingId(null);
+      await saveConfig({ habilitar_ingreso: value, data: null });
+      console.log('config saved - habilitar_ingreso:', value);
+    }
     // Transmition stuffs must go back to 'liveBroadcast'
     await resetActivityType('liveBroadcast'); // reset the content tab?
+    setMeetingId(null);
     setIsLoadingDelete(false);
+    console.info('deleteStreaming called');
   };
 
   const executer_startStream = async () => {
@@ -115,9 +131,9 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   };
 
   const popconfirmMessage = useMemo(() => {
-    if (props.type === 'Transmisión' || props.type === 'EviusMeet' || props.type === 'vimeo' || props.type === 'Youtube')
+    if (props.type === TypeDisplayment.TRANSMISSION || props.type === TypeDisplayment.EVIUS_MEET || props.type === TypeDisplayment.VIMEO || props.type === TypeDisplayment.YOUTUBE)
       return 'Eliminar transmisió';
-    if (props.type === 'reunión')
+    if (props.type === TypeDisplayment.MEETING)
       return 'Eliminar sala de reunión';
     return 'Eliminar video';
   }, [props.type]);

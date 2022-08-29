@@ -16,6 +16,8 @@ import Loading from '../loaders/loading';
 import { withRouter } from 'react-router-dom';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
+import { UseEventContext } from '@/context/eventContext';
+import { HelperContext } from '@/context/helperContext/helperContext';
 
 const { Column } = Table;
 const { confirm } = Modal;
@@ -32,6 +34,7 @@ class Product extends Component {
       loadingPosition: false,
     };
   }
+  static contextType = HelperContext;
   //DRAG TABLE
   DraggableContainer = (props) => (
     <SortableContainer
@@ -188,6 +191,7 @@ class Product extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
+    const { eventIsActive } = this.context;
     return (
       <div>
         <Header
@@ -197,7 +201,11 @@ class Product extends Component {
           extra={
             <Row wrap gutter={[8, 8]}>
               <Col>
-                <Button onClick={this.savePosition} type='primary' icon={<SaveOutlined />}>
+                <Button
+                  onClick={this.savePosition}
+                  type='primary'
+                  icon={<SaveOutlined />}
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                   {'Guardar orden'}
                 </Button>
               </Col>
@@ -237,7 +245,7 @@ class Product extends Component {
                     style={{ cursor: 'grab', color: '#999', visibility: 'visible' }}
                   />
                 ));
-                return <DragHandle />;
+                return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
               }}
             />
             <Column
@@ -303,42 +311,45 @@ class Product extends Component {
               align='center'
               fixed='right'
               width={150}
-              render={(data, index) => (
-                <Space key={index} size='small'>
-                  <Tooltip key={index} placement='topLeft' title='Editar'>
-                    <Button
-                      key={index}
-                      id={`editAction${index.index}`}
-                      onClick={() => this.editProduct(data)}
-                      type='primary'
-                      icon={<EditOutlined /* style={{ fontSize: 25 }} */ />}
-                      size='small'
-                    />
-                  </Tooltip>
-                  <Tooltip key={index} placement='topLeft' title='Eliminar'>
-                    <Button
-                      key={index}
-                      id={`removeAction${index.index}`}
-                      onClick={() => this.removeProduct(data)}
-                      type='danger'
-                      icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
-                      size='small'
-                    />
-                  </Tooltip>
-                  <Tooltip key={index} placement='topLeft' title='Ofertas'>
-                    <Button
-                      key={index}
-                      id={`shoppingAction${index.index}`}
-                      onClick={() =>
-                        this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`)
-                      }
-                      color={'#1890ff'}
-                      icon={<ShoppingCartOutlined /* style={{ fontSize: 25 }} */ />}
-                      size='small'
-                    />
-                  </Tooltip>
-                </Space>
-              )}
+              render={(data, index) => {
+                return (
+                  <Space key={index} size='small'>
+                    <Tooltip key={index} placement='topLeft' title='Editar'>
+                      <Button
+                        key={index}
+                        id={`editAction${index.index}`}
+                        onClick={() => this.editProduct(data)}
+                        type='primary'
+                        icon={<EditOutlined /* style={{ fontSize: 25 }} */ />}
+                        size='small'
+                      />
+                    </Tooltip>
+                    <Tooltip key={index} placement='topLeft' title='Eliminar'>
+                      <Button
+                        key={index}
+                        id={`removeAction${index.index}`}
+                        onClick={() => this.removeProduct(data)}
+                        type='danger'
+                        icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
+                        size='small'
+                        disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                      />
+                    </Tooltip>
+                    <Tooltip key={index} placement='topLeft' title='Ofertas'>
+                      <Button
+                        key={index}
+                        id={`shoppingAction${index.index}`}
+                        onClick={() =>
+                          this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`)
+                        }
+                        color={'#1890ff'}
+                        icon={<ShoppingCartOutlined /* style={{ fontSize: 25 }} */ />}
+                        size='small'
+                      />
+                    </Tooltip>
+                  </Space>
+                );
+              }}
             />
           </Table>
         )}

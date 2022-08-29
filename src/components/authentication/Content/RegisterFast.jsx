@@ -117,7 +117,6 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   ];
 
   function onFinish(values) {
-    console.log('values', values);
     handleNext(values);
   }
 

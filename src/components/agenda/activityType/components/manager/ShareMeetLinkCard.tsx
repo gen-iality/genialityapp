@@ -1,7 +1,7 @@
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
 import { CopyFilled } from '@ant-design/icons';
 import { useContext } from 'react';
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 
 export interface ShareMeetLinkCardProps {
   activityId: string,

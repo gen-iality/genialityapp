@@ -1,3 +1,4 @@
+import { DispatchMessageService } from '@/context/MessageService';
 import { fireStorage } from '@/helpers/firebase';
 
 export const deleteFireStorageData = async (fileUrl: string) => {
@@ -6,24 +7,57 @@ export const deleteFireStorageData = async (fileUrl: string) => {
     // Create a reference to the file to delete
     let fileRef = fireStorage.refFromURL(fileUrl);
 
-    // The reference is validated so as not to show a 404 by console in case a file is deleted and it is not saved and by chance the file is loaded and it is deleted again
-    const validatorTypeRef = fileRef;
-
-    if (typeof validatorTypeRef !== 'string') return 'the reference does not exist';
+    /** Skip template directory */
+    const fileRefPath: string = fileRef.fullPath;
+    const nameFileRefDirectory: string = fileRefPath.split('/')[0];
+    if (nameFileRefDirectory === 'template') {
+      // File deleted successfully
+      theFileWasDeleted = 'file deleted successfully';
+      DispatchMessageService({
+        type: 'success',
+        msj: theFileWasDeleted,
+        action: 'show',
+      });
+      return;
+    }
 
     // Delete the file using the delete() method
-    await fileRef
-      .delete()
-      .then(function() {
-        // File deleted successfully
-        theFileWasDeleted = 'file deleted successfully';
-      })
-      .catch(function(error: any) {
-        // Some error occurred
-        theFileWasDeleted = 'error deleting file';
+    try {
+      await fileRef
+        .delete()
+        .then(function() {
+          // File deleted successfully
+          theFileWasDeleted = 'file deleted successfully';
+          DispatchMessageService({
+            type: 'success',
+            msj: theFileWasDeleted,
+            action: 'show',
+          });
+        })
+        .catch(function(error: any) {
+          // Some Error occurred
+          theFileWasDeleted = `error deleting file - ${error}`;
+          DispatchMessageService({
+            type: 'error',
+            msj: theFileWasDeleted,
+            action: 'show',
+          });
+        });
+    } catch (error) {
+      theFileWasDeleted = `unexpected error - ${error}`;
+      DispatchMessageService({
+        type: 'error',
+        msj: theFileWasDeleted,
+        action: 'show',
       });
+    }
   } catch (error) {
-    theFileWasDeleted = 'unexpected error';
+    theFileWasDeleted = `unexpected error - ${error}`;
+    DispatchMessageService({
+      type: 'error',
+      msj: theFileWasDeleted,
+      action: 'show',
+    });
   }
 
   return theFileWasDeleted;

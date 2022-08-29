@@ -2,14 +2,14 @@ import * as React from 'react';
 import { useMemo } from 'react';
 
 import { Button, Card, Typography } from 'antd';
-import { UseCurrentUser } from '@/context/userContext';
+import { UseCurrentUser } from '@context/userContext';
 import { useContext } from 'react';
-import AgendaContext from '@/context/AgendaContext';
-import { SimplifiedActivityTypeValue } from '@/context/activityType/schema/structureInterfaces';
+import AgendaContext from '@context/AgendaContext';
+import type { ActivityType } from '@context/activityType/types/activityType';
 
 export interface GoToMeetProps {
   activityId: string,
-  type: SimplifiedActivityTypeValue,
+  type: ActivityType.TypeAsDisplayment,
 };
 
 const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare';
