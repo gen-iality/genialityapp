@@ -15,6 +15,7 @@ export interface QuizApprovedStatusProps {
 function QuizApprovedStatus(props: QuizApprovedStatusProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [status, setStatus] = useState('estimando...');
+  const [backgroundColor, setBackgroundColor] = useState('#9C835F');
 
   const cUser = UseCurrentUser();
 
@@ -41,9 +42,16 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
         }
       }
 
-      if (passed === surveys.length) setStatus('aprobado');
-      else if (notPassed < surveys.length) setStatus('reprobado');
-      else if (passed < surveys.length) setStatus('no completado');
+      if (passed === surveys.length) {
+        setStatus('aprobado');
+        setBackgroundColor('#5EB841');
+      } else if (notPassed < surveys.length) {
+        setStatus('reprobado');
+        setBackgroundColor('#B8415A');
+      } else if (passed < surveys.length) {
+        setStatus('no completado');
+        setBackgroundColor('#9C835F');
+      };
 
       setIsLoaded(true);      
     })();
@@ -51,7 +59,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
 
   return (
     <>
-    {isLoaded && <Badge count={status} style={{ backgroundColor: '#9C835F' }} />}
+    {isLoaded && <Badge count={status} style={{ backgroundColor }} />}
     </>
   );
 }
