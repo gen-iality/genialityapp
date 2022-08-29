@@ -116,7 +116,8 @@ function SurveyComponent(props) {
     const status = surveyModel.state;
     console.log('200.sendData status', status);
 
-    await SetCurrentUserSurveyStatus(surveyData, currentUser, status);
+    await SetCurrentUserSurveyStatus(query.data, currentUser, status);
+
     if (status === 'completed') {
       props.setShowSurveyTemporarily(true);
     }
@@ -131,8 +132,8 @@ function SurveyComponent(props) {
     }
 
     console.log('200.sendData question', question);
-    await saveAcumulativePoints(surveyData._id, currentUser.value._id, parseInt(question.points) || 0);
-    const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
+    await saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0);
+    const pointsForCorrectAnswer = RegisterVote(query.data, question, currentUser, eventUsers, voteWeight);
 
     setRankingPoints(pointsForCorrectAnswer);
 

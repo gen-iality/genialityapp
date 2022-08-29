@@ -9,7 +9,7 @@ function SetCurrentUserSurveyStatus(surveyData, currentUser, status) {
       .collection('surveyStatus')
       .doc(surveyId);
 
-   firebaseRef.set({
+   return firebaseRef.set({
       surveyCompleted: status,
    });
 }
