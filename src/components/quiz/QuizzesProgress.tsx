@@ -9,14 +9,17 @@ import QuizBadge from './QuizBadge';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
 import { SurveysApi } from '@/helpers/request';
 
+type Status = {
+  right: number,
+  total: number,
+  minimum: number,
+};
+
 type RowData = {
   surveyTitle: string,
-  requiredMessage: string,
-  status: {
-    isPassed?: boolean,
-    message: string,
-  },
+  status: Status,
   statsMessage: string,
+  requiredMessage: string,
 };
 
 export interface QuizzesProgressProps {
@@ -41,8 +44,12 @@ const columns: ColumnsType<RowData> = [
     title: 'Estado',
     dataIndex: 'status',
     key: 'status',
-    render: ({isPassed, message}) => (
-      <QuizBadge isRight={isPassed} message={message}/>
+    render: (status: Status) => (
+      <QuizBadge
+        right={status.right}
+        total={status.total}
+        minimum={status.minimum}
+      />
     ),
   },
   {
@@ -95,15 +102,13 @@ function QuizzesProgress(props: QuizzesProgressProps) {
 
         const rowData: RowData = {
           surveyTitle: survey.survey,
+          status: {
+            right: stats.right,
+            total: stats.total,
+            minimum: stats.minimum,
+            },
           statsMessage: `${stats.right} de ${stats.total}`,
           requiredMessage: `Requeridos ${stats.minimum}`,
-          status: {
-            isPassed,
-            message: generatePassedMessage(
-              stats.right >= stats.minimum,
-              stats.total,
-            )
-          },
         };
 
         caughtRows.push(rowData);
