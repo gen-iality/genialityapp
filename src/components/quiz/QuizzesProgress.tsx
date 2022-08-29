@@ -76,10 +76,13 @@ const generatePassedMessage = (isPassedQuiz: boolean, totalAnswers: number) => {
 function QuizzesProgress(props: QuizzesProgressProps) {
   const [rows, setRows] = useState<RowData[]>([]);
   const [notPassedCount, setNotPassedCount] = useState(0);
+  const [passedCount, setPassedCount] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
 
   useEffect(() => {
     (async () => {
       const surveys: Survey[] = await SurveysApi.byEvent(props.eventId);
+      setTotalCourses(surveys.length);
       // const surveys = [
       //   {
       //     survey: 'survey 2',
@@ -102,7 +105,9 @@ function QuizzesProgress(props: QuizzesProgressProps) {
         }
 
         if (stats.minimum > 0) {
-          if (stats.right < stats.minimum) {
+          if (stats.right >= stats.minimum) {
+            setPassedCount((previous) => previous + 1);
+          } else {
             setNotPassedCount((previous) => previous + 1);
           }
         }
@@ -131,6 +136,7 @@ function QuizzesProgress(props: QuizzesProgressProps) {
       <Typography.Text strong>Progreso de quices</Typography.Text>
       <br />
       {notPassedCount > 0 && <Alert message='Curso reprobado' type='error' />}
+      {passedCount === totalCourses && <Alert message='Curso aprobado' type='success' />}
       <Table dataSource={rows} columns={columns} />
     </section>
   );
