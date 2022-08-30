@@ -53,13 +53,14 @@ function AgendaActivityItem(props) {
 
     const loadData = async () => {
       // Ask if that activity (item) is stored in <ID>_event_attendees
+      console.log('item._id', item._id)
       let activity_attendee = await firestore
         .collection(`${item._id}_event_attendees`)
         .doc(cEventUser.value._id)
         .get(); //checkedin_at
       if (activity_attendee.exists) {
         // If this activity existes, then it means the lesson was taken
-        setIsTaken(true);
+        setIsTaken(activity_attendee.data().checked_in);
       }
     };
     loadData();
