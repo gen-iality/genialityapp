@@ -119,6 +119,7 @@ export const typeInputs = [
   { value: 'password', label: 'Password' },
   { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
   { value: 'codearea', label: 'Código de área para números' },
+  { value: 'onlyCodearea', label: 'Código de área sin teléfono' },
   /* { value: 'avatar', label: 'Imagen de perfil' }, */
 ];
 export const toolbarEditor = {

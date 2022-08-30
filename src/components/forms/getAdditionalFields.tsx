@@ -112,6 +112,28 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           </Form.Item>
         );
       }
+      if (type === 'onlyCodearea') {
+        input = (
+          <Form.Item initialValue={areacodeselected} name={name} noStyle>
+            <Select
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              onChange={(val) => {
+                areacodeselected = val;
+              }}
+              placeholder='Código de area del pais'>
+              {areaCode.map((code: any, key: any) => {
+                console.log('🚀 debug - {areaCode.map - code', code);
+                return (
+                  <Option key={key} value={code.value}>
+                    {`${code.label} (+${code.value})`}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        );
+      }
 
       if (type === 'tituloseccion') {
         input = (

@@ -841,7 +841,7 @@ class ListEventUser extends Component {
         {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
           list={users.length > 0 && users}
-          header={this.state.columns}
+          header={columns}
           takeOriginalHeader
           scroll={{ x: 'max-content' }} //auto funciona de la misma forma, para ajustar el contenido
           loading={this.state.loading}
