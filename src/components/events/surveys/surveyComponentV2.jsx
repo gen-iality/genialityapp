@@ -6,6 +6,7 @@ import useSurveyQuery from './hooks/useSurveyQuery';
 import * as Survey from 'survey-react';
 //Funciones externas
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
+import StateMessages from './functions/stateMessagesV2';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -13,7 +14,7 @@ function SurveyComponent(props) {
   //query.data tiene la definición de la encuesta/examen
   let query = useSurveyQuery(eventId, idSurvey);
   console.log('200.updateSurveyStatusx0', eventId, idSurvey);
-  console.log('200.pruebashook', query);
+  console.log('200.pruebashook', query.data);
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -42,23 +43,12 @@ function SurveyComponent(props) {
   }
 
   const displayFeedbackAfterQuestionAnswered = (sender, options) => {
-    //En el primer intento de cambio de pagina esta variable es indefinida y por tanto  activamos el feedback y  marcamos answered cómo true. para que al siguiente intento de cambio de pagina ya podamos pasar la la siguiente pregunta.
-    console.log('200.displayFeedbackafterQuestionAnswered sender', sender);
-    console.log('200.displayFeedbackafterQuestionAnswered options', options);
-
-    console.log(
-      '200.displayFeedbackafterQuestionAnswered shouldDisplayFeedback(options.oldCurrentPage)',
-      shouldDisplayFeedback(options.oldCurrentPage)
-    );
-
     if (shouldDisplayFeedback(options.oldCurrentPage)) {
-      console.log('200.Ejecución del If');
       stopChangeToNextQuestion(options);
       hideTimerPanel();
       displayFeedback(Survey, options.oldCurrentPage);
       setReadOnlyTheQuestions(options.oldCurrentPage.questions);
     } else {
-      console.log('200.Ejecución del else');
       showTimerPanel();
     }
   };
@@ -88,16 +78,24 @@ function SurveyComponent(props) {
     //feedback de la pregunta
     console.log('200.page.questions', page.questions);
     var feedback = Survey.Serializer.createClass('html');
-    let cantidadCorrectas = 0;
+    console.log('200.feedback', feedback);
+
+    let pointsScored = 0;
     page.questions.map((question) => {
-      cantidadCorrectas += question.correctAnswerCount ? question.correctAnswerCount : 0;
+      pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
-    let mensaje = cantidadCorrectas ? 'Bien contestado' : 'Te jodiste.';
+
+    let messageType = pointsScored ? 'success' : 'error';
+
+    let mensaje = StateMessages(messageType);
+    console.log('200.mensaje', mensaje);
+    let titulo = mensaje.title.props.children;
+    console.log('200.titulo', titulo);
 
     feedback.fromJSON({
       type: 'html',
       name: 'info',
-      html: '<div><h1>Pregunta respondida</h1><p>' + mensaje + '</p></div>',
+      html: '<div><p>Pregunta contestada</p><p>' + titulo + '</p><p>Has ganado ' + pointsScored + ' puntos</p></div>',
     });
     return feedback;
   }
