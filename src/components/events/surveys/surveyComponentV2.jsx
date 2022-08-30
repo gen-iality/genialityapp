@@ -34,14 +34,14 @@ function SurveyComponent(props) {
   function createSurveyModel(survey) {
     let surveyModelData = new Survey.Model(survey);
     surveyModelData.currentPageNo = survey.currentPage;
-    //surveyModelData.locale = 'es';
+    surveyModelData.locale = 'es';
     //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
     //uno en el header y otro encima del botón de inicio de encuesta
     delete surveyModelData.localizableStrings.title.values.default;
     return surveyModelData;
   }
 
-  const displayFeedbackafterQuestionAnswered = (sender, options) => {
+  const displayFeedbackAfterQuestionAnswered = (sender, options) => {
     //En el primer intento de cambio de pagina esta variable es indefinida y por tanto  activamos el feedback y  marcamos answered cómo true. para que al siguiente intento de cambio de pagina ya podamos pasar la la siguiente pregunta.
     console.log('200.displayFeedbackafterQuestionAnswered sender', sender);
     console.log('200.displayFeedbackafterQuestionAnswered options', options);
@@ -52,12 +52,14 @@ function SurveyComponent(props) {
     );
 
     if (shouldDisplayFeedback(options.oldCurrentPage)) {
+      console.log('200.Ejecución del If');
       stopChangeToNextQuestion(options);
-      hideTimerPanel(options.oldCurrentPage);
+      hideTimerPanel();
       displayFeedback(Survey, options.oldCurrentPage);
       setReadOnlyTheQuestions(options.oldCurrentPage.questions);
     } else {
-      showTimerPlanel(options.oldCurrentPage);
+      console.log('200.Ejecución del else');
+      showTimerPanel();
     }
   };
 
@@ -69,14 +71,17 @@ function SurveyComponent(props) {
     options.allowChanging = false;
   }
 
-  function hideTimerPanel(page) {
-    page.showTimerPanel = 'none';
+  function hideTimerPanel() {
+    surveyModel.showTimerPanel = 'none';
   }
 
   function displayFeedback(Survey, page) {
+    console.log('200.Se ejecuta la función displayFeedback');
+    console.log('200.displayFeedback page', page);
     page.feedbackVisible = true;
     let feedback = createQuestionsFeedback(Survey, page);
     page.addQuestion(feedback, 0);
+    console.log('200.displayFeedback page despues de addQuestion', page);
   }
 
   function createQuestionsFeedback(Survey, page) {
@@ -88,6 +93,7 @@ function SurveyComponent(props) {
       cantidadCorrectas += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
     let mensaje = cantidadCorrectas ? 'Bien contestado' : 'Te jodiste.';
+
     feedback.fromJSON({
       type: 'html',
       name: 'info',
@@ -104,8 +110,12 @@ function SurveyComponent(props) {
     });
   }
 
-  function showTimerPlanel(sender) {
-    sender.showTimerPanel = 'top';
+  function showTimerPanel() {
+    surveyModel.showTimerPanel = 'top';
+  }
+
+  function temporizador(sender, options) {
+    options.text = `Tienes ${sender.maxTimeToFinishPage} para responder. Tu tiempo es ${sender.currentPage.timeSpent}`;
   }
 
   /* survey.onTimerPanelInfoText.add((sender, options) => {
@@ -124,7 +134,7 @@ function SurveyComponent(props) {
   return (
     <>
       {surveyModel && (
-        <Survey.Survey model={surveyModel} onCurrentPageChanging={displayFeedbackafterQuestionAnswered} />
+        <Survey.Survey model={surveyModel} onCurrentPageChanging={displayFeedbackAfterQuestionAnswered} />
       )}
     </>
   );
