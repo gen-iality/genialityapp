@@ -1,5 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePicker, DatePicker } from 'antd';
+import {
+  Card,
+  Col,
+  Input,
+  Row,
+  Space,
+  Typography,
+  Modal,
+  Button,
+  Select,
+  TimePicker,
+  DatePicker,
+  Checkbox,
+} from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -118,6 +131,9 @@ const Informacion = (props) => {
             )}
             <ModalOrgListCreate orgId={props.orgId} />
           </Space>
+        </div>
+        <div>
+          <Checkbox>Eveno externo, solo landing informativa</Checkbox>
         </div>
         {state.selectOrganization?.template_properties && (
           <div>

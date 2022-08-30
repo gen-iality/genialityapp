@@ -121,7 +121,7 @@ const InfoEvent = ({ paddingOff }) => {
         )
       }
       footer={
-        <Space>
+        <Space style={{ color: textColor }}>
           <Space wrap>
             <Space>
               <CalendarOutlined />
