@@ -101,7 +101,7 @@ export const saveFirebase = {
         comment: comment,
         date: new Date(),
         idPost: postId,
-        picture: user.picture,
+        picture: user.picture || '',
       });
 
     /* let snapshot = await posts.get();

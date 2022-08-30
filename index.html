@@ -10,9 +10,9 @@
     <!-- <meta name="google" content="notranslate"> -->
     <meta http-equiv="Expires" content="0" />
     <link rel="manifest" href="./manifest.json" />
-    <link rel="shortcut icon" href="/favicon.png" />
-    <title>Eventos - EVIUS</title>
-    <meta name="description" content="Eventos" />
+    <link rel="shortcut icon" href="<%- faviconGlobalPortalHref %>" />
+    <title><%- titleGlobalPortal %></title>
+    <meta name="description" content="<%- contentGlobalPortalHref %>" />
     <!-- preconnect & prefetch -->
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.gstatic.com" />
@@ -27,7 +27,14 @@
 
     <script type="module">
       // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
-      document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
+      if (location.hostname === 'beta.geniality.com.co') {
+        document.domain = 'beta.geniality.com.co';
+      } else if (location.hostname === 'stagingevius.netlify.app') {
+        // se agrega el dominio de staging para poder renderizar el sitio
+        document.domain = 'stagingevius.netlify.app';
+      } else {
+        document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
+      }
     </script>
 
     <link
@@ -59,7 +66,7 @@
     <link rel="stylesheet" href="/Assets/css/globalcss.css" />
   </head>
 
-  <body id="evius-body">
+  <body class="<%- globalPortalClassName %>" id="evius-body">
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>

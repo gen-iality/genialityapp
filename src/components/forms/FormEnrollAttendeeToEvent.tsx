@@ -30,19 +30,22 @@ const FormEnrollAttendeeToEvent = ({
   checkInAttendeeCallbak,
   visibleInCms = false,
   eventType = 'Virtual',
-  submitIcon = <BadgeAccountOutlineIcon />,
+  submitButtonProps = {
+    icon: <BadgeAccountOutlineIcon />,
+    styles: {},
+  },
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
   const buttonSubmit = useRef(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState<boolean>(false);
-  const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
 
   const [attendeeInformation, setAttendeeInformation] = useState<AttendeeInformation | null>(null);
 
   const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent();
   const { basicFields, thereAreExtraFields, buttonText } = formState;
-
+  const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
+  const { icon, styles, text } = submitButtonProps;
   /** Restructuring of fields which contain conditions or not */
   const assigningConditionsToFields = (changedValues: {}, allValues: {}) => {
     assignmentOfConditionsToAdditionalFields({ conditionalFields, allValues, fields, setValidatedFields });
@@ -141,18 +144,21 @@ const FormEnrollAttendeeToEvent = ({
                         {attendeeInformation?.checkedin_type ? attendeeInformation.checkedin_type : 'ninguno'}
                       </b>
                     )}
-
-                    <AttendeeCheckInCheckbox
-                      attendee={attendeeInformation}
-                      reloadComponent={componentLoad}
-                      checkInAttendeeCallbak={checkInAttendeeCallbak}
-                    />
-                    {eventType === 'hybridEvent' && (
-                      <AttendeeCheckInButton
-                        attendee={attendeeInformation}
-                        reloadComponent={componentLoad}
-                        checkInAttendeeCallbak={checkInAttendeeCallbak}
-                      />
+                    {visibleInCms && (
+                      <>
+                        <AttendeeCheckInCheckbox
+                          attendee={attendeeInformation}
+                          reloadComponent={componentLoad}
+                          checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
+                        />
+                        {eventType === 'hybridEvent' && (
+                          <AttendeeCheckInButton
+                            attendee={attendeeInformation}
+                            reloadComponent={componentLoad}
+                            checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
+                          />
+                        )}
+                      </>
                     )}
 
                     <Form.Item>
@@ -161,12 +167,11 @@ const FormEnrollAttendeeToEvent = ({
                           htmlType='submit'
                           type='primary'
                           ref={buttonSubmit}
-                          icon={submitIcon}
-                          // style={{
-                          //   display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
-                          // }}
-                        >
-                          {buttonText}
+                          icon={icon}
+                          style={{
+                            ...styles,
+                          }}>
+                          {text ? text : buttonText}
                         </Button>
 
                         {options &&

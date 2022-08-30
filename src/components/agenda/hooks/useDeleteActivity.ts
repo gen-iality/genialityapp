@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@/context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
 import { AgendaApi } from '@/helpers/request';
 import { firestore, fireRealtime } from '@/helpers/firebase';
@@ -13,7 +13,6 @@ export default function useDeleteActivity () {
       eventId: string,
       activityId: string,
       activityName: string,
-      cb: () => void,
     ) => {
     try {
       const refActivity = `request/${eventId}/activities/${activityId}`;
@@ -21,7 +20,15 @@ export default function useDeleteActivity () {
       const configuration = await service.getConfiguration(eventId, activityId);
       if (configuration && configuration.typeActivity === 'eviusMeet') {
         await deleteAllVideos(activityName, configuration.meeting_id);
-        await deleteLiveStream(configuration.meeting_id);
+        try {
+          await deleteLiveStream(configuration.meeting_id);
+        } catch(err) {
+          DispatchMessageService({
+            type: 'error',
+            msj: handleRequestError(err).message,
+            action: 'show',
+          });
+        }
       }
       await fireRealtime.ref(refActivity).remove();
       await fireRealtime.ref(refActivityViewers).remove();
@@ -38,7 +45,6 @@ export default function useDeleteActivity () {
         msj: 'Se eliminó la información correctamente!',
         action: 'show',
       });
-      cb();
     } catch (e) {
       DispatchMessageService({
         type: 'loading', // Added by types

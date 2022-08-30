@@ -52,6 +52,8 @@ function reducer(state, action) {
           return { ...state, type: action.payload.type, allow_register: false, visibility: 'PRIVATE' };
       }
       break;
+    case 'TYPE_AUTHENTICATION':
+      return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' };
     default:
       throw new Error();
   }

@@ -124,6 +124,7 @@ class ListEventUser extends Component {
     if (this.state.rolesList) {
       for (let role of this.state.rolesList) {
         if (item.rol_id == role._id) {
+          item['rol_name'] = role.name;
           return <p>{role.name}</p>;
         }
       }
@@ -307,7 +308,7 @@ class ListEventUser extends Component {
                 /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
                 case 'date':
                   const date = key[item.name];
-                  const dateSplit = date ? date.split('T') : '';
+                  const dateSplit = date ? date?.split('T') : '';
                   return dateSplit[0];
 
                 case 'file':
@@ -333,7 +334,7 @@ class ListEventUser extends Component {
         key: 'rol_id',
         ellipsis: true,
         sorter: (a, b) => a.rol_id.length - b.rol_id.length,
-        ...self.getColumnSearchProps('rol_id'),
+        ...self.getColumnSearchProps('rol_name'),
         render: self.rol_component,
       };
 
@@ -422,6 +423,9 @@ class ListEventUser extends Component {
                   updatedAttendees[i][key.name] === undefined
                 )
               ) {
+                {
+                  console.log('entro', updatedAttendees[i].user ? updatedAttendees[i].user[key.name] : '');
+                }
                 updatedAttendees[i]['properties'][key.name] =
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }

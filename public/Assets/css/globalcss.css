@@ -74,21 +74,31 @@
 }
 
 .preloaderIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: auto;
-  background: url('../img/newLogo.svg') no-repeat center;
-  background-size: 150px;
   width: 300px;
   height: 300px;
   opacity: 0.8;
 }
 
+.sizeBackground {
+  width: 150px;
+}
+
 .preloader {
   margin: auto;
-  background: url('../img/newLogoEvius.svg') no-repeat center;
+  background: url('https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Public%2FnewLogoEvius.svg?alt=media&token=0f24d024-6115-467e-9d64-307ee13d69d3')
+    no-repeat center;
   background-size: 200px;
   width: 300px;
   height: 300px;
   opacity: 0.8;
+}
+
+body.geniality .preloader {
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FImagotipo.dark.png?alt=media&token=9e87f8ab-34ee-456f-9dcd-c51286f1d218');
 }
 
 .preloader2 {

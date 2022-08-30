@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 //custom
-import { List, Card, Button, Table } from 'antd';
+import { List, Card, Button, Table, Typography } from 'antd';
 import { DownloadOutlined, FileTextOutlined, FolderOutlined, DownOutlined } from '@ant-design/icons';
 
 const columns = [
@@ -24,8 +24,8 @@ const columns = [
 
 // Estructura de boton para descargar documentos
 const IconText = ({ icon, text, onSubmit }) => (
-  <Button htmlType='submit' type='link' href={onSubmit} target='_blank'>
-    {React.createElement(icon, { style: { margin: 0 } })}
+  <Button icon={icon} htmlType='submit' type='link' href={onSubmit} target='_blank'>
+    + {/* {React.createElement(icon, { style: { margin: 0 } })} */}
     {text}
   </Button>
 );
@@ -79,7 +79,7 @@ class documentsList extends Component {
             <Table dataSource={documentDates} columns={columns} loading={loading} />
           </div>
         ) : (
-          <Card style={{ textAlign: 'left' }}>
+          <Card bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }} style={{ textAlign: 'left' }}>
             <List
               itemLayout='horizontal'
               //Se traen los datos del state
@@ -92,7 +92,16 @@ class documentsList extends Component {
                     //boton de descarga
                     actions={[
                       <a key={'itemDoc' + item._id} target='_blank' href={item.file} download rel='noopener noreferrer'>
-                        {item.type == 'folder' ? '' : <IconText text='Descargar' icon={DownloadOutlined} />}
+                        {item.type == 'folder' ? (
+                          ''
+                        ) : (
+                          <IconText
+                            text={
+                              <Typography.Text style={{ color: this.props.colors.texto }}>Descargar</Typography.Text>
+                            }
+                            icon={<DownloadOutlined style={{ color: this.props.colors.texto }} />}
+                          />
+                        )}
                       </a>,
                       // <a
                       //     href={ApiGoogleDocuments + encodeURIComponent(item.file)}
@@ -107,12 +116,18 @@ class documentsList extends Component {
                     ]}>
                     <List.Item.Meta
                       style={{ marginRight: '10%', fontSize: '20px' }}
-                      avatar={item.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
+                      avatar={
+                        item.type == 'folder' ? (
+                          <FolderOutlined style={{ color: this.props.colors.texto }} />
+                        ) : (
+                          <FileTextOutlined style={{ color: this.props.colors.texto }} />
+                        )
+                      }
                       title={
                         item.title ? (
-                          <span style={{ fontSize: '20px' }}> {item.title} </span>
+                          <span style={{ fontSize: '20px', color: this.props.colors.texto }}> {item.title} </span>
                         ) : (
-                          <span style={{ fontSize: '20px' }}> {item.name} </span>
+                          <span style={{ fontSize: '20px', color: this.props.colors.texto }}> {item.name} </span>
                         )
                       }
                     />
@@ -133,7 +148,14 @@ class documentsList extends Component {
                               {files.type == 'folder' ? (
                                 <DownOutlined />
                               ) : (
-                                <IconText text='Descargar' icon={DownloadOutlined} />
+                                <IconText
+                                  text={
+                                    <Typography.Text style={{ color: this.props.colors.texto }}>
+                                      Descargar
+                                    </Typography.Text>
+                                  }
+                                  icon={<DownloadOutlined style={{ color: this.props.colors.texto }} />}
+                                />
                               )}
                             </a>,
                           ]}>

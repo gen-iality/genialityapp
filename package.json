@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --mode staging",
+    "prod": "vite --mode prod_evius",
+    "devgeniality": "vite --mode geniality_staging",
+    "prodgeniality": "vite --mode geniality_production",
     "build": "vite build",
     "preview": "vite preview",
     "vite:start": "vite",
@@ -133,6 +136,7 @@
     "netlify-plugin-cypress": "^2.2.0",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
-    "vite-plugin-environment": "^1.1.0"
+    "vite-plugin-environment": "^1.1.0",
+    "vite-plugin-html": "^3.2.0"
   }
 }

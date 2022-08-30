@@ -1,15 +1,15 @@
-import * as Moment from 'moment';
+import moment from 'moment';
 import useDeepStateEqualityValidation from './useDeepStateEqualityValidation';
-import { FormularyType } from "../components/AgendaFormulary";
+import { FormDataType } from '../components/MainAgendaForm';
 
-function useValideChangesInFormulary(
-  saved: FormularyType,
-  modified: FormularyType,
+function useValideChangesInFormData(
+  saved: FormDataType,
+  modified: FormDataType,
   isPublished: boolean,
-  setWasChanged: (was: boolean) => void,
+  setWasChanged: (was: boolean) => void
 ) {
-  const deepStateEqualityValidation = useDeepStateEqualityValidation(); 
-  const valideChangesInFormulary = () => {
+  const deepStateEqualityValidation = useDeepStateEqualityValidation();
+  const valideChangesInFormData = () => {
     if (!saved) return;
     const {
       name,
@@ -27,8 +27,8 @@ function useValideChangesInFormulary(
       isPhysical,
     } = modified;
 
-    const initialHour = Moment(hour_start).format('HH:mm');
-    const finalHour = Moment(hour_end).format('HH:mm');
+    const initialHour = moment(hour_start).format('HH:mm');
+    const finalHour = moment(hour_end).format('HH:mm');
 
     const formattedModified = {
       name,
@@ -48,10 +48,10 @@ function useValideChangesInFormulary(
 
     const equalityValidation = deepStateEqualityValidation(modified, formattedModified);
     console.log('equalityValidation:', equalityValidation);
-    setWasChanged(equalityValidation === false)
+    setWasChanged(equalityValidation === false);
   };
 
-  return valideChangesInFormulary;
+  return valideChangesInFormData;
 }
 
-export default useValideChangesInFormulary;
+export default useValideChangesInFormData;

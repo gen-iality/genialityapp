@@ -29,22 +29,22 @@ function getBase64(img, callback) {
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
-  const [ takingPhoto, setTakingPhoto ] = useState(false);
-  const [ imageAvatar, setImageAvatar ] = useState(null);
-  const [ form ] = Form.useForm();
+  const [takingPhoto, setTakingPhoto] = useState(false);
+  const [imageAvatar, setImageAvatar] = useState(null);
+  const [form] = Form.useForm();
 
   /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
    y no se ve la imagen en el preview
   */
   useEffect(() => {
-    if (basicDataUser.picture && basicDataUser.picture[ 0 ] && basicDataUser.picture[ 0 ].originFileObj) {
-      getBase64(basicDataUser.picture[ 0 ].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-    } else if (basicDataUser.picture && basicDataUser.picture[ 0 ] && basicDataUser.picture[ 0 ].url) {
-      setImageAvatar(basicDataUser.picture[ 0 ].url);
+    if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].originFileObj) {
+      getBase64(basicDataUser.picture[0].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+    } else if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].url) {
+      setImageAvatar(basicDataUser.picture[0].url);
     } else {
       setImageAvatar(null);
     }
-  }, [ basicDataUser.picture ]);
+  }, [basicDataUser.picture]);
 
   const handleTakePhotoAnimationDone = (dataUri) => {
     let pic = [
@@ -117,7 +117,6 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   ];
 
   function onFinish(values) {
-    console.log('values', values);
     handleNext(values);
   }
 

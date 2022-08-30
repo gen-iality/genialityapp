@@ -40,6 +40,10 @@ const Importacion = (props) => {
             for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
               const secondCell = sheetObj[utils.encode_cell({ r: rowNum, c: colNum })];
               let val = secondCell ? secondCell.v : undefined;
+              /** Validation so that the checkIn field saves its value as a string and not as an integer, when Excel is imported */
+              props.extraFields.map((field) => {
+                if (field.type === 'checkInField' && field.name === key) val = val?.toString();
+              });
               fields[colNum].list.push(val);
             }
           }
@@ -100,7 +104,7 @@ const Importacion = (props) => {
 
     //data[0]['tiquete'] = '';
     /** Se agrega campo requerido que no viene en la consulta de la base de datos */
-    data[0]['rol'] = '';
+    // data[0]['rol'] = '';
     /* if (password) {
       data[0]['password'] = password;
     } */
@@ -115,7 +119,7 @@ const Importacion = (props) => {
 
   /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */
   const addMoreItemsToExtraFields = () => {
-    let modifiedExtraFields = [...props.extraFields, { name: 'rol', type: 'rol' }];
+    let modifiedExtraFields = [...props.extraFields /*{ name: 'rol', type: 'rol' }*/];
     /* if (password) {
       modifiedExtraFields = [...props.extraFields, { name: 'password', type: 'password' }];
     } */

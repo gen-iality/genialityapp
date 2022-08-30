@@ -16,7 +16,7 @@ import { HelperContextProvider } from '../context/helperContext/helperProvider';
 import { AgendaContextProvider } from '../context/AgendaContext';
 import ModalAuth from '../components/authentication/ModalAuth';
 import ModalNoRegister from '../components/authentication/ModalNoRegister';
-
+import ModalAuthAnonymous from '@/components/authentication/ModalAuthAnonymous';
 //PAGES
 const Organization = loadable(() => import('../pages/eventOrganization'));
 const Home = loadable(() => import('../pages/home'));
@@ -81,6 +81,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
                     <Header />
                     <Component {...props} />
                     <ModalAuth />
+                    <ModalAuthAnonymous />
                     <ModalNoRegister />
                   </Layout>
                 </SurveysProvider>

@@ -1,9 +1,9 @@
-import * as Moment from 'moment';
-import AgendaDocumentType from '../types/AgendaDocumentType';
-import { FormularyType } from '../components/AgendaFormulary';
+import moment from 'moment';
+import AgendaType from '@Utilities/types/AgendaType';
+import { FormDataType } from '../components/MainAgendaForm';
 
-export default function useBuildInfo (formulary: FormularyType, info: AgendaDocumentType) {
-  const buildInfo = () => {
+export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType | null, defaultAgenda: AgendaType) {
+  const buildInfo: () => AgendaType = () => {
     const {
       name,
       hour_start,
@@ -18,7 +18,7 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
       image,
       length,
       latitude,
-    } = formulary;
+    } = formdata;
 
     const {
       meeting_id,
@@ -30,7 +30,6 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
       name_host,
       key,
       requires_registration,
-      isPublished,
       registration_message,
       // selected_document,
       capacity,
@@ -38,13 +37,13 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
       subtitle,
       bigmaker_meeting_id,
       has_date,
-    } = info;
+    } = agenda || defaultAgenda;
 
     // const registration_message_storage = window.sessionStorage.getItem('registration_message');
     // const description_storage = window.sessionStorage.getItem('description');
     /* console.log(date, '========================== date'); */
-    const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
-    const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
+    const datetime_start = date + ' ' + moment(hour_start).format('HH:mm');
+    const datetime_end = date + ' ' + moment(hour_end).format('HH:mm');
 
     const activity_categories_ids =
       selectedCategories !== undefined && selectedCategories !== null
@@ -81,12 +80,11 @@ export default function useBuildInfo (formulary: FormularyType, info: AgendaDocu
       name_host,
       key,
       requires_registration,
-      isPublished,
       host_ids,
       length,
       latitude,
       selected_document: selectedDocuments,
-    } as AgendaDocumentType;
+    };
   };
 
   return buildInfo;
