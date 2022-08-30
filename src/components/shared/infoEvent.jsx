@@ -9,9 +9,10 @@ import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBe
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
-const InfoEvent = () => {
+const InfoEvent = ({ paddingOff }) => {
+  console.log('🚀 debug - InfoEvent - paddingOff', paddingOff);
   let cEvent = UseEventContext();
-  let { handleChangeTypeModal, eventIsActive } = useHelper();
+  let { handleChangeTypeModal, helperDispatch } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
 
@@ -45,12 +46,15 @@ const InfoEvent = () => {
         paddingRight: paddingOff ? '' : '30px',
         paddingTop: '10px',
         paddingBottom: '20px',
-        margin: '20px',
-        borderTop: `5px solid ${cEvent.value.styles.toolbarDefaultBg}`,
+        margin: paddingOff ? '' : '20px',
         borderRadius: '20px',
-        backgroundColor: cEvent.value.styles.toolbarDefaultBg,
+        backgroundColor: bgColor,
       }}
-      title={cEvent.value.name}
+      title={
+        <Typography.Title level={4} style={{ color: textColor }}>
+          {cEvent.value?.name}
+        </Typography.Title>
+      }
       extra={
         visibleButton() == 'SIGNUP' ? (
           <Button
