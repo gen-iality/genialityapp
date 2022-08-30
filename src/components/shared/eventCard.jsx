@@ -6,6 +6,7 @@ import { imageUtils } from '@Utilities/ImageUtils';
 import { HelperContext } from '@context/helperContext/helperContext';
 
 import StudentGeneralCourseProgress from '@components/StudentProgress/StudentGeneralCourseProgress';
+import QuizApprovedStatus from '../quiz/QuizApprovedStatus';
 
 const { Meta } = Card;
 
@@ -68,7 +69,12 @@ class EventCard extends Component {
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
                     alt='geniality.com.co'
                   />
-                  {event._id && <StudentGeneralCourseProgress eventId={event._id} />}
+                  {this.props.moreDetails && event._id && (
+                    <StudentGeneralCourseProgress eventId={event._id} />
+                  )}
+                  {this.props.moreDetails && (
+                    <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                  )}
                 </Link>
               ) : (
                 <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
@@ -85,7 +91,12 @@ class EventCard extends Component {
                     }
                     alt='geniality.com.co'
                   />
-                  {event._id && <StudentGeneralCourseProgress eventId={event._id} />}
+                  {this.props.moreDetails && event._id && (
+                    <StudentGeneralCourseProgress eventId={event._id} />
+                  )}
+                  {this.props.moreDetails && (
+                    <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                  )}
                 </Link>
               )
             }

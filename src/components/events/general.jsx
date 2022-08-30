@@ -717,6 +717,14 @@ class General extends Component {
     const userPlan = userContext.value?.plan;
     const streamingHours = userPlan?.availables?.streaming_hours;
 
+    if (!dayjs(event.hour_start).isValid()) {
+      event.hour_start = dayjs(new Date());
+    }
+
+    if (!dayjs(event.hour_end).isValid()) {
+      event.hour_end = dayjs(new Date());
+    }
+
     return (
       <>
         {/* RESTRICIONES */}
