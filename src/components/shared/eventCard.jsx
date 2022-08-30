@@ -73,7 +73,7 @@ class EventCard extends Component {
                     <StudentGeneralCourseProgress eventId={event._id} />
                   )}
                   {this.props.moreDetails && (
-                    <QuizApprovedStatus eventId={event._id} />
+                    <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
                   )}
                 </Link>
               ) : (
@@ -95,7 +95,7 @@ class EventCard extends Component {
                     <StudentGeneralCourseProgress eventId={event._id} />
                   )}
                   {this.props.moreDetails && (
-                    <QuizApprovedStatus eventId={event._id} />
+                    <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
                   )}
                 </Link>
               )
