@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Graphics from './graphics';
-import SurveyComponent from './surveyComponent';
+import SurveyComponent from './surveyComponentV2';
 import { Card, Result, Divider } from 'antd';
 
 import ClosedSurvey from './components/closedSurvey';
@@ -61,7 +61,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   }
   return (
     <div>
-      {!cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
+      {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
         <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
       )}
       {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
