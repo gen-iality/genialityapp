@@ -48,7 +48,7 @@ function QuizBadge(props: QuizBadgetProps) {
   }, [isLoading, right, total]);
 
   useEffect(() => {
-    setIsRight(right > minimum);
+    setIsRight(right >= minimum);
   }, [right, minimum]);
 
   return (
