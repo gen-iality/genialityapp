@@ -105,6 +105,7 @@ export const typeInputs = [
   { value: '', label: 'Seleccione una opción' },
   { value: 'text', label: 'Texto' },
   { value: 'country', label: 'Pais ' },
+  { value: 'region', label: 'Region ' },
   { value: 'city', label: 'Ciudad ' },
   { value: 'longtext', label: 'Texto Largo' },
   { value: 'email', label: 'Correo' },

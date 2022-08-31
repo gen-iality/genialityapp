@@ -5491,6 +5491,11 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+country-state-city@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/country-state-city/-/country-state-city-3.1.1.tgz#eb8ab5c002c0bcd6383d1bbbc57f2f77dca28190"
+  integrity sha512-aXex18axihqUhWhlMSarEf/EWXSG1L3VeLlM8G/WHM8unO9tyahEPUR+l29RMrW2vijwKeABw1aEajMyr1x8cw==
+
 craco-antd@^1.19:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/craco-antd/-/craco-antd-1.19.0.tgz#ad3b95853a29a20c6de4003874517ae2a995064b"
@@ -14128,11 +14133,6 @@ react-component-managers@^3.1.0:
   dependencies:
     prop-types "^15.6.1"
     spy-on-component "^1.1.0"
-
-react-country-region-selector@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/react-country-region-selector/-/react-country-region-selector-3.4.0.tgz#e7df48c3e3e8c01d6c135fbe692679604b616ab3"
-  integrity sha512-3zUC0Uhsr6gV8Wxj/BBVJxdTl7pETHPnpDU72OT1n6WrhKVlSYcITEjV0iSyqyk+EmTPM1Fca9JmHRJ+efA2UA==
 
 react-data-export@^0.6.0:
   version "0.6.0"
