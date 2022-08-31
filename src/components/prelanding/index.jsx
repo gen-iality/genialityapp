@@ -5,6 +5,9 @@ import {
   Button,
   Card,
   Col,
+  Divider,
+  Form,
+  Input,
   Menu,
   message,
   Row,
@@ -17,13 +20,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import {
-  EyeInvisibleOutlined,
-  EyeOutlined,
-  InfoCircleOutlined,
-  OrderedListOutlined,
-  SolutionOutlined,
-} from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeOutlined, OrderedListOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 import { useContext, useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
@@ -31,11 +28,11 @@ import { SectionsPrelanding } from '@/helpers/constants';
 import DragIcon from '@2fd/ant-design-icons/lib/DragVertical';
 import InformationIcon from '@2fd/ant-design-icons/lib/Information';
 import { CurrentEventContext } from '@/context/eventContext';
-import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
+import { EventsApi } from '@/helpers/request';
 import ModalContador from './modalContador';
 import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
-import PaletteOutlineIcon from '@2fd/ant-design-icons/lib/PaletteOutline';
+
 const DragHandle = SortableHandle(() => (
   <DragIcon
     style={{
@@ -57,6 +54,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   const [description, setDescription] = useState([]);
   const [speakers, setSpeakers] = useState([]);
   const [agenda, setAgenda] = useState([]);
+  const [typeEvent, settypeEvent] = useState('');
 
   const cEvent = useContext(CurrentEventContext);
   const history = useHistory();
@@ -258,23 +256,47 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
 
       <Col span={6}>
         <Card style={{ borderRadius: '20px' }}>
-          <Row justify='start'>
-            <Typography.Title level={5}>Opciones rapidas</Typography.Title>
-          </Row>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Menu style={{ border: 'none' }} theme='light'>
-                <Menu.Item icon={<PaletteOutlineIcon />}>Estilos landing</Menu.Item>
-                <Menu.Item icon={<SolutionOutlined />}>Datos a recolectar</Menu.Item>
-              </Menu>
+              <Typography.Title level={5}>Opciones rapidas</Typography.Title>
             </Col>
             <Col span={24}>
-              <Select placeholder='Tipo de evento' style={{ width: '100%' }} name={'type_event'}>
-                <Option value=''>Seleccionar...</Option>
-                <Option value='physicalEvent'>Evento físico</Option>
-                <Option value='onlineEvent'>Evento virtual</Option>
-                <Option value='hybridEvent'>Evento híbrido</Option>
-              </Select>
+              <Space direction='vertical' style={{ width: '100%' }}>
+                <Button size='large' block>
+                  Estilos landing
+                </Button>
+                <Button size='large' block>
+                  Datos a recolectar
+                </Button>
+                <Button size='large' block>
+                  Vista previa landing
+                </Button>
+              </Space>
+            </Col>
+            <Divider />
+            <Col span={24}>
+              <Form layout='vertical'>
+                <Select
+                  onChange={(e) => settypeEvent(e)}
+                  size='large'
+                  placeholder='Tipo de evento'
+                  style={{ width: '100%' }}
+                  name={'type_event'}>
+                  <Option value=''>Seleccionar...</Option>
+                  <Option value='physicalEvent'>Evento físico</Option>
+                  <Option value='onlineEvent'>Evento virtual</Option>
+                  <Option value='hybridEvent'>Evento híbrido</Option>
+                </Select>
+                <>
+                  <Form.Item label={'Dirección'}>
+                    <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
+                  </Form.Item>
+
+                  <Form.Item label={'Lugar'}>
+                    <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
+                  </Form.Item>
+                </>
+              </Form>
             </Col>
           </Row>
         </Card>
