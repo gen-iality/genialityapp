@@ -329,7 +329,9 @@ function AgendaActivityItem(props) {
                   borderRadius: '15px',
                   border: `solid 2px ${cEvent.value.styles.textMenu}`,
                   maxHeight: '280px',
-                  minHeight: '187px',
+                  ...{...(
+                    [activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) ? {} : {minHeight: '187px'}
+                  )}
                 }}
                 hoverable
                 className='card-agenda-desktop agendaHover efect-scale'
@@ -339,7 +341,7 @@ function AgendaActivityItem(props) {
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
                 }}>
                 <Row gutter={[8, 8]}>
-                  <Col md={4} lg={4} xl={4} className='agenda-hora'>
+                  {![activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) && <Col md={4} lg={4} xl={4} className='agenda-hora'>
                     <div>
                       {!props.hasDate && item.datetime_end ? (
                         <Timeline>
@@ -503,8 +505,13 @@ function AgendaActivityItem(props) {
                         </div>
                       )}
                     </div>
-                  </Col>
-                  <Col md={14} lg={15} xl={15} className='agenda-contenido'>
+                  </Col>}
+                  <Col
+                    md={[activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) ? 24:14}
+                    lg={[activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name)? 24:15}
+                    xl={[activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) ? 24:15}
+                    className='agenda-contenido'
+                  >
                     <Space direction='vertical'>
                       <Row gutter={[10, 10]}>
                         <Col span={24} style={{ paddingLeft: '0px' }}>
@@ -616,7 +623,7 @@ function AgendaActivityItem(props) {
                       )}
                     </Space>
                   </Col>
-                  <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
+                  {![activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) && <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
                     {/* {console.log(meetingState, 'meetingState', item.video)} */}
                     {/* Aplicada la condición ya que no mostraba el video */}
                     {(meetingState === 'ended_meeting_room' ||
@@ -659,7 +666,7 @@ function AgendaActivityItem(props) {
                         />
                       </>
                     )}
-                  </Col>
+                  </Col>}
                   <LessonViewedCheck isTaken={isTaken} />
                 </Row>
               </Card>
