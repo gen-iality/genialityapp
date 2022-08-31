@@ -21,6 +21,7 @@ function SurveyComponent(props) {
 
   const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
+  const [questionFeedback, setQuestionFeedback] = useState(false);
   var survey;
 
   //Asigna los colores configurables a  la UI de la encuesta
@@ -44,18 +45,20 @@ function SurveyComponent(props) {
 
   const displayFeedbackAfterQuestionAnswered = (sender, options) => {
     if (shouldDisplayFeedback(sender.currentPage)) {
-      stopChangeToNextQuestion(sender.currentPage);
+      stopChangeToNextQuestion(options);
       hideTimerPanel();
       displayFeedback(Survey, sender.currentPage);
       console.log('senderi', sender.currentPage);
+      setQuestionFeedback(createQuestionsFeedback(sender.currentPage));
       setReadOnlyTheQuestions(sender.currentPage.questions);
     } else {
+      console.log('200.Ejecución de else');
       showTimerPanel();
     }
   };
 
   function shouldDisplayFeedback(page) {
-    return page.feedbackVisible !== true;
+    return showingFeedback !== true;
   }
 
   function stopChangeToNextQuestion(options) {
@@ -69,7 +72,6 @@ function SurveyComponent(props) {
   function displayFeedback(Survey, page) {
     console.log('200.Se ejecuta la función displayFeedback');
     console.log('200.displayFeedback page', page);
-    page.feedbackVisible = true;
     setShowingFeedback(true);
     {
       console.log('currentpage displayFeedback', page);
@@ -82,6 +84,7 @@ function SurveyComponent(props) {
   function calculateScoredPoints(questions) {
     let pointsScored = 0;
     questions.map((question) => {
+      console.log('200.Is value empty', question.isValueEmpty());
       pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
 
@@ -90,6 +93,8 @@ function SurveyComponent(props) {
 
   function createQuestionsFeedback(page) {
     let pointsScored = calculateScoredPoints(page.questions);
+    console.log('200.page.questions', page.questions[0].value);
+    console.log('200.surveyModel.data', surveyModel.data);
 
     let mensaje = StateMessages(pointsScored ? 'success' : 'error');
     return (
@@ -113,7 +118,7 @@ function SurveyComponent(props) {
       </>
     );
 
-    function createQuestionsFeedbackAsSurveJSObject(Survey, page) {
+    /* function createQuestionsFeedbackAsSurveJSObject(Survey, page) {
       let pointsScored = calculateScoredPoints(page.questions);
       var feedback = Survey.Serializer.createClass('html');
       feedback.fromJSON({
@@ -122,7 +127,7 @@ function SurveyComponent(props) {
         html: '<div><p>Pregunta contestada</p><p>' + titulo + '</p><p>Has ganado ' + pointsScored + ' puntos</p></div>',
       });
       return feedback;
-    }
+    }*/
   }
 
   function setReadOnlyTheQuestions(questions) {
@@ -159,7 +164,7 @@ function SurveyComponent(props) {
       {/* {&& query.data.allow_gradable_survey === 'true' } */}
       {surveyModel && (
         <>
-          {showingFeedback && createQuestionsFeedback(surveyModel.currentPage)}
+          {showingFeedback && questionFeedback}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
             <Survey.Survey model={surveyModel} onCurrentPageChanging={displayFeedbackAfterQuestionAnswered} />
           </div>
