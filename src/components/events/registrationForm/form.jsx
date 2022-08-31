@@ -20,7 +20,6 @@ import {
   Avatar,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
