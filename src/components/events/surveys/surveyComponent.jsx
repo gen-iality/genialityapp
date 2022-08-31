@@ -18,6 +18,8 @@ import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 import useSurveyQuery from './hooks/useSurveyQuery';
+import { Button } from 'antd';
+import { useHistory } from 'react-router-dom';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -26,6 +28,11 @@ function SurveyComponent(props) {
   //query.data tiene la definición de la encuesta/examen
   let query = useSurveyQuery(eventId, idSurvey);
   console.log('pruebashook', query);
+
+  const history = useHistory();
+  const handleGoToCertificate = () => {
+    history.push(`/landing/${eventId}/certificate`);
+  }
 
   //SurveyModel es usado por el modulo de SurveyJS
   const [initialSurveyModel, setInitialSurveyModel] = useState(null);
@@ -279,6 +286,10 @@ function SurveyComponent(props) {
         <Result className='animate__animated animate__fadeIn' {...feedbackMessage} extra={null} />
       )}
       <div>LA</div>
+      <Button
+        type='primary'
+        onClick={handleGoToCertificate}
+      >Descargar certificado</Button>
       {console.log('query.data', query.data)}
       {query.data.isPublished && <div>published</div>}
 
