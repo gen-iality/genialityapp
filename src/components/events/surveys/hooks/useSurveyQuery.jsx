@@ -32,8 +32,8 @@ function useSurveyQuery(eventId, idSurvey) {
   useEffect(() => {
     const innerAsyncCall = async () => {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
-      // loadedSurvey.currentPage = 0;
-      loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
+      loadedSurvey.currentPage = 0;
+      //loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
       setInnerQuery(loadedSurvey);
     };
     innerAsyncCall();

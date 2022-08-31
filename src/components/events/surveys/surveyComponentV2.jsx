@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Result, Spin } from 'antd';
+import { Result, Spin, Button } from 'antd';
 import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
 import { UseEventContext } from '../../../context/eventContext';
 import useSurveyQuery from './hooks/useSurveyQuery';
@@ -20,7 +20,7 @@ function SurveyComponent(props) {
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
 
   const [surveyModel, setSurveyModel] = useState(null);
-
+  const [showingFeedback, setShowingFeedback] = useState(false);
   var survey;
 
   //Asigna los colores configurables a  la UI de la encuesta
@@ -43,11 +43,12 @@ function SurveyComponent(props) {
   }
 
   const displayFeedbackAfterQuestionAnswered = (sender, options) => {
-    if (shouldDisplayFeedback(options.oldCurrentPage)) {
-      stopChangeToNextQuestion(options);
+    if (shouldDisplayFeedback(sender.currentPage)) {
+      stopChangeToNextQuestion(sender.currentPage);
       hideTimerPanel();
-      displayFeedback(Survey, options.oldCurrentPage);
-      setReadOnlyTheQuestions(options.oldCurrentPage.questions);
+      displayFeedback(Survey, sender.currentPage);
+      console.log('senderi', sender.currentPage);
+      setReadOnlyTheQuestions(sender.currentPage.questions);
     } else {
       showTimerPanel();
     }
@@ -69,35 +70,59 @@ function SurveyComponent(props) {
     console.log('200.Se ejecuta la función displayFeedback');
     console.log('200.displayFeedback page', page);
     page.feedbackVisible = true;
-    let feedback = createQuestionsFeedback(Survey, page);
-    page.addQuestion(feedback, 0);
+    setShowingFeedback(true);
+    {
+      console.log('currentpage displayFeedback', page);
+    }
+    //let feedback = createQuestionsFeedback(Survey, page);
+    //page.addQuestion(feedback, 0);
     console.log('200.displayFeedback page despues de addQuestion', page);
   }
 
-  function createQuestionsFeedback(Survey, page) {
-    //feedback de la pregunta
-    console.log('200.page.questions', page.questions);
-    var feedback = Survey.Serializer.createClass('html');
-    console.log('200.feedback', feedback);
-
+  function calculateScoredPoints(questions) {
     let pointsScored = 0;
-    page.questions.map((question) => {
+    questions.map((question) => {
       pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
 
-    let messageType = pointsScored ? 'success' : 'error';
+    return pointsScored;
+  }
 
-    let mensaje = StateMessages(messageType);
-    console.log('200.mensaje', mensaje);
-    let titulo = mensaje.title.props.children;
-    console.log('200.titulo', titulo);
+  function createQuestionsFeedback(page) {
+    let pointsScored = calculateScoredPoints(page.questions);
 
-    feedback.fromJSON({
-      type: 'html',
-      name: 'info',
-      html: '<div><p>Pregunta contestada</p><p>' + titulo + '</p><p>Has ganado ' + pointsScored + ' puntos</p></div>',
-    });
-    return feedback;
+    let mensaje = StateMessages(pointsScored ? 'success' : 'error');
+    return (
+      <>
+        <Result
+          className='animate__animated animate__fadeIn'
+          {...mensaje}
+          extra={[
+            <Button
+              onClick={() => {
+                setShowingFeedback(false);
+                surveyModel.nextPage();
+              }}
+              type='primary'
+              key='console'
+            >
+              Next
+            </Button>,
+          ]}
+        />
+      </>
+    );
+
+    function createQuestionsFeedbackAsSurveJSObject(Survey, page) {
+      let pointsScored = calculateScoredPoints(page.questions);
+      var feedback = Survey.Serializer.createClass('html');
+      feedback.fromJSON({
+        type: 'html',
+        name: 'info',
+        html: '<div><p>Pregunta contestada</p><p>' + titulo + '</p><p>Has ganado ' + pointsScored + ' puntos</p></div>',
+      });
+      return feedback;
+    }
   }
 
   function setReadOnlyTheQuestions(questions) {
@@ -131,8 +156,14 @@ function SurveyComponent(props) {
 
   return (
     <>
+      {/* {&& query.data.allow_gradable_survey === 'true' } */}
       {surveyModel && (
-        <Survey.Survey model={surveyModel} onCurrentPageChanging={displayFeedbackAfterQuestionAnswered} />
+        <>
+          {showingFeedback && createQuestionsFeedback(surveyModel.currentPage)}
+          <div style={{ display: showingFeedback ? 'none' : 'block' }}>
+            <Survey.Survey model={surveyModel} onCurrentPageChanging={displayFeedbackAfterQuestionAnswered} />
+          </div>
+        </>
       )}
     </>
   );
