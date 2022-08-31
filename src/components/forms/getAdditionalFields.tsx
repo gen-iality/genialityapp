@@ -18,7 +18,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const intl = useIntl();
   let attendeeProperties = attendee?.properties || {};
   const countryField = attendeeProperties['pais'] || '';
-  let areacodeselected = attendeeProperties['code'] || 57;
+  let areacodeselected = attendeeProperties['code'] || '+57';
+  let onlyAreacodeselected = attendeeProperties['onlyCodearea'] || '+57';
   const dateFormat = 'YYYY/MM/DD';
 
   const [country, setCountry] = useState('');
@@ -91,7 +92,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
-                    {`${code.label} (+${code.value})`}
+                    {`${code.label} (${code.value})`}
                   </Option>
                 );
               })}
@@ -114,19 +115,18 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       }
       if (type === 'onlyCodearea') {
         input = (
-          <Form.Item initialValue={areacodeselected} name={name} noStyle>
+          <Form.Item initialValue={onlyAreacodeselected} name={name} noStyle>
             <Select
               optionFilterProp='children'
               style={{ width: '100%' }}
               onChange={(val) => {
-                areacodeselected = val;
+                onlyAreacodeselected = val;
               }}
               placeholder='Código de area del pais'>
               {areaCode.map((code: any, key: any) => {
-                console.log('🚀 debug - {areaCode.map - code', code);
                 return (
                   <Option key={key} value={code.value}>
-                    {`${code.label} (+${code.value})`}
+                    {`${code.label} (${code.value})`}
                   </Option>
                 );
               })}

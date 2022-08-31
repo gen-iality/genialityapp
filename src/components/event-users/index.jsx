@@ -438,7 +438,7 @@ class ListEventUser extends Component {
                   key.name == codearea[0].name
                 ) {
                   updatedAttendees[i][codearea[0].name] = updatedAttendees[i]['code']
-                    ? '(+' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
+                    ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
                     : updatedAttendees[i].properties[codearea[0].name];
                 } else {
                   //console.log("KEY==>",updatedAttendees[i]['properties'][key.name])

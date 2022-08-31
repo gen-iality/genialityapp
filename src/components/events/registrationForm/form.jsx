@@ -190,7 +190,7 @@ const FormRegister = ({
   const [typeRegister, setTypeRegister] = useState('pay');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState(57);
+  let [areacodeselected, setareacodeselected] = useState('+57');
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState({});
@@ -719,7 +719,7 @@ const FormRegister = ({
               {areaCode.map((code, key) => {
                 return (
                   <Option key={key} value={code.value}>
-                    {`${code.label} (+${code.value})`}
+                    {`${code.label} (${code.value})`}
                   </Option>
                 );
               })}
@@ -753,7 +753,7 @@ const FormRegister = ({
                 {areaCode.map((code, key) => {
                   return (
                     <Option key={key} value={code.value}>
-                      {`${code.label} (+${code.value})`}
+                      {`${code.label} (${code.value})`}
                     </Option>
                   );
                 })}
