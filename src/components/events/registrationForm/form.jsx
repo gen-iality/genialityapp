@@ -735,6 +735,7 @@ const FormRegister = ({
           input = (
             <Form.Item initialValue={areacodeselected} name={name} noStyle>
               <Select
+                showSearch
                 optionFilterProp='children'
                 style={{ width: '100%' }}
                 onChange={(val) => {
