@@ -15,6 +15,7 @@ import certificateImage from './certificateImage';
 export interface CertificateProps {
   cEvent?: any
   cEventUser?: any,
+  cUser?: any
 };
 
 const originalContent = '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>participo con éxito de curso</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].';
@@ -112,7 +113,7 @@ function Certificate(props: CertificateProps) {
         const stats = await useAsyncPrepareQuizStats(
           props.cEvent?.value?._id,
           survey._id!,
-          props.cEventUser?.value?._id,
+          props.cUser?.value?._id,
           survey,
         );
 
@@ -145,10 +146,10 @@ function Certificate(props: CertificateProps) {
           {isPassed === undefined && (
             <Spin>Cargando...</Spin>
           )}
-          {!isPassed && (
+          {isPassed === false && (
             <Alert message='Certificados NO disponibles' type='error' />
           )}
-          {isPassed ||1 && (
+          {(isPassed||1) && (
             <>
             <Alert message='Certificados disponibles' type='success' />
             <IconText
