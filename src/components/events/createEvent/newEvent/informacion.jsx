@@ -12,8 +12,10 @@ import {
   TimePicker,
   DatePicker,
   Checkbox,
+  Form,
+  Popover,
 } from 'antd';
-import { CalendarOutlined } from '@ant-design/icons';
+import { CalendarOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
@@ -133,7 +135,18 @@ const Informacion = (props) => {
           </Space>
         </div>
         <div>
-          <Checkbox>Eveno externo, solo landing informativa</Checkbox>
+          <Space>
+            <Checkbox>Evento externo, solo landing informativa</Checkbox>
+            <Popover
+              content={
+                <Typography.Paragraph style={{ width: '220px' }}>
+                  Si marcas esta opción, solo se creará una landing informativa para tu evento, podrás configurar y
+                  personalizar todos los aspectos de esta misma.
+                </Typography.Paragraph>
+              }>
+              <QuestionCircleOutlined />
+            </Popover>
+          </Space>
         </div>
         {state.selectOrganization?.template_properties && (
           <div>

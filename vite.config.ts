@@ -41,6 +41,7 @@ export default defineConfig(({ mode }) => {
           modifyVars: {
             '@primary-color': '#333F44',
             '@secondary-color': '#C44D17',
+            '@border-radius-base': '5px',
           },
           javascriptEnabled: true,
         },

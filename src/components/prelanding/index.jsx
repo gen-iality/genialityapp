@@ -5,20 +5,25 @@ import {
   Button,
   Card,
   Col,
-  Layout,
-  List,
+  Menu,
   message,
-  Modal,
-  Popover,
   Row,
+  Select,
   Space,
   Spin,
   Switch,
   Table,
   Tag,
   Tooltip,
+  Typography,
 } from 'antd';
-import { EyeInvisibleOutlined, EyeOutlined, InfoCircleOutlined, OrderedListOutlined } from '@ant-design/icons';
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  InfoCircleOutlined,
+  OrderedListOutlined,
+  SolutionOutlined,
+} from '@ant-design/icons';
 import arrayMove from 'array-move';
 import { useContext, useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
@@ -30,6 +35,7 @@ import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import ModalContador from './modalContador';
 import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
+import PaletteOutlineIcon from '@2fd/ant-design-icons/lib/PaletteOutline';
 const DragHandle = SortableHandle(() => (
   <DragIcon
     style={{
@@ -42,6 +48,7 @@ const DragHandle = SortableHandle(() => (
 
 const SortableItem = SortableElement((props) => <tr {...props} />);
 const SortableBody = SortableContainer((props) => <tbody {...props} />);
+const { Option } = Select;
 
 const PreLandingSections = ({ tabActive, changeTab }) => {
   const [dataSource, setDataSource] = useState([]);
@@ -250,7 +257,28 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       </Col>
 
       <Col span={6}>
-        <Card
+        <Card style={{ borderRadius: '20px' }}>
+          <Row justify='start'>
+            <Typography.Title level={5}>Opciones rapidas</Typography.Title>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Menu style={{ border: 'none' }} theme='light'>
+                <Menu.Item icon={<PaletteOutlineIcon />}>Estilos landing</Menu.Item>
+                <Menu.Item icon={<SolutionOutlined />}>Datos a recolectar</Menu.Item>
+              </Menu>
+            </Col>
+            <Col span={24}>
+              <Select placeholder='Tipo de evento' style={{ width: '100%' }} name={'type_event'}>
+                <Option value=''>Seleccionar...</Option>
+                <Option value='physicalEvent'>Evento físico</Option>
+                <Option value='onlineEvent'>Evento virtual</Option>
+                <Option value='hybridEvent'>Evento híbrido</Option>
+              </Select>
+            </Col>
+          </Row>
+        </Card>
+        {/* <Card
           bordered={false}
           bodyStyle={{ padding: '0px', overflow: 'hidden', backgroundColor: '#7C7979' }}
           style={{
@@ -288,7 +316,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
               />
             </Layout.Content>
           </Layout>
-        </Card>
+        </Card> */}
       </Col>
       {/* Modal para la creacion de la data del contador */}
       <ModalContador visible={visible} setVisible={setVisible} />
