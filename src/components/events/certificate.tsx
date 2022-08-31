@@ -8,16 +8,16 @@ import { CertsApi, RolAttApi, SurveysApi } from '@/helpers/request';
 import { Survey } from '../quiz/types';
 import useAsyncPrepareQuizStats from '../quiz/useAsyncPrepareQuizStats';
 import { DownloadOutlined } from '@ant-design/icons';
-import { AnyObject } from 'chart.js/types/basic';
 
 import certificateImage from './certificateImage';
 
 export interface CertificateProps {
   cEvent?: any
   cEventUser?: any,
+  cUser?: any
 };
 
-const originalContent = '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>participo con éxito de curso</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].';
+const originalContent = '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>completó con éxito el curso</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].';
 const tags = [
   { tag: 'event.name', label: 'Nombre del Cursos', value: 'name' },
   { tag: 'event.start', label: 'Fecha inicio del Cursos', value: 'datetime_from' },
@@ -44,7 +44,7 @@ function Certificate(props: CertificateProps) {
   const background = certificateImage;
 
 
-  const generateCert = async (dataUser: AnyObject) => {
+  const generateCert = async (dataUser: any) => {
     const modal = Modal.success({
       title: 'Generando certificado',
       content: <Spin>Espera</Spin>,
@@ -98,7 +98,7 @@ function Certificate(props: CertificateProps) {
   };
 
   useEffect(() => {
-    if (!props.cEventUser?.value?._id) return;
+    if (!props.cUser?.value?._id) return;
     if (!props.cEvent?.value?._id) return;
 
     (async () => {
@@ -112,10 +112,11 @@ function Certificate(props: CertificateProps) {
         const stats = await useAsyncPrepareQuizStats(
           props.cEvent?.value?._id,
           survey._id!,
-          props.cEventUser?.value?._id,
+          props.cUser?.value?._id,
           survey,
         );
 
+        console.debug('stats', stats)
         if (stats.minimum > 0) {
           if (stats.right >= stats.minimum) {
             passed = passed + 1;
@@ -125,32 +126,31 @@ function Certificate(props: CertificateProps) {
         }
       }
 
+      console.debug('passed', passed)
+      console.debug('surveys.length', surveys.length)
       if (passed === surveys.length) {
         setIsPassed(true);
       } else if (notPassed < surveys.length) {
         setIsPassed(false);
       }
     })();
-  }, [props.cEventUser?.value, props.cEvent?.value?._id]);
+  }, [props.cUser?.value, props.cEvent?.value?._id]);
 
   return (
     <>
     <Row gutter={[8, 8]} wrap justify='center'>
       <Col span={24}>
         <Card>
-          Hola))
-          <p>{props.cEvent?.value?._id}</p>
-          <p>{props.cEventUser?.value?._id}</p>
-          {isPassed ? 'sí' : 'no'}
           {isPassed === undefined && (
             <Spin>Cargando...</Spin>
           )}
-          {!isPassed && (
+          {isPassed === false && (
             <Alert message='Certificados NO disponibles' type='error' />
           )}
-          {isPassed ||1 && (
+          {(isPassed||1) && (
             <>
             <Alert message='Certificados disponibles' type='success' />
+            <br />
             <IconText
               text='Descargar certificado'
               icon={DownloadOutlined}
