@@ -20,6 +20,8 @@ import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 import useSurveyQuery from './hooks/useSurveyQuery';
 import { Button } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { SurveysApi } from '@/helpers/request';
+import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -33,6 +35,7 @@ function SurveyComponent(props) {
   const handleGoToCertificate = () => {
     history.push(`/landing/${eventId}/certificate`);
   }
+  const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
 
   //SurveyModel es usado por el modulo de SurveyJS
   const [initialSurveyModel, setInitialSurveyModel] = useState(null);
@@ -274,6 +277,43 @@ function SurveyComponent(props) {
     return true;
   }
 
+  useEffect(() => {
+    if (!eventId) return;
+    if (!currentUser?.value?._id) return;
+
+    (async () => {
+      const surveys = await SurveysApi.byEvent(eventId);
+
+      let passed = 0;
+      let notPassed = 0;
+
+      for (let i = 0; i < surveys.length; i++) {
+        const survey = surveys[i];
+        const stats = await useAsyncPrepareQuizStats(
+          eventId,
+          survey._id,
+          currentUser?.value?._id,
+          survey,
+        );
+
+        console.debug('stats', stats)
+        if (stats.minimum > 0) {
+          if (stats.right >= stats.minimum) {
+            passed = passed + 1;
+          } else {
+            notPassed = notPassed + 1;
+          }
+        }
+      }
+
+      if (passed === surveys.length) {
+        setEnableGoToCertificate(true);
+      } else {
+        setEnableGoToCertificate(false);
+      }
+    })();
+  }, [currentUser?.value?._id, eventId]);
+
   /**
    * Render del componente
    **/
@@ -286,10 +326,10 @@ function SurveyComponent(props) {
         <Result className='animate__animated animate__fadeIn' {...feedbackMessage} extra={null} />
       )}
       <div>LA</div>
-      <Button
+      {(enableGoToCertificate) && <Button
         type='primary'
         onClick={handleGoToCertificate}
-      >Descargar certificado</Button>
+      >Descargar certificado</Button>}
       {console.log('query.data', query.data)}
       {query.data.isPublished && <div>published</div>}
 
