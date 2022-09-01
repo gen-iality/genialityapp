@@ -59,8 +59,11 @@ const ImageUploaderDragAndDrop = ({
             minWidth: width as number,
             minHeight: height as number,
             convertSize: 5000000,
-            success: async (result) => {
-              const imagenUrl = await uploadImageData(result);
+            success: async (compressedImage) => {
+              const typeOfImage = file.originFileObj.type;
+              const imageData = typeOfImage === 'image/gif' ? file.originFileObj : compressedImage;
+
+              const imagenUrl = await uploadImageData(imageData);
               setImage(imagenUrl);
               imageDataCallBack(imagenUrl);
               setIsUploading(false);
