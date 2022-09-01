@@ -6,6 +6,7 @@ import {
   Card,
   Col,
   Divider,
+  Drawer,
   Form,
   Input,
   Menu,
@@ -32,6 +33,7 @@ import { EventsApi } from '@/helpers/request';
 import ModalContador from './modalContador';
 import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
+import DrawerPreviewLanding from './drawerPreviewLanding';
 
 const DragHandle = SortableHandle(() => (
   <DragIcon
@@ -55,6 +57,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   const [speakers, setSpeakers] = useState([]);
   const [agenda, setAgenda] = useState([]);
   const [typeEvent, settypeEvent] = useState('');
+  const [drawerPreviewVisible, setDrawerPreviewVisible] = useState(false);
 
   const cEvent = useContext(CurrentEventContext);
   const history = useHistory();
@@ -255,51 +258,58 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       </Col>
 
       <Col span={6}>
-        <Card style={{ borderRadius: '20px' }}>
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <Typography.Title level={5}>Opciones rapidas</Typography.Title>
-            </Col>
-            <Col span={24}>
-              <Space direction='vertical' style={{ width: '100%' }}>
-                <Button size='large' block>
-                  Estilos landing
-                </Button>
-                <Button size='large' block>
-                  Datos a recolectar
-                </Button>
-                <Button size='large' block>
-                  Vista previa landing
-                </Button>
-              </Space>
-            </Col>
-            <Divider />
-            <Col span={24}>
-              <Form layout='vertical'>
-                <Select
-                  onChange={(e) => settypeEvent(e)}
-                  size='large'
-                  placeholder='Tipo de evento'
-                  style={{ width: '100%' }}
-                  name={'type_event'}>
-                  <Option value=''>Seleccionar...</Option>
-                  <Option value='physicalEvent'>Evento físico</Option>
-                  <Option value='onlineEvent'>Evento virtual</Option>
-                  <Option value='hybridEvent'>Evento híbrido</Option>
-                </Select>
-                <>
-                  <Form.Item label={'Dirección'}>
-                    <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
-                  </Form.Item>
+        <Affix offsetTop={150}>
+          <Card style={{ borderRadius: '20px' }}>
+            <Row gutter={[4, 4]}>
+              <Col span={24}>
+                <Typography.Title level={5}>Opciones rapidas</Typography.Title>
+              </Col>
+              <Col span={24}>
+                <Space direction='vertical' style={{ width: '100%' }}>
+                  <Button size='large' block>
+                    Estilos landing
+                  </Button>
+                  <Button size='large' block>
+                    Datos a recolectar
+                  </Button>
+                  <Button onClick={() => setDrawerPreviewVisible(true)} size='large' block>
+                    Vista previa landing
+                  </Button>
+                </Space>
+              </Col>
+              <Divider />
+              <Col span={24}>
+                <Form layout='vertical'>
+                  <Space direction='vertical' style={{ width: '100%' }}>
+                    <Select
+                      value={typeEvent}
+                      onChange={(e) => settypeEvent(e)}
+                      size='large'
+                      placeholder='Tipo de evento'
+                      style={{ width: '100%' }}
+                      name={'type_event'}>
+                      <Option value=''>Seleccionar...</Option>
+                      <Option value='physicalEvent'>Evento físico</Option>
+                      <Option value='onlineEvent'>Evento virtual</Option>
+                      <Option value='hybridEvent'>Evento híbrido</Option>
+                    </Select>
+                    {typeEvent === 'physicalEvent' && (
+                      <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
+                        <Form.Item label={'Dirección'}>
+                          <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
+                        </Form.Item>
 
-                  <Form.Item label={'Lugar'}>
-                    <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
-                  </Form.Item>
-                </>
-              </Form>
-            </Col>
-          </Row>
-        </Card>
+                        <Form.Item label={'Lugar'}>
+                          <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
+                        </Form.Item>
+                      </Space>
+                    )}
+                  </Space>
+                </Form>
+              </Col>
+            </Row>
+          </Card>
+        </Affix>
         {/* <Card
           bordered={false}
           bodyStyle={{ padding: '0px', overflow: 'hidden', backgroundColor: '#7C7979' }}
@@ -342,6 +352,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       </Col>
       {/* Modal para la creacion de la data del contador */}
       <ModalContador visible={visible} setVisible={setVisible} />
+      <DrawerPreviewLanding visibleDrawer={drawerPreviewVisible} setVisibleDrawer={setDrawerPreviewVisible} />
     </Row>
   );
 };

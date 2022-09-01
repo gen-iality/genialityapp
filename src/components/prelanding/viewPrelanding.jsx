@@ -23,7 +23,8 @@ import MenuScrollBlock from './MenuScrollBlock';
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
-const ViewPrelanding = (props) => {
+const ViewPrelanding = ({ preview }) => {
+  const mobilePreview = preview ? preview : '';
   const screens = useBreakpoint();
 
   //CONTEXTOS
@@ -141,13 +142,14 @@ const ViewPrelanding = (props) => {
       const sectionsDescription = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
       let speakers = await SpeakersApi.byEvent(cEventContext?.value._id);
       const agenda = await AgendaApi.byEvent(cEventContext?.value._id);
-      const speakersFiltered=speakers.filter((speaker)=>speaker.published || speaker.published=="undefined")
-      const agendaConfig=await obtenerConfigActivity(cEventContext.value?._id,agenda.data);
-      const agendaFiltered= agendaConfig.filter((agendaCfg)=>agendaCfg.isPublished || agendaCfg.isPublished==undefined)
+      const speakersFiltered = speakers.filter((speaker) => speaker.published || speaker.published == 'undefined');
+      const agendaConfig = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
+      const agendaFiltered = agendaConfig.filter(
+        (agendaCfg) => agendaCfg.isPublished || agendaCfg.isPublished == undefined
+      );
       setDescription(sectionsDescription?.data || []);
       setSpeakers(speakersFiltered || []);
       setAgenda(agendaFiltered || []);
-    
     }
   }, [cEventContext.value]);
   return (
@@ -168,7 +170,9 @@ const ViewPrelanding = (props) => {
         }}>
         {/**MODAL INSCRIPCION EN EL EVENTO*/}
         <ModalPermission />
-        <Row gutter={[0, 16]} style={screens.xs ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
+        <Row
+          gutter={[0, 16]}
+          style={screens.xs || mobilePreview === 'smartphone' ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
           <Col id='Franja de titulo' span={24}>
             <Row>
               <Col span={24}>
@@ -220,7 +224,9 @@ const ViewPrelanding = (props) => {
                   <Card
                     id='Descripción_block'
                     className='viewReactQuill'
-                    bodyStyle={screens.xs ? mobileBlockContentStyle : desktopBlockContentStyle}
+                    bodyStyle={
+                      screens.xs || mobilePreview === 'smartphone' ? mobileBlockContentStyle : desktopBlockContentStyle
+                    }
                     style={{
                       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                       borderRadius: '20px',
@@ -236,7 +242,10 @@ const ViewPrelanding = (props) => {
                 <Col span={24} order={obtenerOrder('Conferencistas')}>
                   <Card
                     id='Conferencistas_block'
-                    bodyStyle={{ height: '100%', padding: screens.xs ? '10px' : '24px' }}
+                    bodyStyle={{
+                      height: '100%',
+                      padding: screens.xs || mobilePreview === 'smartphone' ? '10px' : '24px',
+                    }}
                     style={{
                       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                       height: '450px',
