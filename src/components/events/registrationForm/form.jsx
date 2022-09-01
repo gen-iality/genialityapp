@@ -20,7 +20,6 @@ import {
   Avatar,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
@@ -36,6 +35,7 @@ import { UseEventContext } from '../../../context/eventContext';
 import { UseCurrentUser } from '../../../context/userContext';
 import { app } from '../../../helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
+import { Country, State, City } from 'country-state-city';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -180,8 +180,6 @@ const FormRegister = ({
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
   const [formMessage, setFormMessage] = useState({});
-  const [country, setCountry] = useState();
-  const [region, setRegion] = useState();
   // const [password, setPassword] = useState('');
   const [event, setEvent] = useState(null);
   const [loggedurl, setLogguedurl] = useState(null);
@@ -190,10 +188,12 @@ const FormRegister = ({
   const [typeRegister, setTypeRegister] = useState('pay');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState(57);
+  let [areacodeselected, setareacodeselected] = useState('+57');
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState({});
+  const [country, setCountry] = useState({ name: '', countryCode: '' });
+  const [region, setRegion] = useState({ name: '', regionCode: '' });
 
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || []
@@ -261,11 +261,6 @@ const FormRegister = ({
         let splitphone = phonenumber.toString().split(' ');
         setareacodeselected(codeValue);
       }
-    }
-    let pais = extraFields.filter((field) => field.type == 'country');
-    if (pais[0]) {
-      let paisSelected = initialValues && pais[0] ? initialValues[pais[0].name] : '';
-      setCountry(paisSelected);
     }
   }, []);
 
@@ -546,10 +541,6 @@ const FormRegister = ({
   useEffect(() => {
     console.log('INITIAL VALUES===>', initialValues, extraFields);
     form.setFieldsValue(initialValues);
-    const fieldCountry = extraFields?.filter((field) => field.type == 'country');
-    if (fieldCountry.length > 0) {
-      setCountry(initialValues[fieldCountry[0].name]);
-    }
   }, [initialValues]);
 
   useEffect(() => {
@@ -719,7 +710,7 @@ const FormRegister = ({
               {areaCode.map((code, key) => {
                 return (
                   <Option key={key} value={code.value}>
-                    {`${code.label} (+${code.value})`}
+                    {`${code.label} (${code.value})`}
                   </Option>
                 );
               })}
@@ -737,6 +728,29 @@ const FormRegister = ({
               style={{ width: '100%' }}
               placeholder='Numero de telefono'
             />
+          );
+        }
+
+        if (type === 'onlyCodearea') {
+          input = (
+            <Form.Item initialValue={areacodeselected} name={name} noStyle>
+              <Select
+                showSearch
+                optionFilterProp='children'
+                style={{ width: '100%' }}
+                onChange={(val) => {
+                  areacodeselected = val;
+                }}
+                placeholder='Código de area del pais'>
+                {areaCode.map((code, key) => {
+                  return (
+                    <Option key={key} value={code.value}>
+                      {`${code.label} (${code.value})`}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
           );
         }
 
@@ -899,24 +913,66 @@ const FormRegister = ({
 
         if (type === 'country') {
           input = (
-            <CountryDropdown
-              className='countryCity-styles'
-              value={country}
-              onChange={(val) => setCountry(val)}
-              name={name}
-            />
+            <Form.Item initialValue={value} name={name} noStyle>
+              <Select
+                showSearch
+                optionFilterProp='children'
+                style={{ width: '100%' }}
+                onChange={(name, aditionalData) => {
+                  setCountry({ name, countryCode: aditionalData.key });
+                }}
+                placeholder='Seleccione un país'>
+                {Country.getAllCountries().map((country) => {
+                  return (
+                    <Option key={country.isoCode} value={country.name}>
+                      {country.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          );
+        }
+        if (type === 'region') {
+          input = (
+            <Form.Item initialValue={value} name={name} noStyle>
+              <Select
+                showSearch
+                optionFilterProp='children'
+                style={{ width: '100%' }}
+                onChange={(name, aditionalData) => {
+                  setRegion({ name, regionCode: aditionalData.key });
+                }}
+                placeholder='Seleccione un región'>
+                {State.getStatesOfCountry(country.countryCode).map((regionCode) => {
+                  return (
+                    <Option key={regionCode.isoCode} value={regionCode.name}>
+                      {regionCode.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
           );
         }
 
         if (type === 'city') {
           input = (
-            <RegionDropdown
-              className='countryCity-styles'
-              country={country}
-              value={region}
-              name={name}
-              onChange={(val) => setRegion(val)}
-            />
+            <Form.Item initialValue={value} name={name} noStyle>
+              <Select
+                showSearch
+                optionFilterProp='children'
+                style={{ width: '100%' }}
+                placeholder='Seleccione una ciudad'>
+                {City.getCitiesOfState(country.countryCode, region.regionCode).map((cityCode, key) => {
+                  return (
+                    <Option key={key} value={cityCode.name}>
+                      {cityCode.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
           );
         }
 
