@@ -109,6 +109,7 @@
     "react-tabs": "^3.1.0",
     "react-timestamp": "^5.1.0",
     "react-to-print": "^2.12.6",
+    "react-widgets": "4.6.1",
     "react-widgets-moment": "^4.0.19",
     "react-window": "^1.8.5",
     "redux": "^4",
