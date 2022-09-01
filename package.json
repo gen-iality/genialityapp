@@ -6,6 +6,7 @@
     "dev": "vite --mode staging",
     "prod": "vite --mode prod_evius",
     "devgeniality": "vite --mode geniality_staging",
+    "localgeniality": "vite --mode geniality_development",
     "prodgeniality": "vite --mode geniality_production",
     "build": "vite build",
     "preview": "vite preview",
