@@ -510,7 +510,7 @@ class Agenda extends Component {
       const isRegistered = this.checkInscriptionStatus(item._id) && true;
 
       return (
-        <div key={index} className='container_agenda-information'>
+        <div key={index} className='container_agenda-information' style={{ marginBottom: 0 }}>
           {(item.requires_registration || item.requires_registration === 'true') && !this.props.cUser ? (
             <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
               <AgendaActivityItem
