@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900');
 
-$font-path: 'react-widgets/lib/fonts';
-$img-path: 'react-widgets/lib/img';
 $family-sans-serif: 'Montserrat', sans-serif;
 $color-evius: #1cdcb7;
 $evius-secundary: #009fd9;
@@ -448,7 +446,6 @@ iframe {
   border-radius: 8px !important;
 }
 
-@import 'react-widgets/lib/scss/react-widgets';
 @import 'react-quill/dist/quill.snow.css';
 @import 'react-quill/dist/quill.bubble.css';
 
