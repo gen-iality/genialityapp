@@ -17,13 +17,12 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   let cSurveys = UseSurveysContext();
 
   const currentUser = UseCurrentUser();
-  const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
 
   //Effect for when prop.idSurvey changes
   useEffect(() => {
     if (!surveyId) return;
 
-    console.log('survey surveyid userid', surveyId, currentUser.value);
+    console.log('200.survey surveyid userid', surveyId, currentUser.value);
     let unsubscribe;
     (async () => {
       let loadedSurvey = await LoadSelectedSurvey(cEvent.value._id, surveyId);
@@ -44,14 +43,6 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     };
   }, [surveyId]);
 
-  useEffect(() => {
-    if (showSurveyTemporarily === true) {
-      setTimeout(() => {
-        setShowSurveyTemporarily(false);
-      }, 10000);
-    }
-  }, [showSurveyTemporarily]);
-
   if (!cSurveys.currentSurvey) {
     return <h1>No hay nada publicado{surveyId}</h1>;
   }
@@ -71,7 +62,6 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           idSurvey={surveyId}
           eventId={cEvent.value._id}
           currentUser={currentUser}
-          setShowSurveyTemporarily={setShowSurveyTemporarily}
           operation='participationPercentage'
         />
       </Card>

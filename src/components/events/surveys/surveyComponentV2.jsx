@@ -4,9 +4,12 @@ import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
 import { UseEventContext } from '../../../context/eventContext';
 import useSurveyQuery from './hooks/useSurveyQuery';
 import * as Survey from 'survey-react';
+import { SurveyPage } from './services/services';
 //Funciones externas
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
 import StateMessages from './functions/stateMessagesV2';
+import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
+import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -15,6 +18,7 @@ function SurveyComponent(props) {
   let query = useSurveyQuery(eventId, idSurvey);
   console.log('200.updateSurveyStatusx0', eventId, idSurvey);
   console.log('200.pruebashook', query.data);
+  console.log('200.CurrentUserID', currentUser.value._id);
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -22,6 +26,7 @@ function SurveyComponent(props) {
   const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [questionFeedback, setQuestionFeedback] = useState(false);
+  const [completedSurvey, setCompletedSurvey] = useState(false);
   var survey;
 
   //Asigna los colores configurables a  la UI de la encuesta
@@ -44,20 +49,18 @@ function SurveyComponent(props) {
   }
 
   const displayFeedbackAfterQuestionAnswered = (sender, options) => {
-    if (shouldDisplayFeedback(sender.currentPage)) {
+    if (shouldDisplayFeedback()) {
       stopChangeToNextQuestion(options);
       hideTimerPanel();
       displayFeedback(Survey, sender.currentPage);
-      console.log('senderi', sender.currentPage);
       setQuestionFeedback(createQuestionsFeedback(sender.currentPage));
       setReadOnlyTheQuestions(sender.currentPage.questions);
     } else {
-      console.log('200.Ejecución de else');
       showTimerPanel();
     }
   };
 
-  function shouldDisplayFeedback(page) {
+  function shouldDisplayFeedback() {
     return showingFeedback !== true;
   }
 
@@ -67,18 +70,11 @@ function SurveyComponent(props) {
 
   function hideTimerPanel() {
     surveyModel.showTimerPanel = 'none';
+    surveyModel.stopTimer();
   }
 
   function displayFeedback(Survey, page) {
-    console.log('200.Se ejecuta la función displayFeedback');
-    console.log('200.displayFeedback page', page);
     setShowingFeedback(true);
-    {
-      console.log('currentpage displayFeedback', page);
-    }
-    //let feedback = createQuestionsFeedback(Survey, page);
-    //page.addQuestion(feedback, 0);
-    console.log('200.displayFeedback page despues de addQuestion', page);
   }
 
   function calculateScoredPoints(questions) {
@@ -87,14 +83,14 @@ function SurveyComponent(props) {
       console.log('200.Is value empty', question.isValueEmpty());
       pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
-
+    console.log('200.pointsScored', pointsScored);
     return pointsScored;
   }
 
   function createQuestionsFeedback(page) {
     let pointsScored = calculateScoredPoints(page.questions);
-    console.log('200.page.questions', page.questions[0].value);
-    console.log('200.surveyModel.data', surveyModel.data);
+    console.log('200.createQuestionsFeedback page.questions', page.questions[0].value);
+    console.log('200.createQuestionsFeedback surveyModel.data', surveyModel.data);
 
     let mensaje = StateMessages(pointsScored ? 'success' : 'error');
     return (
@@ -117,17 +113,6 @@ function SurveyComponent(props) {
         />
       </>
     );
-
-    /* function createQuestionsFeedbackAsSurveJSObject(Survey, page) {
-      let pointsScored = calculateScoredPoints(page.questions);
-      var feedback = Survey.Serializer.createClass('html');
-      feedback.fromJSON({
-        type: 'html',
-        name: 'info',
-        html: '<div><p>Pregunta contestada</p><p>' + titulo + '</p><p>Has ganado ' + pointsScored + ' puntos</p></div>',
-      });
-      return feedback;
-    }*/
   }
 
   function setReadOnlyTheQuestions(questions) {
@@ -140,24 +125,26 @@ function SurveyComponent(props) {
 
   function showTimerPanel() {
     surveyModel.showTimerPanel = 'top';
+    surveyModel.startTimer();
   }
 
   function temporizador(sender, options) {
     options.text = `Tienes ${sender.maxTimeToFinishPage} para responder. Tu tiempo es ${sender.currentPage.timeSpent}`;
   }
 
-  /* survey.onTimerPanelInfoText.add((sender, options) => {
-    if (sender.currentPage.isReadOnly) {
-      options.text = '';
-    } else {
-      //console.log("Esto sucede en onTimerPanelInfoText");
-      options.text = `Tienes ${survey.maxTimeToFinishPage} para responder. Tu tiempo es ${survey.currentPage.timeSpent}`;
+  async function saveSurveyData() {
+    const status = surveyModel.state;
+    await SetCurrentUserSurveyStatus(query.data, currentUser, status);
+    if (!(Object.keys(currentUser).length === 0)) {
+      //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
+      SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
     }
-  }); */
+  }
 
-  /*  survey.onComplete.add(function(sender) {
-    document.querySelector('#surveyResult').textContent = 'Result JSON:\n' + JSON.stringify(sender.data, null, 3);
-  }); */
+  async function surveyCompleted() {
+    saveSurveyData();
+    MessageWhenCompletingSurvey(surveyModel, query.data, '10');
+  }
 
   return (
     <>
@@ -166,7 +153,13 @@ function SurveyComponent(props) {
         <>
           {showingFeedback && questionFeedback}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
-            <Survey.Survey model={surveyModel} onCurrentPageChanging={displayFeedbackAfterQuestionAnswered} />
+            <Survey.Survey
+              model={surveyModel}
+              onCurrentPageChanging={displayFeedbackAfterQuestionAnswered}
+              onPartialSend={saveSurveyData}
+              onCompleting={displayFeedbackAfterQuestionAnswered}
+              onComplete={surveyCompleted}
+            />
           </div>
         </>
       )}
