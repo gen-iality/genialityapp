@@ -39,8 +39,8 @@ const DrawerPreviewLanding = ({ visibleDrawer, setVisibleDrawer }) => {
           />
         </Space>
       }
-      className='viewReactQuill'
       width={device.value}
+      bodyStyle={{ padding: '0px' }}
       placement='right'
       onClose={() => setVisibleDrawer(false)}
       visible={visibleDrawer}>

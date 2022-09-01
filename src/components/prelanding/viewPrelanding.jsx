@@ -176,7 +176,7 @@ const ViewPrelanding = ({ preview }) => {
           <Col id='Franja de titulo' span={24}>
             <Row>
               <Col span={24}>
-                <InfoEvent paddingOff={true} />
+                <InfoEvent paddingOff={true} preview={preview} />
               </Col>
             </Row>
           </Col>
@@ -271,7 +271,7 @@ const ViewPrelanding = ({ preview }) => {
                       backgroundColor: bgColor,
                       border: 'none',
                     }}>
-                    <ActivityBlock />
+                    <ActivityBlock preview={mobilePreview} />
                   </Card>
                 </Col>
               )}

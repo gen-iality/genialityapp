@@ -9,7 +9,8 @@ import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBe
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
-const InfoEvent = ({ paddingOff }) => {
+const InfoEvent = ({ paddingOff, preview }) => {
+  let isPreview = preview ? true : false;
   let cEvent = UseEventContext();
   let { handleChangeTypeModal, helperDispatch } = useHelper();
   const cEventUser = UseUserEvent();
@@ -58,7 +59,7 @@ const InfoEvent = ({ paddingOff }) => {
         visibleButton() == 'SIGNUP' ? (
           <Button
             style={{ color: bgColor, backgroundColor: textColor }}
-            onClick={() => handleChangeTypeModal('registerForTheEvent')}
+            onClick={() => !isPreview && handleChangeTypeModal('registerForTheEvent')}
             type='primary'
             size='large'>
             {intl.formatMessage({
@@ -71,7 +72,7 @@ const InfoEvent = ({ paddingOff }) => {
             <Button
               style={{ marginRight: 10, color: bgColor, backgroundColor: textColor }}
               onClick={() => {
-                helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
+                !isPreview && helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
               }}
               type='primary'
               size='large'>
@@ -82,7 +83,9 @@ const InfoEvent = ({ paddingOff }) => {
             </Button>
             <Button
               style={{ color: bgColor, backgroundColor: textColor }}
-              onClick={() => helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })}
+              onClick={() =>
+                !isPreview && helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })
+              }
               type='primary'
               size='large'>
               {intl.formatMessage({
@@ -96,12 +99,12 @@ const InfoEvent = ({ paddingOff }) => {
             <Button
               style={{ color: bgColor, backgroundColor: textColor }}
               onClick={() => {
-                if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT') {
+                if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && !isPreview) {
                   //SE GUARDA LA SESION DEL USUARIO POR EL EVENTO ACTUAL
                   window.sessionStorage.setItem('session', cEvent.value?._id);
                   history.replace(`/landing/${cEvent.value?._id}`);
                 } else {
-                  helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
+                  !isPreview && helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
                 }
               }}
               type='primary'

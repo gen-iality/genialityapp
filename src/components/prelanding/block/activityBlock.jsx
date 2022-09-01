@@ -9,7 +9,8 @@ import { UserOutlined } from '@ant-design/icons';
 
 const { useBreakpoint } = Grid;
 
-const ActivityBlock = () => {
+const ActivityBlock = ({ preview }) => {
+  const mobilePreview = preview ? preview : '';
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
   const [activities, setActivities] = useState([]);
@@ -116,14 +117,16 @@ const ActivityBlock = () => {
   };
   return (
     <Row style={{ height: '100%' }} justify={activities.length < 2 ? 'start' : 'center'} align='middle'>
-      <Timeline style={{ width: '100%' }} mode={screens.xs ? 'left' : activities.length < 2 ? 'left' : 'alternate'}>
+      <Timeline
+        style={{ width: '100%' }}
+        mode={screens.xs || mobilePreview === 'smartphone' ? 'left' : activities.length < 2 ? 'left' : 'alternate'}>
         {activities.map((activity, index) => {
           return (
             <Timeline.Item
               color={textColor}
               label={
                 activities.length > 1
-                  ? !screens.xs
+                  ? !screens.xs || mobilePreview === 'smartphone'
                     ? activity?.type && determineType(activity.type.name)
                     : null
                   : null
