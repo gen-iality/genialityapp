@@ -1,24 +1,23 @@
 .CourseProgressBar-container {
-    /* border: 2px solid red; */
     display: flex;
     max-width: max-content;
-    /* flex-direction: column; */
+    flex-direction: column;
     gap: 1rem;
     justify-content: space-between;
     align-items: center;
-    transform: rotate(90deg);
+    position: relative;
 }
 
 .CourseProgressBar-container::before{
     content: '';
     position: absolute;
     background-color: #143851; 
-    top: 50%;
-    left: 0;
-    transform:translateY(-50%);
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
     border-radius: 5px;
-    height: 4px;
-    width: 100%;
+    width: 4px;
+    height: 100%;
     z-index: -1;
     transition: 0.4s e;
 }
@@ -27,12 +26,12 @@
     position: absolute;
     border-color:  #143851;
     background-color: #E89941;
-    top: 50%;
-    left: 0;
-    transform:translateY(-50%);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     border-radius: 5px;
-    height: 4px;
-    width: 50%;
+    width: 4px;
+    height: 50%;
     z-index: -1;
     transition: 0.4s e;
 }

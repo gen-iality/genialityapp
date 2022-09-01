@@ -32,7 +32,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   return (
     <div className='CourseProgressBar-container'>
-      <div className='CourseProgressBar-line' style={{ width: progressWidth + "%" }}></div>
+      <div className='CourseProgressBar-line' style={{ height: progressWidth + "%" }}></div>
       {Array.from(Array(total).keys()).map((i) => (
         <Step
           isActive={i < count}
