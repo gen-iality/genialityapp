@@ -242,7 +242,7 @@ const ModalAuth = (props) => {
                   prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                 />
               </Form.Item>
-              {useEventWithCedula(cEvent.value?._id).isArkmed ? (
+              {useEventWithCedula(cEvent.value).isArkmed ? (
                 <Form.Item
                   label={intl.formatMessage({
                     id: 'modal.label.cedula',
