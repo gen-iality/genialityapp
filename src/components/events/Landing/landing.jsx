@@ -27,6 +27,9 @@ import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 import DateEvent from '../dateEvent';
 import dayjs from 'dayjs';
+
+import CourseProgressBar from '@components/events/courseProgressBar/CourseProgressBar';
+
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));
@@ -193,7 +196,7 @@ const Landing = (props) => {
             props.setUserAgenda(null);
           }}
         />
-
+        <CourseProgressBar total={10} count={2}/>
         <EventSectionsInnerMenu />
         <MenuTablets />
 
