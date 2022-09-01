@@ -280,33 +280,35 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
               </Col>
               <Divider />
               <Col span={24}>
-                <Form layout='vertical'>
-                  <Space direction='vertical' style={{ width: '100%' }}>
-                    <Select
-                      value={typeEvent}
-                      onChange={(e) => settypeEvent(e)}
-                      size='large'
-                      placeholder='Tipo de evento'
-                      style={{ width: '100%' }}
-                      name={'type_event'}>
-                      <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Evento físico</Option>
-                      <Option value='onlineEvent'>Evento virtual</Option>
-                      <Option value='hybridEvent'>Evento híbrido</Option>
-                    </Select>
-                    {typeEvent === 'physicalEvent' && (
-                      <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
-                        <Form.Item label={'Dirección'}>
-                          <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
-                        </Form.Item>
+                {cEvent.value.has_prelanding && (
+                  <Form layout='vertical'>
+                    <Space direction='vertical' style={{ width: '100%' }}>
+                      <Select
+                        value={typeEvent}
+                        onChange={(e) => settypeEvent(e)}
+                        size='large'
+                        placeholder='Tipo de evento'
+                        style={{ width: '100%' }}
+                        name={'type_event'}>
+                        <Option value=''>Seleccionar...</Option>
+                        <Option value='physicalEvent'>Evento físico</Option>
+                        <Option value='onlineEvent'>Evento virtual</Option>
+                        <Option value='hybridEvent'>Evento híbrido</Option>
+                      </Select>
+                      {typeEvent === 'physicalEvent' && (
+                        <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
+                          <Form.Item label={'Dirección'}>
+                            <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
+                          </Form.Item>
 
-                        <Form.Item label={'Lugar'}>
-                          <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
-                        </Form.Item>
-                      </Space>
-                    )}
-                  </Space>
-                </Form>
+                          <Form.Item label={'Lugar'}>
+                            <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
+                          </Form.Item>
+                        </Space>
+                      )}
+                    </Space>
+                  </Form>
+                )}
               </Col>
             </Row>
           </Card>

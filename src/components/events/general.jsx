@@ -837,18 +837,19 @@ class General extends Component {
                       </Select>
                     </Form.Item>
                   )}
-
-                  <Form.Item label={'Tipo de evento'}>
-                    <Select
-                      defaultValue={event.type_event}
-                      name={'type_event'}
-                      onChange={(e) => this.handleChange(e, 'type_event')}>
-                      <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Evento físico</Option>
-                      <Option value='onlineEvent'>Evento virtual</Option>
-                      <Option value='hybridEvent'>Evento híbrido</Option>
-                    </Select>
-                  </Form.Item>
+                  {!event.has_prelanding && (
+                    <Form.Item label={'Tipo de evento'}>
+                      <Select
+                        defaultValue={event.type_event}
+                        name={'type_event'}
+                        onChange={(e) => this.handleChange(e, 'type_event')}>
+                        <Option value=''>Seleccionar...</Option>
+                        <Option value='physicalEvent'>Evento físico</Option>
+                        <Option value='onlineEvent'>Evento virtual</Option>
+                        <Option value='hybridEvent'>Evento híbrido</Option>
+                      </Select>
+                    </Form.Item>
+                  )}
 
                   {/* {event.type_event === 'onlineEvent' && (
                     <Form.Item label={'Plataforma Streaming del evento'}>
