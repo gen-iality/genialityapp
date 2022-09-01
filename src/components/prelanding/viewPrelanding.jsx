@@ -63,6 +63,7 @@ const ViewPrelanding = ({ preview }) => {
     if (window.sessionStorage.getItem('session') !== cEventContext.value?._id) {
       window.sessionStorage.removeItem('session');
     }
+    if (preview) return;
     if (window.sessionStorage.getItem('session') === cEventContext.value?._id) {
       history.replace(`/landing/${cEventContext.value?._id}`);
     }
