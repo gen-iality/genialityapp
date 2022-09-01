@@ -10,7 +10,6 @@ import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
 const InfoEvent = ({ paddingOff }) => {
-  console.log('🚀 debug - InfoEvent - paddingOff', paddingOff);
   let cEvent = UseEventContext();
   let { handleChangeTypeModal, helperDispatch } = useHelper();
   const cEventUser = UseUserEvent();

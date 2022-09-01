@@ -61,6 +61,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
 
   const cEvent = useContext(CurrentEventContext);
   const history = useHistory();
+  const pathForRedirection = `/eventadmin/${cEvent.value._id}`;
 
   useEffect(() => {
     if (!cEvent.value || tabActive !== '3') return;
@@ -266,10 +267,10 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
               </Col>
               <Col span={24}>
                 <Space direction='vertical' style={{ width: '100%' }}>
-                  <Button size='large' block>
+                  <Button size='large' block onClick={() => history.push(`${pathForRedirection}/styles`)}>
                     Estilos landing
                   </Button>
-                  <Button size='large' block>
+                  <Button size='large' block onClick={() => history.push(`${pathForRedirection}/datos`)}>
                     Datos a recolectar
                   </Button>
                   <Button onClick={() => setDrawerPreviewVisible(true)} size='large' block>
