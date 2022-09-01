@@ -249,7 +249,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
           <Row justify='end' style={{ marginTop: 10 }}>
             {!loading ? (
               <Button onClick={() => saveSections()} type='primary'>
-                Guardar
+                Guardar orden y estado
               </Button>
             ) : (
               <Spin />
@@ -259,99 +259,81 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       </Col>
 
       <Col span={6}>
-        <Affix offsetTop={150}>
+        <Card style={{ borderRadius: '20px', height: '100%' }}>
+          <Row gutter={[4, 4]}>
+            <Col span={24}>
+              <Typography.Title level={5}>Opciones rapidas</Typography.Title>
+            </Col>
+            <Col span={24}>
+              <Space direction='vertical' style={{ width: '100%' }}>
+                <Button size='large' block onClick={() => history.push(`${pathForRedirection}/styles`)}>
+                  Estilos landing
+                </Button>
+                <Button size='large' block onClick={() => history.push(`${pathForRedirection}/datos`)}>
+                  Datos a recolectar
+                </Button>
+                <Button onClick={() => setDrawerPreviewVisible(true)} size='large' block>
+                  Vista previa landing
+                </Button>
+              </Space>
+            </Col>
+          </Row>
+        </Card>
+      </Col>
+      <Col span={10}>
+        {!cEvent.value.has_prelanding && (
           <Card style={{ borderRadius: '20px' }}>
-            <Row gutter={[4, 4]}>
-              <Col span={24}>
-                <Typography.Title level={5}>Opciones rapidas</Typography.Title>
-              </Col>
-              <Col span={24}>
-                <Space direction='vertical' style={{ width: '100%' }}>
-                  <Button size='large' block onClick={() => history.push(`${pathForRedirection}/styles`)}>
-                    Estilos landing
-                  </Button>
-                  <Button size='large' block onClick={() => history.push(`${pathForRedirection}/datos`)}>
-                    Datos a recolectar
-                  </Button>
-                  <Button onClick={() => setDrawerPreviewVisible(true)} size='large' block>
-                    Vista previa landing
-                  </Button>
-                </Space>
-              </Col>
-              <Divider />
-              <Col span={24}>
-                {cEvent.value.has_prelanding && (
-                  <Form layout='vertical'>
-                    <Space direction='vertical' style={{ width: '100%' }}>
-                      <Select
-                        value={typeEvent}
-                        onChange={(e) => settypeEvent(e)}
-                        size='large'
-                        placeholder='Tipo de evento'
-                        style={{ width: '100%' }}
-                        name={'type_event'}>
-                        <Option value=''>Seleccionar...</Option>
-                        <Option value='physicalEvent'>Evento físico</Option>
-                        <Option value='onlineEvent'>Evento virtual</Option>
-                        <Option value='hybridEvent'>Evento híbrido</Option>
-                      </Select>
-                      {typeEvent === 'physicalEvent' && (
-                        <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
-                          <Form.Item label={'Dirección'}>
-                            <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
-                          </Form.Item>
+            <Form layout='vertical'>
+              <Space size={'large'} direction='vertical' style={{ width: '100%' }}>
+                <Form.Item label={'Tipo de evento'}>
+                  <Select
+                    value={typeEvent}
+                    onChange={(e) => settypeEvent(e)}
+                    size='large'
+                    placeholder='Tipo de evento'
+                    style={{ width: '100%' }}
+                    name={'type_event'}>
+                    <Option value=''>Seleccionar...</Option>
+                    <Option value='physicalEvent'>Evento físico</Option>
+                    <Option value='onlineEvent'>Evento virtual</Option>
+                    <Option value='hybridEvent'>Evento híbrido</Option>
+                  </Select>
+                </Form.Item>
+                {typeEvent === 'physicalEvent' && (
+                  <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
+                    <Form.Item label={'Dirección'}>
+                      <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
+                    </Form.Item>
 
-                          <Form.Item label={'Lugar'}>
-                            <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
-                          </Form.Item>
-                        </Space>
-                      )}
-                    </Space>
-                  </Form>
+                    <Form.Item label={'Lugar'}>
+                      <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
+                    </Form.Item>
+                  </Space>
                 )}
-              </Col>
-            </Row>
+              </Space>
+            </Form>
           </Card>
-        </Affix>
-        {/* <Card
-          bordered={false}
-          bodyStyle={{ padding: '0px', overflow: 'hidden', backgroundColor: '#7C7979' }}
-          style={{
-            borderRadius: '5px',
-            height: '100%',
-            overflow: 'hidden',
-            minHeight: '100%',
-            backgroundColor: '#7C7979',
-          }}>
-          <Layout>
-            <Layout.Header style={{ padding: '0px' }}>
-              <Row justify='center' align='middle' style={{ height: '80px', backgroundColor: '#E8E6F0' }}>
-                Banner
+        )}
+      </Col>
+      <Col span={14}>
+        {!cEvent.value.has_prelanding && (
+          <Card style={{ borderRadius: '20px', height: '100%' }}>
+            <Form layout='vertical' style={{ height: '100%', width: '100%' }}>
+              <Row gutter={[16, 16]} justify='center' align='stretch'>
+                <Col span={24}>
+                  <Form.Item label={'Url Externa'}>
+                    <Input name={'externalUrl'} placeholder={'https://example.com'} />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item label={'Mensaje al inscribirse'}>
+                    <Input name={'messageWhenRegistering'} placeholder={''} />
+                  </Form.Item>
+                </Col>
               </Row>
-            </Layout.Header>
-            <Layout.Content style={{ backgroundColor: '#7C7979' }}>
-              <Row justify='center' align='middle' style={{ height: '80px', backgroundColor: '#7C7979' }}>
-                <Card style={{ width: '80%', height: '40px' }}></Card>
-              </Row>
-
-              <List
-                dataSource={dataSource}
-                grid={{ gutter: 8, column: 1 }}
-                renderItem={(item) => (
-                  <List.Item
-                    className={`animate__animated ${item.status ? 'animate__backInLeft' : 'animate__backOutRight'}`}
-                    style={{ display: `${item.status ? 'block' : 'none'}` }}>
-                    <Col span={24} style={{ height: '60px', backgroundColor: '#C4C4C4' }}>
-                      <Row justify='center' align='middle' style={{ height: '100%' }}>
-                        {item.name}
-                      </Row>
-                    </Col>
-                  </List.Item>
-                )}
-              />
-            </Layout.Content>
-          </Layout>
-        </Card> */}
+            </Form>
+          </Card>
+        )}
       </Col>
       {/* Modal para la creacion de la data del contador */}
       <ModalContador visible={visible} setVisible={setVisible} />
