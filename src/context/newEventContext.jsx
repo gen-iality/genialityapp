@@ -80,6 +80,7 @@ export const NewEventProvider = ({ children }) => {
   const [loadingOrganization, setLoadingOrganization] = useState(false);
   const [createOrganizationF, setCreateOrganization] = useState(false);
   const [templateId, setTemplateId] = useState();
+  const [prelandingSelect, setPrelandingSelect] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   async function OrganizationsList() {
@@ -194,6 +195,11 @@ export const NewEventProvider = ({ children }) => {
     setErrorInputs(listerrors);
   };
 
+  const handlePrelandingSelect = (event) => {
+    const checked = event.target.checked;
+    setPrelandingSelect(checked);
+  };
+
   const containsError = (field) => {
     let errorField = errorInputs.filter((error) => error.name == field);
     if (errorField.length > 0 && errorField[0].value) {
@@ -238,9 +244,11 @@ export const NewEventProvider = ({ children }) => {
   }, [selectedDay, selectedHours]);
   const saveEvent = async () => {
     dispatch({ type: 'LOADING' });
+
     if (state.selectOrganization) {
       const data = {
         name: valueInputs.name,
+        has_prelanding: prelandingSelect,
         address: '',
         type_event: 'onlineEvent',
         datetime_from: selectedDateEvent?.from + ':00',
@@ -312,7 +320,7 @@ export const NewEventProvider = ({ children }) => {
           },
         },
       };
-      console.log('DATA A VERIFICAR===>', state.selectOrganization?.itemsMenu, templateId, data);
+
       //CREAR EVENTO
       try {
         let token = await GetTokenUserFirebase();
@@ -320,7 +328,6 @@ export const NewEventProvider = ({ children }) => {
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
-          //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
           let sectionsDefault = state.selectOrganization?.itemsMenu
             ? { itemsMenu: state.selectOrganization?.itemsMenu }
             : newMenu;
@@ -340,7 +347,6 @@ export const NewEventProvider = ({ children }) => {
               datetime_start: selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
-            //console.log("RESPUESTA AGENDA==>",agenda)
             if (agenda._id) {
               //CREAR TEMPLATE PARA EL EVENTO
               let template = !templateId && true;
@@ -355,7 +361,6 @@ export const NewEventProvider = ({ children }) => {
                   countdownFinalMessage: 'Ha terminado el evento',
                 };
                 const respApi = await EventsApi.editOne(data, result._id);
-                // console.log("RESPUESTA TEMPLATE==>",template)
                 if (respApi?._id) {
                   DispatchMessageService({
                     type: 'success',
@@ -373,7 +378,6 @@ export const NewEventProvider = ({ children }) => {
               }
             }
           } else {
-            //console.log('RESP API==>', result);
             DispatchMessageService({
               type: 'error',
               msj: 'Error al crear el evento',
@@ -382,7 +386,6 @@ export const NewEventProvider = ({ children }) => {
             dispatch({ type: 'COMPLETE' });
           }
         } else {
-          //console.log('RESP API==>', result);
           DispatchMessageService({
             type: 'error',
             msj: 'Error al crear el evento',
@@ -391,7 +394,7 @@ export const NewEventProvider = ({ children }) => {
           dispatch({ type: 'COMPLETE' });
         }
       } catch (error) {
-        console.log('CATCH==>', error);
+        console.error('CATCH==>', error);
         DispatchMessageService({
           type: 'error',
           msj: 'Error al crear el evento catch',
@@ -458,6 +461,7 @@ export const NewEventProvider = ({ children }) => {
         dispatch,
         createOrganization,
         saveEvent,
+        handlePrelandingSelect,
       }}>
       {children}
     </cNewEventContext.Provider>

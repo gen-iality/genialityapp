@@ -50,6 +50,7 @@ const Informacion = (props) => {
     templateId,
     dispatch,
     state,
+    handlePrelandingSelect,
   } = useContextNewEvent();
   const cUser = props?.currentUser;
   const eventDateStart = { date_start: selectedDay };
@@ -136,7 +137,9 @@ const Informacion = (props) => {
         </div>
         <div>
           <Space>
-            <Checkbox>Evento externo, solo landing informativa</Checkbox>
+            <Checkbox onChange={(event) => handlePrelandingSelect(event)}>
+              Evento externo, solo landing informativa
+            </Checkbox>
             <Popover
               content={
                 <Typography.Paragraph style={{ width: '220px' }}>
