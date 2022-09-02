@@ -23,7 +23,7 @@ class menuLanding extends Component {
       menu: {
         evento: {
           name: 'Curso', // TODO: check where this prop is used
-          position: 30,
+          position: 0,
           section: 'evento',
           icon: 'CalendarOutlined',
           checked: false,

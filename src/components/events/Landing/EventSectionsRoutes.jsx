@@ -13,7 +13,9 @@ import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { UseCurrentUser } from '@/context/userContext';
-import { Row, Col } from 'antd';
+import { Row, Col, Card, Typography } from 'antd';
+import { activityContentValues } from '@context/activityType/constants/ui';
+import QuizApprovedStatus from '@components/quiz/QuizApprovedStatus';
 
 import StudentSelfCourseProgress from '@components/StudentProgress/StudentSelfCourseProgress';
 
@@ -117,10 +119,10 @@ const EventSectionRoutes = (props) => {
       if (props.location.pathname === `/landing/${props.cEvent.value._id}/activity/${props.currentActivity._id}`) {
         if (props.currentActivity.type) {
           if (
-            (props.currentActivity.type.name === 'youTube' ||
-              props.currentActivity.type.name === 'eviusMeet' ||
-              props.currentActivity.type.name === 'RTMP' ||
-              props.currentActivity.type.name === 'vimeo') &&
+            (props.currentActivity.type.name === activityContentValues.youtube ||
+              props.currentActivity.type.name === activityContentValues.meet ||
+              props.currentActivity.type.name === activityContentValues.rtmp ||
+              props.currentActivity.type.name === activityContentValues.vimeo) &&
             props.currentActivity.habilitar_ingreso === 'open_meeting_room'
           ) {
             console.log('Llegue aqui 3');
@@ -138,11 +140,10 @@ const EventSectionRoutes = (props) => {
         if (props.currentActivity.type) {
           if (
             props.currentActivity.type.name === 'video' ||
-            props.currentActivity.type.name === 'url' ||
-            props.currentActivity.type.name === 'meeting' ||
-            props.currentActivity.type.name === 'cargarvideo'
+            props.currentActivity.type.name === activityContentValues.url ||
+            props.currentActivity.type.name === activityContentValues.meeting ||
+            props.currentActivity.type.name === activityContentValues.file
           ) {
-            console.log('Llegue aqui 4');
             initBroadcastViewers(props.cEvent.value._id, props.currentActivity._id, props.currentActivity.name, cUser);
           }
         }
@@ -186,7 +187,16 @@ const EventSectionRoutes = (props) => {
             <Col span={24}>
               <div style={{ padding: '25px' }}>
                 {(props.location?.pathname || '').endsWith('evento') || (props.location?.pathname || '').endsWith('curso') && (
-                <StudentSelfCourseProgress hasProgressLabel />
+                  <>
+                  <StudentSelfCourseProgress hasProgressLabel />
+                  <Card>
+                    <Typography.Text>
+                      Estado del curso:
+                    </Typography.Text>
+                    {' '}
+                    <QuizApprovedStatus eventId={event_id} approvedLink={`/landing/${event_id}/certificate`} />
+                  </Card>
+                  </>
                 )}
               </div>
             </Col>
