@@ -13,8 +13,9 @@ import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { UseCurrentUser } from '@/context/userContext';
-import { Row, Col } from 'antd';
+import { Row, Col, Card, Typography } from 'antd';
 import { activityContentValues } from '@context/activityType/constants/ui';
+import QuizApprovedStatus from '@components/quiz/QuizApprovedStatus';
 
 import StudentSelfCourseProgress from '@components/StudentProgress/StudentSelfCourseProgress';
 
@@ -186,7 +187,16 @@ const EventSectionRoutes = (props) => {
             <Col span={24}>
               <div style={{ padding: '25px' }}>
                 {(props.location?.pathname || '').endsWith('evento') || (props.location?.pathname || '').endsWith('curso') && (
-                <StudentSelfCourseProgress hasProgressLabel />
+                  <>
+                  <StudentSelfCourseProgress hasProgressLabel />
+                  <Card>
+                    <Typography.Text>
+                      Estado del curso:
+                    </Typography.Text>
+                    {' '}
+                    <QuizApprovedStatus eventId={event_id} approvedLink={`/landing/${event_id}/certificate`} />
+                  </Card>
+                  </>
                 )}
               </div>
             </Col>
