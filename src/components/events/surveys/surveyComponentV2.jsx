@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Result, Spin, Button } from 'antd';
+import { Result, Spin, Button, Col } from 'antd';
 import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
 import { UseEventContext } from '../../../context/eventContext';
 import useSurveyQuery from './hooks/useSurveyQuery';
@@ -26,7 +26,8 @@ function SurveyComponent(props) {
   const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [questionFeedback, setQuestionFeedback] = useState(false);
-  const [completedSurvey, setCompletedSurvey] = useState(false);
+  const [showingExitButton, setShowingExitButton] = useState(false);
+  let [totalPoints, setTotalPoints] = useState(null);
   var survey;
 
   //Asigna los colores configurables a  la UI de la encuesta
@@ -84,6 +85,8 @@ function SurveyComponent(props) {
       pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
     console.log('200.pointsScored', pointsScored);
+    totalPoints += pointsScored;
+    setTotalPoints(totalPoints);
     return pointsScored;
   }
 
@@ -103,6 +106,9 @@ function SurveyComponent(props) {
               onClick={() => {
                 setShowingFeedback(false);
                 surveyModel.nextPage();
+                if (surveyModel.state === 'completed') {
+                  setShowingExitButton(true);
+                }
               }}
               type='primary'
               key='console'
@@ -132,18 +138,27 @@ function SurveyComponent(props) {
     options.text = `Tienes ${sender.maxTimeToFinishPage} para responder. Tu tiempo es ${sender.currentPage.timeSpent}`;
   }
 
-  async function saveSurveyData() {
+  async function saveSurveyStatus() {
     const status = surveyModel.state;
+    console.log('200.status', status);
     await SetCurrentUserSurveyStatus(query.data, currentUser, status);
+  }
+
+  async function saveSurveyCurrentPage() {
     if (!(Object.keys(currentUser).length === 0)) {
       //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
       SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
     }
   }
 
+  function saveSurveyData() {
+    saveSurveyStatus();
+    saveSurveyCurrentPage();
+  }
+
   async function surveyCompleted() {
-    saveSurveyData();
-    MessageWhenCompletingSurvey(surveyModel, query.data, '10');
+    saveSurveyCurrentPage();
+    MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints);
   }
 
   return (
@@ -161,6 +176,19 @@ function SurveyComponent(props) {
               onComplete={surveyCompleted}
             />
           </div>
+          {showingExitButton && (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                onClick={() => {
+                  saveSurveyStatus();
+                }}
+                type='primary'
+                key='console'
+              >
+                Exit
+              </Button>
+            </div>
+          )}
         </>
       )}
     </>

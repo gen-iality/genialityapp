@@ -4,7 +4,6 @@ import Graphics from './graphics';
 import SurveyComponent from './surveyComponentV2';
 import { Card, Result, Divider } from 'antd';
 
-import ClosedSurvey from './components/closedSurvey';
 import WithEviusContext from '@/context/withContext';
 import LoadSelectedSurvey from './functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './functions/initRealTimeSurveyListening';
@@ -52,7 +51,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   }
   return (
     <div>
-      {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
+      {/* {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
         <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
       )}
       {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
@@ -71,8 +70,28 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           <Divider />
           <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
         </>
-      )}
+      )}*/}
       {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
+
+      {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
+        <Result style={{ height: '50%', padding: '75px' }} status='success' title='Ya has contestado esta evaluación' />
+      ) : cSurveys.shouldDisplaySurveyClosedMenssage() ? (
+        <Result title='Esta evaluación ha sido cerrada' />
+      ) : cSurveys.shouldDisplayGraphics() ? (
+        <>
+          <Divider />
+          <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
+        </>
+      ) : (
+        <Card className='survyCard'>
+          <SurveyComponent
+            idSurvey={surveyId}
+            eventId={cEvent.value._id}
+            currentUser={currentUser}
+            operation='participationPercentage'
+          />
+        </Card>
+      )}
     </div>
   );
 }
