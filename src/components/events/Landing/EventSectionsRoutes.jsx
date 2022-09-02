@@ -186,14 +186,15 @@ const EventSectionRoutes = (props) => {
           <Row justify='start'>
             <Col span={24}>
               <div style={{ padding: '25px' }}>
-                {(props.location?.pathname || '').endsWith('evento') || (props.location?.pathname || '').endsWith('curso') && (
+                {((props.location?.pathname || '').endsWith('evento') || (props.location?.pathname || '').endsWith('curso')) && (
                   <>
                   <StudentSelfCourseProgress hasProgressLabel />
                   <Card>
                     <Typography.Text>
                       Estado del curso:
                     </Typography.Text>
-                    {' '}
+                    <br />
+                    <br />
                     <QuizApprovedStatus eventId={event_id} approvedLink={`/landing/${event_id}/certificate`} />
                   </Card>
                   </>
