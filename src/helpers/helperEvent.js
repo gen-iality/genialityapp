@@ -12,8 +12,6 @@ export function isHome() {
   }
 }
 
-
-
 // //METODO PARA OBTENER ENCUESTAS New
 export function listenSurveysData(
   event_id,
@@ -43,7 +41,7 @@ export function listenSurveysData(
 function changeInSurveyDocChanges(docChanges) {
   let changeInSurvey = null;
   if (docChanges.length) {
-    let lastChange = docChanges[ docChanges.length - 1 ];
+    let lastChange = docChanges[docChanges.length - 1];
     switch (lastChange.type) {
       case 'removed':
         changeInSurvey = null;
@@ -82,7 +80,7 @@ export let monitorNewChatMessages = (event, user) => {
   let totalNewMessages = 0;
   firestore
     .collection('eventchats/' + event._id + '/userchats/' + user.uid + '/' + 'chats/')
-    .onSnapshot(function (querySnapshot) {
+    .onSnapshot(function(querySnapshot) {
       let data;
       querySnapshot.forEach((doc) => {
         data = doc.data();
@@ -129,7 +127,7 @@ export const zoomExternoHandleOpen = (activity, eventUser, isMobile, TicketsApi,
 
   try {
     if (eventUser) {
-      TicketsApi.checkInAttendee(event._id, eventUser._id);
+      // TicketsApi.checkInAttendee(event._id, eventUser._id);
       //Activity.checkInAttendeeActivity(this.props.cEvent._id, props.currentActivity._id, eventUser.account_id);
     }
   } catch (e) {
@@ -143,7 +141,7 @@ export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
   firestore
     .collection('events')
     .doc(event_id)
-    .onSnapshot(function (eventSnapshot) {
+    .onSnapshot(function(eventSnapshot) {
       if (eventSnapshot.exists) {
         if (eventSnapshot.data().tabs !== undefined) {
           setgeneraltabs(eventSnapshot.data().tabs);
@@ -152,14 +150,11 @@ export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
     });
 };
 
-
-
-
-export const useEventArkmed = (event_id) => {
+export const useEventWithCedula = (event) => {
   let label = 'Contraseña';
   let isArkmed = false;
 
-  if (ArkmedEvents.includes(event_id)) {
+  if (EventsWithDni.includes(event?.author_id)) {
     isArkmed = true;
     label = 'Cedula';
   }
@@ -170,16 +165,4 @@ export const useEventArkmed = (event_id) => {
   }
 };
 
-
-
-let ArkmedEvents = [
-  "611c3dcf6fedd7455434a166",
-  "618d3a983a90686a9016b5d3",
-  "609d41a46bfe5402bd015c5c",
-  "61980b387a79b8207d6bd902",
-  "618c030cf96e0f01141788d2",
-  "611c285104f5d97d1b0f5ed2",
-  "613bd7340a46d371b765fd34",
-  "61364ebddb928f7a473eefe5",
-  "62684012622f7a044066a798"
-]
+export const EventsWithDni = ['62171ec163b90f7cc421c3a3'];

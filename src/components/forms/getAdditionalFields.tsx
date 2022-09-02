@@ -1,13 +1,13 @@
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { useIntl } from 'react-intl';
 import { ApiUrl, areaCode } from '@/helpers/constants';
 import { beforeUpload, getImagename } from '@/Utilities/formUtils';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
+import { Country, State, City } from 'country-state-city';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -17,15 +17,12 @@ const { Dragger } = Upload;
 const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const intl = useIntl();
   let attendeeProperties = attendee?.properties || {};
-  const countryField = attendeeProperties['pais'] || '';
-  let areacodeselected = attendeeProperties['code'] || 57;
+  let areacodeselected = attendeeProperties['code'] || '+57';
+  let onlyAreacodeselected = attendeeProperties['onlyCodearea'] || '+57';
   const dateFormat = 'YYYY/MM/DD';
 
-  const [country, setCountry] = useState('');
-
-  useEffect(() => {
-    setCountry(countryField);
-  }, [countryField]);
+  const [country, setCountry] = useState({ name: '', countryCode: '' });
+  const [region, setRegion] = useState({ name: '', regionCode: '' });
 
   if (fields?.lenght === 0) return [];
 
@@ -91,7 +88,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
-                    {`${code.label} (+${code.value})`}
+                    {`${code.label} (${code.value})`}
                   </Option>
                 );
               })}
@@ -109,6 +106,28 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               style={{ width: '100%' }}
               placeholder='Numero de telefono'
             />
+          </Form.Item>
+        );
+      }
+      if (type === 'onlyCodearea') {
+        input = (
+          <Form.Item initialValue={onlyAreacodeselected} name={name} noStyle>
+            <Select
+              showSearch
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              onChange={(val) => {
+                onlyAreacodeselected = val;
+              }}
+              placeholder='Código de area del pais'>
+              {areaCode.map((code: any, key: any) => {
+                return (
+                  <Option key={key} value={code.value}>
+                    {`${code.label} (${code.value})`}
+                  </Option>
+                );
+              })}
+            </Select>
           </Form.Item>
         );
       }
@@ -295,16 +314,44 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       if (type === 'country') {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
-            {/* @ts-ignore: Unreachable code error */}
-            <CountryDropdown
-              classes='countryCity-styles'
-              priorityOptions={['CO']}
-              onChange={(val) => {
-                setCountry(val);
+            <Select
+              showSearch
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              onChange={(name, aditionalData: any) => {
+                setCountry({ name, countryCode: aditionalData.key });
               }}
-              name={name}
-              defaultOptionLabel={label}
-            />
+              placeholder='Seleccione un país'>
+              {Country.getAllCountries().map((country: any) => {
+                return (
+                  <Option key={country.isoCode} value={country.name}>
+                    {country.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        );
+      }
+      if (type === 'region') {
+        input = (
+          <Form.Item initialValue={value} name={name} noStyle>
+            <Select
+              showSearch
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              onChange={(name, aditionalData: any) => {
+                setRegion({ name, regionCode: aditionalData.key });
+              }}
+              placeholder='Seleccione un región'>
+              {State.getStatesOfCountry(country.countryCode).map((regionCode: any) => {
+                return (
+                  <Option key={regionCode.isoCode} value={regionCode.name}>
+                    {regionCode.name}
+                  </Option>
+                );
+              })}
+            </Select>
           </Form.Item>
         );
       }
@@ -312,15 +359,19 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       if (type === 'city') {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
-            {/* @ts-ignore: Unreachable code error */}
-            <RegionDropdown
-              classes='countryCity-styles'
-              disableWhenEmpty={true}
-              country={country}
-              name={name}
-              defaultOptionLabel={label}
-              blankOptionLabel={label}
-            />
+            <Select
+              showSearch
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              placeholder='Seleccione una ciudad'>
+              {City.getCitiesOfState(country.countryCode, region.regionCode).map((cityCode: any, key: any) => {
+                return (
+                  <Option key={key} value={cityCode.name}>
+                    {cityCode.name}
+                  </Option>
+                );
+              })}
+            </Select>
           </Form.Item>
         );
       }
