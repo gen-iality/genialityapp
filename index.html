@@ -29,10 +29,9 @@
       // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
       if (location.hostname === 'beta.geniality.com.co') {
         document.domain = 'beta.geniality.com.co';
-      } else if (location.hostname === 'stagingevius.netlify.app') {
-        // se agrega el dominio de staging para poder renderizar el sitio
-        document.domain = 'stagingevius.netlify.app';
       } else if (location.hostname.includes('.geniality.com.co')) {
+        document.domain = location.hostname;
+      } else if (location.hostname.includes('.netlify.app')) {
         document.domain = location.hostname;
       } else {
         document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
