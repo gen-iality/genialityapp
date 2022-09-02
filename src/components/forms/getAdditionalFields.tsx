@@ -7,7 +7,8 @@ import { beforeUpload, getImagename } from '@/Utilities/formUtils';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
-import { Country, State, City } from 'country-state-city';
+/**TODO::ocaciona error en ios */
+// import { Country, State, City } from 'country-state-city';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -311,70 +312,70 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         );
       }
 
-      if (type === 'country') {
-        input = (
-          <Form.Item initialValue={value} name={name} noStyle>
-            <Select
-              showSearch
-              optionFilterProp='children'
-              style={{ width: '100%' }}
-              onChange={(name, aditionalData: any) => {
-                setCountry({ name, countryCode: aditionalData.key });
-              }}
-              placeholder='Seleccione un país'>
-              {Country.getAllCountries().map((country: any) => {
-                return (
-                  <Option key={country.isoCode} value={country.name}>
-                    {country.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-        );
-      }
-      if (type === 'region') {
-        input = (
-          <Form.Item initialValue={value} name={name} noStyle>
-            <Select
-              showSearch
-              optionFilterProp='children'
-              style={{ width: '100%' }}
-              onChange={(name, aditionalData: any) => {
-                setRegion({ name, regionCode: aditionalData.key });
-              }}
-              placeholder='Seleccione un región'>
-              {State.getStatesOfCountry(country.countryCode).map((regionCode: any) => {
-                return (
-                  <Option key={regionCode.isoCode} value={regionCode.name}>
-                    {regionCode.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-        );
-      }
+      // if (type === 'country') {
+      //   input = (
+      //     <Form.Item initialValue={value} name={name} noStyle>
+      //       <Select
+      //         showSearch
+      //         optionFilterProp='children'
+      //         style={{ width: '100%' }}
+      //         onChange={(name, aditionalData: any) => {
+      //           setCountry({ name, countryCode: aditionalData.key });
+      //         }}
+      //         placeholder='Seleccione un país'>
+      //         {Country.getAllCountries().map((country: any) => {
+      //           return (
+      //             <Option key={country.isoCode} value={country.name}>
+      //               {country.name}
+      //             </Option>
+      //           );
+      //         })}
+      //       </Select>
+      //     </Form.Item>
+      //   );
+      // }
+      // if (type === 'region') {
+      //   input = (
+      //     <Form.Item initialValue={value} name={name} noStyle>
+      //       <Select
+      //         showSearch
+      //         optionFilterProp='children'
+      //         style={{ width: '100%' }}
+      //         onChange={(name, aditionalData: any) => {
+      //           setRegion({ name, regionCode: aditionalData.key });
+      //         }}
+      //         placeholder='Seleccione un región'>
+      //         {State.getStatesOfCountry(country.countryCode).map((regionCode: any) => {
+      //           return (
+      //             <Option key={regionCode.isoCode} value={regionCode.name}>
+      //               {regionCode.name}
+      //             </Option>
+      //           );
+      //         })}
+      //       </Select>
+      //     </Form.Item>
+      //   );
+      // }
 
-      if (type === 'city') {
-        input = (
-          <Form.Item initialValue={value} name={name} noStyle>
-            <Select
-              showSearch
-              optionFilterProp='children'
-              style={{ width: '100%' }}
-              placeholder='Seleccione una ciudad'>
-              {City.getCitiesOfState(country.countryCode, region.regionCode).map((cityCode: any, key: any) => {
-                return (
-                  <Option key={key} value={cityCode.name}>
-                    {cityCode.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-        );
-      }
+      // if (type === 'city') {
+      //   input = (
+      //     <Form.Item initialValue={value} name={name} noStyle>
+      //       <Select
+      //         showSearch
+      //         optionFilterProp='children'
+      //         style={{ width: '100%' }}
+      //         placeholder='Seleccione una ciudad'>
+      //         {City.getCitiesOfState(country.countryCode, region.regionCode).map((cityCode: any, key: any) => {
+      //           return (
+      //             <Option key={key} value={cityCode.name}>
+      //               {cityCode.name}
+      //             </Option>
+      //           );
+      //         })}
+      //       </Select>
+      //     </Form.Item>
+      //   );
+      // }
 
       //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
       if (type === 'avatar') {

@@ -35,7 +35,8 @@ import { UseEventContext } from '../../../context/eventContext';
 import { UseCurrentUser } from '../../../context/userContext';
 import { app } from '../../../helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
-import { Country, State, City } from 'country-state-city';
+/**TODO::ocaciona error en ios */
+// import { Country, State, City } from 'country-state-city';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -907,70 +908,70 @@ const FormRegister = ({
           );
         }
 
-        if (type === 'country') {
-          input = (
-            <Form.Item initialValue={value} name={name} noStyle>
-              <Select
-                showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
-                onChange={(name, aditionalData) => {
-                  setCountry({ name, countryCode: aditionalData.key });
-                }}
-                placeholder='Seleccione un país'>
-                {Country.getAllCountries().map((country) => {
-                  return (
-                    <Option key={country.isoCode} value={country.name}>
-                      {country.name}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          );
-        }
-        if (type === 'region') {
-          input = (
-            <Form.Item initialValue={value} name={name} noStyle>
-              <Select
-                showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
-                onChange={(name, aditionalData) => {
-                  setRegion({ name, regionCode: aditionalData.key });
-                }}
-                placeholder='Seleccione un región'>
-                {State.getStatesOfCountry(country.countryCode).map((regionCode) => {
-                  return (
-                    <Option key={regionCode.isoCode} value={regionCode.name}>
-                      {regionCode.name}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          );
-        }
+        // if (type === 'country') {
+        //   input = (
+        //     <Form.Item initialValue={value} name={name} noStyle>
+        //       <Select
+        //         showSearch
+        //         optionFilterProp='children'
+        //         style={{ width: '100%' }}
+        //         onChange={(name, aditionalData) => {
+        //           setCountry({ name, countryCode: aditionalData.key });
+        //         }}
+        //         placeholder='Seleccione un país'>
+        //         {Country.getAllCountries().map((country) => {
+        //           return (
+        //             <Option key={country.isoCode} value={country.name}>
+        //               {country.name}
+        //             </Option>
+        //           );
+        //         })}
+        //       </Select>
+        //     </Form.Item>
+        //   );
+        // }
+        // if (type === 'region') {
+        //   input = (
+        //     <Form.Item initialValue={value} name={name} noStyle>
+        //       <Select
+        //         showSearch
+        //         optionFilterProp='children'
+        //         style={{ width: '100%' }}
+        //         onChange={(name, aditionalData) => {
+        //           setRegion({ name, regionCode: aditionalData.key });
+        //         }}
+        //         placeholder='Seleccione un región'>
+        //         {State.getStatesOfCountry(country.countryCode).map((regionCode) => {
+        //           return (
+        //             <Option key={regionCode.isoCode} value={regionCode.name}>
+        //               {regionCode.name}
+        //             </Option>
+        //           );
+        //         })}
+        //       </Select>
+        //     </Form.Item>
+        //   );
+        // }
 
-        if (type === 'city') {
-          input = (
-            <Form.Item initialValue={value} name={name} noStyle>
-              <Select
-                showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
-                placeholder='Seleccione una ciudad'>
-                {City.getCitiesOfState(country.countryCode, region.regionCode).map((cityCode, key) => {
-                  return (
-                    <Option key={key} value={cityCode.name}>
-                      {cityCode.name}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          );
-        }
+        // if (type === 'city') {
+        //   input = (
+        //     <Form.Item initialValue={value} name={name} noStyle>
+        //       <Select
+        //         showSearch
+        //         optionFilterProp='children'
+        //         style={{ width: '100%' }}
+        //         placeholder='Seleccione una ciudad'>
+        //         {City.getCitiesOfState(country.countryCode, region.regionCode).map((cityCode, key) => {
+        //           return (
+        //             <Option key={key} value={cityCode.name}>
+        //               {cityCode.name}
+        //             </Option>
+        //           );
+        //         })}
+        //       </Select>
+        //     </Form.Item>
+        //   );
+        // }
 
         //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
         if (type === 'avatar') {
