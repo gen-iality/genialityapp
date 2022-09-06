@@ -161,8 +161,8 @@ export async function parseData2Excel(data, fields, roles = null) {
     });
     if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
     info[key]['Tipo asistente'] = roles?.filter((role) => role._id == item.rol_id)[0]?.name;
-    info[key]['Actualizado'] = item.updated_at?.toDate();
-    info[key]['Creado'] = item.created_at?.toDate();
+    info[key]['Actualizado'] = item.updated_at ? new Date(item.updated_at) : '';
+    info[key]['Creado'] = item.created_at ? new Date(item.created_at) : '';
     info[key]['Tipo de checkIn'] = item.checkedin_type;
     return info;
   });
