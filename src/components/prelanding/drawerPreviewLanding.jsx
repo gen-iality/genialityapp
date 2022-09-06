@@ -43,7 +43,8 @@ const DrawerPreviewLanding = ({ visibleDrawer, setVisibleDrawer }) => {
       bodyStyle={{ padding: '0px' }}
       placement='right'
       onClose={() => setVisibleDrawer(false)}
-      visible={visibleDrawer}>
+      visible={visibleDrawer}
+      destroyOnClose>
       <ViewPrelanding preview={device.device} />
     </Drawer>
   );

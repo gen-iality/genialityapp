@@ -46,6 +46,7 @@ import {
 } from '@/Utilities/disableTimeAndDatePickerInEventDate';
 import { CurrentUserContext } from '@/context/userContext';
 import DescriptionDynamic from './Description';
+import TypeEvent from '../typeEvent/TypeEvent';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -438,6 +439,10 @@ class General extends Component {
     this.setState({ image: imageUrl });
   }
 
+  handleFormDataOfEventType(values) {
+    this.setState({ event: { ...this.state.event, ...values } });
+  }
+
   //*********** FIN FUNCIONES DEL FORMULARIO
 
   //Envío de datos
@@ -495,7 +500,7 @@ class General extends Component {
       app_configuration: this.state.info.app_configuration,
       banner_image_link: this.state.banner_image_link,
       adminContenido: event.adminContenido,
-      type_event: this.state.event.type_event,
+      type_event: event.type_event,
       event_platform: event.event_platform || 'zoom',
       loader_page: event.loader_page || 'no',
       initial_page: event.initial_page || '',
@@ -507,6 +512,9 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
+      where_it_run: event.where_it_run || 'InternalEvent',
+      url_external: event.url_external || '',
+      success_message: event.success_message || '',
     };
 
     try {
@@ -697,7 +705,6 @@ class General extends Component {
   };
 
   render() {
-    if (this.state.loading) return <Loading />;
     const {
       event,
       categories,
@@ -715,7 +722,10 @@ class General extends Component {
       iMustBlockAFunctionality,
       iMustValidate,
       consumption,
+      loading,
     } = this.state;
+
+    if (loading) return <Loading />;
     const userContext = this.context;
     /** RESTRICIONES */
     const cUser = userContext?.value;
@@ -837,56 +847,12 @@ class General extends Component {
                       </Select>
                     </Form.Item>
                   )}
-                  {!event.has_prelanding && (
-                    <Form.Item label={'Tipo de evento'}>
-                      <Select
-                        defaultValue={event.type_event}
-                        name={'type_event'}
-                        onChange={(e) => this.handleChange(e, 'type_event')}>
-                        <Option value=''>Seleccionar...</Option>
-                        <Option value='physicalEvent'>Evento físico</Option>
-                        <Option value='onlineEvent'>Evento virtual</Option>
-                        <Option value='hybridEvent'>Evento híbrido</Option>
-                      </Select>
-                    </Form.Item>
-                  )}
 
-                  {/* {event.type_event === 'onlineEvent' && (
-                    <Form.Item label={'Plataforma Streaming del evento'}>
-                      <Select
-                        defaultValue={event.event_platform}
-                        name={'event_platform'}
-                        onChange={(e) => this.handleChange(e, 'event_platform')}>
-                        <Option value="">Seleccionar...</Option>
-                        <Option value='zoom'>Zoom</Option>
-                        <Option value='zoomExterno'>ZoomExterno</Option>
-                        <Option value='vimeo'>Vimeo</Option>
-                        <Option value='bigmarker'>BigMaker</Option>
-                      </Select>
-                    </Form.Item>
-                  )} */}
-
-                  {event.type_event !== 'onlineEvent' && (
-                    <>
-                      <Form.Item label={'Dirección'}>
-                        <Input
-                          name={'address'}
-                          placeholder={'¿Cuál es la dirección del evento?'}
-                          value={event.address}
-                          onChange={(e) => this.handleChange(e, 'address')}
-                        />
-                      </Form.Item>
-
-                      <Form.Item label={'Lugar'}>
-                        <Input
-                          name={'venue'}
-                          placeholder={'Nombre del lugar del evento'}
-                          value={event.venue}
-                          onChange={(e) => this.handleChange(e, 'venue')}
-                        />
-                      </Form.Item>
-                    </>
-                  )}
+                  <TypeEvent
+                    loading={loading}
+                    event={event}
+                    handleFormDataOfEventType={(values) => this.handleFormDataOfEventType(values)}
+                  />
 
                   {!cUser?.plan && (
                     <Form.Item label={'Especificar fechas'}>

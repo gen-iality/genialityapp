@@ -27,6 +27,7 @@ import {
   disabledStartDate,
   disabledStartDateTime,
 } from '@/Utilities/disableTimeAndDatePickerInEventDate';
+import TypeEvent from '@/components/typeEvent/TypeEvent';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -89,6 +90,10 @@ const Informacion = (props) => {
     return resp;
   };
 
+  const handleFormDataOfEventType = (values) => {
+    console.log('🚀 debug - handleFormDataOfEventType - values', values);
+  };
+
   return (
     <div className='step-information'>
       <Space direction='vertical' size='middle' style={{ marginBottom: '30px' }}>
@@ -136,7 +141,7 @@ const Informacion = (props) => {
           </Space>
         </div>
         <div>
-          <Space>
+          {/* <Space>
             <Checkbox onChange={(event) => handlePrelandingSelect(event)}>
               Evento externo, solo landing informativa
             </Checkbox>
@@ -149,7 +154,11 @@ const Informacion = (props) => {
               }>
               <QuestionCircleOutlined />
             </Popover>
-          </Space>
+          </Space> */}
+          <TypeEvent
+            // loading={loading}
+            handleFormDataOfEventType={(values) => handleFormDataOfEventType(values)}
+          />
         </div>
         {state.selectOrganization?.template_properties && (
           <div>

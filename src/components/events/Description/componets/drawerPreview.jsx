@@ -58,7 +58,8 @@ const DrawerPreview = ({ visibleDrawer, setVisibleDrawer }) => {
       width={device.value}
       placement='right'
       onClose={() => setVisibleDrawer(false)}
-      visible={visibleDrawer}>
+      visible={visibleDrawer}
+      destroyOnClose>
       {visibleDrawer ? <RenderSectios /> : <Spin />}
     </Drawer>
   );

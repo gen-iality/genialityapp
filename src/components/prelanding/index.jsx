@@ -34,6 +34,7 @@ import ModalContador from './modalContador';
 import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
 import DrawerPreviewLanding from './drawerPreviewLanding';
+import TypeEvent from '../typeEvent/TypeEvent';
 
 const DragHandle = SortableHandle(() => (
   <DragIcon
@@ -47,7 +48,6 @@ const DragHandle = SortableHandle(() => (
 
 const SortableItem = SortableElement((props) => <tr {...props} />);
 const SortableBody = SortableContainer((props) => <tbody {...props} />);
-const { Option } = Select;
 
 const PreLandingSections = ({ tabActive, changeTab }) => {
   const [dataSource, setDataSource] = useState([]);
@@ -56,7 +56,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   const [description, setDescription] = useState([]);
   const [speakers, setSpeakers] = useState([]);
   const [agenda, setAgenda] = useState([]);
-  const [typeEvent, settypeEvent] = useState('');
+
   const [drawerPreviewVisible, setDrawerPreviewVisible] = useState(false);
 
   const cEvent = useContext(CurrentEventContext);
@@ -231,7 +231,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   return (
     <Row gutter={[8, 8]}>
       <Col span={18}>
-        <Card hoverable={true} style={{ borderRadius: '20px' }}>
+        <Card hoverable={true} style={{ borderRadius: '20px' }} loading={loading}>
           <Table
             tableLayout='auto'
             style={{ userSelect: 'none' }}
@@ -259,7 +259,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       </Col>
 
       <Col span={6}>
-        <Card style={{ borderRadius: '20px', height: '100%' }}>
+        <Card style={{ borderRadius: '20px', height: '100%' }} loading={loading}>
           <Row gutter={[4, 4]}>
             <Col span={24}>
               <Typography.Title level={5}>Opciones rapidas</Typography.Title>
@@ -280,61 +280,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
           </Row>
         </Card>
       </Col>
-      <Col span={10}>
-        {!cEvent.value.has_prelanding && (
-          <Card style={{ borderRadius: '20px' }}>
-            <Form layout='vertical'>
-              <Space size={'large'} direction='vertical' style={{ width: '100%' }}>
-                <Form.Item label={'Tipo de evento'}>
-                  <Select
-                    value={typeEvent}
-                    onChange={(e) => settypeEvent(e)}
-                    size='large'
-                    placeholder='Tipo de evento'
-                    style={{ width: '100%' }}
-                    name={'type_event'}>
-                    <Option value=''>Seleccionar...</Option>
-                    <Option value='physicalEvent'>Evento físico</Option>
-                    <Option value='onlineEvent'>Evento virtual</Option>
-                    <Option value='hybridEvent'>Evento híbrido</Option>
-                  </Select>
-                </Form.Item>
-                {typeEvent === 'physicalEvent' && (
-                  <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
-                    <Form.Item label={'Dirección'}>
-                      <Input name={'address'} placeholder={'¿Cuál es la dirección del evento?'} />
-                    </Form.Item>
 
-                    <Form.Item label={'Lugar'}>
-                      <Input name={'venue'} placeholder={'Nombre del lugar del evento'} />
-                    </Form.Item>
-                  </Space>
-                )}
-              </Space>
-            </Form>
-          </Card>
-        )}
-      </Col>
-      <Col span={14}>
-        {!cEvent.value.has_prelanding && (
-          <Card style={{ borderRadius: '20px', height: '100%' }}>
-            <Form layout='vertical' style={{ height: '100%', width: '100%' }}>
-              <Row gutter={[16, 16]} justify='center' align='stretch'>
-                <Col span={24}>
-                  <Form.Item label={'Url Externa'}>
-                    <Input name={'externalUrl'} placeholder={'https://example.com'} />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item label={'Mensaje al inscribirse'}>
-                    <Input name={'messageWhenRegistering'} placeholder={''} />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
-          </Card>
-        )}
-      </Col>
       {/* Modal para la creacion de la data del contador */}
       <ModalContador visible={visible} setVisible={setVisible} />
       <DrawerPreviewLanding visibleDrawer={drawerPreviewVisible} setVisibleDrawer={setDrawerPreviewVisible} />
