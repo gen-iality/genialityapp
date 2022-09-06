@@ -51,7 +51,7 @@ const Informacion = (props) => {
     templateId,
     dispatch,
     state,
-    handlePrelandingSelect,
+    handleFormDataOfEventType,
   } = useContextNewEvent();
   const cUser = props?.currentUser;
   const eventDateStart = { date_start: selectedDay };
@@ -88,10 +88,6 @@ const Informacion = (props) => {
   const obtainTemplates = async () => {
     const resp = await OrganizationApi.getTemplateOrganization(selectOrganization?.id);
     return resp;
-  };
-
-  const handleFormDataOfEventType = (values) => {
-    console.log('🚀 debug - handleFormDataOfEventType - values', values);
   };
 
   return (
@@ -141,24 +137,7 @@ const Informacion = (props) => {
           </Space>
         </div>
         <div>
-          {/* <Space>
-            <Checkbox onChange={(event) => handlePrelandingSelect(event)}>
-              Evento externo, solo landing informativa
-            </Checkbox>
-            <Popover
-              content={
-                <Typography.Paragraph style={{ width: '220px' }}>
-                  Si marcas esta opción, solo se creará una landing informativa para tu evento, podrás configurar y
-                  personalizar todos los aspectos de esta misma.
-                </Typography.Paragraph>
-              }>
-              <QuestionCircleOutlined />
-            </Popover>
-          </Space> */}
-          <TypeEvent
-            // loading={loading}
-            handleFormDataOfEventType={(values) => handleFormDataOfEventType(values)}
-          />
+          <TypeEvent handleFormDataOfEventType={(values) => handleFormDataOfEventType(values)} />
         </div>
         {state.selectOrganization?.template_properties && (
           <div>

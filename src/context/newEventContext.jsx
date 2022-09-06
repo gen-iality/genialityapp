@@ -80,7 +80,11 @@ export const NewEventProvider = ({ children }) => {
   const [loadingOrganization, setLoadingOrganization] = useState(false);
   const [createOrganizationF, setCreateOrganization] = useState(false);
   const [templateId, setTemplateId] = useState();
-  const [prelandingSelect, setPrelandingSelect] = useState(false);
+  const [typeEvent, setTypeEvent] = useState('onlineEvent');
+  const [whereItRun, setWhereItRun] = useState('InternalEvent');
+  const [urlExternal, setUrlExternal] = useState('');
+  const [venue, setVenue] = useState('');
+  const [address, setAddress] = useState('');
   const [state, dispatch] = useReducer(reducer, initialState);
 
   async function OrganizationsList() {
@@ -195,9 +199,29 @@ export const NewEventProvider = ({ children }) => {
     setErrorInputs(listerrors);
   };
 
-  const handlePrelandingSelect = (event) => {
-    const checked = event.target.checked;
-    setPrelandingSelect(checked);
+  const handleFormDataOfEventType = (values) => {
+    Object.keys(values).map((key) => {
+      switch (key) {
+        case 'type_event':
+          setTypeEvent(values[key]);
+          break;
+        case 'where_it_run':
+          setWhereItRun(values[key]);
+          break;
+        case 'url_external':
+          setUrlExternal(values[key]);
+          break;
+        case 'address':
+          setAddress(values[key]);
+          break;
+        case 'venue':
+          setVenue(values[key]);
+          break;
+
+        default:
+          break;
+      }
+    });
   };
 
   const containsError = (field) => {
@@ -248,13 +272,11 @@ export const NewEventProvider = ({ children }) => {
     if (state.selectOrganization) {
       const data = {
         name: valueInputs.name,
-        has_prelanding: prelandingSelect,
-        address: '',
-        type_event: 'onlineEvent',
+        address: address,
         datetime_from: selectedDateEvent?.from + ':00',
         datetime_to: selectedDateEvent?.at + ':00',
         picture: null,
-        venue: '',
+        venue: venue,
         location: '',
         visibility: state.visibility,
         description: '',
@@ -263,6 +285,9 @@ export const NewEventProvider = ({ children }) => {
         event_type_id: '5bf47203754e2317e4300b68',
         user_properties: [],
         allow_register: state.allow_register,
+        type_event: typeEvent,
+        where_it_run: whereItRun,
+        url_external: urlExternal,
         styles: {
           buttonColor: '#FFF',
           banner_color: '#FFF',
@@ -461,7 +486,7 @@ export const NewEventProvider = ({ children }) => {
         dispatch,
         createOrganization,
         saveEvent,
-        handlePrelandingSelect,
+        handleFormDataOfEventType,
       }}>
       {children}
     </cNewEventContext.Provider>
