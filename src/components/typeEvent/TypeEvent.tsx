@@ -6,16 +6,16 @@ const { Item } = Form;
 const { Option } = Select;
 
 const defaultEvent = {
-  type_event: '',
-  address: '',
-  venue: '',
-  url_external: '',
-  where_it_run: '',
+  type_event: null,
+  address: null,
+  venue: null,
+  url_external: null,
+  where_it_run: null,
 };
 
 const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEventType = () => {} }: typeEvent) => {
-  const [typeEvent, setTypeEvent] = useState('onlineEvent');
-  const [whereItRun, setWhereItRun] = useState('InternalEvent');
+  const [typeEvent, setTypeEvent] = useState<string | null>('onlineEvent');
+  const [whereItRun, setWhereItRun] = useState<string | null>('InternalEvent');
 
   const { type_event, address, venue, url_external, where_it_run } = event;
 
