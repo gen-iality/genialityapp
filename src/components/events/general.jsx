@@ -46,7 +46,8 @@ import {
 } from '@/Utilities/disableTimeAndDatePickerInEventDate';
 import { CurrentUserContext } from '@/context/userContext';
 import DescriptionDynamic from './Description';
-import TypeEvent from '../typeEvent/TypeEvent';
+import TypeEvent from '../shared/typeEvent/TypeEvent';
+import AccessTypeCard from '../shared/accessTypeCard';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -1136,6 +1137,7 @@ class General extends Component {
             </Tabs.TabPane>
             <Tabs.TabPane tab='Tipos de acceso' key='2'>
               <Row justify='center' wrap gutter={[8, 8]}>
+                <AccessTypeCard title='titulo' description='descripcion' />
                 <Col span={16}>
                   <Form.Item label={''}>
                     <Row gutter={[16, 16]} wrap>

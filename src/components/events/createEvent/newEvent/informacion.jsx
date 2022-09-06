@@ -27,7 +27,7 @@ import {
   disabledStartDate,
   disabledStartDateTime,
 } from '@/Utilities/disableTimeAndDatePickerInEventDate';
-import TypeEvent from '@/components/typeEvent/TypeEvent';
+import TypeEvent from '@/components/shared/typeEvent/TypeEvent';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;

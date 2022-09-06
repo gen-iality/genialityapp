@@ -6,8 +6,8 @@ export interface Event {
   where_it_run: string | null;
 }
 
-export type typeEvent = {
+export interface typeEvent {
   loading?: boolean;
   event?: Event;
   handleFormDataOfEventType: (data: {}) => void;
-};
+}

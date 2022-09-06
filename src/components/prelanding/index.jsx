@@ -34,7 +34,6 @@ import ModalContador from './modalContador';
 import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
 import DrawerPreviewLanding from './drawerPreviewLanding';
-import TypeEvent from '../typeEvent/TypeEvent';
 
 const DragHandle = SortableHandle(() => (
   <DragIcon

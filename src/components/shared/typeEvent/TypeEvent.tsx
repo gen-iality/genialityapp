@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, Col, Form, Input, Select, Space } from 'antd';
-import { typeEvent } from './types/types/types';
+import { typeEvent } from './interfaces/interfaces';
 
 const { Item } = Form;
 const { Option } = Select;
