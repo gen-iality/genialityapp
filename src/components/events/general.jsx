@@ -655,18 +655,13 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, initial_page: data } });
   }
 
-  onChangeCheck = (e) => {
-    this.setState({
-      checked: e.target.checked,
-    });
-  };
-
   handleChangeReactQuill = (e) => {
     this.setState({ description: e });
   };
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changeAccessTypeForEvent = (value) => {
+    console.log('🚀 debug - General - value', value);
     this.setState({ accessSelected: value });
     switch (value) {
       case 'PUBLIC_EVENT_WITH_REGISTRATION':

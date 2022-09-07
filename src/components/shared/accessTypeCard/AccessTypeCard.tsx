@@ -1,4 +1,4 @@
-import { SmileOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 import { Avatar, Card, Row, Space, Typography } from 'antd';
 import { AccessTypeCardInterface } from './interfaces/interfaces';
 
@@ -7,7 +7,7 @@ const AccessTypeCard = ({
   icon,
   title,
   description = '',
-  extra,
+  extra = () => {},
   infoIcon = [],
   callBackSelectedItem = () => {},
   itemSelected = '',
@@ -22,7 +22,7 @@ const AccessTypeCard = ({
           {title}
         </Typography.Text>
         <Typography.Paragraph>{description}</Typography.Paragraph>
-        <div>{extra}</div>
+        <div>{itemSelected === index && extra(callBackSelectedItem)}</div>
         <Row justify='end'>
           <Space>{infoIcon.map((item) => item)}</Space>
         </Row>

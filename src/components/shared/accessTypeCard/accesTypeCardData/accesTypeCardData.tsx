@@ -21,14 +21,19 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
     title: 'Evento publico con registro',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     infoIcon: [<AccountKeyIcon />, <DatabaseIcon />, <MessageIcon />, <MessageLockIcon />],
-    extra: (
-      <>
-        <h5>
-          <b>Registro sin autenticación de usuario (Beta)</b>
-        </h5>
-        <Switch />
-      </>
-    ),
+    extra: (callBackSelectedItem) => {
+      return (
+        <Switch
+          onChange={(state) => {
+            console.log('🚀 debug - state', state);
+            const validateState = state
+              ? 'PUBLIC_WITH_REGISTRATION_WITHOUT_PASSWORD'
+              : 'PUBLIC_EVENT_WITH_REGISTRATION';
+            callBackSelectedItem(validateState);
+          }}
+        />
+      );
+    },
   },
   {
     index: 'UN_REGISTERED_PUBLIC_EVENT',
