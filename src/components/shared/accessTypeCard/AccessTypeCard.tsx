@@ -1,18 +1,21 @@
 import { SmileOutlined } from '@ant-design/icons';
 import { Avatar, Card, Row, Space, Typography } from 'antd';
-import { ReactNode } from 'react';
+import { AccessTypeCardInterface } from './interfaces/interfaces';
 
-interface AccessTypeCardTyped {
-  icon: ReactNode;
-  title: string;
-  description?: string;
-  extra?: ReactNode;
-  infoIcon: ReactNode[];
-}
-
-const AccessTypeCard = ({ icon, title, description = '', extra, infoIcon = [] }: AccessTypeCardTyped) => {
+const AccessTypeCard = ({
+  index,
+  icon,
+  title,
+  description = '',
+  extra,
+  infoIcon = [],
+  callBackSelectedItem = () => {},
+  itemSelected = '',
+}: AccessTypeCardInterface) => {
   return (
-    <Card style={{ borderRadius: '8px' }}>
+    <Card
+      style={{ borderRadius: '8px', cursor: 'pointer', background: itemSelected === index ? '#50d3c9' : 'white' }}
+      onClick={() => callBackSelectedItem(index)}>
       <Space style={{ width: '100%' }} direction='vertical'>
         <Avatar size={'large'} shape='square' icon={icon} />
         <Typography.Text strong style={{ fontSize: '14px' }}>
@@ -21,11 +24,7 @@ const AccessTypeCard = ({ icon, title, description = '', extra, infoIcon = [] }:
         <Typography.Paragraph>{description}</Typography.Paragraph>
         <div>{extra}</div>
         <Row justify='end'>
-          <Space>
-            {infoIcon.map((item) => {
-              item;
-            })}
-          </Space>
+          <Space>{infoIcon.map((item) => item)}</Space>
         </Row>
       </Space>
     </Card>
