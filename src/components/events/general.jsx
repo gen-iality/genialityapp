@@ -1144,14 +1144,17 @@ class General extends Component {
               </Row>
               <BackTop />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='Tipos de acceso' key='2'>
-              <Row justify='center' wrap gutter={[8, 8]}>
+            <Tabs.TabPane tab='Tipos de acceso' key='2' style={{ paddingLeft: '32px', paddingRight: '32px' }}>
+              <Row justify='center' wrap gutter={[32, 8]}>
                 {AccessTypeCardData.map((item) => (
-                  <AccessTypeCard
-                    {...item}
-                    callBackSelectedItem={this.changeAccessTypeForEvent}
-                    itemSelected={this.state.accessSelected}
-                  />
+                  <Col span={8}>
+                    <AccessTypeCard
+                      {...item}
+                      callBackSelectedItem={this.changeAccessTypeForEvent}
+                      itemSelected={this.state.accessSelected}
+                      isCms
+                    />
+                  </Col>
                 ))}
               </Row>
             </Tabs.TabPane>

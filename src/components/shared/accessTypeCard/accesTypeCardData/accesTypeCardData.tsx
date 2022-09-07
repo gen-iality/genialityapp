@@ -1,8 +1,8 @@
-import { Switch } from 'antd';
-import { AccessTypeCardInterface } from '../interfaces/interfaces';
+import { Space, Switch, Tooltip, Typography } from 'antd';
+import { AccessTypeCardInterface, textTooltipType, iconTooltipType } from '../interfaces/interfaces';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
-import BadgeAccountHorizontaIcon from '@2fd/ant-design-icons/lib/BadgeAccountHorizontal';
+import AccountTieIcon from '@2fd/ant-design-icons/lib/AccountTie';
 import IncognitoIcon from '@2fd/ant-design-icons/lib/Incognito';
 import MessageIcon from '@2fd/ant-design-icons/lib/Message';
 import MessageLockIcon from '@2fd/ant-design-icons/lib/MessageLock';
@@ -13,25 +13,41 @@ import AccountKeyIcon from '@2fd/ant-design-icons/lib/AccountKey';
 
 //evento publico con registro sin autenticación de usuario
 // PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS
+const iconWithTooltip = (text: textTooltipType, icon: iconTooltipType) => {
+  return <Tooltip title={text}>{icon}</Tooltip>;
+};
 
 export const AccessTypeCardData: AccessTypeCardInterface[] = [
   {
     index: 'PUBLIC_EVENT_WITH_REGISTRATION',
-    icon: <BadgeAccountHorizontaIcon />,
+    icon: <AccountTieIcon />,
     title: 'Evento publico con registro',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    infoIcon: [<AccountKeyIcon />, <DatabaseIcon />, <MessageIcon />, <MessageLockIcon />],
+    description:
+      'Tus asistentes deberán registrarse en la plataforma y en tu evento para poder ver el contenido. Si ya poseen una cuenta en Evius podrán iniciar sesión y continuar con la inscripción en tu evento ',
+    infoIcon: [
+      iconWithTooltip('Tiene autenticación de usuario', <AccountKeyIcon />),
+      iconWithTooltip('Puede recolectar información de sus asistentes', <DatabaseIcon />),
+      iconWithTooltip('Tiene chat público', <MessageIcon />),
+      iconWithTooltip('Tiene chat privado', <MessageLockIcon />),
+    ],
     extra: (callBackSelectedItem) => {
       return (
-        <Switch
-          onChange={(state) => {
-            console.log('🚀 debug - state', state);
-            const validateState = state
-              ? 'PUBLIC_WITH_REGISTRATION_WITHOUT_PASSWORD'
-              : 'PUBLIC_EVENT_WITH_REGISTRATION';
-            callBackSelectedItem(validateState);
-          }}
-        />
+        <Space direction='vertical'>
+          <Typography.Text strong style={{ fontWeight: '500' }}>
+            Registrar sin autenticar usuario
+          </Typography.Text>
+          <Switch
+            checkedChildren={'Si'}
+            unCheckedChildren={'No'}
+            onChange={(state) => {
+              console.log('🚀 debug - state', state);
+              const validateState = state
+                ? 'PUBLIC_WITH_REGISTRATION_WITHOUT_PASSWORD'
+                : 'PUBLIC_EVENT_WITH_REGISTRATION';
+              callBackSelectedItem(validateState);
+            }}
+          />
+        </Space>
       );
     },
   },
@@ -39,14 +55,24 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
     index: 'UN_REGISTERED_PUBLIC_EVENT',
     icon: <AccountGroupIcon />,
     title: 'Evento publico sin registro',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    infoIcon: [<IncognitoIcon />, <DatabaseOffIcon />, <MessageIcon />],
+    description:
+      'Tus asistentes podrán ingresa a tu evento sin ningún tipo de autenticación o registro. Solo se podrán habilitar los módulos informativos.',
+    infoIcon: [
+      iconWithTooltip('Los asistentes son anonimos', <IncognitoIcon />),
+      iconWithTooltip('No puede recolectar información de sus asistentes', <DatabaseOffIcon />),
+      iconWithTooltip('Tiene chat público', <MessageIcon />),
+    ],
   },
   {
     index: 'PRIVATE_EVENT',
     icon: <ShieldAccountIcon />,
     title: 'Evento privado por invitación',
-    description: 'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    infoIcon: [<CardAccountDetailsStarIcon />, <MessageIcon />, <MessageLockIcon />],
+    description:
+      'Solo pueden ingresar los asistentes que reciben una invitación a su correo electrónico, desde el cual podrán iniciar sesión de forma rápida con solo un clic.',
+    infoIcon: [
+      iconWithTooltip('Requiere invitación', <CardAccountDetailsStarIcon />),
+      iconWithTooltip('Tiene chat público', <MessageIcon />),
+      iconWithTooltip('Tiene chat privado', <MessageLockIcon />),
+    ],
   },
 ];
