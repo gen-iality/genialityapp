@@ -47,7 +47,8 @@ import {
 import { CurrentUserContext } from '@/context/userContext';
 import DescriptionDynamic from './Description';
 import TypeEvent from '../shared/typeEvent/TypeEvent';
-import AccessTypeCard from '../shared/accessTypeCard';
+import AccessTypeCard from '../shared/accessTypeCard/AccessTypeCard';
+import { AccessTypeCardData } from '../shared/accessTypeCard/accesTypeCardData/accesTypeCardData';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -101,7 +102,6 @@ class General extends Component {
         checked: false,
         permissions: 'public',
       },
-      typeEvent: 0,
       image: this.props.event.picture,
       tabActive: '1',
       iMustBlockAFunctionality: false,
@@ -220,13 +220,13 @@ class General extends Component {
       this.state.event.allow_register
     ) {
       //Evento Público con Registro
-      this.setState({ typeEvent: 0 });
+      this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Evento Público sin Registro
-      this.setState({ typeEvent: 1 });
+      this.setState({ accessSelected: 'UN_REGISTERED_PUBLIC_EVENT' });
     } else {
       //Evento Privado con Invitación
-      this.setState({ typeEvent: 2 });
+      this.setState({ accessSelected: 'PRIVATE_EVENT' });
     }
   }
 
@@ -655,46 +655,54 @@ class General extends Component {
     this.setState({ event: { ...this.state.event, initial_page: data } });
   }
 
-  onChangeCheck = (e) => {
-    this.setState({
-      checked: e.target.checked,
-    });
-  };
-
   handleChangeReactQuill = (e) => {
     this.setState({ description: e });
   };
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
-  changetypeEvent = (value) => {
-    this.setState({ typeEvent: value });
-    if (value === 0) {
-      //Evento Público con Registro
-      this.setState({
-        event: {
-          ...this.state.event,
-          visibility: 'PUBLIC',
-          allow_register: true,
-        },
-      });
-    } else if (value === 1) {
-      //Evento Público sin Registro
-      this.setState({
-        event: {
-          ...this.state.event,
-          visibility: 'PUBLIC',
-          allow_register: false,
-        },
-      });
-    } else {
-      //Evento Privado con Invitación
-      this.setState({
-        event: {
-          ...this.state.event,
-          visibility: 'PRIVATE',
-          allow_register: false,
-        },
-      });
+  changeAccessTypeForEvent = (value) => {
+    console.log('🚀 debug - General - value', value);
+    this.setState({ accessSelected: value });
+    switch (value) {
+      case 'PUBLIC_EVENT_WITH_REGISTRATION':
+        this.setState({
+          event: {
+            ...this.state.event,
+            visibility: 'PUBLIC',
+            allow_register: true,
+          },
+        });
+        break;
+      case 'PUBLIC_WITH_REGISTRATION_WITHOUT_PASSWORD':
+        this.setState({
+          event: {
+            ...this.state.event,
+            visibility: 'ANONYMOUS',
+            allow_register: true,
+          },
+        });
+        break;
+      case 'UN_REGISTERED_PUBLIC_EVENT':
+        this.setState({
+          event: {
+            ...this.state.event,
+            visibility: 'PUBLIC',
+            allow_register: false,
+          },
+        });
+        break;
+      case 'PRIVATE_EVENT':
+        this.setState({
+          event: {
+            ...this.state.event,
+            visibility: 'PRIVATE',
+            allow_register: false,
+          },
+        });
+        break;
+
+      default:
+        break;
     }
   };
   /** RESTRICIONES */
@@ -1138,132 +1146,13 @@ class General extends Component {
             </Tabs.TabPane>
             <Tabs.TabPane tab='Tipos de acceso' key='2'>
               <Row justify='center' wrap gutter={[8, 8]}>
-                <AccessTypeCard title='titulo' description='descripcion' />
-                <Col span={16}>
-                  <Form.Item label={''}>
-                    <Row gutter={[16, 16]} wrap>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 0 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }>
-                          <div
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}>
-                            <Space direction='vertical'>
-                              <div onClick={() => this.changetypeEvent(0)}>
-                                <Text strong>Evento Público con Registro</Text>
-                                <Divider />
-                                <Text type='secondary'>
-                                  <ul>
-                                    <li>Tiene registro para todos.</li>
-                                    <br />
-                                    <li>Tiene inicio de sesión para todos.</li>
-                                  </ul>
-                                </Text>
-                              </div>
-                              {this.state.typeEvent === 0 && (
-                                <>
-                                  <Divider />
-                                  <Checkbox
-                                    defaultChecked={this.state.event.visibility === 'ANONYMOUS'}
-                                    onChange={(e) =>
-                                      this.setState({
-                                        event: {
-                                          ...this.state.event,
-                                          visibility: e.target.checked === true ? 'ANONYMOUS' : 'PUBLIC',
-                                          allow_register: true,
-                                        },
-                                      })
-                                    }>
-                                    Registro sin autenticación de usuario (Beta)
-                                  </Checkbox>
-                                </>
-                              )}
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 1 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }>
-                          <div
-                            /* className='cards-type-information'  */
-                            onClick={() => this.changetypeEvent(1)}
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}>
-                            <Space direction='vertical'>
-                              <Text strong>Evento Público sin Registro</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
-                                <ul>
-                                  <li>Quedará como anónimo.</li>
-                                  <br />
-                                  <li>No tendrá inicio de sesión ni registro.</li>
-                                </ul>
-                              </Text>
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 2 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }>
-                          <div
-                            /* className='cards-type-information'  */
-                            onClick={() => this.changetypeEvent(2)}
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}>
-                            <Space direction='vertical'>
-                              <Text strong>Evento Privado por invitación</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}
-                                <ul>
-                                  <li>Sólo se podrá acceder por invitación.</li>
-                                  <br />
-                                  <li>Sólo se mostrará el inicio de sesión.</li>
-                                </ul>
-                              </Text>
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                    </Row>
-                  </Form.Item>
-                </Col>
+                {AccessTypeCardData.map((item) => (
+                  <AccessTypeCard
+                    {...item}
+                    callBackSelectedItem={this.changeAccessTypeForEvent}
+                    itemSelected={this.state.accessSelected}
+                  />
+                ))}
               </Row>
             </Tabs.TabPane>
             <Tabs.TabPane
