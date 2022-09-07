@@ -142,6 +142,7 @@ class NewEvent extends Component {
           height: '100vh',
           width: '100vw',
           backgroundColor: '#ECF2F7',
+          overflowY: 'auto',
         }}>
         <Row justify='center' className='newEvent' style={{ transition: 'all 1.5s ease-out' }}>
           {/* Items del paso a paso */}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Card, Col, Form, Input, Select, Space } from 'antd';
 import { typeEvent } from './interfaces/interfaces';
 
@@ -13,11 +13,18 @@ const defaultEvent = {
   where_it_run: null,
 };
 
-const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEventType = () => {} }: typeEvent) => {
+const TypeEvent = ({
+  loading = false,
+  event = defaultEvent,
+  handleFormDataOfEventType = () => {},
+  isCms = false,
+}: typeEvent) => {
   const [typeEvent, setTypeEvent] = useState<string | null>('onlineEvent');
   const [whereItRun, setWhereItRun] = useState<string | null>('InternalEvent');
 
   const { type_event, address, venue, url_external, where_it_run } = event;
+  const sizeInput = isCms ? 'large' : 'middle';
+  const TagDinamic = isCms ? Space : Fragment;
 
   const changesToFormValues = async (values: EventListenerObject) => {
     handleFormDataOfEventType(values);
@@ -31,7 +38,9 @@ const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEven
   return (
     <Col span={24}>
       <Card
-        hoverable
+        bordered={isCms}
+        hoverable={isCms}
+        bodyStyle={isCms ? {} : { padding: '0px' }}
         style={{
           borderRadius: '20px',
           cursor: 'auto',
@@ -39,8 +48,8 @@ const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEven
         }}
         loading={loading}>
         <Form layout='vertical' onValuesChange={changesToFormValues}>
-          <Space
-            size={'large'}
+          <TagDinamic
+            size={sizeInput}
             direction='vertical'
             style={{
               width: '100%',
@@ -50,7 +59,7 @@ const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEven
                 defaultValue={type_event}
                 value={typeEvent}
                 onChange={(e) => setTypeEvent(e)}
-                size='large'
+                size={sizeInput}
                 placeholder='Tipo de evento'
                 style={{
                   width: '100%',
@@ -66,7 +75,7 @@ const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEven
                   defaultValue={where_it_run}
                   value={whereItRun}
                   onChange={(e) => setWhereItRun(e)}
-                  size='large'
+                  size={sizeInput}
                   placeholder='Donde se llevará a cabo el evento?'
                   style={{
                     width: '100%',
@@ -83,8 +92,8 @@ const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEven
               </Item>
             )}
             {typeEvent && typeEvent !== 'onlineEvent' && typeEvent !== '' && (
-              <Space
-                size={'middle'}
+              <TagDinamic
+                size={sizeInput}
                 direction='vertical'
                 style={{
                   width: '100%',
@@ -96,9 +105,9 @@ const TypeEvent = ({ loading = false, event = defaultEvent, handleFormDataOfEven
                 <Item label={'Lugar'} name={'venue'} initialValue={venue}>
                   <Input placeholder={'Nombre del lugar del evento'} />
                 </Item>
-              </Space>
+              </TagDinamic>
             )}
-          </Space>
+          </TagDinamic>
         </Form>
       </Card>
     </Col>

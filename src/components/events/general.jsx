@@ -853,6 +853,7 @@ class General extends Component {
                     loading={loading}
                     event={event}
                     handleFormDataOfEventType={(values) => this.handleFormDataOfEventType(values)}
+                    isCms
                   />
 
                   {!cUser?.plan && (

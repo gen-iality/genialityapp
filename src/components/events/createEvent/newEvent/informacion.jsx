@@ -14,8 +14,9 @@ import {
   Checkbox,
   Form,
   Popover,
+  Tooltip,
 } from 'antd';
-import { CalendarOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
@@ -58,6 +59,7 @@ const Informacion = (props) => {
   const eventHourStart = { hour_start: selectedHours.from };
 
   const [userConsumption, setUserConsumption] = useState({});
+  const [showText, setShowText] = useState(false);
   const handleChange = (value) => {
     selectTemplate(value);
   };
@@ -105,7 +107,6 @@ const Informacion = (props) => {
           />
           {containsError('name') && (
             <Col>
-              {' '}
               <small className='text-color'>Ingrese un nombre correcto para el evento</small>
             </Col>
           )}
@@ -122,19 +123,24 @@ const Informacion = (props) => {
           />
         </div>
         <div>
-          <Space direction='vertical'>
-            {state.organizations.length > 0 && (
-              <div>
-                <p>
-                  Este evento pertenecerá a la organización | <b>{state?.selectOrganization?.name}</b>
-                </p>
-                <Button onClick={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } })} block>
-                  Cambiar de organización
+          {state.organizations.length > 0 && (
+            <Space align='center'>
+              <Typography.Text ellipsis>
+                Organizado por: <b>{state?.selectOrganization?.name}</b>
+              </Typography.Text>
+              <Tooltip title={'Cambiar de organización'}>
+                <Button
+                  onMouseLeave={() => setShowText(false)}
+                  onMouseEnter={() => setShowText(true)}
+                  type='text'
+                  icon={<EditOutlined />}
+                  onClick={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } })}>
+                  {showText && 'Cambiar'}
                 </Button>
-              </div>
-            )}
-            <ModalOrgListCreate orgId={props.orgId} />
-          </Space>
+              </Tooltip>
+            </Space>
+          )}
+          <ModalOrgListCreate orgId={props.orgId} />
         </div>
         <div>
           <TypeEvent handleFormDataOfEventType={(values) => handleFormDataOfEventType(values)} />

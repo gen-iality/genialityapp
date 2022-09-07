@@ -10,4 +10,5 @@ export interface typeEvent {
   loading?: boolean;
   event?: Event;
   handleFormDataOfEventType: (data: {}) => void;
+  isCms?: boolean;
 }
