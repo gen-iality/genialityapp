@@ -1146,7 +1146,7 @@ class General extends Component {
             <Tabs.TabPane tab='Tipos de acceso' key='2' style={{ paddingLeft: '32px', paddingRight: '32px' }}>
               <Row justify='center' wrap gutter={[32, 8]}>
                 {AccessTypeCardData.map((item) => (
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
                     <AccessTypeCard
                       {...item}
                       callBackSelectedItem={this.changeAccessTypeForEvent}
