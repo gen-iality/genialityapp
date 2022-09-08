@@ -3,7 +3,7 @@ import SurveyAnswers from './services/surveyAnswersService';
 import { LoadingOutlined } from '@ant-design/icons';
 
 function ResultsPanel(props) {
-  const { queryData, surveyModel, eventId, idSurvey, operation, currentUser } = props;
+  const { queryData, surveyModel, eventId, idSurvey, currentUser } = props;
 
   console.log('800.ResultsPanel queryData', queryData);
   console.log('800.ResultsPanel surveyModel', surveyModel);
@@ -12,14 +12,8 @@ function ResultsPanel(props) {
 
   let [loading, setloading] = useState();
 
-  //let userAnswers = [];
   let [userAnswers, setUserAnswers] = useState(undefined);
   let [dataLoaded, setDataLoaded] = useState(false);
-
-  //if (surveyModel == null) return null;
-
-  /* let surveyModelQuestions = surveyModel.getAllQuestions();
-  console.log('800.ResultsPanel surveyModelQuestions', surveyModelQuestions); */
 
   async function getUserAnswers(question) {
     let userAnswer = await SurveyAnswers.getAnswersQuestionV2(idSurvey, question.id, currentUser.value._id);

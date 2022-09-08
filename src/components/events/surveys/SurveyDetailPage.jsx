@@ -21,8 +21,10 @@ function SurveyDetailPage({ surveyId, cEvent }) {
 
   const currentUser = UseCurrentUser();
 
-  const [surveyModel, setSurveyModel] = useState(null);
+  const [loadedQuestions, setLoadedQuestions] = useState([]);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
+
+  const [isSurveyFinished, setIsSurveyFinished] = useState(false);
 
   //Effect for when prop.idSurvey changes
   useEffect(() => {
@@ -44,6 +46,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         cSurveys.select_survey({ ...surveyConfig, ...loadedSurvey });
       }
     })();
+
     return () => {
       if (unsubscribe) unsubscribe();
     };
@@ -54,35 +57,19 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   }
 
   if (!cSurveys.currentSurvey) {
-    return <h1>No hay nada publicado{surveyId}</h1>;
+    return <h1>No hay nada publicado, {surveyId}</h1>;
   }
 
   if (!cEvent || !surveyId) {
-    return <h1>Carga......{console.log('cevent', cEvent)}</h1>;
+    return <h1>Cargando..</h1>;
   }
   return (
     <div>
-      {/* {cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
-        <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
-      )}
-      {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
-
-      <Card className='survyCard'>
-        <SurveyComponent
-          idSurvey={surveyId}
-          eventId={cEvent.value._id}
-          currentUser={currentUser}
-          operation='participationPercentage'
-        />
-      </Card>
-
-      {cSurveys.shouldDisplayGraphics() && (
-        <>
-          <Divider />
-          <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
-        </>
-      )}*/}
-      {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
+      {true && <>
+      hola. {isSurveyFinished ? 'finalizado' : 'no finalizado aún'}
+      <br/>
+      {JSON.stringify(loadedQuestions)}
+      </>}
 
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
         <div>
@@ -105,8 +92,6 @@ function SurveyDetailPage({ surveyId, cEvent }) {
               currentUser={currentUser}
               eventId={eventId}
               idSurvey={surveyId}
-              surveyModel={surveyModel}
-              //setSurveyModel={setSurveyModel}
               queryData={queryData}
               operation='participationPercentage'
             />
@@ -120,14 +105,13 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
         </>
       ) : (
-        <Card className='survyCard'>
+        <Card className='surveyCard'>
           <SurveyComponent
             idSurvey={surveyId}
             eventId={cEvent.value._id}
             currentUser={currentUser}
-            setSurveyModel={setSurveyModel}
-            surveyModel={surveyModel}
-            operation='participationPercentage'
+            cbMaskAsFinished={() => setIsSurveyFinished(true)}
+            setLoadedQuestions={setLoadedQuestions}
           />
         </Card>
       )}

@@ -16,7 +16,13 @@ import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFrom
 import ResultsPanel from './resultsPanel';
 
 function SurveyComponent(props) {
-  const { eventId, idSurvey, currentUser, setSurveyModel, operation, surveyModel } = props;
+  const {
+    eventId, // The event id
+    idSurvey, // The survey ID
+    currentUser, // the currentUser (use the User model)
+    cbMaskAsFinished, // This callback allows to know if the survey is finished
+    setLoadedQuestions, // Load the question to parent
+  } = props;
   const cEvent = UseEventContext();
   //query.data tiene la definición de la encuesta/examen
   let query = useSurveyQuery(eventId, idSurvey);
@@ -28,14 +34,11 @@ function SurveyComponent(props) {
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
 
-  //const [surveyModel, setSurveyModel] = useState(null);
+  const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [questionFeedback, setQuestionFeedback] = useState(false);
-  const [showingExitButton, setShowingExitButton] = useState(false);
 
-  const [showingResultsPanel, setShowingResultsPanel] = useState(false);
-  const [resultsPanel, setResultsPanel] = useState(false);
-  const [showingResultsButton, setShowingResultsButton] = useState(false);
+  const [isSaveButtonShown, setIsSaveButtonShown] = useState(false);
 
   const [eventUsers, setEventUsers] = useState([]);
   const [voteWeight, setVoteWeight] = useState(0); // Inquietud: Es util?
@@ -52,10 +55,10 @@ function SurveyComponent(props) {
 
   //Asigna los colores configurables a  la UI de la encuesta
   useEffect(() => {
-    if (!query.data) return;
+    if (!(query.data?.questions.length > 0)) return;
     assignStylesToSurveyFromEvent(eventStyles);
-    survey = createSurveyModel(query.data);
-    setSurveyModel(survey);
+    setSurveyModel(createSurveyModel(query.data));
+    setLoadedQuestions(query.data?.questions.filter((question) => question.id !== undefined));
     //survey.onCurrentPageChanging.add(displayFeedbackafterQuestionAnswered);
   }, [query.data]);
 
@@ -69,7 +72,7 @@ function SurveyComponent(props) {
     return surveyModelData;
   }
 
-  const displayFeedbackAfterQuestionAnswered = (sender, options) => {
+  const displayFeedbackAfterEachQuestion = (sender, options) => {
     if (shouldDisplayFeedback()) {
       stopChangeToNextQuestion(options);
       hideTimerPanel();
@@ -127,8 +130,8 @@ function SurveyComponent(props) {
                 setShowingFeedback(false);
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
-                  setShowingExitButton(true);
-                  setShowingResultsButton(true);
+                  cbMaskAsFinished();
+                  setIsSaveButtonShown(true);
                 }
               }}
               type='primary'
@@ -213,20 +216,16 @@ function SurveyComponent(props) {
   function saveSurveyData(sender) {
     console.log('200.saveSurveyData');
 
-    saveSurveyStatus();
+    // saveSurveyStatus(); -- temporally ignored
     saveSurveyCurrentPage();
     saveSurveyAnswers(sender.currentPage.questions);
   }
 
-  async function surveyCompleted(sender) {
+  async function onSurveyCompleted(sender) {
     saveSurveyCurrentPage();
     saveSurveyAnswers(sender.currentPage.questions);
     MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints);
     //setResultsSurvey([surveyModel, query.data]);
-  }
-
-  function showResultsPanel() {
-    setShowingResultsPanel(true);
   }
 
   return (
@@ -238,13 +237,13 @@ function SurveyComponent(props) {
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
             <Survey.Survey
               model={surveyModel}
-              onCurrentPageChanging={displayFeedbackAfterQuestionAnswered}
+              onCurrentPageChanging={displayFeedbackAfterEachQuestion}
               onPartialSend={saveSurveyData}
-              onCompleting={displayFeedbackAfterQuestionAnswered}
-              onComplete={surveyCompleted}
+              onCompleting={displayFeedbackAfterEachQuestion}
+              onComplete={onSurveyCompleted}
             />
           </div>
-          {showingExitButton && (
+          {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
                 onClick={() => {
@@ -253,34 +252,9 @@ function SurveyComponent(props) {
                 type='primary'
                 key='console'
               >
-                Exit
+                Save survey
               </Button>
             </div>
-          )}
-          {showingResultsButton && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button
-                onClick={() => {
-                  showResultsPanel();
-                }}
-                type='primary'
-                key='console'
-              >
-                Results
-              </Button>
-            </div>
-          )}
-          {showingResultsPanel && (
-            <>
-              <ResultsPanel
-                currentUser={currentUser}
-                eventId={eventId}
-                idSurvey={idSurvey}
-                surveyModel={surveyModel}
-                queryData={query.data}
-                operation={operation}
-              />
-            </>
           )}
         </>
       )}
