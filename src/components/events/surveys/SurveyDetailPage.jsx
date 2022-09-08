@@ -2,20 +2,27 @@ import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Graphics from './graphics';
 import SurveyComponent from './surveyComponentV2';
-import { Card, Result, Divider } from 'antd';
+import { Card, Result, Divider, Button } from 'antd';
 
 import WithEviusContext from '@/context/withContext';
 import LoadSelectedSurvey from './functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './functions/initRealTimeSurveyListening';
+import useSurveyQuery from './hooks/useSurveyQuery';
 
 /** Context´s */
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
 
+/** Components */
+import ResultsPanel from './resultsPanel';
+
 function SurveyDetailPage({ surveyId, cEvent }) {
   let cSurveys = UseSurveysContext();
 
   const currentUser = UseCurrentUser();
+
+  const [surveyModel, setSurveyModel] = useState(null);
+  const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
   //Effect for when prop.idSurvey changes
   useEffect(() => {
@@ -41,6 +48,10 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       if (unsubscribe) unsubscribe();
     };
   }, [surveyId]);
+
+  function showResultsPanel() {
+    setShowingResultsPanel(true);
+  }
 
   if (!cSurveys.currentSurvey) {
     return <h1>No hay nada publicado{surveyId}</h1>;
@@ -74,7 +85,33 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
 
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
-        <Result style={{ height: '50%', padding: '75px' }} status='success' title='Ya has contestado esta evaluación' />
+        <div>
+          <Result
+            style={{ height: '50%', padding: '75px' }}
+            status='success'
+            title='Ya has contestado esta evaluación'
+          />
+          <Button
+            onClick={() => {
+              showResultsPanel();
+            }}
+            type='primary'
+            key='console'
+          >
+            Results
+          </Button>
+          {showingResultsPanel && (
+            <ResultsPanel
+              currentUser={currentUser}
+              eventId={eventId}
+              idSurvey={surveyId}
+              surveyModel={surveyModel}
+              //setSurveyModel={setSurveyModel}
+              queryData={queryData}
+              operation='participationPercentage'
+            />
+          )}
+        </div>
       ) : cSurveys.shouldDisplaySurveyClosedMenssage() ? (
         <Result title='Esta evaluación ha sido cerrada' />
       ) : cSurveys.shouldDisplayGraphics() ? (
@@ -88,6 +125,8 @@ function SurveyDetailPage({ surveyId, cEvent }) {
             idSurvey={surveyId}
             eventId={cEvent.value._id}
             currentUser={currentUser}
+            setSurveyModel={setSurveyModel}
+            surveyModel={surveyModel}
             operation='participationPercentage'
           />
         </Card>

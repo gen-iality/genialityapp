@@ -6,29 +6,49 @@ import useSurveyQuery from './hooks/useSurveyQuery';
 import * as Survey from 'survey-react';
 import { SurveyPage } from './services/services';
 //Funciones externas
-import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
 import StateMessages from './functions/stateMessagesV2';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
+import GetResponsesIndex from './functions/getResponsesIndex';
+import SavingResponseByUserId from './functions/savingResponseByUserId';
+// Componentes
+import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
+import ResultsPanel from './resultsPanel';
 
 function SurveyComponent(props) {
-  const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
+  const { eventId, idSurvey, currentUser, setSurveyModel, operation, surveyModel } = props;
   const cEvent = UseEventContext();
   //query.data tiene la definición de la encuesta/examen
   let query = useSurveyQuery(eventId, idSurvey);
-  console.log('200.updateSurveyStatusx0', eventId, idSurvey);
-  console.log('200.pruebashook', query.data);
-  console.log('200.CurrentUserID', currentUser.value._id);
+  console.log('200.SurveyComponent eventId', eventId);
+  console.log('200.SurveyComponent idSurvey', idSurvey);
+  console.log('200.SurveyComponent query.data', query.data);
+  console.log('200.SurveyComponent CurrentUserID', currentUser.value._id);
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
 
-  const [surveyModel, setSurveyModel] = useState(null);
+  //const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [questionFeedback, setQuestionFeedback] = useState(false);
   const [showingExitButton, setShowingExitButton] = useState(false);
+
+  const [showingResultsPanel, setShowingResultsPanel] = useState(false);
+  const [resultsPanel, setResultsPanel] = useState(false);
+  const [showingResultsButton, setShowingResultsButton] = useState(false);
+
+  const [eventUsers, setEventUsers] = useState([]);
+  const [voteWeight, setVoteWeight] = useState(0); // Inquietud: Es util?
+
   let [totalPoints, setTotalPoints] = useState(null);
   var survey;
+
+  useEffect(() => {
+    //Configuración para poder relacionar el id de la pregunta en la base de datos
+    //con la encuesta visible para poder almacenar las respuestas
+    Survey.JsonObject.metaData.addProperty('question', 'id');
+    Survey.JsonObject.metaData.addProperty('question', 'points');
+  }, []);
 
   //Asigna los colores configurables a  la UI de la encuesta
   useEffect(() => {
@@ -108,6 +128,7 @@ function SurveyComponent(props) {
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
                   setShowingExitButton(true);
+                  setShowingResultsButton(true);
                 }
               }}
               type='primary'
@@ -151,14 +172,61 @@ function SurveyComponent(props) {
     }
   }
 
-  function saveSurveyData() {
-    saveSurveyStatus();
-    saveSurveyCurrentPage();
+  function saveSurveyAnswers(surveyQuestions) {
+    let question;
+    let optionQuantity = 0;
+    let correctAnswer = false;
+
+    console.log('200.saveSurveyAnswers surveyModel', surveyModel);
+    console.log('200.saveSurveyAnswers surveyQuestions', surveyQuestions);
+    if (surveyQuestions.length === 1) {
+      question = surveyModel.currentPage.questions[0];
+    } else {
+      question = surveyModel.currentPage.questions[1];
+    }
+
+    console.log('200.saveSurveyAnswers question', question);
+
+    // Funcion que retorna si la opcion escogida es la respuesta correcta
+    correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+    console.log('200.saveSurveyAnswers correctAnswer', correctAnswer);
+
+    /** funcion para validar tipo de respuesta multiple o unica */
+    GetResponsesIndex(question).then((responseIndex) => {
+      optionQuantity = question.choices.length;
+      let optionIndex = responseIndex;
+
+      let infoOptionQuestion =
+        query.data.allow_gradable_survey === 'true'
+          ? { optionQuantity, optionIndex, correctAnswer }
+          : { optionQuantity, optionIndex };
+
+      // Se envia al servicio el id de la encuesta, de la pregunta y los datos
+      // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
+      if (!(Object.keys(currentUser).length === 0)) {
+        SavingResponseByUserId(query.data, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
+        console.log('200.saveSurveyAnswers SavingResponseByUserId');
+      }
+    });
   }
 
-  async function surveyCompleted() {
+  function saveSurveyData(sender) {
+    console.log('200.saveSurveyData');
+
+    saveSurveyStatus();
     saveSurveyCurrentPage();
+    saveSurveyAnswers(sender.currentPage.questions);
+  }
+
+  async function surveyCompleted(sender) {
+    saveSurveyCurrentPage();
+    saveSurveyAnswers(sender.currentPage.questions);
     MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints);
+    //setResultsSurvey([surveyModel, query.data]);
+  }
+
+  function showResultsPanel() {
+    setShowingResultsPanel(true);
   }
 
   return (
@@ -188,6 +256,31 @@ function SurveyComponent(props) {
                 Exit
               </Button>
             </div>
+          )}
+          {showingResultsButton && (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                onClick={() => {
+                  showResultsPanel();
+                }}
+                type='primary'
+                key='console'
+              >
+                Results
+              </Button>
+            </div>
+          )}
+          {showingResultsPanel && (
+            <>
+              <ResultsPanel
+                currentUser={currentUser}
+                eventId={eventId}
+                idSurvey={idSurvey}
+                surveyModel={surveyModel}
+                queryData={query.data}
+                operation={operation}
+              />
+            </>
           )}
         </>
       )}
