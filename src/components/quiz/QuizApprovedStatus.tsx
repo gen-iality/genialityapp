@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Badge } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 import { SurveysApi } from '@/helpers/request';
 import { Survey } from './types';
 
@@ -10,12 +12,14 @@ import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
 
 export interface QuizApprovedStatusProps {
   eventId: string,
+  approvedLink?: string,
 };
 
 function QuizApprovedStatus(props: QuizApprovedStatusProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [status, setStatus] = useState('estimando...');
   const [backgroundColor, setBackgroundColor] = useState('#9C835F');
+  const [isApproved, setIsApproved] = useState(false);
 
   const cUser = UseCurrentUser();
 
@@ -44,6 +48,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
 
       if (passed === surveys.length) {
         setStatus('aprobado');
+        setIsApproved(true);
         setBackgroundColor('#5EB841');
       } else if (notPassed < surveys.length) {
         setStatus('reprobado');
@@ -60,6 +65,11 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
   return (
     <>
     {isLoaded && <Badge count={status} style={{ backgroundColor }} />}
+    {isLoaded && isApproved && props.approvedLink && (
+      <Link to={props.approvedLink}>
+        <DownloadOutlined/>
+      </Link>
+    )}
     </>
   );
 }

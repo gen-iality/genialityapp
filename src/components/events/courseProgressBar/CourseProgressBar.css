@@ -1,0 +1,37 @@
+.CourseProgressBar-container {
+    display: flex;
+    max-width: max-content;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.CourseProgressBar-container::before{
+    content: '';
+    position: absolute;
+    background-color: #143851; 
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    width: 4px;
+    height: 100%;
+    z-index: -1;
+    transition: 0.4s e;
+}
+
+.CourseProgressBar-line {
+    position: absolute;
+    border-color:  #143851;
+    background-color: #E89941;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    width: 4px;
+    height: 50%;
+    z-index: -1;
+    transition: 0.4s e;
+}

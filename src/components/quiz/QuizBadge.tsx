@@ -29,7 +29,7 @@ function QuizBadge(props: QuizBadgetProps) {
     if (isRight === undefined) return '#7D7D7D';
     if (minimum === 0) return '#CB7E0B';
     return isRight ? '#5EB841' : '#B8415A';
-  }, [isRight]);
+  }, [isRight, minimum]);
 
   const badgeMessage = useMemo(() => {
     if (isLoading) return QuizStatusMessage.PROCESSING;
@@ -48,7 +48,7 @@ function QuizBadge(props: QuizBadgetProps) {
   }, [isLoading, right, total]);
 
   useEffect(() => {
-    setIsRight(right > minimum);
+    setIsRight(right >= minimum);
   }, [right, minimum]);
 
   return (

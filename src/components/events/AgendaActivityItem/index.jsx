@@ -53,13 +53,14 @@ function AgendaActivityItem(props) {
 
     const loadData = async () => {
       // Ask if that activity (item) is stored in <ID>_event_attendees
+      console.log('item._id', item._id)
       let activity_attendee = await firestore
         .collection(`${item._id}_event_attendees`)
         .doc(cEventUser.value._id)
         .get(); //checkedin_at
       if (activity_attendee.exists) {
         // If this activity existes, then it means the lesson was taken
-        setIsTaken(true);
+        setIsTaken(activity_attendee.data().checked_in);
       }
     };
     loadData();
@@ -325,10 +326,8 @@ function AgendaActivityItem(props) {
               }>
               <Card
                 style={{
-                  borderRadius: '15px',
-                  border: `solid 2px ${cEvent.value.styles.textMenu}`,
+                  border: `solid 1px rgb(240,240,240)`, // color: ${cEvent.value.styles.textMenu}
                   maxHeight: '280px',
-                  minHeight: '187px',
                 }}
                 hoverable
                 className='card-agenda-desktop agendaHover efect-scale'
@@ -338,7 +337,7 @@ function AgendaActivityItem(props) {
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
                 }}>
                 <Row gutter={[8, 8]}>
-                  <Col md={4} lg={4} xl={4} className='agenda-hora'>
+                  {/* <Col md={4} lg={4} xl={4} className='agenda-hora'>
                     <div>
                       {!props.hasDate && item.datetime_end ? (
                         <Timeline>
@@ -502,15 +501,20 @@ function AgendaActivityItem(props) {
                         </div>
                       )}
                     </div>
-                  </Col>
-                  <Col md={14} lg={15} xl={15} className='agenda-contenido'>
-                    <Space direction='vertical'>
+                  </Col>*/}
+                  <Col
+                    md={24}
+                    lg={24}
+                    xl={24}
+                    className='agenda-contenido'
+                  >
+                    <Space direction='horizontal'>
                       <Row gutter={[10, 10]}>
-                        <Col span={24} style={{ paddingLeft: '0px' }}>
-                          <div className='titulo' style={{ color: cEvent.value.styles.textMenu }}>
+                        <Row span={24} style={{ paddingLeft: '0px' }}>
+                          <div className='titulo' style={{ color: cEvent.value.styles.textMenu, marginRight: '1rem' }}>
                             {item.name}.
                           </div>
-                          <div>
+                          <div style={{marginRight: '1rem'}}>
                             {meetingId && [activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) && (
                               <QuizProgress eventId={cEvent.value._id} userId={currentUser.value._id} surveyId={meetingId} />
                             )}
@@ -519,8 +523,8 @@ function AgendaActivityItem(props) {
                           <span className='lugar' style={{ color: cEvent.value.styles.textMenu }}>
                             {item && item.space && item.space.name}
                           </span>
-                        </Col>
-                        <Row style={{ width: '100%' }}>
+                        </Row>
+                        {/* <Row style={{ width: '100%' }}>
                           {item.description !== null && item.description !== '<p><br></p>' && (
                             <div
                               style={
@@ -528,7 +532,7 @@ function AgendaActivityItem(props) {
                               }>
                               {
                                 <>
-                                  {/*  */}
+                                  {/*  * /}
                                   <Comment
                                     className='descripcion'
                                     content={
@@ -553,7 +557,7 @@ function AgendaActivityItem(props) {
                               }
                             </div>
                           )}
-                        </Row>
+                        </Row> */}
                         <Row style={{ marginRight: '8px' }}>
                           {item.hosts.length > 0 &&
                             (item.hosts.length < 4 ? (
@@ -615,9 +619,9 @@ function AgendaActivityItem(props) {
                       )}
                     </Space>
                   </Col>
-                  <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
-                    {/* {console.log(meetingState, 'meetingState', item.video)} */}
-                    {/* Aplicada la condición ya que no mostraba el video */}
+                  {/* <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
+                    {/* {console.log(meetingState, 'meetingState', item.video)} * /}
+                    {/* Aplicada la condición ya que no mostraba el video * /}
                     {(meetingState === 'ended_meeting_room' ||
                       meetingState === '' ||
                       meetingState === null ||
@@ -658,7 +662,7 @@ function AgendaActivityItem(props) {
                         />
                       </>
                     )}
-                  </Col>
+                  </Col>*/}
                   <LessonViewedCheck isTaken={isTaken} />
                 </Row>
               </Card>

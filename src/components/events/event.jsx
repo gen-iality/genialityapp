@@ -125,10 +125,10 @@ class Event extends Component {
   addNewFieldsToEvent(event) {
     const dateFrom = event.datetime_from.split(' ');
     const dateTo = event.datetime_to.split(' ');
-    event.hour_start = dayjs(dateFrom[1], 'HH:mm').toDate();
-    event.hour_end = dayjs(dateTo[1], 'HH:mm').toDate();
-    event.date_start = dayjs(dateFrom[0], 'YYYY-MM-DD').toDate();
-    event.date_end = dayjs(dateTo[0], 'YYYY-MM-DD').toDate();
+    event.hour_start = dayjs(event.datetime_from).toDate();
+    event.hour_end = dayjs(event.datetime_to).toDate();
+    event.date_start = dayjs(event.datetime_from).toDate();
+    event.date_end = dayjs(event.datetime_to).toDate();
     event.address = event.address ? event.address : '';
 
     return event;
