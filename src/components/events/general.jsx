@@ -654,7 +654,6 @@ class General extends Component {
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changeAccessTypeForEvent = (value) => {
-    console.log('🚀 debug - General - value', value);
     this.setState({ accessSelected: value });
     switch (value) {
       case 'PUBLIC_EVENT_WITH_REGISTRATION':

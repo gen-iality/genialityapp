@@ -12,12 +12,14 @@ import { useHistory } from 'react-router';
 const InfoEvent = ({ paddingOff, preview }) => {
   let isPreview = preview ? true : false;
   let cEvent = UseEventContext();
+  let cEventValues = cEvent.value;
   let { handleChangeTypeModal, helperDispatch } = useHelper();
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
+  const cUserValues = cUser.value;
 
-  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
-  const textColor = cEvent.value?.styles?.textMenu;
+  const bgColor = cEventValues?.styles?.toolbarDefaultBg;
+  const textColor = cEventValues?.styles?.textMenu;
 
   //PARA REDIRIGIR A LA LANDING
   const history = useHistory();
@@ -25,16 +27,44 @@ const InfoEvent = ({ paddingOff, preview }) => {
   //VALIDACION DE BOTONES
   const visibleButton = () => {
     if (
-      (recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION' || (cUser?.value && cEventUser?.value)) &&
-      !window.sessionStorage.getItem('session')
+      (recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION' || (cUserValues && cEventUser?.value)) &&
+      !window.sessionStorage.getItem('session') &&
+      cEventValues?.type_event !== 'physicalEvent'
     ) {
       return 'JOIN';
     }
-    if (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && !cUser?.value) {
+    if (
+      recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
+      !cUserValues &&
+      cEventValues?.type_event !== 'physicalEvent'
+    ) {
       return 'REGISTER';
     }
-    if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUser?.value && !cEventUser?.value) {
+    if (
+      recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
+      cUserValues &&
+      !cEventUser?.value &&
+      cEventValues?.type_event !== 'physicalEvent'
+    ) {
       return 'SIGNUP';
+    }
+  };
+
+  const buttonAction = () => {
+    if (!isPreview && !cUserValues?._id && recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT') {
+      !isPreview && helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
+      return;
+    }
+
+    if (!isPreview && cEventValues?.where_it_run === 'ExternalEvent') {
+      window.open(cEventValues?.url_external, '_blank');
+      return;
+    }
+
+    if (!isPreview && cEventValues?.where_it_run === 'InternalEvent') {
+      //SE GUARDA LA SESION DEL USUARIO POR EL EVENTO ACTUAL
+      window.sessionStorage.setItem('session', cEventValues?._id);
+      history.replace(`/landing/${cEventValues?._id}`);
     }
   };
 
@@ -52,7 +82,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
       }}
       title={
         <Typography.Title level={4} style={{ color: textColor }}>
-          {cEvent.value?.name}
+          {cEventValues?.name}
         </Typography.Title>
       }
       extra={
@@ -98,25 +128,22 @@ const InfoEvent = ({ paddingOff, preview }) => {
           visibleButton() == 'JOIN' && (
             <Button
               style={{ color: bgColor, backgroundColor: textColor }}
-              onClick={() => {
-                if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && !isPreview) {
-                  //SE GUARDA LA SESION DEL USUARIO POR EL EVENTO ACTUAL
-                  window.sessionStorage.setItem('session', cEvent.value?._id);
-                  history.replace(`/landing/${cEvent.value?._id}`);
-                } else {
-                  !isPreview && helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
-                }
-              }}
+              onClick={buttonAction}
               type='primary'
               size='large'>
-              {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT'
+              {cUserValues?._id
                 ? intl.formatMessage({
                     id: 'button.join',
                     defaultMessage: 'Unirse al evento',
                   })
-                : intl.formatMessage({
+                : recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT'
+                ? intl.formatMessage({
                     id: 'modal.title.login',
                     defaultMessage: 'Iniciar sesión',
+                  })
+                : intl.formatMessage({
+                    id: 'button.join',
+                    defaultMessage: 'Unirse al evento',
                   })}
             </Button>
           )
@@ -127,24 +154,39 @@ const InfoEvent = ({ paddingOff, preview }) => {
           <Space wrap>
             <Space>
               <CalendarOutlined />
-              <time>{Moment(cEvent.value?.datetime_from).format('ll')}</time>
+              <time>{Moment(cEventValues?.datetime_from).format('ll')}</time>
             </Space>
             <Space>
               <ClockCircleOutlined />
-              <time>{Moment(cEvent.value?.datetime_from).format('LT')}</time>
+              <time>{Moment(cEventValues?.datetime_from).format('LT')}</time>
             </Space>
           </Space>
           <Divider type='vertical'></Divider>
           <Space wrap>
             <Space>
               <CalendarOutlined />
-              <time>{Moment(cEvent.value?.datetime_to).format('ll')}</time>
+              <time>{Moment(cEventValues?.datetime_to).format('ll')}</time>
             </Space>
             <Space>
               <ClockCircleOutlined />
-              <time>{Moment(cEvent.value?.datetime_to).format('LT')}</time>
+              <time>{Moment(cEventValues?.datetime_to).format('LT')}</time>
             </Space>
           </Space>
+          {cEventValues?.type_event !== 'onlineEvent' && (
+            <>
+              <Divider type='vertical'></Divider>
+              <Space wrap>
+                <Space>
+                  <b>Dirección: </b>
+                  {cEventValues?.address}
+                </Space>
+                <Space>
+                  <b>Lugar: </b>
+                  {cEventValues?.venue}
+                </Space>
+              </Space>
+            </>
+          )}
         </Space>
       }></PageHeader>
   );
