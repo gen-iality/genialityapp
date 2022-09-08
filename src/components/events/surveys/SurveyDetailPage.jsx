@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Graphics from './graphics';
 import SurveyComponent from './surveyComponentV2';
@@ -8,6 +9,8 @@ import WithEviusContext from '@/context/withContext';
 import LoadSelectedSurvey from './functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './functions/initRealTimeSurveyListening';
 import useSurveyQuery from './hooks/useSurveyQuery';
+import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats';
+import { SurveysApi } from '@/helpers/request';
 
 /** Context´s */
 import { UseCurrentUser } from '@context/userContext';
@@ -20,6 +23,11 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   const cSurveys = UseSurveysContext();
 
   const currentUser = UseCurrentUser();
+  const history = useHistory();
+  const handleGoToCertificate = useCallback(() => {
+    history.push(`/landing/${cEvent.value?._id}/certificate`);
+  }, [cEvent.value]);
+  const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
 
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
@@ -53,6 +61,43 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     setShowingResultsPanel(true);
   }
 
+  useEffect(() => {
+    if (!cEvent.value?._id) return;
+    if (!currentUser?.value?._id) return;
+
+    (async () => {
+      const surveys = await SurveysApi.byEvent(cEvent.value._id);
+
+      let passed = 0;
+      let notPassed = 0;
+
+      for (let i = 0; i < surveys.length; i++) {
+        const survey = surveys[i];
+        const stats = await useAsyncPrepareQuizStats(
+          cEvent.value._id,
+          survey._id,
+          currentUser?.value?._id,
+          survey,
+        );
+
+        console.debug('stats', stats)
+        if (stats.minimum > 0) {
+          if (stats.right >= stats.minimum) {
+            passed = passed + 1;
+          } else {
+            notPassed = notPassed + 1;
+          }
+        }
+      }
+
+      if (passed === surveys.length) {
+        setEnableGoToCertificate(true);
+      } else {
+        setEnableGoToCertificate(false);
+      }
+    })();
+  }, [currentUser?.value?._id, cEvent.value]);
+
   if (!cSurveys.currentSurvey) {
     return <h1>No hay nada publicado, {surveyId}</h1>;
   }
@@ -85,6 +130,10 @@ function SurveyDetailPage({ surveyId, cEvent }) {
               idSurvey={surveyId}
             />
           )}
+          {(enableGoToCertificate) && <Button
+            type='primary'
+            onClick={handleGoToCertificate}
+          >Descargar certificado</Button>}
         </div>
       ) : cSurveys.shouldDisplaySurveyClosedMenssage() ? (
         <Result title='Esta evaluación ha sido cerrada' />
