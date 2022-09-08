@@ -26,7 +26,7 @@ function SurveyComponent(props) {
   } = props;
   const cEvent = UseEventContext();
   //query.data tiene la definición de la encuesta/examen
-  let query = useSurveyQuery(eventId, idSurvey);
+  const query = useSurveyQuery(eventId, idSurvey);
   console.log('200.SurveyComponent eventId', eventId);
   console.log('200.SurveyComponent idSurvey', idSurvey);
   console.log('200.SurveyComponent query.data', query.data);

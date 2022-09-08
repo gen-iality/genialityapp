@@ -1,61 +1,71 @@
 import { useState, useEffect } from 'react';
 import SurveyAnswers from './services/surveyAnswersService';
 import { LoadingOutlined } from '@ant-design/icons';
+import useSurveyQuery from './hooks/useSurveyQuery';
 
 function ResultsPanel(props) {
-  const { queryData, surveyModel, eventId, idSurvey, currentUser } = props;
+  const { eventId, idSurvey, currentUser } = props;
 
-  console.log('800.ResultsPanel queryData', queryData);
-  console.log('800.ResultsPanel surveyModel', surveyModel);
-  console.log('800.ResultsPanel eventId', eventId);
+  const query = useSurveyQuery(eventId, idSurvey);
+  console.log('800.ResultsPanel queryData', query.data);
   console.log('800.ResultsPanel idSurvey', idSurvey);
 
-  let [loading, setloading] = useState();
+  const [userAnswers, setUserAnswers] = useState(undefined);
 
-  let [userAnswers, setUserAnswers] = useState(undefined);
-  let [dataLoaded, setDataLoaded] = useState(false);
-
-  async function getUserAnswers(question) {
-    let userAnswer = await SurveyAnswers.getAnswersQuestionV2(idSurvey, question.id, currentUser.value._id);
+  async function getUserAnswers(questionId) {
+    let userAnswer = await SurveyAnswers.getAnswersQuestionV2(
+      idSurvey, // survey ID
+      questionId, // current question
+      currentUser.value._id, // who
+    );
     return userAnswer.data();
   }
 
   useEffect(() => {
     console.log('800.useEffect idSurvey', idSurvey);
     console.log('800.useEffect currentUser', currentUser);
-
-    let userAnswersLocal = {};
-
+    console.log('800.useEffect query.data', query.data);
+    if (!query.data) return;
     if (!idSurvey || !currentUser.value._id) return;
-    queryData.questions.map(async (question, index) => {
-      //console.log('200.question', question);
-      let userAnswer = await getUserAnswers(question);
-      console.log('800.userAnswer - 1', userAnswer);
 
-      if (userAnswer !== undefined) {
-        userAnswersLocal[question.id] = userAnswer;
-      }
+    let userAnswersLocal = [];
 
-      if (queryData.questions.length - 1 === index) {
-        console.log('800.userAnswersLocal', userAnswersLocal);
-        setUserAnswers(userAnswersLocal);
-        setDataLoaded(true);
+    (async () => {
+      // For each question, search thhe user's answer and save all in userAnswersLocal
+      for (let index = 0; index < query.data.questions.length; index++) {
+        const question = query.data.questions[index];
+        // The first question is not a real question!!
+        if (!question.id) continue;
+        // Search the answer
+        let userAnswer = await getUserAnswers(question.id);
+        console.log('800.userAnswer - 1', userAnswer);
+  
+        // Save the current question, and the correct answer
+        if (userAnswer !== undefined) {
+          userAnswersLocal.push({
+            id: question.id,
+            answer: userAnswer.response,
+            correctAnswer: question.correctAnswer,
+            title: question.title,
+          });
+        } else {
+          console.debug('no answer found for question.id:', question.id);
+        }
       }
-    });
-  }, [currentUser.value._id, idSurvey]);
+      // Save all user's answers
+      setUserAnswers(userAnswersLocal);
+    })();
+  }, [currentUser.value._id, idSurvey, query.data]);
 
   return (
     <>
-      {userAnswers ? (
+      {userAnswers === undefined && <LoadingOutlined style={{ width: '50px', color: '#808080' }} />}
+      {userAnswers !== undefined && (
+        <>
+        <p>Aquí se ven los resultados</p>
         <div style={{ display: 'block', border: '1px solid #808080', padding: '10px' }}>
-          {queryData.questions.map((question, index) => {
-            let questionTitle = question.title;
-            let correctAnswer = question.correctAnswer;
-            //let userAnswerResponse = userAnswers[index - 1].response[0];
-
-            if (questionTitle === undefined) return;
-
-            console.log('800.userAnswersObject - 2', userAnswers);
+          {userAnswers.map((answer, index) => {
+            console.log('800.userAnswersObject - 2', answer);
 
             return (
               <div
@@ -67,15 +77,14 @@ function ResultsPanel(props) {
                   borderRadius: '5px',
                 }}
               >
-                <p>{`${index}. ${questionTitle}`}</p>
-                <p>{`Respuesta correcta: ${correctAnswer}`}</p>
-                <p>{`Tu respuesta: ${userAnswers[question.id].response[0]}`}</p>
+                <p>{`${index}. ${answer.title}`}</p>
+                <p>{`Respuesta correcta: ${answer.correctAnswer}`}</p>
+                <p>{`Tu respuesta: ${answer.answer}`}</p>
               </div>
             );
           })}
         </div>
-      ) : (
-        <LoadingOutlined style={{ width: '50px', color: '#808080' }} />
+        </>
       )}
     </>
   );

@@ -17,7 +17,7 @@ import { UseSurveysContext } from '@context/surveysContext';
 import ResultsPanel from './resultsPanel';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
-  let cSurveys = UseSurveysContext();
+  const cSurveys = UseSurveysContext();
 
   const currentUser = UseCurrentUser();
 
@@ -72,6 +72,13 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       {JSON.stringify(loadedQuestions)}
       <hr/>
       {JSON.stringify(answerdQuestions)}
+      {isSurveyFinished && (
+        <ResultsPanel
+          eventId={cEvent.value?._id}
+          currentUser={currentUser}
+          idSurvey={surveyId}
+        />
+      )}
       </>}
 
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
@@ -92,11 +99,9 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           </Button>
           {showingResultsPanel && (
             <ResultsPanel
+              eventId={cEvent.value?._id}
               currentUser={currentUser}
-              eventId={eventId}
               idSurvey={surveyId}
-              queryData={queryData}
-              operation='participationPercentage'
             />
           )}
         </div>
@@ -105,13 +110,13 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       ) : cSurveys.shouldDisplayGraphics() ? (
         <>
           <Divider />
-          <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
+          <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation='participationPercentage' />
         </>
       ) : (
         <Card className='surveyCard'>
           <SurveyComponent
             idSurvey={surveyId}
-            eventId={cEvent.value._id}
+            eventId={cEvent.value?._id}
             cbMaskAsFinished={() => setIsSurveyFinished(true)}
             setLoadedQuestions={setLoadedQuestions}
             addAnswerdQuestion={(newAnswer) => {
