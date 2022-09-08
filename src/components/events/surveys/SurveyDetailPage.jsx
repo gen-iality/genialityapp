@@ -1,29 +1,41 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Graphics from './graphics';
-import SurveyComponent from './surveyComponent';
-import { Card, Result, Divider } from 'antd';
+import SurveyComponent from './surveyComponentV2';
+import { Card, Result, Divider, Button, Space } from 'antd';
 
-import ClosedSurvey from './components/closedSurvey';
 import WithEviusContext from '@/context/withContext';
 import LoadSelectedSurvey from './functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './functions/initRealTimeSurveyListening';
+import useSurveyQuery from './hooks/useSurveyQuery';
+import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats';
+import { SurveysApi } from '@/helpers/request';
 
 /** Context´s */
-import { UseCurrentUser } from '../../../context/userContext';
-import { UseSurveysContext } from '../../../context/surveysContext';
+import { UseCurrentUser } from '@context/userContext';
+import { UseSurveysContext } from '@context/surveysContext';
+
+/** Components */
+import ResultsPanel from './resultsPanel';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
-  let cSurveys = UseSurveysContext();
+  const cSurveys = UseSurveysContext();
 
   const currentUser = UseCurrentUser();
-  const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
+  const history = useHistory();
+  const handleGoToCertificate = useCallback(() => {
+    history.push(`/landing/${cEvent.value?._id}/certificate`);
+  }, [cEvent.value]);
+  const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
+
+  const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
   //Effect for when prop.idSurvey changes
   useEffect(() => {
     if (!surveyId) return;
 
-    console.log('survey surveyid userid', surveyId, currentUser.value);
+    console.log('200.survey surveyid userid', surveyId, currentUser.value);
     let unsubscribe;
     (async () => {
       let loadedSurvey = await LoadSelectedSurvey(cEvent.value._id, surveyId);
@@ -39,50 +51,94 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         cSurveys.select_survey({ ...surveyConfig, ...loadedSurvey });
       }
     })();
+
     return () => {
       if (unsubscribe) unsubscribe();
     };
   }, [surveyId]);
 
+  function showResultsPanel() {
+    setShowingResultsPanel(true);
+  }
+
   useEffect(() => {
-    if (showSurveyTemporarily === true) {
-      setTimeout(() => {
-        setShowSurveyTemporarily(false);
-      }, 10000);
-    }
-  }, [showSurveyTemporarily]);
+    if (!cEvent.value?._id) return;
+    if (!currentUser?.value?._id) return;
+
+    (async () => {
+      const surveys = await SurveysApi.byEvent(cEvent.value._id);
+
+      let passed = 0;
+      let notPassed = 0;
+
+      for (let i = 0; i < surveys.length; i++) {
+        const survey = surveys[i];
+        const stats = await useAsyncPrepareQuizStats(cEvent.value._id, survey._id, currentUser?.value?._id, survey);
+
+        console.debug('stats', stats);
+        if (stats.minimum > 0) {
+          if (stats.right >= stats.minimum) {
+            passed = passed + 1;
+          } else {
+            notPassed = notPassed + 1;
+          }
+        }
+      }
+
+      if (passed === surveys.length) {
+        setEnableGoToCertificate(true);
+      } else {
+        setEnableGoToCertificate(false);
+      }
+    })();
+  }, [currentUser?.value?._id, cEvent.value]);
 
   if (!cSurveys.currentSurvey) {
-    return <h1>No hay nada publicado{surveyId}</h1>;
+    return <h1>No hay nada publicado, {surveyId}</h1>;
   }
 
   if (!cEvent || !surveyId) {
-    return <h1>Carga......{console.log('cevent', cEvent)}</h1>;
+    return <h1>Cargando..</h1>;
   }
   return (
     <div>
-      {!cSurveys.shouldDisplaySurveyAttendeeAnswered() && (
-        <Result style={{ height: '50%', padding: '0px' }} status='success' title='Ya has contestado esta evaluación' />
-      )}
-      {cSurveys.shouldDisplaySurveyClosedMenssage() && <Result title='Esta evaluación ha sido cerrada' />}
-
-      <Card className='survyCard'>
-        <SurveyComponent
-          idSurvey={surveyId}
-          eventId={cEvent.value._id}
-          currentUser={currentUser}
-          setShowSurveyTemporarily={setShowSurveyTemporarily}
-          operation='participationPercentage'
-        />
-      </Card>
-
-      {cSurveys.shouldDisplayGraphics() && (
+      {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
+        <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
+          <Result
+            style={{ height: '50%', padding: '75px 75px 20px' }}
+            status='success'
+            title='Ya has contestado esta evaluación'
+          />
+          <Button
+            onClick={() => {
+              showResultsPanel();
+            }}
+            type='primary'
+            key='console'
+          >
+            Ver mis respuestas
+          </Button>
+          {showingResultsPanel && (
+            <ResultsPanel eventId={cEvent.value?._id} currentUser={currentUser} idSurvey={surveyId} />
+          )}
+          {enableGoToCertificate && (
+            <Button type='primary' onClick={handleGoToCertificate}>
+              Descargar certificado
+            </Button>
+          )}
+        </Space>
+      ) : cSurveys.shouldDisplaySurveyClosedMenssage() ? (
+        <Result title='Esta evaluación ha sido cerrada' />
+      ) : cSurveys.shouldDisplayGraphics() ? (
         <>
           <Divider />
-          <Graphics idSurvey={surveyId} eventId={cEvent._id} operation='participationPercentage' />
+          <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation='participationPercentage' />
         </>
+      ) : (
+        <Card className='surveyCard'>
+          <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} />
+        </Card>
       )}
-      {/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
     </div>
   );
 }

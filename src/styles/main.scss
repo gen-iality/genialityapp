@@ -124,7 +124,7 @@ iframe {
   transform: translateX(-50%);
 }
 .sv-container-modern {
-  margin-bottom: 10%;
+  margin-bottom: 5px;
   overflow-y: auto;
   height: auto;
   @media screen and (max-width: $breakpoint-mobile) {
@@ -144,10 +144,10 @@ iframe {
   color: #1ab394 !important;
 }
 
-.sv-question__content {
+/* .sv-question__content {
   margin-right: 2.05em;
   margin-top: 2em;
-}
+} */
 
 .sv-question__content {
   text-align: center;
@@ -173,17 +173,18 @@ iframe {
 // style de la respuestas del survey
 .sv-root-modern .sv-completedpage {
   background-color: transparent !important;
+  margin: 0 10px;
   font-family: Raleway;
   font-size: 20px;
   font-weight: bold;
   box-sizing: border-box;
-  height: 23em;
+  height: auto;
   padding-top: 1.5em;
   padding-bottom: 0.5em;
   text-align: center;
   @media screen and (max-width: $breakpoint-mobile) {
     font-size: 20px;
-    height: 28em;
+    height: auto;
   }
 }
 
