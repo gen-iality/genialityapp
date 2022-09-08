@@ -163,9 +163,9 @@ const Informacion = (props) => {
               style={{ width: '100%', marginTop: '20px' }}
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               allowClear={false}
-              value={dayjs(selectedDay)}
+              // value={dayjs(selectedDay)}
               format={'DD/MM/YYYY'}
-              onChange={(value) => changeSelectDay(value.toDate())}
+              onChange={(value) => changeSelectDay(value)}
             />
 
             {userConsumption?.end_date && (
