@@ -221,6 +221,10 @@ class General extends Component {
     ) {
       //Evento Público con Registro
       this.setState({ accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION' });
+      //estado del check del evento público con registro sin contraseña
+      if (this.state.event.visibility === 'ANONYMOUS' && this.state.event.allow_register) {
+        this.setState({ extraState: true });
+      }
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Evento Público sin Registro
       this.setState({ accessSelected: 'UN_REGISTERED_PUBLIC_EVENT' });
@@ -251,7 +255,7 @@ class General extends Component {
     const valueData = e?.target?.value;
 
     const targetData = e?.target;
-    // console.log(e.target);
+
     if (targetData !== null || targetData !== undefined || targetData !== '') {
       let value = e;
       if (typeof valueData === 'string') {
@@ -272,8 +276,6 @@ class General extends Component {
     //     value = valueData;
     //   }
     // }
-
-    /* console.log(name, value, '2'); */
   };
   //Validación
   valid = () => {
@@ -474,8 +476,6 @@ class General extends Component {
       return item.value;
     });
 
-    /* console.log(event.visibility, event.allow_register, 'hola') */
-
     const data = {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
@@ -558,11 +558,8 @@ class General extends Component {
         action: 'show',
       });
       if (error?.response) {
-        console.log('ERROR ACA==>', error);
-        /* console.error(error.response); */
         const { status, data } = error.response;
 
-        /* console.error('STATUS', status, status === 401); */
         if (status === 401) {
           DispatchMessageService({
             type: 'error',
@@ -572,16 +569,12 @@ class General extends Component {
         } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.log('ERROR DATA===>', errorData);
-        /* console.error('Error', error.message); */
         if (error.request) {
-          /* console.error(error.request); */
           errorData = error.request;
         }
         errorData.status = 708;
         this.setState({ serverError: true, loader: false, errorData });
       }
-      /*  console.error(error.config); */
     }
   }
   //Delete event
@@ -666,6 +659,7 @@ class General extends Component {
     switch (value) {
       case 'PUBLIC_EVENT_WITH_REGISTRATION':
         this.setState({
+          extraState: false,
           event: {
             ...this.state.event,
             visibility: 'PUBLIC',
@@ -673,8 +667,10 @@ class General extends Component {
           },
         });
         break;
-      case 'PUBLIC_WITH_REGISTRATION_WITHOUT_PASSWORD':
+      case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
         this.setState({
+          accessSelected: 'PUBLIC_EVENT_WITH_REGISTRATION',
+          extraState: true,
           event: {
             ...this.state.event,
             visibility: 'ANONYMOUS',
@@ -684,6 +680,7 @@ class General extends Component {
         break;
       case 'UN_REGISTERED_PUBLIC_EVENT':
         this.setState({
+          extraState: false,
           event: {
             ...this.state.event,
             visibility: 'PUBLIC',
@@ -693,6 +690,7 @@ class General extends Component {
         break;
       case 'PRIVATE_EVENT':
         this.setState({
+          extraState: false,
           event: {
             ...this.state.event,
             visibility: 'PRIVATE',
@@ -732,6 +730,8 @@ class General extends Component {
       iMustValidate,
       consumption,
       loading,
+      accessSelected,
+      extraState,
     } = this.state;
 
     if (loading) return <Loading />;
@@ -1151,7 +1151,8 @@ class General extends Component {
                     <AccessTypeCard
                       {...item}
                       callBackSelectedItem={this.changeAccessTypeForEvent}
-                      itemSelected={this.state.accessSelected}
+                      itemSelected={accessSelected}
+                      extraState={extraState}
                       isCms
                     />
                   </Col>

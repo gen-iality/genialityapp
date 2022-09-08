@@ -1,5 +1,7 @@
+import { ReactNode } from 'react';
+
 import { Space, Switch, Tooltip, Typography } from 'antd';
-import { AccessTypeCardInterface, textTooltipType, iconTooltipType } from '../interfaces/interfaces';
+import { AccessTypeCardInterface, textTooltipType, iconTooltipType, extraProperties } from '../interfaces/interfaces';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
 import AccountTieIcon from '@2fd/ant-design-icons/lib/AccountTie';
@@ -30,19 +32,20 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
       iconWithTooltip('Tiene chat público', <MessageIcon />),
       iconWithTooltip('Tiene chat privado', <MessageLockIcon />),
     ],
-    extra: (callBackSelectedItem) => {
+    extra: ({ callBackSelectedItem = () => {}, extraState = false }: extraProperties) => {
       return (
         <Space direction='vertical'>
           <Typography.Text strong style={{ fontWeight: '500' }}>
             Registrar sin autenticar usuario
           </Typography.Text>
           <Switch
+            checked={extraState}
+            // defaultChecked={extraState}
             checkedChildren={'Si'}
             unCheckedChildren={'No'}
             onChange={(state) => {
-              console.log('🚀 debug - state', state);
               const validateState = state
-                ? 'PUBLIC_WITH_REGISTRATION_WITHOUT_PASSWORD'
+                ? 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS'
                 : 'PUBLIC_EVENT_WITH_REGISTRATION';
               callBackSelectedItem(validateState);
             }}
