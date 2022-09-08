@@ -59,10 +59,14 @@ function ResultsPanel(props) {
 
   return (
     <>
-      {userAnswers === undefined && <LoadingOutlined style={{ width: '50px', color: '#808080' }} />}
+      {userAnswers === undefined && (
+        <>
+        <p>Cargando resultados...</p>
+        <LoadingOutlined style={{ width: '50px', color: '#808080' }} />
+        </>
+      )}
       {userAnswers !== undefined && (
         <>
-        <p>Aquí se ven los resultados</p>
         <div style={{ display: 'block', border: '1px solid #808080', padding: '10px' }}>
           {userAnswers.map((answer, index) => {
             console.log('800.userAnswersObject - 2', answer);

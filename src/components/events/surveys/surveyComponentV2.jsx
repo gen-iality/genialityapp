@@ -20,9 +20,6 @@ function SurveyComponent(props) {
   const {
     eventId, // The event id
     idSurvey, // The survey ID
-    cbMaskAsFinished, // This callback allows to know if the survey is finished
-    setLoadedQuestions, // Load the question to parent
-    addAnswerdQuestion, // Allows to add new answerd question
   } = props;
   const cEvent = UseEventContext();
   //query.data tiene la definición de la encuesta/examen
@@ -60,7 +57,6 @@ function SurveyComponent(props) {
     if (!(query.data?.questions.length > 0)) return;
     assignStylesToSurveyFromEvent(eventStyles);
     setSurveyModel(createSurveyModel(query.data));
-    setLoadedQuestions(query.data?.questions.filter((question) => question.id !== undefined));
     // survey.onCurrentPageChanging.add(displayFeedbackafterQuestionAnswered);
   }, [query.data]);
 
@@ -132,7 +128,6 @@ function SurveyComponent(props) {
                 setShowingFeedback(false);
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
-                  cbMaskAsFinished();
                   setIsSaveButtonShown(true);
                 }
               }}
@@ -191,9 +186,6 @@ function SurveyComponent(props) {
     }
 
     console.log('200.saveSurveyAnswers question', question);
-
-    // Add their answers
-    addAnswerdQuestion({ id: question.id, value: question.value });
 
     // Funcion que retorna si la opcion escogida es la respuesta correcta
     correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;

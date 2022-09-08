@@ -21,11 +21,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
 
   const currentUser = UseCurrentUser();
 
-  const [loadedQuestions, setLoadedQuestions] = useState([]);
-  const [answerdQuestions, setAnswerdQuestions] = useState([]);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
-
-  const [isSurveyFinished, setIsSurveyFinished] = useState(false);
 
   //Effect for when prop.idSurvey changes
   useEffect(() => {
@@ -66,21 +62,6 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   }
   return (
     <div>
-      {true && <>
-      hola. {isSurveyFinished ? 'finalizado' : 'no finalizado aún'}
-      <br/>
-      {JSON.stringify(loadedQuestions)}
-      <hr/>
-      {JSON.stringify(answerdQuestions)}
-      {isSurveyFinished && (
-        <ResultsPanel
-          eventId={cEvent.value?._id}
-          currentUser={currentUser}
-          idSurvey={surveyId}
-        />
-      )}
-      </>}
-
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
         <div>
           <Result
@@ -117,11 +98,6 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           <SurveyComponent
             idSurvey={surveyId}
             eventId={cEvent.value?._id}
-            cbMaskAsFinished={() => setIsSurveyFinished(true)}
-            setLoadedQuestions={setLoadedQuestions}
-            addAnswerdQuestion={(newAnswer) => {
-              setAnswerdQuestions((previous) => ([...previous, newAnswer]))
-            }}
           />
         </Card>
       )}
