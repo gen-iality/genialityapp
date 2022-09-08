@@ -14,14 +14,15 @@ import SavingResponseByUserId from './functions/savingResponseByUserId';
 // Componentes
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
 import ResultsPanel from './resultsPanel';
+import { UseCurrentUser } from '@context/userContext';
 
 function SurveyComponent(props) {
   const {
     eventId, // The event id
     idSurvey, // The survey ID
-    currentUser, // the currentUser (use the User model)
     cbMaskAsFinished, // This callback allows to know if the survey is finished
     setLoadedQuestions, // Load the question to parent
+    addAnswerdQuestion, // Allows to add new answerd question
   } = props;
   const cEvent = UseEventContext();
   //query.data tiene la definición de la encuesta/examen
@@ -29,7 +30,8 @@ function SurveyComponent(props) {
   console.log('200.SurveyComponent eventId', eventId);
   console.log('200.SurveyComponent idSurvey', idSurvey);
   console.log('200.SurveyComponent query.data', query.data);
-  console.log('200.SurveyComponent CurrentUserID', currentUser.value._id);
+
+  const currentUser = UseCurrentUser();
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -47,27 +49,27 @@ function SurveyComponent(props) {
   var survey;
 
   useEffect(() => {
-    //Configuración para poder relacionar el id de la pregunta en la base de datos
-    //con la encuesta visible para poder almacenar las respuestas
+    // Configuración para poder relacionar el id de la pregunta en la base de datos
+    // con la encuesta visible para poder almacenar las respuestas
     Survey.JsonObject.metaData.addProperty('question', 'id');
     Survey.JsonObject.metaData.addProperty('question', 'points');
   }, []);
 
-  //Asigna los colores configurables a  la UI de la encuesta
+  // Asigna los colores configurables a  la UI de la encuesta
   useEffect(() => {
     if (!(query.data?.questions.length > 0)) return;
     assignStylesToSurveyFromEvent(eventStyles);
     setSurveyModel(createSurveyModel(query.data));
     setLoadedQuestions(query.data?.questions.filter((question) => question.id !== undefined));
-    //survey.onCurrentPageChanging.add(displayFeedbackafterQuestionAnswered);
+    // survey.onCurrentPageChanging.add(displayFeedbackafterQuestionAnswered);
   }, [query.data]);
 
   function createSurveyModel(survey) {
     let surveyModelData = new Survey.Model(survey);
     surveyModelData.currentPageNo = survey.currentPage;
     surveyModelData.locale = 'es';
-    //Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
-    //uno en el header y otro encima del botón de inicio de encuesta
+    // Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
+    // uno en el header y otro encima del botón de inicio de encuesta
     delete surveyModelData.localizableStrings.title.values.default;
     return surveyModelData;
   }
@@ -170,7 +172,7 @@ function SurveyComponent(props) {
 
   async function saveSurveyCurrentPage() {
     if (!(Object.keys(currentUser).length === 0)) {
-      //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
+      // Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
       SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
     }
   }
@@ -189,6 +191,9 @@ function SurveyComponent(props) {
     }
 
     console.log('200.saveSurveyAnswers question', question);
+
+    // Add their answers
+    addAnswerdQuestion({ id: question.id, value: question.value });
 
     // Funcion que retorna si la opcion escogida es la respuesta correcta
     correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;

@@ -10,8 +10,8 @@ import initRealTimeSurveyListening from './functions/initRealTimeSurveyListening
 import useSurveyQuery from './hooks/useSurveyQuery';
 
 /** Context´s */
-import { UseCurrentUser } from '../../../context/userContext';
-import { UseSurveysContext } from '../../../context/surveysContext';
+import { UseCurrentUser } from '@context/userContext';
+import { UseSurveysContext } from '@context/surveysContext';
 
 /** Components */
 import ResultsPanel from './resultsPanel';
@@ -22,6 +22,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   const currentUser = UseCurrentUser();
 
   const [loadedQuestions, setLoadedQuestions] = useState([]);
+  const [answerdQuestions, setAnswerdQuestions] = useState([]);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
   const [isSurveyFinished, setIsSurveyFinished] = useState(false);
@@ -69,6 +70,8 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       hola. {isSurveyFinished ? 'finalizado' : 'no finalizado aún'}
       <br/>
       {JSON.stringify(loadedQuestions)}
+      <hr/>
+      {JSON.stringify(answerdQuestions)}
       </>}
 
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
@@ -109,9 +112,11 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           <SurveyComponent
             idSurvey={surveyId}
             eventId={cEvent.value._id}
-            currentUser={currentUser}
             cbMaskAsFinished={() => setIsSurveyFinished(true)}
             setLoadedQuestions={setLoadedQuestions}
+            addAnswerdQuestion={(newAnswer) => {
+              setAnswerdQuestions((previous) => ([...previous, newAnswer]))
+            }}
           />
         </Card>
       )}
