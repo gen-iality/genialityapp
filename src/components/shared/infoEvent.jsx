@@ -1,7 +1,7 @@
 import { UseEventContext } from '../../context/eventContext';
 import { Button, Divider, PageHeader, Row, Space, Typography } from 'antd';
 import Moment from 'moment';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '../../context/eventUserContext';
 import { UseCurrentUser } from '../../context/userContext';
@@ -150,7 +150,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
         )
       }
       footer={
-        <Space style={{ color: textColor }}>
+        <Space wrap size={'large'} style={{ color: textColor }}>
           <Space wrap>
             <Space>
               <CalendarOutlined />
@@ -161,7 +161,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
               <time>{Moment(cEventValues?.datetime_from).format('LT')}</time>
             </Space>
           </Space>
-          <Divider type='vertical'></Divider>
+
           <Space wrap>
             <Space>
               <CalendarOutlined />
@@ -173,19 +173,13 @@ const InfoEvent = ({ paddingOff, preview }) => {
             </Space>
           </Space>
           {cEventValues?.type_event !== 'onlineEvent' && (
-            <>
-              <Divider type='vertical'></Divider>
-              <Space wrap>
-                <Space>
-                  <b>Dirección: </b>
-                  {cEventValues?.address}
-                </Space>
-                <Space>
-                  <b>Lugar: </b>
-                  {cEventValues?.venue}
-                </Space>
+            <Space>
+              <EnvironmentOutlined />
+              <Space wrap split='/'>
+                <Typography.Text>{cEventValues?.address}</Typography.Text>
+                <Typography.Text italic>{cEventValues?.venue}</Typography.Text>
               </Space>
-            </>
+            </Space>
           )}
         </Space>
       }></PageHeader>

@@ -1159,8 +1159,11 @@ class General extends Component {
                 {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
                   <Col span={24}>
                     <Card style={{ borderRadius: '8px' }}>
-                      <Form.Item label={'Mensaje al finalizar el registro'}>
+                      <Form.Item
+                        tooltip={'Esta funcionalidad se encuentra en construcción. - Tecnología 🛠️'}
+                        label={'Mensaje al finalizar el registro'}>
                         <Input.TextArea
+                          disabled={true}
                           value={event?.success_message}
                           autoFocus={true}
                           name={'success_message'}
