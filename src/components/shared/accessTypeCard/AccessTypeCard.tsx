@@ -1,4 +1,4 @@
-import { Avatar, Badge, Card, Row, Space, Typography } from 'antd';
+import { Avatar, Badge, Button, Card, Row, Space, Typography } from 'antd';
 import { AccessTypeCardInterface } from './interfaces/interfaces';
 
 const AccessTypeCard = ({
@@ -29,11 +29,9 @@ const AccessTypeCard = ({
         />
       }
       extra={
-        <div onClick={() => callBackSelectedItem(index)}>
-          <Badge
-            style={{ cursor: 'pointer', backgroundColor: itemSelected === index ? '#2593FC' : '#C4C4C4' }}
-            count={itemSelected === index ? 'Activado' : 'Activar'}></Badge>
-        </div>
+        <Space style={{ fontSize: '22px', color: itemSelected === index ? '#2593FC' + '99' : '#C4C4C4' }}>
+          {infoIcon.map((item) => item)}
+        </Space>
       }
       style={{
         height: '100%',
@@ -50,7 +48,17 @@ const AccessTypeCard = ({
 
         <div>{extra({ callBackSelectedItem, extraState })}</div>
         <Row justify='end' align='bottom' style={{ position: 'absolute', bottom: '15px', right: '24px' }}>
-          <Space style={{ fontSize: '22px' }}>{infoIcon.map((item) => item)}</Space>
+          <div onClick={() => callBackSelectedItem(index)}>
+            <Button
+              style={{
+                color: itemSelected === index ? '#2593FC' : '#FFFFFF',
+                backgroundColor: itemSelected === index ? '#2593FC' + '4D' : '#C4C4C4',
+              }}
+              size='large'
+              type={'text'}>
+              {itemSelected === index ? 'Activado' : 'Seleccionar'}
+            </Button>
+          </div>
         </Row>
       </Space>
     </Card>

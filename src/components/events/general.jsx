@@ -1157,6 +1157,21 @@ class General extends Component {
                     />
                   </Col>
                 ))}
+                {console.log('event', event)}
+                {accessSelected === 'PUBLIC_EVENT_WITH_REGISTRATION' && (
+                  <Col span={24}>
+                    <Card style={{ borderRadius: '8px' }}>
+                      <Form.Item label={'Mensaje al finalizar el registro'}>
+                        <Input.TextArea
+                          autoFocus={true}
+                          name={'success_message'}
+                          placeholder={'Mensaje que se mostrara al asistente al finalizar su registro o inscripcion'}
+                          autoSize={{ minRows: 6, maxRows: 6 }}
+                        />
+                      </Form.Item>
+                    </Card>
+                  </Col>
+                )}
               </Row>
             </Tabs.TabPane>
             <Tabs.TabPane
