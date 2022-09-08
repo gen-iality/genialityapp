@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Graphics from './graphics';
 import SurveyComponent from './surveyComponentV2';
-import { Card, Result, Divider, Button } from 'antd';
+import { Card, Result, Divider, Button, Space } from 'antd';
 
 import WithEviusContext from '@/context/withContext';
 import LoadSelectedSurvey from './functions/loadSelectedSurvey';
@@ -73,14 +73,9 @@ function SurveyDetailPage({ surveyId, cEvent }) {
 
       for (let i = 0; i < surveys.length; i++) {
         const survey = surveys[i];
-        const stats = await useAsyncPrepareQuizStats(
-          cEvent.value._id,
-          survey._id,
-          currentUser?.value?._id,
-          survey,
-        );
+        const stats = await useAsyncPrepareQuizStats(cEvent.value._id, survey._id, currentUser?.value?._id, survey);
 
-        console.debug('stats', stats)
+        console.debug('stats', stats);
         if (stats.minimum > 0) {
           if (stats.right >= stats.minimum) {
             passed = passed + 1;
@@ -108,9 +103,9 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   return (
     <div>
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
-        <div>
+        <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
           <Result
-            style={{ height: '50%', padding: '75px' }}
+            style={{ height: '50%', padding: '75px 75px 20px' }}
             status='success'
             title='Ya has contestado esta evaluación'
           />
@@ -121,20 +116,17 @@ function SurveyDetailPage({ surveyId, cEvent }) {
             type='primary'
             key='console'
           >
-            Results
+            Ver mis respuestas
           </Button>
           {showingResultsPanel && (
-            <ResultsPanel
-              eventId={cEvent.value?._id}
-              currentUser={currentUser}
-              idSurvey={surveyId}
-            />
+            <ResultsPanel eventId={cEvent.value?._id} currentUser={currentUser} idSurvey={surveyId} />
           )}
-          {(enableGoToCertificate) && <Button
-            type='primary'
-            onClick={handleGoToCertificate}
-          >Descargar certificado</Button>}
-        </div>
+          {enableGoToCertificate && (
+            <Button type='primary' onClick={handleGoToCertificate}>
+              Descargar certificado
+            </Button>
+          )}
+        </Space>
       ) : cSurveys.shouldDisplaySurveyClosedMenssage() ? (
         <Result title='Esta evaluación ha sido cerrada' />
       ) : cSurveys.shouldDisplayGraphics() ? (
@@ -144,10 +136,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         </>
       ) : (
         <Card className='surveyCard'>
-          <SurveyComponent
-            idSurvey={surveyId}
-            eventId={cEvent.value?._id}
-          />
+          <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} />
         </Card>
       )}
     </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Result, Spin, Button, Col, Card, Space } from 'antd';
 import SurveyAnswers from './services/surveyAnswersService';
 import { LoadingOutlined } from '@ant-design/icons';
 import useSurveyQuery from './hooks/useSurveyQuery';
@@ -16,7 +17,7 @@ function ResultsPanel(props) {
     let userAnswer = await SurveyAnswers.getAnswersQuestionV2(
       idSurvey, // survey ID
       questionId, // current question
-      currentUser.value._id, // who
+      currentUser.value._id // who
     );
     return userAnswer.data();
   }
@@ -39,7 +40,7 @@ function ResultsPanel(props) {
         // Search the answer
         let userAnswer = await getUserAnswers(question.id);
         console.log('800.userAnswer - 1', userAnswer);
-  
+
         // Save the current question, and the correct answer
         if (userAnswer !== undefined) {
           userAnswersLocal.push({
@@ -58,39 +59,31 @@ function ResultsPanel(props) {
   }, [currentUser.value._id, idSurvey, query.data]);
 
   return (
-    <>
+    <div>
       {userAnswers === undefined && (
-        <>
-        <p>Cargando resultados...</p>
-        <LoadingOutlined style={{ width: '50px', color: '#808080' }} />
-        </>
+        <Space direction='vertical' size='middle' align='center'>
+          <p style={{ fontWeight: '700' }}>Cargando resultados...</p>
+          <LoadingOutlined style={{ fontSize: '50px', color: '#808080' }} />
+        </Space>
       )}
       {userAnswers !== undefined && (
         <>
-        <div style={{ display: 'block', border: '1px solid #808080', padding: '10px' }}>
-          {userAnswers.map((answer, index) => {
-            console.log('800.userAnswersObject - 2', answer);
+          <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
+            {userAnswers.map((answer, index) => {
+              console.log('800.userAnswersObject - 2', answer);
 
-            return (
-              <div
-                style={{
-                  display: 'block',
-                  border: '1px solid #808080',
-                  marginBottom: '10px',
-                  padding: '15px',
-                  borderRadius: '5px',
-                }}
-              >
-                <p>{`${index}. ${answer.title}`}</p>
-                <p>{`Respuesta correcta: ${answer.correctAnswer}`}</p>
-                <p>{`Tu respuesta: ${answer.answer}`}</p>
-              </div>
-            );
-          })}
-        </div>
+              return (
+                <Card>
+                  <p style={{ fontWeight: '700' }}>{`${index + 1}. ${answer.title}`}</p>
+                  <p style={{ fontWeight: '700', color: 'green' }}>{`Respuesta correcta: ${answer.correctAnswer}`}</p>
+                  <p style={{ fontWeight: '700' }}>{`Tu respuesta: ${answer.answer}`}</p>
+                </Card>
+              );
+            })}
+          </Space>
         </>
       )}
-    </>
+    </div>
   );
 }
 
