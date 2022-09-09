@@ -173,7 +173,7 @@ function SurveyComponent(props) {
     }
   }
 
-  async function saveSurveyAnswers(surveyQuestions) {
+  function saveSurveyAnswers(surveyQuestions) {
     let question;
     let optionQuantity = 0;
     let correctAnswer = false;
@@ -209,22 +209,24 @@ function SurveyComponent(props) {
         console.log('200.saveSurveyAnswers SavingResponseByUserId');
       }
       try {
-        await saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0);
-      } catch(err) { console.error(err); }
+        saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0);
+      } catch (err) {
+        console.error(err);
+      }
     });
   }
 
-  async function saveSurveyData(sender) {
+  function saveSurveyData(sender) {
     console.log('200.saveSurveyData');
 
     // saveSurveyStatus(); -- temporally ignored
     saveSurveyCurrentPage();
-    await saveSurveyAnswers(sender.currentPage.questions);
+    saveSurveyAnswers(sender.currentPage.questions);
   }
 
-  async function onSurveyCompleted(sender) {
+  function onSurveyCompleted(sender) {
     saveSurveyCurrentPage();
-    await saveSurveyAnswers(sender.currentPage.questions);
+    saveSurveyAnswers(sender.currentPage.questions);
     MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints);
     //setResultsSurvey([surveyModel, query.data]);
   }
