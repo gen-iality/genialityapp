@@ -185,9 +185,13 @@ function SurveyComponent(props) {
       question = surveyModel.currentPage.questions[1];
     }
 
+    const correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+
     setIsSavingPoints(true);
     try {
-      await saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0)
+      const value = parseInt(question.points) || 0;
+      console.log('survey correct?', correctAnswer);
+      await saveAcumulativePoints(query.data._id, currentUser.value._id, correctAnswer ? value : 0);
       setIsSavingPoints(false);
     } catch (err) {
       console.error(err);
