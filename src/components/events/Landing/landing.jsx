@@ -116,7 +116,7 @@ const Landing = (props) => {
   useEffect(() => {
     DispatchMessageService({
       type: 'loading',
-      msj: 'Estamos configurando la mejor experiencia para tí!',
+      msj: '¡Estamos configurando la mejor experiencia para tí!',
       action: 'show',
     });
   }, []);
