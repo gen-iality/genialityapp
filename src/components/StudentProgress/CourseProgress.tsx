@@ -3,6 +3,7 @@ import { Progress } from 'antd';
 
 export interface CourseProgressProps {
   type: 'circle' | 'block',
+  title?: string,
   hasLabel?: boolean,
   percentValue: number,
   stats?: string | ReactNode,
@@ -20,11 +21,12 @@ function CourseProgress(props: CourseProgressProps | SteppedCourseProgressProps)
     hasLabel = false,
     percentValue,
     stats,
+    title,
   } = props;
 
   return (
     <div style={{ color: '#AAA' }}>
-      {hasLabel && <p style={{ color: 'black', fontWeight: 'bold' }}>Mi progreso:</p>}
+      {hasLabel && <p style={{ color: 'black', fontWeight: 'bold' }}>{title || 'Mi progreso'}:</p>}
 
       {type === 'circle' && (
       <Progress
