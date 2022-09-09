@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Badge } from 'antd';
+import { Badge, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { SurveysApi } from '@/helpers/request';
 import { Survey } from './types';
@@ -47,14 +47,14 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
       }
 
       if (passed === surveys.length) {
-        setStatus('aprobado');
+        setStatus('Aprobado');
         setIsApproved(true);
         setBackgroundColor('#5EB841');
       } else if (notPassed < surveys.length) {
-        setStatus('reprobado');
+        setStatus('Reprobado');
         setBackgroundColor('#B8415A');
       } else if (passed < surveys.length) {
-        setStatus('no completado');
+        setStatus('No completado');
         setBackgroundColor('#9C835F');
       };
 
@@ -67,7 +67,30 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
     {isLoaded && <Badge count={status} style={{ backgroundColor }} />}
     {isLoaded && isApproved && props.approvedLink && (
       <Link to={props.approvedLink}>
-        <DownloadOutlined/>
+        {/* <Badge
+            style={{
+              background: '#5EB841',
+              border: 'none',
+              marginLeft: '2px',
+            }}
+            count='Certificado'
+          /> */}
+          <Button
+            style={{
+              background: '#5EB841',
+              color: '#fff',
+              border: 'none',
+              fontSize: '12px',
+              height: '20px',
+              lineHeight: '20px',
+              borderRadius: '10px',
+              marginLeft: '2px',
+            }}
+            size='small'
+            icon={<DownloadOutlined />}
+          >
+            Certificado
+          </Button>
       </Link>
     )}
     </>
