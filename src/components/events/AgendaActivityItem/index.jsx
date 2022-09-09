@@ -78,7 +78,7 @@ function AgendaActivityItem(props) {
         .get();
       const activity = document.data();    
       console.log('This activity is', activity);
-      setMeetingId(activity.meeting_id);
+      setMeetingId(activity?.meeting_id);
     })();
   }, [item._id, cEvent.value]);
 

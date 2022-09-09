@@ -9,9 +9,10 @@ function SetCurrentUserSurveyStatus(surveyData, currentUser, status) {
     .collection('surveyStatus')
     .doc(surveyId);
 
-  return firebaseRef.set({
-    surveyCompleted: status,
-  });
+  return firebaseRef.set(
+    { surveyCompleted: status },
+    {merge: true},
+  );
 }
 
 export default SetCurrentUserSurveyStatus;
