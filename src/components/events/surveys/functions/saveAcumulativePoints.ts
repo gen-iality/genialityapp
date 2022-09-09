@@ -34,5 +34,5 @@ export async function saveAcumulativePoints(
   }
   // Speak pretty goodly with Firestore
   await firebaseRef.set({ right: acumulativePoints + nextPoints } as QuizStatus, {merge: true});
-  console.debug(`save survey status /votingStatusByUser/${userId}/surveyStatus/${surveyId}`, 'value', acumulativePoints);
+  console.debug(`save survey status /votingStatusByUser/${userId}/surveyStatus/${surveyId}`, 'value', acumulativePoints, '->', acumulativePoints + nextPoints);
 }

@@ -39,6 +39,7 @@ function SurveyComponent(props) {
   const [questionFeedback, setQuestionFeedback] = useState(false);
 
   const [isSaveButtonShown, setIsSaveButtonShown] = useState(false);
+  const [isSavingPoints, setIsSavingPoints] = useState(false);
 
   const [eventUsers, setEventUsers] = useState([]);
   const [voteWeight, setVoteWeight] = useState(0); // Inquietud: Es util?
@@ -126,6 +127,9 @@ function SurveyComponent(props) {
           extra={[
             <Button
               onClick={() => {
+                saveGainedSurveyPoints(surveyModel.currentPage.questions)
+                  .then(() => console.debug('puntos enviados para este quiz'))
+                  .catch((err) => console.error('saveGainedSurveyPoints error:', err));
                 setShowingFeedback(false);
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
@@ -135,7 +139,7 @@ function SurveyComponent(props) {
               type='primary'
               key='console'
             >
-              Next
+              Save & Next
             </Button>,
           ]}
         />
@@ -169,11 +173,29 @@ function SurveyComponent(props) {
   async function saveSurveyCurrentPage() {
     if (!(Object.keys(currentUser).length === 0)) {
       // Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-      SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
+      await SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
     }
   }
 
-  function saveSurveyAnswers(surveyQuestions) {
+  async function saveGainedSurveyPoints(surveyQuestions) {
+    let question;
+    if (surveyQuestions.length === 1) {
+      question = surveyModel.currentPage.questions[0];
+    } else {
+      question = surveyModel.currentPage.questions[1];
+    }
+
+    setIsSavingPoints(true);
+    try {
+      await saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0)
+      setIsSavingPoints(false);
+    } catch (err) {
+      console.error(err);
+      setIsSavingPoints(false);
+    };
+  }
+
+  async function saveSurveyAnswers(surveyQuestions) {
     let question;
     let optionQuantity = 0;
     let correctAnswer = false;
@@ -193,40 +215,35 @@ function SurveyComponent(props) {
     console.log('200.saveSurveyAnswers correctAnswer', correctAnswer);
 
     /** funcion para validar tipo de respuesta multiple o unica */
-    GetResponsesIndex(question).then((responseIndex) => {
-      optionQuantity = question.choices.length;
-      let optionIndex = responseIndex;
+    const responseIndex = await GetResponsesIndex(question);
+    optionQuantity = question.choices.length;
+    let optionIndex = responseIndex;
 
-      let infoOptionQuestion =
-        query.data.allow_gradable_survey === 'true'
-          ? { optionQuantity, optionIndex, correctAnswer }
-          : { optionQuantity, optionIndex };
+    let infoOptionQuestion =
+      query.data.allow_gradable_survey === 'true'
+        ? { optionQuantity, optionIndex, correctAnswer }
+        : { optionQuantity, optionIndex };
 
-      // Se envia al servicio el id de la encuesta, de la pregunta y los datos
-      // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
-      if (!(Object.keys(currentUser).length === 0)) {
-        SavingResponseByUserId(query.data, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
-        console.log('200.saveSurveyAnswers SavingResponseByUserId');
-      }
-      try {
-        saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0);
-      } catch (err) {
-        console.error(err);
-      }
-    });
+    // Se envia al servicio el id de la encuesta, de la pregunta y los datos
+    // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
+    if (!(Object.keys(currentUser).length === 0)) {
+      SavingResponseByUserId(query.data, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
+      console.log('200.saveSurveyAnswers SavingResponseByUserId');
+    }
   }
 
-  function saveSurveyData(sender) {
+  async function saveSurveyData(sender) {
     console.log('200.saveSurveyData');
 
     // saveSurveyStatus(); -- temporally ignored
-    saveSurveyCurrentPage();
-    saveSurveyAnswers(sender.currentPage.questions);
+    await saveSurveyCurrentPage();
+    await saveSurveyAnswers(sender.currentPage.questions);
   }
 
-  function onSurveyCompleted(sender) {
-    saveSurveyCurrentPage();
-    saveSurveyAnswers(sender.currentPage.questions);
+  async function onSurveyCompleted(sender) {
+    await saveSurveyCurrentPage();
+    //await saveGainedSurveyPoints(sender.currentPage.questions);
+    await saveSurveyAnswers(sender.currentPage.questions);
     MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints);
     //setResultsSurvey([surveyModel, query.data]);
   }
@@ -236,6 +253,7 @@ function SurveyComponent(props) {
       {/* {&& query.data.allow_gradable_survey === 'true' } */}
       {surveyModel && (
         <>
+          {isSavingPoints && (<>Guardando puntos <Spin/></>)}
           {showingFeedback && questionFeedback}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
             <Survey.Survey
@@ -256,6 +274,8 @@ function SurveyComponent(props) {
                 key='console'
               >
                 Save survey
+                {' '}
+                {isSavingPoints && <Spin/>}
               </Button>
             </div>
           )}
