@@ -219,7 +219,7 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      const createdAt = typeof item?.created_at === 'object' ? item?.created_at?.toDate() : item?.created_at;
+      const createdAt = item.created_at | new Date();
 
       return <>{createdAt ? <p>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
@@ -241,7 +241,7 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      const updatedAt = typeof item?.created_at === 'object' ? item?.updated_at?.toDate() : item?.updated_at;
+      const updatedAt = item?.created_at;
 
       return <>{updatedAt ? <p>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
     } else {
