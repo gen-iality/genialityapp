@@ -333,10 +333,10 @@ function AgendaActivityItem(props) {
                 className='card-agenda-desktop agendaHover efect-scale'
                 bodyStyle={{
                   padding: '10px',
-                  borderRadius: '15px',
+                  borderRadius: '5px',
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
                 }}>
-                <Row gutter={[8, 8]}>
+                <Row gutter={[8, 8]} style={{paddingLeft: '10px'}}>
                   {/* <Col md={4} lg={4} xl={4} className='agenda-hora'>
                     <div>
                       {!props.hasDate && item.datetime_end ? (
@@ -508,7 +508,7 @@ function AgendaActivityItem(props) {
                     xl={24}
                     className='agenda-contenido'
                   >
-                    <Space direction='horizontal'>
+                    <Space direction='vertical'>
                       <Row gutter={[10, 10]}>
                         <Row span={24} style={{ paddingLeft: '0px' }}>
                           <div className='titulo' style={{ color: cEvent.value.styles.textMenu, marginRight: '1rem' }}>
@@ -560,14 +560,15 @@ function AgendaActivityItem(props) {
                             </div>
                           )}
                         </Row> */}
-                        <Row style={{ marginRight: '8px', marginLeft: '8px' }}>
+                      </Row>
+                      <Row style={{ marginRight: '8px', marginLeft: '0px' }}>
                           {item.hosts.length > 0 &&
                             (item.hosts.length < 4 ? (
                               <>
                                 {item.hosts.map((speaker, key) => (
                                   <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
                                     <Avatar size={24} src={speaker.image} />
-                                    <Typography.Text style={{ color: cEvent.value.styles.textMenu }}>
+                                    <Typography.Text style={{ color: cEvent.value.styles.textMenu, fontWeight: '400' }}>
                                       {speaker.name}
                                     </Typography.Text>
                                     {/* <table>
@@ -599,26 +600,25 @@ function AgendaActivityItem(props) {
                                 </Col>
                               </>
                             ))}
+                            {item.habilitar_ingreso === 'open_meeting_room' && (
+                            <Button
+                              size={screens.xs === true ? 'small' : 'small'}
+                              type='primary'
+                              className='buttonVirtualConference'
+                              style={{ marginTop: '5px' }}
+                              onClick={() => {
+                                if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
+                                  const { eventUser } = props;
+                                  zoomExternoHandleOpen(item, eventUser);
+                                } else {
+                                  // props.gotoActivity(item);
+                                  HandleGoActivity(item._id);
+                                }
+                              }}>
+                              <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
+                            </Button>
+                          )}
                         </Row>
-                      </Row>
-                      {item.habilitar_ingreso === 'open_meeting_room' && (
-                        <Button
-                          size={screens.xs === true ? 'middle' : 'large'}
-                          type='primary'
-                          className='buttonVirtualConference'
-                          style={{ marginTop: '10px' }}
-                          onClick={() => {
-                            if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
-                              const { eventUser } = props;
-                              zoomExternoHandleOpen(item, eventUser);
-                            } else {
-                              // props.gotoActivity(item);
-                              HandleGoActivity(item._id);
-                            }
-                          }}>
-                          <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
-                        </Button>
-                      )}
                     </Space>
                   </Col>
                   {/* <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
