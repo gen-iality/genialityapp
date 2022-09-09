@@ -42,7 +42,8 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>{intl.formatMessage({ id: 'title.description' })}</p>
               </>
             }
-            key='description'>
+            key='description'
+          >
             <Row justify='center'>
               <Col span={24} id='img-description'>
                 {currentActivity?.description && (
@@ -61,7 +62,7 @@ const AditionalInformation = (props) => {
               <div></div>
             ) : (
               <div className='List-conferencistas'>
-                <Title level={5}>{intl.formatMessage({ id: 'title.panelists' })} </Title>
+                {/* <Title level={5}>{intl.formatMessage({ id: 'title.panelists' })} </Title> */}
                 <p style={{ marginTop: '5%', marginBottom: '5%' }}>
                   {props.orderedHost.length > 0 ? (
                     <Row>
@@ -127,7 +128,8 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>Documentos</p>
               </>
             }
-            key='docs'>
+            key='docs'
+          >
             <div>
               <div style={{ marginTop: '5%', marginBottom: '5%' }}>
                 <b>Documentos:</b> &nbsp;
@@ -150,7 +152,8 @@ const AditionalInformation = (props) => {
                   </Badge>
                 </p>
               </>
-            }>
+            }
+          >
             {props.cUser.value !== null ? (
               <SurveyList eventSurveys={props.eventSurveys} />
             ) : (
@@ -176,7 +179,8 @@ const AditionalInformation = (props) => {
                 </p>{' '}
               </>
             }
-            key='games'></TabPane>
+            key='games'
+          ></TabPane>
         )}
       </Tabs>
     </Card>

@@ -48,6 +48,7 @@ function ResultsPanel(props) {
             answer: userAnswer.response,
             correctAnswer: question.correctAnswer,
             title: question.title,
+            isCorrectAnswer: userAnswer.correctAnswer,
           });
         } else {
           console.debug('no answer found for question.id:', question.id);
@@ -75,8 +76,13 @@ function ResultsPanel(props) {
               return (
                 <Card>
                   <p style={{ fontWeight: '700' }}>{`${index + 1}. ${answer.title}`}</p>
-                  <p style={{ fontWeight: '700', color: 'green' }}>{`Respuesta correcta: ${answer.correctAnswer}`}</p>
-                  <p style={{ fontWeight: '700' }}>{`Tu respuesta: ${answer.answer}`}</p>
+                  <p style={{ fontWeight: '700' }}>{`Respuesta correcta: ${answer.correctAnswer}`}</p>
+                  <p
+                    style={{
+                      fontWeight: '700',
+                      color: answer.isCorrectAnswer ? 'green' : 'red',
+                    }}
+                  >{`Tu respuesta: ${answer.answer}`}</p>
                 </Card>
               );
             })}

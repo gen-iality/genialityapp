@@ -15,6 +15,7 @@ import SavingResponseByUserId from './functions/savingResponseByUserId';
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
 import ResultsPanel from './resultsPanel';
 import { UseCurrentUser } from '@context/userContext';
+import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 
 function SurveyComponent(props) {
   const {
@@ -207,6 +208,11 @@ function SurveyComponent(props) {
         SavingResponseByUserId(query.data, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
         console.log('200.saveSurveyAnswers SavingResponseByUserId');
       }
+      try {
+        saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0);
+      } catch (err) {
+        console.error(err);
+      }
     });
   }
 
@@ -218,7 +224,7 @@ function SurveyComponent(props) {
     saveSurveyAnswers(sender.currentPage.questions);
   }
 
-  async function onSurveyCompleted(sender) {
+  function onSurveyCompleted(sender) {
     saveSurveyCurrentPage();
     saveSurveyAnswers(sender.currentPage.questions);
     MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints);

@@ -15,12 +15,16 @@ type CurrentEventAttendees = any; // TODO: define this type and move to @Utiliti
 export interface StudentSelfCourseProgressProps {
   progressType: 'circle' | 'block',
   hasProgressLabel?: boolean,
+  activityFilter?: (a: AgendaType) => boolean,
+  customTitle?: string,
 };
 
 function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
   const {
     progressType,
     hasProgressLabel = false,
+    activityFilter = (a: AgendaType) => true,
+    customTitle,
   } = props;
 
   const cEventContext = UseEventContext();
@@ -38,8 +42,9 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
     setActivitiesAttendee([]);
     const loadData = async () => {
       const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(cEventContext.value._id);
-      setAllActivities(data);
-      const existentActivities = data.map(async (activity) => {
+      const filteredData = data.filter(activityFilter);
+      setAllActivities(filteredData);
+      const existentActivities = filteredData.map(async (activity) => {
         const activityAttendee = await firestore
           .collection(`${activity._id}_event_attendees`)
           .doc(cEventUser.value._id)
@@ -66,6 +71,7 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
 
   return (
     <CourseProgress
+      title={customTitle}
       hasLabel={hasProgressLabel}
       stats={progressStats || <Spin/>}
       percentValue={progressPercentValue}

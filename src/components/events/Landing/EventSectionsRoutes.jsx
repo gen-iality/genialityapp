@@ -188,7 +188,16 @@ const EventSectionRoutes = (props) => {
               <div style={{ padding: '25px' }}>
                 {((props.location?.pathname || '').endsWith('evento') || (props.location?.pathname || '').endsWith('curso')) && (
                   <>
-                  <StudentSelfCourseProgress hasProgressLabel />
+                  <StudentSelfCourseProgress
+                    hasProgressLabel
+                    customTitle='Avance del curso'
+                    activityFilter={(a) => ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name) }
+                  />
+                  <StudentSelfCourseProgress
+                    hasProgressLabel
+                    customTitle='Avance de exámenes'
+                    activityFilter={(a) => [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name) }
+                  />
                   <Card>
                     <Typography.Text>
                       Estado del curso:

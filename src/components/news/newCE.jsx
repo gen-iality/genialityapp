@@ -2,7 +2,23 @@ import { useState, useEffect } from 'react';
 import { NewsFeed } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { Col, Row, Input, Form, DatePicker, Modal } from 'antd';
-import dayjs from 'dayjs';
+/**
+ * This solution is distributed as is:
+ * https://github.com/react-component/picker/issues/123#issuecomment-728755491
+ */
+ import dayjs from 'dayjs';
+ import advancedFormat from 'dayjs/plugin/advancedFormat';
+ import customParseFormat from 'dayjs/plugin/customParseFormat';
+ import localeData from 'dayjs/plugin/localeData';
+ import weekday from 'dayjs/plugin/weekday';
+ import weekOfYear from 'dayjs/plugin/weekOfYear';
+ import weekYear from 'dayjs/plugin/weekYear';
+ dayjs.extend(customParseFormat);
+ dayjs.extend(advancedFormat);
+ dayjs.extend(weekday);
+ dayjs.extend(localeData);
+ dayjs.extend(weekOfYear);
+ dayjs.extend(weekYear);
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { useHistory } from 'react-router-dom';
