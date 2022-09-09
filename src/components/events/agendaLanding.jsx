@@ -751,7 +751,8 @@ class Agenda extends Component {
                     this.props.cEvent.value.styles.hideDatesAgenda === true ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
                       <>
-                      {days.map((day) => this.getActivitiesByDay(day))}
+                      {/* {days.map((day) => this.getActivitiesByDay(day))} */}
+                      {this.getActivitiesByDay(null)}
                     {/*<Tabs
                       //tabBarExtraContent={{right:<DoubleRightOutlined />, left:<DoubleLeftOutlined/>}}
                       defaultActiveKey='0'

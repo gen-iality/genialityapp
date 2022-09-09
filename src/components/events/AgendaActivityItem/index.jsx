@@ -560,13 +560,13 @@ function AgendaActivityItem(props) {
                             </div>
                           )}
                         </Row> */}
-                        <Row style={{ marginRight: '8px' }}>
+                        <Row style={{ marginRight: '8px', marginLeft: '8px' }}>
                           {item.hosts.length > 0 &&
                             (item.hosts.length < 4 ? (
                               <>
                                 {item.hosts.map((speaker, key) => (
                                   <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
-                                    <Avatar size={40} src={speaker.image} />
+                                    <Avatar size={24} src={speaker.image} />
                                     <Typography.Text style={{ color: cEvent.value.styles.textMenu }}>
                                       {speaker.name}
                                     </Typography.Text>
