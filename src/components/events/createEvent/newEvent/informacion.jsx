@@ -6,7 +6,23 @@ import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 import { OrganizationApi, PlansApi } from '../../../../helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
-import dayjs from 'dayjs';
+/**
+ * This solution is distributed as is:
+ * https://github.com/react-component/picker/issues/123#issuecomment-728755491
+ */
+ import dayjs from 'dayjs';
+ import advancedFormat from 'dayjs/plugin/advancedFormat';
+ import customParseFormat from 'dayjs/plugin/customParseFormat';
+ import localeData from 'dayjs/plugin/localeData';
+ import weekday from 'dayjs/plugin/weekday';
+ import weekOfYear from 'dayjs/plugin/weekOfYear';
+ import weekYear from 'dayjs/plugin/weekYear';
+ dayjs.extend(customParseFormat);
+ dayjs.extend(advancedFormat);
+ dayjs.extend(weekday);
+ dayjs.extend(localeData);
+ dayjs.extend(weekOfYear);
+ dayjs.extend(weekYear);
 import {
   disabledEndDateTime,
   disabledStartDate,
@@ -163,9 +179,9 @@ const Informacion = (props) => {
               style={{ width: '100%', marginTop: '20px' }}
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               allowClear={false}
-              // value={dayjs(selectedDay)}
+              value={dayjs(selectedDay)}
               format={'DD/MM/YYYY'}
-              onChange={(value) => changeSelectDay(value)}
+              onChange={(value) => changeSelectDay(value.toDate())}
             />
 
             {userConsumption?.end_date && (
