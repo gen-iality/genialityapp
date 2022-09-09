@@ -13,6 +13,93 @@ const formLayout = {
 const { Option } = Select;
 const { TextArea } = Input;
 
+const extraInputs = {
+  country: [
+    {
+      id: undefined,
+      name: 'region',
+      description: undefined,
+      label: 'Region',
+      unique: false,
+      mandatory: true,
+      options: undefined,
+      order_weight: undefined,
+      type: 'region',
+      visibleByAdmin: true,
+      visibleByContacts: undefined,
+    },
+    {
+      id: undefined,
+      name: 'city',
+      description: undefined,
+      label: 'Ciudad',
+      unique: false,
+      mandatory: true,
+      options: undefined,
+      order_weight: undefined,
+      type: 'city',
+      visibleByAdmin: true,
+      visibleByContacts: undefined,
+    },
+  ],
+  region: [
+    {
+      id: undefined,
+      name: 'country',
+      description: undefined,
+      label: 'Pais',
+      unique: false,
+      mandatory: true,
+      options: undefined,
+      order_weight: undefined,
+      type: 'country',
+      visibleByAdmin: true,
+      visibleByContacts: undefined,
+    },
+    {
+      id: undefined,
+      name: 'city',
+      description: undefined,
+      label: 'Ciudad',
+      unique: false,
+      mandatory: true,
+      options: undefined,
+      order_weight: undefined,
+      type: 'city',
+      visibleByAdmin: true,
+      visibleByContacts: undefined,
+    },
+  ],
+  city: [
+    {
+      id: undefined,
+      name: 'region',
+      description: undefined,
+      label: 'Region',
+      unique: false,
+      mandatory: true,
+      options: undefined,
+      order_weight: undefined,
+      type: 'region',
+      visibleByAdmin: true,
+      visibleByContacts: undefined,
+    },
+    {
+      id: undefined,
+      name: 'country',
+      description: undefined,
+      label: 'Pais',
+      unique: false,
+      mandatory: true,
+      options: undefined,
+      order_weight: undefined,
+      type: 'country',
+      visibleByAdmin: true,
+      visibleByContacts: undefined,
+    },
+  ],
+};
+
 class DatosModal extends Component {
   formRef = createRef();
 
@@ -112,6 +199,8 @@ class DatosModal extends Component {
     this.setState({ info: { ...this.state.info, options: option } }, this.validForm);
   };
 
+  //funciona pra crear datos predeterminados
+
   handleKeyDown = (event) => {
     const { inputValue } = this.state;
     const value = inputValue;
@@ -168,7 +257,16 @@ class DatosModal extends Component {
     };
     this.setState({ info: initModal, loading: false });
   };
-
+  onSaveGeneral = async (values) => {
+    if (values.type === 'country' || values.type === 'region' || values.type === 'city') {
+      let inputsCountry = [...extraInputs[values.type], values];
+      inputsCountry.map((input) => {
+        this.saveField(input);
+      });
+    } else {
+      this.saveField(values);
+    }
+  };
   render() {
     const { inputValue, info, valid, loading } = this.state;
     const { edit } = this.props;
@@ -180,7 +278,7 @@ class DatosModal extends Component {
           autoComplete='off'
           initialValues={this.props.info}
           ref={this.formRef}
-          onFinish={this.saveField}
+          onFinish={this.onSaveGeneral}
           {...formLayout}>
           {/* Campo oculto  con el id del mismo para poder editar un campo a recolectar para una organización */}
           <Form.Item hidden initialValue={this.props.info?._id} name={'id'}>
