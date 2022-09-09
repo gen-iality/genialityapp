@@ -519,7 +519,9 @@ function AgendaActivityItem(props) {
                               <QuizProgress eventId={cEvent.value._id} userId={currentUser.value._id} surveyId={meetingId} />
                             )}
                           </div>
-                          <div className='lesson'>{lessonTypeToString(item.type?.name || 'Contenido genérico')}</div>
+                          <div className='lesson'>
+                            <Badge style={{backgroundColor: '#8D6CA1'}} count={lessonTypeToString(item.type?.name || 'Contenido genérico')}/>
+                          </div>
                           <span className='lugar' style={{ color: cEvent.value.styles.textMenu }}>
                             {item && item.space && item.space.name}
                           </span>
