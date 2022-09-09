@@ -121,6 +121,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (agenda === null) return;
 
     const processedDate = processDateFromAgendaDocument(agenda);
+    console.log('processedDate', processedDate)
 
     setFormData({
       ...previousFormData,
@@ -254,11 +255,11 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   const currentHourStart = useMemo(() => {
     if (typeof formdata.hour_start === 'string' && formdata.hour_start.trim() !== '') {
-      return dayjs(formdata.hour_start, 'HH:mm:ss');
+      return dayjs(formdata.hour_start);
     }
     if (typeof formdata.hour_start === 'object' && formdata.hour_start !== null) {
       if (formdata.hour_start.isValid && !formdata.hour_start.isValid()) {
-        return dayjs(formdata.hour_start, 'HH:mm:ss');
+        return dayjs(formdata.hour_start);
       }
       return formdata.hour_start;
     }
@@ -269,11 +270,11 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   const currentHourEnd = useMemo(() => {
     if (typeof formdata.hour_end === 'string' && formdata.hour_end.trim() !== '') {
-      return dayjs(formdata.hour_end, 'HH:mm:ss');
+      return dayjs(formdata.hour_end);
     }
     if (typeof formdata.hour_end === 'object' && formdata.hour_end !== null) {
       if (formdata.hour_end.isValid && !formdata.hour_end.isValid()) {
-        return dayjs(formdata.hour_end, 'HH:mm:ss');
+        return dayjs(formdata.hour_end);
       }
       return formdata.hour_end;
     }
