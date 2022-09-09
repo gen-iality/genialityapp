@@ -54,7 +54,7 @@ function QuizActivity(props) {
   return (
     <>
 
-      {currentActivity && (<div>{currentActivity._id}{console.log('currentActivityx', currentActivity)}</div>)}
+      {/* {currentActivity && (<div>{currentActivity._id}{console.log('currentActivityx', currentActivity)}</div>)} */}
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
       {console.log('100.activityState', activityState)}
       <SurveyDetailPage surveyId={activityState?.meeting_id} />
