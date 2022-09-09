@@ -33,19 +33,10 @@ const InfoEvent = ({ paddingOff, preview }) => {
     ) {
       return 'JOIN';
     }
-    if (
-      recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
-      !cUserValues &&
-      cEventValues?.type_event !== 'physicalEvent'
-    ) {
+    if (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && !cUserValues) {
       return 'REGISTER';
     }
-    if (
-      recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-      cUserValues &&
-      !cEventUser?.value &&
-      cEventValues?.type_event !== 'physicalEvent'
-    ) {
+    if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUserValues && !cEventUser?.value) {
       return 'SIGNUP';
     }
   };
@@ -119,8 +110,8 @@ const InfoEvent = ({ paddingOff, preview }) => {
               type='primary'
               size='large'>
               {intl.formatMessage({
-                id: 'registration.button.create',
-                defaultMessage: 'Registrarme',
+                id: 'Button.signup',
+                defaultMessage: 'Inscribirme al evento',
               })}
             </Button>
           </Space>
