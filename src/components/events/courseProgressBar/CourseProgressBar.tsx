@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'antd';
 
@@ -13,7 +13,6 @@ type Activity = {
 };
 
 export interface CourseProgressBarProps {
-  total: number,
   count: number,
   linkFormatter: (activityId: string) => string,
   activities: Activity[],
@@ -21,7 +20,6 @@ export interface CourseProgressBarProps {
 
 function CourseProgressBar(props: CourseProgressBarProps) {
   const {
-    total,
     count,
     linkFormatter,
     activities,
@@ -30,27 +28,39 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   const [progressWidth, setProgressWidth] = useState(0);
 
   useEffect(() => {
-    if (count === total) {
+    if (count === activities.length) {
       setProgressWidth(100);
     } else {
-      setProgressWidth((100 / (total - 1)) * count);
+      setProgressWidth((100 / (activities.length - 1)) * count);
     }
-  }, [count, total]);
+  }, [count, activities.length]);
 
-  if (total === 0) {
+  const cssStyleForHeight = useMemo(() => {
+    if (activities.length > 25) {
+      return {}
+    } else if (activities.length > 16) {
+      return {maxHeight: '100vh'}
+    } else if (activities.length == 1) {
+      return {maxHeight: '20vh'}
+    } else {
+      return {maxHeight: '80vh'}
+    }
+  }, [activities]);
+
+  if (activities.length === 0) {
     return null;
   }
 
   return (
-    <div className='CourseProgressBar-container'>
+    <div className='CourseProgressBar-container' style={{...cssStyleForHeight}}>
       <div className='CourseProgressBar-line' style={{ height: progressWidth + "%" }}></div>
-      {Array.from(Array(total).keys()).map((i, j) => (
+      {activities.map((activity, index) => (
         <Step
-          isActive={i < count}
+          isActive={index < count}
         >
-          <Link to={linkFormatter(activities[j]._id)} key={`key_${j}`}>
-            <Tooltip placement="right" title={`Ir a la actividad "${activities[j].name}"`}>
-              {i+1}
+          <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+            <Tooltip placement="right" title={`Ir a la actividad "${activity.name}"`}>
+              {index+1}
             </Tooltip>
           </Link>
         </Step>
