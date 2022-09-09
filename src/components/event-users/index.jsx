@@ -569,7 +569,7 @@ class ListEventUser extends Component {
                   key.name == codearea[0].name
                 ) {
                   updatedAttendees[i][codearea[0].name] = updatedAttendees[i]['code']
-                    ? '(+' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
+                    ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
                     : updatedAttendees[i].properties[codearea[0].name];
                 } else {
                   //console.log("KEY==>",updatedAttendees[i]['properties'][key.name])
@@ -985,7 +985,7 @@ class ListEventUser extends Component {
         {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
           list={users.length > 0 && users}
-          header={this.state.columns}
+          header={columns}
           takeOriginalHeader
           scroll={{ x: 'max-content' }} //auto funciona de la misma forma, para ajustar el contenido
           loading={this.state.loading}

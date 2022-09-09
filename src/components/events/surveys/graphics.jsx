@@ -137,7 +137,9 @@ class Graphics extends Component {
       switch (operation) {
         case 'onlyCount':
           generatedlabels[a] =
-            answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} respuesta(s)` : '0 respuestas';
+            answer_count && answer_count[a]
+              ? options.choices[a] + ` ${answer_count[a][0]} respuesta(s)`
+              : '0 respuestas';
           break;
         case 'participationPercentage':
           generatedlabels[a] =
@@ -354,7 +356,8 @@ class Graphics extends Component {
                       boxShadow: '0px 4px 4px 0px #00000040',
                       marginTop: '12px',
                       marginBottom: '12px',
-                    }}>
+                    }}
+                  >
                     <Row>
                       <Col span={votos.option == 2 ? 8 : 5} style={{ width: '100%' }}>
                         <div
@@ -363,7 +366,8 @@ class Graphics extends Component {
                             width: '100%',
                             backgroundColor: `${votos.color}`,
                             borderRadius: '4px 0px 0px 4px',
-                          }}>
+                          }}
+                        >
                           <span
                             style={{
                               justifyContent: 'center',
@@ -372,7 +376,8 @@ class Graphics extends Component {
                               color: 'white',
                               display: 'grid',
                               fontSize: '24px',
-                            }}>
+                            }}
+                          >
                             {votos?.option?.toUpperCase()}{' '}
                           </span>
                         </div>
@@ -386,7 +391,8 @@ class Graphics extends Component {
                           <div>
                             <Paragraph
                               style={{ color: 'gray ' }}
-                              ellipsis={true && { rows: 2, expandable: true, symbol: 'more' }}>
+                              ellipsis={true && { rows: 2, expandable: true, symbol: 'more' }}
+                            >
                               {votos.answer}
                             </Paragraph>
                           </div>
@@ -406,7 +412,8 @@ class Graphics extends Component {
                     width: '320px',
                     borderRadius: '6px',
                     boxShadow: '0px 4px 4px 0px #00000040',
-                  }}>
+                  }}
+                >
                   <Row>
                     <Col span={8}>
                       <div
@@ -415,7 +422,8 @@ class Graphics extends Component {
                           width: '100%',
                           backgroundColor: '#9e9e9e',
                           borderRadius: '4px 0px 0px 4px',
-                        }}>
+                        }}
+                      >
                         <span
                           style={{
                             justifyContent: 'center',
@@ -425,7 +433,8 @@ class Graphics extends Component {
                             display: 'grid',
                             fontSize: '18px',
                             textAlign: 'center',
-                          }}>
+                          }}
+                        >
                           Sin responder
                         </span>
                       </div>
@@ -439,7 +448,8 @@ class Graphics extends Component {
                           display: 'grid',
                           alignContent: 'center',
                           height: '100%',
-                        }}>
+                        }}
+                      >
                         <div>
                           <span style={{ fontSize: '22px', fontWeight: '500' }}>
                             {this.state.resultVotos.usuariosSinRespuesta} respuest(s)

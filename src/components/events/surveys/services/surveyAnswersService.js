@@ -123,6 +123,19 @@ const surveyAnswers = {
       }
     });
   },
+  getAnswersQuestionV2: async (surveyId, questionId, uid) => {
+    return (
+      firestore
+        //surveys/surveyId/answers/questionId/responses/uid
+        .collection('surveys')
+        .doc(surveyId)
+        .collection('answers')
+        .doc(questionId)
+        .collection('responses')
+        .doc(uid)
+        .get()
+    );
+  },
 };
 
 export default surveyAnswers;

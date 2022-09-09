@@ -229,7 +229,13 @@ const Landing = (props) => {
             props.setUserAgenda(null);
           }}
         />
-        <CourseProgressBar total={activities.length} count={activitiesAttendee.length}/>
+        <CourseProgressBar
+          total={activities.length}
+          eventId={cEventContext.value._id}
+          activities={activities}
+          linkFormatter={(activityId) => `/landing/${cEventContext.value._id}/activity/${activityId}`}
+          count={activitiesAttendee.length}
+        />
         <EventSectionsInnerMenu />
         <MenuTablets />
 
