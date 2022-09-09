@@ -37,7 +37,6 @@ import { app } from '../../../helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { countryApi } from '@/helpers/request';
 /**TODO::ocaciona error en ios */
-// import { Country, State, City } from 'country-state-city';
 
 const { Option } = Select;
 const { Panel } = Collapse;

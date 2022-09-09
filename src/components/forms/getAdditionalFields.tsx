@@ -9,7 +9,6 @@ import moment from 'moment';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
 import { countryApi } from '@/helpers/request';
 /**TODO::ocaciona error en ios */
-// import { Country, State, City } from 'country-state-city';
 
 import { async } from 'ramda-adjunct';
 const { Option } = Select;
