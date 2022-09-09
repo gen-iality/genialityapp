@@ -230,7 +230,6 @@ const Landing = (props) => {
           }}
         />
         <CourseProgressBar
-          total={activities.length}
           eventId={cEventContext.value._id}
           activities={activities}
           linkFormatter={(activityId) => `/landing/${cEventContext.value._id}/activity/${activityId}`}
