@@ -1,6 +1,7 @@
 .CourseProgressBar-container {
     display: flex;
     max-width: max-content;
+    max-height: 100vh;
     flex-direction: column;
     gap: 1rem;
     justify-content: space-between;
