@@ -7,9 +7,11 @@ import { ApiUrl, areaCode } from '@/helpers/constants';
 import { beforeUpload, getImagename } from '@/Utilities/formUtils';
 import moment from 'moment';
 import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
+import { countryApi } from '@/helpers/request';
 /**TODO::ocaciona error en ios */
 // import { Country, State, City } from 'country-state-city';
 
+import { async } from 'ramda-adjunct';
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -22,9 +24,68 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   let onlyAreacodeselected = attendeeProperties['onlyCodearea'] || '+57';
   const dateFormat = 'YYYY/MM/DD';
 
-  const [country, setCountry] = useState({ name: '', countryCode: '' });
-  const [region, setRegion] = useState({ name: '', regionCode: '' });
+  const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' });
+  const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' });
+  const [city, setCity] = useState({ name: '', regionCode: '', inputName: '' });
+  const [countries, setCountries] = useState([]);
+  const [regiones, setRegiones] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  const getCountries = async () => {
+    setLoading(true);
+    try {
+      const response = await countryApi.getCountries();
+      setCountries(response);
+    } catch (error) {
+      setCountries([]);
+    }
+    setLoading(false);
+  };
+
+  const getState = async (country: string) => {
+    setLoading(true);
+    try {
+      const response = await countryApi.getStatesByCountry(country);
+
+      setRegiones(response);
+    } catch (error) {
+      setRegiones([]);
+    }
+    setLoading(false);
+  };
+
+  const getCities = async (country: string, state: string) => {
+    setLoading(true);
+    try {
+      const response = await countryApi.getCities(country, state);
+
+      setCities(response);
+    } catch (error) {
+      setCities([]);
+    }
+    setLoading(false);
+  };
+
+  const getCitiesByCountry = async (country: string) => {
+    setLoading(true);
+    try {
+      const response = await countryApi.getCitiesByCountry(country);
+
+      setCities(response);
+    } catch (error) {
+      setCities([]);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    getCountries();
+    return () => {
+      setCountries([]);
+    };
+  }, []);
+
+  //console.log(locationState.getStatesByShort('CO'), country, region);
   if (fields?.lenght === 0) return [];
 
   let additionalFormFields = fields.map((field: any, key: any) => {
@@ -57,6 +118,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             }
           : rule;
       rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
+      console.log('sss', cities.length, type, regiones.length, regiones, rule);
+      let validations =
+        (type === 'region' && regiones.length == 0) ||
+        (type === 'country' && countries.length == 0) ||
+        (type === 'city' && cities.length == 0);
 
       let input = (
         <Form.Item initialValue={value} name={name} noStyle>
@@ -312,70 +378,82 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         );
       }
 
-      // if (type === 'country') {
-      //   input = (
-      //     <Form.Item initialValue={value} name={name} noStyle>
-      //       <Select
-      //         showSearch
-      //         optionFilterProp='children'
-      //         style={{ width: '100%' }}
-      //         onChange={(name, aditionalData: any) => {
-      //           setCountry({ name, countryCode: aditionalData.key });
-      //         }}
-      //         placeholder='Seleccione un país'>
-      //         {Country.getAllCountries().map((country: any) => {
-      //           return (
-      //             <Option key={country.isoCode} value={country.name}>
-      //               {country.name}
-      //             </Option>
-      //           );
-      //         })}
-      //       </Select>
-      //     </Form.Item>
-      //   );
-      // }
-      // if (type === 'region') {
-      //   input = (
-      //     <Form.Item initialValue={value} name={name} noStyle>
-      //       <Select
-      //         showSearch
-      //         optionFilterProp='children'
-      //         style={{ width: '100%' }}
-      //         onChange={(name, aditionalData: any) => {
-      //           setRegion({ name, regionCode: aditionalData.key });
-      //         }}
-      //         placeholder='Seleccione un región'>
-      //         {State.getStatesOfCountry(country.countryCode).map((regionCode: any) => {
-      //           return (
-      //             <Option key={regionCode.isoCode} value={regionCode.name}>
-      //               {regionCode.name}
-      //             </Option>
-      //           );
-      //         })}
-      //       </Select>
-      //     </Form.Item>
-      //   );
-      // }
+      if (type === 'country') {
+        input = (
+          <Form.Item initialValue={value} name={name} noStyle>
+            <Select
+              showSearch
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              onChange={(nameCountry, aditionalData: any) => {
+                getState(aditionalData.key);
+                getCitiesByCountry(aditionalData.key);
+                setCountry({ name: nameCountry, countryCode: aditionalData.key, inputName: name });
+              }}
+              disabled={loading || countries.length === 0}
+              loading={loading}
+              placeholder='Seleccione un país'>
+              {countries.map((country: any) => {
+                return (
+                  <Option key={country.iso2} value={country.name}>
+                    {country.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        );
+      }
+      if (type === 'region') {
+        input = (
+          <Form.Item initialValue={value} name={name} noStyle>
+            <Select
+              showSearch
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              onChange={(nameRegion, aditionalData: any) => {
+                getCities(country.countryCode, aditionalData.key);
+                setRegion({ name: nameRegion, regionCode: aditionalData.key, inputName: name });
+              }}
+              disabled={loading || regiones.length === 0}
+              loading={loading}
+              placeholder='Seleccione un región'>
+              {regiones.map((regiones: any) => {
+                return (
+                  <Option key={regiones.iso2} value={regiones.name}>
+                    {regiones.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        );
+      }
 
-      // if (type === 'city') {
-      //   input = (
-      //     <Form.Item initialValue={value} name={name} noStyle>
-      //       <Select
-      //         showSearch
-      //         optionFilterProp='children'
-      //         style={{ width: '100%' }}
-      //         placeholder='Seleccione una ciudad'>
-      //         {City.getCitiesOfState(country.countryCode, region.regionCode).map((cityCode: any, key: any) => {
-      //           return (
-      //             <Option key={key} value={cityCode.name}>
-      //               {cityCode.name}
-      //             </Option>
-      //           );
-      //         })}
-      //       </Select>
-      //     </Form.Item>
-      //   );
-      // }
+      if (type === 'city') {
+        input = (
+          <Form.Item initialValue={value} name={name} noStyle>
+            <Select
+              showSearch
+              optionFilterProp='children'
+              style={{ width: '100%' }}
+              disabled={loading || cities.length === 0}
+              loading={loading}
+              onChange={(nameCity, aditionalData: any) => {
+                setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
+              }}
+              placeholder='Seleccione una ciudad'>
+              {cities.map((cityCode: any, key: any) => {
+                return (
+                  <Option key={key} value={cityCode.name}>
+                    {cityCode.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        );
+      }
 
       //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
       if (type === 'avatar') {
@@ -451,7 +529,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       : '' && (labelPosition !== 'arriba' || !labelPosition)
                   }
                   name={name}
-                  rules={[rule]}
+                  rules={validations ? [{ required: false }] : [rule]}
                   key={'l' + key}
                   htmlFor={key}>
                   {input}

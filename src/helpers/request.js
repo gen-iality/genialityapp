@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiDEVUrl, ApiUrl, ApiEviusZoomSurvey } from './constants';
+import { ApiDEVUrl, ApiUrlCountry, KeyCountry, ApiUrl, ApiEviusZoomSurvey } from './constants';
 import { handleSelect } from './utils';
 import { firestore } from './firebase';
 import Moment from 'moment';
@@ -17,7 +17,14 @@ const privateInstance = axios.create({
   baseURL: ApiUrl,
   withCredentials: true,
 });
-
+const countryInstance = axios.create({
+  url: ApiUrlCountry,
+  baseURL: ApiUrlCountry,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSCAPI-KEY': KeyCountry,
+  },
+});
 /*PROXIMAMENTE DEPRECADO, 
 //PREGUNTE A MARIO MONTERO O JUAN LOPEZ DONDE SE PUEDE USAR*/
 
@@ -47,6 +54,7 @@ export const fireStoreApi = {
     });
   },
 };
+
 export const Actions = {
   create: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);
@@ -90,7 +98,6 @@ export const SearchUserbyEmail = (email) => {
 
 //BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
 export const getCurrentUser = async () => {
-  
   let token = await GetTokenUserFirebase();
 
   return new Promise(async (resolve) => {
@@ -394,6 +401,9 @@ export const UsersApi = {
 
   validateEmail: async (email) => {
     return await Actions.post(`api/validateEmail`, email, true);
+  },
+  validateAttendeeData: async (event_id, eventUser_id) => {
+    return await Actions.get(`events/${event_id}/eventusers/${eventUser_id}/validate-attendee-data`, true);
   },
 
   mineOrdes: async (id) => {
@@ -1169,6 +1179,29 @@ export const Networking = {
   },
   getContactList: async (eventId, userId) => {
     return await Actions.getOne(`/api/events/${eventId}/contactlist/`, userId);
+  },
+};
+
+export const countryApi = {
+  getCountries: async () => {
+    return countryInstance.get('/countries').then(({ data }) => data);
+  },
+  getCountry: async (id) => {
+    return countryInstance.get(`/countries/${id}`).then(({ data }) => data);
+  },
+  getStates: async () => {
+    return countryInstance.get(`/states`).then(({ data }) => data);
+  },
+  getStatesByCountry: async (id) => {
+    return countryInstance.get(`/countries/${id}/states`).then(({ data }) => data);
+  },
+
+  getCitiesByCountry: async (id) => {
+    return countryInstance.get(`/countries/${id}/cities`).then(({ data }) => data);
+  },
+
+  getCities: async (country, state) => {
+    return countryInstance.get(`/countries/${country}/states/${state}/cities`).then(({ data }) => data);
   },
 };
 
