@@ -53,8 +53,6 @@ function QuizActivity(props) {
   }, [currentActivity, props.cEvent]);
   return (
     <>
-
-      {/* {currentActivity && (<div>{currentActivity._id}{console.log('currentActivityx', currentActivity)}</div>)} */}
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
       {console.log('100.activityState', activityState)}
       <SurveyDetailPage surveyId={activityState?.meeting_id} />
