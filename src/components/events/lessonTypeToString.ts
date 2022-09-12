@@ -10,7 +10,7 @@ export default function lessonTypeToString (inputType: string) {
     case 'cargarvideo':
     case 'url':
     case 'video':
-      typeName = 'Video'; // desde URL
+      typeName = 'Vídeo'; // desde URL
       break;
     case 'vimeo':
     case 'youTube':
