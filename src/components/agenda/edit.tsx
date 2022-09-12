@@ -485,6 +485,7 @@ function AgendaEdit(props: AgendaEditProps) {
                             eventId={props.event._id}
                             selectedDocuments={formdata.selectedDocuments}
                             onSelectedDocuments={(changed) => handleDocumentChange(changed)}
+                            matchUrl={props.matchUrl}
                           />
                         </Form.Item>
                         <BackTop />
