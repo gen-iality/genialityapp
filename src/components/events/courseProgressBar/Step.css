@@ -12,4 +12,5 @@
 
 .Step.active {
     border-color: #E89941;
+    background-color: #E89941;
 }

@@ -57,19 +57,22 @@ function CourseProgressBar(props: CourseProgressBarProps) {
     <div className='CourseProgressBar-container' style={{...cssStyleForHeight}}>
       <div className='CourseProgressBar-line' style={{ height: progressWidth + "%" }}></div>
       {activities.map((activity, index) => (
-        <Step
-          isActive={index < count}
-          isSurvey={
-            [activityContentValues.quizing,
-              activityContentValues.survey].includes(activity.type?.name)
-          }
-        >
-          <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
-            <Tooltip placement="right" title={`Ir a la actividad "${activity.name}"`}>
+        <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+          <Step
+            isActive={index < count}
+            isSurvey={
+              [activityContentValues.quizing,
+                activityContentValues.survey].includes(activity.type?.name)
+            }
+          >
+            <Tooltip
+              placement="right"
+              title={`Ir ${[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)? 'al cuestionario' : 'a la actividad'} "${activity.name}"`}
+            >
               {index+1}
             </Tooltip>
-          </Link>
-        </Step>
+          </Step>
+        </Link>
       ))}
     </div>
   );
