@@ -27,8 +27,8 @@ function QuizBadge(props: QuizBadgetProps) {
    const badgetColor = useMemo(() => {
     // Check out the 3 status
     if (isRight === undefined) return '#7D7D7D';
-    if (minimum === 0) return '#CB7E0B';
-    return isRight ? '#5EB841' : '#B8415A';
+    if (minimum === 0) return '#EFD1BD';
+    return isRight ? '#5EB841' : '#E86710';// '#B8415A';
   }, [isRight, minimum]);
 
   const badgeMessage = useMemo(() => {
