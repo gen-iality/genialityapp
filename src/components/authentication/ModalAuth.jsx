@@ -188,7 +188,7 @@ const ModalAuth = (props) => {
         centered
         footer={null}
         zIndex={1000}
-        visible={controllerLoginVisible?.visible}
+        visible={controllerLoginVisible?.visible && props.cEvent?.value?.visibility !== 'ANONYMOUS'}
         closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
         <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
           <TabPane

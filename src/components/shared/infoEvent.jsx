@@ -1,5 +1,5 @@
 import { UseEventContext } from '../../context/eventContext';
-import { Button, Divider, PageHeader, Row, Space, Typography } from 'antd';
+import { Button, PageHeader, Space, Typography } from 'antd';
 import Moment from 'moment';
 import { CalendarOutlined, ClockCircleOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
@@ -10,6 +10,7 @@ import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
 const InfoEvent = ({ paddingOff, preview }) => {
+  const intl = useIntl();
   let isPreview = preview ? true : false;
   let cEvent = UseEventContext();
   let cEventValues = cEvent.value;
@@ -28,30 +29,26 @@ const InfoEvent = ({ paddingOff, preview }) => {
   const visibleButton = () => {
     if (
       (recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION' || (cUserValues && cEventUser?.value)) &&
-      !window.sessionStorage.getItem('session') &&
-      cEventValues?.type_event !== 'physicalEvent'
+      !window.sessionStorage.getItem('session')
     ) {
       return 'JOIN';
     }
-    if (
-      recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' &&
-      !cUserValues &&
-      cEventValues?.type_event !== 'physicalEvent'
-    ) {
-      return 'REGISTER';
-    }
-    if (
-      recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-      cUserValues &&
-      !cEventUser?.value &&
-      cEventValues?.type_event !== 'physicalEvent'
-    ) {
+    if (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && !cUserValues) {
       return 'SIGNUP';
+    }
+    if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUserValues && !cEventUser?.value) {
+      return 'REGISTER';
     }
   };
 
   const buttonAction = () => {
     if (!isPreview && !cUserValues?._id && recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT') {
+      if (!isPreview && recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS') {
+        console.log('🚀  anonimo');
+        helperDispatch({ type: 'showRegister', visible: true });
+        return;
+      }
+
       !isPreview && helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
       return;
     }
@@ -68,7 +65,34 @@ const InfoEvent = ({ paddingOff, preview }) => {
     }
   };
 
-  const intl = useIntl();
+  const labelButtonJoin = () => {
+    if (cUserValues?._id) {
+      return intl.formatMessage({
+        id: 'button.join',
+        defaultMessage: 'Unirse al evento',
+      });
+    }
+
+    if (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS') {
+      return intl.formatMessage({
+        id: 'Button.signup',
+        defaultMessage: 'Inscribirme al evento',
+      });
+    }
+
+    if (recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT') {
+      return intl.formatMessage({
+        id: 'modal.title.login',
+        defaultMessage: 'Iniciar sesión',
+      });
+    }
+
+    return intl.formatMessage({
+      id: 'button.join',
+      defaultMessage: 'Unirse al evento',
+    });
+  };
+
   return (
     <PageHeader
       style={{
@@ -87,17 +111,6 @@ const InfoEvent = ({ paddingOff, preview }) => {
       }
       extra={
         visibleButton() == 'SIGNUP' ? (
-          <Button
-            style={{ color: bgColor, backgroundColor: textColor }}
-            onClick={() => !isPreview && handleChangeTypeModal('registerForTheEvent')}
-            type='primary'
-            size='large'>
-            {intl.formatMessage({
-              id: 'Button.signup',
-              defaultMessage: 'Inscribirme al evento',
-            })}
-          </Button>
-        ) : visibleButton() == 'REGISTER' ? (
           <Space wrap>
             <Button
               style={{ marginRight: 10, color: bgColor, backgroundColor: textColor }}
@@ -119,11 +132,22 @@ const InfoEvent = ({ paddingOff, preview }) => {
               type='primary'
               size='large'>
               {intl.formatMessage({
-                id: 'registration.button.create',
-                defaultMessage: 'Registrarme',
+                id: 'Button.signup',
+                defaultMessage: 'Inscribirme al evento',
               })}
             </Button>
           </Space>
+        ) : visibleButton() == 'REGISTER' ? (
+          <Button
+            style={{ color: bgColor, backgroundColor: textColor }}
+            onClick={() => !isPreview && handleChangeTypeModal('registerForTheEvent')}
+            type='primary'
+            size='large'>
+            {intl.formatMessage({
+              id: 'Button.signup',
+              defaultMessage: 'Inscribirme al evento',
+            })}
+          </Button>
         ) : (
           visibleButton() == 'JOIN' && (
             <Button
@@ -131,20 +155,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
               onClick={buttonAction}
               type='primary'
               size='large'>
-              {cUserValues?._id
-                ? intl.formatMessage({
-                    id: 'button.join',
-                    defaultMessage: 'Unirse al evento',
-                  })
-                : recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT'
-                ? intl.formatMessage({
-                    id: 'modal.title.login',
-                    defaultMessage: 'Iniciar sesión',
-                  })
-                : intl.formatMessage({
-                    id: 'button.join',
-                    defaultMessage: 'Unirse al evento',
-                  })}
+              {labelButtonJoin()}
             </Button>
           )
         )
