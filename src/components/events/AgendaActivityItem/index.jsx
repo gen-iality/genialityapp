@@ -512,7 +512,7 @@ function AgendaActivityItem(props) {
                       <Row gutter={[10, 10]}>
                         <Row span={24} style={{ paddingLeft: '0px' }}>
                           <div className='titulo' style={{ color: cEvent.value.styles.textMenu, marginRight: '1rem' }}>
-                            {item.name}.
+                            {item.name}
                           </div>
                           <div style={{marginRight: '1rem'}}>
                             {meetingId && [activityContentValues.quizing, activityContentValues.survey].includes(item.type?.name) && (
