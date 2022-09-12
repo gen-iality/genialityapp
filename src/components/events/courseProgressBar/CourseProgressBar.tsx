@@ -5,6 +5,8 @@ import { Tooltip } from 'antd';
 
 import { activityContentValues } from '@/context/activityType/constants/ui';
 
+import lessonTypeToString from '../lessonTypeToString';
+
 import Step from './Step';
 
 import './CourseProgressBar.css';
@@ -67,7 +69,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
           >
             <Tooltip
               placement="right"
-              title={`Ir ${[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)? 'al cuestionario' : 'a la actividad'} "${activity.name}"`}
+              title={`Ir ${[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)? 'al cuestionario' : 'a la actividad'} "${activity.name}", tipo ${(lessonTypeToString(activity.type?.name)||'sin contenido').toLowerCase()}`}
             >
               {index+1}
             </Tooltip>

@@ -523,7 +523,8 @@ function AgendaActivityItem(props) {
                             <Badge
                               style={{
                                 backgroundColor: activityContentValues.url === item.type?.name ? '#CB1313'
-                                : [activityContentValues.streaming, activityContentValues.rtmp, activityContentValues.vimeo, activityContentValues.youtube, activityContentValues.meeting, activityContentValues.meet].includes(item.type?.name) ? '#14AA55' : '#8D6CA1'
+                                : [activityContentValues.streaming, activityContentValues.rtmp, activityContentValues.vimeo, activityContentValues.youtube, activityContentValues.meeting, activityContentValues.meet].includes(item.type?.name) ? '#14AA55'
+                                : item.type?.name === undefined ? '#5F7FA4' : '#8D6CA1',
                               }}
                               count={lessonTypeToString(item.type?.name || 'Contenido genérico')}
                             />
