@@ -82,14 +82,14 @@ const UserStatusAndMenu = (props) => {
           <Menu.Item
             icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
-            <FormattedMessage id='header.my_tickets' defaultMessage='Mis tiquetes' />
+            <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
         {visible && (
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
-            <FormattedMessage id='header.my_events' defaultMessage='Mis cursos' />
+            <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
         {visible && (
