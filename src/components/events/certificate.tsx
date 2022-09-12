@@ -17,7 +17,8 @@ export interface CertificateProps {
   cUser?: any
 };
 
-const originalContent = '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>completó con éxito el curso</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].';
+// const originalContent = '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>completó con éxito el curso</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].';
+const originalContent = '';
 const tags = [
   { tag: 'event.name', label: 'Nombre del Cursos', value: 'name' },
   { tag: 'event.start', label: 'Fecha inicio del Cursos', value: 'datetime_from' },
