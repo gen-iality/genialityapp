@@ -520,7 +520,13 @@ function AgendaActivityItem(props) {
                             )}
                           </div>
                           <div className='lesson'>
-                            <Badge style={{backgroundColor: '#8D6CA1'}} count={lessonTypeToString(item.type?.name || 'Contenido genérico')}/>
+                            <Badge
+                              style={{
+                                backgroundColor: activityContentValues.url === item.type?.name ? '#CB1313'
+                                : [activityContentValues.streaming, activityContentValues.rtmp, activityContentValues.vimeo, activityContentValues.youtube, activityContentValues.meeting, activityContentValues.meet].includes(item.type?.name) ? '#14AA55' : '#8D6CA1'
+                              }}
+                              count={lessonTypeToString(item.type?.name || 'Contenido genérico')}
+                            />
                           </div>
                           <span className='lugar' style={{ color: cEvent.value.styles.textMenu }}>
                             {item && item.space && item.space.name}
