@@ -30,7 +30,7 @@ const Document = (props) => {
   const [fromEditing, setFromEditing] = useState(false);
 
   useEffect(() => {
-    if (locationState?.edit) {
+    if (locationState?.edit && !props.simpleMode) {
       getDocument();
     }
   }, []);
@@ -44,6 +44,16 @@ const Document = (props) => {
     setLoading(false);
     setFromEditing(true);
   };
+
+  const resetDocument = () => {
+    setDocument({});
+    setFolder(false);
+    setFiles('');
+    setDocumentList([]);
+    setLoading(false);
+    setFromEditing(false);
+    setLoadPercentage(0);
+  }
 
   const onSubmit = async () => {
     setLoading(true);
@@ -72,17 +82,25 @@ const Document = (props) => {
       });
 
       try {
-        if (locationState.edit) {
+        if (locationState.edit && !props.simpleMode) {
+          console.debug('document editing');
           await DocumentsApi.editOne(
             !folder ? document : { title: document.title, type: 'folder', folder },
             locationState.edit,
             props.event._id
           );
+          console.debug('document edited');
         } else {
+          console.debug('document creating');
           await DocumentsApi.create(
             !folder ? document : { title: document.title, type: 'folder', folder },
             props.event._id
           );
+          console.debug('document created');
+          if (typeof props.cbUploaded === 'function') {
+            props.cbUploaded();
+            resetDocument();
+          }
         }
 
         DispatchMessageService({
@@ -94,7 +112,7 @@ const Document = (props) => {
           msj: 'Información guardada correctamente!',
           action: 'show',
         });
-        history.push(`${props.matchUrl}`);
+        if (!props.simpleMode) history.push(`${props.matchUrl}`);
         setLoading(false);
       } catch (e) {
         DispatchMessageService({
@@ -156,7 +174,7 @@ const Document = (props) => {
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
               });
-              history.push(`${props.matchUrl}`);
+              if (!props.simpleMode) history.push(`${props.matchUrl}`);
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
@@ -185,6 +203,7 @@ const Document = (props) => {
   };
 
   const onHandlerFile = async (e) => {
+    console.log('onHandlerFile calling...')
     /* console.log(e.file.originFileObj); */
     setLoading(true);
     setDocumentList(e.fileList);
@@ -193,7 +212,7 @@ const Document = (props) => {
     setFiles(e.file.originFileObj);
 
     //Se crea el nombre con base a la fecha y nombre del archivo
-    const name = dayjs().format('YYYY-DD-MM') + '-' + files.name;
+    const name = dayjs().format('YYYY-DD-MM') + '-' + (files.name || 'unnamed');
     setFileName(name);
     //Se extrae la extencion del archivo por necesidad del aplicativo
 
@@ -224,9 +243,12 @@ const Document = (props) => {
       },
       (error) => {
         // Handle unsuccessful uploads
+        console.error('You tried upload things to firestore:', error);
       },
       () => {
+        console.log('calling succesUploadFile');
         succesUploadFile(uploadTaskRef);
+        console.log('succesUploadFile called');
       }
     );
   };
@@ -248,7 +270,9 @@ const Document = (props) => {
         type: 'file',
         documentList: documentList,
       });
+      // if (props.simpleMode) setInterval(() => onSubmit(), 1000);
     } catch (e) {
+      console.error('cannot re get file', e);
       setLoading(true);
     }
   };
@@ -274,11 +298,12 @@ const Document = (props) => {
   return (
     <Form onFinish={onSubmit} {...formLayout}>
       <Header
-        title={'Documento'}
-        back
-        save={(loadPercentage > 0 && true) || fromEditing}
-        form
-        remove={remove}
+        title={props.simpleMode ? 'Cargar documento' : 'Documento'}
+        back={!props.simpleMode}
+        save={props.simpleMode || ((loadPercentage > 0 && true) || fromEditing)}
+        saveMethod={props.simpleMode && onSubmit}
+        form={!props.simpleMode}
+        remove={() => { props.simpleMode ? history.push(`${props.matchUrl.replace('agenda', 'documents')}`) : remove()}}
         edit={locationState?.edit}
         loadingSave={loading}
       />
