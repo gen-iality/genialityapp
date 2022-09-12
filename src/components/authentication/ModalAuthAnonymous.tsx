@@ -60,49 +60,49 @@ const ModalAuthAnonymous = (props: any) => {
     }
   };
 
-  useEffect(() => {
-    async function isModalVisible() {
-      let typeEvent = recordTypeForThisEvent(cEvent);
-      switch (typeEvent) {
-        case 'PRIVATE_EVENT':
-          setmodalVisible(false);
-          helperDispatch({ type: 'showLogin', visible: true });
-          break;
+  // useEffect(() => {
+  //   async function isModalVisible() {
+  //     let typeEvent = recordTypeForThisEvent(cEvent);
+  //     switch (typeEvent) {
+  //       case 'PRIVATE_EVENT':
+  //         setmodalVisible(false);
+  //         helperDispatch({ type: 'showLogin', visible: true });
+  //         break;
 
-        case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setmodalVisible(false);
-          helperDispatch({ type: 'showRegister', visible: true });
-          break;
-        case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
-          setmodalVisible(true);
-          helperDispatch({ type: 'showRegister', visible: true });
-          break;
+  //       case 'PUBLIC_EVENT_WITH_REGISTRATION':
+  //         setmodalVisible(false);
+  //         helperDispatch({ type: 'showRegister', visible: true });
+  //         break;
+  //       case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
+  //         setmodalVisible(true);
+  //         helperDispatch({ type: 'showRegister', visible: true });
+  //         break;
 
-        case 'UN_REGISTERED_PUBLIC_EVENT':
-          setmodalVisible(false);
-          helperDispatch({ type: 'showLogin', visible: false });
-          break;
+  //       case 'UN_REGISTERED_PUBLIC_EVENT':
+  //         setmodalVisible(false);
+  //         helperDispatch({ type: 'showLogin', visible: false });
+  //         break;
 
-        default:
-          setmodalVisible(false);
-          break;
-      }
-    }
+  //       default:
+  //         setmodalVisible(false);
+  //         break;
+  //     }
+  //   }
 
-    async function isUserAuth() {
-      app.auth().onAuthStateChanged((user) => {
-        if (user) {
-          setmodalVisible(false);
+  //   async function isUserAuth() {
+  //     app.auth().onAuthStateChanged((user) => {
+  //       if (user) {
+  //         setmodalVisible(false);
 
-          helperDispatch({ type: 'showLogin', visible: false });
-        } else {
-          isModalVisible();
-        }
-      });
-    }
+  //         helperDispatch({ type: 'showLogin', visible: false });
+  //       } else {
+  //         isModalVisible();
+  //       }
+  //     });
+  //   }
 
-    isUserAuth();
-  }, [cEvent, cUser]);
+  //   isUserAuth();
+  // }, [cEvent, cUser]);
 
   useEffect(() => {
     form1.resetFields();
