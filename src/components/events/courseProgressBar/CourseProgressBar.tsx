@@ -3,6 +3,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'antd';
 
+import { activityContentValues } from '@/context/activityType/constants/ui';
+
 import Step from './Step';
 
 import './CourseProgressBar.css';
@@ -57,6 +59,10 @@ function CourseProgressBar(props: CourseProgressBarProps) {
       {activities.map((activity, index) => (
         <Step
           isActive={index < count}
+          isSurvey={
+            [activityContentValues.quizing,
+              activityContentValues.survey].includes(activity.type?.name)
+          }
         >
           <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
             <Tooltip placement="right" title={`Ir a la actividad "${activity.name}"`}>

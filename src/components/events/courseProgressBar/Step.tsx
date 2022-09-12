@@ -5,12 +5,14 @@ import './Step.css';
 export interface StepProps {
   children: React.ReactNode,
   isActive?: boolean,
+  isSurvey?: boolean,
 };
 
 function Step(props: StepProps) {
   const {
     children,
     isActive,
+    isSurvey,
     ...rest
   } = props;
 
@@ -22,7 +24,11 @@ function Step(props: StepProps) {
   }, [isActive]);
 
   return (
-    <div {...rest} className={className}>
+    <div
+      className={className}
+      style={{ borderRadius: isSurvey ? '':'50%'}}
+      {...rest}
+    >
       {children}
     </div>
   );
