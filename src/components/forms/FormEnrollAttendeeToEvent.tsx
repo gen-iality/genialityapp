@@ -101,14 +101,14 @@ const FormEnrollAttendeeToEvent = ({
                       <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>
                         {intl.formatMessage({
                           id: 'modal.title.registerevent..',
-                          defaultMessage: 'Información adicional para el evento',
+                          defaultMessage: 'Información adicional para el curso',
                         })}
                       </Title>
                     )}
                     {thereAreExtraFields === 0 &&
                       intl.formatMessage({
                         id: 'msg.no_fields_create',
-                        defaultMessage: 'No hay campos adicionales en este evento',
+                        defaultMessage: 'No hay campos adicionales en este curso',
                       })}
                     <AdditionalFieldsToFormEnrollAttendeeToEvent
                       aditionalFields={aditionalFields({ validatedFields, attendee, visibleInCms })}

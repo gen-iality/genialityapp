@@ -152,7 +152,7 @@ class NewEvent extends Component {
       const newMenu = {
         itemsMenu: {
           evento: {
-            name: 'evento',
+            name: 'curso',
             position: 1,
             section: 'evento',
             icon: 'CalendarOutlined',

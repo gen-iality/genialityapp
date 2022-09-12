@@ -18,14 +18,14 @@ export const useBlockedEventValidator = (event: any, cUser: any) => {
     const blockedMessage = async () => {
       try {
         let message = await AlertsPlanApi.createOne({
-          message: 'Evento bloqueado sin días posteriores',
+          message: 'Curso bloqueado sin días posteriores',
           status: 'ACTIVE',
           user_id: cUser.value?._id,
         });
         if (message) {
           DispatchMessageService({
             type: 'success',
-            msj: `Ya no puedes ver el evento`,
+            msj: `Ya no puedes ver el curso`,
             action: 'show',
           });
         }

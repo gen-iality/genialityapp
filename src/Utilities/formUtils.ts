@@ -47,7 +47,7 @@ export const validateButtonText = (attendee: attendee, visibleInCms: boolean) =>
     case true:
       return attendee?._id ? 'Actualizar usuario' : 'Agregar usuario';
     case false:
-      return attendee?._id ? 'Actualizar información' : 'Incribirme al evento';
+      return attendee?._id ? 'Actualizar información' : 'Incribirme al curso';
 
     default:
       return 'Aceptar';

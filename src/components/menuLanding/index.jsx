@@ -401,7 +401,7 @@ class menuLanding extends Component {
                       this.state.menu[key].section === 'interviews' ||
                       this.state.menu[key].section === 'my_sesions') &&
                     this.props.event?.visibility === 'ANONYMOUS' ? (
-                      <Result title={'No está disponible para este tipo de acceso del evento'} icon={<></>} />
+                      <Result title={'No está disponible para este tipo de acceso del curso'} icon={<></>} />
                     ) : (
                       <>
                         <Form.Item name={this.state.menu[key].name}>

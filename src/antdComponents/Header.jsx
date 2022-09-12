@@ -57,7 +57,7 @@ const Header = (props) => {
         )}
       </small> */}
       {!eventIsActive && window.location.toString().includes('eventadmin') && (
-        <Typography.Text style={{ color: 'red' }}>Tu evento se encuentra bloqueado</Typography.Text>
+        <Typography.Text style={{ color: 'red' }}>Tu curso se encuentra bloqueado</Typography.Text>
       )}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>

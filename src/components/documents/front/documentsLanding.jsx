@@ -91,7 +91,7 @@ class documentsDetail extends Component {
                   color: this.props.cEvent.value.styles.textMenu,
                   backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
                 }}>
-                Documentos del evento
+                Documentos del curso
               </Typography.Text>
             }
             key='1'>

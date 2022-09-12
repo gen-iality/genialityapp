@@ -1144,7 +1144,7 @@ class ListEventUser extends Component {
                       <img
                         style={{ objectFit: 'cover', width: '96vw' }}
                         src={this.props.event.styles.event_image}
-                        alt='Logo evento'
+                        alt='Logo curso'
                       />
                     ) : (
                       ''

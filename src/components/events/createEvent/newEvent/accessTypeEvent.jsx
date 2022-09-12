@@ -26,7 +26,7 @@ const AccessTypeEvent = () => {
             }}>
             <Space direction='vertical'>
               <div onClick={() => this.changetypeEvent(0)}>
-                <Typography.Text strong>Evento público con registro obligatorio</Typography.Text>
+                <Typography.Text strong>Curso público con registro obligatorio</Typography.Text>
                 <Divider />
                 <Typography.Text type='secondary'>
                   <ul>

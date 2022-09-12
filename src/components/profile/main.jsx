@@ -528,7 +528,7 @@ const MainProfile = (props) => {
               </TabPane>
               <TabPane tab='Calificaciones' key='5'>
                 {events.length === 0 && (
-                  <Typography.Text strong>Sin eventos</Typography.Text>
+                  <Typography.Text strong>Sin cursos</Typography.Text>
                 )}
                 {!(props?.cUser?.value?._id) ? (
                   <Loading />

@@ -85,7 +85,7 @@ const MenuConfig = (props) => {
             size='middle'
             target='_blank'
             href={`${window.location.origin}/landing/${eventId}`}>
-            {props.collapsed ? '' : 'Ir al evento'}
+            {props.collapsed ? '' : 'Ir al curso'}
           </Button>
         </Col>
         <Divider style={{ background: 'gray' }} />

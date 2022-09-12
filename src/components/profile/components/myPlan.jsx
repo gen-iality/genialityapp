@@ -488,7 +488,7 @@ const myPlan = ({ cUser }) => {
     {
       title: intl.formatMessage({
         id: 'my_plan.event.name',
-        defaultMessage: 'Nombre del evento',
+        defaultMessage: 'Nombre del curso',
       }),
       dataIndex: 'name',
       key: 'name',

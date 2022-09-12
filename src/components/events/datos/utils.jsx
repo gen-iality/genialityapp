@@ -4,7 +4,7 @@ const { confirm } = Modal;
 const { Text } = Typography;
 
 const checkInInstructions = [
-  'Si ya hay asistentes inscritos en el evento, se deberá actualizar la información de dicho campo.',
+  'Si ya hay asistentes inscritos en el curso, se deberá actualizar la información de dicho campo.',
   'Esta función está disponible solo para cédula de ciudadanía Colombiana.',
   'Se requiere Lector de documentos.',
   'Durante la inscripción se almacenará la información capturada del documento.',

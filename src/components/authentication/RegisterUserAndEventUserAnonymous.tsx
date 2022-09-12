@@ -79,7 +79,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       <Title level={3} style={{ textAlign: 'center' }}>
         {intl.formatMessage({
           id: 'modal.title.registerevent..',
-          defaultMessage: 'Información para el evento',
+          defaultMessage: 'Información para el curso',
         })}
       </Title>
       <FormEnrollAttendeeToEvent
