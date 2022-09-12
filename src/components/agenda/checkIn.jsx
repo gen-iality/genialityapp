@@ -219,7 +219,7 @@ class CheckAgenda extends Component {
     /* columnsTable.push(editColumn); */
 
     columnsTable.push({
-      title: 'Chequeado',
+      title: 'Último ingreso',
       dataIndex: 'checkedin_at',
       width: 120,
       ellipsis: true,
@@ -352,7 +352,7 @@ class CheckAgenda extends Component {
       .then(() => {
         DispatchMessageService({
           type: 'success',
-          msj: 'Usuario chequeado exitosamente',
+          msj: 'Usuario inscrito exitosamente',
           action: 'show',
         });
         if (edit) {

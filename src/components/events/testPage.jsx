@@ -56,7 +56,7 @@ class Test extends Component {
               // Disminuye el contador si la actualizacion en la base de datos se realiza
               DispatchMessageService({
                 type: 'success',
-                msj: 'Usuario chequeado',
+                msj: 'Usuario inscrito',
                 action: 'show',
               });
               this.setState({ usuarioRegistrado: true });

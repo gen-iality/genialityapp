@@ -705,7 +705,7 @@ class ListEventUser extends Component {
       .then(() => {
         DispatchMessageService({
           type: 'success',
-          msj: 'Usuario chequeado exitosamente...',
+          msj: 'Usuario inscrito exitosamente...',
           action: 'show',
         });
         checkInStatus = true;

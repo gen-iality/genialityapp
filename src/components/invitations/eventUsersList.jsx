@@ -71,7 +71,7 @@ class eventUsersList extends Component {
     let columnsTable = [];
 
     columnsTable.push({
-      title: 'Chequeado',
+      title: 'Último ingreso',
       dataIndex: 'checkedin_at',
       width: '150px',
       ellipsis: true,
