@@ -110,6 +110,7 @@ const SpeakersBlock = () => {
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     scrollSnapAlign: 'center',
+                    backgroundPosition: 'center',
                   }}>
                   <Row
                     justify='start'
