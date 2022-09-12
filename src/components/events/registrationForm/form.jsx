@@ -223,8 +223,12 @@ const FormRegister = ({
     setLoading(true);
     try {
       const response = await countryApi.getStatesByCountry(country);
-
       setRegiones(response);
+      if (response.length === 0) {
+        form.setFieldsValue({
+          [region.inputName !== '' ? region.inputName : 'region']: 'NA',
+        });
+      }
     } catch (error) {
       setRegiones([]);
     }
@@ -235,8 +239,12 @@ const FormRegister = ({
     setLoading(true);
     try {
       const response = await countryApi.getCities(country, state);
-
       setCities(response);
+      if (response.length === 0) {
+        form.setFieldsValue({
+          [city.inputName !== '' ? city.inputName : 'city']: 'NA',
+        });
+      }
     } catch (error) {
       setCities([]);
     }

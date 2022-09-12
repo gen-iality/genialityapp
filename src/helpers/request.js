@@ -403,7 +403,11 @@ export const UsersApi = {
     return await Actions.post(`api/validateEmail`, email, true);
   },
   validateAttendeeData: async (event_id, eventUser_id) => {
-    return await Actions.get(`events/${event_id}/eventusers/${eventUser_id}/validate-attendee-data`, true);
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(
+      `api/events/${event_id}/eventusers/${eventUser_id}/validate-attendee-data?token=${token}`,
+      true
+    );
   },
 
   mineOrdes: async (id) => {
