@@ -28,15 +28,16 @@ const InfoEvent = ({ paddingOff, preview }) => {
   //VALIDACION DE BOTONES
   const visibleButton = () => {
     if (
-      (recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION' || (cUserValues && cEventUser?.value)) &&
+      (recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION' ||
+        (cUserValues?._id && cEventUser?.value?._id)) &&
       !window.sessionStorage.getItem('session')
     ) {
       return 'JOIN';
     }
-    if (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && !cUserValues) {
+    if (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' && !cUserValues?._id) {
       return 'SIGNUP';
     }
-    if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUserValues && !cEventUser?.value) {
+    if (recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUserValues?._id && !cEventUser?.value?._id) {
       return 'REGISTER';
     }
   };
@@ -44,7 +45,6 @@ const InfoEvent = ({ paddingOff, preview }) => {
   const buttonAction = () => {
     if (!isPreview && !cUserValues?._id && recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT') {
       if (!isPreview && recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS') {
-        console.log('🚀  anonimo');
         helperDispatch({ type: 'showRegister', visible: true });
         return;
       }
@@ -66,6 +66,8 @@ const InfoEvent = ({ paddingOff, preview }) => {
   };
 
   const labelButtonJoin = () => {
+    if (cUserValues?._id && cEventValues?.type_event === 'physicalEvent') return '';
+
     if (cUserValues?._id) {
       return intl.formatMessage({
         id: 'button.join',
