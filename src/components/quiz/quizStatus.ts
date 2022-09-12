@@ -1,9 +1,9 @@
 const QuizStatusMessage = {
-  PASSED: 'aprobado',
-  NOT_PASSED: 'no aprobado aún',
-  NO_QUESTIONS: 'sin preguntas',
-  NO_REQUIRED: 'sin requisitos',
-  PROCESSING: 'procesando...',
+  PASSED: 'Aprobado',
+  NOT_PASSED: 'No aprobado',
+  NO_QUESTIONS: 'Sin preguntas',
+  NO_REQUIRED: 'Sin requisitos',
+  PROCESSING: 'Procesando...',
 };
 
 export default QuizStatusMessage;
