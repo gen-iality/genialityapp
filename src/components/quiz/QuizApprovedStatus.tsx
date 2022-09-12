@@ -67,17 +67,9 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
     {isLoaded && <Badge count={status} style={{ backgroundColor }} />}
     {isLoaded && isApproved && props.approvedLink && (
       <Link to={props.approvedLink}>
-        {/* <Badge
-            style={{
-              background: '#5EB841',
-              border: 'none',
-              marginLeft: '2px',
-            }}
-            count='Certificado'
-          /> */}
           <Button
             style={{
-              background: '#5EB841',
+              background: '#356785',
               color: '#fff',
               border: 'none',
               fontSize: '12px',
