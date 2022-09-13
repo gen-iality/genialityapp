@@ -19,6 +19,7 @@ import lessonTypeToString from '../lessonTypeToString';
 import QuizProgress from '@/components/quiz/QuizProgress';
 import { activityContentValues } from '@/context/activityType/constants/ui';
 import { UseCurrentUser } from '@context/userContext';
+import { ActivityCustomIcon } from '@/components/agenda/components/ActivityCustomIcon';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
@@ -325,6 +326,7 @@ function AgendaActivityItem(props) {
                 )
               }>
               <Card
+                className='shadow-box'
                 style={{
                   border: `solid 1px rgb(240,240,240)`, // color: ${cEvent.value.styles.textMenu}
                   maxHeight: '280px',
@@ -511,6 +513,7 @@ function AgendaActivityItem(props) {
                     <Space direction='vertical'>
                       <Row gutter={[10, 10]}>
                         <Row span={24} style={{ paddingLeft: '0px' }}>
+                          <ActivityCustomIcon style={{marginTop: '0.3em', marginRight: '10px'}} type={item.type?.name}/>
                           <div className='titulo' style={{ color: cEvent.value.styles.textMenu, marginRight: '1rem' }}>
                             {item.name}
                           </div>
