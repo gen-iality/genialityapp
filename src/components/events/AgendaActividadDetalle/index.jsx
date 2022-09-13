@@ -24,14 +24,14 @@ import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 
 const { setHasOpenSurveys } = SurveyActions;
 
-const AgendaActividadDetalle = (props) => {
+const AgendaActividadDetalle = props => {
   let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
-  let [ orderedHost, setOrderedHost ] = useState([]);
+  let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
-  const [ videoStyles, setVideoStyles ] = useState(null);
-  const [ videoButtonStyles, setVideoButtonStyles ] = useState(null);
-  let [ blockActivity, setblockActivity ] = useState(false);
-  const [ activity, setactivity ] = useState('');
+  const [videoStyles, setVideoStyles] = useState(null);
+  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
+  let [blockActivity, setblockActivity] = useState(false);
+  const [activity, setactivity] = useState('');
   const cUser = UseCurrentUserContext();
   let cEventUser = UseUserEvent();
   const cEvent = UseEventContext();
@@ -47,13 +47,13 @@ const AgendaActividadDetalle = (props) => {
     }
 
     function orderHost(hosts) {
-      hosts.sort(function (a, b) {
+      hosts.sort(function(a, b) {
         return a.order - b.order;
       });
       setOrderedHost(hosts);
     }
 
-    getActividad().then((result) => {
+    getActividad().then(result => {
       helperDispatch({ type: 'currentActivity', currentActivity: result });
       setactivity(result);
       orderHost(result.hosts);
@@ -77,17 +77,17 @@ const AgendaActividadDetalle = (props) => {
       helperDispatch({ type: 'currentActivity', currentActivity: null });
       setactivity(null);
     };
-  }, []);
+  }, [props.match.params.activity_id]);
 
   useEffect(() => {
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
       // console.log(cEvent.value.type_event)
-      if (cEvent.value.type_event === "onlineEvent") {
+      if (cEvent.value.type_event === 'onlineEvent') {
         checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id);
       }
     }
-  }, [ currentActivity, cEventUser.status ]);
+  }, [currentActivity, cEventUser.status]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
@@ -120,7 +120,7 @@ const AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
       setVideoButtonStyles({ display: 'none' });
     }
-  }, [ chatAttendeChats, isMobile ]);
+  }, [chatAttendeChats, isMobile]);
 
   // VALIDAR LECCIONES POR CODIGO
   useEffect(() => {
@@ -142,7 +142,7 @@ const AgendaActividadDetalle = (props) => {
         setblockActivity(false);
       }
     }
-  }, [ cEvent.value, cEventUser.value, cUser.value ]);
+  }, [cEvent.value, cEventUser.value, cUser.value]);
 
   // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
   return (
@@ -151,7 +151,7 @@ const AgendaActividadDetalle = (props) => {
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
 
-          {activity.type === undefined ? (<PreloaderApp />) : (<HOCActividad activity={activity}/>)}
+          {activity?.type === undefined ? <PreloaderApp /> : <HOCActividad activity={activity} />}
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
@@ -162,7 +162,7 @@ const AgendaActividadDetalle = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   mainStageContent: state.stage.data.mainStage,
   userInfo: state.user.data,
   currentActivity: state.stage.data.currentActivity,
