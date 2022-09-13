@@ -1,4 +1,4 @@
-import { Divider, List, Typography, Button, Spin } from 'antd';
+import { Divider, List, Typography, Button, Spin, Badge } from 'antd';
 import { DesktopOutlined, FileDoneOutlined, ReadFilled, VideoCameraOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import { ExtendedAgendaType } from '@/Utilities/types/AgendaType';
 import { activityContentValues } from '@/context/activityType/constants/ui';
 import { ActivityType } from '@/context/activityType/types/activityType';
+import { firestore } from '@/helpers/firebase';
+import LessonViewedCheck from '../LessonViewedCheck';
 
 const data = [
   <div>
@@ -24,10 +26,12 @@ type TruncatedAgenda = {
   type?: ActivityType.ContentValue,
   timeString: string,
   link: string,
+  Component?: any,
 };
 
 interface ActivitiesListProps {
   eventId: string,
+  cEventUserId: string,
 };
 
 interface CustomIconProps {
@@ -57,6 +61,7 @@ const CustomIcon = ({type, ...props} : CustomIconProps) => {
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
     eventId, // The event ID
+    cEventUserId, // The event user ID
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -87,6 +92,24 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             type: agenda.type?.name as ActivityType.ContentValue,
             timeString: dayjs(diff).format('h:mm').concat(' min'),
             link: `/landing/${eventId}/activity/${agenda._id}`,
+            Component: () => {
+              const [isTaken, setIsTaken] = useState(false);
+              useEffect(() => {
+                (async () => {
+                  console.log('item._id', agenda._id)
+                  let activity_attendee = await firestore
+                    .collection(`${agenda._id}_event_attendees`)
+                    .doc(cEventUserId)
+                    .get(); //checkedin_at
+                  if (activity_attendee && activity_attendee.exists) {
+                    // If this activity existes, then it means the lesson was taken
+                    setIsTaken(activity_attendee.data()?.checked_in);
+                  }
+                })();
+              }, []);
+              if (isTaken) return <Badge count='Visto'/>
+              return <></>;
+            }
           };
           return result;
         })
@@ -119,12 +142,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               <CustomIcon type={item.type!} className='list-icon' style={{marginRight: '1em'}} />
               <span>{item.title}</span>
             </div>
-            <span
-              style={{
-                fontWeight: '100',
-                fontSize: '1.2rem',
-              }}
-            >{item.timeString}</span>
+            <div style={{ display: 'flex', flexDirection: 'row'}}>
+              <span style={{marginRight: '.5em',}}>
+                <item.Component/>
+              </span>
+              <span
+                style={{
+                  fontWeight: '100',
+                  fontSize: '1.2rem',
+                }}
+              >{item.timeString}</span>
+            </div>
           </Link>
         </List.Item>
       )}
