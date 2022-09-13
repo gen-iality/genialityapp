@@ -1,14 +1,13 @@
 import { Divider, List, Typography, Button, Spin, Badge } from 'antd';
-import { DesktopOutlined, FileDoneOutlined, ReadFilled, VideoCameraOutlined } from '@ant-design/icons';
+import { ReadFilled } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AgendaApi } from '@/helpers/request';
 import dayjs from 'dayjs';
 import { ExtendedAgendaType } from '@/Utilities/types/AgendaType';
-import { activityContentValues } from '@/context/activityType/constants/ui';
 import { ActivityType } from '@/context/activityType/types/activityType';
 import { firestore } from '@/helpers/firebase';
-import LessonViewedCheck from '../LessonViewedCheck';
+import { ActivityCustomIcon } from './ActivityCustomIcon';
 
 const data = [
   <div>
@@ -32,30 +31,6 @@ type TruncatedAgenda = {
 interface ActivitiesListProps {
   eventId: string,
   cEventUserId: string,
-};
-
-interface CustomIconProps {
-  type: ActivityType.ContentValue,
-  [x: string]: any,
-};
-
-const CustomIcon = ({type, ...props} : CustomIconProps) => {
-  switch (type) {
-    case activityContentValues.file:
-    case activityContentValues.url:
-      return <VideoCameraOutlined {...props} />
-    case activityContentValues.meet:
-    case activityContentValues.meeting:
-    case activityContentValues.rtmp:
-    case activityContentValues.youtube:
-    case activityContentValues.vimeo:
-    case activityContentValues.streaming:
-      return <DesktopOutlined {...props}/>
-    case activityContentValues.quizing:
-    case activityContentValues.survey:
-      return <FileDoneOutlined {...props}/>
-    default: return <ReadFilled {...props}/>;
-  }
 };
 
 const ActivitiesList = (props: ActivitiesListProps) => {
@@ -139,7 +114,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
           >
             <div>
               {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
-              <CustomIcon type={item.type!} className='list-icon' style={{marginRight: '1em'}} />
+              <ActivityCustomIcon type={item.type!} className='list-icon' style={{marginRight: '1em'}} />
               <span>{item.title}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'row'}}>
