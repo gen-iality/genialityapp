@@ -1,5 +1,6 @@
 import { Divider, List, Typography, Button, Spin } from 'antd';
 import { ReadFilled } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AgendaApi } from '@/helpers/request';
 import dayjs from 'dayjs';
@@ -21,7 +22,8 @@ const data = [
 type TruncatedAgenda = {
   title: string,
   type?: ActivityType.ContentValue,
-  timeString?: string,
+  timeString: string,
+  link: string,
 };
 
 interface ActivitiesListProps {
@@ -60,6 +62,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             title: agenda.name,
             type: agenda.type?.name as ActivityType.ContentValue,
             timeString: dayjs(diff).format('h:mm').concat(' min'),
+            link: `/landing/${eventId}/activity/${agenda._id}`,
           };
           return result;
         })
@@ -79,7 +82,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       dataSource={truncatedAgendaList}
       renderItem={(item: TruncatedAgenda) => (
         <List.Item className='shadow-box'>
-          <div
+          <Link
+            to={item.link}
             style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -96,7 +100,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 fontSize: '1.2rem',
               }}
             >{item.timeString}</span>
-          </div>
+          </Link>
         </List.Item>
       )}
     />
