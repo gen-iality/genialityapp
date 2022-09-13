@@ -23,7 +23,7 @@ const EventHome = () => {
     <>
       {cEvent && cEvent.value && cEvent.value._id && cEvent.value._id !== '610e72451c2ae8638d5395c6' && (
         <Row justify='center'>
-          <Col span={22} /* sm={24} md={16} lg={18} xl={18} */>
+          <Col span={24} /* sm={24} md={16} lg={18} xl={18} */ style={{ padding: '25px' }}>
             <EventLanding />
           </Col>
         </Row>
