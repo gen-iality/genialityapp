@@ -69,6 +69,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   useEffect(() => {
     if (!eventId) return;
+    if (!cEventUserId) return;
 
     (async () => {
       setIsLoading(true);
@@ -117,7 +118,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setIsLoading(false);
     })();
-  }, [eventId]);
+  }, [eventId, cEventUserId]);
 
   if (isLoading) return <Spin/>
 
