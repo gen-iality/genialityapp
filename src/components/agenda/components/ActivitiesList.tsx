@@ -19,7 +19,7 @@ const ActivitiesList = () => {
       header={<h2>LECCIONES DEL CURSO</h2>}
       bordered
       dataSource={data}
-      renderItem={(item) => <List.Item>{item}</List.Item>}
+      renderItem={(item) => <List.Item className='shadow-box'>{item}</List.Item>}
     />
   );
 };

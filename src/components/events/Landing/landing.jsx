@@ -250,7 +250,6 @@ const Landing = (props) => {
             }}
           >
             {props.view && <TopBanner currentActivity={currentActivity} />}
-            <p>asdasd</p>
             <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
             <EviusFooter />
           </Content>
