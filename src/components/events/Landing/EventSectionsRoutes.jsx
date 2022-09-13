@@ -202,8 +202,7 @@ const EventSectionRoutes = (props) => {
                     <Typography.Text>
                       Estado del curso:
                     </Typography.Text>
-                    <br />
-                    <br />
+                    {' '}
                     <QuizApprovedStatus eventId={event_id} approvedLink={`/landing/${event_id}/certificate`} />
                   </Card>
                   </>
