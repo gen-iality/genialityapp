@@ -34,7 +34,6 @@ function ThisRouteCanBeDisplayed({ children }) {
   let eventUserStatus = cEventUser.status;
   let cEvent = UseEventContext();
   let { handleChangeTypeModal } = useHelper();
-  console.log('llllll', cEventUser);
   useEffect(() => {
     /** Abrir modal de registro al evento automaticamente para eventos con registro obligatorio */
     (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' ||

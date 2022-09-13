@@ -38,7 +38,6 @@ const ModalUpdate = (props: any) => {
 
   useEffect(() => {
     validateAttende();
-    console.log(cEvent.value, cEventUser.value);
   }, [cEvent.value, cEventUser.value]);
 
   return (

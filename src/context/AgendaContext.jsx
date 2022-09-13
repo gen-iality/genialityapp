@@ -77,7 +77,6 @@ export const AgendaContextProvider = ({ children }) => {
 
   //Un patch temporal mientras la transisicón a reducer/store
   useEffect(() => {
-    console.log('meeting_created_local', activityState);
     setMeetingId(activityState.meeting_id); //esta linea es temporal mejor reeplazarla por el store del reducer
   }, [activityState.meeting_id]);
 

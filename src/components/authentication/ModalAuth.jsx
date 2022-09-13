@@ -40,7 +40,7 @@ const ModalAuth = (props) => {
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
-  console.log(props);
+ 
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);

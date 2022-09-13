@@ -630,7 +630,6 @@ const FormRegister = ({
     }
   };
   useEffect(() => {
-    console.log('INITIAL VALUES===>', initialValues, extraFields);
     form.setFieldsValue(initialValues);
   }, [initialValues]);
 
@@ -665,14 +664,12 @@ const FormRegister = ({
 
   const valuesChange = (changedValues, allValues) => {
     //validar que todos los campos de event user esten llenos
-    console.log(allValues);
     ValidateEmptyFields(allValues);
     let e = {
       target: {
         value: changedValues[Object.keys(changedValues)[0]],
       },
     };
-    console.log(changedValues, allValues, 'values');
     HandleHookForm(e, Object.keys(changedValues)[0], null);
     updateFieldsVisibility(conditionals, allValues);
   };
@@ -1261,7 +1258,6 @@ const FormRegister = ({
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
                   <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
-                    {console.log('avatar', initialValues)}
                     <Typography.Title level={5}>
                       {intl.formatMessage({
                         id: 'title.user_data',

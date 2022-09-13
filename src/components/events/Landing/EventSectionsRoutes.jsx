@@ -81,8 +81,7 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     //presencia de usuario
     if (props.cEvent.value && cUser.value) {
-      console.log(props.cEvent.value, cUser.value);
-      initUserPresence(props.cEvent.value._id);
+      initUserPresence(props.cEvent.value);
     }
     /** RESTRICIONES */
     // let { isBlocked, formatDate } = useBlockedEventValidator(props.cEvent, cUser);
@@ -121,7 +120,6 @@ const EventSectionRoutes = (props) => {
               props.currentActivity.type.name === 'vimeo') &&
             props.currentActivity.habilitar_ingreso === 'open_meeting_room'
           ) {
-            console.log('Llegue aqui 3');
             initBroadcastViewers(props.cEvent.value._id, props.currentActivity._id, props.currentActivity.name, cUser);
           }
         }
