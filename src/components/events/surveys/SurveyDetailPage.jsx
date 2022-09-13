@@ -18,6 +18,7 @@ import { UseSurveysContext } from '@context/surveysContext';
 
 /** Components */
 import ResultsPanel from './resultsPanel';
+import QuizProgress from '@/components/quiz/QuizProgress';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
   const cSurveys = UseSurveysContext();
@@ -109,6 +110,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
             status='success'
             title='Ya has contestado esta evaluación'
           />
+          <QuizProgress eventId={cEvent.value._id} userId={currentUser.value._id} surveyId={surveyId} />
           <Button
             onClick={() => {
               showResultsPanel();
