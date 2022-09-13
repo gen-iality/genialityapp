@@ -17,6 +17,7 @@ import InfoEvent from '../shared/infoEvent';
 import ActivityBlock from './block/activityBlock';
 import CountdownBlock from './block/countdownBlock';
 import SpeakersBlock from './block/speakersBlock';
+import SponsorBlock from './block/sponsorBlock';
 import { obtenerConfigActivity } from './hooks/helperFunction';
 import MenuScrollBlock from './MenuScrollBlock';
 
@@ -276,6 +277,20 @@ const ViewPrelanding = ({ preview }) => {
                   </Card>
                 </Col>
               )}
+              <Col span={24}>
+                <Card
+                  id='Patrocinadores_block'
+                  style={{
+                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                    height: '100%',
+                    borderRadius: '20px',
+                    color: textColor,
+                    backgroundColor: bgColor,
+                    border: 'none',
+                  }}>
+                  <SponsorBlock />
+                </Card>
+              </Col>
             </Row>
           </Col>
         </Row>
