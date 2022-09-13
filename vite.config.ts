@@ -39,8 +39,8 @@ export default defineConfig(({ mode }) => {
       preprocessorOptions: {
         less: {
           modifyVars: {
-            '@primary-color': '#333F44',
-            '@secondary-color': '#C44D17',
+            //'@primary-color': '#333F44',
+            //'@secondary-color': '#C44D17',
           },
           javascriptEnabled: true,
         },

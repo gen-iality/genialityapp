@@ -91,7 +91,7 @@ const Landing = (props) => {
     setActivitiesAttendee([]);
     const loadData = async () => {
       const { data } = await AgendaApi.byEvent(cEventContext.value?._id);
-      console.log('data:', data)
+      console.log('data:', data);
       setActivities(data);
       const existentActivities = data.map(async (activity) => {
         let activity_attendee = await firestore
@@ -128,7 +128,8 @@ const Landing = (props) => {
         size='small'
         onClick={() =>
           window.location.replace(`${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`)
-        }>
+        }
+      >
         Ir a la lección
       </Button>
     ) : null;
@@ -169,7 +170,7 @@ const Landing = (props) => {
         fb.firestore
           .collection('events')
           .doc(cEventContext.value?._id)
-          .onSnapshot(function (eventSnapshot) {
+          .onSnapshot(function(eventSnapshot) {
             if (eventSnapshot.exists) {
               if (eventSnapshot.data().tabs !== undefined) {
                 setgeneraltabs(eventSnapshot.data().tabs);
@@ -179,7 +180,7 @@ const Landing = (props) => {
 
         fb.firestore
           .collection('eventchats/' + cEventContext.value._id + '/userchats/' + cUser.uid + '/' + 'chats/')
-          .onSnapshot(function (querySnapshot) {
+          .onSnapshot(function(querySnapshot) {
             let data;
             querySnapshot.forEach((doc) => {
               data = doc.data();
@@ -246,9 +247,9 @@ const Landing = (props) => {
               backgroundSize: 'cover',
               background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
               backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,
-            }}>
+            }}
+          >
             {props.view && <TopBanner currentActivity={currentActivity} />}
-
             <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
             <EviusFooter />
           </Content>
