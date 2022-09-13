@@ -70,7 +70,7 @@ const HostList = () => {
         size='small'
         header={<h3>COLABORADORES</h3>}
         dataSource={speakers}
-        renderItem={(item) => (
+        renderItem={(item: any) => (
           <List.Item className='shadow-box'>
             <List.Item.Meta
               avatar={<Avatar src={item.image} />}
