@@ -1761,29 +1761,38 @@ export const configEventsTemplate = {
 export const imageforDefaultProfile = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
 
 //DATA PARA SECCIONES DE PRELANDING
-export const SectionsPrelanding = [
-  {
-    key: '1',
-    name: 'Contador',
-    status: true,
-    index: 0,
-  },
-  {
-    key: '2',
-    name: 'Descripción',
-    status: false,
-    index: 1,
-  },
-  {
-    key: '3',
-    name: 'Conferencistas',
-    status: false,
-    index: 2,
-  },
-  {
-    key: '4',
-    name: 'Actividades',
-    status: true,
-    index: 3,
-  },
-];
+
+export const SectionsPrelanding = {
+  main_landing_blocks: [
+    {
+      key: '1',
+      name: 'Contador',
+      status: true,
+      index: 0,
+    },
+    {
+      key: '2',
+      name: 'Descripción',
+      status: false,
+      index: 1,
+    },
+    {
+      key: '3',
+      name: 'Conferencistas',
+      status: false,
+      index: 2,
+    },
+    {
+      key: '4',
+      name: 'Actividades',
+      status: true,
+      index: 3,
+    },
+    {
+      key: '5',
+      name: 'Patrocinadores',
+      status: false,
+      index: 4,
+    },
+  ],
+};

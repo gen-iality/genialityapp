@@ -70,11 +70,12 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       //OBTENENOS LAS SECCIONES DE PRELANDING
       const previews = await EventsApi.getPreviews(cEvent.value._id);
       //SE ORDENAN LAS SECCIONES POR INDEX
-      const sections = previews.data.length > 0 ? previews.data.sort((a, b) => a.index - b.index) : SectionsPrelanding;
+      // const sections = previews.data.length > 0 ? previews.data.sort((a, b) => a.index - b.index) : SectionsPrelanding;
+      const sections = previews?._id ? previews : SectionsPrelanding;
       const { speakers, agenda, description } = await obtenerData(cEvent);
       setDescription(description);
-      setAgenda(agenda);
       setSpeakers(speakers);
+      setAgenda(agenda);
       setDataSource(sections);
       setLoading(false);
     }
@@ -83,11 +84,11 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   const updateItem = (item, val) => {
     setLoading(true);
     item.status = val;
-    const newDataSource = dataSource.map((data) => {
+    const newDataSource = dataSource.main_landing_blocks.map((data) => {
       if (data.key == item.key) return item;
       else return data;
     });
-    setDataSource(newDataSource);
+    setDataSource({ ...dataSource, main_landing_blocks: newDataSource });
     setLoading(false);
   };
 
@@ -119,24 +120,25 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   //PERMITE GUARDAR STATUS DE LAS SECCIONES EN BD
   const saveSections = async () => {
     if (dataSource) {
+      // return;
       let saved = true;
-      await Promise.all(
-        dataSource.map(async (section) => {
-          if (!section._id) {
-            try {
-              const resp = await EventsApi.addPreviews(cEvent.value._id, section);
-            } catch (error) {
-              saved = false;
-            }
-          } else {
-            try {
-              const resp = await EventsApi.updatePreviews(section._id, section);
-            } catch (error) {
-              saved = false;
-            }
-          }
-        })
-      );
+      let response = undefined;
+      const main_landing_blocks = dataSource.main_landing_blocks;
+
+      if (!dataSource?._id) {
+        try {
+          response = await EventsApi.addPreviews(cEvent.value._id, { main_landing_blocks });
+        } catch (error) {
+          saved = false;
+        }
+      } else {
+        try {
+          response = await EventsApi.updatePreviews(dataSource?._id, { main_landing_blocks });
+        } catch (error) {
+          saved = false;
+        }
+      }
+      if (response) setDataSource(response);
       if (saved) message.success('Configuración guardada correctamente');
       else message.error('Error al guardar la configuración');
     } else {
@@ -207,13 +209,14 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
-      let newData = arrayMove([].concat(dataSource), oldIndex, newIndex).filter((el) => !!el);
+      let newData = arrayMove([].concat(dataSource.main_landing_blocks), oldIndex, newIndex).filter((el) => !!el);
       if (newData) {
         newData = newData.map((data, key) => {
           return { ...data, index: key };
         });
       }
-      setDataSource(newData);
+      setDataSource({ ...dataSource, main_landing_blocks: newData });
+      // setDataSource(newData);
     }
   };
 
@@ -223,7 +226,9 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = dataSource.findIndex((x) => x.index === restProps['data-row-key']);
+    const index = dataSource?.main_landing_blocks?.findIndex((x) => {
+      return x.index === restProps['data-row-key'];
+    });
     return <SortableItem index={index} {...restProps} />;
   };
 
@@ -235,7 +240,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
             tableLayout='auto'
             style={{ userSelect: 'none' }}
             pagination={false}
-            dataSource={dataSource}
+            dataSource={dataSource.main_landing_blocks}
             columns={columns}
             rowKey='index'
             components={{
