@@ -1,0 +1,90 @@
+import { Divider, List, Typography, Button, Avatar } from 'antd';
+import { ReadFilled } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import { UseEventContext } from '../../../context/eventContext';
+import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../../helpers/request';
+
+const dataDuration = [
+  {
+    title: '1 hora de contenido',
+  },
+  {
+    title: '6 horas de práctica',
+  },
+];
+
+const dataTooling = [
+  {
+    title: 'Trello',
+  },
+  {
+    title: 'Excel',
+  },
+];
+
+const HostList = () => {
+  const cEvent = UseEventContext();
+  let [speakers, setSpeakers] = useState([]);
+
+  useEffect(() => {
+    let speakersApi = [];
+
+    (async () => {
+      speakersApi = await SpeakersApi.byEvent(cEvent.value._id);
+      console.log('900.speakers', speakersApi);
+      setSpeakers(speakersApi);
+    })();
+  }, []);
+
+  return (
+    <>
+      <List
+        size='small'
+        header={<h3>DURACIÓN</h3>}
+        dataSource={dataDuration}
+        renderItem={(item) => (
+          <List.Item>
+            {
+              <>
+                <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.title}</p>
+              </>
+            }
+          </List.Item>
+        )}
+      />
+      <List
+        size='small'
+        header={<h3>HERRAMIENTAS</h3>}
+        dataSource={dataTooling}
+        renderItem={(item) => (
+          <List.Item>
+            {
+              <>
+                <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.title}</p>
+              </>
+            }
+          </List.Item>
+        )}
+      />
+      <List
+        size='small'
+        header={<h3>COLABORADORES</h3>}
+        dataSource={speakers}
+        renderItem={(item) => (
+          <List.Item className='shadow-box'>
+            <List.Item.Meta
+              avatar={<Avatar src={item.image} />}
+              description={
+                <>
+                  <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>
+                  <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>Profesor</p>
+                </>
+              }
+            />
+          </List.Item>
+        )}
+      />
+    </>
+  );
+};
+export default HostList;
