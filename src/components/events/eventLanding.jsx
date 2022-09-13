@@ -5,11 +5,11 @@ import { Card } from 'antd';
 import ReactQuill from 'react-quill';
 import ReactPlayer from 'react-player';
 import { Row, Col } from 'antd';
-import { AgendaApi } from '../../helpers/request';
-import { parseUrl } from '../../helpers/constants';
-import withContext from '../../context/withContext';
-import ActivitiesList from '../agenda/components/activitiesList';
-import HostList from '../agenda/components/HostList';
+import { AgendaApi } from '@helpers/request';
+import { parseUrl } from '@helpers/constants';
+import withContext from '@context/withContext';
+import ActivitiesList from '@components/agenda/components/ActivitiesList';
+import HostList from '@components/agenda/components/HostList';
 class eventLanding extends Component {
   constructor(props) {
     super(props);
