@@ -117,7 +117,7 @@ class eventLanding extends Component {
               </Col>
               <Col span={18}>
                 <div className='activities-main-list'>
-                  <ActivitiesList />
+                  <ActivitiesList eventId={this.props.cEvent.value._id} />
                 </div>
               </Col>
             </Row>

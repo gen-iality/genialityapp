@@ -1,5 +1,8 @@
-import { Divider, List, Typography, Button } from 'antd';
+import { Divider, List, Typography, Button, Spin } from 'antd';
 import { ReadFilled } from '@ant-design/icons';
+import { useState, useEffect } from 'react';
+import { AgendaApi } from '@/helpers/request';
+import AgendaType from '@/Utilities/types/AgendaType';
 
 const data = [
   <div>
@@ -12,14 +15,53 @@ const data = [
   'Los Angeles battles huge wildfires.',
 ];
 
-const ActivitiesList = () => {
+type TruncatedAgenda = {
+  title: string,
+};
+
+interface ActivitiesListProps {
+  eventId: string,
+};
+
+const ActivitiesList = (props: ActivitiesListProps) => {
+  const {
+    eventId, // The event ID
+  } = props;
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([]);
+
+  useEffect(() => {
+    if (!eventId) return;
+
+    (async () => {
+      const { data: agendaList } = await AgendaApi.byEvent(eventId) as { data: AgendaType[]};
+
+      setTruncatedAgendaList((previous) => ([
+        ...previous,
+        ...agendaList.map((agenda) => {
+          // Logic here
+          return {
+            title: agenda.name
+          };
+        })
+      ]))
+
+      setIsLoading(false);
+    })();
+  }, [eventId]);
+
+  if (isLoading) return <Spin/>
+
   return (
     <List
       size='small'
       header={<h2>LECCIONES DEL CURSO</h2>}
       bordered
-      dataSource={data}
-      renderItem={(item) => <List.Item className='shadow-box'>{item}</List.Item>}
+      dataSource={truncatedAgendaList}
+      renderItem={(item: TruncatedAgenda) => (
+        <List.Item className='shadow-box'>{item.title}</List.Item>
+      )}
     />
   );
 };
