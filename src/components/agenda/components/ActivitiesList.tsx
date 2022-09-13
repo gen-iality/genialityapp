@@ -1,5 +1,5 @@
 import { Divider, List, Typography, Button, Spin } from 'antd';
-import { ReadFilled } from '@ant-design/icons';
+import { DesktopOutlined, FileDoneOutlined, ReadFilled, VideoCameraOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AgendaApi } from '@/helpers/request';
@@ -28,6 +28,30 @@ type TruncatedAgenda = {
 
 interface ActivitiesListProps {
   eventId: string,
+};
+
+interface CustomIconProps {
+  type: ActivityType.ContentValue,
+  [x: string]: any,
+};
+
+const CustomIcon = ({type, ...props} : CustomIconProps) => {
+  switch (type) {
+    case activityContentValues.file:
+    case activityContentValues.url:
+      return <VideoCameraOutlined {...props} />
+    case activityContentValues.meet:
+    case activityContentValues.meeting:
+    case activityContentValues.rtmp:
+    case activityContentValues.youtube:
+    case activityContentValues.vimeo:
+    case activityContentValues.streaming:
+      return <DesktopOutlined {...props}/>
+    case activityContentValues.quizing:
+    case activityContentValues.survey:
+      return <FileDoneOutlined {...props}/>
+    default: return <ReadFilled {...props}/>;
+  }
 };
 
 const ActivitiesList = (props: ActivitiesListProps) => {
@@ -91,7 +115,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             }}
           >
             <div>
-              <ReadFilled className='list-icon' style={{marginRight: '1em'}} />
+              {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
+              <CustomIcon type={item.type!} className='list-icon' style={{marginRight: '1em'}} />
               <span>{item.title}</span>
             </div>
             <span
