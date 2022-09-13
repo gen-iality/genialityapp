@@ -189,8 +189,10 @@ const InfoEvent = ({ paddingOff, preview }) => {
             <Space>
               <EnvironmentOutlined />
               <Space wrap split='/'>
-                <Typography.Text>{cEventValues?.address}</Typography.Text>
-                <Typography.Text italic>{cEventValues?.venue}</Typography.Text>
+                <Typography.Text style={{ color: textColor }}>{cEventValues?.address}</Typography.Text>
+                <Typography.Text style={{ color: textColor }} italic>
+                  {cEventValues?.venue}
+                </Typography.Text>
               </Space>
             </Space>
           )}
