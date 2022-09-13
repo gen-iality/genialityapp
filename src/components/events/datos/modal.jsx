@@ -45,7 +45,7 @@ const extraInputs = {
   region: [
     {
       id: undefined,
-      name: 'country',
+      name: 'pais',
       description: undefined,
       label: 'Pais',
       unique: false,
@@ -86,7 +86,7 @@ const extraInputs = {
     },
     {
       id: undefined,
-      name: 'country',
+      name: 'pais',
       description: undefined,
       label: 'Pais',
       unique: false,

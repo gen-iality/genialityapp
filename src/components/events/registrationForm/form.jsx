@@ -219,6 +219,28 @@ const FormRegister = ({
     setLoading(false);
   };
 
+  const getIso2ByName = (name) => {
+    let countryFound = countries.find((country) => country.name === name);
+    if (countryFound) {
+      setCountry({
+        ...country,
+        name: countryFound.name,
+        countryCode: countryFound.iso2,
+      });
+      getState(countryFound.iso2);
+      getCitiesByCountry(countryFound.iso2);
+    }
+  };
+
+  const getNameTypeCountry = () => {
+    if (extraFields.length === 0) return '';
+    let fieldFound = extraFields.find((field) => field.type === 'country');
+    if (fieldFound.length > 1) {
+      return fieldFound[0].name;
+    }
+    return fieldFound.name;
+  };
+
   const getState = async (country) => {
     setLoading(true);
     try {
@@ -267,6 +289,10 @@ const FormRegister = ({
       setCountries([]);
     };
   }, []);
+
+  useEffect(() => {
+    getIso2ByName(form.getFieldValue(getNameTypeCountry()));
+  }, [initialValues, countries]);
 
   useEffect(() => {
     let initialValuesGeneral = {};
@@ -982,7 +1008,7 @@ const FormRegister = ({
 
         if (type === 'country') {
           input = (
-            <Form.Item initialValue={value} name={name} noStyle>
+            <Form.Item id='country_input_form' initialValue={value} name={name} noStyle>
               <Select
                 showSearch
                 optionFilterProp='children'
@@ -1049,7 +1075,6 @@ const FormRegister = ({
                 disabled={loading || cities.length === 0}
                 loading={loading}
                 onChange={(nameCity, aditionalData) => {
-                  console.log(name, aditionalData);
                   setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
                 }}
                 placeholder='Seleccione una ciudad'>
