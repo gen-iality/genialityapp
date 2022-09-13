@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'neusaregular';
+  src: url('../styles/font/Neusa/neusa_semibold-webfont.woff2') format('woff2'),
+    url('../styles/font/Neusa/neusa_semibold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-size-base: 16px;
+@font-family: 'neusaregular', 'Impact', 'Franklin Gothic Medium', 'Arial Narrow', -apple-system, BlinkMacSystemFont,
+  'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  'Segoe UI Symbol', 'Noto Color Emoji';
+
+#root .activities-main-list .ant-list-item {
+  color: @heading-color;
+  font-size: 1.3em;
+}
+#root .ant-list-item {
+  margin: 15px 5px;
+  //   border: 2px solid #ddd !important;
+  border-radius: 20px;
+  box-shadow: 0px 0px 8px 5px #eee;
+}
+
+#root .list-icon {
+  margin-right: 10px;
+  border-radius: 15px;
+  color: @white;
+  background-color: @primary-color;
+  padding: 5px;
+}
+
+//@black: #006a93;
+@primary-color: #006a93;
+
+@text-color: fade(@black, 65%);
+//@text-color-secondary: fade(@white, 45%);
+@heading-color: #006a93; // heading text color
+// @highlight-color: @red-5;
+// @normal-color: #ffd9d9;
+// @white: #ff0000;
