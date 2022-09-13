@@ -81,6 +81,7 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     //presencia de usuario
     if (props.cEvent.value && cUser.value) {
+      console.log(props.cEvent.value, cUser.value);
       initUserPresence(props.cEvent.value._id);
     }
     /** RESTRICIONES */

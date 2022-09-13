@@ -2,6 +2,7 @@ import { fireRealtime, app } from '../helpers/firebase';
 import { getCurrentUser } from '../helpers/request';
 import { UseEventContext } from '../context/eventContext';
 let initUserPresence = async (event_id) => {
+  console.log('event_id', event_id);
   const cEvent = UseEventContext();
   if (cEvent.value?.visibility === 'ANONYMOUS') return;
   const user = await getCurrentUser();

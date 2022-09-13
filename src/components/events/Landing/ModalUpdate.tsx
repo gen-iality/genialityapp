@@ -22,7 +22,7 @@ const ModalUpdate = (props: any) => {
   const btn = <Button onClick={handleOpen}>Actualizar</Button>;
   const validateAttende = async () => {
     if (!cEvent.value && !cEventUser.value) return;
-    if (cEventUser.value.rol.type !== 'attendee') return;
+    if (cEventUser.value?.rol.type !== 'attendee') return;
     try {
       await UsersApi.validateAttendeeData(cEvent.value._id, cEventUser.value._id);
     } catch (error) {
@@ -33,8 +33,6 @@ const ModalUpdate = (props: any) => {
       // });
 
       setIsVisible(true);
-
-      console.log(cEventUser.value);
     }
   };
 

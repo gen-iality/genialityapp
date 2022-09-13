@@ -235,6 +235,7 @@ const FormRegister = ({
   const getNameTypeCountry = () => {
     if (extraFields.length === 0) return '';
     let fieldFound = extraFields.find((field) => field.type === 'country');
+    if (!fieldFound) return '';
     if (fieldFound.length > 1) {
       return fieldFound[0].name;
     }
