@@ -39,7 +39,8 @@ const ViewPrelanding = ({ preview }) => {
 
   //ESTADOS
   const [loading, setLoading] = useState(false);
-  const [sections, setSections] = useState([]);
+  const [sections, setSections] = useState({});
+
   // PERMITE VALIDAR SI EXISTE DESCRIPCION
   const [description, setDescription] = useState([]);
   //PERMITE VALIDAR SI EXISTE CONFERENCISTAS
@@ -101,7 +102,7 @@ const ViewPrelanding = ({ preview }) => {
   // Funciones para el render
   const obtenerOrder = (name) => {
     if (sections) {
-      return sections && sections.filter((section) => section.name == name)[0]?.index + 2;
+      return sections && sections?.main_landing_blocks?.filter((section) => section.name == name)[0]?.index + 2;
     } else {
       return 2;
     }
@@ -109,7 +110,10 @@ const ViewPrelanding = ({ preview }) => {
 
   const visibleSection = (name) => {
     if (sections) {
-      return sections && sections.filter((section) => section.name == name && section.status).length > 0 ? true : false;
+      return sections &&
+        sections?.main_landing_blocks?.filter((section) => section.name == name && section.status).length > 0
+        ? true
+        : false;
     } else {
       return false;
     }
@@ -117,7 +121,7 @@ const ViewPrelanding = ({ preview }) => {
 
   const isVisibleCardSections = () => {
     if (sections) {
-      return sections && sections.filter((section) => section.status).length > 1 ? true : false;
+      return sections && sections?.main_landing_blocks?.filter((section) => section.status).length > 1 ? true : false;
     } else {
       return false;
     }
@@ -131,7 +135,7 @@ const ViewPrelanding = ({ preview }) => {
       //OBTENENOS LAS SECCIONES DE PRELANDING
       const previews = await EventsApi.getPreviews(cEventContext.value._id);
       //SE ORDENAN LAS SECCIONES POR INDEX
-      const sections = previews.data.length > 0 ? previews.data.sort((a, b) => a.index - b.index) : SectionsPrelanding;
+      const sections = previews?._id ? previews : SectionsPrelanding;
       setSections(sections);
       setLoading(false);
     }
@@ -196,10 +200,11 @@ const ViewPrelanding = ({ preview }) => {
                     }}>
                     <Row justify='center' align='middle'>
                       <MenuScrollBlock
-                        sections={sections && sections}
+                        sections={sections && sections?.main_landing_blocks}
                         vdescription={description}
                         vspeakers={speakers}
                         vactividades={agenda}
+                        vpatrocinadores={[0]}
                       />
                     </Row>
                   </Card>
@@ -277,20 +282,22 @@ const ViewPrelanding = ({ preview }) => {
                   </Card>
                 </Col>
               )}
-              <Col span={24}>
-                <Card
-                  id='Patrocinadores_block'
-                  style={{
-                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                    height: '100%',
-                    borderRadius: '20px',
-                    color: textColor,
-                    backgroundColor: bgColor,
-                    border: 'none',
-                  }}>
-                  <SponsorBlock />
-                </Card>
-              </Col>
+              {visibleSection('Patrocinadores') && agenda.length > 0 && (
+                <Col span={24} order={obtenerOrder('Patrocinadores')}>
+                  <Card
+                    id='Patrocinadores_block'
+                    style={{
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      height: '100%',
+                      borderRadius: '20px',
+                      color: textColor,
+                      backgroundColor: bgColor,
+                      border: 'none',
+                    }}>
+                    <SponsorBlock />
+                  </Card>
+                </Col>
+              )}
             </Row>
           </Col>
         </Row>

@@ -5,7 +5,7 @@ import ScrollIntoView from 'react-scroll-into-view';
 
 const { useBreakpoint } = Grid;
 
-const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades }) => {
+const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpatrocinadores }) => {
   //CONTEXTO
   const cEvent = useContext(CurrentEventContext);
   const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
@@ -26,6 +26,9 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades }) =>
     if (name == 'Actividades' && vactividades.length > 0) {
       return true;
     }
+    if (name == 'Patrocinadores' && vpatrocinadores.length > 0) {
+      return true;
+    }
     return false;
   };
 
@@ -43,6 +46,9 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades }) =>
         break;
       case 'Actividades':
         label = 'Actividades';
+        break;
+      case 'Patrocinadores':
+        label = 'Patrocinadores';
         break;
     }
     return label;
