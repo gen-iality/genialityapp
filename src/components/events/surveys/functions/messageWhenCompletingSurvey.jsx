@@ -38,9 +38,10 @@ function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
           : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
     }
 
-    survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
+    /* survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
       surveyData.neutral_Message ? surveyData.neutral_Message : ''
-    }`;
+    }`; */
+    survey.completedHtml = `${textOnCompleted}<br>${surveyData.neutral_Message ? surveyData.neutral_Message : ''}`;
   }
 }
 
