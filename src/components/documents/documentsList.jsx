@@ -9,15 +9,26 @@ const columns = [
     title: 'Documento',
     dataIndex: 'document',
     key: 'document',
-  },
-  {
-    render: function(item) {
-      const element = (
-        <a target='_blank' href={item.file} download rel='noopener noreferrer'>
-          <IconText text='Descargar' icon={DownloadOutlined} />
+    render: function(text, record) {
+      console.log('record', record);
+      return (
+        <a target='_blank' href={record?.file} target='_blank' rel='noopener noreferrer'>
+          {text}
         </a>
       );
-      return element;
+    },
+  },
+  {
+    title: 'Descargar',
+    dataIndex: 'file',
+    key: 'document',
+    render: function(text, record) {
+      console.log('record', record);
+      return (
+        <a target='_blank' href={record?.file} target='_blank' rel='noopener noreferrer'>
+          <IconText text='Descargar' icon={<DownloadOutlined />} href={record?.file} />
+        </a>
+      );
     },
   },
 ];
@@ -74,18 +85,18 @@ class documentsList extends Component {
 
     return (
       <div>
-        {data[0].activity_id ? (
-          <div>
-            <Table dataSource={documentDates} columns={columns} loading={loading} />
-          </div>
+        {console.log('documentDates', documentDates, columns, loading)}
+        {documentDates && data && data[0]?.activity_id ? (
+          <Table dataSource={documentDates} columns={columns} loading={loading} />
         ) : (
+          // <div>{documentDates.map(item => JSON.stringify(item))}</div>
           <Card bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }} style={{ textAlign: 'left' }}>
             <List
               itemLayout='horizontal'
               //Se traen los datos del state
               dataSource={data}
               //se mapean los datos del array data
-              renderItem={(item) => (
+              renderItem={item => (
                 <>
                   <List.Item
                     key={item._id}
@@ -113,7 +124,8 @@ class documentsList extends Component {
                       //         icon={EyeOutlined}
                       //     />
                       // </a>
-                    ]}>
+                    ]}
+                  >
                     <List.Item.Meta
                       style={{ marginRight: '10%', fontSize: '20px' }}
                       avatar={
@@ -134,7 +146,7 @@ class documentsList extends Component {
                   </List.Item>
                   {files &&
                     files
-                      .filter((file) => file.father_id == item._id)
+                      .filter(file => file.father_id == item._id)
                       .map((files, key) => (
                         <List.Item
                           key={key}
@@ -144,7 +156,8 @@ class documentsList extends Component {
                               target='_blank'
                               href={files.file}
                               download
-                              rel='noopener noreferrer'>
+                              rel='noopener noreferrer'
+                            >
                               {files.type == 'folder' ? (
                                 <DownOutlined />
                               ) : (
@@ -158,7 +171,8 @@ class documentsList extends Component {
                                 />
                               )}
                             </a>,
-                          ]}>
+                          ]}
+                        >
                           <List.Item.Meta
                             style={{ marginRight: '10%' }}
                             avatar={files.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
