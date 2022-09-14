@@ -148,7 +148,7 @@ function Certificate(props: CertificateProps) {
           {isPassed === false && (
             <Alert message='Certificados NO disponibles' type='error' />
           )}
-          {(isPassed||1) && (
+          {(isPassed) && (
             <>
             <Alert message='Certificados disponibles' type='success' />
             <br />
