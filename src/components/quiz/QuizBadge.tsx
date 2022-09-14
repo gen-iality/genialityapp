@@ -9,6 +9,7 @@ interface QuizBadgetProps {
   total: number,
   minimum: number,
   isLoading?: boolean,
+  short?: boolean,
 };
 
 function QuizBadge(props: QuizBadgetProps) {
@@ -17,6 +18,7 @@ function QuizBadge(props: QuizBadgetProps) {
     total,
     minimum,
     isLoading,
+    short,
   } = props;
 
   const [isRight, setIsRight] = useState<boolean>(false);
@@ -50,6 +52,14 @@ function QuizBadge(props: QuizBadgetProps) {
   useEffect(() => {
     setIsRight(right >= minimum);
   }, [right, minimum]);
+
+  if (short) {
+    return (
+      <Space>
+        <Badge count={`${badgeMessage}: ${statsMessage}`} style={{ backgroundColor: badgetColor }}/>
+      </Space>
+    );
+  }
 
   return (
     <Space>
