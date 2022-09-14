@@ -95,13 +95,14 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     })();
   }, [currentUser?.value?._id, cEvent.value]);
 
+  if (!cEvent || !surveyId) {
+    return <h1>Cargando..</h1>;
+  }
+
   if (!cSurveys.currentSurvey) {
     return <h1>No hay nada publicado, {surveyId}</h1>;
   }
 
-  if (!cEvent || !surveyId) {
-    return <h1>Cargando..</h1>;
-  }
   return (
     <div>
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
