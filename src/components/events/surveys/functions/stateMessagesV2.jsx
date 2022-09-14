@@ -12,7 +12,7 @@ function StateMessages(state) {
     case 'success':
       return {
         ...objMessage,
-        title: <div>Has ganado respondiendo correctamente.</div>,
+        title: <div>¡Respuesta correcta!</div>,
         subTitle: '',
         icon: <SmileOutlined />,
       };
@@ -20,7 +20,7 @@ function StateMessages(state) {
     case 'error':
       return {
         ...objMessage,
-        title: <div>Respondiste incorrectamente</div>,
+        title: <div>¡Respuesta incorrecta!</div>,
         subTitle: '',
         icon: <FrownOutlined />,
       };
