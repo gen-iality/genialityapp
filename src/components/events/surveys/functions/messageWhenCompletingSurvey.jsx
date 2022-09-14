@@ -1,47 +1,51 @@
-// Componente que se ejecuta antes del curso onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
-function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
-  let totalQuestions = 0;
+import getAcumulativePoints from './getAcumulativePoints';
 
-  let questions = surveyData.pages;
+// Componente que se ejecuta antes del curso onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
+async function MessageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
+  let totalSurveyPoints = 0;
+
+  let questions = surveyConfig.pages;
 
   /** iteramos las preguntas para validar el puntaje total para la comparativa de puntaje ganado vs puntaje total */
-  questions.forEach((item) => {
+  questions.forEach(item => {
     if (item.questions) {
       if (item.questions.length === 1 && item.questions[0]?.points) {
-        totalQuestions += parseInt(item.questions[0]?.points);
+        totalSurveyPoints += parseInt(item.questions[0]?.points);
       } else if (item.questions.length === 2 && item.questions[1]?.points) {
-        totalQuestions += parseInt(item.questions[1]?.points);
+        totalSurveyPoints += parseInt(item.questions[1]?.points);
       }
     }
   });
 
-  if (totalQuestions === 0) {
+  if (totalSurveyPoints === 0) {
     //Número total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
-    totalQuestions = surveyData.pages.length - 1;
+    totalSurveyPoints = surveyConfig.pages.length - 1;
   }
 
-  let textOnCompleted = survey.completedHtml;
+  let textOnCompleted = surveyModel.completedHtml;
 
-  survey.currentPage.questions.forEach((question) => {
+  /* survey.currentPage.questions.forEach((question) => {
     let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
     if (correctAnswer) totalPoints += parseInt(question.points);
-  });
+  }); */
 
-  if (surveyData.allow_gradable_survey === 'true') {
-    //const { minimumScore } = surveyData;
+  let totalPoints = await getAcumulativePoints(surveyConfig._id, userId);
+  console.log('600 MessageWhenCompletingSurvey getAcumulativePoints totalPoints', totalPoints);
 
-    let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
-    if (surveyData.hasMinimumScore === 'true') {
+  if (surveyConfig.allow_gradable_survey === 'true') {
+    //const { minimumScore } = surveyConfig;
+
+    let text = `Has obtenido ${totalPoints} de ${totalSurveyPoints} puntos </br>`;
+    if (surveyConfig.hasMinimumScore === 'true') {
       text +=
-        totalPoints >= surveyData.minimumScore
-          ? `${surveyData.win_Message ? surveyData.win_Message : ''}`
-          : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
+        totalPoints >= surveyConfig.minimumScore
+          ? `${surveyConfig.win_Message ? surveyConfig.win_Message : ''}`
+          : `${surveyConfig.lose_Message ? surveyConfig.lose_Message : ''}`;
     }
 
-    /* survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
-      surveyData.neutral_Message ? surveyData.neutral_Message : ''
-    }`; */
-    survey.completedHtml = `${textOnCompleted}<br>${surveyData.neutral_Message ? surveyData.neutral_Message : ''}`;
+    surveyModel.completedHtml = `${textOnCompleted}<br>${text}<br>${
+      surveyConfig.neutral_Message ? surveyConfig.neutral_Message : ''
+    }`;
   }
 }
 
