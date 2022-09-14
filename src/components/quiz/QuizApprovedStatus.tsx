@@ -46,16 +46,25 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
         }
       }
 
+      // if (passed === surveys.length) {
+      //   setStatus('Aprobado');
+      //   setIsApproved(true);
+      //   setBackgroundColor('#5EB841');
+      // } else if (notPassed < surveys.length) {
+      //   setStatus('No aprobado');
+      //   setBackgroundColor('#E86710');
+      // } else if (passed < surveys.length) {
+      //   setStatus('No completado');
+      //   setBackgroundColor('#9C835F');
+      // };
+
       if (passed === surveys.length) {
         setStatus('Aprobado');
         setIsApproved(true);
         setBackgroundColor('#5EB841');
-      } else if (notPassed < surveys.length) {
+      } else {
         setStatus('No aprobado');
         setBackgroundColor('#E86710');
-      } else if (passed < surveys.length) {
-        setStatus('No completado');
-        setBackgroundColor('#9C835F');
       };
 
       setIsLoaded(true);      

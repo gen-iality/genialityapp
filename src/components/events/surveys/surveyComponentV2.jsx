@@ -21,6 +21,7 @@ function SurveyComponent(props) {
   const {
     eventId, // The event id
     idSurvey, // The survey ID
+    survey_just_finished,
   } = props;
   const cEvent = UseEventContext();
   //query.data tiene la definición de la encuesta/examen
@@ -103,7 +104,7 @@ function SurveyComponent(props) {
 
   function calculateScoredPoints(questions) {
     let pointsScored = 0;
-    questions.map((question) => {
+    questions.map(question => {
       console.log('200.Is value empty', question.isValueEmpty());
       pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
@@ -126,10 +127,7 @@ function SurveyComponent(props) {
           {...mensaje}
           extra={[
             <Button
-              onClick={() => {
-                saveGainedSurveyPoints(surveyModel.currentPage.questions)
-                  .then(() => console.debug('puntos enviados para este quiz'))
-                  .catch((err) => console.error('saveGainedSurveyPoints error:', err));
+              onClick={async () => {
                 setShowingFeedback(false);
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
@@ -190,13 +188,14 @@ function SurveyComponent(props) {
     setIsSavingPoints(true);
     try {
       const value = parseInt(question.points) || 0;
-      console.log('survey correct?', correctAnswer);
+      console.log('200.saveGainedSurveyPoints survey correct?', correctAnswer);
       await saveAcumulativePoints(query.data._id, currentUser.value._id, correctAnswer ? value : 0);
+      console.log('600 savedGainedSurveyPoints value', value);
       setIsSavingPoints(false);
     } catch (err) {
       console.error(err);
       setIsSavingPoints(false);
-    };
+    }
   }
 
   async function saveSurveyAnswers(surveyQuestions) {
@@ -242,14 +241,16 @@ function SurveyComponent(props) {
     // saveSurveyStatus(); -- temporally ignored
     await saveSurveyCurrentPage();
     await saveSurveyAnswers(sender.currentPage.questions);
+    await saveGainedSurveyPoints(sender.currentPage.questions)
+      .then(() => console.log('600 saveSurveyData puntos enviados para este quiz'))
+      .catch(err => console.error('600 saveSurveyData saveGainedSurveyPoints error:', err));
   }
 
   async function onSurveyCompleted(sender) {
-    await saveSurveyCurrentPage();
-    //await saveGainedSurveyPoints(sender.currentPage.questions);
-    await saveSurveyAnswers(sender.currentPage.questions);
-    MessageWhenCompletingSurvey(surveyModel, query.data, totalPoints);
-    //setResultsSurvey([surveyModel, query.data]);
+    console.log('200.onSurveyCompleted');
+    await saveSurveyData(sender);
+    //survey_just_finished();
+    await MessageWhenCompletingSurvey(surveyModel, query.data, currentUser.value._id);
   }
 
   return (
@@ -257,7 +258,11 @@ function SurveyComponent(props) {
       {/* {&& query.data.allow_gradable_survey === 'true' } */}
       {surveyModel && (
         <>
-          {isSavingPoints && (<>Guardando puntos <Spin/></>)}
+          {isSavingPoints && (
+            <>
+              Guardando puntos <Spin />
+            </>
+          )}
           {showingFeedback && questionFeedback}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
             <Survey.Survey
@@ -277,9 +282,7 @@ function SurveyComponent(props) {
                 type='primary'
                 key='console'
               >
-                Save survey
-                {' '}
-                {isSavingPoints && <Spin/>}
+                Save survey {isSavingPoints && <Spin />}
               </Button>
             </div>
           )}

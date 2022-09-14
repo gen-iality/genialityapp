@@ -34,7 +34,7 @@ const InfoEvent = () => {
       }}
       title={
         <Typography.Title level={2} style={{ color: cEvent.value.styles.textMenu }}>
-          Temario y recurso
+          {cEvent.value.name}
         </Typography.Title>
       }
       extra={
