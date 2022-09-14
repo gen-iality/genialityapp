@@ -10,6 +10,7 @@ import { firestore } from '@/helpers/firebase';
 import { ActivityCustomIcon } from './ActivityCustomIcon';
 import { activityContentValues } from '@/context/activityType/constants/ui';
 import QuizProgress from '@/components/quiz/QuizProgress';
+import { UseCurrentUser } from '@context/userContext';
 
 const data = [
   <div>
@@ -45,6 +46,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([]);
+
+  const currentUser = UseCurrentUser();
 
   useEffect(() => {
     if (!eventId) return;
@@ -98,7 +101,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               if (isTaken) return <Badge count='Visto'/>
               return <></>;
             },
-            Component2: () => {
+            Component2: ({userId}: {userId: string}) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any)) return <></>;
 
               const [surveyId, setSurveyId] = useState<string | undefined>();
@@ -128,7 +131,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 })();
               }, []);
               if (cEventUserId && surveyId) {
-                return <QuizProgress short eventId={eventId} userId={cEventUserId} surveyId={surveyId} />
+                return <QuizProgress short eventId={eventId} userId={userId} surveyId={surveyId} />
               }
               return <></>
             },
@@ -167,7 +170,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             <div style={{ display: 'flex', flexDirection: 'row'}}>
               <span style={{marginRight: '.5em',}}>
                 {item.Component && <item.Component/>}
-                {item.Component2 && <item.Component2/>}
+                {(item.Component2 && currentUser.value?._id) && <item.Component2 userId={currentUser.value._id}/>}
               </span>
               <span
                 style={{
