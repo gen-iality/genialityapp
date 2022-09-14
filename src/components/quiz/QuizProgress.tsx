@@ -24,6 +24,10 @@ interface QuizProgressProps {
    * The current user ID
    */
   userId: string,
+  /**
+   * Mark as short badge
+   */
+  short?: boolean,
 }
 
 function QuizProgress(props: QuizProgressProps) {
@@ -47,7 +51,7 @@ function QuizProgress(props: QuizProgressProps) {
   }, [props.eventId, props.surveyId, props.userId, isLoading]);
 
   return (
-    <QuizBadge right={goodAnswers} total={totalAnswers} minimum={requiredMinimum} isLoading={isLoading}/>
+    <QuizBadge right={goodAnswers} total={totalAnswers} minimum={requiredMinimum} isLoading={isLoading} short={props.short}/>
   );
 };
 
