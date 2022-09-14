@@ -76,7 +76,8 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         const survey = surveys[i];
         const stats = await useAsyncPrepareQuizStats(cEvent.value._id, survey._id, currentUser?.value?._id, survey);
 
-        console.debug('stats', stats);
+        console.debug(`stats: cEvent.value._id=${cEvent.value._id}, survey._id=${survey._id}, currentUser?.value?._id=${currentUser?.value?._id}, survey=${survey}`)
+        console.debug('stats object:', stats);
         if (stats.minimum > 0) {
           if (stats.right >= stats.minimum) {
             passed = passed + 1;
