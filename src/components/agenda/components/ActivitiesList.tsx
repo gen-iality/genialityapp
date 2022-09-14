@@ -8,6 +8,8 @@ import { ExtendedAgendaType } from '@/Utilities/types/AgendaType';
 import { ActivityType } from '@/context/activityType/types/activityType';
 import { firestore } from '@/helpers/firebase';
 import { ActivityCustomIcon } from './ActivityCustomIcon';
+import { activityContentValues } from '@/context/activityType/constants/ui';
+import QuizProgress from '@/components/quiz/QuizProgress';
 
 const data = [
   <div>
@@ -26,6 +28,7 @@ type TruncatedAgenda = {
   timeString: string,
   link: string,
   Component?: any,
+  Component2?: any,
 };
 
 interface ActivitiesListProps {
@@ -94,7 +97,41 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               }, [cEventUserId]);
               if (isTaken) return <Badge count='Visto'/>
               return <></>;
-            }
+            },
+            Component2: () => {
+              if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any)) return <></>;
+
+              const [surveyId, setSurveyId] = useState<string | undefined>();
+
+              useEffect(() => {
+                (async () => {
+                  const document = await firestore
+                    .collection('events')
+                    .doc(eventId)
+                    .collection('activities')
+                    .doc(agenda._id)
+                    .get();
+                  const activity = document.data();
+                  console.log('This activity is', activity);
+                  if (!activity) return;
+                  const meetingId = activity?.meeting_id;
+                  if (!meetingId) {
+                    console.warn(
+                      'without meetingId eventId', eventId,
+                      ', agendaId', agenda._id,
+                      ', activity', activity,
+                      ', meetingId', meetingId,
+                    );
+                    return;
+                  }
+                  setSurveyId(meetingId);
+                })();
+              }, []);
+              if (cEventUserId && surveyId) {
+                return <QuizProgress short eventId={eventId} userId={cEventUserId} surveyId={surveyId} />
+              }
+              return <></>
+            },
           };
           return result;
         })
@@ -129,7 +166,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'row'}}>
               <span style={{marginRight: '.5em',}}>
-                <item.Component/>
+                {item.Component && <item.Component/>}
+                {item.Component2 && <item.Component2/>}
               </span>
               <span
                 style={{
