@@ -137,7 +137,7 @@ function SurveyComponent(props) {
               type='primary'
               key='console'
             >
-              Save & Next
+              Next
             </Button>,
           ]}
         />
@@ -282,7 +282,7 @@ function SurveyComponent(props) {
                 type='primary'
                 key='console'
               >
-                Save survey {isSavingPoints && <Spin />}
+                Volver al curso {isSavingPoints && <Spin />}
               </Button>
             </div>
           )}
