@@ -20,6 +20,7 @@ import SpeakersBlock from './block/speakersBlock';
 import SponsorBlock from './block/sponsorBlock';
 import { obtenerConfigActivity } from './hooks/helperFunction';
 import MenuScrollBlock from './MenuScrollBlock';
+import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -33,6 +34,7 @@ const ViewPrelanding = ({ preview }) => {
   const cUser = useContext(CurrentUserContext);
   const cEventUser = useContext(CurrentEventUserContext);
   const { setIsPrelanding } = useHelper();
+  const [companies] = getEventsponsors(cEventContext?.value?._id);
 
   //History
   const history = useHistory();
@@ -47,6 +49,8 @@ const ViewPrelanding = ({ preview }) => {
   const [speakers, setSpeakers] = useState([]);
   //PERMITE VALIDAR SI EXISTEN ACTIVIDADES
   const [agenda, setAgenda] = useState([]);
+  //PERMITE VALIDAR SI EXISTEN SPONSORS
+  const [sponsors, setSponsors] = useState([]);
 
   //console.log('Event', cEventContext);
   const cBanner = cEventContext.value?.styles?.banner_image;
@@ -158,6 +162,11 @@ const ViewPrelanding = ({ preview }) => {
       setAgenda(agendaFiltered || []);
     }
   }, [cEventContext.value]);
+
+  useEffect(() => {
+    setSponsors(companies || []);
+  }, [companies]);
+
   return (
     <Layout>
       {(cEventContext.value?.styles?.show_banner === undefined ||
@@ -181,9 +190,7 @@ const ViewPrelanding = ({ preview }) => {
           style={screens.xs || mobilePreview === 'smartphone' ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
           <Col id='Franja de titulo' span={24}>
             <Row>
-              <Col span={24}>
-                <InfoEvent paddingOff={true} preview={preview} />
-              </Col>
+              <Col span={24}>{/* <InfoEvent paddingOff={true} preview={preview} /> */}</Col>
             </Row>
           </Col>
           <Col id='Bloques del evento' span={24}>
@@ -204,7 +211,7 @@ const ViewPrelanding = ({ preview }) => {
                         vdescription={description}
                         vspeakers={speakers}
                         vactividades={agenda}
-                        vpatrocinadores={[0]}
+                        vpatrocinadores={sponsors}
                       />
                     </Row>
                   </Card>
@@ -282,7 +289,7 @@ const ViewPrelanding = ({ preview }) => {
                   </Card>
                 </Col>
               )}
-              {visibleSection('Patrocinadores') && agenda.length > 0 && (
+              {visibleSection('Patrocinadores') && sponsors.length > 0 && (
                 <Col span={24} order={obtenerOrder('Patrocinadores')}>
                   <Card
                     id='Patrocinadores_block'
@@ -294,7 +301,7 @@ const ViewPrelanding = ({ preview }) => {
                       backgroundColor: bgColor,
                       border: 'none',
                     }}>
-                    <SponsorBlock />
+                    <SponsorBlock sponsors={sponsors} />
                   </Card>
                 </Col>
               )}

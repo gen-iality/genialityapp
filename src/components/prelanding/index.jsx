@@ -34,6 +34,7 @@ import ModalContador from './modalContador';
 import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
 import DrawerPreviewLanding from './drawerPreviewLanding';
+import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
 
 const DragHandle = SortableHandle(() => (
   <DragIcon
@@ -55,12 +56,14 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   const [description, setDescription] = useState([]);
   const [speakers, setSpeakers] = useState([]);
   const [agenda, setAgenda] = useState([]);
+  const [sponsors, setSponsors] = useState([]);
 
   const [drawerPreviewVisible, setDrawerPreviewVisible] = useState(false);
 
   const cEvent = useContext(CurrentEventContext);
   const history = useHistory();
   const pathForRedirection = `/eventadmin/${cEvent.value._id}`;
+  const [companies] = getEventsponsors(cEvent.value._id);
 
   useEffect(() => {
     if (!cEvent.value || tabActive !== '3') return;
@@ -70,7 +73,6 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       //OBTENENOS LAS SECCIONES DE PRELANDING
       const previews = await EventsApi.getPreviews(cEvent.value._id);
       //SE ORDENAN LAS SECCIONES POR INDEX
-      // const sections = previews.data.length > 0 ? previews.data.sort((a, b) => a.index - b.index) : SectionsPrelanding;
       const sections = previews?._id ? previews : SectionsPrelanding;
       const { speakers, agenda, description } = await obtenerData(cEvent);
       setDescription(description);
@@ -78,8 +80,23 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
       setAgenda(agenda);
       setDataSource(sections);
       setLoading(false);
+      // setSponsors(companies);
     }
   }, [cEvent, tabActive]);
+
+  useEffect(() => {
+    if (companies.length > 0) {
+      let newCompanies = companies.map((company, ind) => {
+        return { ...company, index: company.index ? company.index : ind + 1 };
+      });
+
+      newCompanies = newCompanies.sort(function(a, b) {
+        return a.index - b.index;
+      });
+      setSponsors(newCompanies);
+    }
+  }, [companies]);
+
   //PERMITE ACTUALIZAR EL STATUS DE LAS SECCIONES
   const updateItem = (item, val) => {
     setLoading(true);
@@ -93,9 +110,9 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
   };
 
   const validateBlockState = (block) => {
-    if (block.status === true && !visibleAlert(block, description, speakers, agenda)) {
+    if (block.status === true && !visibleAlert(block, description, speakers, agenda, sponsors)) {
       return 'VISIBLE_BLOCK';
-    } else if (block.status === true && visibleAlert(block, description, speakers, agenda)) {
+    } else if (block.status === true && visibleAlert(block, description, speakers, agenda, sponsors)) {
       return 'BLOCK_LOCKED';
     } else {
       return 'HIDDEN_BLOCK';
@@ -191,7 +208,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
             />
             <Badge
               count={
-                visibleAlert(item, description, speakers, agenda) ? (
+                visibleAlert(item, description, speakers, agenda, sponsors) ? (
                   <Tooltip title={'Debe configurar el contenido para que se visualice en la landing'}>
                     <InformationIcon style={{ color: '#FAAD14', fontSize: '20px' }} />
                   </Tooltip>
