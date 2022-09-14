@@ -5,6 +5,7 @@ import { UseEventContext } from '../../../context/eventContext';
 import useSurveyQuery from './hooks/useSurveyQuery';
 import * as Survey from 'survey-react';
 import { SurveyPage } from './services/services';
+import { Link } from 'react-router-dom';
 //Funciones externas
 import StateMessages from './functions/stateMessagesV2';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
@@ -275,15 +276,17 @@ function SurveyComponent(props) {
           </div>
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button
-                onClick={() => {
-                  saveSurveyStatus();
-                }}
-                type='primary'
-                key='console'
-              >
-                Volver al curso {isSavingPoints && <Spin />}
-              </Button>
+              <Link to={`/landing/${eventId}/evento`} replace>
+                <Button
+                  onClick={() => {
+                    saveSurveyStatus();
+                  }}
+                  type='primary'
+                  key='console'
+                >
+                  Volver al curso {isSavingPoints && <Spin />}
+                </Button>
+              </Link>
             </div>
           )}
         </>
