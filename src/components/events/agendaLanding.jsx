@@ -17,6 +17,7 @@ import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 import { setTabs } from '../../redux/stage/actions';
+import ActivitiesList from '../agenda/components/ActivitiesList';
 const { TabPane } = Tabs;
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -752,7 +753,12 @@ class Agenda extends Component {
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
                       <>
                       {/* {days.map((day) => this.getActivitiesByDay(day))} */}
-                      {this.getActivitiesByDay(null)}
+                      {/* this.getActivitiesByDay(null)*/ }
+                      <div style={{
+                        backgroundColor: 'white'
+                      }}>
+                        <ActivitiesList agendaList={this.state.data} eventId={this.props.cEvent.value._id} cEventUserId={this.props.cEventUser.value._id}/>
+                      </div>
                     {/*<Tabs
                       //tabBarExtraContent={{right:<DoubleRightOutlined />, left:<DoubleLeftOutlined/>}}
                       defaultActiveKey='0'
