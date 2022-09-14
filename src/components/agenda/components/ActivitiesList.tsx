@@ -30,7 +30,8 @@ type TruncatedAgenda = {
 
 interface ActivitiesListProps {
   eventId: string,
-  cEventUserId: string,
+  cEventUserId?: string,
+  agendaList?: ExtendedAgendaType[], // If parent has this, why have we to re-do?
 };
 
 const ActivitiesList = (props: ActivitiesListProps) => {
@@ -44,12 +45,19 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   useEffect(() => {
     if (!eventId) return;
-    if (!cEventUserId) return;
+    // if (!cEventUserId) return;
 
     (async () => {
       setIsLoading(true);
       setTruncatedAgendaList([]);
-      const { data: agendaList } = await AgendaApi.byEvent(eventId) as { data: ExtendedAgendaType[]};
+
+      let agendaList: ExtendedAgendaType[] = [];
+      if (props.agendaList === undefined) {
+        const { data } = await AgendaApi.byEvent(eventId) as { data: ExtendedAgendaType[]};
+        agendaList = data;
+      } else {
+        agendaList = props.agendaList;
+      }
 
       setTruncatedAgendaList((previous) => ([
         ...previous,
@@ -71,6 +79,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             Component: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
+                if (!cEventUserId) return;
                 (async () => {
                   console.log('item._id', agenda._id)
                   let activity_attendee = await firestore
@@ -82,7 +91,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                     setIsTaken(activity_attendee.data()?.checked_in);
                   }
                 })();
-              }, []);
+              }, [cEventUserId]);
               if (isTaken) return <Badge count='Visto'/>
               return <></>;
             }
