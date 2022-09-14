@@ -190,7 +190,9 @@ const ViewPrelanding = ({ preview }) => {
           style={screens.xs || mobilePreview === 'smartphone' ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
           <Col id='Franja de titulo' span={24}>
             <Row>
-              <Col span={24}>{/* <InfoEvent paddingOff={true} preview={preview} /> */}</Col>
+              <Col span={24}>
+                <InfoEvent paddingOff={true} preview={preview} />{' '}
+              </Col>
             </Row>
           </Col>
           <Col id='Bloques del evento' span={24}>
