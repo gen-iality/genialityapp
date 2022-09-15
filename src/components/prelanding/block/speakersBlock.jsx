@@ -90,13 +90,14 @@ const SpeakersBlock = () => {
               display: 'flex',
               flexWrap: 'nowrap',
               gap: '1rem',
-              justifyContent: speakersWithoutCategory.length > 3 ? 'initial' : 'space-around',
+              justifyContent: speakersWithoutCategory.length > 3 || screens.xs ? 'initial' : 'center',
               scrollPaddingLeft: '2rem',
               scrollPaddingRight: '2rem',
               overflowX: `${screens.xs ? 'auto' : 'hidden'}`,
               scrollSnapType: 'x mandatory',
               touchAction: 'auto',
               scrollBehavior: 'smooth',
+              overflowY: 'hidden',
             }}>
             {speakersWithoutCategory.length > 0 && !loading ? (
               speakersWithoutCategory.map((speaker, key) => (
@@ -117,12 +118,12 @@ const SpeakersBlock = () => {
                     align='bottom'
                     style={{
                       height: '100%',
-                      widows: '100%',
+                      width: '100%',
                       borderRadius: '10px',
-                      paddingLeft: '15px',
+                      paddingLeft: '20px',
                       paddingRight: '15px',
-                      paddingBottom: '15px',
-                      background: `linear-gradient(180deg,rgb(0,0,0,0) 65.94%, rgb(0,0,0,0.4) 100%)`,
+                      paddingBottom: '30px',
+                      background: `linear-gradient(180deg,rgb(0,0,0,0) 65.94%, rgb(0,0,0,0.9) 100%)`,
                     }}>
                     <Space size={0} direction='vertical'>
                       <Typography.Text
@@ -131,6 +132,7 @@ const SpeakersBlock = () => {
                           color: '#FFFFFF',
                           textShadow: '0 1px 2px rgb(0 0 0 / 60%), 0 0 2px rgb(0 0 0 / 30%)',
                           userSelect: 'none',
+                          fontSize: '16px',
                         }}>
                         {speaker.name}
                       </Typography.Text>
