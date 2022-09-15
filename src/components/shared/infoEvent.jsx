@@ -1,13 +1,14 @@
-import { UseEventContext } from '../../context/eventContext';
-import { Button, PageHeader, Space, Typography } from 'antd';
-import Moment from 'moment';
 import { CalendarOutlined, ClockCircleOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '../../context/eventUserContext';
-import { UseCurrentUser } from '../../context/userContext';
-import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { PageHeader, Space, Typography } from 'antd';
+import Moment from 'moment';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
+import { UseEventContext } from '../../context/eventContext';
+import { UseUserEvent } from '../../context/eventUserContext';
+import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import { UseCurrentUser } from '../../context/userContext';
+import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import EventAccessAction from './eventAccessAction/EventAccessAction';
 
 const InfoEvent = ({ paddingOff, preview }) => {
   const intl = useIntl();
@@ -111,57 +112,58 @@ const InfoEvent = ({ paddingOff, preview }) => {
           {cEventValues?.name}
         </Typography.Title>
       }
-      extra={
-        visibleButton() == 'SIGNUP' ? (
-          <Space wrap>
-            <Button
-              style={{ marginRight: 10, color: bgColor, backgroundColor: textColor }}
-              onClick={() => {
-                !isPreview && helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
-              }}
-              type='primary'
-              size='large'>
-              {intl.formatMessage({
-                id: 'modal.title.login',
-                defaultMessage: 'Iniciar sesión',
-              })}
-            </Button>
-            <Button
-              style={{ color: bgColor, backgroundColor: textColor }}
-              onClick={() =>
-                !isPreview && helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })
-              }
-              type='primary'
-              size='large'>
-              {intl.formatMessage({
-                id: 'Button.signup',
-                defaultMessage: 'Inscribirme al evento',
-              })}
-            </Button>
-          </Space>
-        ) : visibleButton() == 'REGISTER' ? (
-          <Button
-            style={{ color: bgColor, backgroundColor: textColor }}
-            onClick={() => !isPreview && handleChangeTypeModal('registerForTheEvent')}
-            type='primary'
-            size='large'>
-            {intl.formatMessage({
-              id: 'Button.signup',
-              defaultMessage: 'Inscribirme al evento',
-            })}
-          </Button>
-        ) : (
-          visibleButton() == 'JOIN' && (
-            <Button
-              style={{ color: bgColor, backgroundColor: textColor }}
-              onClick={buttonAction}
-              type='primary'
-              size='large'>
-              {labelButtonJoin()}
-            </Button>
-          )
-        )
-      }
+      extra={<EventAccessAction />}
+      // extra={
+      //   visibleButton() == 'SIGNUP' ? (
+      //     <Space wrap>
+      //       <Button
+      //         style={{ marginRight: 10, color: bgColor, backgroundColor: textColor }}
+      //         onClick={() => {
+      //           !isPreview && helperDispatch({ type: 'showLogin', visible: true, organization: 'landing' });
+      //         }}
+      //         type='primary'
+      //         size='large'>
+      //         {intl.formatMessage({
+      //           id: 'modal.title.login',
+      //           defaultMessage: 'Iniciar sesión',
+      //         })}
+      //       </Button>
+      //       <Button
+      //         style={{ color: bgColor, backgroundColor: textColor }}
+      //         onClick={() =>
+      //           !isPreview && helperDispatch({ type: 'showRegister', visible: true, organization: 'landing' })
+      //         }
+      //         type='primary'
+      //         size='large'>
+      //         {intl.formatMessage({
+      //           id: 'Button.signup',
+      //           defaultMessage: 'Inscribirme al evento',
+      //         })}
+      //       </Button>
+      //     </Space>
+      //   ) : visibleButton() == 'REGISTER' ? (
+      //     <Button
+      //       style={{ color: bgColor, backgroundColor: textColor }}
+      //       onClick={() => !isPreview && handleChangeTypeModal('registerForTheEvent')}
+      //       type='primary'
+      //       size='large'>
+      //       {intl.formatMessage({
+      //         id: 'Button.signup',
+      //         defaultMessage: 'Inscribirme al evento',
+      //       })}
+      //     </Button>
+      //   ) : (
+      //     visibleButton() == 'JOIN' && (
+      //       <Button
+      //         style={{ color: bgColor, backgroundColor: textColor }}
+      //         onClick={buttonAction}
+      //         type='primary'
+      //         size='large'>
+      //         {labelButtonJoin()}
+      //       </Button>
+      //     )
+      //   )
+      // }
       footer={
         <Space wrap size={'large'} style={{ color: textColor }}>
           <Space wrap>
