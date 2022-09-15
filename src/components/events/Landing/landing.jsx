@@ -3,14 +3,21 @@ import { connect } from 'react-redux';
 import { UseEventContext } from '../../../context/eventContext';
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
-
+import { useHistory, Link } from 'react-router-dom';
 /** ant design */
-import { Layout, Spin, notification, Button, Result } from 'antd';
+import { Layout, Spin, notification, Button, Result, Steps, Tooltip } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 const { Content } = Layout;
+const { Step } = Steps;
 
 import { setUserAgenda } from '../../../redux/networking/actions';
-import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
+import {
+  DesktopOutlined,
+  LoadingOutlined,
+  IssuesCloseOutlined,
+  NotificationOutlined,
+  MinusCircleFilled,
+} from '@ant-design/icons';
 
 /** Google tag manager */
 import { EnableGTMByEVENT } from './helpers/tagManagerHelper';
@@ -54,7 +61,7 @@ const iniitalstatetabs = {
   publicChat: false,
 };
 
-const IconRender = (type) => {
+const IconRender = type => {
   let iconRender;
   switch (type) {
     case 'open':
@@ -76,7 +83,7 @@ const IconRender = (type) => {
   return iconRender;
 };
 
-const Landing = (props) => {
+const Landing = props => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
@@ -84,7 +91,7 @@ const Landing = (props) => {
 
   const [activitiesAttendee, setActivitiesAttendee] = useState([]);
   const [activities, setActivities] = useState([]);
-
+  let history = useHistory();
   useEffect(() => {
     if (!cEventContext.value?._id) return;
     if (!cEventUser.value?._id) return;
@@ -93,13 +100,17 @@ const Landing = (props) => {
       const { data } = await AgendaApi.byEvent(cEventContext.value?._id);
       console.log('data:', data);
       setActivities(data);
-      const existentActivities = data.map(async (activity) => {
+      const existentActivities = data.map(async activity => {
         let activity_attendee = await firestore
           .collection(`${activity._id}_event_attendees`)
           .doc(cEventUser.value?._id)
           .get(); //checkedin_at
         if (activity_attendee.exists) {
-          return activity_attendee.data();
+          let datos = activity_attendee.data();
+          datos = { ...datos, hola: 123, activity_id: activity._id, activity_attendee: activity_attendee.id };
+
+          //...activity_attendee.data(), activity_id: activity._id, activity_attendee: activity_attendee.id()
+          return datos;
           // setActivities_attendee((past) => [...past, activity_attendee.data()]);
         }
         return null;
@@ -107,7 +118,7 @@ const Landing = (props) => {
       // Filter existent activities and set the state
       setActivitiesAttendee(
         // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item)
+        (await Promise.all(existentActivities)).filter(item => !!item),
       );
     };
     loadData();
@@ -166,7 +177,7 @@ const Landing = (props) => {
 
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
-      import('../../../helpers/firebase').then((fb) => {
+      import('../../../helpers/firebase').then(fb => {
         fb.firestore
           .collection('events')
           .doc(cEventContext.value?._id)
@@ -182,14 +193,14 @@ const Landing = (props) => {
           .collection('eventchats/' + cEventContext.value._id + '/userchats/' + cUser.uid + '/' + 'chats/')
           .onSnapshot(function(querySnapshot) {
             let data;
-            querySnapshot.forEach((doc) => {
+            querySnapshot.forEach(doc => {
               data = doc.data();
 
               if (data.newMessages) {
                 settotalnewmessages(
                   (totalNewMessages += !isNaN(parseInt(data.newMessages.length))
                     ? parseInt(data.newMessages.length)
-                    : 0)
+                    : 0),
                 );
               }
             });
@@ -230,15 +241,39 @@ const Landing = (props) => {
             props.setUserAgenda(null);
           }}
         />
+        {console.log('activitiesAttendee', activitiesAttendee, 'activities', activities)}
+        activity_attendee.id()
         <CourseProgressBar
           eventId={cEventContext.value._id}
           activities={activities}
-          linkFormatter={(activityId) => `/landing/${cEventContext.value._id}/activity/${activityId}`}
+          linkFormatter={activityId => `/landing/${cEventContext.value._id}/activity/${activityId}`}
           count={activitiesAttendee.length}
         />
+        <Steps
+          style={{ maxHeight: '100vh', width: 'auto' }}
+          direction='vertical'
+          size='small'
+          labelPlacement='vertical'
+        >
+          {activities.map((activity, index) => (
+            <Step
+              onClick={() => {
+                history.push(`/landing/${cEventContext.value._id}/activity/${activity._id}`);
+              }}
+              type='navigation'
+              icon={
+                <Tooltip placement='topLeft' title={activity.name}>
+                  <div>{index + 1} </div>
+                </Tooltip>
+              }
+              status={
+                activitiesAttendee.filter(attende => attende.activity_id == activity._id).length ? 'process' : 'wait'
+              }
+            />
+          ))}
+        </Steps>
         <EventSectionsInnerMenu />
         <MenuTablets />
-
         <Layout className='site-layout'>
           <Content
             className='site-layout-background'
@@ -273,7 +308,7 @@ const Landing = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,
