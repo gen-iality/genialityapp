@@ -23,7 +23,7 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
   {
     index: 'PUBLIC_EVENT_WITH_REGISTRATION',
     icon: <AccountTieIcon />,
-    title: 'Evento publico con registro',
+    title: 'Evento público con registro',
     description:
       'Tus asistentes deberán registrarse en la plataforma y en tu evento para poder ver el contenido. Si ya poseen una cuenta en Evius podrán iniciar sesión y continuar con la inscripción en tu evento ',
     infoIcon: [
@@ -57,7 +57,7 @@ export const AccessTypeCardData: AccessTypeCardInterface[] = [
   {
     index: 'UN_REGISTERED_PUBLIC_EVENT',
     icon: <AccountGroupIcon />,
-    title: 'Evento publico sin registro',
+    title: 'Evento público sin registro',
     description:
       'Tus asistentes podrán ingresa a tu evento sin ningún tipo de autenticación o registro. Solo se podrán habilitar los módulos informativos.',
     infoIcon: [
