@@ -92,7 +92,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   }
                 })();
               }, [cEventUserId]);
-              if (isTaken) return <Badge count='Visto'/>
+              if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto'/>
               return <></>;
             },
             Component2: ({userId}: {userId: string}) => {
