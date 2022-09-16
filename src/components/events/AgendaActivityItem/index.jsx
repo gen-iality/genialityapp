@@ -326,13 +326,12 @@ function AgendaActivityItem(props) {
                 )
               }>
               <Card
-                className='shadow-box'
                 style={{
                   border: `solid 1px rgb(240,240,240)`, // color: ${cEvent.value.styles.textMenu}
                   maxHeight: '280px',
                 }}
                 hoverable
-                className='card-agenda-desktop agendaHover efect-scale'
+                className='card-agenda-desktop agendaHover efect-scale shadow-box'
                 bodyStyle={{
                   padding: '10px',
                   borderRadius: '5px',
