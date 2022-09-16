@@ -1,0 +1,9 @@
+.Line {
+  height: 50px;
+  width: 2px;
+  background-color: #143851;
+}
+
+.Line.active {
+  background-color: #e89941;
+}

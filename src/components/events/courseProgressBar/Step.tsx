@@ -1,17 +1,22 @@
 import * as React from 'react';
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useEffect, useState } from 'react';
 import './Step.css';
 
 export interface StepProps {
   children: React.ReactNode;
   isActive?: boolean | number;
   isSurvey?: boolean;
+  key?: string;
+  /* onChangeFunction?: any; */
+  setCurrentId?: any;
+  currentId?: any;
+  id?: string;
 }
 
 function Step(props: StepProps) {
-  const { children, isActive, isSurvey, ...rest } = props;
+  const { children, isActive, isSurvey, key, currentId, setCurrentId, id, ...rest } = props;
 
-  const className = useMemo(() => {
+  let className = useMemo(() => {
     if (isActive) {
       return 'Step active';
     }
@@ -19,7 +24,16 @@ function Step(props: StepProps) {
   }, [isActive]);
 
   return (
-    <div className={className} style={{ borderRadius: isSurvey ? '' : '50%' }} {...rest}>
+    <div
+      className={className}
+      style={{
+        borderRadius: isSurvey ? '' : '50%',
+        backgroundColor: currentId == id ? '#043558' : '',
+        color: currentId == id ? '#fff' : '',
+      }}
+      {...rest}
+      onClick={() => setCurrentId(id)}
+    >
       {children}
     </div>
   );

@@ -10,6 +10,11 @@
   transition: 0.4s ease;
 }
 
+.Step:hover {
+  background-color: #043558;
+  color: #fff;
+}
+
 .Step.active {
   border-color: #e89941;
   background-color: #fda036;

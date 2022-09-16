@@ -8,6 +8,7 @@ import { activityContentValues } from '@/context/activityType/constants/ui';
 import lessonTypeToString from '../lessonTypeToString';
 
 import Step from './Step';
+import Line from './Line';
 
 import './CourseProgressBar.css';
 
@@ -29,22 +30,14 @@ export interface CourseProgressBarProps {
 function CourseProgressBar(props: CourseProgressBarProps) {
   const { count, linkFormatter, activities, activitiesAttendee } = props;
 
-  const [progressWidth, setProgressWidth] = useState(0);
-  let [current, setCurrent] = useState(0);
-  const [isTaken, setIsTaken] = useState(false);
-  const [statusActivity, setStatusActivity] = useState(false);
-
   console.log('903.activities', activities);
   console.log('903.activitiesAttendee', activitiesAttendee);
+
+  let [currentId, setCurrentId] = useState(null);
 
   if (activities.length === 0) {
     return null;
   }
-
-  /* function onChange(current: any) {
-    console.log('900.onChange:', current);
-    setCurrent(current);
-  } */
 
   return (
     <div>
@@ -71,12 +64,17 @@ function CourseProgressBar(props: CourseProgressBarProps) {
         <div className='CourseProgressBar-innerContainer'>
           {activities.map((activity, index) => (
             <div className='CourseProgressBar-stepContainer'>
-              <div className='CourseProgressBar-lineContainer'></div>
-              <Step
-                isActive={activitiesAttendee.filter(attende => attende.activity_id == activity._id).length}
-                isSurvey={[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)}
-              >
-                <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+              <Line isActive={activitiesAttendee.filter(attende => attende.activity_id == activity._id).length} />
+              <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+                <Step
+                  /* onChangeFunction={onChange} */
+                  setCurrentId={setCurrentId}
+                  currentId={currentId}
+                  id={activity._id}
+                  key={activity._id}
+                  isActive={activitiesAttendee.filter(attende => attende.activity_id == activity._id).length}
+                  isSurvey={[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)}
+                >
                   <Tooltip
                     placement='right'
                     title={`Ir ${
@@ -89,8 +87,8 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                   >
                     {index + 1}
                   </Tooltip>
-                </Link>
-              </Step>
+                </Step>
+              </Link>
             </div>
           ))}
         </div>
