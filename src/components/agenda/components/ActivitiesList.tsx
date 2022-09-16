@@ -1,5 +1,6 @@
-import { Divider, List, Typography, Button, Spin, Badge } from 'antd';
+import { Divider, List, Typography, Button, Spin, Badge, Space } from 'antd';
 import { ReadFilled } from '@ant-design/icons';
+import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AgendaApi } from '@/helpers/request';
@@ -11,17 +12,7 @@ import { ActivityCustomIcon } from './ActivityCustomIcon';
 import { activityContentValues } from '@/context/activityType/constants/ui';
 import QuizProgress from '@/components/quiz/QuizProgress';
 import { UseCurrentUser } from '@context/userContext';
-
-const data = [
-  <div>
-    <ReadFilled className='list-icon' />
-    <span>Racing car sprays burning fuel into crowd.</span>
-  </div>,
-  'JAPANESE PRICESS MARRIED WITH COMMOONER',
-  'Australian walks 100km after outback crash.',
-  'Man charged over missing wedding girl.',
-  'Los Angeles battles huge wildfires.',
-];
+import Service from '@components/agenda/roomManager/service';
 
 type TruncatedAgenda = {
   title: string,
@@ -30,6 +21,7 @@ type TruncatedAgenda = {
   link: string,
   Component?: any,
   Component2?: any,
+  RibbonComponent: any,
 };
 
 interface ActivitiesListProps {
@@ -43,6 +35,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
     eventId, // The event ID
     cEventUserId, // The event user ID
   } = props;
+
+  const service = new Service(firestore);
 
   const [isLoading, setIsLoading] = useState(true);
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([]);
@@ -135,6 +129,44 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               }
               return <></>
             },
+            RibbonComponent: ({ children }: { children: any }) => {
+              const [isLive, setIsLive] = useState(false);
+              useEffect(() => {
+                service.getConfiguration(eventId, agenda._id)
+                  .then((config) => {
+                    const is = config.habilitar_ingreso === 'open_meeting_room';
+                    console.log('isLive change to:', is);
+                    setIsLive(is);
+                  });
+              }, [agenda._id]);
+
+              return (
+                <Badge.Ribbon
+                  className='animate__animated animate__bounceIn animate__delay-2s'
+                  placement={'end'}
+                  style={{ height: 'auto', padding: '3px', top: -5, lineHeight: '10px' }}
+                  color={isLive ? 'red' : 'transparent'}
+                  text={
+                    isLive ? (
+                      <Space direction='horizontal' style={{padding: 0}}>
+                        <AccessPointIcon
+                          className='animate__animated animate__heartBeat animate__infinite animate__slower'
+                          style={{ fontSize: '12px' }}
+                        />
+                        <span style={{ textAlign: 'center', fontSize: '12px' }}>
+                          {/* {<FormattedMessage id='live' defaultMessage='En vivo' />} */}
+                          En Vivo
+                        </span>
+                      </Space>
+                    ) : (
+                      ''
+                    )
+                  }
+                >
+                  {children}
+                </Badge.Ribbon>
+              );
+            }
           };
           return result;
         })
@@ -153,6 +185,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       bordered
       dataSource={truncatedAgendaList}
       renderItem={(item: TruncatedAgenda) => (
+          <item.RibbonComponent>
         <List.Item className='shadow-box'>
           <Link
             to={item.link}
@@ -181,6 +214,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             </div>
           </Link>
         </List.Item>
+          </item.RibbonComponent>
       )}
     />
   );
