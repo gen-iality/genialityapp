@@ -111,9 +111,8 @@ export const assignStatusAccordingToAction = ({
       setInformativeMessage(informativeMessage);
       break;
 
-    /*NOTE: Quitar /-/ en el INITIAL_STATE */
     case 'NO_ACTION':
-      informativeMessage = [{ label: 'INITIAL_STATE/-/' }];
+      informativeMessage = [{ label: 'INITIAL_STATE' }];
 
       setInformativeMessage(informativeMessage);
       break;
