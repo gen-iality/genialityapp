@@ -242,36 +242,13 @@ const Landing = props => {
           }}
         />
         {console.log('activitiesAttendee', activitiesAttendee, 'activities', activities)}
-        activity_attendee.id()
         <CourseProgressBar
           eventId={cEventContext.value._id}
           activities={activities}
           linkFormatter={activityId => `/landing/${cEventContext.value._id}/activity/${activityId}`}
           count={activitiesAttendee.length}
+          activitiesAttendee={activitiesAttendee}
         />
-        <Steps
-          style={{ maxHeight: '100vh', width: 'auto' }}
-          direction='vertical'
-          size='small'
-          labelPlacement='vertical'
-        >
-          {activities.map((activity, index) => (
-            <Step
-              onClick={() => {
-                history.push(`/landing/${cEventContext.value._id}/activity/${activity._id}`);
-              }}
-              type='navigation'
-              icon={
-                <Tooltip placement='topLeft' title={activity.name}>
-                  <div>{index + 1} </div>
-                </Tooltip>
-              }
-              status={
-                activitiesAttendee.filter(attende => attende.activity_id == activity._id).length ? 'process' : 'wait'
-              }
-            />
-          ))}
-        </Steps>
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>

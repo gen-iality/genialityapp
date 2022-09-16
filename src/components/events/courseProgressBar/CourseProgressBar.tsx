@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Tooltip } from 'antd';
+import { Tooltip, Steps } from 'antd';
 
 import { activityContentValues } from '@/context/activityType/constants/ui';
 
@@ -11,71 +11,90 @@ import Step from './Step';
 
 import './CourseProgressBar.css';
 
+/* const { Step } = Steps; */
+
 type Activity = {
-  _id: string,
-  name: string,
+  _id: string;
+  name: string;
+  activity_id: string;
 };
 
 export interface CourseProgressBarProps {
-  count: number,
-  linkFormatter: (activityId: string) => string,
-  activities: Activity[],
-};
+  count: number;
+  linkFormatter: (activityId: string) => string;
+  activities: Activity[];
+  activitiesAttendee: Activity[];
+}
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const {
-    count,
-    linkFormatter,
-    activities,
-  } = props;
+  const { count, linkFormatter, activities, activitiesAttendee } = props;
 
   const [progressWidth, setProgressWidth] = useState(0);
+  let [current, setCurrent] = useState(0);
+  const [isTaken, setIsTaken] = useState(false);
+  const [statusActivity, setStatusActivity] = useState(false);
 
-  useEffect(() => {
-    if (count === activities.length) {
-      setProgressWidth(100);
-    } else {
-      setProgressWidth((100 / (activities.length - 1)) * count);
-    }
-  }, [count, activities.length]);
-
-  const cssStyleForHeight = useMemo(() => {
-    if (activities.length > 25) {
-      return {}
-    } else if (activities.length > 16) {
-      return {maxHeight: '100vh'}
-    } else if (activities.length == 1) {
-      return {maxHeight: '20vh'}
-    } else {
-      return {maxHeight: '80vh'}
-    }
-  }, [activities]);
+  console.log('903.activities', activities);
+  console.log('903.activitiesAttendee', activitiesAttendee);
 
   if (activities.length === 0) {
     return null;
   }
 
+  /* function onChange(current: any) {
+    console.log('900.onChange:', current);
+    setCurrent(current);
+  } */
+
   return (
-    <div className='CourseProgressBar-container' style={{...cssStyleForHeight}}>
-      <div className='CourseProgressBar-line' style={{ height: progressWidth + "%" }}></div>
-      {activities.map((activity, index) => (
-        <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+    <div>
+      {/* <Steps style={{ maxHeight: '100vh', width: 'auto' }} direction='vertical' size='small' labelPlacement='vertical'>
+        {activities.map((activity, index) => (
           <Step
-            isActive={index < count}
-            isSurvey={
-              [activityContentValues.quizing,
-                activityContentValues.survey].includes(activity.type?.name)
+            onClick={() => {
+              history.push(`/landing/${cEventContext.value._id}/activity/${activity._id}`);
+            }}
+            type='navigation'
+            icon={
+              <Tooltip placement='topLeft' title={activity.name}>
+                <div>{index + 1} </div>
+              </Tooltip>
             }
-          >
-            <Tooltip
-              placement="right"
-              title={`Ir ${[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)? 'al cuestionario' : 'a la actividad'} "${activity.name}", tipo ${(lessonTypeToString(activity.type?.name)||'sin contenido').toLowerCase()}`}
-            >
-              {index+1}
-            </Tooltip>
-          </Step>
-        </Link>
-      ))}
+            status={
+              activitiesAttendee.filter(attende => attende.activity_id == activity._id).length ? 'process' : 'wait'
+            }
+          />
+        ))}
+      </Steps> */}
+
+      <div className='CourseProgressBar-container'>
+        <div className='CourseProgressBar-innerContainer'>
+          {activities.map((activity, index) => (
+            <div className='CourseProgressBar-stepContainer'>
+              <div className='CourseProgressBar-lineContainer'></div>
+              <Step
+                isActive={activitiesAttendee.filter(attende => attende.activity_id == activity._id).length}
+                isSurvey={[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)}
+              >
+                <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+                  <Tooltip
+                    placement='right'
+                    title={`Ir ${
+                      [activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name)
+                        ? 'al cuestionario'
+                        : 'a la actividad'
+                    } "${activity.name}", tipo ${(
+                      lessonTypeToString(activity.type?.name) || 'sin contenido'
+                    ).toLowerCase()}`}
+                  >
+                    {index + 1}
+                  </Tooltip>
+                </Link>
+              </Step>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

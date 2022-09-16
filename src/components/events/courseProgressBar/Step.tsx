@@ -3,18 +3,13 @@ import { useMemo, memo } from 'react';
 import './Step.css';
 
 export interface StepProps {
-  children: React.ReactNode,
-  isActive?: boolean,
-  isSurvey?: boolean,
-};
+  children: React.ReactNode;
+  isActive?: boolean | number;
+  isSurvey?: boolean;
+}
 
 function Step(props: StepProps) {
-  const {
-    children,
-    isActive,
-    isSurvey,
-    ...rest
-  } = props;
+  const { children, isActive, isSurvey, ...rest } = props;
 
   const className = useMemo(() => {
     if (isActive) {
@@ -24,11 +19,7 @@ function Step(props: StepProps) {
   }, [isActive]);
 
   return (
-    <div
-      className={className}
-      style={{ borderRadius: isSurvey ? '':'50%'}}
-      {...rest}
-    >
+    <div className={className} style={{ borderRadius: isSurvey ? '' : '50%' }} {...rest}>
       {children}
     </div>
   );
