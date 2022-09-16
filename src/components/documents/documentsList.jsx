@@ -12,7 +12,7 @@ const columns = [
     render: function(text, record) {
       console.log('record', record);
       return (
-        <a target='_blank' href={record?.file} target='_blank' rel='noopener noreferrer'>
+        <a href={record?.file} target='_blank' rel='noopener noreferrer'>
           {text}
         </a>
       );
@@ -93,12 +93,14 @@ class documentsList extends Component {
           <Card bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }} style={{ textAlign: 'left' }}>
             <List
               itemLayout='horizontal'
+              size='small'
               //Se traen los datos del state
               dataSource={data}
               //se mapean los datos del array data
               renderItem={item => (
                 <>
                   <List.Item
+                    className='shadow-box'
                     key={item._id}
                     //boton de descarga
                     actions={[
@@ -149,6 +151,11 @@ class documentsList extends Component {
                       .filter(file => file.father_id == item._id)
                       .map((files, key) => (
                         <List.Item
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            width: '100%',
+                          }}
                           key={key}
                           actions={[
                             <a
