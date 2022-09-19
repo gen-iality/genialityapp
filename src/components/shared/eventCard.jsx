@@ -105,6 +105,7 @@ class EventCard extends Component {
             <Meta
               style={{}}
               description={
+                <Link to={`/landing/${event._id}`}>
                 <Space size={1} direction='vertical'>
                   <span style={{ fontSize: '12px' }}>
                     <Space>
@@ -136,6 +137,7 @@ class EventCard extends Component {
                     </Typography.Paragraph>
                   )} */}
                 </Space>
+                </Link>
               }
             />
           </Card>
