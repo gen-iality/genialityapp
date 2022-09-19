@@ -95,7 +95,7 @@ class documentsDetail extends Component {
               </Typography.Text>
             }
             key='1'>
-            <Col xs={24} sm={20} md={20} lg={20} xl={20} style={{ margin: '0 auto' }}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
               {folders && folders.length > 0 && (
                 <DocumentsList
                   colors={{
