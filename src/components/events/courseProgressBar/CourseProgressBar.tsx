@@ -25,6 +25,7 @@ export interface CourseProgressBarProps {
   linkFormatter: (activityId: string) => string;
   activities: Activity[];
   activitiesAttendee: Activity[];
+  onChange?: () => void;
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
@@ -38,6 +39,10 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   if (activities.length === 0) {
     return null;
   }
+
+  /*   useEffect(() => {
+  
+  }, [currentId]); */
 
   return (
     <div>
@@ -68,6 +73,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
               <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
                 <Step
                   /* onChangeFunction={onChange} */
+                  onClick={props.onChange}
                   setCurrentId={setCurrentId}
                   currentId={currentId}
                   id={activity._id}

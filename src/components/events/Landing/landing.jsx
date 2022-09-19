@@ -92,35 +92,41 @@ const Landing = props => {
   const [activitiesAttendee, setActivitiesAttendee] = useState([]);
   const [activities, setActivities] = useState([]);
   let history = useHistory();
+
+  const loadData = async () => {
+    const { data } = await AgendaApi.byEvent(cEventContext.value?._id);
+    console.log('data:', data);
+    setActivities(data);
+    const existentActivities = data.map(async activity => {
+      let activity_attendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(cEventUser.value?._id)
+        .get(); //checkedin_at
+      if (activity_attendee.exists) {
+        let datos = activity_attendee.data();
+        datos = { ...datos, hola: 123, activity_id: activity._id, activity_attendee: activity_attendee.id };
+
+        //...activity_attendee.data(), activity_id: activity._id, activity_attendee: activity_attendee.id()
+        return datos;
+        // setActivities_attendee((past) => [...past, activity_attendee.data()]);
+      }
+      return null;
+    });
+    // Filter existent activities and set the state
+    setActivitiesAttendee(
+      // Promises don't bite :)
+      (await Promise.all(existentActivities)).filter(item => !!item),
+    );
+  };
+
+  function reloadActivityAttendee() {
+    loadData();
+  }
+
   useEffect(() => {
     if (!cEventContext.value?._id) return;
     if (!cEventUser.value?._id) return;
     setActivitiesAttendee([]);
-    const loadData = async () => {
-      const { data } = await AgendaApi.byEvent(cEventContext.value?._id);
-      console.log('data:', data);
-      setActivities(data);
-      const existentActivities = data.map(async activity => {
-        let activity_attendee = await firestore
-          .collection(`${activity._id}_event_attendees`)
-          .doc(cEventUser.value?._id)
-          .get(); //checkedin_at
-        if (activity_attendee.exists) {
-          let datos = activity_attendee.data();
-          datos = { ...datos, hola: 123, activity_id: activity._id, activity_attendee: activity_attendee.id };
-
-          //...activity_attendee.data(), activity_id: activity._id, activity_attendee: activity_attendee.id()
-          return datos;
-          // setActivities_attendee((past) => [...past, activity_attendee.data()]);
-        }
-        return null;
-      });
-      // Filter existent activities and set the state
-      setActivitiesAttendee(
-        // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter(item => !!item),
-      );
-    };
     loadData();
   }, [cEventContext.value, cEventUser.value]);
 
@@ -248,6 +254,7 @@ const Landing = props => {
           linkFormatter={activityId => `/landing/${cEventContext.value._id}/activity/${activityId}`}
           count={activitiesAttendee.length}
           activitiesAttendee={activitiesAttendee}
+          onChange={reloadActivityAttendee}
         />
         <EventSectionsInnerMenu />
         <MenuTablets />

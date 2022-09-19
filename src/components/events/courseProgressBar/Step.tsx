@@ -11,6 +11,7 @@ export interface StepProps {
   setCurrentId?: any;
   currentId?: any;
   id?: string;
+  onClick?: () => void;
 }
 
 function Step(props: StepProps) {
@@ -32,7 +33,10 @@ function Step(props: StepProps) {
         color: currentId == id ? '#fff' : '',
       }}
       {...rest}
-      onClick={() => setCurrentId(id)}
+      onClick={() => {
+        setCurrentId(id);
+        props.onClick && props.onClick();
+      }}
     >
       {children}
     </div>
