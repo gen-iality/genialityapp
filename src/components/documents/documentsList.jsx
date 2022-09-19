@@ -98,7 +98,7 @@ class documentsList extends Component {
               dataSource={data}
               //se mapean los datos del array data
               renderItem={item => (
-                <>
+                <a href={item.file} rel='noopener noreferrer' target='_blank'>
                   <List.Item
                     className='shadow-box'
                     key={item._id}
@@ -187,7 +187,7 @@ class documentsList extends Component {
                           />
                         </List.Item>
                       ))}
-                </>
+                </a>
               )}
             />
           </Card>
