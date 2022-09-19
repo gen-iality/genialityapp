@@ -22,10 +22,12 @@ const reducer = (state, action) => {
     case 'data_loaded':
       newState = { ...state, surveys: action.payload.publishedSurveys, status: 'LOADED' };
       //Actualizamos el estado de la encuesta actual o se borra la encuesta actual si se despublico
-      if (state.currentSurvey) {
-        let updatedcurrentSurvey = action.payload.publishedSurveys.find((item) => state.currentSurvey._id == item._id);
+
+      /* if (state.currentSurvey) {
+        let updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
+        console.log('900.updatedcurrentSurvey', updatedcurrentSurvey);
         newState['currentSurvey'] = updatedcurrentSurvey;
-      }
+      } */
 
       surveyChangedNew = action.payload.changeInSurvey;
       if (shouldActivateUpdatedSurvey(state, surveyChangedNew)) {
@@ -99,6 +101,7 @@ export function SurveysProvider({ children }) {
     }
     return state.currentSurvey.isOpened === 'false';
   }
+
   function shouldDisplaySurveyAttendeeAnswered() {
     return !attendeeAllReadyAnswered();
   }
@@ -124,7 +127,7 @@ export function SurveysProvider({ children }) {
       listOfSurveysFilteredByActivity =
         state.surveys &&
         state.surveys.filter(
-          (item) => item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true
+          item => item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true,
         );
     }
     return listOfSurveysFilteredByActivity;
@@ -137,7 +140,7 @@ export function SurveysProvider({ children }) {
     }
     recentlyOpenedSurvey =
       surveysToBeListedByActivity() &&
-      surveysToBeListedByActivity().filter((item) => item?._id === state.currentSurvey?._id);
+      surveysToBeListedByActivity().filter(item => item?._id === state.currentSurvey?._id);
 
     if (recentlyOpenedSurvey && recentlyOpenedSurvey.length > 0) {
       return true;
@@ -152,13 +155,13 @@ export function SurveysProvider({ children }) {
 
     async function fetchSurveys() {
       //  console.log('surveyContext', 'inicialize');
-      console.log('ESTE ES EL STATE', state);
+      console.log('900. ESTE ES EL STATE', state);
       listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
       InitSurveysCompletedListener(cUser, dispatch);
     }
     fetchSurveys();
   }, [cEventContext, cUser]);
-  //  console.groupEnd('surveyContext');
+
   return (
     <SurveysContext.Provider
       value={{
@@ -174,7 +177,8 @@ export function SurveysProvider({ children }) {
         shouldDisplayRanking,
         surveysToBeListedByActivity,
         shouldDisplaysurveyAssignedToThisActivity,
-      }}>
+      }}
+    >
       {children}
     </SurveysContext.Provider>
   );
@@ -196,7 +200,7 @@ function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
     /** Se valida que el estado actual de la encuesta sea abierta y publicada */
     if (surveyChangedNew.isOpened === 'true' && surveyChangedNew.isPublished === 'true') {
       /** Se filtran la encuestas por id del array de encuestas en el estado anterior versus el id de la encuesta que se actualizo recientemente */
-      let surveyChangedPrevius = state.surveys.find((item) => item._id === surveyChangedNew._id);
+      let surveyChangedPrevius = state.surveys.find(item => item._id === surveyChangedNew._id);
       // newState['surveyResult'] = 'view';
 
       /** Si la comparacion anterior da undefined es por la encuesta estaba abierta pero despublicada por ello se niega el surveyChanged, de lo contrario se valida que este cerrada o despublicada */
