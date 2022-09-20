@@ -73,7 +73,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       });
   };
 
-  console.log('current', cEvent);
   return (
     <div>
       <Title level={3} style={{ textAlign: 'center' }}>

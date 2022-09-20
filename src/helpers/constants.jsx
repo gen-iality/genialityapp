@@ -7,7 +7,8 @@ export const ApiEviusZoomServer = process.env.VITE_APP_API_EVIUS_ZOOM_SERVER;
 export const ApiGoogleDocuments = process.env.VITE_APP_API_GOOGLE_API_DOCUMENTS;
 export const ApiEviusZoomHosts = process.env.VITE_APP_API_EVIUS_ZOOM_HOSTS;
 export const ApiEviusZoomSurvey = process.env.VITE_APP_API_EVIUS_ZOOM_SURVEY;
-
+export const ApiUrlCountry = process.env.VITE_API_COUNTRY_URL;
+export const KeyCountry = process.env.VITE_API_KEY_COUNTRY;
 export const parseUrl = (url) => {
   try {
     let temporal = {};

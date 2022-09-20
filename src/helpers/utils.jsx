@@ -80,16 +80,20 @@ export function handleRequestError(error) {
 
 export async function parseData2Excel(data, fields, roles = null) {
   let info = [];
+
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
+    let checkedInAt = typeof item.checkedin_at === 'object' ? item.checkedin_at?.toDate() : item.checkedin_at;
+    let updatedAt = typeof item.updated_at === 'object' ? item.updated_at?.toDate() : item.updated_at;
+    let createdAt = typeof item.created_at === 'object' ? item.created_at?.toDate() : item.created_at;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] =
       item.checkedin_at !== 'null' && item.checkedin_at != null && item.checkedin_at != '' ? 'TRUE' : 'FALSE';
 
-    info[key]['Hora checkIn'] = item.checkedin_at ? dayjs(item.checkedin_at).format('DD/MM/YYYY H:mm:ss A') : '';
+    info[key]['Hora checkIn'] = item.checkedin_at ? dayjs(checkedInAt).format('DD/MM/YYYY H:mm:ss A') : '';
     fields.map(({ name, type, label, _id }) => {
       let str;
       if (item?.properties) {
@@ -160,8 +164,8 @@ export async function parseData2Excel(data, fields, roles = null) {
     });
     if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
     info[key]['Tipo asistente'] = roles?.filter((role) => role._id == item.rol_id)[0]?.name;
-    info[key]['Actualizado'] = item.updated_at?.toDate();
-    info[key]['Creado'] = item.created_at?.toDate();
+    info[key]['Actualizado'] = updatedAt;
+    info[key]['Creado'] = createdAt;
     info[key]['Tipo de checkIn'] = item.checkedin_type;
     return info;
   });
