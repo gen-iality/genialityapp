@@ -63,10 +63,19 @@ async function LoadSelectedSurvey(eventId, idSurvey) {
     newPage['isRequired'] = dataSurvey.allow_gradable_survey === 'true' ? false : true;
     /** Se agrega la imagen a la pregunta */
     if (newPage?.image) {
+      // newPage.imageLink = newPage.image[0].imageLink;
+      const newPanel = {
+        type: 'panel',
+        elements: [
+          newPage.image[0], // First the imagen
+          newPage, // Then the question
+        ]
+      }
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
         key: `page${index + 1}`,
-        questions: [newPage?.image[0], newPage],
+        // questions: [newPage?.image[0], newPage],
+        questions: [newPanel],
       };
     } else {
       dataSurvey.pages[index] = {
