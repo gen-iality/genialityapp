@@ -24,7 +24,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
         backgroundColor: bgColor,
       }}
       title={
-        <Typography.Title level={4} style={{ color: textColor }}>
+        <Typography.Title level={4} style={{ color: textColor, whiteSpace: 'normal' }}>
           {cEventValues?.name}
         </Typography.Title>
       }
@@ -32,32 +32,34 @@ const InfoEvent = ({ paddingOff, preview }) => {
         !isPreview ? (
           <EventAccessActionContainer />
         ) : (
-          <Button type='primary' size='large'>
+          <Button style={{ color: textColor, backgroundColor: bgColor }} type='primary' size='large'>
             Incribirme al evento
           </Button>
         )
       }
       footer={
-        <Space wrap size={'large'} style={{ color: textColor }}>
-          <Space wrap>
-            <Space>
-              <CalendarOutlined />
-              <time>{Moment(cEventValues?.datetime_from).format('ll')}</time>
+        <Space direction='vertical' size={'large'} style={{ color: textColor }}>
+          <Space wrap size={'large'} style={{ color: textColor }}>
+            <Space wrap>
+              <Space>
+                <CalendarOutlined />
+                <time>{Moment(cEventValues?.datetime_from).format('ll')}</time>
+              </Space>
+              <Space>
+                <ClockCircleOutlined />
+                <time>{Moment(cEventValues?.datetime_from).format('LT')}</time>
+              </Space>
             </Space>
-            <Space>
-              <ClockCircleOutlined />
-              <time>{Moment(cEventValues?.datetime_from).format('LT')}</time>
-            </Space>
-          </Space>
 
-          <Space wrap>
-            <Space>
-              <CalendarOutlined />
-              <time>{Moment(cEventValues?.datetime_to).format('ll')}</time>
-            </Space>
-            <Space>
-              <ClockCircleOutlined />
-              <time>{Moment(cEventValues?.datetime_to).format('LT')}</time>
+            <Space wrap>
+              <Space>
+                <CalendarOutlined />
+                <time>{Moment(cEventValues?.datetime_to).format('ll')}</time>
+              </Space>
+              <Space>
+                <ClockCircleOutlined />
+                <time>{Moment(cEventValues?.datetime_to).format('LT')}</time>
+              </Space>
             </Space>
           </Space>
           {cEventValues?.type_event !== 'onlineEvent' && (

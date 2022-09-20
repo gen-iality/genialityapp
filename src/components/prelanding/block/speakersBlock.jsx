@@ -68,7 +68,7 @@ const SpeakersBlock = () => {
             <Space>
               <Button
                 style={{ backgroundColor: textColor }}
-                shape='circle'
+                shape='default'
                 disabled={disabledMinus || speakersWithoutCategory.length === 1}
                 size='large'
                 icon={<CaretLeftFilled style={{ color: bgColor }} />}
@@ -123,7 +123,7 @@ const SpeakersBlock = () => {
                       paddingLeft: '20px',
                       paddingRight: '15px',
                       paddingBottom: '30px',
-                      background: `linear-gradient(180deg,rgb(0,0,0,0) 65.94%, rgb(0,0,0,0.9) 100%)`,
+                      background: `linear-gradient(180deg,rgb(0,0,0,0) 40%, rgb(0,0,0,0.9) 100%)`,
                     }}>
                     <Space size={0} direction='vertical'>
                       <Typography.Text
@@ -159,7 +159,7 @@ const SpeakersBlock = () => {
             <Space>
               <Button
                 style={{ backgroundColor: textColor }}
-                shape='circle'
+                shape='default'
                 disabled={disabledPlus || speakersWithoutCategory.length === 1}
                 size='large'
                 icon={<CaretRightFilled style={{ color: bgColor }} />}

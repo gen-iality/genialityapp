@@ -15,6 +15,8 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   const history = useHistory();
   const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => {} }];
   const informativeMessagesState = [{ label: 'INITIAL_STATE' }];
+  const bgColor = cEvent?.value?.styles?.toolbarDefaultBg;
+  const textColor = cEvent?.value?.styles?.textMenu;
 
   const [buttonsActions, setButtonsActions] = useState<EventAccessActionButtonsInterface[]>(initialButtonsState);
 
@@ -46,11 +48,16 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   }, [eventAction]);
 
   return (
-    <Space>
+    <Space direction='vertical' style={{ width: '100%' }}>
       {buttonsActions.map((button) => (
         <>
           {button.label !== 'INITIAL_STATE' && (
-            <Button type='primary' size='large' onClick={button.action}>
+            <Button
+              block
+              style={{ color: bgColor, backgroundColor: textColor }}
+              type='primary'
+              size='large'
+              onClick={button.action}>
               {button.label}
             </Button>
           )}

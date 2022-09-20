@@ -137,37 +137,38 @@ const ActivityBlock = ({ preview }) => {
               }
               key={activity?._id}>
               <Space
-                className='ant-card-grid-hoverable'
                 size={4}
                 direction='vertical'
                 style={{
                   padding: '20px',
-                  border: '1px solid #0000000f',
                   borderRadius: '5px',
                   transition: 'all 500ms ease-in-out',
-                  backgroundColor: textColor,
+                  backgroundColor: 'transparent',
                   width: activities.length < 2 ? '100%' : 'auto',
                 }}>
                 <Space size={0} direction='vertical'>
                   <Typography.Text
-                    strong
                     style={{
                       userSelect: 'none',
-                      color: bgColor,
+                      color: textColor,
+                      fontWeight: '700',
                     }}>
                     {activity?.datetime_start}
                   </Typography.Text>
                   <Typography.Text
                     style={{
                       userSelect: 'none',
-                      color: bgColor,
+                      color: textColor,
+                      fontWeight: '500',
                     }}>
                     {activity?.name}
                   </Typography.Text>
                 </Space>
                 <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }}>
                   {activity.hosts.length > 0 &&
-                    activity.hosts.map((host) => <Avatar icon={<UserOutlined />} src={host.image && host.image} />)}
+                    activity.hosts.map((host) => (
+                      <Avatar size={'large'} icon={<UserOutlined />} src={host.image && host.image} />
+                    ))}
                 </Avatar.Group>
                 {activities.length < 2 && (
                   <span style={{ position: 'relative', float: 'right' }}>{determineType(activity?.type?.name)}</span>
