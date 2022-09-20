@@ -723,7 +723,8 @@ export const OrganizationApi = {
 };
 export const BadgeApi = {
   create: async (data) => {
-    return await Actions.post(`/api/escarapelas`, data);
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/escarapelas?token=${token}`, data);
   },
   edit: async (data, id) => {
     return await Actions.edit('/api/escarapelas/', data, id);
