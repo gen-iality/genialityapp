@@ -25,7 +25,7 @@ const columns = [
     render: function(text, record) {
       console.log('record', record);
       return (
-        <a target='_blank' href={record?.file} target='_blank' rel='noopener noreferrer'>
+        <a target='_blank' href={record?.file} rel='noopener noreferrer'>
           <IconText text='Descargar' icon={<DownloadOutlined />} href={record?.file} />
         </a>
       );
