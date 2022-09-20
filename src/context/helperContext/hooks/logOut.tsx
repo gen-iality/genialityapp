@@ -11,7 +11,7 @@ let initialStateUserContext = { status: 'LOADING', value: undefined };
  */
 
 export const logout = async ({ showNotification, params }: logoutInterface) => {
-  const { formatMessage, user, handleChangeTypeModal, setuserEvent, setCurrentUser, history } = params;
+  const { formatMessage, user, handleChangeTypeModal, setuserEvent, setCurrentUser } = params;
 
   const currentUser = app.auth()?.currentUser;
 
@@ -29,15 +29,11 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
       const currentUserConnect = await conectionRef.doc(user.uid).get();
 
       if (currentUserConnect?.data()?.lastSignInTime === lastSignInTime) await conectionRef.doc(user.uid).delete();
-      const routeUrl = window.location.href;
-      const weAreOnTheLanding = routeUrl.includes('landing');
+
       handleChangeTypeModal(null);
       setuserEvent(initialStateEvenUserContext);
       setCurrentUser(initialStateUserContext);
       if (showNotification) remoteLogoutNotification({ type: 'info', names: user.names, formatMessage });
-      if (!weAreOnTheLanding) {
-        history.push('/');
-      }
     })
     .catch(function(error) {
       console.error('error', error);

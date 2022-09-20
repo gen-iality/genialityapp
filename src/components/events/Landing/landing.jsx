@@ -92,10 +92,10 @@ const Landing = (props) => {
     });
     return () => {
       if (
-        recordTypeForThisEvent(cEventContext) == 'UN_REGISTERED_PUBLIC_EVENT' &&
-        window.window.sessionStorage?.getItem('session')
+        recordTypeForThisEvent(cEventContext) === 'UN_REGISTERED_PUBLIC_EVENT' &&
+        sessionStorage?.getItem('session')
       ) {
-        window.sessionStorage.removeItem('session');
+        sessionStorage.removeItem('session');
       }
     };
   }, [cEventContext]);
@@ -147,11 +147,13 @@ const Landing = (props) => {
     const urlParams = new URLSearchParams(window.location.search);
     let email = urlParams.get('email');
     let names = urlParams.get('names');
-    if (window.window.sessionStorage?.getItem('session') !== props.match?.params?.event_id) {
+
+    if (sessionStorage?.getItem('session') !== props.match?.params?.event_id) {
       //SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
       window.sessionStorage.removeItem('session');
       if (email && names) history.replace(`/${props.match?.params?.event_id}?email=${email}&names=${names}`);
       history.replace(`/${props.match?.params?.event_id}`);
+      return;
     }
   }, [window.sessionStorage, cUser.value, cEventUser.value, cEventContext.value]);
 

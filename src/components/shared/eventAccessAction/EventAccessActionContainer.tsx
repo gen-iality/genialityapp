@@ -13,7 +13,7 @@ const EventAccessActionContainer = () => {
   let attendee_status = () => {
     let status = 'NO_USER';
     status = cUser.value?._id ? 'WITH_USER' : status;
-    status = cEventUser.value?._id ? 'WITH_ASSISTANT' : status;
+    status = cUser.value?._id && cEventUser.value?._id ? 'WITH_ASSISTANT' : status;
     return status;
   };
 
