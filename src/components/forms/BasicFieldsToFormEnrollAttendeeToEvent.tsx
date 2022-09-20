@@ -29,7 +29,9 @@ const BasicFieldsToFormEnrollAttendeeToEvent = ({ basicFields, attendee }: any) 
             content={
               <Space direction='vertical'>
                 <Text style={nameAndEmailBasicFieldsStyles}>{names}</Text>
-                <Text style={nameAndEmailBasicFieldsStyles}>{email}</Text>
+                <Text type='secondary' style={nameAndEmailBasicFieldsStyles}>
+                  {email}
+                </Text>
               </Space>
             }
           />

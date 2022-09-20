@@ -50,7 +50,6 @@ export const assignStatusAccordingToAction = ({
       break;
 
     case 'ACTION_REGISTER_FOR_THE_EVENT_ANONYMOUS':
-      /*BUG:Cargar el modal de registro despues de mejorar la logica actual para este tipo de acceso REGISTRO EVENTO PUBLICO SIN CONTRASEÑA cuando ya hay un usuario */
       buttonsAction = [
         {
           label: 'Inscribirme al evento',

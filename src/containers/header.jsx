@@ -254,18 +254,22 @@ const Headers = (props) => {
               ) : (
                 <Space>
                   {showButtons.buttonlogin ? (
-                    <Button
-                      icon={<LockOutlined />}
-                      style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                      size='large'
-                      onClick={() => {
-                        helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
-                      }}>
-                      {intl.formatMessage({
-                        id: 'modal.title.login',
-                        defaultMessage: 'Iniciar sesión',
-                      })}
-                    </Button>
+                    <>
+                      {recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' && (
+                        <Button
+                          icon={<LockOutlined />}
+                          style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                          size='large'
+                          onClick={() => {
+                            helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
+                          }}>
+                          {intl.formatMessage({
+                            id: 'modal.title.login',
+                            defaultMessage: 'Iniciar sesión',
+                          })}
+                        </Button>
+                      )}
+                    </>
                   ) : (
                     <Space>
                       <Dropdown overlay={MenuMobile}>

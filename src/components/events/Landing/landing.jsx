@@ -29,6 +29,7 @@ import DateEvent from '../dateEvent';
 import moment from 'moment';
 import { useHistory } from 'react-router';
 import { recordTypeForThisEvent } from './helpers/thisRouteCanBeDisplayed';
+import { app } from '@helpers/firebase';
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));
@@ -91,21 +92,68 @@ const Landing = (props) => {
     });
     return () => {
       if (
-        recordTypeForThisEvent(cEventContext) == 'UN_REGISTERED_PUBLIC_EVENT' &&
-        window.window.sessionStorage?.getItem('session')
+        recordTypeForThisEvent(cEventContext) === 'UN_REGISTERED_PUBLIC_EVENT' &&
+        sessionStorage?.getItem('session')
       ) {
-        window.sessionStorage.removeItem('session');
+        sessionStorage.removeItem('session');
       }
     };
   }, [cEventContext]);
 
-  //PERMITE VALIDAR SI TIENE O NO ACCESO A LA LANDING // SE MANEJA POR SESION STORAGE
+  const anonymousAutoLogin = (name, email) => {
+    app
+      .auth()
+      .signInAnonymously()
+      .then(() => {
+        app
+          .auth()
+          .currentUser.updateProfile({
+            displayName: name,
+            /**almacenamos el email en el photoURL para poder setearlo en el context del usuario y asi llamar el eventUser anonimo */
+            photoURL: email,
+          })
+          .then(async () => {
+            await app.auth().currentUser.reload();
+          });
+      });
+  };
+  /// inicio automatic con anonymous
   useEffect(() => {
     if (!cEventContext?.value) return;
-    if (window.window.sessionStorage?.getItem('session') !== props.match?.params?.event_id) {
+    const urlParams = new URLSearchParams(window.location.search);
+    let email = urlParams.get('email');
+    let names = urlParams.get('names');
+    if (cEventContext && cEventContext.value?.visibility != 'ANONYMOUS') return;
+    if (!names && !email) return;
+    if (cUser && cUser.value) {
+      if (cUser.value.names === names && cUser.value.email === email) return;
+
+      app
+        .auth()
+        .signOut()
+        .then(() => {
+          anonymousAutoLogin(names, email);
+        });
+      return;
+    }
+
+    anonymousAutoLogin(names, email);
+  }, [cEventContext]);
+
+  //PERMITE VALIDAR SI TIENE O NO ACCESO A LA LANDING // SE MANEJA POR SESION STORAGE
+
+  useEffect(() => {
+    if (!cEventContext?.value) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    let email = urlParams.get('email');
+    let names = urlParams.get('names');
+
+    if (sessionStorage?.getItem('session') !== props.match?.params?.event_id) {
       //SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
       window.sessionStorage.removeItem('session');
+      if (email && names) history.replace(`/${props.match?.params?.event_id}?email=${email}&names=${names}`);
       history.replace(`/${props.match?.params?.event_id}`);
+      return;
     }
   }, [window.sessionStorage, cUser.value, cEventUser.value, cEventContext.value]);
 

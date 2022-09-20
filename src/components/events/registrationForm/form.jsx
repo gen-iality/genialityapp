@@ -219,12 +219,39 @@ const FormRegister = ({
     setLoading(false);
   };
 
+  const getIso2ByName = (name) => {
+    let countryFound = countries.find((country) => country.name === name);
+    if (countryFound) {
+      setCountry({
+        ...country,
+        name: countryFound.name,
+        countryCode: countryFound.iso2,
+      });
+      getState(countryFound.iso2);
+      getCitiesByCountry(countryFound.iso2);
+    }
+  };
+
+  const getNameTypeCountry = () => {
+    if (extraFields.length === 0) return '';
+    let fieldFound = extraFields.find((field) => field.type === 'country');
+    if (!fieldFound) return '';
+    if (fieldFound.length > 1) {
+      return fieldFound[0].name;
+    }
+    return fieldFound.name;
+  };
+
   const getState = async (country) => {
     setLoading(true);
     try {
       const response = await countryApi.getStatesByCountry(country);
-
       setRegiones(response);
+      if (response.length === 0) {
+        form.setFieldsValue({
+          [region.inputName !== '' ? region.inputName : 'region']: 'NA',
+        });
+      }
     } catch (error) {
       setRegiones([]);
     }
@@ -235,8 +262,12 @@ const FormRegister = ({
     setLoading(true);
     try {
       const response = await countryApi.getCities(country, state);
-
       setCities(response);
+      if (response.length === 0) {
+        form.setFieldsValue({
+          [city.inputName !== '' ? city.inputName : 'city']: 'NA',
+        });
+      }
     } catch (error) {
       setCities([]);
     }
@@ -259,6 +290,10 @@ const FormRegister = ({
       setCountries([]);
     };
   }, []);
+
+  useEffect(() => {
+    getIso2ByName(form.getFieldValue(getNameTypeCountry()));
+  }, [initialValues, countries]);
 
   useEffect(() => {
     let initialValuesGeneral = {};
@@ -595,7 +630,6 @@ const FormRegister = ({
     }
   };
   useEffect(() => {
-    console.log('INITIAL VALUES===>', initialValues, extraFields);
     form.setFieldsValue(initialValues);
   }, [initialValues]);
 
@@ -630,14 +664,12 @@ const FormRegister = ({
 
   const valuesChange = (changedValues, allValues) => {
     //validar que todos los campos de event user esten llenos
-    console.log(allValues);
     ValidateEmptyFields(allValues);
     let e = {
       target: {
         value: changedValues[Object.keys(changedValues)[0]],
       },
     };
-    console.log(changedValues, allValues, 'values');
     HandleHookForm(e, Object.keys(changedValues)[0], null);
     updateFieldsVisibility(conditionals, allValues);
   };
@@ -974,7 +1006,7 @@ const FormRegister = ({
 
         if (type === 'country') {
           input = (
-            <Form.Item initialValue={value} name={name} noStyle>
+            <Form.Item id='country_input_form' initialValue={value} name={name} noStyle>
               <Select
                 showSearch
                 optionFilterProp='children'
@@ -1041,7 +1073,6 @@ const FormRegister = ({
                 disabled={loading || cities.length === 0}
                 loading={loading}
                 onChange={(nameCity, aditionalData) => {
-                  console.log(name, aditionalData);
                   setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
                 }}
                 placeholder='Seleccione una ciudad'>
@@ -1227,7 +1258,6 @@ const FormRegister = ({
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
                   <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
-                    {console.log('avatar', initialValues)}
                     <Typography.Title level={5}>
                       {intl.formatMessage({
                         id: 'title.user_data',
