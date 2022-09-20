@@ -40,7 +40,7 @@ class Graphics extends Component {
     this.chart.destroy();
   }
   // Funcion que permite dividir una cadena
-  divideString = (string) => {
+  divideString = string => {
     let separatedByWhiteSpace = string.split(/\s/);
     let times;
     let text = [];
@@ -74,11 +74,11 @@ class Graphics extends Component {
 
     this.setState(
       { dataSurvey: response, usersRegistered: totalUsersRegistered, totalUser: totalUsersRegistered },
-      this.mountChart
+      this.mountChart,
     );
   };
 
-  setCurrentPage = (page) => {
+  setCurrentPage = page => {
     this.setState({ currentPage: page }, this.mountChart);
   };
 
@@ -118,7 +118,7 @@ class Graphics extends Component {
      * @returns The numberToLetterOfAlphabet function is returning the order of the alphabet that the
      * number is in.
      */
-    const numberToLetterOfAlphabet = (number) => {
+    const numberToLetterOfAlphabet = number => {
       const alphabet = graphy.data.datasets[0].alphabet;
 
       let orderAlphabet = alphabet[number % alphabet.length];
@@ -292,7 +292,7 @@ class Graphics extends Component {
       questions[currentPage - 1].id,
       eventId,
       this.updateData,
-      operation
+      operation,
     );
   };
 
@@ -474,7 +474,7 @@ class Graphics extends Component {
 
 const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   currentActivity: state.stage.data.currentActivity,
 });
 

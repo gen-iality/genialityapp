@@ -1,33 +1,28 @@
 import * as React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 
-import {
-  Typography,
-  Space,
-} from 'antd';
+import { Typography, Space } from 'antd';
 
-import {
-  QuizStats,
-} from './types';
+import { QuizStats } from './types';
 import QuizBadge from './QuizBadge';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
 interface QuizProgressProps {
   /**
    * The event ID
    */
-  eventId: string,
+  eventId: string;
   /**
    * The current survey ID
    */
-  surveyId: string,
+  surveyId: string;
   /**
    * The current user ID
    */
-  userId: string,
+  userId: string;
   /**
    * Mark as short badge
    */
-  short?: boolean,
+  short?: boolean;
 }
 
 function QuizProgress(props: QuizProgressProps) {
@@ -51,8 +46,14 @@ function QuizProgress(props: QuizProgressProps) {
   }, [props.eventId, props.surveyId, props.userId, isLoading]);
 
   return (
-    <QuizBadge right={goodAnswers} total={totalAnswers} minimum={requiredMinimum} isLoading={isLoading} short={props.short}/>
+    <QuizBadge
+      right={goodAnswers}
+      total={totalAnswers}
+      minimum={requiredMinimum}
+      isLoading={isLoading}
+      short={props.short}
+    />
   );
-};
+}
 
 export default QuizProgress;

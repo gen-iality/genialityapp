@@ -17,7 +17,7 @@ function ResultsPanel(props) {
     let userAnswer = await SurveyAnswers.getAnswersQuestionV2(
       idSurvey, // survey ID
       questionId, // current question
-      currentUser.value._id // who
+      currentUser.value._id, // who
     );
     return userAnswer.data();
   }

@@ -6,11 +6,12 @@ import WithEviusContext from '@/context/withContext';
 import { withRouter } from 'react-router-dom';
 import { firestore } from '@/helpers/firebase';
 import Service from '@/components/agenda/roomManager/service';
-function SurveyActivity(props) {
-  const [activityState, setactivityState] = useState('');
 
+function SurveyActivity(props) {
   let { currentActivity } = useHelper();
-  console.log('propsSurveyActivity', props);
+  console.log('100.propsSurveyActivity', props);
+
+  const [activityState, setactivityState] = useState('');
 
   async function listeningStateStreamingRoom(event_id, activity_id) {
     firestore
@@ -18,7 +19,7 @@ function SurveyActivity(props) {
       .doc(event_id)
       .collection('activities')
       .doc(activity_id)
-      .onSnapshot((infoActivity) => {
+      .onSnapshot(infoActivity => {
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
         //const { habilitar_ingreso, meeting_id } = data;
@@ -28,8 +29,9 @@ function SurveyActivity(props) {
         //setTransmition(data.transmition);
       });
   }
+
   useEffect(() => {
-    console.log('100.currentActivity', currentActivity)
+    console.log('100.currentActivity', currentActivity);
     if (!currentActivity || !props.cEvent) return;
 
     async function GetStateStreamingRoom() {
@@ -41,6 +43,7 @@ function SurveyActivity(props) {
       GetStateStreamingRoom();
     }
   }, [currentActivity, props.cEvent]);
+
   return (
     <>
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />

@@ -22,20 +22,18 @@ import QuizProgress from '@/components/quiz/QuizProgress';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
   const cSurveys = UseSurveysContext();
-
   const currentUser = UseCurrentUser();
   const history = useHistory();
   const handleGoToCertificate = useCallback(() => {
     history.push(`/landing/${cEvent.value?._id}/certificate`);
   }, [cEvent.value]);
-  const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
 
+  const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
   //Effect for when prop.idSurvey changes
   useEffect(() => {
     if (!surveyId) return;
-
     console.log('200.survey surveyid userid', surveyId, currentUser.value);
     let unsubscribe;
     (async () => {
@@ -76,7 +74,9 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         const survey = surveys[i];
         const stats = await useAsyncPrepareQuizStats(cEvent.value._id, survey._id, currentUser?.value?._id, survey);
 
-        console.debug(`stats: cEvent.value._id=${cEvent.value._id}, survey._id=${survey._id}, currentUser?.value?._id=${currentUser?.value?._id}, survey=${survey}`)
+        console.debug(
+          `stats: cEvent.value._id=${cEvent.value._id}, survey._id=${survey._id}, currentUser?.value?._id=${currentUser?.value?._id}, survey=${survey}`,
+        );
         console.debug('stats object:', stats);
         if (stats.minimum > 0) {
           if (stats.right >= stats.minimum) {
@@ -147,7 +147,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   );
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   isVisible: state.survey.data.surveyVisible,
 });
 

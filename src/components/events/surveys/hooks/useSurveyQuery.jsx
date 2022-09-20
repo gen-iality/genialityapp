@@ -23,7 +23,7 @@ function useSurveyQuery(eventId, idSurvey) {
   useEffect(() => {
     if (innerQuery === undefined || innerRealTimeQuery === undefined) return;
     console.log('prueba que no carga tanto');
-    setQuery((prev) => {
+    setQuery(prev => {
       return { ...prev, loading: false, data: { ...innerQuery, ...innerRealTimeQuery } };
     });
   }, [innerQuery, innerRealTimeQuery]);
