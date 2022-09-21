@@ -1,6 +1,14 @@
-import { Table } from 'antd';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+
+import { Checkbox } from 'antd';
+import { Table } from 'antd';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+
+/**
+ * This constant is used to put the column content and other purposes
+ */
+const mainColumnName = 'Matter';
 
 type SourceRow = { key?: string } & { [x: string]: string };
 type Column = {
@@ -47,20 +55,21 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       // Now we concat from rows.
       // Here we create a key-value pair and return, but the result is an
       // array. So we have to use the reduce to concat those objects.
-      ...source.rows.map((row, j) => {
+      ...source.columns.map((column, j) => {
         const item: { [x:string]: string } = {};
-        item[`row_${j + 1}`] = row.text; // Check out our index starts at 1
+        item[`row_${j + 1}`] = column.text + ''; // Check out our index starts at 1
         return item;
       }).reduce((last, current) => ({...last, ...current})),
     });
 
     // In this point we use the current dataSource to generate the columns list
     Object.values(newDataSource[0]).forEach((columnInfo) => {
-      const columnName = columnInfo === 'key_column_0' ? 'matter' : columnInfo;
+      console.log('LikertScaleEditor.columnInfo', columnInfo)
+      const columnName = columnInfo === 'key_column_0' ? mainColumnName.toLowerCase() : columnInfo;
       newColumns.push({
         key: columnName,
         dataIndex: columnName,
-        title: columnName === 'matter' ? columnName : `"${columnName}"`,
+        title: columnName === mainColumnName.toLowerCase() ? mainColumnName : `"${columnName}"`,
       });
     });
 
@@ -69,7 +78,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       .forEach((column, i) => {
         const newSourceRow: SourceRow = {
           key: `key_column_${i + 1}`,
-          matter: column.text,
+          [mainColumnName.toLowerCase()]: column.text,
           // Now we concat from rows.
           // Here we create a key-value pair and return, but the result is an
           // array. So we have to use the reduce to concat those objects.
