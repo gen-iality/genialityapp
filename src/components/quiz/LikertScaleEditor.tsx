@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import { Checkbox, Button, Space } from 'antd';
-import { Table } from 'antd';
+import { Table, Modal, Input } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
@@ -62,6 +62,50 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
   const [sourceData, setSourceData] = useState(source);
   const [rows, setRows] = useState<RowType[]>([]);
   const [columns, setColumns] = useState<ColumnsType<RowType>>([]);
+  const [isOpenedModal, setIsOpenedModal] = useState(false);
+  const [modalType, setModalType] = useState<'row' | 'column' | null>(null);
+  const [nextText, setNextText] = useState<string>('');
+  const [nextValue, setNextValue] = useState<string>('');
+
+  const openModal = () => {
+    setIsOpenedModal(true)
+    console.debug('LikertScaleEditor.modal', 'close');
+  };
+
+  const closeModal = () => {
+    setModalType(null);
+    setNextText('');
+    setNextValue('');
+    setIsOpenedModal(false);
+    console.debug('LikertScaleEditor.modal', 'close');
+  };
+
+  const showModalForRow = () => {
+    setModalType('row');
+    openModal();
+  };
+
+  const showModalForColumn = () => {
+    setModalType('column');
+    openModal();
+  };
+
+  const addNewElement = () => {
+    console.debug('LikertScaleEditor.add', 'Add new element');
+    if (modalType === 'row') {
+      addNewRow(nextText, nextValue);
+    } else if (modalType === 'column') {
+      addNewColumn(nextText, nextValue);
+    }
+    closeModal();
+  };
+
+  const addNewColumn = (text: string, value: string | number) => {
+    console.debug('LikertScaleEditor.add', 'Add new column', text, value);
+  };
+  const addNewRow = (text: string, value: string | number) => {
+    console.debug('LikertScaleEditor.add', 'Add new row', text, value);
+  };
 
   useEffect(() => {
     console.debug('LikertScaleEditor.source', source)
@@ -190,6 +234,18 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
   return (
     <>
     <Table dataSource={rows} columns={columns} />
+    <Modal
+      visible={isOpenedModal}
+      title='Agrega elemento'
+      okText='Add'
+      onCancel={closeModal}
+      onOk={addNewElement}
+    >
+      <Space direction='vertical'>
+        <Input size='large' placeholder='Texto' defaultValue={nextText} onChange={(e) => setNextText(e.target.value)}/>
+        <Input size='large' placeholder='Valor' defaultValue={nextValue} onChange={(e) => setNextValue(e.target.value)}/>
+      </Space>
+    </Modal>
     </>
   );
 }
