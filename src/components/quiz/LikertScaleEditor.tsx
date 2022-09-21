@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 
 import { Checkbox } from 'antd';
 import { Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 /**
@@ -20,12 +21,12 @@ type RowType = {
   [x: string]: any | Cell,
 };
 
-type ColumnType = {
-  title: string,
-  dataIndex: keyof RowType,
-  key?: string,
-  render?: (text: any) => any,
-};
+// type ColumnType = {
+//   title: string | ((text: any) => any),
+//   dataIndex: keyof RowType,
+//   key?: string,
+//   render?: (text: any) => any,
+// };
 
 export interface DataSource {
   columns: {
@@ -56,14 +57,14 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
 
   const [sourceData, setSourceData] = useState(source);
   const [rows, setRows] = useState<RowType[]>([]);
-  const [columns, setColumns] = useState<ColumnType[]>([]);
+  const [columns, setColumns] = useState<ColumnsType<RowType>>([]);
 
   useEffect(() => {
     console.debug('LikertScaleEditor.source', source)
     if (!sourceData) return;
 
     const newRows: RowType[] = [];
-    const newColumns: ColumnType[] = [];
+    const newColumns: ColumnsType<RowType> = [];
 
     sourceData.rows.forEach((row, i) => {
       newRows.push({
