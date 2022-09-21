@@ -10,10 +10,10 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox';
  */
 const mainColumnName = 'Matter';
 
-type SourceRow = { key?: string } & { [x: string]: string };
-type Column = {
+type RowType = { key?: string } & { [x: string]: string };
+type ColumnType = {
   title: string,
-  dataIndex: keyof SourceRow,
+  dataIndex: keyof RowType,
   key?: string,
 };
 
@@ -39,67 +39,52 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       rows: [], // Empty list for default
     } // Default value, if it is undefined
   } = props;
-  const [dataSource, setDataSource] = useState<SourceRow[]>([]);
-  const [columns, setColumns] = useState<Column[]>([]);
+  const [rows, setRows] = useState<RowType[]>([]);
+  const [columns, setColumns] = useState<ColumnType[]>([]);
 
   useEffect(() => {
     console.debug('LikertScaleEditor.source', source)
     if (!source) return;
 
-    const newDataSource: SourceRow[] = [];
-    const newColumns: Column[] = [];
+    const newRows: RowType[] = [];
+    const newColumns: ColumnType[] = [];
 
-    // Add header
-    newDataSource.push({
-      key: 'key_column_0',
-      // Now we concat from rows.
-      // Here we create a key-value pair and return, but the result is an
-      // array. So we have to use the reduce to concat those objects.
-      ...source.columns.map((column, j) => {
-        const item: { [x:string]: string } = {};
-        item[`row_${j + 1}`] = column.text + ''; // Check out our index starts at 1
-        return item;
-      }).reduce((last, current) => ({...last, ...current})),
-    });
-
-    // In this point we use the current dataSource to generate the columns list
-    Object.values(newDataSource[0]).forEach((columnInfo) => {
-      console.log('LikertScaleEditor.columnInfo', columnInfo)
-      const columnName = columnInfo === 'key_column_0' ? mainColumnName.toLowerCase() : columnInfo;
-      newColumns.push({
-        key: columnName,
-        dataIndex: columnName,
-        title: columnName === mainColumnName.toLowerCase() ? mainColumnName : `"${columnName}"`,
+    source.columns.forEach((column, i) => {
+      newRows.push({
+        key: `key_${i}`,
+        [mainColumnName.toLowerCase()]: column.text,
+        ...source.rows.map((row, j) => {
+          return { [`row_${j}`]: row.value.toString() };
+        }).reduce((last, current) => ({...last, ...current})),
       });
     });
 
-    // Now we will fill the dataSource
-    source.columns // For each Column, we add data to dataSource
-      .forEach((column, i) => {
-        const newSourceRow: SourceRow = {
-          key: `key_column_${i + 1}`,
-          [mainColumnName.toLowerCase()]: column.text,
-          // Now we concat from rows.
-          // Here we create a key-value pair and return, but the result is an
-          // array. So we have to use the reduce to concat those objects.
-          ...source.rows.map((row, j) => {
-            const item: { [x:string]: string } = {};
-            item[`row_${j + 1}`] = row.text; // Check out our index starts at 1
-            return item;
-          }).reduce((last, current) => ({...last, ...current})),
-        };
+    // Add the header
+    newColumns.push({
+      key: `key_0`,
+      dataIndex: mainColumnName.toLowerCase(),
+      title: mainColumnName,
+    });
+    // Add other things
+    source.rows.forEach((row, i) => {
+      const columnName = row.text === mainColumnName ? row.text : `"${row.text}"`;
+      newColumns.push({
+        key: `key_${i+1}`,
+        dataIndex: `row_${i}`,
+        title: columnName,
+      });
+    });
 
-        console.debug('LikertScaleEditor:', newSourceRow);
-      })
-    
     // Save all data
-    setDataSource(newDataSource);
+    setRows(newRows);
     setColumns(newColumns);
+    console.log('LikertScaleEditor.all', newRows);
+    console.log('LikertScaleEditor.all', newColumns);
   }, [source]);
 
   return (
     <>
-    <Table dataSource={dataSource} columns={columns} />
+    <Table dataSource={rows} columns={columns} />
     </>
   );
 }

@@ -22,7 +22,7 @@ const sampleData = {
     }, {
       "value": 1,
       "text": "Strongly disagree"
-    }
+    },
   ],
   "rows": [
     {
@@ -37,7 +37,7 @@ const sampleData = {
     }, {
       "value": "easy to use",
       "text": "Product is easy to use"
-    }
+    },
   ],
 };
 
