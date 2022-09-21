@@ -130,6 +130,15 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
   };
   const addNewRow = (text: string, value: string | number) => {
     console.debug('LikertScaleEditor.add', 'Add new row', text, value);
+    const newRows: InputRow[] = [
+      ...sourceData.rows,
+      { text, value },
+    ];
+    setSourceData({
+      ...sourceData,
+      rows: newRows,
+      values: { ...sourceData.values, [value]: null }, // Add a relation to null
+    });
   };
 
   useEffect(() => {
