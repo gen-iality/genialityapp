@@ -10,14 +10,24 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox';
  */
 const mainColumnName = 'Matter';
 
-type RowType = { key?: string } & { [x: string]: string };
+type Cell = {
+  row: string | number, // X
+  column: string | number, // Y
+};
+
+type RowType = {
+  key?: string,
+  [x: string]: any | Cell,
+};
+
 type ColumnType = {
   title: string,
   dataIndex: keyof RowType,
   key?: string,
+  render?: (text: any) => any,
 };
 
-interface DataSource {
+export interface DataSource {
   columns: {
     value: number, // Or "number | string" ??
     text: string,
@@ -26,9 +36,12 @@ interface DataSource {
     value: number | string,
     text: string,
   }[],
+  values: {
+    [key: string]: number | string | null,
+  },
 };
 
-interface LikertScaleEditorProps {
+export interface LikertScaleEditorProps {
   source?: DataSource | null,
 };
 
@@ -37,27 +50,35 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     source = {
       columns: [], // Empty list for default
       rows: [], // Empty list for default
+      values: {}, // Empty list for default
     } // Default value, if it is undefined
   } = props;
+
+  const [sourceData, setSourceData] = useState(source);
   const [rows, setRows] = useState<RowType[]>([]);
   const [columns, setColumns] = useState<ColumnType[]>([]);
 
   useEffect(() => {
     console.debug('LikertScaleEditor.source', source)
-    if (!source) return;
+    if (!sourceData) return;
 
     const newRows: RowType[] = [];
     const newColumns: ColumnType[] = [];
 
-    source.columns.forEach((column, i) => {
+    sourceData.columns.forEach((column, i) => {
       newRows.push({
         key: `key_${i}`,
         [mainColumnName.toLowerCase()]: column.text,
-        ...source.rows.map((row, j) => {
-          return { [`row_${j}`]: row.value.toString() };
+        ...sourceData.rows.map((row, j) => {
+          const cell: Cell = {
+            row: row.value,
+            column: column.value,
+          };
+          return { [`row_${j}`]: cell };
         }).reduce((last, current) => ({...last, ...current})),
       });
     });
+    // [`row_${j}`]: `${column.value.toString()} - ${row.value.toString()} - ${source.values[row.value.toString()]}`,
 
     // Add the header
     newColumns.push({
@@ -66,12 +87,30 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       title: mainColumnName,
     });
     // Add other things
-    source.rows.forEach((row, i) => {
+    sourceData.rows.forEach((row, i) => {
       const columnName = row.text === mainColumnName ? row.text : `"${row.text}"`;
       newColumns.push({
         key: `key_${i+1}`,
         dataIndex: `row_${i}`,
         title: columnName,
+        render: (value: Cell) => {
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => {
+                const { checked } = e.target;
+                console.debug('checked', checked);
+                const newSourceData = { ...sourceData };
+                if (checked) {
+                  newSourceData.values[value.row] = value.column;
+                } else {
+                  newSourceData.values[value.row] = null;
+                }
+                setSourceData(newSourceData);
+              }}
+              checked={sourceData.values[value.row] === value.column}
+            >{value.row}</Checkbox>
+          );
+        }
       });
     });
 
@@ -80,7 +119,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     setColumns(newColumns);
     console.log('LikertScaleEditor.all', newRows);
     console.log('LikertScaleEditor.all', newColumns);
-  }, [source]);
+  }, [sourceData]);
 
   return (
     <>
