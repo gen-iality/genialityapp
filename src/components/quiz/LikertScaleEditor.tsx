@@ -155,18 +155,22 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
         </Space>
       ),
       render: (text, record, index) => (
-        <Button
-          danger
-          title='Eliminar pregunta'
-        >
-          <DeleteOutlined />
-        </Button>
+        <>
+        {record.key !== 'key_row_controller' && (
+          <Button
+            danger
+            title='Eliminar pregunta'
+          >
+            <DeleteOutlined />
+          </Button>
+        )}
+        </>
       ),
     });
 
     // Add this row for controllers
     newRows.push({
-      key: `key_controller`,
+      key: `key_row_controller`,
       [mainColumnName.toLowerCase()]: { isController: true },
       ...sourceData.columns.map((column, j) => {
         const cell: Cell = {
