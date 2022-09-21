@@ -181,7 +181,6 @@ const FormEdit = (
     setTimeout(() => {
       setLoading(false);
     }, 500);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, valuesQuestion]);
 
   const handleRadio = (e) => {
@@ -247,6 +246,14 @@ const FormEdit = (
         case 'checkbox':
           values['correctAnswer'] = values.choices && searchWithMultipleIndex(values.choices, correctAnswerIndex);
           values['correctAnswerIndex'] = correctAnswerIndex;
+          break;
+        
+        case 'ranking':
+          // TODO: implement that
+          break;
+        
+        case 'rating':
+          // TODO: implement that
           break;
 
         default:
@@ -540,57 +547,88 @@ const FormEdit = (
                             </Form.Item>
                           ))}
                         </Radio.Group>
+                      ) : questionType === 'checkbox' ? (
+                        <Checkbox.Group
+                          onChange={handleCheckbox}
+                          disabled={!allowGradableSurvey}
+                          value={correctAnswerIndex}
+                          style={{ display: 'block' }}>
+                          {fields.map((field, index) => (
+                            <Form.Item
+                              label={<Text type='secondary'>Respuesta {index + 1}</Text>}
+                              required={false}
+                              key={field.key}>
+                              <Checkbox value={index} style={{ width: '100%' }}>
+                                <Form.Item
+                                  {...field}
+                                  validateTrigger={['onChange', 'onBlur']}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      whitespace: true,
+                                      message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                                    },
+                                    {
+                                      validator: fieldValidation,
+                                    },
+                                  ]}
+                                  noStyle>
+                                  <Input placeholder='Asingar respuesta' style={{ width: '100%' }} />
+                                </Form.Item>
+                                {fields.length > 2 ? (
+                                  <MinusCircleOutlined
+                                    onClick={() => {
+                                      remove(field.name);
+                                    }}
+                                  />
+                                ) : null}
+                              </Checkbox>
+                            </Form.Item>
+                          ))}
+                        </Checkbox.Group>
+                      ) : questionType === 'ranking' ? (
+                        <Space direction='vertical'>
+                        {fields.map((field, index) => (
+                          <Form.Item
+                            label={<Text type='secondary'>Opción {index + 1}</Text>}
+                            required={false}
+                            key={field.key}>
+                            <Form.Item
+                              {...field}
+                              validateTrigger={['onChange', 'onBlur']}
+                              rules={[
+                                {
+                                  required: true,
+                                  whitespace: true,
+                                  message: `Por favor ingresa la opción ${index + 1}`,
+                                },
+                                {
+                                  validator: fieldValidation,
+                                },
+                              ]}
+                              noStyle>
+                              <Input placeholder='Asingar opción' style={{ width: '100%' }} />
+                            </Form.Item>
+                            {fields.length > 1 ? (
+                              <MinusCircleOutlined
+                                onClick={() => {
+                                  remove(field.name);
+                                }}
+                              />
+                            ) : null}
+                          </Form.Item>
+                        ))}
+                        </Space>
                       ) : (
-                        questionType === 'checkbox' && (
-                          <Checkbox.Group
-                            onChange={handleCheckbox}
-                            disabled={!allowGradableSurvey}
-                            value={correctAnswerIndex}
-                            style={{ display: 'block' }}>
-                            {fields.map((field, index) => (
-                              <Form.Item
-                                label={<Text type='secondary'>Respuesta {index + 1}</Text>}
-                                required={false}
-                                key={field.key}>
-                                <Checkbox value={index} style={{ width: '100%' }}>
-                                  <Form.Item
-                                    {...field}
-                                    validateTrigger={['onChange', 'onBlur']}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        whitespace: true,
-                                        message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
-                                      },
-                                      {
-                                        validator: fieldValidation,
-                                      },
-                                    ]}
-                                    noStyle>
-                                    <Input placeholder='Asingar respuesta' style={{ width: '100%' }} />
-                                  </Form.Item>
-                                  {fields.length > 2 ? (
-                                    <MinusCircleOutlined
-                                      onClick={() => {
-                                        remove(field.name);
-                                      }}
-                                    />
-                                  ) : null}
-                                </Checkbox>
-                              </Form.Item>
-                            ))}
-                          </Checkbox.Group>
-                        )
+                        <p>Tipo desconocido</p>
                       )}
                     </Space>
                     {fields.length < 15 && (
                       <Form.Item>
                         <Button
                           type='dashed'
-                          onClick={() => {
-                            add();
-                          }}>
-                          <PlusOutlined /> Agregar otra respuesta
+                          onClick={() => add()}>
+                          <PlusOutlined /> Agregar otra {questionType === 'ranking' ? 'opción' : 'respuesta'}
                         </Button>
                       </Form.Item>
                     )}
