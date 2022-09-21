@@ -382,7 +382,7 @@ class UserModal extends Component {
       // Head
       oDoc.write('<head><title>Escarapela</title>');
       // body
-      oDoc.write('<body onload="window.print()"><div>');
+      oDoc.write('<body style="width: 100%, textAlign: center" onload="window.print()"><div>');
       // Datos
       let i = 0;
       for (; i < badge.length; ) {
@@ -402,7 +402,7 @@ class UserModal extends Component {
           i++;
         } else {
           if (badge[i + 1] && !badge[i + 1].line) {
-            oDoc.write(`<div style="display: flex">`);
+            oDoc.write(`<div style="display: block textAlign: center">`);
             if (!badge[i].qr) {
               oDoc.write(`<div style="margin-right: 20px">`);
               oDoc.write(
@@ -440,7 +440,7 @@ class UserModal extends Component {
             oDoc.write(`</div>`);
             i = i + 2;
           } else {
-            oDoc.write(`<div style="display: flex">`);
+            oDoc.write(`<div style="display: block textAlign: center">`);
             oDoc.write(`<div style="margin-right: 20px">`);
             if (!badge[i].qr) {
               oDoc.write(
@@ -506,6 +506,7 @@ class UserModal extends Component {
             />
           )}
         </div>
+        <div style={{ opacity: 0, display: 'none' }}>{user && <QRCode value={userId} />}</div>
         <iframe title='Pint User' ref='ifrmPrint' style={{ opacity: 0, display: 'none' }} />
       </Modal>
     );

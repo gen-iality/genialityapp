@@ -10,34 +10,33 @@ import Column from 'antd/lib/table/Column';
 export default function Index(props) {
   const { event } = props;
   const ifrmPrint = useRef();
-  const [badge, setBadge] = useState([]);
+  const [badges, setBadges] = useState([]);
+  const [badge, setBadge] = useState({
+    id_properties: {
+      label: '',
+      value: '',
+    },
+    size: 22,
+  });
+
   const [isVisible, setIsVisible] = useState(false);
-  console.log('🚀 ~ file: index.jsx ~ line 9 ~ Index ~ badge', badge);
   const [qrExist, setQrExist] = useState(false);
   const [extraFields, setExtraFields] = useState([]);
-  console.log('🚀 ~ file: index.jsx ~ line 13 ~ Index ~ extraFields', extraFields);
-  const [newField, setNewField] = useState(false);
-  const [showPrev, setShowPrev] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const fontSize = [18, 22, 36, 44];
   const qrSize = [32, 64, 128];
   const [form] = Form.useForm();
   const getIValuesInitial = async () => {
     if (event) {
-      const properties = event.user_properties;
-      console.log('🚀 ~ file: index.jsx ~ line 22 ~ getIValuesInitial ~ properties', properties);
       const resp = await BadgeApi.get(event._id);
-      //Manejo adecuado de campos, no se neceista toda la información
-      properties.map((prop) => {
-        return setExtraFields([...extraFields, { value: prop.name, label: prop.label }]);
-      });
-      //Si hay escarapela se muestra el preview y se setean los datos
+
       if (resp._id) {
-        let badgeFilter = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
-        setBadge(badgeFilter);
-        setShowPrev(true);
+        let badgesFilter = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
+        setBadges(badgesFilter);
       }
     }
   };
+  const filterOptions = event.user_properties ? event.user_properties : [];
 
   useEffect(() => {
     getIValuesInitial();
@@ -47,41 +46,41 @@ export default function Index(props) {
     let items = [];
     let i = 0;
     //Se itera sobre cada campo
-    for (; i < badge.length; ) {
+    for (; i < badges.length; ) {
       let item;
       //Si el campo es line ocupa una fila completa
-      if (badge[i].line) {
+      if (badges[i].line) {
         //Si es QR muestro un QR de ejemplo, sino muestro el nombre del campo
-        item = badge[i].qr ? (
+        item = badges[i].qr ? (
           <QRCode value={'alejomg27@gmail.com'} size={64} />
         ) : (
           <div>
-            <p style={{ fontSize: `${badge[i].size}px` }}>{badge[i].id_properties.label}</p>
+            <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
           </div>
         );
         items.push(item);
         i++;
       } else {
         //Sino es line, ocupa la mitad de una columna siempre y cuando el campo siguiente tampoco sea line
-        if (badge[i + 1] && !badge[i + 1].line) {
+        if (badges[i + 1] && !badges[i + 1].line) {
           item = (
-            <div style={{ display: 'flex' }}>
-              {!badge[i].qr ? (
+            <div style={{ display: 'block', textAlign: 'center' }}>
+              {!badges[i].qr ? (
                 <div style={{ marginRight: '20px' }}>
-                  <p style={{ fontSize: `${badge[i].size}px` }}>{badge[i].id_properties.label}</p>
+                  <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
                 </div>
               ) : (
                 <div style={{ marginRight: '20px' }}>
-                  <QRCode value={'evius.co'} size={badge[i].size} />
+                  <QRCode value={'evius.co'} size={badges[i].size} />
                 </div>
               )}
-              {!badge[i + 1].qr ? (
+              {!badges[i + 1].qr ? (
                 <div style={{ marginRight: '20px' }}>
-                  <p style={{ fontSize: `${badge[i + 1].size}px` }}>{badge[i + 1].id_properties.label}</p>
+                  <p style={{ fontSize: `${badges[i + 1].size}px` }}>{badges[i + 1].id_properties.label}</p>
                 </div>
               ) : (
                 <div>
-                  <QRCode value={'evius.co'} size={badge[i + 1].size} />
+                  <QRCode value={'evius.co'} size={badges[i + 1].size} />
                 </div>
               )}
             </div>
@@ -90,12 +89,12 @@ export default function Index(props) {
           i = i + 2;
         } else {
           item = (
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'block', textAlign: 'center' }}>
               <div style={{ marginRight: '20px' }}>
-                {!badge[i].qr ? (
-                  <p style={{ fontSize: `${badge[i].size}px` }}>{badge[i].id_properties.label}</p>
+                {!badges[i].qr ? (
+                  <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
                 ) : (
-                  <QRCode value={'evius.co'} size={badge[i].size} />
+                  <QRCode value={'evius.co'} size={badges[i].size} />
                 )}
               </div>
             </div>
@@ -110,18 +109,25 @@ export default function Index(props) {
     });
   };
   const addQR = () => {
-    setBadge([...badge, { edit: true, line: true, qr: true }]);
+    setBadges([
+      ...badges,
+      {
+        edit: true,
+        id_properties: {
+          label: 'QR',
+        },
+        qr: true,
+        size: 148,
+      },
+    ]);
     setQrExist(true);
-    setNewField(true);
   };
   const printPreview = () => {
     //Para el preview se crea un iframe con el contenido, se usa la misma logica de iteración que renderPrint
     const canvas = document.getElementsByTagName('CANVAS')[0];
     let qr = canvas ? canvas.toDataURL() : '';
     let oIframe = ifrmPrint.current;
-
     let oDoc = oIframe.contentWindow || oIframe.contentDocument;
-
     if (oDoc.document) {
       oDoc = oDoc.document;
     }
@@ -131,22 +137,22 @@ export default function Index(props) {
     oDoc.write('<body onload="window.print()"><div>');
     // Datos
     let i = 0;
-    for (; i < badge.length; ) {
-      if (badge[i].line) {
-        if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
+    for (; i < badges.length; ) {
+      if (badges[i].line) {
+        if (badges[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
         else
           oDoc.write(
-            `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i].id_properties.value}</p>`
+            `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].id_properties.value}</p>`
           );
         i++;
       } else {
-        if (badge[i + 1] && !badge[i + 1].line) {
-          oDoc.write(`<div style="display: flex">`);
-          if (!badge[i].qr) {
+        if (badges[i + 1] && !badges[i + 1].line) {
+          oDoc.write(`<div style="display: block, textAlign: center ">`);
+          if (!badges[i].qr) {
             oDoc.write(`<div style="margin-right: 20px">`);
             oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                badge[i + 1].name
+              `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${
+                badges[i + 1].name
               }</p>`
             );
             oDoc.write(`</div>`);
@@ -155,11 +161,11 @@ export default function Index(props) {
             oDoc.write(`<div><img src=${qr}></div>`);
             oDoc.write(`</div>`);
           }
-          if (!badge[i + 1].qr) {
+          if (!badges[i + 1].qr) {
             oDoc.write(`<div style="margin-right: 20px">`);
             oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i + 1].size}px;text-transform: uppercase">${
-                badge[i + 1].name
+              `<p style="font-family: Lato, sans-serif;font-size: ${badges[i + 1].size}px;text-transform: uppercase">${
+                badges[i + 1].name
               }</p>`
             );
             oDoc.write(`</div>`);
@@ -171,11 +177,11 @@ export default function Index(props) {
           oDoc.write(`</div>`);
           i = i + 2;
         } else {
-          oDoc.write(`<div style="display: flex">`);
+          oDoc.write(`<div style="display: block, textAlign: center">`);
           oDoc.write(`<div style="margin-right: 20px">`);
-          if (!badge[i].qr) {
+          if (!badges[i].qr) {
             oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i].name}]}</p>`
+              `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].name}]}</p>`
             );
           } else {
             oDoc.write(`<div><img src=${qr}></div>`);
@@ -188,43 +194,66 @@ export default function Index(props) {
     }
     oDoc.close();
   };
-  const saveBadge = async (values) => {
-    console.log('🚀 ~ file: index.jsx ~ line 189 ~ saveBadge ~ values', values);
+  const saveBadge = async () => {
+    if (event) {
+      const data = {
+        fields_id: event._id,
+        BadgeFields: badges,
+      };
 
-    // if (event) {
-    //   const data = {
-    //     fields_id: event._id,
-    //     BadgeFields: [],
-    //   };
-    //   badge.map((item) => {
-    //     return data.BadgeFields.push(item);
-    //   });
+      try {
+        const resp = await BadgeApi.create(data);
 
-    //   try {
-    //     const resp = await BadgeApi.create(data);
-
-    //     if (resp._id) {
-    //       message.success('Badge Guardada');
-    //     } else {
-    //       message.warning('Ocurrio algo');
-    //     }
-    //   } catch (err) {
-    //     console.log(err.response);
-    //     message.error('Error al guardar', err.response);
-    //   }
-    // }
+        if (resp._id) {
+          message.success('Badge Guardada');
+        } else {
+          message.warning('Ocurrio algo');
+        }
+      } catch (err) {
+        console.log(err.response);
+        message.error('Error al guardar', err.response);
+      }
+    }
   };
-  const addField = () => {
-    badge.push({ edit: true, id_properties: '', size: 18 });
+  const addField = (values) => {
+    let dataAdd = {
+      edit: true,
+      id_properties: {
+        label: 'default',
+        value: values.id_properties,
+      },
+      size: values.size,
+    };
+    if (event) {
+      const properties = event.user_properties;
+      let labelFound = properties.find((propertie) => propertie.name === values.id_properties);
+      console.log('🚀 ~ file: index.jsx ~ line 237 ~ addField ~ labelFound', labelFound);
+      dataAdd = {
+        edit: true,
+        id_properties: {
+          label: labelFound?.label,
+          value: values.id_properties,
+        },
+        size: values.size,
+      };
+    }
+    setBadges([...badges, dataAdd]);
+    setIsVisible(false);
+    setExtraFields([...extraFields, dataAdd.id_properties]);
+    // badges.push({ edit: true, id_properties: '', size: 18 });
   };
   const removeField = (field) => {
-    console.log('🚀 ~ file: index.jsx ~ line 223 ~ removeField ~ key', field);
-    //if (badge[key].qr) setQrExist(true);
+    if (field.qr) setQrExist(false);
     setExtraFields([...extraFields, field.id_properties]);
-    let badgeFilter = badge.filter((item) => item.id_properties != field.id_properties);
-    setBadge(badgeFilter);
+    let badgesFilter = badges.filter((item) => item.id_properties != field.id_properties);
+    setBadges(badgesFilter);
   };
+  const actionEditField = (values) => {
+    setIsVisible(true);
+    setBadge(values);
 
+    setIsEdit(true);
+  };
   const columns = [
     {
       title: 'Propiedad',
@@ -243,7 +272,9 @@ export default function Index(props) {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <Button icon={<EditOutlined />}>Editar</Button>
+          {/* <Button onClick={() => actionEditField(record)} icon={<EditOutlined />}>
+            Editar
+          </Button> */}
           <Button onClick={() => removeField(_)} icon={<DeleteOutlined />}>
             Eliminar
           </Button>
@@ -260,10 +291,10 @@ export default function Index(props) {
         }
       />
 
-      <Row justify='center' wrap gutter={[8, 8]}>
-        <Col span={12}>
+      <Row justify='center' wrap gutter={[16, 16]}>
+        <Col span={16}>
           <Space style={{ marginBottom: 8 }}>
-            <Button type='primary' onClick={addField} block>
+            <Button type='primary' onClick={saveBadge} block>
               Guardar
             </Button>
 
@@ -272,10 +303,10 @@ export default function Index(props) {
               Imprimir
             </Button>
           </Space>
-          <Table columns={columns} dataSource={badge} />
+          <Table columns={columns} dataSource={badges} />
         </Col>
 
-        <Col span={12}>
+        <Col span={8}>
           <div
             style={{
               marginTop: '1rem',
@@ -287,18 +318,26 @@ export default function Index(props) {
           </div>
         </Col>
       </Row>
-      <Modal title='Agregar parametro' visible={isVisible} onOk={addField}>
-        <Form>
-          <Form.Item label='Campo' name='id_properties'>
+      <Modal
+        title='Agregar parametro'
+        visible={isVisible}
+        destroyOnClose
+        footer={null}
+        onCancel={() => setIsVisible(false)}>
+        <Form onFinish={addField}>
+          <Form.Item label='Campo' name='id_properties' rules={[{ required: true }]}>
             <Select placeholder='Selecciona un campo'>
-              {extraFields.map((option, index) => (
-                <Option key={index + option.value} value={option.value}>
+              {filterOptions.map((option, index) => (
+                <Option
+                  key={index + option.value}
+                  value={option.name}
+                  disabled={badges.find((bagde) => bagde.id_properties.value === option.name)}>
                   {option.label}
                 </Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label='Tamaño' name='size'>
+          <Form.Item label='Tamaño' name='size' rules={[{ required: true }]}>
             <Select placeholder='Selecciona un tamaño'>
               {fontSize.map((size, index) => (
                 <Option key={index} value={size}>
@@ -306,6 +345,11 @@ export default function Index(props) {
                 </Option>
               ))}
             </Select>
+          </Form.Item>
+          <Form.Item>
+            <Button type='primary' htmlType='submit'>
+              Agregar
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
@@ -325,7 +369,7 @@ export default function Index(props) {
 //   constructor(props) {
 //     super(props);
 //     this.state = {
-//       badge: [],
+//       badges: [],
 //       qrExist: false,
 //       extraFields: [],
 //       fontSize: [18, 22, 36, 44],
@@ -339,37 +383,37 @@ export default function Index(props) {
 //     const { event } = this.props;
 //     const properties = event.user_properties;
 //     const resp = await BadgeApi.get(event._id);
-//     let { extraFields, badge, showPrev } = this.state;
+//     let { extraFields, badges, showPrev } = this.state;
 //     //Manejo adecuado de campos, no se neceista toda la información
 //     properties.map((prop) => {
 //       return extraFields.push({ value: prop.name, label: prop.name });
 //     });
 //     //Si hay escarapela se muestra el preview y se setean los datos
 //     if (resp._id) {
-//       badge = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
+//       badges = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
 //       showPrev = true;
 //     }
-//     this.setState({ extraFields, badge, showPrev });
+//     this.setState({ extraFields, badges, showPrev });
 //   }
 
 //   //FN para agregar campo a la escarapela
 //   addField = () => {
-//     const { badge } = this.state;
-//     badge.push({ edit: true, line: true, id_properties: '', size: 18 });
-//     this.setState({ badge, newField: true });
+//     const { badges } = this.state;
+//     badges.push({ edit: true, line: true, id_properties: '', size: 18 });
+//     this.setState({ badges, newField: true });
 //   };
 
 //   //FN para agregar QR a la escarapela
 //   addQR = () => {
-//     const { badge } = this.state;
-//     badge.push({ edit: true, line: true, qr: true });
-//     this.setState({ badge, qrExist: true, newField: true, size: '64' });
+//     const { badges } = this.state;
+//     badges.push({ edit: true, line: true, qr: true });
+//     this.setState({ badges, qrExist: true, newField: true, size: '64' });
 //   };
 
 //   //FN manejo en el cambio de las opciones (tamaño)
 //   handleChange = (e, key) => {
 //     const { value, name } = e.target;
-//     const { badge, extraFields } = this.state;
+//     const { badges, extraFields } = this.state;
 //     let field = value;
 //     if (name === 'id_properties') {
 //       const pos = extraFields
@@ -381,87 +425,87 @@ export default function Index(props) {
 //     } else {
 //       field = parseInt(field, 10);
 //     }
-//     badge[key][name] = field;
-//     this.setState({ badge });
+//     badges[key][name] = field;
+//     this.setState({ badges });
 //   };
 
 //   //FN manejo en el cambio de la posición del campo
 //   toggleSwitch = (key) => {
-//     const { badge } = this.state;
-//     badge[key].line = !badge[key].line;
-//     this.setState({ badge });
+//     const { badges } = this.state;
+//     badges[key].line = !badges[key].line;
+//     this.setState({ badges });
 //   };
 
 //   //FNs para guardar, editar y eliminar un campo
 //   saveField = (key) => {
-//     const { badge, extraFields } = this.state;
-//     if (badge[key].id_properties) {
+//     const { badges, extraFields } = this.state;
+//     if (badges[key].id_properties) {
 //       const pos = extraFields
 //         .map((field) => {
 //           return field.value;
 //         })
-//         .indexOf(badge[key].id_properties.value);
+//         .indexOf(badges[key].id_properties.value);
 //       extraFields.splice(pos, 1);
 //     }
-//     badge[key].edit = !badge[key].edit;
-//     this.setState({ badge, extraFields, newField: false, showPrev: true });
+//     badges[key].edit = !badges[key].edit;
+//     this.setState({ badges, extraFields, newField: false, showPrev: true });
 //   };
 
 //   editField = (key) => {
-//     const { badge } = this.state;
-//     badge[key].edit = !badge[key].edit;
-//     this.setState({ badge, newField: true });
+//     const { badges } = this.state;
+//     badges[key].edit = !badges[key].edit;
+//     this.setState({ badges, newField: true });
 //   };
 
 //   removeField = (key) => {
-//     const { badge, extraFields } = this.state;
-//     if (badge[key].qr) this.setState({ qrExist: false });
-//     extraFields.push(badge[key].id_properties);
-//     badge.splice(key, 1);
-//     this.setState({ badge, extraFields });
+//     const { badges, extraFields } = this.state;
+//     if (badges[key].qr) this.setState({ qrExist: false });
+//     extraFields.push(badges[key].id_properties);
+//     badges.splice(key, 1);
+//     this.setState({ badges, extraFields });
 //   };
 
 //   //FN para realizar el preview
 //   renderPrint = () => {
-//     const badge = [...this.state.badge];
+//     const badges = [...this.state.badges];
 //     let items = [];
 //     let i = 0;
 //     //Se itera sobre cada campo
-//     for (; i < badge.length; ) {
+//     for (; i < badges.length; ) {
 //       let item;
 //       //Si el campo es line ocupa una fila completa
-//       if (badge[i].line) {
+//       if (badges[i].line) {
 //         //Si es QR muestro un QR de ejemplo, sino muestro el nombre del campo
-//         item = badge[i].qr ? (
+//         item = badges[i].qr ? (
 //           <QRCode value={'alejomg27@gmail.com'} size={64} />
 //         ) : (
 //           <div>
-//             <p style={{ fontSize: `${badge[i].size}px` }}>{badge[i].id_properties.label}</p>
+//             <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
 //           </div>
 //         );
 //         items.push(item);
 //         i++;
 //       } else {
 //         //Sino es line, ocupa la mitad de una columna siempre y cuando el campo siguiente tampoco sea line
-//         if (badge[i + 1] && !badge[i + 1].line) {
+//         if (badges[i + 1] && !badges[i + 1].line) {
 //           item = (
 //             <div style={{ display: 'flex' }}>
-//               {!badge[i].qr ? (
+//               {!badges[i].qr ? (
 //                 <div style={{ marginRight: '20px' }}>
-//                   <p style={{ fontSize: `${badge[i].size}px` }}>{badge[i].id_properties.label}</p>
+//                   <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
 //                 </div>
 //               ) : (
 //                 <div style={{ marginRight: '20px' }}>
-//                   <QRCode value={'evius.co'} size={badge[i].size} />
+//                   <QRCode value={'evius.co'} size={badges[i].size} />
 //                 </div>
 //               )}
-//               {!badge[i + 1].qr ? (
+//               {!badges[i + 1].qr ? (
 //                 <div style={{ marginRight: '20px' }}>
-//                   <p style={{ fontSize: `${badge[i + 1].size}px` }}>{badge[i + 1].id_properties.label}</p>
+//                   <p style={{ fontSize: `${badges[i + 1].size}px` }}>{badges[i + 1].id_properties.label}</p>
 //                 </div>
 //               ) : (
 //                 <div>
-//                   <QRCode value={'evius.co'} size={badge[i + 1].size} />
+//                   <QRCode value={'evius.co'} size={badges[i + 1].size} />
 //                 </div>
 //               )}
 //             </div>
@@ -472,10 +516,10 @@ export default function Index(props) {
 //           item = (
 //             <div style={{ display: 'flex' }}>
 //               <div style={{ marginRight: '20px' }}>
-//                 {!badge[i].qr ? (
-//                   <p style={{ fontSize: `${badge[i].size}px` }}>{badge[i].id_properties.label}</p>
+//                 {!badges[i].qr ? (
+//                   <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
 //                 ) : (
-//                   <QRCode value={'evius.co'} size={badge[i].size} />
+//                   <QRCode value={'evius.co'} size={badges[i].size} />
 //                 )}
 //               </div>
 //             </div>
@@ -492,12 +536,12 @@ export default function Index(props) {
 
 //   async saveBadge() {
 //     const { event } = this.props;
-//     const { badge } = this.state;
+//     const { badges } = this.state;
 //     const data = {
 //       fields_id: event._id,
 //       BadgeFields: [],
 //     };
-//     badge.map((item) => {
+//     badges.map((item) => {
 //       return data.BadgeFields.push(item);
 //     });
 //     console.log(data);
@@ -519,7 +563,7 @@ export default function Index(props) {
 //   printPreview = () => {
 //     //Para el preview se crea un iframe con el contenido, se usa la misma logica de iteración que renderPrint
 //     const canvas = document.getElementsByTagName('CANVAS')[0];
-//     const { badge } = this.state;
+//     const { badges } = this.state;
 //     let qr = canvas ? canvas.toDataURL() : '';
 //     let oIframe = this.refs.ifrmPrint;
 //     let oDoc = oIframe.contentWindow || oIframe.contentDocument;
@@ -532,22 +576,22 @@ export default function Index(props) {
 //     oDoc.write('<body onload="window.print()"><div>');
 //     // Datos
 //     let i = 0;
-//     for (; i < badge.length; ) {
-//       if (badge[i].line) {
-//         if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
+//     for (; i < badges.length; ) {
+//       if (badges[i].line) {
+//         if (badges[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
 //         else
 //           oDoc.write(
-//             `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i].id_properties.value}</p>`
+//             `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].id_properties.value}</p>`
 //           );
 //         i++;
 //       } else {
-//         if (badge[i + 1] && !badge[i + 1].line) {
+//         if (badges[i + 1] && !badges[i + 1].line) {
 //           oDoc.write(`<div style="display: flex">`);
-//           if (!badge[i].qr) {
+//           if (!badges[i].qr) {
 //             oDoc.write(`<div style="margin-right: 20px">`);
 //             oDoc.write(
-//               `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-//                 badge[i + 1].name
+//               `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${
+//                 badges[i + 1].name
 //               }</p>`
 //             );
 //             oDoc.write(`</div>`);
@@ -556,11 +600,11 @@ export default function Index(props) {
 //             oDoc.write(`<div><img src=${qr}></div>`);
 //             oDoc.write(`</div>`);
 //           }
-//           if (!badge[i + 1].qr) {
+//           if (!badges[i + 1].qr) {
 //             oDoc.write(`<div style="margin-right: 20px">`);
 //             oDoc.write(
-//               `<p style="font-family: Lato, sans-serif;font-size: ${badge[i + 1].size}px;text-transform: uppercase">${
-//                 badge[i + 1].name
+//               `<p style="font-family: Lato, sans-serif;font-size: ${badges[i + 1].size}px;text-transform: uppercase">${
+//                 badges[i + 1].name
 //               }</p>`
 //             );
 //             oDoc.write(`</div>`);
@@ -574,9 +618,9 @@ export default function Index(props) {
 //         } else {
 //           oDoc.write(`<div style="display: flex">`);
 //           oDoc.write(`<div style="margin-right: 20px">`);
-//           if (!badge[i].qr) {
+//           if (!badges[i].qr) {
 //             oDoc.write(
-//               `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i].name}]}</p>`
+//               `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].name}]}</p>`
 //             );
 //           } else {
 //             oDoc.write(`<div><img src=${qr}></div>`);
@@ -591,7 +635,7 @@ export default function Index(props) {
 //   };
 
 //   render() {
-//     const { badge, qrExist, extraFields, newField, showPrev, fontSize, qrSize } = this.state;
+//     const { badges, qrExist, extraFields, newField, showPrev, fontSize, qrSize } = this.state;
 //     return (
 //       <React.Fragment>
 //         <p>
@@ -616,7 +660,7 @@ export default function Index(props) {
 //                 </p>
 //               )}
 //             </div>
-//             {badge.map((item, key) => {
+//             {badges.map((item, key) => {
 //               return (
 //                 <article key={key} className='media'>
 //                   {item.edit ? (
@@ -778,10 +822,10 @@ export default function Index(props) {
 //                 <div style={{ padding: '1.5rem' }}>{showPrev && this.renderPrint()}</div>
 //               </div>
 //             </div>
-//             <button className='button is-info is-outlined' onClick={this.saveBadge} disabled={badge.length <= 0}>
+//             <button className='button is-info is-outlined' onClick={this.saveBadge} disabled={badges.length <= 0}>
 //               Guardar
 //             </button>
-//             <button className='button is-text is-outlined' onClick={this.printPreview} disabled={badge.length <= 0}>
+//             <button className='button is-text is-outlined' onClick={this.printPreview} disabled={badges.length <= 0}>
 //               Imprimir
 //             </button>
 //           </div>
