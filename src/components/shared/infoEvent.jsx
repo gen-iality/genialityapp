@@ -1,3 +1,4 @@
+import { isHome } from '@/helpers/helperEvent';
 import { CalendarFilled, ClockCircleFilled, EnvironmentFilled } from '@ant-design/icons';
 import { Button, PageHeader, Space, Typography, Grid } from 'antd';
 import Moment from 'moment';
@@ -32,12 +33,16 @@ const InfoEvent = ({ paddingOff, preview }) => {
         </Typography.Title>
       }
       extra={
-        !isPreview ? (
-          <EventAccessActionContainer />
-        ) : (
-          <Button style={{ color: textColor, backgroundColor: bgColor }} type='primary' size='large'>
-            Incribirme al evento
-          </Button>
+        isHome() && (
+          <>
+            {!isPreview ? (
+              <EventAccessActionContainer />
+            ) : (
+              <Button style={{ color: textColor, backgroundColor: bgColor }} type='primary' size='large'>
+                Incribirme al evento
+              </Button>
+            )}
+          </>
         )
       }
       footer={
