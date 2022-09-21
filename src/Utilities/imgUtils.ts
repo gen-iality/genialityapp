@@ -48,3 +48,8 @@ export const removeObjectFromArray = (name: string, array: [], callback: (data: 
   let filtered = array.filter((item: any) => item.name !== name);
   callback(filtered);
 };
+
+export const showImageOrDefaultImage = (image: string, defultImage: string): string => {
+  if (image && image !== '') return image;
+  return defultImage;
+};
