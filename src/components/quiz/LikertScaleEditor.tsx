@@ -196,6 +196,12 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
               <Button
                 danger
                 title='Eliminar categoría'
+                onClick={() => {
+                  const newSourceData = { ...sourceData };
+                  newSourceData.columns.splice(i, 1);
+                  console.debug('LikertScaleEditor.delete', i, 'at columns', newSourceData);
+                  setSourceData(newSourceData);
+                }}
               >
                 <DeleteOutlined />
               </Button>
@@ -238,6 +244,13 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
           <Button
             danger
             title='Eliminar pregunta'
+            onClick={() => {
+              const newSourceData = { ...sourceData };
+              const i = index;
+              newSourceData.rows.splice(i, 1);
+              console.debug('LikertScaleEditor.delete', i, 'at rows', newSourceData);
+              setSourceData(newSourceData);
+            }}
           >
             <DeleteOutlined />
           </Button>
