@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import { Checkbox, Button, Space } from 'antd';
-import { Table, Modal, Input } from 'antd';
+import { Table, Modal, Input, Alert } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
@@ -32,15 +32,19 @@ type RowType = {
 //   render?: (text: any) => any,
 // };
 
+type InputColumn = {
+  value: number, // Or "number | string" ??
+  text: string,
+};
+
+type InputRow = {
+  value: number | string,
+  text: string,
+};
+
 export interface DataSource {
-  columns: {
-    value: number, // Or "number | string" ??
-    text: string,
-  }[],
-  rows: {
-    value: number | string,
-    text: string,
-  }[],
+  columns: InputColumn[],
+  rows: InputRow[],
   values: {
     [key: string]: number | string | null,
   },
@@ -59,13 +63,20 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     } // Default value, if it is undefined
   } = props;
 
-  const [sourceData, setSourceData] = useState(source);
+  const [sourceData, setSourceData] = useState(
+    source === null ? {
+      columns: [],
+      rows: [],
+      values: {},
+    } : source,
+  );
   const [rows, setRows] = useState<RowType[]>([]);
   const [columns, setColumns] = useState<ColumnsType<RowType>>([]);
   const [isOpenedModal, setIsOpenedModal] = useState(false);
   const [modalType, setModalType] = useState<'row' | 'column' | null>(null);
   const [nextText, setNextText] = useState<string>('');
   const [nextValue, setNextValue] = useState<string>('');
+  const [isAlertShown, setIsAlertShown] = useState(false);
 
   const openModal = () => {
     setIsOpenedModal(true)
@@ -92,16 +103,30 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
 
   const addNewElement = () => {
     console.debug('LikertScaleEditor.add', 'Add new element');
-    if (modalType === 'row') {
-      addNewRow(nextText, nextValue);
-    } else if (modalType === 'column') {
-      addNewColumn(nextText, nextValue);
+    if (nextText.trim() && nextValue.trim()) {
+      if (modalType === 'row') {
+        addNewRow(nextText, nextValue);
+      } else if (modalType === 'column') {
+        addNewColumn(nextText, nextValue);
+      }
+      closeModal();
+    } else {
+      setIsAlertShown(true);
+      setTimeout(() => setIsAlertShown(false), 5000);
     }
-    closeModal();
   };
 
   const addNewColumn = (text: string, value: string | number) => {
     console.debug('LikertScaleEditor.add', 'Add new column', text, value);
+    const numberValue = parseInt(value as string);
+    const newColumns: InputColumn[] = [
+      ...sourceData.columns,
+      { text, value: numberValue },
+    ];
+    setSourceData({
+      ...sourceData,
+      columns: newColumns,
+    });
   };
   const addNewRow = (text: string, value: string | number) => {
     console.debug('LikertScaleEditor.add', 'Add new row', text, value);
@@ -138,7 +163,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
         <>
         {typeof value !== 'string' && value.isController ? (
           <Space align='center' size='large'>
-            <Button title='Agregar pregunta' type='primary'>
+            <Button title='Agregar pregunta' type='primary' onClick={showModalForRow}>
               <PlusOutlined />
             </Button>
           </Space>
@@ -193,7 +218,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       dataIndex: 'row_controller',
       title: (text) => (
         <Space align='center' size='large'>
-          <Button title='Agregar categoría' type='primary'>
+          <Button title='Agregar categoría' type='primary' onClick={showModalForColumn}>
             <PlusOutlined />
           </Button>
         </Space>
@@ -236,14 +261,15 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     <Table dataSource={rows} columns={columns} />
     <Modal
       visible={isOpenedModal}
-      title='Agrega elemento'
+      title={`Agrega elemento: ${modalType === 'column' ? 'categoría' : modalType === 'row' ? 'pregunta' : 'desconocido tipo'}`}
       okText='Add'
       onCancel={closeModal}
       onOk={addNewElement}
     >
       <Space direction='vertical'>
-        <Input size='large' placeholder='Texto' defaultValue={nextText} onChange={(e) => setNextText(e.target.value)}/>
-        <Input size='large' placeholder='Valor' defaultValue={nextValue} onChange={(e) => setNextValue(e.target.value)}/>
+        {isAlertShown && <Alert message='Faltan datos' type='error'/>}
+        <Input required size='large' placeholder='Texto' value={nextText} onChange={(e) => setNextText(e.target.value)}/>
+        <Input required size='large' placeholder='Valor' value={nextValue} onChange={(e) => setNextValue(e.target.value)}/>
       </Space>
     </Modal>
     </>
