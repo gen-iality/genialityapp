@@ -70,7 +70,7 @@ const ModalTextComponent = ({
         <EviusReactQuill
           placeholder='Ingresa aquí la descripción'
           colors={[textColor, bgColor]}
-          styles={{ caretColor: textColor }}
+          styles={{ caretColor: textColor, color: textColor }}
           className='insideModal'
           blockedOptions={true}
           name='Texto'

@@ -40,7 +40,7 @@ const CountdownBlock = () => {
     paddingRight: '10px',
     borderRadius: '10px',
     paddingBottom: '10px',
-    borderWidth: '2px',
+    borderWidth: '4px',
     borderStyle: 'solid',
     borderColor: textColor,
   };
@@ -58,6 +58,12 @@ const CountdownBlock = () => {
     border: 'none',
     boxShadow: 'none',
     borderLeft: `1px solid ${textColor}`,
+  };
+
+  const stylesNumbers = {
+    textShadow: '0px 3px 2px rgba(0, 0, 0, 0.4)',
+    fontVariantNumeric: 'tabular-nums',
+    color: textColor,
   };
 
   const numberBlink = (days, hours, minutes, seconds, completed) => {
@@ -104,9 +110,7 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Dias
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: textColor }}>
-                      {zeroPad(days)}
-                    </Typography.Text>
+                    <Typography.Text style={stylesNumbers}>{zeroPad(days)}</Typography.Text>
                   </Space>
                 </Col>
 
@@ -115,9 +119,7 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Horas
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: textColor }}>
-                      {zeroPad(hours)}
-                    </Typography.Text>
+                    <Typography.Text style={stylesNumbers}>{zeroPad(hours)}</Typography.Text>
                   </Space>
                 </Col>
                 <Col>
@@ -125,9 +127,7 @@ const CountdownBlock = () => {
                     <Typography.Text type='secondary' style={stylesSubtitle}>
                       Minutos
                     </Typography.Text>
-                    <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: textColor }}>
-                      {zeroPad(minutes)}
-                    </Typography.Text>
+                    <Typography.Text style={stylesNumbers}>{zeroPad(minutes)}</Typography.Text>
                   </Space>
                 </Col>
                 <Col>
@@ -141,9 +141,7 @@ const CountdownBlock = () => {
                           ? 'animate__animated animate__flash animate__fast animate__infinite'
                           : ''
                       }>
-                      <Typography.Text style={{ fontVariantNumeric: 'tabular-nums', color: textColor }}>
-                        {zeroPad(seconds)}
-                      </Typography.Text>
+                      <Typography.Text style={stylesNumbers}>{zeroPad(seconds)}</Typography.Text>
                     </div>
                   </Space>
                 </Col>

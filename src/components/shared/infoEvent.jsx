@@ -1,13 +1,16 @@
-import { CalendarOutlined, ClockCircleOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { Button, PageHeader, Space, Typography } from 'antd';
+import { CalendarFilled, ClockCircleFilled, EnvironmentFilled } from '@ant-design/icons';
+import { Button, PageHeader, Space, Typography, Grid } from 'antd';
 import Moment from 'moment';
 import { UseEventContext } from '../../context/eventContext';
 import EventAccessActionContainer from './eventAccessAction/EventAccessActionContainer';
+
+const { useBreakpoint } = Grid;
 
 const InfoEvent = ({ paddingOff, preview }) => {
   let isPreview = preview ? true : false;
   let cEvent = UseEventContext();
   let cEventValues = cEvent.value;
+  const screens = useBreakpoint();
 
   const bgColor = cEventValues?.styles?.toolbarDefaultBg;
   const textColor = cEventValues?.styles?.textMenu;
@@ -24,7 +27,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
         backgroundColor: bgColor,
       }}
       title={
-        <Typography.Title level={4} style={{ color: textColor, whiteSpace: 'normal' }}>
+        <Typography.Title level={screens.xs ? 4 : 2} style={{ color: textColor, whiteSpace: 'normal' }}>
           {cEventValues?.name}
         </Typography.Title>
       }
@@ -38,34 +41,34 @@ const InfoEvent = ({ paddingOff, preview }) => {
         )
       }
       footer={
-        <Space direction='vertical' size={'large'} style={{ color: textColor }}>
-          <Space wrap size={'large'} style={{ color: textColor }}>
+        <Space direction='vertical' size={4} style={{ color: textColor, fontSize: '16px' }}>
+          <Space wrap size={'large'}>
             <Space wrap>
               <Space>
-                <CalendarOutlined />
+                <CalendarFilled />
                 <time>{Moment(cEventValues?.datetime_from).format('ll')}</time>
               </Space>
               <Space>
-                <ClockCircleOutlined />
+                <ClockCircleFilled />
                 <time>{Moment(cEventValues?.datetime_from).format('LT')}</time>
               </Space>
             </Space>
 
             <Space wrap>
               <Space>
-                <CalendarOutlined />
+                <CalendarFilled />
                 <time>{Moment(cEventValues?.datetime_to).format('ll')}</time>
               </Space>
               <Space>
-                <ClockCircleOutlined />
+                <ClockCircleFilled />
                 <time>{Moment(cEventValues?.datetime_to).format('LT')}</time>
               </Space>
             </Space>
           </Space>
           {cEventValues?.type_event !== 'onlineEvent' && (
             <Space>
-              <EnvironmentOutlined />
-              <Space wrap split='/'>
+              <EnvironmentFilled />
+              <Space wrap split={screens.xs ? null : '/'}>
                 <Typography.Text style={{ color: textColor }}>{cEventValues?.address}</Typography.Text>
                 <Typography.Text style={{ color: textColor }} italic>
                   {cEventValues?.venue}
