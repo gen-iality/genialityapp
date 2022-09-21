@@ -1,6 +1,21 @@
 import LikertScaleEditor from '@/components/quiz/LikertScaleEditor';
 import * as React from 'react';
 
+
+type SampleData = {
+  columns: {
+    value: string | number,
+    text: string,
+  }[],
+  rows: {
+    value: string | number,
+    text: string,
+  }[],
+  values: {
+    [x: string]: number | string | null,
+  }
+};
+
 // Taken from: https://surveyjs.io/form-library/examples/questiontype-matrix/reactjs#content-js
 const sampleData = {
   "columns": [
@@ -39,6 +54,13 @@ const sampleData = {
       "text": "Product is easy to use"
     },
   ],
+  // Added
+  values: {
+    'affordable': null,
+    'does what it claims': null,
+    'better than others': null,
+    'easy to use': 1,
+  }
 };
 
 export interface ILikertScaleEditorPageProps {
