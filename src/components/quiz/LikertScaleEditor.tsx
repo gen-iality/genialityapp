@@ -65,11 +65,11 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     const newRows: RowType[] = [];
     const newColumns: ColumnType[] = [];
 
-    sourceData.columns.forEach((column, i) => {
+    sourceData.rows.forEach((row, i) => {
       newRows.push({
         key: `key_${i}`,
-        [mainColumnName.toLowerCase()]: column.text,
-        ...sourceData.rows.map((row, j) => {
+        [mainColumnName.toLowerCase()]: row.text,
+        ...sourceData.columns.map((column, j) => {
           const cell: Cell = {
             row: row.value,
             column: column.value,
@@ -87,8 +87,8 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       title: mainColumnName,
     });
     // Add other things
-    sourceData.rows.forEach((row, i) => {
-      const columnName = row.text === mainColumnName ? row.text : `"${row.text}"`;
+    sourceData.columns.forEach((column, i) => {
+      const columnName = column.text === mainColumnName ? column.text : `"${column.text}"`;
       newColumns.push({
         key: `key_${i+1}`,
         dataIndex: `row_${i}`,
