@@ -158,7 +158,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
             column: column.value,
           };
           return { [`row_${j}`]: cell };
-        }).reduce((last, current) => ({...last, ...current})),
+        }).reduce((last, current) => ({...last, ...current}), []),
       });
     });
     // [`row_${j}`]: `${column.value.toString()} - ${row.value.toString()} - ${source.values[row.value.toString()]}`,
@@ -219,7 +219,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
                   setSourceData(newSourceData);
                 }}
                 checked={sourceData.values[value.row] === value.column}
-              >{value.row}</Checkbox>
+              >{/*value.row*/}</Checkbox>
             )}
             </>
           );
@@ -268,7 +268,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
           isController: true,
         };
         return { [`row_${j}`]: cell };
-      }).reduce((last, current) => ({...last, ...current})),
+      }).reduce((last, current) => ({...last, ...current}), []),
     });
 
     // Save all data
@@ -290,7 +290,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     >
       <Space direction='vertical'>
         {isAlertShown && <Alert message='Faltan datos' type='error'/>}
-        <Input required size='large' placeholder='Texto' value={nextText} onChange={(e) => setNextText(e.target.value)}/>
+        <Input autoFocus required size='large' placeholder='Texto' value={nextText} onChange={(e) => setNextText(e.target.value)}/>
         <Input required size='large' placeholder='Valor' value={nextValue} onChange={(e) => setNextValue(e.target.value)}/>
       </Space>
     </Modal>
