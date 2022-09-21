@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { Checkbox } from 'antd';
+import { Checkbox, Button, Space } from 'antd';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 /**
  * This constant is used to put the column content and other purposes
@@ -14,6 +15,9 @@ const mainColumnName = 'Matter';
 type Cell = {
   row: string | number, // X
   column: string | number, // Y
+  isController?: false,
+} | {
+  isController: true,
 };
 
 type RowType = {
@@ -86,6 +90,19 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       key: `key_0`,
       dataIndex: mainColumnName.toLowerCase(),
       title: mainColumnName,
+      render: (value: string | Cell) => (
+        <>
+        {typeof value !== 'string' && value.isController ? (
+          <Space align='center' size='large'>
+            <Button title='Agregar pregunta' type='primary'>
+              <PlusOutlined />
+            </Button>
+          </Space>
+        ) : (
+          <em>{value}</em>
+        )}
+        </>
+      ),
     });
     // Add other things
     sourceData.columns.forEach((column, i) => {
@@ -94,25 +111,69 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
         key: `key_${i+1}`,
         dataIndex: `row_${i}`,
         title: columnName,
-        render: (value: Cell) => {
+        render: (value: Cell, record, index) => {
           return (
-            <Checkbox
-              onChange={(e: CheckboxChangeEvent) => {
-                const { checked } = e.target;
-                console.debug('checked', checked);
-                const newSourceData = { ...sourceData };
-                if (checked) {
-                  newSourceData.values[value.row] = value.column;
-                } else {
-                  newSourceData.values[value.row] = null;
-                }
-                setSourceData(newSourceData);
-              }}
-              checked={sourceData.values[value.row] === value.column}
-            >{value.row}</Checkbox>
+            <>
+            {value.isController ? (
+              <Button
+                danger
+                title='Eliminar categoría'
+              >
+                <DeleteOutlined />
+              </Button>
+            ) : (
+              <Checkbox
+                onChange={(e: CheckboxChangeEvent) => {
+                  const { checked } = e.target;
+                  console.debug('checked', checked);
+                  const newSourceData = { ...sourceData };
+                  if (checked) {
+                    newSourceData.values[value.row] = value.column;
+                  } else {
+                    newSourceData.values[value.row] = null;
+                  }
+                  setSourceData(newSourceData);
+                }}
+                checked={sourceData.values[value.row] === value.column}
+              >{value.row}</Checkbox>
+            )}
+            </>
           );
         }
       });
+    });
+
+    // Add this column for add controllers
+    newColumns.push({
+      key: `key_controller`,
+      dataIndex: 'row_controller',
+      title: (text) => (
+        <Space align='center' size='large'>
+          <Button title='Agregar categoría' type='primary'>
+            <PlusOutlined />
+          </Button>
+        </Space>
+      ),
+      render: (text, record, index) => (
+        <Button
+          danger
+          title='Eliminar pregunta'
+        >
+          <DeleteOutlined />
+        </Button>
+      ),
+    });
+
+    // Add this row for controllers
+    newRows.push({
+      key: `key_controller`,
+      [mainColumnName.toLowerCase()]: { isController: true },
+      ...sourceData.columns.map((column, j) => {
+        const cell: Cell = {
+          isController: true,
+        };
+        return { [`row_${j}`]: cell };
+      }).reduce((last, current) => ({...last, ...current})),
     });
 
     // Save all data
