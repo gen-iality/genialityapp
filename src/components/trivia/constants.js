@@ -9,6 +9,10 @@ export const selectOptions = [
     text: 'Selección Múltiple',
   },
   {
+    value: 'ranking',
+    text: 'Ranking',
+  },
+  {
     value: 'comment',
     text: 'Comentarios',
   },
@@ -56,7 +60,7 @@ export const fieldsFormQuestion = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text']),
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking']),
     name: 'type',
   },
 ];
@@ -70,7 +74,7 @@ export const fieldsFormQuestionWithPoints = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text']),
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking']),
     name: 'type',
   },
   {
