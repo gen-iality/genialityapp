@@ -446,6 +446,16 @@ iframe {
   border-radius: 8px !important;
 }
 
+.menu__prelanding {
+  .ant-collapse-item > .ant-collapse-header {
+    align-items: center !important;
+  }
+
+  .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+    vertical-align: -6px !important;
+  }
+}
+
 @import 'react-quill/dist/quill.snow.css';
 @import 'react-quill/dist/quill.bubble.css';
 

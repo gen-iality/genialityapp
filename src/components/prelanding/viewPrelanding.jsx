@@ -200,6 +200,7 @@ const ViewPrelanding = ({ preview }) => {
               <Col span={24} order={1}>
                 {isVisibleCardSections() ? (
                   <Card
+                    bodyStyle={{ padding: screens.xs ? '10px' : '24px' }}
                     style={{
                       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                       borderRadius: '10px',
