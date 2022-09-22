@@ -1,36 +1,39 @@
+/** Hooks, CustomHooks  and react libraries*/
 import { useState, useEffect } from 'react';
-import { Result, Spin, Button, Col } from 'antd';
-import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
-import { UseEventContext } from '../../../context/eventContext';
-import useSurveyQuery from './hooks/useSurveyQuery';
 import * as Survey from 'survey-react';
-import { SurveyPage } from './services/services';
 import { Link } from 'react-router-dom';
-//Funciones externas
+
+/** Helpers and services */
+import { SurveyPage } from './services/services';
+
+/** Antd services */
+import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Result, Spin, Button, Col } from 'antd';
+
+/** Funciones externas */
 import StateMessages from './functions/stateMessagesV2';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 import GetResponsesIndex from './functions/getResponsesIndex';
 import SavingResponseByUserId from './functions/savingResponseByUserId';
-// Componentes
-import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
-import ResultsPanel from './resultsPanel';
-import { UseCurrentUser } from '@context/userContext';
 import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
+
+/** Context´s */
+import { UseEventContext } from '../../../context/eventContext';
+import { UseCurrentUser } from '@context/userContext';
+
+/** Componentes */
+import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
 
 function SurveyComponent(props) {
   const {
     eventId, // The event id
     idSurvey, // The survey ID
     survey_just_finished,
+    queryData, // The survey data
   } = props;
-  const cEvent = UseEventContext();
-  //query.data tiene la definición de la encuesta/examen
-  const query = useSurveyQuery(eventId, idSurvey);
-  console.log('200.SurveyComponent eventId', eventId);
-  console.log('200.SurveyComponent idSurvey', idSurvey);
-  console.log('200.SurveyComponent query.data', query.data);
 
+  const cEvent = UseEventContext();
   const currentUser = UseCurrentUser();
 
   const eventStyles = cEvent.value.styles;
@@ -58,11 +61,11 @@ function SurveyComponent(props) {
 
   // Asigna los colores configurables a  la UI de la encuesta
   useEffect(() => {
-    if (!(query.data?.questions.length > 0)) return;
+    if (!(queryData?.questions.length > 0)) return;
     assignStylesToSurveyFromEvent(eventStyles);
-    setSurveyModel(createSurveyModel(query.data));
+    setSurveyModel(createSurveyModel(queryData));
     // survey.onCurrentPageChanging.add(displayFeedbackafterQuestionAnswered);
-  }, [query.data]);
+  }, [queryData]);
 
   function createSurveyModel(survey) {
     let surveyModelData = new Survey.Model(survey);
@@ -166,13 +169,13 @@ function SurveyComponent(props) {
   async function saveSurveyStatus() {
     const status = surveyModel.state;
     console.log('200.status', status);
-    await SetCurrentUserSurveyStatus(query.data, currentUser, status);
+    await SetCurrentUserSurveyStatus(queryData, currentUser, status);
   }
 
   async function saveSurveyCurrentPage() {
     if (!(Object.keys(currentUser).length === 0)) {
       // Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-      await SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
+      await SurveyPage.setCurrentPage(queryData._id, currentUser.value._id, surveyModel.currentPageNo);
     }
   }
 
@@ -190,7 +193,7 @@ function SurveyComponent(props) {
     try {
       const value = parseInt(question.points) || 0;
       console.log('200.saveGainedSurveyPoints survey correct?', correctAnswer);
-      await saveAcumulativePoints(query.data._id, currentUser.value._id, correctAnswer ? value : 0);
+      await saveAcumulativePoints(queryData._id, currentUser.value._id, correctAnswer ? value : 0);
       console.log('600 savedGainedSurveyPoints value', value);
       setIsSavingPoints(false);
     } catch (err) {
@@ -224,14 +227,14 @@ function SurveyComponent(props) {
     let optionIndex = responseIndex;
 
     let infoOptionQuestion =
-      query.data.allow_gradable_survey === 'true'
+      queryData.allow_gradable_survey === 'true'
         ? { optionQuantity, optionIndex, correctAnswer }
         : { optionQuantity, optionIndex };
 
     // Se envia al servicio el id de la encuesta, de la pregunta y los datos
     // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
     if (!(Object.keys(currentUser).length === 0)) {
-      SavingResponseByUserId(query.data, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
+      SavingResponseByUserId(queryData, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
       console.log('200.saveSurveyAnswers SavingResponseByUserId');
     }
   }
@@ -251,12 +254,12 @@ function SurveyComponent(props) {
     console.log('200.onSurveyCompleted');
     await saveSurveyData(sender);
     //survey_just_finished();
-    await MessageWhenCompletingSurvey(surveyModel, query.data, currentUser.value._id);
+    await MessageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id);
   }
 
   return (
     <>
-      {/* {&& query.data.allow_gradable_survey === 'true' } */}
+      {/* {&& queryData.allow_gradable_survey === 'true' } */}
       {surveyModel && (
         <>
           {isSavingPoints && (

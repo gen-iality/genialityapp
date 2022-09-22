@@ -23,11 +23,11 @@ const reducer = (state, action) => {
       newState = { ...state, surveys: action.payload.publishedSurveys, status: 'LOADED' };
       //Actualizamos el estado de la encuesta actual o se borra la encuesta actual si se despublico
 
-      /* if (state.currentSurvey) {
+      if (state.currentSurvey) {
         let updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
         console.log('900.updatedcurrentSurvey', updatedcurrentSurvey);
         newState['currentSurvey'] = updatedcurrentSurvey;
-      } */
+      }
 
       surveyChangedNew = action.payload.changeInSurvey;
       if (shouldActivateUpdatedSurvey(state, surveyChangedNew)) {
