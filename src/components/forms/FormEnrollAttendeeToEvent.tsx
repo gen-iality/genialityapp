@@ -36,6 +36,7 @@ const FormEnrollAttendeeToEvent = ({
     styles: {},
   },
   printUser,
+  badgeEvent,
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -52,7 +53,6 @@ const FormEnrollAttendeeToEvent = ({
   const assigningConditionsToFields = (changedValues: {}, allValues: {}) => {
     assignmentOfConditionsToAdditionalFields({ conditionalFields, allValues, fields, setValidatedFields });
   };
-  console.log(attendee, 'attendee');
   const componentLoad = (attendeeData: AttendeeInformation) => {
     setAttendeeInformation(attendeeData);
     form.resetFields();
@@ -160,7 +160,7 @@ const FormEnrollAttendeeToEvent = ({
                             checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
                           />
                         )}
-                        {eventType !== 'onlineEvent' && attendee && printUser && (
+                        {eventType !== 'onlineEvent' && badgeEvent && attendee && printUser && (
                           <AttendeeCheckInButtonPrint onPrintUser={printUser!} />
                         )}
                       </>

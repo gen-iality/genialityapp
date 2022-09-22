@@ -24,7 +24,7 @@ export default function ModalAdd({ addField, isVisible, filterOptions, badges, f
         <Form.Item label='Tamaño' name='size' rules={[{ required: true }]}>
           <Select placeholder='Selecciona un tamaño'>
             {fontSize.map((size, index) => (
-              <Option key={index} value={size}>
+              <Option key={index + size} value={size}>
                 {size}
               </Option>
             ))}

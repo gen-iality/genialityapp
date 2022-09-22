@@ -52,7 +52,7 @@ export default function ModalEdit({
             }
             defaultValue={badge.size}>
             {fontSize.map((size, index) => (
-              <Option key={index} value={size}>
+              <Option key={index + size} value={size}>
                 {size}
               </Option>
             ))}

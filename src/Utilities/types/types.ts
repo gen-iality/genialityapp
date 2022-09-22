@@ -59,6 +59,7 @@ export type FormEnrollAttendeeToEventPropsTypes = {
   visibleInCms?: boolean;
   eventType?: string;
   submitButtonProps?: submitButtonPropsTypes;
+  badgeEvent?: object;
 };
 
 export type submitButtonPropsTypes = {

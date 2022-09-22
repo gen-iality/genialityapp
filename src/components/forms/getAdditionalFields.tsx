@@ -117,7 +117,6 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             }
           : rule;
       rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
-      console.log('sss', cities.length, type, regiones.length, regiones, rule);
       let validations =
         (type === 'region' && regiones.length == 0) ||
         (type === 'country' && countries.length == 0) ||

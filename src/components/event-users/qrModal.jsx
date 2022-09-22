@@ -101,12 +101,10 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
   const printUser = () => {
     if (badgeEvent._id && scannerData.attendee) {
       let badges = badgeEvent.BadgeFields;
-      let QRSize = badges.find((bagde) => bagde.qr === true);
       printBagdeUser(ifrmPrint, badges, scannerData.attendee.properties);
     }
   };
-  console.log('🚀 ~ file: qrModal.jsx ~ line 106 ~ printUser ~ printUser', printUser);
-
+  let qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
   return (
     <Row style={{ textAlign: 'center' }}>
       <Modal visible={openModal} onCancel={closeQr} footer={null}>
@@ -135,6 +133,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
               visibleInCms
               eventType={type_event}
               printUser={printUser}
+              badgeEvent={badgeEvent}
             />
           ) : (
             <QrAndDocumentForm
@@ -152,10 +151,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
         </>
         <div style={{ opacity: 0, display: 'none' }}>
           {scannerData && badgeEvent && badgeEvent.BadgeFields && scannerData.attendee && (
-            <QRCode
-              value={scannerData?.attendee?._id}
-              size={badgeEvent.BadgeFields.find((bagde) => bagde.qr === true).size ?? 64}
-            />
+            <QRCode value={scannerData?.attendee?._id} size={qrSize ? qrSize?.size : 64} />
           )}
         </div>
         <iframe title={'Print User'} ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />

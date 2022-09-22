@@ -1,7 +1,4 @@
 const printBagdeUser = (ifrmPrint, badge, user) => {
-  console.log('🚀 ~ file: printBagdeUser.jsx ~ line 2 ~ printBagdeUser ~ ifrmPrint', ifrmPrint);
-  console.log('🚀 ~ file: printBagdeUser.jsx ~ line 2 ~ printBagdeUser ~ badge', badge, badge[1].size);
-  console.log('🚀 ~ file: printBagdeUser.jsx ~ line 2 ~ printBagdeUser ~ ifrmPrint', user);
   const canvas = document.getElementsByTagName('CANVAS')[0];
   let qr = canvas ? canvas.toDataURL() : '';
   let oIframe = ifrmPrint.current;
@@ -11,26 +8,18 @@ const printBagdeUser = (ifrmPrint, badge, user) => {
   }
   oDoc.write('<head><title>Escarapela</title>');
   oDoc.write('<body onload="window.print()"><div>');
-  let i = 0;
-  for (; i < badge.length; ) {
-    if (badge[i].line) {
-      if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
-      else
-        oDoc.write(
-          `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-            user[badge[i].id_properties.value]
-              ? user[badge[i].id_properties.value]
-              : user[badge[i].id_properties.label]
-              ? user[badge[i].id_properties.label]
-              : ''
-          }</p>`
-        );
-      i++;
-    } else {
-      if (badge[i + 1] && !badge[i + 1].line) {
-        oDoc.write(`<div style="display: block; textAlign: center;">`);
-        if (!badge[i].qr) {
-          oDoc.write(`<div style="margin-right: 20px">`);
+  if (badge.length === 0) {
+    oDoc.write(
+      `<p style="font-family: Lato, sans-serif;font-size:12px;text-transform: uppercase">
+       No hay data
+      </p>`
+    );
+  } else {
+    let i = 0;
+    for (; i < badge.length; ) {
+      if (badge[i].line) {
+        if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
+        else
           oDoc.write(
             `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
               user[badge[i].id_properties.value]
@@ -40,50 +29,66 @@ const printBagdeUser = (ifrmPrint, badge, user) => {
                 : ''
             }</p>`
           );
-          oDoc.write(`</div>`);
-        } else {
-          oDoc.write(`<div style="margin-right: 20px">`);
-          oDoc.write(`<div><img src=${qr}></div>`);
-          oDoc.write(`</div>`);
-        }
-        if (!badge[i + 1].qr) {
-          oDoc.write(`<div style="margin-right: 20px">`);
-          oDoc.write(
-            `<p style="font-family: Lato, sans-serif;font-size: ${badge[i + 1].size}px;text-transform: uppercase">${
-              user[badge[i + 1].id_properties.value]
-                ? user[badge[i + 1].id_properties.value]
-                : user[badge[i + 1].id_properties.label]
-                ? user[badge[i + 1].id_properties.label]
-                : ''
-            }</p>`
-          );
-          oDoc.write(`</div>`);
-        } else {
-          oDoc.write(`<div style="margin-right: 20px">`);
-          oDoc.write(`<div><img src=${qr}></div>`);
-          oDoc.write(`</div>`);
-        }
-        oDoc.write(`</div>`);
-        i = i + 2;
-      } else {
-        oDoc.write(`<div style="display: block; textAlign: center">`);
-        oDoc.write(`<div style="margin-right: 20px">`);
-        if (!badge[i].qr) {
-          oDoc.write(
-            `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-              user[badge[i].id_properties.value]
-                ? user[badge[i].id_properties.value]
-                : user[badge[i].id_properties.label]
-                ? user[badge[i].id_properties.label]
-                : ''
-            }</p>`
-          );
-        } else {
-          oDoc.write(`<div><img src=${qr}></div>`);
-        }
-        oDoc.write(`</div>`);
-        oDoc.write(`</div>`);
         i++;
+      } else {
+        if (badge[i + 1] && !badge[i + 1].line) {
+          oDoc.write(`<div style="display: block; textAlign: center;">`);
+          if (!badge[i].qr) {
+            oDoc.write(`<div style="margin-right: 20px">`);
+            oDoc.write(
+              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
+                user[badge[i].id_properties.value]
+                  ? user[badge[i].id_properties.value]
+                  : user[badge[i].id_properties.label]
+                  ? user[badge[i].id_properties.label]
+                  : ''
+              }</p>`
+            );
+            oDoc.write(`</div>`);
+          } else {
+            oDoc.write(`<div style="margin-right: 20px">`);
+            oDoc.write(`<div><img src=${qr}></div>`);
+            oDoc.write(`</div>`);
+          }
+          if (!badge[i + 1].qr) {
+            oDoc.write(`<div style="margin-right: 20px">`);
+            oDoc.write(
+              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i + 1].size}px;text-transform: uppercase">${
+                user[badge[i + 1].id_properties.value]
+                  ? user[badge[i + 1].id_properties.value]
+                  : user[badge[i + 1].id_properties.label]
+                  ? user[badge[i + 1].id_properties.label]
+                  : ''
+              }</p>`
+            );
+            oDoc.write(`</div>`);
+          } else {
+            oDoc.write(`<div style="margin-right: 20px">`);
+            oDoc.write(`<div><img src=${qr}></div>`);
+            oDoc.write(`</div>`);
+          }
+          oDoc.write(`</div>`);
+          i = i + 2;
+        } else {
+          oDoc.write(`<div style="display: block; textAlign: center">`);
+          oDoc.write(`<div style="margin-right: 20px">`);
+          if (!badge[i].qr) {
+            oDoc.write(
+              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
+                user[badge[i].id_properties.value]
+                  ? user[badge[i].id_properties.value]
+                  : user[badge[i].id_properties.label]
+                  ? user[badge[i].id_properties.label]
+                  : ''
+              }</p>`
+            );
+          } else {
+            oDoc.write(`<div><img src=${qr}></div>`);
+          }
+          oDoc.write(`</div>`);
+          oDoc.write(`</div>`);
+          i++;
+        }
       }
     }
   }

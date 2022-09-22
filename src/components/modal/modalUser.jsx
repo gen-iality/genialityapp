@@ -46,7 +46,6 @@ class UserModal extends Component {
   async componentDidMount() {
     const self = this;
     const { rolesList } = this.props;
-    console.log(this.props, 'Las rops');
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
     const tickets = await eventTicketsApi.getAll(this.props.cEvent?.value?._id || '5ea23acbd74d5c4b360ddde2');
     if (tickets.length > 0) this.setState({ tickets });
@@ -370,7 +369,6 @@ class UserModal extends Component {
     const resp = this.props.badgeEvent;
     if (resp._id) {
       let badges = resp.BadgeFields;
-
       if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
       printBagdeUser(this.ifrmPrint, badges, this.state.user);
     } else this.setState({ noBadge: true });
@@ -379,6 +377,7 @@ class UserModal extends Component {
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
     const { modal, badgeEvent, componentKey } = this.props;
+    let qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
@@ -402,6 +401,7 @@ class UserModal extends Component {
               loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
               visibleInCms
               eventType={this.props.cEvent?.value?.type_event}
+              badgeEvent={this.props.badgeEvent}
             />
           ) : (
             <FormComponent
@@ -418,9 +418,7 @@ class UserModal extends Component {
           )}
         </div>
         <div style={{ opacity: 0, display: 'none' }}>
-          {user && badgeEvent && (
-            <QRCode value={userId} size={badgeEvent.BadgeFields.find((bagde) => bagde.qr === true).size ?? 64} />
-          )}
+          {user && badgeEvent && badgeEvent.BadgeFields && <QRCode value={userId} size={qrSize ? qrSize?.size : 64} />}
         </div>
         <iframe title={'Print User'} ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
