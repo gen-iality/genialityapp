@@ -15,20 +15,20 @@ import { UseCurrentUser } from '@context/userContext';
 import Service from '@components/agenda/roomManager/service';
 
 type TruncatedAgenda = {
-  title: string,
-  type?: ActivityType.ContentValue,
-  timeString: string,
-  link: string,
-  Component?: any,
-  Component2?: any,
-  RibbonComponent: any,
+  title: string;
+  type?: ActivityType.ContentValue;
+  timeString: string;
+  link: string;
+  Component?: any;
+  Component2?: any;
+  RibbonComponent: any;
 };
 
 interface ActivitiesListProps {
-  eventId: string,
-  cEventUserId?: string,
-  agendaList?: ExtendedAgendaType[], // If parent has this, why have we to re-do?
-};
+  eventId: string;
+  cEventUserId?: string;
+  agendaList?: ExtendedAgendaType[]; // If parent has this, why have we to re-do?
+}
 
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
@@ -53,17 +53,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       let agendaList: ExtendedAgendaType[] = [];
       if (props.agendaList === undefined) {
-        const { data } = await AgendaApi.byEvent(eventId) as { data: ExtendedAgendaType[]};
+        const { data } = (await AgendaApi.byEvent(eventId)) as { data: ExtendedAgendaType[] };
         agendaList = data;
       } else {
         agendaList = props.agendaList;
       }
 
-      setTruncatedAgendaList((previous) => ([
+      setTruncatedAgendaList(previous => [
         ...previous,
-        ...agendaList.map((agenda) => {
+        ...agendaList.map(agenda => {
           // Logic here
-          let diff = Math.floor(Math.random() * 60*60);
+          let diff = Math.floor(Math.random() * 60 * 60);
 
           try {
             diff = dayjs(agenda.datetime_end).diff(dayjs(agenda.datetime_start));
@@ -74,14 +74,16 @@ const ActivitiesList = (props: ActivitiesListProps) => {
           const result: TruncatedAgenda = {
             title: agenda.name,
             type: agenda.type?.name as ActivityType.ContentValue,
-            timeString: dayjs(diff).format('h:mm').concat(' min'),
+            timeString: dayjs(diff)
+              .format('h:mm')
+              .concat(' min'),
             link: `/landing/${eventId}/activity/${agenda._id}`,
             Component: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
                 if (!cEventUserId) return;
                 (async () => {
-                  console.log('item._id', agenda._id)
+                  console.log('item._id', agenda._id);
                   let activity_attendee = await firestore
                     .collection(`${agenda._id}_event_attendees`)
                     .doc(cEventUserId)
@@ -92,11 +94,12 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   }
                 })();
               }, [cEventUserId]);
-              if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto'/>
+              if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto' />;
               return <></>;
             },
-            Component2: ({userId}: {userId: string}) => {
-              if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any)) return <></>;
+            Component2: ({ userId }: { userId: string }) => {
+              if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
+                return <></>;
 
               const [surveyId, setSurveyId] = useState<string | undefined>();
 
@@ -114,10 +117,14 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   const meetingId = activity?.meeting_id;
                   if (!meetingId) {
                     console.warn(
-                      'without meetingId eventId', eventId,
-                      ', agendaId', agenda._id,
-                      ', activity', activity,
-                      ', meetingId', meetingId,
+                      'without meetingId eventId',
+                      eventId,
+                      ', agendaId',
+                      agenda._id,
+                      ', activity',
+                      activity,
+                      ', meetingId',
+                      meetingId,
                     );
                     return;
                   }
@@ -125,19 +132,18 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 })();
               }, []);
               if (cEventUserId && surveyId) {
-                return <QuizProgress short eventId={eventId} userId={userId} surveyId={surveyId} />
+                return <QuizProgress short eventId={eventId} userId={userId} surveyId={surveyId} />;
               }
-              return <></>
+              return <></>;
             },
             RibbonComponent: ({ children }: { children: any }) => {
               const [isLive, setIsLive] = useState(false);
               useEffect(() => {
-                service.getConfiguration(eventId, agenda._id)
-                  .then((config) => {
-                    const is = config.habilitar_ingreso === 'open_meeting_room';
-                    console.log('isLive change to:', is);
-                    setIsLive(is);
-                  });
+                service.getConfiguration(eventId, agenda._id).then(config => {
+                  const is = config.habilitar_ingreso === 'open_meeting_room';
+                  console.log('isLive change to:', is);
+                  setIsLive(is);
+                });
               }, [agenda._id]);
 
               return (
@@ -148,7 +154,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   color={isLive ? 'red' : 'transparent'}
                   text={
                     isLive ? (
-                      <Space direction='horizontal' style={{padding: 0}}>
+                      <Space direction='horizontal' style={{ padding: 0 }}>
                         <AccessPointIcon
                           className='animate__animated animate__heartBeat animate__infinite animate__slower'
                           style={{ fontSize: '12px' }}
@@ -166,17 +172,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   {children}
                 </Badge.Ribbon>
               );
-            }
+            },
           };
           return result;
-        })
-      ]))
+        }),
+      ]);
 
       setIsLoading(false);
     })();
   }, [eventId, cEventUserId]);
 
-  if (isLoading) return <Spin/>
+  if (isLoading) return <Spin />;
 
   return (
     <List
@@ -185,36 +191,38 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       bordered
       dataSource={truncatedAgendaList}
       renderItem={(item: TruncatedAgenda) => (
-          <item.RibbonComponent>
-        <List.Item className='shadow-box'>
-          <Link
-            to={item.link}
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-            }}
-          >
-            <div>
-              {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
-              <ActivityCustomIcon type={item.type!} className='list-icon' style={{marginRight: '1em'}} />
-              <span>{item.title}</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'row'}}>
-              <span style={{marginRight: '.5em',}}>
-                {item.Component && <item.Component/>}
-                {(item.Component2 && currentUser.value?._id) && <item.Component2 userId={currentUser.value._id}/>}
-              </span>
-              <span
-                style={{
-                  fontWeight: '100',
-                  fontSize: '1.2rem',
-                }}
-              >{item.timeString}</span>
-            </div>
-          </Link>
-        </List.Item>
-          </item.RibbonComponent>
+        <item.RibbonComponent>
+          <List.Item className='shadow-box'>
+            <Link
+              to={item.link}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <div>
+                {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
+                <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                <span>{item.title}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <span style={{ marginRight: '.5em' }}>
+                  {item.Component && <item.Component />}
+                  {item.Component2 && currentUser.value?._id && <item.Component2 userId={currentUser.value._id} />}
+                </span>
+                <span
+                  style={{
+                    fontWeight: '100',
+                    fontSize: '1.2rem',
+                  }}
+                >
+                  {item.timeString}
+                </span>
+              </div>
+            </Link>
+          </List.Item>
+        </item.RibbonComponent>
       )}
     />
   );
