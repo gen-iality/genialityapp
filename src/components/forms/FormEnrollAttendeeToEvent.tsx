@@ -17,6 +17,7 @@ import { AttendeeInformation, FormEnrollAttendeeToEventPropsTypes } from '@/Util
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
+import AttendeeCheckInButtonPrint from '@/components/checkIn/AttendeeCheckInButtonPrint';
 
 const { Title } = Typography;
 
@@ -34,6 +35,7 @@ const FormEnrollAttendeeToEvent = ({
     icon: <BadgeAccountOutlineIcon />,
     styles: {},
   },
+  printUser = () => {},
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -158,6 +160,7 @@ const FormEnrollAttendeeToEvent = ({
                             checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
                           />
                         )}
+                        {eventType !== 'onlineEvent' && <AttendeeCheckInButtonPrint onPrintUser={printUser} />}
                       </>
                     )}
 

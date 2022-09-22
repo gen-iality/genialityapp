@@ -55,6 +55,7 @@ const Messages = loadable(() => import('../messages'));
 /* const TicketInfo = loadable(() => import('../tickets/index_old')); */
 const Styles = loadable(() => import('../App/styles'));
 const DashboardEvent = loadable(() => import('../dashboard'));
+const BadgeEvent = loadable(() => import('../badge'));
 const OrdersEvent = loadable(() => import('../orders'));
 const ListCertificados = loadable(() => import('../certificados'));
 /* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
@@ -403,6 +404,13 @@ class Event extends Component {
                 eventId={event._id}
                 event={event}
                 componentKey='dashboard'
+              />
+              <Protected
+                path={`${match.url}/badge`}
+                component={BadgeEvent}
+                eventId={event._id}
+                event={event}
+                componentKey='badge'
               />
               <Protected path={`${match.url}/orders`} component={OrdersEvent} event={event} componentKey='orders' />
               <Protected
