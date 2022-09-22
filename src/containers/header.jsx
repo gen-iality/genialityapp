@@ -54,6 +54,10 @@ const Headers = (props) => {
     buttonregister: true,
     buttonlogin: true,
   });
+  const containerBgColor = cEvent?.value?.styles?.containerBgColor || null;
+  const validatorCms = window.location.pathname.includes('/eventadmin');
+  const validatorOrg = window.location.pathname.includes('/organization');
+  const bgcolorContainer = !validatorCms && !validatorOrg && containerBgColor ? containerBgColor : '#FFFFFF';
   const [fixed, setFixed] = useState(false);
   const screens = useBreakpoint();
   let history = useHistory();
@@ -204,12 +208,12 @@ const Headers = (props) => {
           left: 0,
           top: 0,
           float: 'right',
-          background: 'red',
-          height: '45px',
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
+          backgroundColor: bgcolorContainer,
+          boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.25)',
         }}>
-        <Menu theme='light' mode='horizontal'>
+        <Menu theme='light' mode='horizontal' style={{ backgroundColor: bgcolorContainer, border: 'none' }}>
           <Row justify='space-between' align='middle'>
             <Row className='logo-header' justify='space-between' align='middle'>
               {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
@@ -305,6 +309,7 @@ const Headers = (props) => {
               <UserStatusAndMenu
                 user={dataGeneral.user}
                 menuOpen={dataGeneral.menuOpen}
+                colorHeader={bgcolorContainer}
                 photo={
                   dataGeneral.photo
                     ? dataGeneral.photo

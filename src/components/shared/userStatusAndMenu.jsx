@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import WithLoading from './withLoading';
-import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal } from 'antd';
+import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal, Typography } from 'antd';
 import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -13,6 +13,7 @@ import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutli
 import CalendarCheckOutlineIcon from '@2fd/ant-design-icons/lib/CalendarCheckOutline';
 import HexagonMultipleOutlineIcon from '@2fd/ant-design-icons/lib/HexagonMultipleOutline';
 import LogoutIcon from '@2fd/ant-design-icons/lib/Logout';
+import { getCorrectColor } from '@/helpers/utils';
 const MenuStyle = {
   flex: 1,
   textAlign: 'right',
@@ -32,6 +33,7 @@ const UserStatusAndMenu = (props) => {
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
+  let colorHeader = props.colorHeader;
   const [visible, setVisible] = useState(true);
   const intl = useIntl();
 
@@ -161,29 +163,29 @@ const UserStatusAndMenu = (props) => {
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
         <Dropdown arrow overlay={menu} placement='bottomRight'>
-          <a onClick={(e) => e.preventDefault()}>
-            <Space
-              className='shadowHover'
-              style={{
-                height: '40px',
-                backgroundColor: 'white',
-                borderRadius: '50px',
-                padding: '15px',
-                border: '1px solid #e8e8e8',
-                background: '#f5f5f5',
-              }}>
-              {photo ? (
-                <Avatar src={photo} />
-              ) : (
-                <Avatar className='avatar_menu-user'>
-                  {name && name.charAt(0).toUpperCase()}
-                  {name && name.substring(name.indexOf(' ') + 1, name.indexOf(' ') + 2)}
-                </Avatar>
-              )}
-              <span className='name_menu-user'>{name}</span>
-              <DownOutlined style={{ fontSize: '12px' }} />
-            </Space>
-          </a>
+          <Space
+            className='shadowHover'
+            style={{
+              height: '50px',
+              backgroundColor: 'white',
+              borderRadius: '10px',
+              padding: '15px',
+              backdropFilter: 'blur(50%)',
+              background: '#FFFFFF4D',
+            }}>
+            {photo ? (
+              <Avatar shape='square' src={photo} />
+            ) : (
+              <Avatar shape='square' className='avatar_menu-user'>
+                {name && name.charAt(0).toUpperCase()}
+                {name && name.substring(name.indexOf(' ') + 1, name.indexOf(' ') + 2)}
+              </Avatar>
+            )}
+            <Typography.Text style={{ color: getCorrectColor(colorHeader) }} className='name_menu-user'>
+              {name}
+            </Typography.Text>
+            <DownOutlined style={{ fontSize: '12px', color: getCorrectColor(colorHeader) }} />
+          </Space>
         </Dropdown>
       </Col>
     </Row>

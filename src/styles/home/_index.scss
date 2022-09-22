@@ -18,6 +18,7 @@ div.icon-header {
 
 .name_menu-user {
   color: initial;
+  font-weight: 500;
   @media screen and (max-width: '1030px') {
     display: none;
   }
@@ -29,11 +30,6 @@ div.icon-header {
 
 .title-home {
   font-weight: 900;
-}
-
-.ant-layout-header {
-  background: #fff !important;
-  height: 64px !important;
 }
 
 .main {
