@@ -1,113 +1,29 @@
-import QRCode from 'qrcode.react';
 import { BadgeApi } from '../../helpers/request';
 import Header from '@/antdComponents/Header';
 import { Form, Row, Col, Button, Space, Modal, Select, Typography, message, Table } from 'antd';
 import { useState, useEffect, useRef } from 'react';
-const { Option } = Select;
+
 const { Text, Link } = Typography;
-import { MinusCircleOutlined, PlusCircleOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import Column from 'antd/lib/table/Column';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import ModalAdd from './components/ModalAdd';
+import { getInitialValues, saveBadge } from './services';
+import renderPrint from './utils/renderPrint';
+import printBagde from './utils/printBagde';
+import { fontSize, initialStateBagde } from './constants';
+import ModalEdit from './components/ModalEdit';
 export default function Index(props) {
   const { event } = props;
   const ifrmPrint = useRef();
   const [badges, setBadges] = useState([]);
-  const [badge, setBadge] = useState({
-    id_properties: {
-      label: '',
-      value: '',
-    },
-    size: 22,
-  });
-
+  const [badge, setBadge] = useState(initialStateBagde);
   const [isVisible, setIsVisible] = useState(false);
+  const [isVisibleEdit, setIsVisibleEdit] = useState(false);
   const [qrExist, setQrExist] = useState(false);
   const [extraFields, setExtraFields] = useState([]);
-  const [isEdit, setIsEdit] = useState(false);
-  const fontSize = [18, 22, 36, 44];
-  const qrSize = [32, 64, 128];
-  const [form] = Form.useForm();
-  const getIValuesInitial = async () => {
-    if (event) {
-      const resp = await BadgeApi.get(event._id);
-
-      if (resp._id) {
-        let badgesFilter = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
-        setBadges(badgesFilter);
-      }
-    }
-  };
   const filterOptions = event.user_properties ? event.user_properties : [];
-
   useEffect(() => {
-    getIValuesInitial();
+    getInitialValues(event, setBadges, setQrExist);
   }, []);
-
-  const renderPrint = () => {
-    let items = [];
-    let i = 0;
-    //Se itera sobre cada campo
-    for (; i < badges.length; ) {
-      let item;
-      //Si el campo es line ocupa una fila completa
-      if (badges[i].line) {
-        //Si es QR muestro un QR de ejemplo, sino muestro el nombre del campo
-        item = badges[i].qr ? (
-          <QRCode value={'alejomg27@gmail.com'} size={64} />
-        ) : (
-          <div>
-            <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
-          </div>
-        );
-        items.push(item);
-        i++;
-      } else {
-        //Sino es line, ocupa la mitad de una columna siempre y cuando el campo siguiente tampoco sea line
-        if (badges[i + 1] && !badges[i + 1].line) {
-          item = (
-            <div style={{ display: 'block', textAlign: 'center' }}>
-              {!badges[i].qr ? (
-                <div style={{ marginRight: '20px' }}>
-                  <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
-                </div>
-              ) : (
-                <div style={{ marginRight: '20px' }}>
-                  <QRCode value={'evius.co'} size={badges[i].size} />
-                </div>
-              )}
-              {!badges[i + 1].qr ? (
-                <div style={{ marginRight: '20px' }}>
-                  <p style={{ fontSize: `${badges[i + 1].size}px` }}>{badges[i + 1].id_properties.label}</p>
-                </div>
-              ) : (
-                <div>
-                  <QRCode value={'evius.co'} size={badges[i + 1].size} />
-                </div>
-              )}
-            </div>
-          );
-          items.push(item);
-          i = i + 2;
-        } else {
-          item = (
-            <div style={{ display: 'block', textAlign: 'center' }}>
-              <div style={{ marginRight: '20px' }}>
-                {!badges[i].qr ? (
-                  <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
-                ) : (
-                  <QRCode value={'evius.co'} size={badges[i].size} />
-                )}
-              </div>
-            </div>
-          );
-          items.push(item);
-          i++;
-        }
-      }
-    }
-    return items.map((item, key) => {
-      return <React.Fragment key={key}>{item}</React.Fragment>;
-    });
-  };
   const addQR = () => {
     setBadges([
       ...badges,
@@ -122,99 +38,7 @@ export default function Index(props) {
     ]);
     setQrExist(true);
   };
-  const printPreview = () => {
-    //Para el preview se crea un iframe con el contenido, se usa la misma logica de iteración que renderPrint
-    const canvas = document.getElementsByTagName('CANVAS')[0];
-    let qr = canvas ? canvas.toDataURL() : '';
-    let oIframe = ifrmPrint.current;
-    let oDoc = oIframe.contentWindow || oIframe.contentDocument;
-    if (oDoc.document) {
-      oDoc = oDoc.document;
-    }
-    // Head
-    oDoc.write('<head><title>Escarapela</title>');
-    // body, se ejcuta la función de imprimir
-    oDoc.write('<body onload="window.print()"><div>');
-    // Datos
-    let i = 0;
-    for (; i < badges.length; ) {
-      if (badges[i].line) {
-        if (badges[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
-        else
-          oDoc.write(
-            `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].id_properties.value}</p>`
-          );
-        i++;
-      } else {
-        if (badges[i + 1] && !badges[i + 1].line) {
-          oDoc.write(`<div style="display: block, textAlign: center ">`);
-          if (!badges[i].qr) {
-            oDoc.write(`<div style="margin-right: 20px">`);
-            oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${
-                badges[i + 1].name
-              }</p>`
-            );
-            oDoc.write(`</div>`);
-          } else {
-            oDoc.write(`<div style="margin-right: 20px">`);
-            oDoc.write(`<div><img src=${qr}></div>`);
-            oDoc.write(`</div>`);
-          }
-          if (!badges[i + 1].qr) {
-            oDoc.write(`<div style="margin-right: 20px">`);
-            oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badges[i + 1].size}px;text-transform: uppercase">${
-                badges[i + 1].name
-              }</p>`
-            );
-            oDoc.write(`</div>`);
-          } else {
-            oDoc.write(`<div style="margin-right: 20px">`);
-            oDoc.write(`<div><img src=${qr}></div>`);
-            oDoc.write(`</div>`);
-          }
-          oDoc.write(`</div>`);
-          i = i + 2;
-        } else {
-          oDoc.write(`<div style="display: block, textAlign: center">`);
-          oDoc.write(`<div style="margin-right: 20px">`);
-          if (!badges[i].qr) {
-            oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].name}]}</p>`
-            );
-          } else {
-            oDoc.write(`<div><img src=${qr}></div>`);
-          }
-          oDoc.write(`</div>`);
-          oDoc.write(`</div>`);
-          i++;
-        }
-      }
-    }
-    oDoc.close();
-  };
-  const saveBadge = async () => {
-    if (event) {
-      const data = {
-        fields_id: event._id,
-        BadgeFields: badges,
-      };
 
-      try {
-        const resp = await BadgeApi.create(data);
-
-        if (resp._id) {
-          message.success('Badge Guardada');
-        } else {
-          message.warning('Ocurrio algo');
-        }
-      } catch (err) {
-        console.log(err.response);
-        message.error('Error al guardar', err.response);
-      }
-    }
-  };
   const addField = (values) => {
     let dataAdd = {
       edit: true,
@@ -227,7 +51,6 @@ export default function Index(props) {
     if (event) {
       const properties = event.user_properties;
       let labelFound = properties.find((propertie) => propertie.name === values.id_properties);
-      console.log('🚀 ~ file: index.jsx ~ line 237 ~ addField ~ labelFound', labelFound);
       dataAdd = {
         edit: true,
         id_properties: {
@@ -242,17 +65,26 @@ export default function Index(props) {
     setExtraFields([...extraFields, dataAdd.id_properties]);
     // badges.push({ edit: true, id_properties: '', size: 18 });
   };
+  const editField = () => {
+    let dataEdit = {
+      edit: true,
+      id_properties: badge.id_properties,
+      size: badge.size,
+      qr: badge.qr,
+    };
+    badges[badge.index] = dataEdit;
+    setBadges([...badges]);
+    setIsVisibleEdit(false);
+  };
   const removeField = (field) => {
     if (field.qr) setQrExist(false);
     setExtraFields([...extraFields, field.id_properties]);
     let badgesFilter = badges.filter((item) => item.id_properties != field.id_properties);
     setBadges(badgesFilter);
   };
-  const actionEditField = (values) => {
-    setIsVisible(true);
-    setBadge(values);
-
-    setIsEdit(true);
+  const actionEditField = (values, index) => {
+    setBadge({ index, ...values });
+    setIsVisibleEdit(true);
   };
   const columns = [
     {
@@ -270,11 +102,11 @@ export default function Index(props) {
       title: <Button onClick={() => setIsVisible(!isVisible)} icon={<PlusOutlined />} />,
 
       key: 'action',
-      render: (_, record) => (
+      render: (_, record, index) => (
         <Space size='middle'>
-          {/* <Button onClick={() => actionEditField(record)} icon={<EditOutlined />}>
+          <Button onClick={() => actionEditField(record, index)} icon={<EditOutlined />}>
             Editar
-          </Button> */}
+          </Button>
           <Button onClick={() => removeField(_)} icon={<DeleteOutlined />}>
             Eliminar
           </Button>
@@ -290,16 +122,14 @@ export default function Index(props) {
           ' Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño de letra de los campos o del QR'
         }
       />
-
       <Row justify='center' wrap gutter={[16, 16]}>
         <Col span={16}>
           <Space style={{ marginBottom: 8 }}>
-            <Button type='primary' onClick={saveBadge} block>
+            <Button type='primary' onClick={() => saveBadge(event, badges, message)} block>
               Guardar
             </Button>
-
             {!qrExist && <Button onClick={addQR}>Agregar QR</Button>}
-            <Button type='primary' onClick={printPreview}>
+            <Button type='primary' onClick={() => printBagde(ifrmPrint, badges)}>
               Imprimir
             </Button>
           </Space>
@@ -314,526 +144,29 @@ export default function Index(props) {
               borderRadius: '5px',
               padding: '10px',
             }}>
-            {renderPrint()}
+            {renderPrint(badges)}
           </div>
         </Col>
       </Row>
-      <Modal
-        title='Agregar parametro'
-        visible={isVisible}
-        destroyOnClose
-        footer={null}
-        onCancel={() => setIsVisible(false)}>
-        <Form onFinish={addField}>
-          <Form.Item label='Campo' name='id_properties' rules={[{ required: true }]}>
-            <Select placeholder='Selecciona un campo'>
-              {filterOptions.map((option, index) => (
-                <Option
-                  key={index + option.value}
-                  value={option.name}
-                  disabled={badges.find((bagde) => bagde.id_properties.value === option.name)}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label='Tamaño' name='size' rules={[{ required: true }]}>
-            <Select placeholder='Selecciona un tamaño'>
-              {fontSize.map((size, index) => (
-                <Option key={index} value={size}>
-                  {size}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Button type='primary' htmlType='submit'>
-              Agregar
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-
+      <ModalAdd
+        addField={addField}
+        isVisible={isVisible}
+        filterOptions={filterOptions}
+        badges={badges}
+        fontSize={fontSize}
+        setIsVisible={setIsVisible}
+      />
+      <ModalEdit
+        editField={editField}
+        isVisible={isVisibleEdit}
+        filterOptions={filterOptions}
+        badges={badges}
+        fontSize={fontSize}
+        badge={badge}
+        setIsVisible={setIsVisibleEdit}
+        setBadge={setBadge}
+      />
       <iframe title={'Print User'} ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
     </>
   );
 }
-
-// import { Component } from 'react';
-// import QRCode from 'qrcode.react';
-// import { BadgeApi } from '../../helpers/request';
-
-// import { FormattedMessage } from 'react-intl';
-
-// class Badge extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       badges: [],
-//       qrExist: false,
-//       extraFields: [],
-//       fontSize: [18, 22, 36, 44],
-//       qrSize: [32, 64, 128],
-//       newField: false,
-//     };
-//     this.saveBadge = this.saveBadge.bind(this);
-//   }
-
-//   async componentDidMount() {
-//     const { event } = this.props;
-//     const properties = event.user_properties;
-//     const resp = await BadgeApi.get(event._id);
-//     let { extraFields, badges, showPrev } = this.state;
-//     //Manejo adecuado de campos, no se neceista toda la información
-//     properties.map((prop) => {
-//       return extraFields.push({ value: prop.name, label: prop.name });
-//     });
-//     //Si hay escarapela se muestra el preview y se setean los datos
-//     if (resp._id) {
-//       badges = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
-//       showPrev = true;
-//     }
-//     this.setState({ extraFields, badges, showPrev });
-//   }
-
-//   //FN para agregar campo a la escarapela
-//   addField = () => {
-//     const { badges } = this.state;
-//     badges.push({ edit: true, line: true, id_properties: '', size: 18 });
-//     this.setState({ badges, newField: true });
-//   };
-
-//   //FN para agregar QR a la escarapela
-//   addQR = () => {
-//     const { badges } = this.state;
-//     badges.push({ edit: true, line: true, qr: true });
-//     this.setState({ badges, qrExist: true, newField: true, size: '64' });
-//   };
-
-//   //FN manejo en el cambio de las opciones (tamaño)
-//   handleChange = (e, key) => {
-//     const { value, name } = e.target;
-//     const { badges, extraFields } = this.state;
-//     let field = value;
-//     if (name === 'id_properties') {
-//       const pos = extraFields
-//         .map((field) => {
-//           return field.value;
-//         })
-//         .indexOf(value);
-//       field = extraFields[pos];
-//     } else {
-//       field = parseInt(field, 10);
-//     }
-//     badges[key][name] = field;
-//     this.setState({ badges });
-//   };
-
-//   //FN manejo en el cambio de la posición del campo
-//   toggleSwitch = (key) => {
-//     const { badges } = this.state;
-//     badges[key].line = !badges[key].line;
-//     this.setState({ badges });
-//   };
-
-//   //FNs para guardar, editar y eliminar un campo
-//   saveField = (key) => {
-//     const { badges, extraFields } = this.state;
-//     if (badges[key].id_properties) {
-//       const pos = extraFields
-//         .map((field) => {
-//           return field.value;
-//         })
-//         .indexOf(badges[key].id_properties.value);
-//       extraFields.splice(pos, 1);
-//     }
-//     badges[key].edit = !badges[key].edit;
-//     this.setState({ badges, extraFields, newField: false, showPrev: true });
-//   };
-
-//   editField = (key) => {
-//     const { badges } = this.state;
-//     badges[key].edit = !badges[key].edit;
-//     this.setState({ badges, newField: true });
-//   };
-
-//   removeField = (key) => {
-//     const { badges, extraFields } = this.state;
-//     if (badges[key].qr) this.setState({ qrExist: false });
-//     extraFields.push(badges[key].id_properties);
-//     badges.splice(key, 1);
-//     this.setState({ badges, extraFields });
-//   };
-
-//   //FN para realizar el preview
-//   renderPrint = () => {
-//     const badges = [...this.state.badges];
-//     let items = [];
-//     let i = 0;
-//     //Se itera sobre cada campo
-//     for (; i < badges.length; ) {
-//       let item;
-//       //Si el campo es line ocupa una fila completa
-//       if (badges[i].line) {
-//         //Si es QR muestro un QR de ejemplo, sino muestro el nombre del campo
-//         item = badges[i].qr ? (
-//           <QRCode value={'alejomg27@gmail.com'} size={64} />
-//         ) : (
-//           <div>
-//             <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
-//           </div>
-//         );
-//         items.push(item);
-//         i++;
-//       } else {
-//         //Sino es line, ocupa la mitad de una columna siempre y cuando el campo siguiente tampoco sea line
-//         if (badges[i + 1] && !badges[i + 1].line) {
-//           item = (
-//             <div style={{ display: 'flex' }}>
-//               {!badges[i].qr ? (
-//                 <div style={{ marginRight: '20px' }}>
-//                   <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
-//                 </div>
-//               ) : (
-//                 <div style={{ marginRight: '20px' }}>
-//                   <QRCode value={'evius.co'} size={badges[i].size} />
-//                 </div>
-//               )}
-//               {!badges[i + 1].qr ? (
-//                 <div style={{ marginRight: '20px' }}>
-//                   <p style={{ fontSize: `${badges[i + 1].size}px` }}>{badges[i + 1].id_properties.label}</p>
-//                 </div>
-//               ) : (
-//                 <div>
-//                   <QRCode value={'evius.co'} size={badges[i + 1].size} />
-//                 </div>
-//               )}
-//             </div>
-//           );
-//           items.push(item);
-//           i = i + 2;
-//         } else {
-//           item = (
-//             <div style={{ display: 'flex' }}>
-//               <div style={{ marginRight: '20px' }}>
-//                 {!badges[i].qr ? (
-//                   <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
-//                 ) : (
-//                   <QRCode value={'evius.co'} size={badges[i].size} />
-//                 )}
-//               </div>
-//             </div>
-//           );
-//           items.push(item);
-//           i++;
-//         }
-//       }
-//     }
-//     return items.map((item, key) => {
-//       return <React.Fragment key={key}>{item}</React.Fragment>;
-//     });
-//   };
-
-//   async saveBadge() {
-//     const { event } = this.props;
-//     const { badges } = this.state;
-//     const data = {
-//       fields_id: event._id,
-//       BadgeFields: [],
-//     };
-//     badges.map((item) => {
-//       return data.BadgeFields.push(item);
-//     });
-//     console.log(data);
-//     try {
-//       const resp = await BadgeApi.create(data);
-//       console.log(resp);
-//       if (resp._id) {
-//         // toast.success('Badge Guardada');
-//       } else {
-//         //  toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Sry :(' />);
-//       }
-//     } catch (err) {
-//       console.log(err.response);
-//       //  toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-//     }
-//   }
-
-//   //FN para imprimir el preview
-//   printPreview = () => {
-//     //Para el preview se crea un iframe con el contenido, se usa la misma logica de iteración que renderPrint
-//     const canvas = document.getElementsByTagName('CANVAS')[0];
-//     const { badges } = this.state;
-//     let qr = canvas ? canvas.toDataURL() : '';
-//     let oIframe = this.refs.ifrmPrint;
-//     let oDoc = oIframe.contentWindow || oIframe.contentDocument;
-//     if (oDoc.document) {
-//       oDoc = oDoc.document;
-//     }
-//     // Head
-//     oDoc.write('<head><title>Escarapela</title>');
-//     // body, se ejcuta la función de imprimir
-//     oDoc.write('<body onload="window.print()"><div>');
-//     // Datos
-//     let i = 0;
-//     for (; i < badges.length; ) {
-//       if (badges[i].line) {
-//         if (badges[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
-//         else
-//           oDoc.write(
-//             `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].id_properties.value}</p>`
-//           );
-//         i++;
-//       } else {
-//         if (badges[i + 1] && !badges[i + 1].line) {
-//           oDoc.write(`<div style="display: flex">`);
-//           if (!badges[i].qr) {
-//             oDoc.write(`<div style="margin-right: 20px">`);
-//             oDoc.write(
-//               `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${
-//                 badges[i + 1].name
-//               }</p>`
-//             );
-//             oDoc.write(`</div>`);
-//           } else {
-//             oDoc.write(`<div style="margin-right: 20px">`);
-//             oDoc.write(`<div><img src=${qr}></div>`);
-//             oDoc.write(`</div>`);
-//           }
-//           if (!badges[i + 1].qr) {
-//             oDoc.write(`<div style="margin-right: 20px">`);
-//             oDoc.write(
-//               `<p style="font-family: Lato, sans-serif;font-size: ${badges[i + 1].size}px;text-transform: uppercase">${
-//                 badges[i + 1].name
-//               }</p>`
-//             );
-//             oDoc.write(`</div>`);
-//           } else {
-//             oDoc.write(`<div style="margin-right: 20px">`);
-//             oDoc.write(`<div><img src=${qr}></div>`);
-//             oDoc.write(`</div>`);
-//           }
-//           oDoc.write(`</div>`);
-//           i = i + 2;
-//         } else {
-//           oDoc.write(`<div style="display: flex">`);
-//           oDoc.write(`<div style="margin-right: 20px">`);
-//           if (!badges[i].qr) {
-//             oDoc.write(
-//               `<p style="font-family: Lato, sans-serif;font-size: ${badges[i].size}px;text-transform: uppercase">${badges[i].name}]}</p>`
-//             );
-//           } else {
-//             oDoc.write(`<div><img src=${qr}></div>`);
-//           }
-//           oDoc.write(`</div>`);
-//           oDoc.write(`</div>`);
-//           i++;
-//         }
-//       }
-//     }
-//     oDoc.close();
-//   };
-
-//   render() {
-//     const { badges, qrExist, extraFields, newField, showPrev, fontSize, qrSize } = this.state;
-//     return (
-//       <React.Fragment>
-//         <p>
-//           Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño de letra de
-//           los campos o del QR
-//         </p>
-//         <p>Visualiza el resultado e imprime para realizar una prueba!! </p>
-//         <div className='columns'>
-//           <div className='column is-4'>
-//             <div className='field is-grouped'>
-//               <label className='label'>Agregar:</label>
-//               <p className='control'>
-//                 <button className='button' onClick={this.addField} disabled={newField}>
-//                   Campo
-//                 </button>
-//               </p>
-//               {!qrExist && (
-//                 <p className='control'>
-//                   <button className='button' onClick={this.addQR} disabled={newField}>
-//                     QR
-//                   </button>
-//                 </p>
-//               )}
-//             </div>
-//             {badges.map((item, key) => {
-//               return (
-//                 <article key={key} className='media'>
-//                   {item.edit ? (
-//                     <div className='media-content'>
-//                       {!item.qr ? (
-//                         <React.Fragment>
-//                           <div className='field'>
-//                             <label className='label'>Campo</label>
-//                             <div className='control'>
-//                               <div className='select'>
-//                                 <select
-//                                   onChange={(e) => {
-//                                     this.handleChange(e, key);
-//                                   }}
-//                                   name={'id_properties'}
-//                                   value={item.id_properties.value}>
-//                                   <option value={''}>Seleccione...</option>
-//                                   {extraFields.map((field, key) => {
-//                                     return (
-//                                       <option value={field.value} key={key} className='is-capitalized'>
-//                                         {field.label}
-//                                       </option>
-//                                     );
-//                                   })}
-//                                 </select>
-//                               </div>
-//                             </div>
-//                           </div>
-//                           <div className='field'>
-//                             <label className='label'>Tamaño</label>
-//                             <div className='control'>
-//                               <div className='select'>
-//                                 <select
-//                                   onChange={(e) => {
-//                                     this.handleChange(e, key);
-//                                   }}
-//                                   name={'size'}
-//                                   value={item.size}>
-//                                   <option value={''}>Seleccione...</option>
-//                                   {fontSize.map((field, key) => {
-//                                     return (
-//                                       <option value={field} key={key}>
-//                                         {field}
-//                                       </option>
-//                                     );
-//                                   })}
-//                                 </select>
-//                               </div>
-//                             </div>
-//                           </div>
-//                           <div className='field'>
-//                             <input
-//                               id={`switch_${key}`}
-//                               type='checkbox'
-//                               name={`switch_${key}`}
-//                               className='switch'
-//                               checked={item.line}
-//                               onChange={(e) => {
-//                                 this.toggleSwitch(key);
-//                               }}
-//                             />
-//                             <label htmlFor={`switch_${key}`}>Line</label>
-//                           </div>
-//                         </React.Fragment>
-//                       ) : (
-//                         <div className='content'>
-//                           <p>
-//                             <strong>QR</strong>
-//                           </p>
-//                           <div className='field'>
-//                             <input
-//                               id={`switch_${key}`}
-//                               type='checkbox'
-//                               name={`switch_${key}`}
-//                               className='switch'
-//                               checked={item.line}
-//                               onChange={(e) => {
-//                                 this.toggleSwitch(key);
-//                               }}
-//                             />
-//                             <label htmlFor={`switch_${key}`}>Line</label>
-//                           </div>
-//                           <div className='field'>
-//                             <label className='label'>Tamaño</label>
-//                             <div className='control'>
-//                               <div className='select'>
-//                                 <select
-//                                   onChange={(e) => {
-//                                     this.handleChange(e, key);
-//                                   }}
-//                                   name={'size'}
-//                                   value={item.size}>
-//                                   <option value={''}>Seleccione...</option>
-//                                   {qrSize.map((field, key) => {
-//                                     return (
-//                                       <option value={field} key={key}>
-//                                         {field}
-//                                       </option>
-//                                     );
-//                                   })}
-//                                 </select>
-//                               </div>
-//                             </div>
-//                           </div>
-//                         </div>
-//                       )}
-//                       <nav className='level'>
-//                         <div className='level-left'>
-//                           <div className='level-item'>
-//                             <button
-//                               className='button is-info is-small is-outlined'
-//                               onClick={(e) => {
-//                                 this.saveField(key);
-//                               }}>
-//                               Agregar
-//                             </button>
-//                           </div>
-//                         </div>
-//                       </nav>
-//                     </div>
-//                   ) : (
-//                     <React.Fragment>
-//                       <div className='media-content'>
-//                         <div className='content'>
-//                           <p>{item.qr ? 'Código QR' : item.id_properties.label}</p>
-//                         </div>
-//                       </div>
-//                       <div className='media-right'>
-//                         <div>
-//                           <button
-//                             className='delete'
-//                             onClick={(e) => {
-//                               this.removeField(key);
-//                             }}
-//                           />
-//                         </div>
-//                         <div>
-//                           <button className='button is-small'>
-//                             <span
-//                               className='icon is-small'
-//                               onClick={(e) => {
-//                                 this.editField(key);
-//                               }}>
-//                               <i className='fas fa-edit' />
-//                             </span>
-//                           </button>
-//                         </div>
-//                       </div>
-//                     </React.Fragment>
-//                   )}
-//                 </article>
-//               );
-//             })}
-//           </div>
-//           <div className='column'>
-//             <h1>Preview</h1>
-//             <div className='column is-half'>
-//               <div className='card'>
-//                 <div style={{ padding: '1.5rem' }}>{showPrev && this.renderPrint()}</div>
-//               </div>
-//             </div>
-//             <button className='button is-info is-outlined' onClick={this.saveBadge} disabled={badges.length <= 0}>
-//               Guardar
-//             </button>
-//             <button className='button is-text is-outlined' onClick={this.printPreview} disabled={badges.length <= 0}>
-//               Imprimir
-//             </button>
-//           </div>
-//         </div>
-//         <iframe title={'Print User'} ref='ifrmPrint' style={{ opacity: 0, display: 'none' }} />
-//       </React.Fragment>
-//     );
-//   }
-// }
-
-// export default Badge;

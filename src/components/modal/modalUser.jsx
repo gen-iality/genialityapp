@@ -18,7 +18,7 @@ import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
 import { handleRequestError } from '@/helpers/utils';
-
+import printBagdeUser from '../badge/utils/printBagdeUser';
 const { confirm } = Modal;
 
 class UserModal extends Component {
@@ -40,6 +40,7 @@ class UserModal extends Component {
       tickets: [],
       loadingregister: false,
     };
+    this.ifrmPrint = React.createRef();
   }
 
   async componentDidMount() {
@@ -367,107 +368,17 @@ class UserModal extends Component {
 
   printUser = () => {
     const resp = this.props.badgeEvent;
-    console.log('prom', resp);
-    const { user } = this.state;
-    const canvas = document.getElementsByTagName('CANVAS')[0];
-    let qr = canvas ? canvas.toDataURL() : '';
     if (resp._id) {
+      let badges = resp.BadgeFields;
+
       if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
-      let oIframe = this.refs.ifrmPrint;
-      let badge = resp.BadgeFields;
-      let oDoc = oIframe.contentWindow || oIframe.contentDocument;
-      if (oDoc.document) {
-        oDoc = oDoc.document;
-      }
-      // Head
-      oDoc.write('<head><title>Escarapela</title>');
-      // body
-      oDoc.write('<body style="width: 100%, textAlign: center" onload="window.print()"><div>');
-      // Datos
-      let i = 0;
-      for (; i < badge.length; ) {
-        if (badge[i].line) {
-          if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
-          //se pone esta condición por un bug cuando se va a imprimir no se porque quedo en blanco
-          else if (badge[i].id_properties)
-            oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                user[badge[i].id_properties.value]
-                  ? user[badge[i].id_properties.value]
-                  : user[badge[i].id_properties.label]
-                  ? user[badge[i].id_properties.label]
-                  : ''
-              }</p>`
-            );
-          i++;
-        } else {
-          if (badge[i + 1] && !badge[i + 1].line) {
-            oDoc.write(`<div style="display: block textAlign: center">`);
-            if (!badge[i].qr) {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(
-                `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                  user[badge[i].id_properties.value]
-                    ? user[badge[i].id_properties.value]
-                    : user[badge[i].id_properties.label]
-                    ? user[badge[i].id_properties.label]
-                    : ''
-                }</p>`
-              );
-              oDoc.write(`</div>`);
-            } else {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(`<div><img src=${qr}></div>`);
-              oDoc.write(`</div>`);
-            }
-            if (!badge[i + 1].qr) {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(
-                `<p style="font-family: Lato, sans-serif;font-size: ${badge[i + 1].size}px;text-transform: uppercase">${
-                  user[badge[i + 1].id_properties.value]
-                    ? user[badge[i + 1].id_properties.value]
-                    : user[badge[i + 1].id_properties.label]
-                    ? user[badge[i + 1].id_properties.label]
-                    : ''
-                }</p>`
-              );
-              oDoc.write(`</div>`);
-            } else {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(`<div><img src=${qr}></div>`);
-              oDoc.write(`</div>`);
-            }
-            oDoc.write(`</div>`);
-            i = i + 2;
-          } else {
-            oDoc.write(`<div style="display: block textAlign: center">`);
-            oDoc.write(`<div style="margin-right: 20px">`);
-            if (!badge[i].qr) {
-              oDoc.write(
-                `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                  user[badge[i].id_properties.value]
-                    ? user[badge[i].id_properties.value]
-                    : user[badge[i].id_properties.label]
-                    ? user[badge[i].id_properties.label]
-                    : ''
-                }</p>`
-              );
-            } else {
-              oDoc.write(`<div><img src=${qr}></div>`);
-            }
-            oDoc.write(`</div>`);
-            oDoc.write(`</div>`);
-            i++;
-          }
-        }
-      }
-      oDoc.close();
+      printBagdeUser(this.ifrmPrint, badges, this.state.user);
     } else this.setState({ noBadge: true });
   };
 
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
-    const { modal, componentKey } = this.props;
+    const { modal, badgeEvent, componentKey } = this.props;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
@@ -506,8 +417,12 @@ class UserModal extends Component {
             />
           )}
         </div>
-        <div style={{ opacity: 0, display: 'none' }}>{user && <QRCode value={userId} />}</div>
-        <iframe title='Pint User' ref='ifrmPrint' style={{ opacity: 0, display: 'none' }} />
+        <div style={{ opacity: 0, display: 'none' }}>
+          {user && badgeEvent && (
+            <QRCode value={userId} size={badgeEvent.BadgeFields.find((bagde) => bagde.qr === true).size ?? 64} />
+          )}
+        </div>
+        <iframe title={'Print User'} ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
     );
   }

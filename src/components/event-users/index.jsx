@@ -770,6 +770,15 @@ class ListEventUser extends Component {
     clearFilters();
     this.setState({ searchText: '' });
   };
+  printUser = () => {
+    const resp = this.props.badgeEvent;
+    if (resp._id) {
+      let badges = resp.BadgeFields;
+      console.log(this.ifrmPrint, badges);
+      if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
+      printBagdeUser(this.ifrmPrint, badges, this.state.user);
+    } else this.setState({ noBadge: true });
+  };
 
   render() {
     const {
@@ -835,6 +844,7 @@ class ListEventUser extends Component {
             clearOption={this.clearOption}
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
+            badgeEvent={this.state.badgeEvent}
           />
         )}
 
