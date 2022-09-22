@@ -664,7 +664,7 @@ const FormEdit = (
                             required={false}
                             key={field.key}
                           >
-                            <Space direction='horizontal'>
+                            <Space direction='horizontal' key={`space_${field.key}`}>
                             {allowGradableSurvey && (
                               <InputNumber
                                 value={rankingCorrectAnswers[index] || ''} // Value
@@ -695,6 +695,11 @@ const FormEdit = (
                               <MinusCircleOutlined
                                 onClick={() => {
                                   remove(field.name);
+                                  // Delete its ranking
+                                  const newRankingCorrectAnswers = [...rankingCorrectAnswers];
+                                  newRankingCorrectAnswers.splice(index, 1);
+                                  setRankingCorrectAnswers(newRankingCorrectAnswers);
+                                  buildFakeCorrectAnswerIndexForRankingType(fields.length - 1);
                                 }}
                               />
                             ) : null}
@@ -711,7 +716,10 @@ const FormEdit = (
                           type='dashed'
                           onClick={() => {
                             add();
-                            buildFakeCorrectAnswerIndexForRankingType(fields.length);
+                            if (questionType === 'ranking') {
+                              // Only for ranking
+                              buildFakeCorrectAnswerIndexForRankingType(fields.length + 1);
+                            }
                           }}>
                           <PlusOutlined /> Agregar otra {questionType === 'ranking' ? 'opción' : 'respuesta'}
                         </Button>
