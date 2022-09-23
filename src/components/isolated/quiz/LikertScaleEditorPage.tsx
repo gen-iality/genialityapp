@@ -1,5 +1,6 @@
-import LikertScaleEditor from '@/components/quiz/LikertScaleEditor';
+import LikertScaleEditor, { DataSource } from '@/components/quiz/LikertScaleEditor';
 import * as React from 'react';
+import { useState } from 'react';
 
 
 type SampleData = {
@@ -67,9 +68,13 @@ export interface ILikertScaleEditorPageProps {
 }
 
 export function LikertScaleEditorPage (props: ILikertScaleEditorPageProps) {
+  const [data, setData] = useState<DataSource | undefined>();
+
   return (
     <div>
-      <LikertScaleEditor source={sampleData}/>
+      <LikertScaleEditor source={sampleData} onEdit={(x) => setData(x)}/>
+      <br />
+      <pre>{JSON.stringify(data)}</pre>
     </div>
   );
 }

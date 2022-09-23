@@ -52,6 +52,7 @@ export interface DataSource {
 
 export interface LikertScaleEditorProps {
   source?: DataSource | null,
+  onEdit?: (x: DataSource) => void,
 };
 
 function LikertScaleEditor(props: LikertScaleEditorProps) {
@@ -60,7 +61,8 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       columns: [], // Empty list for default
       rows: [], // Empty list for default
       values: {}, // Empty list for default
-    } // Default value, if it is undefined
+    }, // Default value, if it is undefined
+    onEdit = (x: DataSource) => {}, // By default
   } = props;
 
   const [sourceData, setSourceData] = useState(
@@ -276,6 +278,10 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     setColumns(newColumns);
     console.log('LikertScaleEditor.all', newRows);
     console.log('LikertScaleEditor.all', newColumns);
+  }, [sourceData]);
+
+  useEffect(() => {
+    onEdit(sourceData);
   }, [sourceData]);
 
   return (
