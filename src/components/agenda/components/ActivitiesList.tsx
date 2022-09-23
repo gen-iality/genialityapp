@@ -13,6 +13,7 @@ import { activityContentValues } from '@/context/activityType/constants/ui';
 import QuizProgress from '@/components/quiz/QuizProgress';
 import { UseCurrentUser } from '@context/userContext';
 import Service from '@components/agenda/roomManager/service';
+import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
 
 type TruncatedAgenda = {
   title: string;
@@ -22,6 +23,7 @@ type TruncatedAgenda = {
   Component?: any;
   Component2?: any;
   DeleteSurveyAnswersButton?: any;
+  DeleteActivitiesTakenButton?: any;
   RibbonComponent: any;
 };
 
@@ -215,7 +217,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               }
               return <></>;
             },
-
             RibbonComponent: ({ children }: { children: any }) => {
               const [isLive, setIsLive] = useState(false);
               useEffect(() => {
@@ -265,49 +266,53 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   if (isLoading) return <Spin />;
 
   return (
-    <List
-      size='small'
-      header={<h2>LECCIONES DEL CURSO</h2>}
-      bordered
-      dataSource={truncatedAgendaList}
-      renderItem={(item: TruncatedAgenda) => (
-        <item.RibbonComponent>
-          <List.Item className='shadow-box'>
-            <Link
-              to={item.link}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%',
-              }}
-            >
-              <div>
-                {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
-                <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
-                <span>{item.title}</span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <span style={{ marginRight: '.5em' }}>
-                  {item.Component && <item.Component />}
-                  {item.Component2 && currentUser.value?._id && <item.Component2 userId={currentUser.value._id} />}
-                  {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
-                    <item.DeleteSurveyAnswersButton userId={currentUser.value._id} />
-                  )}
-                </span>
-                <span
-                  style={{
-                    fontWeight: '100',
-                    fontSize: '1.2rem',
-                  }}
-                >
-                  {item.timeString}
-                </span>
-              </div>
-            </Link>
-          </List.Item>
-        </item.RibbonComponent>
-      )}
-    />
+    <>
+      <DeleteActivitiesTakenButton eventId={eventId} cEventUserId={cEventUserId} />
+      <List
+        size='small'
+        header={<h2>LECCIONES DEL CURSO</h2>}
+        bordered
+        dataSource={truncatedAgendaList}
+        renderItem={(item: TruncatedAgenda) => (
+          <item.RibbonComponent>
+            <List.Item className='shadow-box'>
+              <Link
+                to={item.link}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <div>
+                  {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
+                  <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                  <span>{item.title}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <span style={{ marginRight: '.5em' }}>
+                    {item.Component && <item.Component />}
+                    {item.Component2 && currentUser.value?._id && <item.Component2 userId={currentUser.value._id} />}
+                    {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
+                      <item.DeleteSurveyAnswersButton userId={currentUser.value._id} />
+                    )}
+                  </span>
+                  <span
+                    style={{
+                      fontWeight: '100',
+                      fontSize: '1.2rem',
+                    }}
+                  >
+                    {item.timeString}
+                  </span>
+                </div>
+              </Link>
+            </List.Item>
+          </item.RibbonComponent>
+        )}
+      />
+    </>
   );
 };
+
 export default ActivitiesList;
