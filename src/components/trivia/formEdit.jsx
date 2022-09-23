@@ -351,11 +351,6 @@ const FormEdit = (
           break;
         
         case 'rating':
-          // TODO: implement that
-          values['maxRateDescription'] = maxRateDescription;
-          values['rateMax'] = rateMax;
-          values['minRateDescription'] = minRateDescription;
-          values['rateMin'] = rateMin;
           values['isRequired'] = true;
           values['correctAnswer'] = ratingCorrectAnswer;
           values['correctAnswerIndex'] = correctAnswerIndex;
@@ -377,6 +372,11 @@ const FormEdit = (
         rows: likertScaleData?.rows || {},
         columns: likertScaleData?.columns || {},
       };
+    } else if (questionType === 'rating') {
+      values['maxRateDescription'] = maxRateDescription;
+      values['rateMax'] = rateMax;
+      values['minRateDescription'] = minRateDescription;
+      values['rateMin'] = rateMin;
     }
 
     if (values.type.indexOf(' ') > 0) {
