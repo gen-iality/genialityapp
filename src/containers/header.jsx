@@ -264,7 +264,7 @@ const Headers = (props) => {
                         <Button
                           icon={<LockOutlined />}
                           style={{
-                            backdropFilter: 'blur(50%)',
+                            backdropFilter: 'blur(8px)',
                             background: '#FFFFFF99',
                             color: getCorrectColor(bgcolorContainer),
                           }}
@@ -299,7 +299,7 @@ const Headers = (props) => {
                   {showButtons.buttonregister && (
                     <Button
                       style={{
-                        backdropFilter: 'blur(50%)',
+                        backdropFilter: 'blur(8px)',
                         background: '#FFFFFF99',
                         color: getCorrectColor(bgcolorContainer),
                       }}
