@@ -14,7 +14,7 @@ export const selectOptions = [
   },
   {
     value: 'rating',
-    text: 'Valuación',
+    text: 'Rating',
   },
   {
     value: 'comment',
