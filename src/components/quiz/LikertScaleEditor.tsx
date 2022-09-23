@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { Checkbox, Button, Space } from 'antd';
 import { Table, Modal, Input, Alert } from 'antd';
@@ -86,9 +86,11 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
   };
 
   const closeModal = () => {
+    // Reset some states
     setModalType(null);
     setNextText('');
     setNextValue('');
+    // Then, close the modal
     setIsOpenedModal(false);
     console.debug('LikertScaleEditor.modal', 'close');
   };
@@ -122,7 +124,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     console.debug('LikertScaleEditor.add', 'Add new column', text, value);
     const numberValue = parseInt(value as string);
     const newColumns: InputColumn[] = [
-      ...sourceData.columns,
+      ...sourceData.columns, // Last values, and new value:
       { text, value: numberValue },
     ];
     setSourceData({
@@ -133,7 +135,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
   const addNewRow = (text: string, value: string | number) => {
     console.debug('LikertScaleEditor.add', 'Add new row', text, value);
     const newRows: InputRow[] = [
-      ...sourceData.rows,
+      ...sourceData.rows, // Last values, and new value:
       { text, value },
     ];
     setSourceData({
@@ -144,7 +146,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
   };
 
   useEffect(() => {
-    console.debug('LikertScaleEditor.source', source)
+    console.debug('LikertScaleEditor.source', source);
     if (!sourceData) return;
 
     const newRows: RowType[] = [];
@@ -196,7 +198,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
             <>
             {value.isController ? (
               <Button
-                danger
+                danger // The button should be different
                 title='Eliminar categoría'
                 onClick={() => {
                   const newSourceData = { ...sourceData };
@@ -244,7 +246,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
         <>
         {record.key !== 'key_row_controller' && (
           <Button
-            danger
+            danger // The button should be different
             title='Eliminar pregunta'
             onClick={() => {
               const newSourceData = { ...sourceData };
@@ -267,7 +269,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       [mainColumnName.toLowerCase()]: { isController: true },
       ...sourceData.columns.map((column, j) => {
         const cell: Cell = {
-          isController: true,
+          isController: true, // In this case, this cell only is a controller
         };
         return { [`row_${j}`]: cell };
       }).reduce((last, current) => ({...last, ...current}), []),
@@ -284,20 +286,45 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     onEdit(sourceData);
   }, [sourceData]);
 
+  const title = useMemo(() => {
+    switch(modalType) {
+      case 'row':
+        return 'Agrega elemento: pregunta';
+      case 'column':
+        return 'Agrega elemento: categoría';
+      default:
+        console.warn(`Tipo de modal ${modalType} es desconocido, no sabría qué hacer al agregar qué cosa en el LikertScalaEditor`);
+        return 'Agrega elemento: desconocido tipo';
+    }
+  }, [modalType]);
+
   return (
     <>
     <Table dataSource={rows} columns={columns} />
     <Modal
-      visible={isOpenedModal}
-      title={`Agrega elemento: ${modalType === 'column' ? 'categoría' : modalType === 'row' ? 'pregunta' : 'desconocido tipo'}`}
-      okText='Add'
-      onCancel={closeModal}
-      onOk={addNewElement}
+      visible={isOpenedModal} // Enable open/close the modal before clicking the plus-buttons
+      title={title}
+      okText='Add' // Change for more understandable
+      onCancel={closeModal} // Close and edit some states
+      onOk={addNewElement} // Add the new element acccording to the selected modalType
     >
       <Space direction='vertical'>
         {isAlertShown && <Alert message='Faltan datos' type='error'/>}
-        <Input autoFocus required size='large' placeholder='Texto' value={nextText} onChange={(e) => setNextText(e.target.value)}/>
-        <Input required size='large' placeholder='Valor' value={nextValue} onChange={(e) => setNextValue(e.target.value)}/>
+        <Input
+          autoFocus // The first field
+          required // It is important that this field won't be empty
+          size='large' // Size, but we NEED that this field has the 100% of width
+          placeholder='Texto' // As we don't use label, so...
+          value={nextText} // Current value
+          onChange={(e) => setNextText(e.target.value)} // Update current value
+        />
+        <Input
+          required // It is important that this field won't be empty
+          size='large' // Size, but we NEED that this field has the 100% of width
+          placeholder='Valor' // As we don't use label, so...
+          value={nextValue} // Current value
+          onChange={(e) => setNextValue(e.target.value)} // Update current value
+        />
       </Space>
     </Modal>
     </>
