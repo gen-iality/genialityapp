@@ -26,7 +26,7 @@ export const UsersPerEventOrActivity = async (updatedAttendees: any, activityId:
   updatedAttendees?.forEach((user: any) => {
     user?.activityProperties?.filter((userInActivity: any) => {
       if (activityId && userInActivity?._id === activityId) {
-        usersInTheActivity.push({ ...user });
+        usersInTheActivity.push({ ...user, ...userInActivity });
       }
     });
 
