@@ -1,5 +1,5 @@
 import { Divider, List, Typography, Button, Spin, Badge, Space } from 'antd';
-import { ReadFilled } from '@ant-design/icons';
+import { ReadFilled, DeleteOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -21,6 +21,7 @@ type TruncatedAgenda = {
   link: string;
   Component?: any;
   Component2?: any;
+  DeleteSurveyAnswersButton?: any;
   RibbonComponent: any;
 };
 
@@ -136,6 +137,85 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               }
               return <></>;
             },
+            DeleteSurveyAnswersButton: ({ userId }: { userId: string }) => {
+              if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
+                return <></>;
+
+              const [surveyId, setSurveyId] = useState<string | undefined>();
+
+              useEffect(() => {
+                (async () => {
+                  const document = await firestore
+                    .collection('events')
+                    .doc(eventId)
+                    .collection('activities')
+                    .doc(agenda._id)
+                    .get();
+                  const activity = document.data();
+                  console.log('This activity is', activity);
+                  if (!activity) return;
+                  const meetingId = activity?.meeting_id;
+                  if (!meetingId) {
+                    console.warn(
+                      'without meetingId eventId',
+                      eventId,
+                      ', agendaId',
+                      agenda._id,
+                      ', activity',
+                      activity,
+                      ', meetingId',
+                      meetingId,
+                    );
+                    return;
+                  }
+                  setSurveyId(meetingId);
+                })();
+              }, []);
+
+              async function deleteSurveyAnswers(surveyId: any, userId: any) {
+                // No se eliminan las respuestas, con solo eliminar el userProgress y surveyStatus el usuario puede volver a contestar la encuesta, sobreescribiendo las anteriores respuestas.
+                console.log('700.surveyId', surveyId);
+                console.log('700.userId', userId);
+
+                await firestore
+                  .collection('surveys')
+                  .doc(surveyId)
+                  .collection('userProgress')
+                  .doc(userId)
+                  .delete();
+
+                await firestore
+                  .collection('votingStatusByUser')
+                  .doc(userId)
+                  .collection('surveyStatus')
+                  .doc(surveyId)
+                  .delete();
+              }
+
+              if (userId && surveyId) {
+                return (
+                  <Button
+                    style={{
+                      background: '#B8415A',
+                      color: '#fff',
+                      border: 'none',
+                      fontSize: '12px',
+                      height: '20px',
+                      lineHeight: '20px',
+                      borderRadius: '10px',
+                      marginLeft: '2px',
+                    }}
+                    size='small'
+                    icon={<DeleteOutlined />}
+                    onClick={() => deleteSurveyAnswers(surveyId, userId)}
+                  >
+                    Eliminar respuestas
+                  </Button>
+                );
+              }
+              return <></>;
+            },
+
             RibbonComponent: ({ children }: { children: any }) => {
               const [isLive, setIsLive] = useState(false);
               useEffect(() => {
@@ -210,6 +290,9 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 <span style={{ marginRight: '.5em' }}>
                   {item.Component && <item.Component />}
                   {item.Component2 && currentUser.value?._id && <item.Component2 userId={currentUser.value._id} />}
+                  {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
+                    <item.DeleteSurveyAnswersButton userId={currentUser.value._id} />
+                  )}
                 </span>
                 <span
                   style={{
