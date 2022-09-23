@@ -53,7 +53,7 @@ export type FormEnrollAttendeeToEventPropsTypes = {
   options?: any;
   /** It allows to send a function to which the information of the event attendee will be passed and it will allow to create or update it */
   saveAttendee: (attendee: any) => void;
-  printUser: () => void;
+  printUser?: () => void;
   loaderWhenSavingUpdatingOrDelete?: boolean;
   /** Allows setting the state for a loader. */
   checkInAttendeeCallbak?: (attendee: any) => void;
@@ -61,6 +61,7 @@ export type FormEnrollAttendeeToEventPropsTypes = {
   visibleInCms?: boolean;
   eventType?: string;
   submitButtonProps?: submitButtonPropsTypes;
+  badgeEvent?: object;
 };
 
 export type submitButtonPropsTypes = {
