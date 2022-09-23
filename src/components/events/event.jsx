@@ -352,7 +352,6 @@ class Event extends Component {
                 eventId={event._id}
                 url={match.url}
                 componentKey='activity-checkin'
-                type='activity-checkin'
               />
 
               <Protected

@@ -480,7 +480,7 @@ class UserModal extends Component {
             paddingBottom: '0px',
             marginTop: '30px',
           }}>
-          {componentKey === 'event-checkin' ? (
+          {componentKey === 'event-checkin' || componentKey == 'activity-checkin' ? (
             <FormEnrollAttendeeToEvent
               fields={this.props.extraFields}
               conditionalFields={this.props.cEvent?.value?.fields_conditions}

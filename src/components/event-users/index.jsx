@@ -32,6 +32,7 @@ import moment from 'moment';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
+import { UsersPerEventOrActivity } from './utils/utils';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -45,9 +46,7 @@ class ListEventUser extends Component {
       usersReq: [],
       pageOfItems: [],
       listTickets: [],
-      usersRef: firestore.collection(
-        `${props.match.params.id ? props.match.params.id : props.event._id}_event_attendees`
-      ),
+      usersRef: firestore.collection(`${props.event._id}_event_attendees`),
       pilaRef: firestore.collection('pila'),
       total: 0,
       totalCheckedIn: 0,
@@ -171,28 +170,10 @@ class ListEventUser extends Component {
     );
     return extraFields;
   };
-  /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
-  sortUsersArray = async (users) => {
-    const sortedResult = users.sort((itemA, itemB) => {
-      let aParameter = '';
-      let bParameter = '';
-
-      try {
-        aParameter = itemA?.checkedin_at?.toDate();
-        bParameter = itemB?.checkedin_at?.toDate();
-      } catch (error) {}
-
-      if (!aParameter) return 1;
-      if (!bParameter) return -1;
-      if (moment(aParameter) === moment(bParameter)) return 0;
-      return moment(aParameter) > moment(bParameter) ? -1 : 1;
-    });
-
-    return sortedResult;
-  };
 
   getAttendes = async () => {
     let self = this;
+    const activityId = this.props.match.params.id;
 
     this.checkFirebasePersistence();
     try {
@@ -467,12 +448,13 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-          const sortedUsers = await this.sortUsersArray(updatedAttendees);
+
+          const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
           this.setState({
-            users: sortedUsers,
-            usersReq: sortedUsers,
-            auxArr: sortedUsers,
+            users: attendees,
+            usersReq: updatedAttendees,
+            auxArr: attendees,
             loading: false,
           });
         },
@@ -793,7 +775,7 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
-    const { type, loading, componentKey } = this.props;
+    const { loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
     const inscritos =
@@ -806,7 +788,13 @@ class ListEventUser extends Component {
 
     return (
       <React.Fragment>
-        <Header title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'} />
+        <Header
+          title={
+            componentKey === 'activity-checkin'
+              ? 'Check-in actividad: ' + nameActivity
+              : `Check-in evento: ${this.props.event?.name}`
+          }
+        />
 
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
