@@ -13,6 +13,10 @@ export const selectOptions = [
     text: 'Ranking',
   },
   {
+    value: 'rating',
+    text: 'Valuación',
+  },
+  {
     value: 'comment',
     text: 'Comentarios',
   },
@@ -60,7 +64,7 @@ export const fieldsFormQuestion = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking']),
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking', 'rating']),
     name: 'type',
   },
 ];
@@ -74,7 +78,7 @@ export const fieldsFormQuestionWithPoints = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking']),
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking', 'rating']),
     name: 'type',
   },
   {
