@@ -57,21 +57,14 @@ export interface LikertScaleEditorProps {
 
 function LikertScaleEditor(props: LikertScaleEditorProps) {
   const {
-    source = {
-      columns: [], // Empty list for default
-      rows: [], // Empty list for default
-      values: {}, // Empty list for default
-    }, // Default value, if it is undefined
     onEdit = (x: DataSource) => {}, // By default
   } = props;
 
-  const [sourceData, setSourceData] = useState(
-    source === null ? {
-      columns: [],
-      rows: [],
-      values: {},
-    } : source,
-  );
+  const [sourceData, setSourceData] = useState<DataSource>({
+    columns: props.source?.columns || [], // Empty list for default
+    rows: props.source?.rows || [], // Empty list for default
+    values: props.source?.values || {}, // Empty list for default
+  });
   const [rows, setRows] = useState<RowType[]>([]);
   const [columns, setColumns] = useState<ColumnsType<RowType>>([]);
   const [isOpenedModal, setIsOpenedModal] = useState(false);
@@ -146,7 +139,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
   };
 
   useEffect(() => {
-    console.debug('LikertScaleEditor.source', source);
+    console.debug('LikertScaleEditor.source', sourceData);
     if (!sourceData) return;
 
     const newRows: RowType[] = [];
