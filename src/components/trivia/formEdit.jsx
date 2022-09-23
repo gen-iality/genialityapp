@@ -16,6 +16,7 @@ import {
   Tooltip,
   Table,
   Divider,
+  InputNumber,
 } from 'antd';
 import {
   MinusCircleOutlined,
@@ -93,6 +94,8 @@ const FormEdit = (
   });
   /** Estado para validar algun error en las dimensiones de la imagen */
   const [wrongDimensions, setWrongDimensions] = useState(false);
+  // Order for the ranking correct answers
+  const [rankingCorrectAnswers, setRankingCorrectAnswers] = useState([]);
 
   const [form] = Form.useForm();
 
@@ -107,8 +110,23 @@ const FormEdit = (
       setDefaultImgValue(null);
       setWrongDimensions(false);
       unmountForm();
+      setRankingCorrectAnswers([]);
     };
   }, []);
+
+  const editRankingCorrectAnswer = (index, value) => {
+    const newRecord = [ ...rankingCorrectAnswers ];
+    newRecord[index] = value;
+    setRankingCorrectAnswers(newRecord);
+  }
+
+  /**
+   * Build a fake correct answer index for the ranking type.
+   * @param {number} size The field size.
+   */
+  const buildFakeCorrectAnswerIndexForRankingType = (size) => {
+    setCorrectAnswerIndex(Array.from(Array(size).keys()));
+  };
 
   /**
    * * This function is used to upload an image to the firebase Blob Storage.
@@ -178,10 +196,19 @@ const FormEdit = (
     setAllowGradableSurvey(state);
 
     setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex);
+    // Load rankingCorrectAnswers
+    (valuesQuestion.correctAnswer || []).forEach((answer, index) => {
+      const position = valuesQuestion.choices.indexOf(answer);
+      if (position < 0) {
+        // Then, nobody knows what it is
+        return;
+      }
+      rankingCorrectAnswers[index] = position + 1;
+    });
+
     setTimeout(() => {
       setLoading(false);
     }, 500);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, valuesQuestion]);
 
   const handleRadio = (e) => {
@@ -204,6 +231,41 @@ const FormEdit = (
     } else {
       return Promise.reject();
     }
+  };
+
+  /**
+   * Sort the choices list according to the ranking list.
+   * If the ranking list has null-values, then this null-values will be
+   * taken as zero.
+   * @param {number[]} choices The options.
+   * @param {number[]} ranking The options' order.
+   * @returns {number[]}
+   */
+  const sortChoicesByRanking = (choices, ranking) => {
+    const pairs = choices.map((value, i) => ({ value, r: ranking[i], }))
+    console.debug('pairs', pairs)
+    const result = pairs.sort((a, b) => {
+        if (a.r === undefined)
+            return -1;
+        if (b.r === undefined)
+            return 1;
+        if (a.r === undefined && b.r === undefined)
+            return 0;
+        if (a.r > b.r)
+            return 1;
+        if (a.r < b.r)
+            return -1;
+        if (a.r === b.r)
+            return 0;                          
+    });
+    
+    console.debug(choices);
+    console.debug();
+    console.debug(ranking);
+    console.debug();
+    console.debug(result);
+    
+    return result.map((r) => r.value);
   };
 
   const onFinish = async (values) => {
@@ -248,6 +310,18 @@ const FormEdit = (
           values['correctAnswer'] = values.choices && searchWithMultipleIndex(values.choices, correctAnswerIndex);
           values['correctAnswerIndex'] = correctAnswerIndex;
           break;
+        
+        case 'ranking':
+          // TODO: implement that. Take in mind the order defined in `rankingCorrectAnswers`
+          const sortted = sortChoicesByRanking(values.choices, rankingCorrectAnswers);
+          console.debug(values.choices, rankingCorrectAnswers, sortted);
+          values['correctAnswer'] = sortted;
+          values['correctAnswerIndex'] = correctAnswerIndex;
+          break;
+        
+        case 'rating':
+          // TODO: implement that
+          break;
 
         default:
           break;
@@ -259,7 +333,7 @@ const FormEdit = (
         if (values.type === option.text) values.type = option.value;
       });
     }
-    // eslint-disable-next-line no-unused-vars
+
     const pointsValue = values.points ? values.points : '1';
     const dataValues = { ...values, points: pointsValue };
     const exclude = ({ questionOptions, ...rest }) => rest;
@@ -335,7 +409,8 @@ const FormEdit = (
             name='form-edit'
             onFinish={onFinish}
             validateMessages={validateMessages}
-            initialValues={defaultValues}>
+            initialValues={defaultValues} // initial values
+          >
             {allowGradableSurvey === true ? (
               <div>
                 {fieldsFormQuestionWithPoints.map((field, key) =>
@@ -500,6 +575,8 @@ const FormEdit = (
               {(fields, { add, remove }) => {
                 return (
                   <>
+                  {/* <pre>{JSON.stringify(rankingCorrectAnswers)}</pre>
+                  <pre>{JSON.stringify(correctAnswerIndex)}</pre> */}
                     <Space direction='horizontal'>
                       {questionType === 'radiogroup' ? (
                         <Radio.Group
@@ -540,47 +617,97 @@ const FormEdit = (
                             </Form.Item>
                           ))}
                         </Radio.Group>
+                      ) : questionType === 'checkbox' ? (
+                        <Checkbox.Group
+                          onChange={handleCheckbox}
+                          disabled={!allowGradableSurvey}
+                          value={correctAnswerIndex}
+                          style={{ display: 'block' }}>
+                          {fields.map((field, index) => (
+                            <Form.Item
+                              label={<Text type='secondary'>Respuesta {index + 1}</Text>}
+                              required={false}
+                              key={field.key}>
+                              <Checkbox value={index} style={{ width: '100%' }}>
+                                <Form.Item
+                                  {...field}
+                                  validateTrigger={['onChange', 'onBlur']}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      whitespace: true,
+                                      message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                                    },
+                                    {
+                                      validator: fieldValidation,
+                                    },
+                                  ]}
+                                  noStyle>
+                                  <Input placeholder='Asingar respuesta' style={{ width: '100%' }} />
+                                </Form.Item>
+                                {fields.length > 2 ? (
+                                  <MinusCircleOutlined
+                                    onClick={() => {
+                                      remove(field.name);
+                                    }}
+                                  />
+                                ) : null}
+                              </Checkbox>
+                            </Form.Item>
+                          ))}
+                        </Checkbox.Group>
+                      ) : questionType === 'ranking' ? (
+                        <Space direction='vertical'>
+                        {fields.map((field, index) => (
+                          <Form.Item
+                            label={<Text type='secondary'>Opción {index + 1}</Text>}
+                            required={false}
+                            key={field.key}
+                          >
+                            <Space direction='horizontal' key={`space_${field.key}`}>
+                            {allowGradableSurvey && (
+                              <InputNumber
+                                value={rankingCorrectAnswers[index] || ''} // Value
+                                onChange={(e) => editRankingCorrectAnswer(index, e)}
+                                placeholder='#orden'
+                                style={{ maxWidth: '5em' }}
+                              />
+                            )}
+                            <Form.Item
+                              {...field}
+                              noStyle
+                              validateTrigger={['onChange', 'onBlur']}
+                              rules={[
+                                {
+                                  required: true,
+                                  whitespace: true,
+                                  message: `Por favor ingresa la opción ${index + 1}`,
+                                },
+                                {
+                                  validator: fieldValidation,
+                                },
+                              ]}
+                            >
+                              <Input placeholder='Asingar opción' style={{ width: '100%' }} />
+                            </Form.Item>
+                            </Space>
+                            {fields.length > 1 ? (
+                              <MinusCircleOutlined
+                                onClick={() => {
+                                  remove(field.name);
+                                  // Delete its ranking
+                                  const newRankingCorrectAnswers = [...rankingCorrectAnswers];
+                                  newRankingCorrectAnswers.splice(index, 1);
+                                  setRankingCorrectAnswers(newRankingCorrectAnswers);
+                                  buildFakeCorrectAnswerIndexForRankingType(fields.length - 1);
+                                }}
+                              />
+                            ) : null}
+                          </Form.Item>
+                        ))}
+                        </Space>
                       ) : (
-                        questionType === 'checkbox' && (
-                          <Checkbox.Group
-                            onChange={handleCheckbox}
-                            disabled={!allowGradableSurvey}
-                            value={correctAnswerIndex}
-                            style={{ display: 'block' }}>
-                            {fields.map((field, index) => (
-                              <Form.Item
-                                label={<Text type='secondary'>Respuesta {index + 1}</Text>}
-                                required={false}
-                                key={field.key}>
-                                <Checkbox value={index} style={{ width: '100%' }}>
-                                  <Form.Item
-                                    {...field}
-                                    validateTrigger={['onChange', 'onBlur']}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        whitespace: true,
-                                        message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
-                                      },
-                                      {
-                                        validator: fieldValidation,
-                                      },
-                                    ]}
-                                    noStyle>
-                                    <Input placeholder='Asingar respuesta' style={{ width: '100%' }} />
-                                  </Form.Item>
-                                  {fields.length > 2 ? (
-                                    <MinusCircleOutlined
-                                      onClick={() => {
-                                        remove(field.name);
-                                      }}
-                                    />
-                                  ) : null}
-                                </Checkbox>
-                              </Form.Item>
-                            ))}
-                          </Checkbox.Group>
-                        )
+                        <p>Tipo desconocido</p>
                       )}
                     </Space>
                     {fields.length < 15 && (
@@ -589,8 +716,12 @@ const FormEdit = (
                           type='dashed'
                           onClick={() => {
                             add();
+                            if (questionType === 'ranking') {
+                              // Only for ranking
+                              buildFakeCorrectAnswerIndexForRankingType(fields.length + 1);
+                            }
                           }}>
-                          <PlusOutlined /> Agregar otra respuesta
+                          <PlusOutlined /> Agregar otra {questionType === 'ranking' ? 'opción' : 'respuesta'}
                         </Button>
                       </Form.Item>
                     )}
