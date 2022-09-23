@@ -29,6 +29,7 @@ import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DispatchMessageService } from '../../context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import LikertScaleEditor from '../quiz/LikertScaleEditor';
 
 const { Option } = Select;
 
@@ -102,6 +103,8 @@ const FormEdit = (
   const [minRateDescription, setMinRateDescription] = useState('Not Satisfied');
   const [rateMin, setRateMin] = useState(0);
   const [ratingCorrectAnswer, setRatingCorrectAnswer] = useState();
+  // For the likert scale surveys
+  const [likertScaleData, setLikertScaleData] = useState(undefined);
 
   const [form] = Form.useForm();
 
@@ -221,6 +224,16 @@ const FormEdit = (
           return;
         }
         rankingCorrectAnswers[index] = position + 1;
+      });
+    }
+
+    if (valuesQuestion.type === 'Escala de Likert') {
+      console.debug('load matrix');
+      setLikertScaleData({
+        ...likertScaleData, // Previous data
+        values: valuesQuestion.correctAnswer, // The correct answers
+        rows: valuesQuestion.choices.rows,
+        columns: valuesQuestion.choices.columns,
       });
     }
 
@@ -347,10 +360,23 @@ const FormEdit = (
           values['correctAnswer'] = ratingCorrectAnswer;
           values['correctAnswerIndex'] = correctAnswerIndex;
           break;
+        
+        case 'matrix':
+          values['correctAnswer'] = likertScaleData?.values || [];
+          values['isRequired'] = true;
+          values['correctAnswerIndex'] = correctAnswerIndex;
 
         default:
           break;
       }
+    }
+    console.debug('will save values', values);
+
+    if (questionType === 'matrix') {
+      values['choices'] = {
+        rows: likertScaleData?.rows || {},
+        columns: likertScaleData?.columns || {},
+      };
     }
 
     if (values.type.indexOf(' ') > 0) {
@@ -806,6 +832,13 @@ const FormEdit = (
                             </Form.Item>
                           )}
                         </Space>
+                      ) :  questionType === 'matrix' ? (
+                        <>
+                        <LikertScaleEditor
+                          source={likertScaleData || {}}
+                          onEdit={(x) => setLikertScaleData(x)}
+                        />
+                        </>
                       ) : (
                         <p>Tipo desconocido</p>
                       )}

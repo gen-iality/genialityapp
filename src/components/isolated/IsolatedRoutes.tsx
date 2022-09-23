@@ -7,6 +7,7 @@ import { QuizProgressPage } from './quiz/QuizProgressPage';
 import { QuizStatusEditorPage } from './quiz/QuizStatusEditorPage';
 import { CourseProgressBarPage } from './progresses/CourseProgressBarPage';
 import { DatePickerAndDayJSPage } from './date/DatePickerAndDayJSPage';
+import { LikertScaleEditorPage } from './quiz/LikertScaleEditorPage';
 
 type UI = {
   url: string;
@@ -40,6 +41,11 @@ const uiSet: UI[] = [
     url: 'datePickerAndDayJSPage',
     text: 'DatePickerAndDayJSPage',
     Component: DatePickerAndDayJSPage,
+  },
+  {
+    url: 'likertScaleEditorPage',
+    text: 'Likert Scale Editor Page',
+    Component: LikertScaleEditorPage,
   }
 ];
 
