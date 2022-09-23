@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
-const sortUsersArray = async (users: any) => {
+const sortUsersArray = async (users: {}[]) => {
   const sortedResult = users.sort((itemA: any, itemB: any) => {
     let aParameter = '';
     let bParameter = '';
@@ -20,11 +20,11 @@ const sortUsersArray = async (users: any) => {
   return sortedResult;
 };
 
-export const UsersPerEventOrActivity = async (updatedAttendees: any, activityId: string) => {
-  let usersInTheActivity: any = [];
+export const UsersPerEventOrActivity = async (updatedAttendees: [], activityId: string) => {
+  let usersInTheActivity: {}[] = [];
 
-  updatedAttendees?.forEach((user: any) => {
-    user?.activityProperties?.filter((userInActivity: any) => {
+  updatedAttendees?.forEach((user: { activityProperties: [] }) => {
+    user?.activityProperties?.filter((userInActivity: { _id: string }) => {
       if (activityId && userInActivity?._id === activityId) {
         usersInTheActivity.push({ ...user, ...userInActivity });
       }
