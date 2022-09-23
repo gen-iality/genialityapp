@@ -12,13 +12,13 @@ import { Modal } from 'antd';
 import withContext from '../../context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
-import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined, PrinterOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
 import { handleRequestError } from '@/helpers/utils';
-
+import printBagdeUser from '../badge/utils/printBagdeUser';
 const { confirm } = Modal;
 
 class UserModal extends Component {
@@ -40,6 +40,7 @@ class UserModal extends Component {
       tickets: [],
       loadingregister: false,
     };
+    this.ifrmPrint = React.createRef();
   }
 
   async componentDidMount() {
@@ -364,9 +365,19 @@ class UserModal extends Component {
     this.setState({ loadingregister: false });
   };
 
+  printUser = () => {
+    const resp = this.props.badgeEvent;
+    if (resp._id) {
+      let badges = resp.BadgeFields;
+      if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
+      printBagdeUser(this.ifrmPrint, badges, this.state.user);
+    } else this.setState({ noBadge: true });
+  };
+
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
-    const { modal, componentKey } = this.props;
+    const { modal, badgeEvent, componentKey } = this.props;
+    let qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
@@ -386,9 +397,11 @@ class UserModal extends Component {
               attendee={this.props.value}
               options={this.options}
               saveAttendee={this.saveUser}
+              printUser={this.printUser}
               loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
               visibleInCms
               eventType={this.props.cEvent?.value?.type_event}
+              badgeEvent={this.props.badgeEvent}
             />
           ) : (
             <FormComponent
@@ -404,6 +417,10 @@ class UserModal extends Component {
             />
           )}
         </div>
+        <div style={{ opacity: 0, display: 'none' }}>
+          {user && badgeEvent && badgeEvent.BadgeFields && <QRCode value={userId} size={qrSize ? qrSize?.size : 64} />}
+        </div>
+        <iframe title={'Print User'} ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
     );
   }

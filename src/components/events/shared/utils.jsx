@@ -5,6 +5,7 @@ import {
   NotificationOutlined,
   EditOutlined,
   BarChartOutlined,
+  PrinterOutlined,
 } from '@ant-design/icons';
 const handleClick = (e) => {
   if (!navigator.onLine) e.preventDefault();
@@ -142,6 +143,12 @@ export const MenuItems = [
         name: ' Organizadores',
         path: '/tipo-asistentes',
         key: 'organizadores',
+        onClick: handleClick,
+      },
+      {
+        name: 'Configuración de escarapelas',
+        path: '/badge',
+        key: 'insignia-evento',
         onClick: handleClick,
       },
     ],
