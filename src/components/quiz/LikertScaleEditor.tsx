@@ -280,6 +280,26 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     setColumns(newColumns);
     console.log('LikertScaleEditor.all', newRows);
     console.log('LikertScaleEditor.all', newColumns);
+
+    const purgedSourceData = { ...sourceData };
+    Object.keys(sourceData.values).forEach((key) => {
+      // Check if this key (A.K.A row-value) exists in the rows list.
+      if (sourceData.rows.some((row) => row.value === key)) {
+        // Nothing to do, everything is ok
+      } else {
+        // Delete from `purgedSourceData.values`
+        delete purgedSourceData.values[key];
+      }
+
+      // Check if its value (A.K.A column-value) exists in the columns list.
+      const value = sourceData.values[key];
+      if (sourceData.columns.some((column) => column.value === value)) {
+        // Nothing to do, everything is ok
+      } else {
+        // Delete from `purgedSourceData.values`
+        delete purgedSourceData.values[key];
+      }
+    });
   }, [sourceData]);
 
   useEffect(() => {
