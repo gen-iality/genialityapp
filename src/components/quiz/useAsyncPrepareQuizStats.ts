@@ -32,21 +32,26 @@ export default async function useQuizStatusRequesting(
   console.debug(result);
 
   let minimumScore = 0;
-  let questionLength = 0;
+  // let questionLength = 0;
+  let totalPoints = 0;
 
   try {
     console.debug('finding eventId', eventId, 'with activityId', surveyId);
 
-    let surveyIn: Survey = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
+    const surveyIn: Survey = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
 
     minimumScore = surveyIn.minimumScore ? surveyIn.minimumScore : 0;
-    questionLength = surveyIn.questions ? surveyIn.questions.length : 0;
+    // questionLength = surveyIn.questions ? surveyIn.questions.length : 0;
+    totalPoints = (surveyIn.questions || []) // For each question
+      .map((question: any) => parseInt(question.points || 0)) // Get their points
+      .reduce((a, b) => a+b, 0); // And sum
   } catch (err) {
     console.error('SurveysApi.getOne', err);
   }
 
   const stats: QuizStats = {
-    total: questionLength,
+    // total: questionLength,
+    total: totalPoints,
     right: quizStatus.right,
     minimum: minimumScore,
   };
