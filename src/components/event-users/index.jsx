@@ -143,7 +143,9 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    return <AttendeeCheckInCheckbox attendee={item} />;
+    const activityId = this.props.match.params.id;
+
+    return <AttendeeCheckInCheckbox attendee={item} activityId={activityId} />;
   };
 
   physicalCheckInComponent = (text, item, index) => {

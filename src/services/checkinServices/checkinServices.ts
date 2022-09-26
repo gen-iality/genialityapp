@@ -1,6 +1,6 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
-import { TicketsApi } from '@/helpers/request';
+import { Activity, TicketsApi } from '@/helpers/request';
 import { structureScannedInformation } from '@/Utilities/checkInUtils';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
 import { newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from '@/Utilities/types/types';
@@ -120,12 +120,16 @@ export const saveCheckInAttendee = async ({
   checkInAttendeeCallbak,
   notification = true,
   checkInType = 'Virtual',
+  activityId,
 }: saveCheckInAttendeePropsTypes) => {
+  console.debug('🚀 -->  - componentKey', activityId, _id, checked);
   let response: any;
 
   try {
     if (checked) {
-      response = await TicketsApi.addCheckIn(_id, checkInType);
+      if (activityId) response = await Activity.addCheckIn(_id, checkInType, activityId);
+      else response = await TicketsApi.addCheckIn(_id, checkInType);
+
       if (notification)
         DispatchMessageService({
           type: 'success',
@@ -133,7 +137,8 @@ export const saveCheckInAttendee = async ({
           action: 'show',
         });
     } else {
-      response = await TicketsApi.deleteCheckIn(_id);
+      if (activityId) response = await Activity.deleteCheckIn(_id, activityId);
+      else response = await TicketsApi.deleteCheckIn(_id);
 
       if (notification)
         DispatchMessageService({

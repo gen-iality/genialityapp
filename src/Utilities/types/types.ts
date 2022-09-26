@@ -75,6 +75,7 @@ export type saveCheckInAttendeePropsTypes = {
   checkInAttendeeCallbak?: (attendee: any) => void;
   notification?: boolean;
   checkInType?: string;
+  activityId?: string;
 };
 
 export type aditionalFieldsPropsTypes = {
@@ -90,6 +91,7 @@ export type updateFieldsVisibilityPropsTypes = {
 };
 export type AttendeeCheckInPropsTypes = {
   attendee: any;
+  activityId?: string;
   reloadComponent?: (response: any) => void;
   checkInAttendeeCallbak: (attendee: any) => void;
 };

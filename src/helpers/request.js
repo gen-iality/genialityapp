@@ -1167,6 +1167,21 @@ export const Activity = {
     };
     return await Actions.put(`api/events/${event}/activities_attendees/${user_id}?token=${token}`, data);
   },
+  addCheckIn: async (eventUser_id, checkInType, activityId) => {
+    let token = await GetTokenUserFirebase();
+    const checkedin_type = checkInType;
+    return await Actions.put(
+      `/api/eventUsers/${eventUser_id}/checkinactivity/${activityId}?token=${token}`,
+      { checkedin_type },
+      true
+    );
+  },
+  deleteCheckIn: async (eventUser_id, activityId) => {
+    console.debug('🚀 -->  - eventUser_id, activityId', eventUser_id, activityId);
+    let token = await GetTokenUserFirebase();
+
+    return await Actions.put(`api/eventUsers/${eventUser_id}/uncheckinactivity/${activityId}?token=${token}`, {}, true);
+  },
 };
 
 export const Networking = {
