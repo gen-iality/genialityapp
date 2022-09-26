@@ -628,7 +628,10 @@ const FormEdit = (
                   <>
                   {/* <pre>{JSON.stringify(rankingCorrectAnswers)}</pre>
                   <pre>{JSON.stringify(correctAnswerIndex)}</pre> */}
-                    <Space direction='horizontal'>
+                  <style>
+                    {`.abc-form-big, .abc-form-big > .ant-space-item { width: 100%; }`}
+                  </style>
+                    <Space direction='horizontal' className={questionType === 'ranking' ? 'abc-form-big' : undefined} style={questionType === 'ranking' ? {width: '100%'} : undefined}>
                       {questionType === 'radiogroup' ? (
                         <Radio.Group
                           onChange={handleRadio}
@@ -708,6 +711,7 @@ const FormEdit = (
                           ))}
                         </Checkbox.Group>
                       ) : questionType === 'ranking' ? (
+                        <Space direction='vertical' style={{width: '100%'}}>
                           <p>Orden de las opciones:</p>
                         {fields.map((field, index) => (
                           <Form.Item
@@ -727,6 +731,7 @@ const FormEdit = (
                             <Form.Item
                               {...field}
                               noStyle
+                              style={{width: '100%'}}
                               validateTrigger={['onChange', 'onBlur']}
                               rules={[
                                 {
