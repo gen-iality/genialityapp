@@ -708,10 +708,10 @@ const FormEdit = (
                           ))}
                         </Checkbox.Group>
                       ) : questionType === 'ranking' ? (
-                        <Space direction='vertical'>
+                          <p>Orden de las opciones:</p>
                         {fields.map((field, index) => (
                           <Form.Item
-                            label={<Text type='secondary'>Opción {index + 1}</Text>}
+                            label={<Text type='secondary'>Opción</Text>}
                             required={false}
                             key={field.key}
                           >
