@@ -73,17 +73,19 @@ class eventLanding extends Component {
           <Card
             className='event-description'
             /* bodyStyle={{ padding: '25px 5px' }} */
-            bordered={true}
+            bordered={false}
             style={
               (this.props.cEvent.value.styles &&
               this.props.cEvent.value.styles.show_card_banner &&
               this.props.cEvent.value.styles.show_card_banner === true
                 ? { marginTop: '2%' }
                 : { marginTop: '0px' },
-              this.props.cEvent.value._id === '61af4b3dab505c39ed5b5855' ||
+              /* this.props.cEvent.value._id === '61af4b3dab505c39ed5b5855' ||
               this.props.cEvent.value._id === '61ae65cdba621c0fc94aff12'
-                ? { backgroundColor: '#000', border: 'none' }
-                : {})
+                ? { backgroundColor: 'transparent', border: 'none' }
+                : */ {
+                backgroundColor: 'transparent',
+              })
             }>
             {/* {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
               ''
