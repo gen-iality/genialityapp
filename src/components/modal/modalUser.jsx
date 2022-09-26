@@ -256,6 +256,8 @@ class UserModal extends Component {
   };
 
   saveUser = async (values) => {
+    const activityId = this.props.activityId;
+    const eventId = this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent;
     this.setState({ loadingregister: true });
     //console.log('callback=>', values);
     let resp;
@@ -270,7 +272,12 @@ class UserModal extends Component {
       } else {
         if (!this.props.edit) {
           try {
-            resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent);
+            if (activityId) {
+              console.debug('🚀 -->  - creando en la actividad ', activityId);
+              respActivity = await UsersApi.createUserInEventAndAssignToActivity(snap?.properties, eventId, activityId);
+            } else {
+              resp = await UsersApi.createOne(snap, eventId);
+            }
           } catch (error) {
             if (handleRequestError(error).message === 'users limit exceeded') {
               DispatchMessageService({
@@ -289,11 +296,7 @@ class UserModal extends Component {
             respActivity = false;
           }
         } else {
-          resp = await UsersApi.editEventUser(
-            snap,
-            this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent,
-            this.props.value._id
-          );
+          resp = await UsersApi.editEventUser(snap, eventId, this.props.value._id);
         }
         /* console.log("10. USERADD==>",resp) */
       }

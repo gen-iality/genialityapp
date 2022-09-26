@@ -447,6 +447,14 @@ export const UsersApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`/api/events/${eventId}/eventusers/${eventUserId}?token=${token}`, data, true);
   },
+  createUserInEventAndAssignToActivity: async (data, eventId, activityId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(
+      `/api/eventUsers/createUserAndAddtoEvent/${eventId}/?activity_id=${activityId}&token=${token}`,
+      data,
+      true
+    );
+  },
 };
 
 export const AttendeeApi = {
@@ -1177,7 +1185,6 @@ export const Activity = {
     );
   },
   deleteCheckIn: async (eventUser_id, activityId) => {
-    console.debug('🚀 -->  - eventUser_id, activityId', eventUser_id, activityId);
     let token = await GetTokenUserFirebase();
 
     return await Actions.put(`api/eventUsers/${eventUser_id}/uncheckinactivity/${activityId}?token=${token}`, {}, true);

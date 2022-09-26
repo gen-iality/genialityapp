@@ -6,21 +6,31 @@ import { Row, Col, Button, Divider, Upload } from 'antd';
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
 import content from '@/containers/content';
+import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
 Moment.locale('es');
 momentLocalizer();
 
 const Importacion = (props) => {
   const [errMsg, setErrMsg] = useState('');
-
   const handleXlsFile = (files) => {
+    if (files.status === 'error') {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error al cargar el archivo excel',
+        action: 'show',
+      });
+      return;
+    }
+    // The execution stops, since ant design updates the upload event with each change in the file upload progress, this generates an error in the steps of importing users
+    if (files.status !== 'done') return;
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: ' Por favor espere mientras se envía la información...',
       action: 'show',
     });
-    const f = files;
+    const f = files.originFileObj;
     const reader = new FileReader();
     try {
       reader.onload = (e) => {
@@ -104,7 +114,7 @@ const Importacion = (props) => {
 
     //data[0]['tiquete'] = '';
     /** Se agrega campo requerido que no viene en la consulta de la base de datos */
-    // data[0]['rol'] = '';
+    data[0]['rol'] = '';
     /* if (password) {
       data[0]['password'] = password;
     } */
@@ -119,7 +129,7 @@ const Importacion = (props) => {
 
   /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */
   const addMoreItemsToExtraFields = () => {
-    let modifiedExtraFields = [...props.extraFields /*{ name: 'rol', type: 'rol' }*/];
+    let modifiedExtraFields = [...props.extraFields, { name: 'rol', type: 'rol' }];
     /* if (password) {
       modifiedExtraFields = [...props.extraFields, { name: 'password', type: 'password' }];
     } */
@@ -148,8 +158,10 @@ const Importacion = (props) => {
       <Row justify='center' align='middle' wrap gutter={[16, 16]}>
         <Col>
           <Upload.Dragger
-            onChange={(e) => handleXlsFile(e.fileList[0].originFileObj)}
-            onDrop={(e) => handleXlsFile(e.fileList[0].originFileObj)}
+            maxCount={1}
+            onChange={(e) => handleXlsFile(e.fileList[0])}
+            onDrop={(e) => handleXlsFile(e.fileList[0])}
+            customRequest={uploadImagedummyRequest}
             multiple={false}
             accept='.xls,.xlsx'
             style={{ margin: '0 15px', padding: '0 !important' }}>

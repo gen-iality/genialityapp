@@ -122,7 +122,6 @@ export const saveCheckInAttendee = async ({
   checkInType = 'Virtual',
   activityId,
 }: saveCheckInAttendeePropsTypes) => {
-  console.debug('🚀 -->  - componentKey', activityId, _id, checked);
   let response: any;
 
   try {

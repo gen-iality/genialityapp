@@ -37,7 +37,7 @@ import { EventsApi } from '@/helpers/request';
 // }
 
 function ListaInvitados({ ...props }) {
-  const { eventId, event, match } = props;
+  const { eventId, event, match, location } = props;
 
   useEffect(() => {
     if (match.path === `/eventAdmin/${eventId}/invitados`) {
@@ -81,7 +81,13 @@ function ListaInvitados({ ...props }) {
           exact
           path={`${match.url}/importar-excel`}
           render={() => (
-            <ImportUsers extraFields={userProperties} eventId={eventId} event={event} matchUrl={match.url} />
+            <ImportUsers
+              extraFields={userProperties}
+              eventId={eventId}
+              event={event}
+              matchUrl={match.url}
+              locationParams={location}
+            />
           )}
         />
       </Switch>

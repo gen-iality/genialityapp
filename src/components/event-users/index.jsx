@@ -786,6 +786,7 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
+    const activityId = this.props.match.params.id;
     const { loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
@@ -919,11 +920,13 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 <Link
-                  to={
-                    !eventIsActive && window.location.toString().includes('eventadmin')
-                      ? ''
-                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
-                  }>
+                  to={{
+                    pathname:
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                        ? ''
+                        : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
+                    state: { activityId },
+                  }}>
                   <Button
                     type='primary'
                     icon={<UploadOutlined />}
@@ -965,6 +968,7 @@ class ListEventUser extends Component {
             edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}
             componentKey={componentKey}
+            activityId={activityId}
           />
         )}
 
