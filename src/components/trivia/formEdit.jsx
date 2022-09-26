@@ -761,6 +761,7 @@ const FormEdit = (
                             ) : null}
                           </Form.Item>
                         ))}
+                          <p>Si es calificable, la respuesta correcta será acorde al orden asignado a cada opción.</p>
                         </Space>
                       ) : questionType === 'rating' ? (
                         <Space direction='vertical'>
