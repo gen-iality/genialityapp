@@ -8,7 +8,7 @@ const printBagde = (ifrmPrint, badge) => {
     oDoc = oDoc.document;
   }
   oDoc.write('<head><title>Escarapela</title>');
-  oDoc.write('<body onload="window.print()"><div>');
+  oDoc.write('<body style="display: block; text-align: center;" onload="window.print()"><div>');
   if (badge.length === 0) {
     oDoc.write(
       `<p style="font-family: Lato, sans-serif;font-size: 12px;text-transform: uppercase">No hay datos para mostrar</p>`
@@ -25,13 +25,11 @@ const printBagde = (ifrmPrint, badge) => {
         i++;
       } else {
         if (badge[i + 1] && !badge[i + 1].line) {
-          oDoc.write(`<div style="display: block; textAlign: center;">`);
+          oDoc.write(`<div style="display: block; text-align: center;">`);
           if (!badge[i].qr) {
             oDoc.write(`<div style="margin-right: 20px">`);
             oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                badge[i + 1].id_properties.label
-              }</p>`
+              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i].id_properties.label}</p>`
             );
             oDoc.write(`</div>`);
           } else {
@@ -55,7 +53,7 @@ const printBagde = (ifrmPrint, badge) => {
           oDoc.write(`</div>`);
           i = i + 2;
         } else {
-          oDoc.write(`<div style="display: block; textAlign: center">`);
+          oDoc.write(`<div style="display: block; text-align: center">`);
           oDoc.write(`<div style="margin-right: 20px">`);
           if (!badge[i].qr) {
             oDoc.write(

@@ -18,10 +18,11 @@ import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey
 import RealTimeSurveyListening from './functions/realTimeSurveyListening';
 import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
+import { sendCommunicationUser } from '@/components/agenda/surveyManager/services';
 // import { firestore, fireRealtime } from '../../../helpers/firebase';
 
 function SurveyComponent(props) {
-  const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
+  const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
 
   const cEvent = UseEventContext();
   const eventStyles = cEvent.value.styles;
@@ -116,9 +117,13 @@ function SurveyComponent(props) {
       //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
       SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
     }
-
     let isLastPage = surveyModel.isLastPage;
-
+    let eventCorrect = '63249587ff90231f1219e332';
+    let eventEvaluate = eventId;
+    let eventUserId = cEventUser?.value?._id;
+    if (eventUserId && eventEvaluate && eventCorrect && eventEvaluate === eventCorrect) {
+      await sendCommunicationUser(idSurvey, eventUserId);
+    }
     if (surveyData.allow_gradable_survey === 'true') {
       if (isLastPage) {
         setShowMessageOnComplete(false);
