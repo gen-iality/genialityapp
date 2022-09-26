@@ -629,9 +629,16 @@ const FormEdit = (
                   {/* <pre>{JSON.stringify(rankingCorrectAnswers)}</pre>
                   <pre>{JSON.stringify(correctAnswerIndex)}</pre> */}
                   <style>
-                    {`.abc-form-big, .abc-form-big > .ant-space-item { width: 100%; }`}
+                    {`
+                    .abc-ranking, .abc-ranking > .ant-space-item { width: 100%; }
+                    .abc-rating, .abc-rating > .ant-space-item, .abc-rating > .ant-space-item > .ant-space-vertical { width: 100%; }
+                    `}
                   </style>
-                    <Space direction='horizontal' className={questionType === 'ranking' ? 'abc-form-big' : undefined} style={questionType === 'ranking' ? {width: '100%'} : undefined}>
+                    <Space
+                      direction='horizontal'
+                      className={questionType === 'ranking' ? 'abc-ranking' : questionType === 'rating' ? 'abc-ranking' : undefined}
+                      style={questionType === 'ranking' ? {width: '100%'} : undefined}
+                    >
                       {questionType === 'radiogroup' ? (
                         <Radio.Group
                           onChange={handleRadio}
@@ -764,7 +771,7 @@ const FormEdit = (
                           <p>Si es calificable, la respuesta correcta será acorde al orden asignado a cada opción.</p>
                         </Space>
                       ) : questionType === 'rating' ? (
-                        <Space direction='vertical'>
+                        <Space direction='vertical' style={{width: '100%'}}>
                           {/* The max rate description in this question kind */}
                           <Form.Item
                             label={<Text type='secondary'>Descripción de la valuación máxima</Text>}
@@ -780,7 +787,7 @@ const FormEdit = (
 
                           {/* The max value */}
                           <Form.Item
-                            label={<Text type='secondary'>Valor de la valuación máxima</Text>}
+                            label={<Text type='secondary'>Valor máxima</Text>}
                             required={true}
                           >
                             <InputNumber
@@ -808,7 +815,7 @@ const FormEdit = (
 
                           {/* The min value */}
                           <Form.Item
-                            label={<Text type='secondary'>Valor de la valuación mínima</Text>}
+                            label={<Text type='secondary'>Valor mínima</Text>}
                             required={true}
                           >
                             <InputNumber
@@ -835,6 +842,7 @@ const FormEdit = (
                                 style={{ width: '100%' }}
                                 min={0}
                                 />
+                                <p>Si marca como evaluable, este valor será usado como respuesta correcta.</p>
                             </Form.Item>
                           )}
                         </Space>
