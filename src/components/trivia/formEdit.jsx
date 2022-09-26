@@ -628,7 +628,10 @@ const FormEdit = (
                   <>
                   {/* <pre>{JSON.stringify(rankingCorrectAnswers)}</pre>
                   <pre>{JSON.stringify(correctAnswerIndex)}</pre> */}
-                    <Space direction='horizontal'>
+                  <style>
+                    {`.abc-form-big, .abc-form-big > .ant-space-item { width: 100%; }`}
+                  </style>
+                    <Space direction='horizontal' className={questionType === 'ranking' ? 'abc-form-big' : undefined} style={questionType === 'ranking' ? {width: '100%'} : undefined}>
                       {questionType === 'radiogroup' ? (
                         <Radio.Group
                           onChange={handleRadio}
@@ -708,10 +711,11 @@ const FormEdit = (
                           ))}
                         </Checkbox.Group>
                       ) : questionType === 'ranking' ? (
-                        <Space direction='vertical'>
+                        <Space direction='vertical' style={{width: '100%'}}>
+                          <p>Orden de las opciones:</p>
                         {fields.map((field, index) => (
                           <Form.Item
-                            label={<Text type='secondary'>Opción {index + 1}</Text>}
+                            label={<Text type='secondary'>Opción</Text>}
                             required={false}
                             key={field.key}
                           >
@@ -727,6 +731,7 @@ const FormEdit = (
                             <Form.Item
                               {...field}
                               noStyle
+                              style={{width: '100%'}}
                               validateTrigger={['onChange', 'onBlur']}
                               rules={[
                                 {
@@ -756,6 +761,7 @@ const FormEdit = (
                             ) : null}
                           </Form.Item>
                         ))}
+                          <p>Si es calificable, la respuesta correcta será acorde al orden asignado a cada opción.</p>
                         </Space>
                       ) : questionType === 'rating' ? (
                         <Space direction='vertical'>
