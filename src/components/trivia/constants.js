@@ -18,7 +18,7 @@ export const selectOptions = [
   },
   {
     value: 'matrix',
-    text: 'Escala de Likert',
+    text: 'Escala de Likert (matrix)',
   },
   {
     value: 'comment',

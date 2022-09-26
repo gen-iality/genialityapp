@@ -227,7 +227,7 @@ const FormEdit = (
       });
     }
 
-    if (valuesQuestion.type === 'Escala de Likert') {
+    if (valuesQuestion.type === 'Escala de Likert (matrix)') {
       console.debug('load matrix');
       setLikertScaleData({
         ...likertScaleData, // Previous data
