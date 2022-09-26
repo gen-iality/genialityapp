@@ -1,28 +1,35 @@
+/** Hooks and CustomHooks */
 import { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
-import Graphics from './graphics';
-import SurveyComponent from './surveyComponentV2';
-import { Card, Result, Divider, Button, Space } from 'antd';
-
-import WithEviusContext from '@/context/withContext';
-import LoadSelectedSurvey from './functions/loadSelectedSurvey';
-import initRealTimeSurveyListening from './functions/initRealTimeSurveyListening';
-import useSurveyQuery from './hooks/useSurveyQuery';
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats';
+import useSurveyQuery from './hooks/useSurveyQuery';
+import { Card, Result, Divider, Button, Space } from 'antd';
+import { connect } from 'react-redux';
+
+/** Helpers */
 import { SurveysApi } from '@/helpers/request';
 
 /** Context´s */
 import { UseCurrentUser } from '@context/userContext';
 import { UseSurveysContext } from '@context/surveysContext';
+import WithEviusContext from '@/context/withContext';
 
 /** Components */
+import SurveyComponent from './surveyComponentV2';
+import Graphics from './graphics';
 import ResultsPanel from './resultsPanel';
 import QuizProgress from '@/components/quiz/QuizProgress';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
   const cSurveys = UseSurveysContext();
   const currentUser = UseCurrentUser();
+  console.log('200.SurveyDetailPage currentUser', currentUser.value);
+
+  const query = useSurveyQuery(cEvent.value?._id, surveyId);
+  console.log('200.SurveyDetailPage eventId', cEvent.value?._id);
+  console.log('200.SurveyDetailPage surveyId', surveyId);
+  console.log('200.SurveyDetailPage query.data', query.data);
+
   const history = useHistory();
   const handleGoToCertificate = useCallback(() => {
     history.push(`/landing/${cEvent.value?._id}/certificate`);
@@ -31,8 +38,12 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
-  //Effect for when prop.idSurvey changes
   useEffect(() => {
+    cSurveys.select_survey({ ...query.data });
+  }, [query.data]);
+
+  //Effect for when prop.idSurvey changes
+  /*  useEffect(() => {
     if (!surveyId) return;
     console.log('200.survey surveyid userid', surveyId, currentUser.value);
     let unsubscribe;
@@ -47,6 +58,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       //await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
       function updateSurveyData(surveyConfig) {
         if (!surveyConfig) return;
+        console.log('600.surveyConfig', surveyConfig);
         cSurveys.select_survey({ ...surveyConfig, ...loadedSurvey });
       }
     })();
@@ -54,7 +66,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [surveyId]);
+  }, [surveyId]); */
 
   function showResultsPanel() {
     setShowingResultsPanel(true);
@@ -140,7 +152,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         </>
       ) : (
         <Card className='surveyCard'>
-          <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} />
+          <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} queryData={query.data} />
         </Card>
       )}
     </div>

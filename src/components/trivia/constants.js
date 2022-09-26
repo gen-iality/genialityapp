@@ -13,6 +13,14 @@ export const selectOptions = [
     text: 'Ranking',
   },
   {
+    value: 'rating',
+    text: 'Rating',
+  },
+  {
+    value: 'matrix',
+    text: 'Escala de Likert',
+  },
+  {
     value: 'comment',
     text: 'Comentarios',
   },
@@ -60,7 +68,7 @@ export const fieldsFormQuestion = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking']),
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'matrix', 'text', 'ranking', 'rating']),
     name: 'type',
   },
 ];
@@ -74,7 +82,7 @@ export const fieldsFormQuestionWithPoints = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text', 'ranking']),
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'matrix', 'text', 'ranking', 'rating']),
     name: 'type',
   },
   {
@@ -108,6 +116,6 @@ export const operationType = [
   },
   {
     value: 'participationPercentage',
-    text: 'Mostrar porcentaje de participacion',
+    text: 'Mostrar porcentaje de participación',
   },
 ];

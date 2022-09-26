@@ -34,22 +34,25 @@ function useSurveyQuery(eventId, idSurvey) {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
       //loadedSurvey.currentPage = 0;
       loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
+      console.log('500.innerAsyncCall loadedSurvey', loadedSurvey);
       setInnerQuery(loadedSurvey);
     };
     innerAsyncCall();
-  }, []);
+  }, [idSurvey]);
 
   //realtime Query
   useEffect(() => {
     function handleRealTimeCallback(surveyStatus) {
+      console.log('500.handleRealTimeCallback surveyStatus', surveyStatus);
       setInnerRealTimeQuery(surveyStatus);
     }
     let unsuscribe = initRealTimeSurveyListening(idSurvey, handleRealTimeCallback);
     return () => {
       if (unsuscribe) unsuscribe();
     };
-  }, []);
+  }, [idSurvey]);
 
+  console.log('500.query', query);
   return query;
 }
 

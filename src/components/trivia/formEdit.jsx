@@ -29,6 +29,7 @@ import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DispatchMessageService } from '../../context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import LikertScaleEditor from '../quiz/LikertScaleEditor';
 
 const { Option } = Select;
 
@@ -96,6 +97,14 @@ const FormEdit = (
   const [wrongDimensions, setWrongDimensions] = useState(false);
   // Order for the ranking correct answers
   const [rankingCorrectAnswers, setRankingCorrectAnswers] = useState([]);
+  // This stuffs are used for the rating questions
+  const [maxRateDescription, setMaxRateDescription] = useState('Completely satisfied');
+  const [rateMax, setRateMax] = useState(10);
+  const [minRateDescription, setMinRateDescription] = useState('Not Satisfied');
+  const [rateMin, setRateMin] = useState(0);
+  const [ratingCorrectAnswer, setRatingCorrectAnswer] = useState();
+  // For the likert scale surveys
+  const [likertScaleData, setLikertScaleData] = useState(undefined);
 
   const [form] = Form.useForm();
 
@@ -183,6 +192,7 @@ const FormEdit = (
   useEffect(() => {
     setLoading(true);
     let state = gradableSurvey === 'true' ? true : false;
+    console.log('valuesQuestion', valuesQuestion)
 
     setDefaultValues(valuesQuestion);
     setQuestionId(valuesQuestion.id);
@@ -193,18 +203,39 @@ const FormEdit = (
       setQuestionType(choice.value);
     }
 
+    if (valuesQuestion.type === 'Rating') {
+      console.debug('valuesQuestion.type = rating');
+      setMaxRateDescription(valuesQuestion.maxRateDescription || 'Completely satisfied.');
+      setRateMax(valuesQuestion.rateMax || 10);
+      setMinRateDescription(valuesQuestion.minRateDescription || 'Not Satisfied.');
+      setRateMin(valuesQuestion.rateMin || 0);
+      setRatingCorrectAnswer(valuesQuestion.correctAnswer || 0);
+    }
+
     setAllowGradableSurvey(state);
 
     setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex);
     // Load rankingCorrectAnswers
-    (valuesQuestion.correctAnswer || []).forEach((answer, index) => {
-      const position = valuesQuestion.choices.indexOf(answer);
-      if (position < 0) {
-        // Then, nobody knows what it is
-        return;
-      }
-      rankingCorrectAnswers[index] = position + 1;
-    });
+    if (valuesQuestion.type === 'Ranking') {
+      (valuesQuestion.correctAnswer || []).forEach((answer, index) => {
+        const position = valuesQuestion.choices.indexOf(answer);
+        if (position < 0) {
+          // Then, nobody knows what it is
+          return;
+        }
+        rankingCorrectAnswers[index] = position + 1;
+      });
+    }
+
+    if (valuesQuestion.type === 'Escala de Likert') {
+      console.debug('load matrix');
+      setLikertScaleData({
+        ...likertScaleData, // Previous data
+        values: valuesQuestion.correctAnswer, // The correct answers
+        rows: valuesQuestion.choices.rows,
+        columns: valuesQuestion.choices.columns,
+      });
+    }
 
     setTimeout(() => {
       setLoading(false);
@@ -320,12 +351,32 @@ const FormEdit = (
           break;
         
         case 'rating':
-          // TODO: implement that
+          values['isRequired'] = true;
+          values['correctAnswer'] = ratingCorrectAnswer;
+          values['correctAnswerIndex'] = correctAnswerIndex;
           break;
+        
+        case 'matrix':
+          values['correctAnswer'] = likertScaleData?.values || [];
+          values['isRequired'] = true;
+          values['correctAnswerIndex'] = correctAnswerIndex;
 
         default:
           break;
       }
+    }
+    console.debug('will save values', values);
+
+    if (questionType === 'matrix') {
+      values['choices'] = {
+        rows: likertScaleData?.rows || {},
+        columns: likertScaleData?.columns || {},
+      };
+    } else if (questionType === 'rating') {
+      values['maxRateDescription'] = maxRateDescription;
+      values['rateMax'] = rateMax;
+      values['minRateDescription'] = minRateDescription;
+      values['rateMin'] = rateMin;
     }
 
     if (values.type.indexOf(' ') > 0) {
@@ -706,11 +757,93 @@ const FormEdit = (
                           </Form.Item>
                         ))}
                         </Space>
+                      ) : questionType === 'rating' ? (
+                        <Space direction='vertical'>
+                          {/* The max rate description in this question kind */}
+                          <Form.Item
+                            label={<Text type='secondary'>Descripción de la valuación máxima</Text>}
+                            required={true}
+                          >
+                            <Input
+                              value={maxRateDescription}
+                              onChange={(e) => setMaxRateDescription(e.target.value)}
+                              placeholder='Descripción de la valuación máxima'
+                              style={{ width: '100%' }}
+                            />
+                          </Form.Item>
+
+                          {/* The max value */}
+                          <Form.Item
+                            label={<Text type='secondary'>Valor de la valuación máxima</Text>}
+                            required={true}
+                          >
+                            <InputNumber
+                              // style={{ maxWidth: '5em' }}
+                              value={rateMax}
+                              onChange={(e) => setRateMax(e)}
+                              placeholder='Valor de la valuación máxima'
+                              style={{ width: '100%' }}
+                              min={0}
+                            />
+                          </Form.Item>
+
+                          {/* The min rate description in this question kind */}
+                          <Form.Item
+                            label={<Text type='secondary'>Descripción de la valuación mínima</Text>}
+                            required={true}
+                          >
+                            <Input
+                              value={minRateDescription}
+                              onChange={(e) => setMinRateDescription(e.target.value)}
+                              placeholder='Descripción de la valuación mínima'
+                              style={{ width: '100%' }}
+                            />
+                          </Form.Item>
+
+                          {/* The min value */}
+                          <Form.Item
+                            label={<Text type='secondary'>Valor de la valuación mínima</Text>}
+                            required={true}
+                          >
+                            <InputNumber
+                              // style={{ maxWidth: '5em' }}
+                              value={rateMin}
+                              onChange={(e) => setRateMin(e)}
+                              placeholder='Valor de la valuación mínima'
+                              style={{ width: '100%' }}
+                              min={0}
+                              />
+                          </Form.Item>
+
+                          {/* The correct answer */}
+                          {allowGradableSurvey && (
+                            <Form.Item
+                              label={<Text type='secondary'>Valoración correcta</Text>}
+                              required={true}
+                            >
+                              <InputNumber
+                                // style={{ maxWidth: '5em' }}
+                                value={ratingCorrectAnswer || ''}
+                                onChange={(e) => setRatingCorrectAnswer(e)}
+                                placeholder='Valoración correcta'
+                                style={{ width: '100%' }}
+                                min={0}
+                                />
+                            </Form.Item>
+                          )}
+                        </Space>
+                      ) :  questionType === 'matrix' ? (
+                        <>
+                        <LikertScaleEditor
+                          source={likertScaleData || {}}
+                          onEdit={(x) => setLikertScaleData(x)}
+                        />
+                        </>
                       ) : (
                         <p>Tipo desconocido</p>
                       )}
                     </Space>
-                    {fields.length < 15 && (
+                    {(fields.length < 15 && questionType !== 'rating') && (
                       <Form.Item>
                         <Button
                           type='dashed'
