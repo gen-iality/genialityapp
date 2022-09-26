@@ -73,7 +73,7 @@ class eventLanding extends Component {
           <Card
             className='event-description'
             /* bodyStyle={{ padding: '25px 5px' }} */
-            bordered={true}
+            bordered={false}
             style={
               (this.props.cEvent.value.styles &&
               this.props.cEvent.value.styles.show_card_banner &&
@@ -85,7 +85,6 @@ class eventLanding extends Component {
                 ? { backgroundColor: 'transparent', border: 'none' }
                 : */ {
                 backgroundColor: 'transparent',
-                border: 'none',
               })
             }>
             {/* {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
