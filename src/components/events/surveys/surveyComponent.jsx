@@ -23,8 +23,10 @@ import { sendCommunicationUser } from '@/components/agenda/surveyManager/service
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
+  console.log('🚀 ~ file: surveyComponent.jsx ~ line 26 ~ SurveyComponent ~ eventId', eventId);
 
   const cEvent = UseEventContext();
+  console.log('🚀 ~ file: surveyComponent.jsx ~ line 28 ~ SurveyComponent ~ cEvent', cEvent);
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
   const [surveyData, setSurveyData] = useState({});

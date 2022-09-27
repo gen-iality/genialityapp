@@ -17,6 +17,7 @@ export default class SurveyManager extends Component {
 
   listenActivitySurveys = () => {
     const { event_id, activity_id } = this.props;
+    console.log('🚀 ~ file: index.jsx ~ line 20 ~ SurveyManager ~  this.props', this.props);
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let $query = firestore.collection('surveys');
 
