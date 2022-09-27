@@ -149,7 +149,8 @@ class ListEventUser extends Component {
   };
 
   physicalCheckInComponent = (text, item, index) => {
-    return <AttendeeCheckInButton attendee={item} />;
+    const activityId = this.props.match.params.id;
+    return <AttendeeCheckInButton attendee={item} activityId={activityId} />;
   };
 
   checkInTypeComponent = (text, item, index) => {
