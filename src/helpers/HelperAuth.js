@@ -21,33 +21,6 @@ export async function GetTokenUserFirebase() {
   });
 }
 
-export const checkinAttendeeInActivity2 = (attende, activityId) => {
-  /** We use the activity id plus _event_attendees to be able to reuse the checkIn component per event */
-  const userRef = firestore.collection(`${activityId}_event_attendees`).doc(attende._id);
-  userRef.onSnapshot(function(doc) {
-    if (doc.exists) {
-      if (!doc.data().checked_in) {
-        userRef.set(
-          {
-            checked_in: true,
-            checkedin_at: new Date(),
-          },
-          { merge: true }
-        );
-      }
-    } else {
-      firestore
-        .collection(`${activityId}_event_attendees`)
-        .doc(attende._id)
-        .set({
-          ...attende,
-          checked_in: true,
-          checkedin_at: new Date(),
-        });
-    }
-  });
-};
-
 export const checkinAttendeeInEvent = (attende, eventId) => {
   const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
 

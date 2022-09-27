@@ -37,6 +37,7 @@ const FormEnrollAttendeeToEvent = ({
   },
   printUser,
   badgeEvent,
+  activityId,
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -150,12 +151,14 @@ const FormEnrollAttendeeToEvent = ({
                       <>
                         <AttendeeCheckInCheckbox
                           attendee={attendeeInformation}
+                          activityId={activityId}
                           reloadComponent={componentLoad}
                           checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
                         />
                         {eventType === 'hybridEvent' && (
                           <AttendeeCheckInButton
                             attendee={attendeeInformation}
+                            activityId={activityId}
                             reloadComponent={componentLoad}
                             checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
                           />

@@ -450,11 +450,11 @@ export const UsersApi = {
 
   createUserInEventAndAssignToActivity: async (data, activityId) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.post(
-      `api/eventUsers/activities/${activityId}/create-user-to-activity?token=${token}`,
-      data,
-      true
-    );
+    return await Actions.post(`api/activities/${activityId}/eventUsers?token=${token}`, data, true);
+  },
+  deleteAttendeeInActivity: async (activityId, eventUserId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/activities/${activityId}/eventUsers/${eventUserId}?token=${token}`);
   },
 };
 
@@ -479,7 +479,7 @@ export const AttendeeApi = {
   },
   delete: async (eventId, id) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/events/${eventId}/eventusers`, `${id}?token=${token}`);
+    return await Actions.delete(`api/events/${eventId}/eventusers/`, `${id}?token=${token}`, true);
   },
 };
 

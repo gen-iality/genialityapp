@@ -60,6 +60,7 @@ export type FormEnrollAttendeeToEventPropsTypes = {
   eventType?: string;
   submitButtonProps?: submitButtonPropsTypes;
   badgeEvent?: object;
+  activityId?: string;
 };
 
 export type submitButtonPropsTypes = {
