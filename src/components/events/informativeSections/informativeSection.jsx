@@ -133,7 +133,7 @@ class InformativeSection extends Component {
             <Card
               title={informativeSection.name || 'clasificación'}
               bordered={false}
-              style={{ width: 1000, margin: 'auto' }}>
+              style={{ margin: 'auto', backgroundColor: 'transparent' }}>
               {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
 
               {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
