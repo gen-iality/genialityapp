@@ -447,10 +447,11 @@ export const UsersApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`/api/events/${eventId}/eventusers/${eventUserId}?token=${token}`, data, true);
   },
-  createUserInEventAndAssignToActivity: async (data, eventId, activityId) => {
+
+  createUserInEventAndAssignToActivity: async (data, activityId) => {
     let token = await GetTokenUserFirebase();
     return await Actions.post(
-      `/api/eventUsers/createUserAndAddtoEvent/${eventId}/?activity_id=${activityId}&token=${token}`,
+      `api/eventUsers/activities/${activityId}/create-user-to-activity?token=${token}`,
       data,
       true
     );

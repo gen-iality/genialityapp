@@ -273,8 +273,7 @@ class UserModal extends Component {
         if (!this.props.edit) {
           try {
             if (activityId) {
-              console.debug('🚀 -->  - creando en la actividad ', activityId);
-              respActivity = await UsersApi.createUserInEventAndAssignToActivity(snap?.properties, eventId, activityId);
+              respActivity = await UsersApi.createUserInEventAndAssignToActivity(snap.properties, activityId);
             } else {
               resp = await UsersApi.createOne(snap, eventId);
             }
