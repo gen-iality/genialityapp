@@ -8,6 +8,7 @@ import {
   Card,
   Typography,
   Statistic,
+  Alert, // to info messages
 } from 'antd';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import AgendaContext from '@context/AgendaContext';
@@ -128,7 +129,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       </div>
       {activityContentType === activityContentValues.quizing && (
         <>
-        {(!contentSource) && (<p>Cargando contenido...</p>)}
+        {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
         <QuizCMS
           title={'Evaluación'}
           activityId={activityEdit}
@@ -153,7 +154,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       )}
       {activityContentType === activityContentValues.survey && (
         <>
-        {(!contentSource) && (<p>Cargando contenido...</p>)}
+        {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
         <SurveyCMS
           title={'Encuesta'}
           activityId={activityEdit}
