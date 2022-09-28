@@ -79,7 +79,7 @@ const AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
-    let unSuscribe;
+    let unSuscribe = () => {};
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
 
