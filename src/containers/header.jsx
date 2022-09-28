@@ -14,6 +14,7 @@ import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thi
 import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import { useIntl } from 'react-intl';
+import { getCorrectColor } from '@/helpers/utils';
 
 const { useBreakpoint } = Grid;
 
@@ -262,7 +263,11 @@ const Headers = (props) => {
                       {recordTypeForThisEvent(cEvent) !== 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS' && (
                         <Button
                           icon={<LockOutlined />}
-                          style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                          style={{
+                            backdropFilter: 'blur(8px)',
+                            background: '#FFFFFF99',
+                            color: getCorrectColor(bgcolorContainer),
+                          }}
                           size='large'
                           onClick={() => {
                             helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
@@ -293,6 +298,11 @@ const Headers = (props) => {
 
                   {showButtons.buttonregister && (
                     <Button
+                      style={{
+                        backdropFilter: 'blur(8px)',
+                        background: '#FFFFFF99',
+                        color: getCorrectColor(bgcolorContainer),
+                      }}
                       size='large'
                       onClick={() => {
                         helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });

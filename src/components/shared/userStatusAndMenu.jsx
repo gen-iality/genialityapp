@@ -170,7 +170,7 @@ const UserStatusAndMenu = (props) => {
               backgroundColor: 'white',
               borderRadius: '10px',
               padding: '15px',
-              backdropFilter: 'blur(50%)',
+              backdropFilter: 'blur(8px)',
               background: '#FFFFFF4D',
             }}>
             {photo ? (
