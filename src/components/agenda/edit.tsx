@@ -467,7 +467,11 @@ function AgendaEdit(props: AgendaEditProps) {
                   <TabPane tab='Encuestas' key='4'>
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
-                        <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
+                        <SurveyManager
+                          event_id={props.event._id}
+                          activity_id={currentActivityID}
+                          canSendComunications={props.event?.sms_notification}
+                        />
                         <BackTop />
                       </Col>
                     </Row>
