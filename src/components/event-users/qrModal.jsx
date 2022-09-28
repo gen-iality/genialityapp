@@ -15,7 +15,7 @@ const { Title } = Typography;
 
 const html = document.querySelector('html');
 
-const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badgeEvent }) => {
+const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badgeEvent, activityId }) => {
   /** PENDING: Se bebe tener en cuenta el campo rol, este debe crearse al crear el evento como campo obligatorio el cual solo debe ser visible admin y permitir cambiar el label, actualmete se recibe la propiedad fields esta se estructura en el front realizando un push del campo con name: 'rol_id', ver componentDidMount del componente ListEventUser ruta: event-user>index, mejorando el origen del campo rol el componente tomaria los user_properties del contexto del evento*/
   const cEvent = useContext(CurrentEventContext);
   const { fields_conditions, type_event, _id } = cEvent?.value || {};
@@ -134,6 +134,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
               eventType={type_event}
               printUser={printUser}
               badgeEvent={badgeEvent}
+              activityId={activityId}
             />
           ) : (
             <QrAndDocumentForm

@@ -837,6 +837,7 @@ class ListEventUser extends Component {
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
             badgeEvent={this.state.badgeEvent}
+            activityId={activityId}
           />
         )}
 
