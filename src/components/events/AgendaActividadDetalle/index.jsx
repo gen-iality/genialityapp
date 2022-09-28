@@ -79,16 +79,19 @@ const AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
+    let unSuscribe;
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
 
       if (cEvent.value.type_event !== 'physicalEvent') {
         const eventId = cEvent.value._id;
         const activityId = props.match.params.activity_id;
-        /* BUG: unsuscribe  pendiente, no se desmonta y baja mucho el performance*/
-        checkinAttendeeInActivity(cEventUser.value, eventId, activityId);
+
+        unSuscribe = checkinAttendeeInActivity(cEventUser.value, eventId, activityId);
       }
     }
+
+    return () => unSuscribe();
   }, [currentActivity, cEventUser.status]);
 
   useEffect(() => {

@@ -36,7 +36,7 @@ export const checkinAttendeeInEvent = (attende, eventId) => {
 export const checkinAttendeeInActivity = (attende, eventId, activityId) => {
   const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
 
-  userRef.onSnapshot(async function(doc) {
+  const unSuscribe = userRef.onSnapshot(async function(doc) {
     if (doc.exists) {
       const activityProperties = doc.data()?.activityProperties;
 
@@ -74,4 +74,5 @@ export const checkinAttendeeInActivity = (attende, eventId, activityId) => {
       }
     }
   });
+  return unSuscribe;
 };
