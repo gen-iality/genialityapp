@@ -862,26 +862,31 @@ class ListEventUser extends Component {
           }
           titleTable={
             <Row gutter={[6, 6]}>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<UsergroupAddOutlined />}>
-                  <strong>Inscritos: </strong>
-                  <span style={{ fontSize: '13px' }}>{inscritos}</span>
-                </Tag>
-              </Col>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<StarOutlined />}>
-                  <strong>Participantes: </strong>
-                  <span style={{ fontSize: '13px' }}>
-                    {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-                  </span>
-                </Tag>
-              </Col>
+              {!activityId && (
+                <React.Fragment>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<UsergroupAddOutlined />}>
+                      <strong>Inscritos: </strong>
+                      <span style={{ fontSize: '13px' }}>{inscritos}</span>
+                    </Tag>
+                  </Col>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<StarOutlined />}>
+                      <strong>Participantes: </strong>
+                      <span style={{ fontSize: '13px' }}>
+                        {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
+                      </span>
+                    </Tag>
+                  </Col>
+                </React.Fragment>
+              )}
+
               <Col>
                 {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
                   <>
@@ -894,11 +899,15 @@ class ListEventUser extends Component {
                   </>
                 )}
               </Col>
-              <Col>
-                <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
-                  Expandir
-                </Button>
-              </Col>
+
+              {!activityId && (
+                <Col>
+                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                    Expandir
+                  </Button>
+                </Col>
+              )}
+
               <Col>
                 <Select
                   name={'type-scanner'}
