@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useMemo } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
 import { UseEventContext } from './eventContext';
@@ -121,6 +121,16 @@ export function SurveysProvider({ children }) {
     return (currentStatus.tried || 0) < (state.currentSurvey?.tries || 1);
   }
 
+  const surveyStatsString = useMemo(() => {
+    // Beware of editing this without thinking
+    if (!state.currentSurveyStatus) return 'cuestionario nuevo';
+    const currentStatus = state.currentSurveyStatus[state.currentSurvey._id];
+    if (!currentStatus) return 'cuestionario nuevo';
+
+    const tried = currentStatus.tried || 0;
+    return `${tried} ${tried > 1 ? 'intentos':'intento'} de ${state.currentSurvey?.tries || 1}`;
+  }, [state.currentSurvey, state.currentSurveyStatus]);
+
   function shouldDisplayRanking() {
     if (!state.currentSurvey) {
       return false;
@@ -173,6 +183,7 @@ export function SurveysProvider({ children }) {
     <SurveysContext.Provider
       value={{
         ...state,
+        surveyStatsString,
         select_survey,
         unset_select_survey,
         set_current_activity,
