@@ -79,13 +79,19 @@ const AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
+    let unSuscribe;
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
-      // console.log(cEvent.value.type_event)
-      if (cEvent.value.type_event === 'onlineEvent') {
-        checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id);
+
+      if (cEvent.value.type_event !== 'physicalEvent') {
+        const eventId = cEvent.value._id;
+        const activityId = props.match.params.activity_id;
+
+        unSuscribe = checkinAttendeeInActivity(cEventUser.value, eventId, activityId);
       }
     }
+
+    return () => unSuscribe();
   }, [currentActivity, cEventUser.status]);
 
   useEffect(() => {

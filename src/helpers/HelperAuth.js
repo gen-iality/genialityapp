@@ -21,33 +21,6 @@ export async function GetTokenUserFirebase() {
   });
 }
 
-export const checkinAttendeeInActivity = (attende, activityId) => {
-  /** We use the activity id plus _event_attendees to be able to reuse the checkIn component per event */
-  const userRef = firestore.collection(`${activityId}_event_attendees`).doc(attende._id);
-  userRef.onSnapshot(function(doc) {
-    if (doc.exists) {
-      if (!doc.data().checked_in) {
-        userRef.set(
-          {
-            checked_in: true,
-            checkedin_at: new Date(),
-          },
-          { merge: true }
-        );
-      }
-    } else {
-      firestore
-        .collection(`${activityId}_event_attendees`)
-        .doc(attende._id)
-        .set({
-          ...attende,
-          checked_in: true,
-          checkedin_at: new Date(),
-        });
-    }
-  });
-};
-
 export const checkinAttendeeInEvent = (attende, eventId) => {
   const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
 
@@ -59,4 +32,47 @@ export const checkinAttendeeInEvent = (attende, eventId) => {
       }
     }
   });
+};
+export const checkinAttendeeInActivity = (attende, eventId, activityId) => {
+  const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
+
+  const unSuscribe = userRef.onSnapshot(async function(doc) {
+    if (doc.exists) {
+      const activityProperties = doc.data()?.activityProperties;
+
+      if (activityProperties && activityProperties?.length > 0) {
+        const addedToTheActivityButWithoutChecking = activityProperties.find((activityPropertie) => {
+          return activityPropertie.activity_id === activityId && !activityPropertie.checked_in;
+        });
+
+        const withoutAddingToTheActivityAndWithoutChecking = activityProperties.find((activityPropertie) => {
+          return activityPropertie.activity_id === activityId;
+        });
+
+        if (addedToTheActivityButWithoutChecking) {
+          await saveCheckInAttendee({
+            _id: attende._id,
+            checked: true,
+            notification: false,
+            type: 'Virtual',
+            activityId,
+          });
+          return;
+        }
+        if (!withoutAddingToTheActivityAndWithoutChecking) {
+          await saveCheckInAttendee({
+            _id: attende._id,
+            checked: true,
+            notification: false,
+            type: 'Virtual',
+            activityId,
+          });
+          return;
+        }
+      } else {
+        saveCheckInAttendee({ _id: attende._id, checked: true, notification: false, type: 'Virtual', activityId });
+      }
+    }
+  });
+  return unSuscribe;
 };

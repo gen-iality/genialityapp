@@ -32,6 +32,7 @@ import moment from 'moment';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
+import { UsersPerEventOrActivity } from './utils/utils';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -45,9 +46,7 @@ class ListEventUser extends Component {
       usersReq: [],
       pageOfItems: [],
       listTickets: [],
-      usersRef: firestore.collection(
-        `${props.match.params.id ? props.match.params.id : props.event._id}_event_attendees`
-      ),
+      usersRef: firestore.collection(`${props.event._id}_event_attendees`),
       pilaRef: firestore.collection('pila'),
       total: 0,
       totalCheckedIn: 0,
@@ -144,11 +143,14 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    return <AttendeeCheckInCheckbox attendee={item} />;
+    const activityId = this.props.match.params.id;
+
+    return <AttendeeCheckInCheckbox attendee={item} activityId={activityId} />;
   };
 
   physicalCheckInComponent = (text, item, index) => {
-    return <AttendeeCheckInButton attendee={item} />;
+    const activityId = this.props.match.params.id;
+    return <AttendeeCheckInButton attendee={item} activityId={activityId} />;
   };
 
   checkInTypeComponent = (text, item, index) => {
@@ -171,28 +173,10 @@ class ListEventUser extends Component {
     );
     return extraFields;
   };
-  /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
-  sortUsersArray = async (users) => {
-    const sortedResult = users.sort((itemA, itemB) => {
-      let aParameter = '';
-      let bParameter = '';
-
-      try {
-        aParameter = itemA?.checkedin_at?.toDate();
-        bParameter = itemB?.checkedin_at?.toDate();
-      } catch (error) {}
-
-      if (!aParameter) return 1;
-      if (!bParameter) return -1;
-      if (moment(aParameter) === moment(bParameter)) return 0;
-      return moment(aParameter) > moment(bParameter) ? -1 : 1;
-    });
-
-    return sortedResult;
-  };
 
   getAttendes = async () => {
     let self = this;
+    const activityId = this.props.match.params.id;
 
     this.checkFirebasePersistence();
     try {
@@ -467,12 +451,13 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-          const sortedUsers = await this.sortUsersArray(updatedAttendees);
+
+          const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
           this.setState({
-            users: sortedUsers,
-            usersReq: sortedUsers,
-            auxArr: sortedUsers,
+            users: attendees,
+            usersReq: updatedAttendees,
+            auxArr: attendees,
             loading: false,
           });
         },
@@ -802,7 +787,8 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
-    const { type, loading, componentKey } = this.props;
+    const activityId = this.props.match.params.id;
+    const { loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
     const inscritos =
@@ -815,7 +801,13 @@ class ListEventUser extends Component {
 
     return (
       <React.Fragment>
-        <Header title={type == 'activity' ? 'Check-in de ' + nameActivity : 'Check-in de evento'} />
+        <Header
+          title={
+            componentKey === 'activity-checkin'
+              ? 'Check-in actividad: ' + nameActivity
+              : `Check-in evento: ${this.props.event?.name}`
+          }
+        />
 
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
@@ -845,6 +837,7 @@ class ListEventUser extends Component {
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
             badgeEvent={this.state.badgeEvent}
+            activityId={activityId}
           />
         )}
 
@@ -929,11 +922,13 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 <Link
-                  to={
-                    !eventIsActive && window.location.toString().includes('eventadmin')
-                      ? ''
-                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
-                  }>
+                  to={{
+                    pathname:
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                        ? ''
+                        : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
+                    state: { activityId },
+                  }}>
                   <Button
                     type='primary'
                     icon={<UploadOutlined />}
@@ -975,6 +970,7 @@ class ListEventUser extends Component {
             edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}
             componentKey={componentKey}
+            activityId={activityId}
           />
         )}
 

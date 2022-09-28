@@ -83,7 +83,9 @@ class Result extends Component {
                 cb();
               });
           } else {
-            Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, user)
+            const activityId = this.props.locationParams?.state?.activityId;
+            let activity = activityId ? `activity_id=${activityId}` : '';
+            Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}/?${activity}`, user)
               .then((resp) => {
                 if (resp.message === 'OK') {
                   ok[key] = {
