@@ -432,10 +432,14 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   }, [activityEdit]);
 
   useEffect(() => {
-    if (!contentSource && !!meetingId && !!activityContentType && (theseAreLiveToo.includes(activityContentType) || theseAreMeeting.includes(activityContentType) || ['survey', 'quiz', 'quizing'].includes(activityContentType))) {
-      console.debug('reset contentSource to meetingId:', meetingId);
-      setContentSource(meetingId);
+    if (!activityContentType) return;
+    if (!meetingId) return;
+    if (theseAreVideo.includes(activityContentType)) {
+      console.debug('not reload content source in type', activityContentType);
+      return;
     }
+    console.debug('reset contentSource to meetingId:', meetingId);
+    setContentSource(meetingId);
   }, [meetingId]);
 
   return (

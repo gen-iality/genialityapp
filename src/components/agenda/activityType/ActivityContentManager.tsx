@@ -127,6 +127,8 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <Typography.Text>Página de configuración del contenido.</Typography.Text>
       </div>
       {activityContentType === activityContentValues.quizing && (
+        <>
+        {(!contentSource) && (<p>Cargando contenido...</p>)}
         <QuizCMS
           title={'Evaluación'}
           activityId={activityEdit}
@@ -147,8 +149,11 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
             resetActivityType('quizing2');
           }}
         />
+        </>
       )}
       {activityContentType === activityContentValues.survey && (
+        <>
+        {(!contentSource) && (<p>Cargando contenido...</p>)}
         <SurveyCMS
           title={'Encuesta'}
           activityId={activityEdit}
@@ -169,6 +174,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
             resetActivityType('survey2');
           }}
         />
+        </>
       )}
       </>
     );
