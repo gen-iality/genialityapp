@@ -107,11 +107,18 @@ export function SurveysProvider({ children }) {
   }
 
   function attendeeAllReadyAnswered() {
+    console.log('survey state', state)
     if (!state.currentSurveyStatus) {
       return true;
     }
 
-    return state.currentSurveyStatus[state.currentSurvey._id]?.surveyCompleted !== 'completed';
+    // return state.currentSurveyStatus[state.currentSurvey._id]?.surveyCompleted !== 'completed';
+
+    // If tried (in Firebase) is equal that tries (in MongoDB), then the user can see the survey
+    const currentStatus = state.currentSurveyStatus[state.currentSurvey._id];
+    if (!currentStatus) return true;
+    console.debug('survey tries tried', state.currentSurvey?.tries, currentStatus.tried);
+    return (currentStatus.tried || 0) < (state.currentSurvey?.tries || 1);
   }
 
   function shouldDisplayRanking() {
