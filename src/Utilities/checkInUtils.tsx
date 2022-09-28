@@ -61,7 +61,7 @@ export const assignMessageAndTypeToQrmodalAlert = ({ scannerData, attendeeId }: 
   let type = 'info';
   let message: ReactNode = <></>;
   const checkedinAt: any = scannerData?.attendee?.checkedin_at;
-  const dateAndTime: any = checkedinAt && checkedinAt?.toDate();
+  const dateAndTime: any = typeof checkedinAt === 'string' ? checkedinAt : checkedinAt?.toDate();
 
   if (scannerData?.attendeeNotFound) {
     type = 'error';

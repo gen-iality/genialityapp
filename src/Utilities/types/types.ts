@@ -22,6 +22,7 @@ export type searchDocumentOrIdPropsTypes = {
   searchValue: searchValue;
   fields: any;
   eventID: string;
+  activityId: string;
   setScannerData: (data: any) => void;
   setLoadingregister: (data: any) => void;
 };
@@ -102,4 +103,5 @@ export type AttendeeInformation = {
   checkedin_type: string | null;
   properties: {};
   _id: string;
+  activityProperties: [];
 };

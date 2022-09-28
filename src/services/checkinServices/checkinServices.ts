@@ -3,7 +3,26 @@ import { firestore } from '@/helpers/firebase';
 import { Activity, TicketsApi } from '@/helpers/request';
 import { structureScannedInformation } from '@/Utilities/checkInUtils';
 import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
-import { newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from '@/Utilities/types/types';
+import {
+  AttendeeInformation,
+  newData,
+  saveCheckInAttendeePropsTypes,
+  searchDocumentOrIdPropsTypes,
+} from '@/Utilities/types/types';
+
+export const checkinByEventOrByActivity = (attendee: AttendeeInformation, activityId: string) => {
+  if (!activityId) attendee;
+
+  let usersInTheActivity: {}[] = [];
+
+  attendee?.activityProperties?.filter((userInActivity: { activity_id: string }) => {
+    if (userInActivity?.activity_id === activityId) {
+      usersInTheActivity.push({ ...attendee, ...userInActivity });
+    }
+  });
+
+  return usersInTheActivity[0];
+};
 
 /**allows you to search by ID or document number for an eventuser in firebase */
 export const getAttendeeByParameter = ({
@@ -11,6 +30,7 @@ export const getAttendeeByParameter = ({
   searchValue,
   fields,
   eventID,
+  activityId,
   setScannerData,
   setLoadingregister,
 }: searchDocumentOrIdPropsTypes) => {
@@ -97,9 +117,12 @@ export const getAttendeeByParameter = ({
         setLoadingregister(false);
       } else {
         querySnapshot.forEach((doc) => {
-          const attendeeData = doc.data();
+          const attendeeData: AttendeeInformation = doc.data() as AttendeeInformation;
+
+          const attendee = checkinByEventOrByActivity(attendeeData, activityId);
+
           newData.attendeeFound = true;
-          newData.attendee = attendeeData;
+          newData.attendee = attendee;
           setScannerData(newData);
           setLoadingregister(false);
         });

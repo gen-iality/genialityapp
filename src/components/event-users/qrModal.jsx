@@ -53,6 +53,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
         searchValue,
         fields,
         eventID: _id,
+        activityId,
         setScannerData,
         setLoadingregister,
       };
