@@ -8,10 +8,11 @@ import ClosedSurvey from './components/closedSurvey';
 /** Context´s */
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
-
+import { UseUserEvent } from '@context/eventUserContext';
 function SurveyDetailPage(props) {
   let cSurveys = UseSurveysContext();
   const currentUser = UseCurrentUser();
+  const cEventUser = UseUserEvent();
   const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ function SurveyDetailPage(props) {
           <SurveyComponent
             idSurvey={cSurveys.currentSurvey._id}
             eventId={cSurveys.currentSurvey.eventId}
+            cEventUser={cEventUser}
             currentUser={currentUser}
             setShowSurveyTemporarily={setShowSurveyTemporarily}
             operation='participationPercentage'

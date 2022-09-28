@@ -3,7 +3,7 @@ import { Card, Row, Col } from 'antd';
 import { firestore, fireRealtime } from '../../../helpers/firebase';
 import SurveyItem from './surveyItem';
 import { DispatchMessageService } from '../../../context/MessageService';
-
+import { sendCommunicationOpen } from './services';
 export default class SurveyManager extends Component {
   constructor(props) {
     super(props);
@@ -65,7 +65,10 @@ export default class SurveyManager extends Component {
 
   handleChange = async (survey_id, data) => {
     const result = await this.updateSurvey(survey_id, data);
-
+    const canSendComunications = this.props.canSendComunications;
+    if (canSendComunications && canSendComunications === true && data.isOpened === 'true') {
+      await sendCommunicationOpen(survey_id);
+    }
     if (result && result.state === 'updated') {
       DispatchMessageService({
         type: 'success',

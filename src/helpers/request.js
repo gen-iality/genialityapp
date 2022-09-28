@@ -603,6 +603,12 @@ export const SurveysApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`/api/events/${event}/questionedit/${id}/?token=${token}&questionNo=${index}`, data, true);
   },
+  sendCommunicationUser: async (surveyId, eventUserId) => {
+    return await Actions.get(`/api/surveys/${surveyId}/eventusers/${eventUserId}/sendcode`);
+  },
+  sendCommunicationOpen: async (surveyId) => {
+    return await Actions.get(`/api/surveys/${surveyId}/open`);
+  },
 };
 
 export const DocumentsApi = {
