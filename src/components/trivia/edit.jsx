@@ -143,6 +143,7 @@ class triviaEdit extends Component {
       openSurvey: firebaseSurvey.isOpened || this.state.openSurvey,
       publish: firebaseSurvey.isPublished || this.state.publish,
 
+      tries: 1,
       random_survey: firebaseSurvey.random_survey || false,
       random_survey_count: firebaseSurvey.random_survey_count || 0,
 
@@ -260,6 +261,7 @@ class triviaEdit extends Component {
         minimumScore: 0,
 
         // Rossie history inspired this feature
+        tries: Math.max(this.state.tries, 1),
         random_survey: this.state.random_survey,
         random_survey_count: this.state.random_survey_count,
       };
@@ -288,6 +290,7 @@ class triviaEdit extends Component {
             minimumScore: data.minimumScore,
 
             // Rossie history inspired this feature
+            tries: Math.max(data.tries, 1),
             random_survey: data.random_survey,
             random_survey_count: data.random_survey_count,
           },
@@ -402,6 +405,7 @@ class triviaEdit extends Component {
         minimumScore: parseInt(this.state.minimumScore),
 
         // Rossie history inspired this feature
+        tries: Math.max(this.state.tries, 1),
         random_survey: this.state.random_survey,
         random_survey_count: this.state.random_survey_count,
       };
@@ -433,6 +437,7 @@ class triviaEdit extends Component {
               activity_id: data.activity_id,
 
               // Rossie history inspired this feature
+              tries: Math.max(this.state.tries, 1),
               random_survey: data.random_survey,
               random_survey_count: data.random_survey_count,
             },
@@ -682,6 +687,10 @@ class triviaEdit extends Component {
       case 'random_survey':
         this.setState({ random_survey: state });
         break;
+      
+      case 'tries':
+        this.setState({ tries: Math.max(state, 1) });
+        break
 
       default:
         break;
@@ -737,6 +746,7 @@ class triviaEdit extends Component {
       currentQuestion,
       allow_anonymous_answers,
       allow_gradable_survey,
+      tries,
       random_survey,
       random_survey_count,
       show_horizontal_bar,
@@ -886,6 +896,21 @@ class triviaEdit extends Component {
                       placeholder={`Nombre de la ${this.state.title.toLowerCase()}`}
                       name={'survey'}
                       onChange={this.changeInput}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label={
+                      <label style={{ marginTop: '2%' }}>
+                        Intentos permitidos <label style={{ color: 'red' }}>*</label>
+                      </label>
+                    }
+                    rules={[{ required: true, message: 'Intentos permitidos es requerido' }]}>
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      value={tries}
+                      placeholder={`Cantidad de intentos permitidos en: ${this.state.title.toLowerCase()}`}
+                      name={'tries'}
+                      onChange={(value) => this.changeInput({ target: { name: 'tries', value: Math.max(value, 1) } })}
                     />
                   </Form.Item>
                   {this.state.idSurvey && (
