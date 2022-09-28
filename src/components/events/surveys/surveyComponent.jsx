@@ -18,11 +18,11 @@ import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey
 import RealTimeSurveyListening from './functions/realTimeSurveyListening';
 import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
+import { sendCommunicationUser } from '@/components/agenda/surveyManager/services';
 // import { firestore, fireRealtime } from '../../../helpers/firebase';
 
 function SurveyComponent(props) {
-  const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
-
+  const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
   const cEvent = UseEventContext();
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -40,7 +40,6 @@ function SurveyComponent(props) {
   let [totalPoints, setTotalPoints] = useState(0);
   let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
   let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
-
   useEffect(() => {
     // asigna los colores del evento para la UI de la encuesta
     InternarlSurveyStyles(eventStyles);
@@ -116,9 +115,12 @@ function SurveyComponent(props) {
       //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
       SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
     }
-
     let isLastPage = surveyModel.isLastPage;
-
+    let canSendComunications = cEvent?.value?.sms_notification;
+    let eventUserId = cEventUser?.value?._id;
+    if (canSendComunications && canSendComunications === true) {
+      await sendCommunicationUser(idSurvey, eventUserId);
+    }
     if (surveyData.allow_gradable_survey === 'true') {
       if (isLastPage) {
         setShowMessageOnComplete(false);
