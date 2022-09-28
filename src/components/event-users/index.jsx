@@ -88,6 +88,8 @@ class ListEventUser extends Component {
       typeScanner: 'CheckIn options',
       nameActivity: props.location.state?.item?.name || '',
       qrModalOpen: false,
+      unSusCribeConFigFast: () => {},
+      unSuscribeAttendees: () => {},
     };
   }
   static contextType = HelperContext;
@@ -177,6 +179,7 @@ class ListEventUser extends Component {
   getAttendes = async () => {
     let self = this;
     const activityId = this.props.match.params.id;
+    console.debug('🚀 -->  - activityId', activityId);
 
     this.checkFirebasePersistence();
     try {
@@ -352,19 +355,20 @@ class ListEventUser extends Component {
       this.setState({ extraFields, rolesList, badgeEvent, fieldsForm });
       const { usersRef } = this.state;
 
-      firestore
+      const unSusCribeConFigFast = firestore
         .collection(`event_config`)
         .doc(event._id)
         .onSnapshot((doc) => {
           this.setState({ ...this.state, configfast: doc.data() });
         });
 
-      usersRef.orderBy('updated_at', 'desc').onSnapshot(
+      const unSuscribeAttendees = usersRef.orderBy('updated_at', 'desc').onSnapshot(
         {
           // Listen for document metadata changes
           //includeMetadataChanges: true
         },
         async (snapshot) => {
+          console.debug('🚀 -->  - snapshot', snapshot);
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
 
@@ -453,8 +457,11 @@ class ListEventUser extends Component {
           }
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
+          console.debug('🚀 -->  - attendees', attendees);
 
           this.setState({
+            unSusCribeConFigFast,
+            unSuscribeAttendees,
             users: attendees,
             usersReq: updatedAttendees,
             auxArr: attendees,
@@ -473,6 +480,11 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     this.getAttendes();
+  }
+
+  async componentWillUnmount() {
+    this.state.unSusCribeConFigFast();
+    this.state.unSuscribeAttendees();
   }
 
   obtenerName = (fileUrl) => {
@@ -788,6 +800,7 @@ class ListEventUser extends Component {
     } = this.state;
 
     const activityId = this.props.match.params.id;
+
     const { loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
@@ -862,26 +875,31 @@ class ListEventUser extends Component {
           }
           titleTable={
             <Row gutter={[6, 6]}>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<UsergroupAddOutlined />}>
-                  <strong>Inscritos: </strong>
-                  <span style={{ fontSize: '13px' }}>{inscritos}</span>
-                </Tag>
-              </Col>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<StarOutlined />}>
-                  <strong>Participantes: </strong>
-                  <span style={{ fontSize: '13px' }}>
-                    {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-                  </span>
-                </Tag>
-              </Col>
+              {!activityId && (
+                <React.Fragment>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<UsergroupAddOutlined />}>
+                      <strong>Inscritos: </strong>
+                      <span style={{ fontSize: '13px' }}>{inscritos}</span>
+                    </Tag>
+                  </Col>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<StarOutlined />}>
+                      <strong>Participantes: </strong>
+                      <span style={{ fontSize: '13px' }}>
+                        {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
+                      </span>
+                    </Tag>
+                  </Col>
+                </React.Fragment>
+              )}
+
               <Col>
                 {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
                   <>
@@ -894,11 +912,15 @@ class ListEventUser extends Component {
                   </>
                 )}
               </Col>
-              <Col>
-                <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
-                  Expandir
-                </Button>
-              </Col>
+
+              {!activityId && (
+                <Col>
+                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                    Expandir
+                  </Button>
+                </Col>
+              )}
+
               <Col>
                 <Select
                   name={'type-scanner'}
