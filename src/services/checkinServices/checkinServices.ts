@@ -11,7 +11,7 @@ import {
 } from '@/Utilities/types/types';
 
 export const checkinByEventOrByActivity = (attendee: AttendeeInformation, activityId: string) => {
-  if (!activityId) attendee;
+  if (!activityId) return attendee;
 
   let usersInTheActivity: {}[] = [];
 
