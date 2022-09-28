@@ -153,7 +153,10 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
         </>
         <div style={{ opacity: 0, display: 'none' }}>
           {scannerData && badgeEvent && badgeEvent.BadgeFields && scannerData.attendee && (
-            <QRCode value={scannerData?.attendee?._id} size={qrSize ? qrSize?.size : 64} />
+            <QRCode
+              value={scannerData?.attendee?._id ? scannerData?.attendee?._id : ''}
+              size={qrSize ? qrSize?.size : 64}
+            />
           )}
         </div>
         <iframe title={'Print User'} ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
