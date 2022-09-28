@@ -43,6 +43,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([]);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const currentUser = UseCurrentUser();
 
@@ -62,8 +63,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         agendaList = props.agendaList;
       }
 
-      setTruncatedAgendaList(previous => [
-        ...previous,
+      setTruncatedAgendaList([
         ...agendaList.map(agenda => {
           // Logic here
           let diff = Math.floor(Math.random() * 60 * 60);
@@ -261,13 +261,13 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setIsLoading(false);
     })();
-  }, [eventId, cEventUserId]);
+  }, [eventId, cEventUserId, isDeleted]);
 
   if (isLoading) return <Spin />;
 
   return (
     <>
-      <DeleteActivitiesTakenButton eventId={eventId} cEventUserId={cEventUserId} />
+      <DeleteActivitiesTakenButton eventId={eventId} cEventUserId={cEventUserId} setIsDeleted={setIsDeleted} />
       <List
         size='small'
         header={<h2>LECCIONES DEL CURSO</h2>}
@@ -291,7 +291,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <span style={{ marginRight: '.5em' }}>
-                    {item.Component && <item.Component />}
+                    {item.Component && <item.Component isDeleted={isDeleted} setIsDeleted={setIsDeleted} />}
                     {item.Component2 && currentUser.value?._id && <item.Component2 userId={currentUser.value._id} />}
                     {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
                       <item.DeleteSurveyAnswersButton userId={currentUser.value._id} />
