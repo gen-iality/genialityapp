@@ -143,6 +143,9 @@ class triviaEdit extends Component {
       openSurvey: firebaseSurvey.isOpened || this.state.openSurvey,
       publish: firebaseSurvey.isPublished || this.state.publish,
 
+      random_survey: firebaseSurvey.random_survey || false,
+      random_survey_count: firebaseSurvey.random_survey_count || 0,
+
       survey: Update.survey,
       show_horizontal_bar: Update.show_horizontal_bar || true,
       graphyType: Update.graphyType ? Update.graphyType : 'y',
@@ -255,6 +258,10 @@ class triviaEdit extends Component {
         publish: 'false',
 
         minimumScore: 0,
+
+        // Rossie history inspired this feature
+        random_survey: this.state.random_survey,
+        random_survey_count: this.state.random_survey_count,
       };
       try {
         // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del curso que viene desde props
@@ -279,6 +286,10 @@ class triviaEdit extends Component {
             isPublished: data.publish,
 
             minimumScore: data.minimumScore,
+
+            // Rossie history inspired this feature
+            random_survey: data.random_survey,
+            random_survey_count: data.random_survey_count,
           },
           { eventId: this.props.event._id, name: save.survey, category: 'none' }
         );
@@ -389,6 +400,10 @@ class triviaEdit extends Component {
         publish: this.state.publish === 'true' || this.state.publish === true ? 'true' : 'false',
 
         minimumScore: parseInt(this.state.minimumScore),
+
+        // Rossie history inspired this feature
+        random_survey: this.state.random_survey,
+        random_survey_count: this.state.random_survey_count,
       };
 
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del curso que viene desde props
@@ -416,6 +431,10 @@ class triviaEdit extends Component {
 
               minimumScore: data.minimumScore,
               activity_id: data.activity_id,
+
+              // Rossie history inspired this feature
+              random_survey: data.random_survey,
+              random_survey_count: data.random_survey_count,
             },
             { eventId: this.props.event._id, name: data.survey, category: 'none' }
           );
