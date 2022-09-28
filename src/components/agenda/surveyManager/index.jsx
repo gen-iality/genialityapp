@@ -17,7 +17,6 @@ export default class SurveyManager extends Component {
 
   listenActivitySurveys = () => {
     const { event_id, activity_id } = this.props;
-    console.log('🚀 ~ file: index.jsx ~ line 20 ~ SurveyManager ~  this.props', this.props);
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let $query = firestore.collection('surveys');
 
@@ -66,9 +65,8 @@ export default class SurveyManager extends Component {
 
   handleChange = async (survey_id, data) => {
     const result = await this.updateSurvey(survey_id, data);
-    let eventCorrect = '63249587ff90231f1219e332';
-    let eventEvaluate = this.props.event_id;
-    if (eventEvaluate && eventCorrect && eventEvaluate === eventCorrect && data.isOpened === 'true') {
+    const canSendComunications = this.props.canSendComunications;
+    if (canSendComunications && canSendComunications === true && data.isOpened === 'true') {
       await sendCommunicationOpen(survey_id);
     }
     if (result && result.state === 'updated') {

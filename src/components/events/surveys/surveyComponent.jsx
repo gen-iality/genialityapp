@@ -23,10 +23,7 @@ import { sendCommunicationUser } from '@/components/agenda/surveyManager/service
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
-  console.log('🚀 ~ file: surveyComponent.jsx ~ line 26 ~ SurveyComponent ~ eventId', eventId);
-
   const cEvent = UseEventContext();
-  console.log('🚀 ~ file: surveyComponent.jsx ~ line 28 ~ SurveyComponent ~ cEvent', cEvent);
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
   const [surveyData, setSurveyData] = useState({});
@@ -43,7 +40,6 @@ function SurveyComponent(props) {
   let [totalPoints, setTotalPoints] = useState(0);
   let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
   let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
-
   useEffect(() => {
     // asigna los colores del evento para la UI de la encuesta
     InternarlSurveyStyles(eventStyles);
@@ -120,10 +116,9 @@ function SurveyComponent(props) {
       SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
     }
     let isLastPage = surveyModel.isLastPage;
-    let eventCorrect = '63249587ff90231f1219e332';
-    let eventEvaluate = eventId;
+    let canSendComunications = cEvent?.value?.sms_notification;
     let eventUserId = cEventUser?.value?._id;
-    if (eventUserId && eventEvaluate && eventCorrect && eventEvaluate === eventCorrect) {
+    if (canSendComunications && canSendComunications === true) {
       await sendCommunicationUser(idSurvey, eventUserId);
     }
     if (surveyData.allow_gradable_survey === 'true') {
