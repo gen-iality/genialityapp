@@ -9,6 +9,7 @@ interface DeleteActivitiesTakenButtonProps {
   eventId: string;
   cEventUserId?: string;
   setIsDeleted?: any;
+  setActivitiesAttendee?: any;
 }
 
 export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonProps) {
@@ -16,6 +17,7 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
     eventId, // The event ID
     cEventUserId, // The event user ID
     setIsDeleted,
+    setActivitiesAttendee,
   } = props;
 
   const deleteActivitiesTaken = useCallback(
@@ -35,13 +37,14 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
         }),
       );
 
+      setActivitiesAttendee([]);
       setIsDeleted((prevState: any) => !prevState);
     },
     [cEventUserId, eventId],
   );
 
   return (
-    <Link to={`/landing/${eventId}/evento`} replace>
+    <Link to={`/landing/${eventId}/agenda`} replace>
       <Button
         style={{
           background: '#B8415A',

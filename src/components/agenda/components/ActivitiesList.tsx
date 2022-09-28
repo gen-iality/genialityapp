@@ -31,12 +31,14 @@ interface ActivitiesListProps {
   eventId: string;
   cEventUserId?: string;
   agendaList?: ExtendedAgendaType[]; // If parent has this, why have we to re-do?
+  setActivitiesAttendee?: any;
 }
 
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
     eventId, // The event ID
     cEventUserId, // The event user ID
+    setActivitiesAttendee,
   } = props;
 
   const service = new Service(firestore);
@@ -267,7 +269,12 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   return (
     <>
-      <DeleteActivitiesTakenButton eventId={eventId} cEventUserId={cEventUserId} setIsDeleted={setIsDeleted} />
+      <DeleteActivitiesTakenButton
+        eventId={eventId}
+        cEventUserId={cEventUserId}
+        setIsDeleted={setIsDeleted}
+        setActivitiesAttendee={setActivitiesAttendee}
+      />
       <List
         size='small'
         header={<h2>LECCIONES DEL CURSO</h2>}
