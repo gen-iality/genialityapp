@@ -184,7 +184,7 @@ class triviaEdit extends Component {
       console.debug('this.props.savedSurveyId:', this.props.savedSurveyId);
       console.debug('this.props.location.state.edit:', this.props.location.state.edit);
       const surveyId = this.props.inserted ? this.props.savedSurveyId : this.props.location.state.edit;
-      await this.getSurveyFromEditing(surveyId);
+      surveyId && await this.getSurveyFromEditing(surveyId);
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
       /* console.log(dataAgenda, 'dataAgenda'); */
