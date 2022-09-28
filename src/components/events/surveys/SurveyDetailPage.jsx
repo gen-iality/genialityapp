@@ -119,6 +119,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     <div>
       {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
         <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
+          <em>{cSurveys.surveyStatsString}</em>
           <Result
             style={{ height: '50%', padding: '75px 75px 20px' }}
             status='success'
@@ -153,6 +154,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       ) : (
         <Card className='surveyCard'>
           <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} queryData={query.data} />
+          <em>{cSurveys.surveyStatsString}</em>
         </Card>
       )}
     </div>
