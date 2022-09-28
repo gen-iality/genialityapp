@@ -719,6 +719,7 @@ const FormEdit = (
                         </Checkbox.Group>
                       ) : questionType === 'ranking' ? (
                         <Space direction='vertical' style={{width: '100%'}}>
+                          <p>Este tipo de pregunta permite al usuario ordenar elementos en una lista proporcionada.</p>
                           <p>Orden de las opciones:</p>
                         {fields.map((field, index) => (
                           <Form.Item
@@ -773,6 +774,7 @@ const FormEdit = (
                       ) : questionType === 'rating' ? (
                         <Space direction='vertical' style={{width: '100%'}}>
                           {/* The max rate description in this question kind */}
+                          <p>Este tipo de pregunta permite al usuario seleccionar un valor en un rango proporcionado, basado en un valor mínimo y un máximo.</p>
                           <Form.Item
                             label={<Text type='secondary'>Descripción de la valuación máxima</Text>}
                             required={true}
@@ -847,12 +849,13 @@ const FormEdit = (
                           )}
                         </Space>
                       ) :  questionType === 'matrix' ? (
-                        <>
+                        <Space direction='vertical'>
+                        <p>Este tipo de pregunta representa una escala psicométrica que mide el grado en que el encuestado está de acuerdo o en desacuerdo con cada consulta.</p>
                         <LikertScaleEditor
                           source={likertScaleData || {}}
                           onEdit={(x) => setLikertScaleData(x)}
                         />
-                        </>
+                        </Space>
                       ) : (
                         <p>Tipo desconocido</p>
                       )}
