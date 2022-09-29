@@ -80,10 +80,12 @@ const AgendaActividadDetalle = props => {
   }, [props.match.params.activity_id]);
 
   useEffect(() => {
+    if (!currentActivity) return;
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
       // console.log(cEvent.value.type_event)
       if (cEvent.value.type_event === 'onlineEvent') {
+        console.log('Haciendo checking en la actividad');
         checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id);
       }
     }

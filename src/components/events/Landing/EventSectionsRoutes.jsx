@@ -47,7 +47,8 @@ const AgendaActividadDetalle = loadable(() => import('../../events/AgendaActivid
 const MySection = loadable(() => import('../newSection'));
 const ThisRouteCanBeDisplayed = loadable(() => import('./helpers/thisRouteCanBeDisplayed'));
 
-const EventSectionRoutes = (props) => {
+const EventSectionRoutes = props => {
+  const { setActivitiesAttendee } = props;
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
   let { GetPermissionsEvent } = useHelper();
@@ -62,8 +63,8 @@ const EventSectionRoutes = (props) => {
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return;
-    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter((item) => item !== 'tickets');
-    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section !== 'tickets');
+    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(item => item !== 'tickets');
+    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(item => item.section !== 'tickets');
 
     let index = -1;
     if (firstroute && firstrouteValues) {
@@ -107,7 +108,7 @@ const EventSectionRoutes = (props) => {
           props.currentActivity._id,
           props.currentActivity.name,
           cUser,
-          true
+          true,
         );
       }
     }
@@ -185,25 +186,27 @@ const EventSectionRoutes = (props) => {
           <Row justify='start'>
             <Col span={24}>
               <div style={{ padding: '25px' }}>
-                {((props.location?.pathname || '').endsWith('evento') || (props.location?.pathname || '').endsWith('curso')) && (
+                {((props.location?.pathname || '').endsWith('evento') ||
+                  (props.location?.pathname || '').endsWith('curso')) && (
                   <>
-                  <StudentSelfCourseProgress
-                    hasProgressLabel
-                    customTitle='Avance del curso'
-                    activityFilter={(a) => ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name) }
-                  />
-                  <StudentSelfCourseProgress
-                    hasProgressLabel
-                    customTitle='Avance de exámenes'
-                    activityFilter={(a) => [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name) }
-                  />
-                  <Card>
-                    <Typography.Text>
-                      Estado del curso:
-                    </Typography.Text>
-                    {' '}
-                    <QuizApprovedStatus eventId={event_id} approvedLink={`/landing/${event_id}/certificate`} />
-                  </Card>
+                    <StudentSelfCourseProgress
+                      hasProgressLabel
+                      customTitle='Avance del curso'
+                      activityFilter={a =>
+                        ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+                      }
+                    />
+                    <StudentSelfCourseProgress
+                      hasProgressLabel
+                      customTitle='Avance de exámenes'
+                      activityFilter={a =>
+                        [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+                      }
+                    />
+                    <Card>
+                      <Typography.Text>Estado del curso:</Typography.Text>{' '}
+                      <QuizApprovedStatus eventId={event_id} approvedLink={`/landing/${event_id}/certificate`} />
+                    </Card>
                   </>
                 )}
               </div>
@@ -230,7 +233,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/certificate`}>
           <ThisRouteCanBeDisplayed>
-            <Certificate key='certificate'/>
+            <Certificate key='certificate' />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -304,7 +307,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key='evento' />
+            <EventHome key='evento' setActivitiesAttendee={setActivitiesAttendee} />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -347,6 +350,7 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
+              setActivitiesAttendee={setActivitiesAttendee}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
@@ -361,7 +365,7 @@ const EventSectionRoutes = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   viewVirtualconference: state.virtualConferenceReducer.view,
   viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
   sectionPermissions: state.viewSectionPermissions.view,
