@@ -1,7 +1,7 @@
 /** Hooks, CustomHooks  and react libraries*/
 import { useState, useEffect } from 'react';
 import * as Survey from 'survey-react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 /** Helpers and services */
 import { SurveyPage } from './services/services';
@@ -21,9 +21,11 @@ import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 /** Context´s */
 import { UseEventContext } from '../../../context/eventContext';
 import { UseCurrentUser } from '@context/userContext';
+import { UseSurveysContext } from '@context/surveysContext';
 
 /** Componentes */
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
+import { addTriesNumber } from './functions/surveyStatus';
 
 function SurveyComponent(props) {
   const {
@@ -35,6 +37,9 @@ function SurveyComponent(props) {
 
   const cEvent = UseEventContext();
   const currentUser = UseCurrentUser();
+  // We need `cSurveys.currentStatus.tried` and `cSurveys.currentSurvey.tries` numbers
+  const cSurveys = UseSurveysContext();
+  const history = useHistory();
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -169,7 +174,14 @@ function SurveyComponent(props) {
   async function saveSurveyStatus() {
     const status = surveyModel.state;
     console.log('200.status', status);
-    await SetCurrentUserSurveyStatus(queryData, currentUser, status);
+    // await SetCurrentUserSurveyStatus(queryData, currentUser, status);
+    await addTriesNumber(
+      queryData._id, // Survey ID
+      currentUser.value._id, // User Id
+      cSurveys.currentSurveyStatus[cSurveys.currentSurvey._id].tried, // Tried amount
+      cSurveys.currentSurvey.tries, // Max tries
+      status,
+    );
   }
 
   async function saveSurveyCurrentPage() {
@@ -279,17 +291,15 @@ function SurveyComponent(props) {
           </div>
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Link to={`/landing/${eventId}/evento`} replace>
-                <Button
-                  onClick={() => {
-                    saveSurveyStatus();
-                  }}
-                  type='primary'
-                  key='console'
-                >
-                  Volver al curso {isSavingPoints && <Spin />}
-                </Button>
-              </Link>
+              <Button
+                onClick={() => {
+                  saveSurveyStatus().then(() => history.push(`/landing/${eventId}/evento`))
+                }}
+                type='primary'
+                key='console'
+              >
+                Volver al curso {isSavingPoints && <Spin />}
+              </Button>
             </div>
           )}
         </>
