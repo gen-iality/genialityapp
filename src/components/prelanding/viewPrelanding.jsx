@@ -60,6 +60,10 @@ const ViewPrelanding = ({ preview }) => {
   const bgColor = cEventContext.value?.styles?.toolbarDefaultBg;
   const textColor = cEventContext.value?.styles?.textMenu;
 
+  //Validacion temporal para el evento audi
+  const idEvent = cEventContext.value?._id;
+  const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
+
   //PERMITE INGRESAR A LA LANDING DEL EVENTO
   useEffect(() => {
     setIsPrelanding(true);
@@ -198,34 +202,36 @@ const ViewPrelanding = ({ preview }) => {
           <Col id='Bloques del evento' span={24}>
             <Row gutter={[0, 16]} align='stretch' justify='center'>
               <Col span={24} order={1}>
-                {isVisibleCardSections() ? (
-                  <Card
-                    bodyStyle={{ padding: screens.xs ? '10px' : '24px' }}
-                    style={{
-                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                      borderRadius: '10px',
-                      color: textColor,
-                      backgroundColor: bgColor,
-                      border: 'none',
-                    }}>
-                    <Row justify='center' align='middle'>
-                      <MenuScrollBlock
-                        sections={sections && sections?.main_landing_blocks}
-                        vdescription={description}
-                        vspeakers={speakers}
-                        vactividades={agenda}
-                        vpatrocinadores={sponsors}
-                      />
-                    </Row>
-                  </Card>
-                ) : null}
+                {isVisibleCardSections()
+                  ? shadow && (
+                      <Card
+                        bodyStyle={{ padding: screens.xs ? '10px' : '24px' }}
+                        style={{
+                          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                          borderRadius: '10px',
+                          color: textColor,
+                          backgroundColor: bgColor,
+                          border: 'none',
+                        }}>
+                        <Row justify='center' align='middle'>
+                          <MenuScrollBlock
+                            sections={sections && sections?.main_landing_blocks}
+                            vdescription={description}
+                            vspeakers={speakers}
+                            vactividades={agenda}
+                            vpatrocinadores={sponsors}
+                          />
+                        </Row>
+                      </Card>
+                    )
+                  : null}
               </Col>
               {visibleSection('Contador') && (
                 <Col order={obtenerOrder('Contador')} span={24}>
                   <Card
                     id='Contador_block'
                     style={{
-                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      boxShadow: shadow,
                       height: 'auto',
                       borderRadius: '20px',
                       color: textColor,
@@ -245,7 +251,7 @@ const ViewPrelanding = ({ preview }) => {
                       screens.xs || mobilePreview === 'smartphone' ? mobileBlockContentStyle : desktopBlockContentStyle
                     }
                     style={{
-                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      boxShadow: shadow,
                       borderRadius: '20px',
 
                       backgroundColor: bgColor,
@@ -264,7 +270,7 @@ const ViewPrelanding = ({ preview }) => {
                       padding: screens.xs || mobilePreview === 'smartphone' ? '10px' : '24px',
                     }}
                     style={{
-                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      boxShadow: shadow,
                       height: '450px',
                       borderRadius: '20px',
                       color: textColor,
@@ -281,7 +287,7 @@ const ViewPrelanding = ({ preview }) => {
                     id='Actividades_block'
                     bodyStyle={{ height: '100%' }}
                     style={{
-                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      boxShadow: shadow,
                       height: '100%',
                       borderRadius: '20px',
                       color: textColor,
@@ -297,7 +303,7 @@ const ViewPrelanding = ({ preview }) => {
                   <Card
                     id='Patrocinadores_block'
                     style={{
-                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      boxShadow: shadow,
                       height: '100%',
                       borderRadius: '20px',
                       color: textColor,
@@ -333,7 +339,7 @@ const ViewPrelanding = ({ preview }) => {
             color: textColor,
             backgroundColor: bgColor,
             borderRadius: '8px',
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            boxShadow: shadow,
             overflow: 'visible',
           }}></Avatar>
       </BackTop>

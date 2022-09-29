@@ -15,6 +15,8 @@ const InfoEvent = ({ paddingOff, preview }) => {
 
   const bgColor = cEventValues?.styles?.toolbarDefaultBg;
   const textColor = cEventValues?.styles?.textMenu;
+  //Validacion temporal para el evento audi
+  const idEvent = cEventValues?._id;
 
   return (
     <PageHeader
@@ -58,17 +60,18 @@ const InfoEvent = ({ paddingOff, preview }) => {
                 <time>{Moment(cEventValues?.datetime_from).format('LT')}</time>
               </Space>
             </Space>
-
-            <Space wrap>
-              <Space>
-                <CalendarFilled />
-                <time>{Moment(cEventValues?.datetime_to).format('ll')}</time>
+            {idEvent !== '6334782dc19fe2710a0b8753' && (
+              <Space wrap>
+                <Space>
+                  <CalendarFilled />
+                  <time>{Moment(cEventValues?.datetime_to).format('ll')}</time>
+                </Space>
+                <Space>
+                  <ClockCircleFilled />
+                  <time>{Moment(cEventValues?.datetime_to).format('LT')}</time>
+                </Space>
               </Space>
-              <Space>
-                <ClockCircleFilled />
-                <time>{Moment(cEventValues?.datetime_to).format('LT')}</time>
-              </Space>
-            </Space>
+            )}
           </Space>
           {cEventValues?.type_event !== 'onlineEvent' && (
             <Space>

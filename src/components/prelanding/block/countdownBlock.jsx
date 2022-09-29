@@ -15,6 +15,11 @@ const CountdownBlock = () => {
   const textColor = cEvent.value?.styles?.textMenu;
   const date = cEvent.value?.datetime_from;
 
+  //Validacion temporal para el evento audi
+  const idEvent = cEvent.value?._id;
+  const shadowNumber = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 3px 2px rgba(0, 0, 0, 0.4)' : '';
+  const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 0px 8px rgba(0, 0, 0, 0.25)' : '';
+
   useEffect(() => {
     if (!cEvent.value) return;
     //PERMITE FORMATEAR LA FECHA PARA PODER INICIALIZAR EL CONTADOR
@@ -61,7 +66,7 @@ const CountdownBlock = () => {
   };
 
   const stylesNumbers = {
-    textShadow: '0px 3px 2px rgba(0, 0, 0, 0.4)',
+    textShadow: shadowNumber,
     fontVariantNumeric: 'tabular-nums',
     color: textColor,
   };
@@ -155,7 +160,7 @@ const CountdownBlock = () => {
                 style={{
                   width: '350px',
                   borderRadius: '20px',
-                  boxShadow: ' 0px 0px 8px rgba(0, 0, 0, 0.25)',
+                  boxShadow: shadow,
                   padding: '20px 0px',
                   backgroundColor: 'transparent',
                 }}>

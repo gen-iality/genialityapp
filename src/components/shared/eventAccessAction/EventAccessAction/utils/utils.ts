@@ -40,6 +40,10 @@ export const assignStatusAccordingToAction = ({
   let buttonsAction: EventAccessActionButtonsInterface[] = initialButtonsState;
   let informativeMessage: informativeMessagesInterface[] = informativeMessagesState;
 
+  //Validacion temporal para el evento audi
+  const idEvent = cEvent?._id;
+  const labelAudi: string = idEvent !== '6334782dc19fe2710a0b8753' ? 'Inscribirme al evento' : 'INSCRÍBETE';
+
   switch (eventAction) {
     case 'ACTION_ONLY_EVENT_REGISTRATION':
       buttonsAction = [
@@ -52,7 +56,7 @@ export const assignStatusAccordingToAction = ({
     case 'ACTION_REGISTER_FOR_THE_EVENT_ANONYMOUS':
       buttonsAction = [
         {
-          label: 'Inscribirme al evento',
+          label: labelAudi,
           action: () => helperDispatch({ type: 'showLogin', visible: true }),
         },
       ];

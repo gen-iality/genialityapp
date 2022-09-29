@@ -54,7 +54,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
           {button.label !== 'INITIAL_STATE' && (
             <Button
               block
-              style={{ color: bgColor, backgroundColor: textColor }}
+              style={{ color: bgColor, backgroundColor: textColor, border: 'none' }}
               type='primary'
               size='large'
               onClick={button.action}>
