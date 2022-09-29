@@ -112,7 +112,7 @@ export function SurveysProvider({ children }) {
       return true;
     }
 
-    // return state.currentSurveyStatus[state.currentSurvey._id]?.surveyCompleted !== 'completed';
+    return state.currentSurveyStatus[state.currentSurvey._id]?.surveyCompleted !== 'completed';
 
     // If tried (in Firebase) is equal that tries (in MongoDB), then the user can see the survey
     const currentStatus = state.currentSurveyStatus[state.currentSurvey._id];
@@ -123,7 +123,7 @@ export function SurveysProvider({ children }) {
 
   const surveyStatsString = useMemo(() => {
     // Beware of editing this without thinking
-    if (!state.currentSurveyStatus) return 'cuestionario nuevo';
+    if (!state.currentSurveyStatus || !state.currentSurvey) return 'cuestionario nuevo';
     const currentStatus = state.currentSurveyStatus[state.currentSurvey._id];
     if (!currentStatus) return 'cuestionario nuevo';
 
