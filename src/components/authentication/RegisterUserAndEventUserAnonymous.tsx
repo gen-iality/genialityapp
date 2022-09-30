@@ -10,6 +10,7 @@ import { UseEventContext } from '../../context/eventContext';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 import { app } from '../../helpers/firebase';
+import openNewWindow from './ModalsFunctions/openNewWindow';
 const { Step } = Steps;
 const { Title } = Typography;
 
@@ -22,10 +23,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   const [loading, setLoading] = useState(false);
   const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {};
   let fields = fieldNameEmailFirst(user_properties);
-
+  // Esto es temporal por el envento de audi consultar con Marlon o Sebas :D
+  const labelButton = cEvent?.value?._id === '6334782dc19fe2710a0b8753' ? 'Inscribirme y Donar' : 'Ingresar';
   let attendee: any = cUser.value || {};
   attendee['properties'] = cUser.value;
-
   const handleSubmit = async (values: any) => {
     setLoading(true);
     app
@@ -55,6 +56,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                 helperDispatch({ type: 'showLogin', visible: false });
                 setLoading(false);
               });
+              // Esto es temporal por el evento de audi, se va planear de una mejor manera
+              openNewWindow('https://checkout.wompi.co/l/VPOS_N4aqRq', cEvent.value._id, true);
             }
           });
       })
@@ -86,7 +89,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           styles: {
             marginTop: '20px',
           },
-          text: 'Ingresar',
+          text: labelButton,
         }}
       />
     </div>
