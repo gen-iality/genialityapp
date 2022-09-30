@@ -12,6 +12,7 @@ import { SurveysApi } from '@/helpers/request';
 /** Context´s */
 import { UseCurrentUser } from '@context/userContext';
 import { UseSurveysContext } from '@context/surveysContext';
+import { UseSurveyContext } from './surveyContext';
 import WithEviusContext from '@/context/withContext';
 
 /** Components */
@@ -21,7 +22,9 @@ import ResultsPanel from './resultsPanel';
 import QuizProgress from '@/components/quiz/QuizProgress';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
-  const cSurveys = UseSurveysContext();
+  //const cSurveys = UseSurveysContext();
+  const cSurvey = UseSurveyContext();
+
   const currentUser = UseCurrentUser();
   console.log('200.SurveyDetailPage currentUser', currentUser.value);
 
@@ -37,9 +40,10 @@ function SurveyDetailPage({ surveyId, cEvent }) {
 
   const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
+  const [currentSurvey, setCurrentSurvey] = useState();
 
   useEffect(() => {
-    cSurveys.select_survey({ ...query.data });
+    cSurvey.select_current_survey({ ...query.data });
   }, [query.data]);
 
   //Effect for when prop.idSurvey changes
@@ -111,13 +115,13 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     return <h1>Cargando..</h1>;
   }
 
-  if (!cSurveys.currentSurvey) {
+  if (!cSurvey.currentSurvey) {
     return <h1>No hay nada publicado, {surveyId}</h1>;
   }
 
   return (
     <div>
-      {cSurveys.shouldDisplaySurveyAttendeeAnswered() ? (
+      {cSurvey.shouldDisplaySurveyAttendeeAnswered() ? (
         <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
           <Result
             style={{ height: '50%', padding: '75px 75px 20px' }}
@@ -143,9 +147,9 @@ function SurveyDetailPage({ surveyId, cEvent }) {
             </Button>
           )}
         </Space>
-      ) : cSurveys.shouldDisplaySurveyClosedMenssage() ? (
+      ) : cSurvey.shouldDisplaySurveyClosedMenssage() ? (
         <Result title='Esta evaluación ha sido cerrada' />
-      ) : cSurveys.shouldDisplayGraphics() ? (
+      ) : cSurvey.shouldDisplayGraphics() ? (
         <>
           <Divider />
           <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation='participationPercentage' />

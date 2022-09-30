@@ -5,13 +5,21 @@ import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUser } from '@/context/userContext';
 export const SurveyContext = React.createContext();
 
+export function UseSurveyContext() {
+  const contextsurvey = React.useContext(SurveyContext);
+  console.log('SurveyContext', contextsurvey);
+  if (!contextsurvey) {
+    throw new Error('SurveyContext debe estar dentro del proveedor');
+  }
+  return contextsurvey;
+}
+
 //status: 'LOADING' | 'LOADED' | 'error'
 let initialContextState = {
   status: 'LOADING',
   surveys: [],
   currentSurvey: null,
   currentSurveyStatus: null,
-  currentActivity: null,
 };
 
 const reducer = (state, action) => {
@@ -23,7 +31,7 @@ const reducer = (state, action) => {
       newState = { ...state, surveys: action.payload.publishedSurveys, status: 'LOADED' };
       //Actualizamos el estado de la encuesta actual o se borra la encuesta actual si se despublico
       if (state.currentSurvey) {
-        let updatedcurrentSurvey = action.payload.publishedSurveys.find((item) => state.currentSurvey._id == item._id);
+        let updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
         newState['currentSurvey'] = updatedcurrentSurvey;
       }
 
@@ -39,35 +47,54 @@ const reducer = (state, action) => {
     case 'survey_selected':
       return { ...state, currentSurvey: action.payload };
 
-    case 'survey_un_selected':
-      return { ...state, currentSurvey: action.payload };
-
-    case 'set_current_activity':
-      return { ...state, currentActivity: action.payload };
-
     default:
       return newState;
   }
 };
 
-export function SurveyProvider({ props, children }) {
+function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
+  let shouldActivateSurvey = false;
+  if (surveyChangedNew) {
+    /** Se valida que el estado actual de la encuesta sea abierta y publicada */
+    if (surveyChangedNew.isOpened === 'true' && surveyChangedNew.isPublished === 'true') {
+      /** Se filtran la encuestas por id del array de encuestas en el estado anterior versus el id de la encuesta que se actualizo recientemente */
+      let surveyChangedPrevius = state.surveys.find(item => item._id === surveyChangedNew._id);
+      // newState['surveyResult'] = 'view';
 
-  console.log('SurveyProvider', props)
+      /** Si la comparacion anterior da undefined es por la encuesta estaba abierta pero despublicada por ello se niega el surveyChanged, de lo contrario se valida que este cerrada o despublicada */
+      if (
+        !surveyChangedPrevius ||
+        surveyChangedPrevius.isOpened === 'false' ||
+        surveyChangedPrevius.isPublished === 'false'
+      ) {
+        shouldActivateSurvey = true;
+      }
+    }
+  }
+  return shouldActivateSurvey;
+}
+
+export function SurveyProvider({ children }) {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
 
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
-  /** ACTION DISPACHERS **/
-  function select_survey(survey) {
-    dispatch({ type: 'survey_selected', payload: survey });
-  }
+  useEffect(() => {
+    if (!cEventContext || !cEventContext.value) return;
+    if (!cUser || !cUser.value) return;
 
-  function unset_select_survey(survey) {
-    dispatch({ type: 'survey_un_selected', payload: survey });
-  }
-  function set_current_activity(currentActivity) {
-    dispatch({ type: 'set_current_activity', payload: currentActivity });
+    async function fetchSurveys() {
+      console.log('ESTE ES EL STATE', state);
+      listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
+      InitSurveysCompletedListener(cUser, dispatch);
+    }
+    fetchSurveys();
+  }, [cEventContext, cUser]);
+
+  /** ACTION DISPACHERS **/
+  function select_current_survey(survey) {
+    dispatch({ type: 'survey_selected', payload: survey });
   }
 
   function shouldDisplaySurvey() {
@@ -100,6 +127,7 @@ export function SurveyProvider({ props, children }) {
     }
     return state.currentSurvey.isOpened === 'false';
   }
+
   function shouldDisplaySurveyAttendeeAnswered() {
     return !attendeeAllReadyAnswered();
   }
@@ -119,146 +147,21 @@ export function SurveyProvider({ props, children }) {
     return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
   }
 
-  function surveysToBeListedByActivity() {
-    let listOfSurveysFilteredByActivity;
-    if (state.currentActivity) {
-      listOfSurveysFilteredByActivity =
-        state.surveys &&
-        state.surveys.filter(
-          (item) => item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true
-        );
-    }
-    return listOfSurveysFilteredByActivity;
-  }
-
-  function shouldDisplaysurveyAssignedToThisActivity() {
-    let recentlyOpenedSurvey;
-    if (!state.currentSurvey && !surveysToBeListedByActivity()) {
-      return false;
-    }
-    recentlyOpenedSurvey =
-      surveysToBeListedByActivity() &&
-      surveysToBeListedByActivity().filter((item) => item?._id === state.currentSurvey?._id);
-
-    if (recentlyOpenedSurvey && recentlyOpenedSurvey.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  useEffect(() => {
-    if (!cEventContext || !cEventContext.value) return;
-    if (!cUser || !cUser.value) return;
-
-    async function fetchSurveys() {
-      //  console.log('surveyContext', 'inicialize');
-      console.log('ESTE ES EL STATE', state);
-      listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
-      InitSurveysCompletedListener(cUser, dispatch);
-    }
-    fetchSurveys();
-  }, [cEventContext, cUser]);
   //  console.groupEnd('surveyContext');
   return (
     <SurveyContext.Provider
       value={{
         ...state,
-        select_survey,
-        unset_select_survey,
-        set_current_activity,
+        select_current_survey,
         shouldDisplaySurvey,
         shouldDisplayGraphics,
         shouldDisplaySurveyAttendeeAnswered,
         shouldDisplaySurveyClosedMenssage,
         attendeeAllReadyAnswered,
         shouldDisplayRanking,
-        surveysToBeListedByActivity,
-        shouldDisplaysurveyAssignedToThisActivity,
-      }}>
+      }}
+    >
       {children}
     </SurveyContext.Provider>
   );
 }
-
-export function UseSurveyContext() {
-  const contextsurvey = React.useContext(SurveyContext);
-  console.log('contextsurvey', contextsurvey);
-  if (!contextsurvey) {
-    throw new Error('SurveyContext debe estar dentro del proveedor');
-  }
-  return contextsurvey;
-}
-
-function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
-  let shouldActivateSurvey = false;
-  if (surveyChangedNew) {
-    /** Se valida que el estado actual de la encuesta sea abierta y publicada */
-    if (surveyChangedNew.isOpened === 'true' && surveyChangedNew.isPublished === 'true') {
-      /** Se filtran la encuestas por id del array de encuestas en el estado anterior versus el id de la encuesta que se actualizo recientemente */
-      let surveyChangedPrevius = state.surveys.find((item) => item._id === surveyChangedNew._id);
-      // newState['surveyResult'] = 'view';
-
-      /** Si la comparacion anterior da undefined es por la encuesta estaba abierta pero despublicada por ello se niega el surveyChanged, de lo contrario se valida que este cerrada o despublicada */
-      if (
-        !surveyChangedPrevius ||
-        surveyChangedPrevius.isOpened === 'false' ||
-        surveyChangedPrevius.isPublished === 'false'
-      ) {
-        shouldActivateSurvey = true;
-      }
-    }
-  }
-  return shouldActivateSurvey;
-}
-
-//Si una encuesta esta publicada y esta abierta la seleccionamos automáticamente cómo activa
-//Esto debería quedar en un mejor lugar
-// if (querySnapshot.docChanges().length) {
-//    let lastChange = querySnapshot.docChanges()[querySnapshot.docChanges().length - 1];
-//    let currentSurvey = null;
-//    switch (lastChange.type) {
-//       case 'removed':
-//       case 'added':
-//          visualizarEncuesta(null);
-//          break;
-//       case 'modified':
-//       default:
-//          currentSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
-//          visualizarEncuesta(currentSurvey);
-//          break;
-//    }
-// }
-
-// /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
-// function visualizarEncuesta(survey) {
-//   if (!survey) {
-//     setCurrentSurvey(null);
-//   }
-//   if (survey && survey.isOpened === 'true' && survey !== null) {
-//     if (currentActivity !== null && survey.isOpened === 'true') {
-//       setSurveyResult('view');
-//     } else if (currentActivity !== null && survey.isOpened === 'false') {
-//       setSurveyResult('results');
-//     }
-//     setCurrentSurvey(survey);
-//   } else {
-//     setCurrentSurvey(survey);
-//     setSurveyResult('closedSurvey');
-//   }
-// }
-
-// /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
-// useEffect(() => {
-//   if (cUser.value !== null) {
-//     const unSuscribe = InitSurveysCompletedListener(cUser, props.setCurrentSurveyStatus);
-//     return unSuscribe;
-//   }
-// }, [cUser]);
-
-/** Listener para obtener todas las encuestas por lección */
-// useEffect(() => {
-//   if (currentActivity) {
-//     listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
-//   }
-// }, [currentActivity]);
