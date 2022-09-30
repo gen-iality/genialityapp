@@ -18,6 +18,9 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
   const bgColor = cEvent?.value?.styles?.toolbarDefaultBg;
   const textColor = cEvent?.value?.styles?.textMenu;
 
+  //Validacion temporal para el evento audi
+  const idEvent = cEvent?.value?._id;
+
   const [buttonsActions, setButtonsActions] = useState<EventAccessActionButtonsInterface[]>(initialButtonsState);
 
   const [informativeMessages, setInformativeMessage] = useState<informativeMessagesInterface[]>(
@@ -54,7 +57,11 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
           {button.label !== 'INITIAL_STATE' && (
             <Button
               block
-              style={{ color: bgColor, backgroundColor: textColor, border: 'none' }}
+              style={{
+                color: idEvent !== '6334782dc19fe2710a0b8753' ? bgColor : '#c55a95',
+                backgroundColor: textColor,
+                border: 'none',
+              }}
               type='primary'
               size='large'
               onClick={button.action}>

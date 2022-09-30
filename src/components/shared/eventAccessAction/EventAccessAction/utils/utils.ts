@@ -46,9 +46,7 @@ export const assignStatusAccordingToAction = ({
 
   switch (eventAction) {
     case 'ACTION_ONLY_EVENT_REGISTRATION':
-      buttonsAction = [
-        { label: 'Inscribirme al evento', action: () => helperDispatch({ type: 'showLogin', visible: true }) },
-      ];
+      buttonsAction = [{ label: labelAudi, action: () => helperDispatch({ type: 'showLogin', visible: true }) }];
 
       setButtonsActions(buttonsAction);
       break;
