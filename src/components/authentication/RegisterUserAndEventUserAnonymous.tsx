@@ -24,7 +24,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {};
   let fields = fieldNameEmailFirst(user_properties);
   // Esto es temporal por el envento de audi consultar con Marlon o Sebas :D
-  const labelButton = cEvent?.value?._id === '6334782dc19fe2710a0b8753' ? 'Inscribirme y Donar' : 'Ingresar';
+  const labelButton = cEvent?.value?._id === '6334782dc19fe2710a0b8753' ? 'Inscribirme y donar' : 'Ingresar';
   let attendee: any = cUser.value || {};
   attendee['properties'] = cUser.value;
   const handleSubmit = async (values: any) => {
