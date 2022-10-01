@@ -95,10 +95,7 @@ const ViewPrelanding = ({ preview }) => {
   };
   // Estilos para el contenido del bloque en desktop y mobile
   const desktopBlockContentStyle = {
-    paddingLeft: '40px',
-    paddingRight: '40px',
-    paddingTop: '40px',
-    paddingBottom: '40px',
+    padding: idEvent !== '6334782dc19fe2710a0b8753' ? '40px' : '0px',
   };
   const mobileBlockContentStyle = {
     paddingLeft: '25px',
@@ -190,17 +187,17 @@ const ViewPrelanding = ({ preview }) => {
         {/**MODAL INSCRIPCION EN EL EVENTO*/}
         <ModalPermission />
         <Row
-          gutter={[0, 16]}
+          gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]}
           style={screens.xs || mobilePreview === 'smartphone' ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
           <Col id='Franja de titulo' span={24}>
             <Row>
               <Col span={24}>
-                <InfoEvent paddingOff={true} preview={preview} />{' '}
+                <InfoEvent paddingOff={true} preview={preview} />
               </Col>
             </Row>
           </Col>
           <Col id='Bloques del evento' span={24}>
-            <Row gutter={[0, 16]} align='stretch' justify='center'>
+            <Row gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]} align='stretch' justify='center'>
               <Col span={24} order={1}>
                 {isVisibleCardSections()
                   ? shadow && (
@@ -253,7 +250,6 @@ const ViewPrelanding = ({ preview }) => {
                     style={{
                       boxShadow: shadow,
                       borderRadius: '20px',
-
                       backgroundColor: bgColor,
                       border: 'none',
                     }}>

@@ -274,8 +274,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   </Checkbox>
                 </Form.Item>
 
-                {description && description.length < 500 && <p>{description}</p>}
-                {description && description.length > 500 && (
+                {description && description.length < 100 && <p>{description}</p>}
+                {description && description.length > 100 && (
                   <Collapse
                     defaultActiveKey={['0']}
                     // style={{ margingBotton: '15px' }}
