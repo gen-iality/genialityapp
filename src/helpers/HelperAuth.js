@@ -4,14 +4,14 @@ import { app, firestore } from './firebase';
 
 export async function GetTokenUserFirebase() {
   return new Promise((resolve, reject) => {
-    app.auth().onAuthStateChanged((user) => {
+    app.auth().onAuthStateChanged(user => {
       if (user) {
         user
           .getIdToken()
           .then(async function(idToken) {
             resolve(idToken);
           })
-          .catch((error) => {
+          .catch(error => {
             reject('Not user token: ', error);
           });
       } else {
@@ -24,15 +24,16 @@ export async function GetTokenUserFirebase() {
 export const checkinAttendeeInActivity = (attende, activityId) => {
   /** We use the activity id plus _event_attendees to be able to reuse the checkIn component per event */
   const userRef = firestore.collection(`${activityId}_event_attendees`).doc(attende._id);
-  userRef.onSnapshot(function(doc) {
+  userRef.get().then(function(doc) {
     if (doc.exists) {
-      if (!doc.data().checked_in) {
-        userRef.set(
+      if (doc.data().checked_in) {
+        userRef.update(
           {
+            checkinsList: app.firestore.FieldValue.arrayUnion(new Date()),
             checked_in: true,
             checkedin_at: new Date(),
           },
-          { merge: true }
+          { merge: true },
         );
       }
     } else {
@@ -41,6 +42,7 @@ export const checkinAttendeeInActivity = (attende, activityId) => {
         .doc(attende._id)
         .set({
           ...attende,
+          checkinsList: app.firestore.FieldValue.arrayUnion(new Date()),
           checked_in: true,
           checkedin_at: new Date(),
         });

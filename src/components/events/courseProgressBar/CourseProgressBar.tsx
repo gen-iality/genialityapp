@@ -32,17 +32,16 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   const { count, linkFormatter, activities, activitiesAttendee } = props;
 
   console.log('903.activities', activities);
-  console.log('903.activitiesAttendee', activitiesAttendee);
 
   let [currentId, setCurrentId] = useState(null);
+
+  useEffect(() => {
+    console.log('903.activitiesAttendee', activitiesAttendee);
+  }, [activitiesAttendee]);
 
   if (activities.length === 0) {
     return null;
   }
-
-  /*   useEffect(() => {
-  
-  }, [currentId]); */
 
   return (
     <div>

@@ -118,15 +118,15 @@ class Agenda extends Component {
     this.props.setVirtualConference(true);
   }
   /** extraemos los días en los que pasan lecciones */
-  setDaysWithAllActivities = (data) => {
+  setDaysWithAllActivities = data => {
     const dayswithactivities = [];
-    data.map((activity) => {
+    data.map(activity => {
       const datestring = Moment.tz(activity.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
         .tz(Moment.tz.guess())
         .format('YYYY-MM-DD');
 
       //Revisamos que no hayamos extraido el día de otra lección previa
-      const result = dayswithactivities.filter((item) => item === datestring);
+      const result = dayswithactivities.filter(item => item === datestring);
       if (result.length === 0) {
         if (data.isPublished || data.isPublished == undefined) {
           dayswithactivities.push(datestring);
@@ -158,7 +158,7 @@ class Agenda extends Component {
         .doc(this.props.cEvent.value._id)
         .collection('activities')
         .doc(activity._id)
-        .onSnapshot((infoActivity) => {
+        .onSnapshot(infoActivity => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
           let { habilitar_ingreso, isPublished, meeting_id, platform } = data;
@@ -190,10 +190,10 @@ class Agenda extends Component {
         let updatedActivityInfo = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
         //this.props.setTabs(tabs);
         return updatedActivityInfo;
-      })
+      }),
     );
 
-    return lista.filter((lf) => lf.isPublished || lf.isPublished == undefined);
+    return lista.filter(lf => lf.isPublished || lf.isPublished == undefined);
   }
 
   exchangeCode = async () => {
@@ -239,7 +239,7 @@ class Agenda extends Component {
       this.props.cEvent.value._id,
       this.props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
         ? `?orderBy=[{"field":"datetime_start","order":"desc"}]`
-        : null
+        : null,
     );
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.cEvent.value._id);
@@ -262,11 +262,11 @@ class Agenda extends Component {
   filterByDay = (day, agenda) => {
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
-      .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format('YYYY-MM-DD')))
+      .filter(a => day && day.format && a.datetime_start && a.datetime_start.includes(day.format('YYYY-MM-DD')))
       .sort(
         (a, b) =>
           Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
-          Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
+          Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY'),
       );
     // this.setState({ listDay: list });
 
@@ -277,7 +277,7 @@ class Agenda extends Component {
     }
 
     //Se mapea la lista para poder retornar los datos ya filtrados
-    list.map((item) => {
+    list.map(item => {
       item.restriction =
         item.access_restriction_type === 'EXCLUSIVE'
           ? 'Exclusiva para: '
@@ -291,7 +291,7 @@ class Agenda extends Component {
   };
 
   //Fn para manejar cuando se selecciona un dia, ejecuta el filtrado
-  selectDay = (day) => {
+  selectDay = day => {
     const filtered = this.filterByDay(day, this.state.data);
     this.setState({ filtered, toShow: filtered, day });
   };
@@ -314,12 +314,12 @@ class Agenda extends Component {
   // eslint-disable-next-line no-unused-vars
   filterBySpace = (space, dates) => {
     //Se filta la lista anterior para esta vez filtrar por espacio
-    const list = this.state.listDay.filter((a) => a.space.name === space);
+    const list = this.state.listDay.filter(a => a.space.name === space);
 
     this.setState({ nameSpace: space });
 
     //Se mapea la lista para poder retornar la lista filtrada por espacio
-    list.map((item) => {
+    list.map(item => {
       item.restriction =
         item.access_restriction_type === 'EXCLUSIVE'
           ? 'Exclusiva para: '
@@ -333,7 +333,7 @@ class Agenda extends Component {
   };
 
   //Fn para el resultado de la búsqueda
-  searchResult = (data) => this.setState({ toShow: !data ? [] : data });
+  searchResult = data => this.setState({ toShow: !data ? [] : data });
 
   // Funcion para registrar usuario en la lección
   registerInActivity = async (activityId, eventId, userId, callback) => {
@@ -344,7 +344,7 @@ class Agenda extends Component {
         });
         callback(true);
       })
-      .catch((err) => {
+      .catch(err => {
         notification.open({
           message: err,
         });
@@ -352,7 +352,7 @@ class Agenda extends Component {
   };
 
   //Fn para el resultado de la búsqueda
-  searchResult = (data) => this.setState({ toShow: !data ? [] : data });
+  searchResult = data => this.setState({ toShow: !data ? [] : data });
 
   redirect = () => this.setState({ redirect: true });
 
@@ -399,7 +399,7 @@ class Agenda extends Component {
       .toLowerCase()
       .trim()
       .split(' ')
-      .map((v) => v[0].toUpperCase() + v.substr(1))
+      .map(v => v[0].toUpperCase() + v.substr(1))
       .join(' ');
   }
 
@@ -415,7 +415,7 @@ class Agenda extends Component {
   checkInscriptionStatus(activityId) {
     const { userAgenda } = this.state;
     if (!userAgenda) return false;
-    const checkInscription = userAgenda.filter((activity) => activity.activity_id === activityId);
+    const checkInscription = userAgenda.filter(activity => activity.activity_id === activityId);
     const statusInscription = checkInscription.length ? true : false;
     return statusInscription;
   }
@@ -447,7 +447,7 @@ class Agenda extends Component {
     this.setState({ visibleModalRegisteredDevices: false });
   };
 
-  validationRegisterAndExchangeCode = (activity) => {
+  validationRegisterAndExchangeCode = activity => {
     const hasPayment =
       this.props.cEvent.value.has_payment === true || this.props.cEvent.value.has_payment === 'true' ? true : false;
 
@@ -489,7 +489,7 @@ class Agenda extends Component {
     }
   };
 
-  getActivitiesByDay = (date) => {
+  getActivitiesByDay = date => {
     const { toggleConference } = this.props;
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
@@ -498,12 +498,12 @@ class Agenda extends Component {
       date != null
         ? data
             .filter(
-              (a) => date && date.format && a.datetime_start && a.datetime_start.includes(date.format('YYYY-MM-DD'))
+              a => date && date.format && a.datetime_start && a.datetime_start.includes(date.format('YYYY-MM-DD')),
             )
             .sort(
               (a, b) =>
                 Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
-                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
+                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY'),
             )
         : data;
 
@@ -580,7 +580,7 @@ class Agenda extends Component {
   };
   //FUNCION QUE PERMITE VERIFICAR SI EXISTEN LECCIONES PUBLICADAS POR DIA
   //SIRVE PARA MOSTRAR U OCULTAR FECHAS
-  getActivitiesByDayVisibility = (date) => {
+  getActivitiesByDayVisibility = date => {
     const { toggleConference } = this.props;
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
@@ -589,17 +589,17 @@ class Agenda extends Component {
       date != null
         ? data
             .filter(
-              (a) =>
+              a =>
                 date &&
                 date.format &&
                 a.datetime_start &&
                 a.datetime_start.includes(date.format('YYYY-MM-DD')) &&
-                (a.isPublished || a.isPublished == undefined)
+                (a.isPublished || a.isPublished == undefined),
             )
             .sort(
               (a, b) =>
                 Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
-                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
+                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY'),
             )
         : data;
     return list;
@@ -633,7 +633,8 @@ class Agenda extends Component {
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
             </Button>,
-          ]}>
+          ]}
+        >
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
 
@@ -650,7 +651,8 @@ class Agenda extends Component {
             <Button key='login' onClick={this.handleOpenModalExchangeCode}>
               Canjear código
             </Button>,
-          ]}>
+          ]}
+        >
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código por favor ingresalo a
             continuación, Si aún no has comprado el código lo puedes comprar en el siguiente link
@@ -670,7 +672,8 @@ class Agenda extends Component {
             <Button key='cancel' onClick={this.handleCloseModalRestrictedDevices}>
               Cancelar
             </Button>,
-          ]}>
+          ]}
+        >
           <p>Has excedido el número de dispositivos permitido</p>
         </Modal>
 
@@ -687,7 +690,8 @@ class Agenda extends Component {
             <Button key='login' onClick={this.exchangeCode}>
               Canjear código
             </Button>,
-          ]}>
+          ]}
+        >
           <div>
             {this.state.exchangeCodeMessage && (
               <Alert
@@ -698,7 +702,7 @@ class Agenda extends Component {
             )}
             {/* <Alert message="" type="info" /> */}
             <p>Ingresa el código de pago</p>
-            <Input value={this.state.discountCode} onChange={(e) => this.setState({ discountCode: e.target.value })} />
+            <Input value={this.state.discountCode} onChange={e => this.setState({ discountCode: e.target.value })} />
           </div>
         </Modal>
 
@@ -720,7 +724,7 @@ class Agenda extends Component {
                   this.props.cEvent.value.styles &&
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'false' ||
                     this.props.cEvent.value.styles.hideDatesAgenda === false) &&
-                  days.map((day) => (
+                  days.map(day => (
                     <>
                       {this.props.cEvent.value.styles.hideDatesAgendaItem === 'true' ||
                       this.props.cEvent.value.styles.hideDatesAgendaItem === true ? (
@@ -751,15 +755,22 @@ class Agenda extends Component {
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'true' ||
                     this.props.cEvent.value.styles.hideDatesAgenda === true ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
-                      <>
+                    <>
                       {/* {days.map((day) => this.getActivitiesByDay(day))} */}
-                      {/* this.getActivitiesByDay(null)*/ }
-                      <div style={{
-                        backgroundColor: 'white'
-                      }}>
-                        <ActivitiesList agendaList={this.state.data} eventId={this.props.cEvent.value._id} cEventUserId={this.props.cEventUser.value._id}/>
+                      {/* this.getActivitiesByDay(null)*/}
+                      <div
+                        style={{
+                          backgroundColor: 'white',
+                        }}
+                      >
+                        <ActivitiesList
+                          agendaList={this.state.data}
+                          eventId={this.props.cEvent.value._id}
+                          cEventUserId={this.props.cEventUser.value._id}
+                          setActivitiesAttendee={this.props.setActivitiesAttendee}
+                        />
                       </div>
-                    {/*<Tabs
+                      {/*<Tabs
                       //tabBarExtraContent={{right:<DoubleRightOutlined />, left:<DoubleLeftOutlined/>}}
                       defaultActiveKey='0'
                       size='large'
@@ -792,7 +803,8 @@ class Agenda extends Component {
                             </TabPane>
                           )
                       )}
-                    </Tabs>*/}</>
+                    </Tabs>*/}
+                    </>
                   )}
               </div>
             </Row>
@@ -803,7 +815,7 @@ class Agenda extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   currentActivity: state.stage.data.currentActivity,
 });
 const mapDispatchToProps = {

@@ -120,6 +120,7 @@ class eventLanding extends Component {
                   <ActivitiesList
                     eventId={this.props.cEvent.value?._id}
                     cEventUserId={this.props.cEventUser.value?._id}
+                    setActivitiesAttendee={this.props.setActivitiesAttendee}
                   />
                 </div>
               </Col>
