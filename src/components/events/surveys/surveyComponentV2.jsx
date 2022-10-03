@@ -66,8 +66,11 @@ function getRandomlySampleQuestions(survey) {
     } else {
       newSurvey = { ...survey };
     }
+  } else {
+    newSurvey = { ...survey };
   }
-
+  
+  console.debug('survey.survey', newSurvey);
   return newSurvey;
 }
 
