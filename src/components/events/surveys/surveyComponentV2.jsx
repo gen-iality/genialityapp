@@ -25,6 +25,52 @@ import { UseCurrentUser } from '@context/userContext';
 /** Componentes */
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
 
+function getRandomlySampleQuestions(survey) {
+  console.debug('survey.survey', survey)
+  const getRandomIndex = (max) => {
+    return Math.floor(Math.random() * max)
+  };
+
+  let newSurvey = {};
+  if (survey.random_survey) {
+    // To avoid foolishness
+    const sampleCount = Math.min(survey.random_survey_count, survey.questions.length);
+    console.debug('sampleCount', sampleCount);
+    if (sampleCount < survey.questions.length) {
+      /** @type number[] */
+      const possibleIndeces = survey.questions.map((question, index) => index);
+      const takenIndeces = [];
+      // Take `sampleCount` question-indeces
+      let taken = 0;
+      let watchDog = 0;
+      while (taken < sampleCount) {
+        watchDog++;
+        const index = getRandomIndex(possibleIndeces.length);
+        if (!takenIndeces.includes(index)) {
+          possibleIndeces.splice(index, 1); // like pop
+          takenIndeces.push(index);
+          taken++;
+        }
+        if (watchDog > survey.questions.length * 2) {
+          console.error('tanking random index has crashed and the loop has overflowed the survey questions length');
+          break;
+        }
+      }
+      // Now, use these indeces to get the questions
+      takenIndeces
+      const newPages = survey.pages.filter((question, index) => takenIndeces.includes(index))
+      newSurvey = {
+        ...survey,
+        pages: newPages,
+      }
+    } else {
+      newSurvey = { ...survey };
+    }
+  }
+
+  return newSurvey;
+}
+
 function SurveyComponent(props) {
   const {
     eventId, // The event id
@@ -63,7 +109,7 @@ function SurveyComponent(props) {
   useEffect(() => {
     if (!(queryData?.questions.length > 0)) return;
     assignStylesToSurveyFromEvent(eventStyles);
-    setSurveyModel(createSurveyModel(queryData));
+    setSurveyModel(createSurveyModel(getRandomlySampleQuestions(queryData)));
     // survey.onCurrentPageChanging.add(displayFeedbackafterQuestionAnswered);
   }, [queryData]);
 
