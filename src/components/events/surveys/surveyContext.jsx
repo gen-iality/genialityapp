@@ -1,8 +1,8 @@
-import { useEffect, useReducer } from 'react';
-import { listenSurveysData } from '@/helpers/helperEvent';
-import InitSurveysCompletedListener from '@/components/events/surveys/functions/initSurveyCompletedListener';
+import { useState, useReducer, useEffect } from 'react';
 import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUser } from '@/context/userContext';
+import { GetCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
+
 export const SurveyContext = React.createContext();
 
 export function UseSurveyContext() {
@@ -14,64 +14,19 @@ export function UseSurveyContext() {
   return contextsurvey;
 }
 
-//status: 'LOADING' | 'LOADED' | 'error'
 let initialContextState = {
   status: 'LOADING',
-  surveys: [],
   currentSurvey: null,
   currentSurveyStatus: null,
 };
 
-const reducer = (state, action) => {
-  let newState = state;
-  let surveyChangedNew = null;
-
+function reducer(state, action) {
   switch (action.type) {
-    case 'data_loaded':
-      newState = { ...state, surveys: action.payload.publishedSurveys, status: 'LOADED' };
-      //Actualizamos el estado de la encuesta actual o se borra la encuesta actual si se despublico
-      if (state.currentSurvey) {
-        let updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
-        newState['currentSurvey'] = updatedcurrentSurvey;
-      }
-
-      surveyChangedNew = action.payload.changeInSurvey;
-      if (shouldActivateUpdatedSurvey(state, surveyChangedNew)) {
-        newState['currentSurvey'] = surveyChangedNew;
-      }
-      return newState;
-
-    case 'current_Survey_Status':
+    case 'survey_loaded':
+      return { ...state, currentSurvey: action.payload, status: 'LOADED' };
+    case 'survey_status_loaded':
       return { ...state, currentSurveyStatus: action.payload };
-
-    case 'survey_selected':
-      return { ...state, currentSurvey: action.payload };
-
-    default:
-      return newState;
   }
-};
-
-function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
-  let shouldActivateSurvey = false;
-  if (surveyChangedNew) {
-    /** Se valida que el estado actual de la encuesta sea abierta y publicada */
-    if (surveyChangedNew.isOpened === 'true' && surveyChangedNew.isPublished === 'true') {
-      /** Se filtran la encuestas por id del array de encuestas en el estado anterior versus el id de la encuesta que se actualizo recientemente */
-      let surveyChangedPrevius = state.surveys.find(item => item._id === surveyChangedNew._id);
-      // newState['surveyResult'] = 'view';
-
-      /** Si la comparacion anterior da undefined es por la encuesta estaba abierta pero despublicada por ello se niega el surveyChanged, de lo contrario se valida que este cerrada o despublicada */
-      if (
-        !surveyChangedPrevius ||
-        surveyChangedPrevius.isOpened === 'false' ||
-        surveyChangedPrevius.isPublished === 'false'
-      ) {
-        shouldActivateSurvey = true;
-      }
-    }
-  }
-  return shouldActivateSurvey;
 }
 
 export function SurveyProvider({ children }) {
@@ -83,42 +38,29 @@ export function SurveyProvider({ children }) {
   useEffect(() => {
     if (!cEventContext || !cEventContext.value) return;
     if (!cUser || !cUser.value) return;
+    if (!state.currentSurvey) return;
 
-    async function fetchSurveys() {
-      console.log('ESTE ES EL STATE', state);
-      listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
-      InitSurveysCompletedListener(cUser, dispatch);
-    }
-    fetchSurveys();
-  }, [cEventContext, cUser]);
+    console.log('1000. Aquí se ejecuta el use Effect');
 
-  /** ACTION DISPACHERS **/
-  function select_current_survey(survey) {
-    dispatch({ type: 'survey_selected', payload: survey });
+    GetCurrentUserSurveyStatus(state.currentSurvey._id, cUser.value._id).then(data => {
+      dispatch({ type: 'survey_status_loaded', payload: data });
+    });
+  }, [cEventContext, cUser, state.currentSurvey]);
+
+  function load_survey(survey) {
+    dispatch({ type: 'survey_loaded', payload: survey });
   }
 
-  function shouldDisplaySurvey() {
-    if (!state.currentSurvey) {
-      return false;
-    }
-    return (
-      state.currentSurvey.isOpened === 'true' &&
-      state.currentSurvey.isPublished === 'true' &&
-      attendeeAllReadyAnswered()
-    );
-  }
-
-  function shouldDisplayGraphics() {
-    if (!state.currentSurvey) {
+  function attendeeAllReadyAnswered() {
+    if (!state.currentSurveyStatus) {
       return false;
     }
 
-    return (
-      !shouldDisplaySurvey() &&
-      // state.currentSurvey.allow_gradable_survey === 'false' ||
-      // state.currentSurvey.allow_gradable_survey === false ||
-      (state.currentSurvey.displayGraphsInSurveys === 'true' || state.currentSurvey.displayGraphsInSurveys === true)
-    );
+    return state.currentSurveyStatus?.surveyCompleted === 'completed';
+  }
+
+  function shouldDisplaySurveyAttendeeAnswered() {
+    return attendeeAllReadyAnswered();
   }
 
   function shouldDisplaySurveyClosedMenssage() {
@@ -128,16 +70,15 @@ export function SurveyProvider({ children }) {
     return state.currentSurvey.isOpened === 'false';
   }
 
-  function shouldDisplaySurveyAttendeeAnswered() {
-    return !attendeeAllReadyAnswered();
-  }
-
-  function attendeeAllReadyAnswered() {
-    if (!state.currentSurveyStatus) {
-      return true;
+  function shouldDisplayGraphics() {
+    if (!state.currentSurvey) {
+      return false;
     }
 
-    return state.currentSurveyStatus[state.currentSurvey._id]?.surveyCompleted !== 'completed';
+    return (
+      attendeeAllReadyAnswered() &&
+      (state.currentSurvey.displayGraphsInSurveys === 'true' || state.currentSurvey.displayGraphsInSurveys === true)
+    );
   }
 
   function shouldDisplayRanking() {
@@ -147,17 +88,15 @@ export function SurveyProvider({ children }) {
     return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
   }
 
-  //  console.groupEnd('surveyContext');
   return (
     <SurveyContext.Provider
       value={{
         ...state,
-        select_current_survey,
-        shouldDisplaySurvey,
-        shouldDisplayGraphics,
+        load_survey,
+        attendeeAllReadyAnswered,
         shouldDisplaySurveyAttendeeAnswered,
         shouldDisplaySurveyClosedMenssage,
-        attendeeAllReadyAnswered,
+        shouldDisplayGraphics,
         shouldDisplayRanking,
       }}
     >

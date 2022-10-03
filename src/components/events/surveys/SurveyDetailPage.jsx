@@ -24,11 +24,11 @@ import QuizProgress from '@/components/quiz/QuizProgress';
 function SurveyDetailPage({ surveyId, cEvent }) {
   //const cSurveys = UseSurveysContext();
   const cSurvey = UseSurveyContext();
-
   const currentUser = UseCurrentUser();
-  console.log('200.SurveyDetailPage currentUser', currentUser.value);
 
   const query = useSurveyQuery(cEvent.value?._id, surveyId);
+
+  console.log('200.SurveyDetailPage currentUser', currentUser.value);
   console.log('200.SurveyDetailPage eventId', cEvent.value?._id);
   console.log('200.SurveyDetailPage surveyId', surveyId);
   console.log('200.SurveyDetailPage query.data', query.data);
@@ -40,10 +40,9 @@ function SurveyDetailPage({ surveyId, cEvent }) {
 
   const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
-  const [currentSurvey, setCurrentSurvey] = useState();
 
   useEffect(() => {
-    cSurvey.select_current_survey({ ...query.data });
+    cSurvey.load_survey({ ...query.data });
   }, [query.data]);
 
   //Effect for when prop.idSurvey changes
@@ -121,6 +120,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
 
   return (
     <div>
+      {console.log('1000.cSurvey.shouldDisplaySurveyAttendeeAnswered()', cSurvey.shouldDisplaySurveyAttendeeAnswered())}
       {cSurvey.shouldDisplaySurveyAttendeeAnswered() ? (
         <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
           <Result
