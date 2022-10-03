@@ -23,6 +23,9 @@ import { useHistory } from 'react-router-dom';
 import { SurveysApi } from '@/helpers/request';
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats';
 
+/**
+ * @deprecated Use SurveyComponentV2 instead.
+ */
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
   console.log('updateSurveyStatusx0', eventId, idSurvey);

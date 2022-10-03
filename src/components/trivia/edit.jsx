@@ -22,6 +22,7 @@ import {
   Card,
   Space,
   Spin,
+  InputNumber,
 } from 'antd';
 import {
   CheckCircleOutlined,
@@ -71,6 +72,8 @@ class triviaEdit extends Component {
       // configuracion de la encuestas
       allow_anonymous_answers: false,
       allow_gradable_survey: false,
+      random_survey: false,
+      random_survey_count: 0,
       hasMinimumScore: 'false', // Si la encuesta calificable requiere un puntaje minimo de aprobación
       isGlobal: 'false', // determina si la encuesta esta disponible desde cualquier lección
       showNoVotos: 'false',
@@ -103,6 +106,7 @@ class triviaEdit extends Component {
 
   //Funcion para poder cambiar el value del input o select
   changeInput = (e) => {
+    console.debug('changeInput', e.target);
     const { name } = e.target;
     const { value } = e.target;
     this.setState({ [name]: value });
@@ -138,6 +142,9 @@ class triviaEdit extends Component {
       freezeGame: firebaseSurvey.freezeGame || this.state.freezeGame,
       openSurvey: firebaseSurvey.isOpened || this.state.openSurvey,
       publish: firebaseSurvey.isPublished || this.state.publish,
+
+      random_survey: firebaseSurvey.random_survey || false,
+      random_survey_count: firebaseSurvey.random_survey_count || 0,
 
       survey: Update.survey,
       show_horizontal_bar: Update.show_horizontal_bar || true,
@@ -251,6 +258,10 @@ class triviaEdit extends Component {
         publish: 'false',
 
         minimumScore: 0,
+
+        // Rossie history inspired this feature
+        random_survey: this.state.random_survey,
+        random_survey_count: this.state.random_survey_count,
       };
       try {
         // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del curso que viene desde props
@@ -275,6 +286,10 @@ class triviaEdit extends Component {
             isPublished: data.publish,
 
             minimumScore: data.minimumScore,
+
+            // Rossie history inspired this feature
+            random_survey: data.random_survey,
+            random_survey_count: data.random_survey_count,
           },
           { eventId: this.props.event._id, name: save.survey, category: 'none' }
         );
@@ -385,6 +400,10 @@ class triviaEdit extends Component {
         publish: this.state.publish === 'true' || this.state.publish === true ? 'true' : 'false',
 
         minimumScore: parseInt(this.state.minimumScore),
+
+        // Rossie history inspired this feature
+        random_survey: this.state.random_survey,
+        random_survey_count: this.state.random_survey_count,
       };
 
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del curso que viene desde props
@@ -412,6 +431,10 @@ class triviaEdit extends Component {
 
               minimumScore: data.minimumScore,
               activity_id: data.activity_id,
+
+              // Rossie history inspired this feature
+              random_survey: data.random_survey,
+              random_survey_count: data.random_survey_count,
             },
             { eventId: this.props.event._id, name: data.survey, category: 'none' }
           );
@@ -634,6 +657,7 @@ class triviaEdit extends Component {
 
   toggleSwitch = (variable, state) => {
     let { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInSurveys } = this.state;
+    console.debug('variable:', variable, state);
     switch (variable) {
       case 'allow_gradable_survey':
         if (state && allow_vote_value_per_user === 'true')
@@ -653,7 +677,10 @@ class triviaEdit extends Component {
         break;
       case 'displayGraphsInSurveys':
         this.setState({ displayGraphsInSurveys: displayGraphsInSurveys === 'true' ? 'false' : 'true' });
-
+        break;
+      
+      case 'random_survey':
+        this.setState({ random_survey: state });
         break;
 
       default:
@@ -710,6 +737,8 @@ class triviaEdit extends Component {
       currentQuestion,
       allow_anonymous_answers,
       allow_gradable_survey,
+      random_survey,
+      random_survey_count,
       show_horizontal_bar,
       allow_vote_value_per_user,
       freezeGame,
@@ -1053,6 +1082,33 @@ class triviaEdit extends Component {
                           </>
                         </>
                       )}
+                    
+                    <Form.Item label={`${this.state.title} con preguntas aleatorias`}>
+                      <Switch
+                        name={'random_survey'}
+                        checked={random_survey === 'true' || random_survey === true}
+                        onChange={(checked) => {
+                          this.toggleSwitch('random_survey', checked);
+                        }}
+                      />
+                    </Form.Item>
+                    {(random_survey === 'true' || random_survey) && (
+                      <Form.Item
+                        label={
+                          <label style={{ marginTop: '2%' }}>
+                            Cantidad de preguntas <label style={{ color: 'red' }}>*</label>
+                          </label>
+                        }
+                        rules={[{ required: true, message: 'La cantidad de preguntas es requerido' }]}>
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          value={random_survey_count}
+                          placeholder={`Cantidad de preguntas aleatorias de ${this.state.title.toLowerCase()}`}
+                          name={'random_survey_count'}
+                          onChange={(value) => this.changeInput({ target: { name: 'random_survey_count', value: Math.max(value, 0) } })}
+                        />
+                      </Form.Item>
+                    )}
                     </>
                   )}
                 </Card>

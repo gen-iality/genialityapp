@@ -7,5 +7,6 @@
   "enable": true,
   "formatOnPaste": false,
   "bracketSameLine": true,
-  "jsxSingleQuote": true
+  "jsxSingleQuote": true,
+  "arrowParens": "always"
 }
