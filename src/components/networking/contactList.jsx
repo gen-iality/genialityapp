@@ -7,7 +7,7 @@ import { formatDataToString } from '../../helpers/utils';
 //context
 import { UseUserEvent } from '../../context/eventUserContext';
 import { UseEventContext } from '../../context/eventContext';
-import { UseCurrentUser } from '../../context/userContext';
+import { useCurrentUser } from '../../context/userContext';
 
 const { Meta } = Card;
 
@@ -19,7 +19,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
 
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
-  let userCurrentContext = UseCurrentUser();
+  let userCurrentContext = useCurrentUser();
 
   useEffect(() => {
     setLoading(true);

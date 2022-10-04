@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '../../context/eventUserContext';
-import { UseCurrentUser } from '../../context/userContext';
+import { useCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useIntl } from 'react-intl';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -15,7 +15,7 @@ const InfoEvent = () => {
   const cEvent = UseEventContext();
   let { handleChangeTypeModal, eventIsActive } = useHelper();
   const cEventUser = UseUserEvent();
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
 
   const intl = useIntl();
   return (

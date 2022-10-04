@@ -4,7 +4,7 @@ import { MessageTwoTone, EyeOutlined, CrownFilled, FileImageOutlined } from '@an
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { UseCurrentUser } from '../../context/userContext';
+import { useCurrentUser } from '../../context/userContext';
 import { UseEventContext } from '../../context/eventContext';
 import { imageforDefaultProfile } from '@/helpers/constants';
 import dayjs from 'dayjs';
@@ -40,7 +40,7 @@ const styleListPointer = {
 };
 
 function UsersCard(props) {
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let cEvent = UseEventContext();
   let eventValues = cEvent.value;
 

@@ -20,7 +20,7 @@ import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 
 /** Context´s */
 import { UseEventContext } from '../../../context/eventContext';
-import { UseCurrentUser } from '@context/userContext';
+import { useCurrentUser } from '@context/userContext';
 
 /** Componentes */
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
@@ -83,7 +83,7 @@ function SurveyComponent(props) {
   } = props;
 
   const cEvent = UseEventContext();
-  const currentUser = UseCurrentUser();
+  const currentUser = useCurrentUser();
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;

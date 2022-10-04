@@ -12,7 +12,7 @@ import ChatList from './ChatList';
 import GameList from '../events/game/gameList';
 import { useRef } from 'react';
 import { UseEventContext } from '../../context/eventContext';
-import { UseCurrentUser } from '../../context/userContext';
+import { useCurrentUser } from '../../context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
@@ -35,7 +35,7 @@ const styleTabAttendes = {
 let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let {
     attendeeList,
     HandleChatOrAttende,

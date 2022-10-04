@@ -1,12 +1,12 @@
 import { Button, Card, Typography } from 'antd';
-import { UseCurrentUser } from '../../../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { useContext } from 'react';
 import AgendaContext from '@/context/AgendaContext';
 
 const GoToEviusMeet = (props: any) => {
   const { dataLive } = useContext(AgendaContext);
 
-  const user = UseCurrentUser();
+  const user = useCurrentUser();
   const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare';
   const urlReunion = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`;
   const urlEviusTransmision = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rtmp=${dataLive?.push_url}&rol=1`;

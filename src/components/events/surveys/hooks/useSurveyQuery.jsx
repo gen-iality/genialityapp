@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import LoadSelectedSurvey from './../functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './../functions/initRealTimeSurveyListening';
 import { SurveyPage } from '../services/services';
-import { UseCurrentUser } from '../../../../context/userContext';
+import { useCurrentUser } from '../../../../context/userContext';
 
 ////open, publish, freezeGame
 function useSurveyQuery(eventId, idSurvey) {
-  const currentUser = UseCurrentUser();
+  const currentUser = useCurrentUser();
   const [query, setQuery] = useState({ loading: true, error: false, data: undefined });
   const [innerQuery, setInnerQuery] = useState(undefined);
   const [innerRealTimeQuery, setInnerRealTimeQuery] = useState(undefined);

@@ -17,7 +17,7 @@ import RegisterUserAnonymous from './RegisterUserAnonymous';
 import { UseEventContext } from '../../context/eventContext';
 import RegisterUserAndEventUserAnonymous from './RegisterUserAndEventUserAnonymous';
 import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
-import { UseCurrentUser } from '../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import FormEnrollAttendeeToEvent from '@/components/forms/FormEnrollAttendeeToEvent';
 import AnonymousEvenUserForm from '@/components/socialZone/hooks/anonymousEvenUserForm';
@@ -43,7 +43,7 @@ const ModalAuthAnonymous = (props: any) => {
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
   const cEvent = UseEventContext();
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
 
   const isVisibleRegister = () => {

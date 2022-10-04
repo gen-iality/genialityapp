@@ -17,7 +17,7 @@ import EventOrganization from '../components/eventOrganization';
 import Organization from '@/pages/eventOrganization/index';
 import MainProfile from '../components/profile/main';
 
-import { UseCurrentUser } from '../context/userContext';
+import { useCurrentUser } from '../context/userContext';
 import loadable from '@loadable/component';
 import ModalAuth from '../components/authentication/ModalAuth';
 import ModalNoRegister from '../components/authentication/ModalNoRegister';
@@ -156,7 +156,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
 );
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
   return (
     <Route
       {...rest}

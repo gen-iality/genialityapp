@@ -29,7 +29,7 @@ import {
   ResetLiveStream,
 } from '../../../../adaptors/wowzaStreamingAPI';
 import { realTimeviuschat } from '../../../../helpers/firebase';
-import { UseCurrentUser } from '../../../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import AgendaContext from '../../../../context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';
 import Loading from '../../../profile/loading';
@@ -48,7 +48,7 @@ const WowzaStreamingPanel = ({
 }) => {
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`;
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   /* console.log('debug ', meeting_id); */
   const [ livestreamStatus, setLivestreamStatus ] = useState(null);
   const [ livestreamStats, setLivestreamStats ] = useState(null);

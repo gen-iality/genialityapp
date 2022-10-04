@@ -32,7 +32,7 @@ import { connect } from 'react-redux';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { UseEventContext } from '../../../context/eventContext';
-import { UseCurrentUser } from '../../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { app } from '../../../helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { countryApi } from '@/helpers/request';
@@ -163,7 +163,7 @@ const FormRegister = ({
   const intl = useIntl();
   const cEvent = UseEventContext();
   const cEventUser = UseUserEvent();
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
   const {
     currentAuthScreen,
     typeModal,

@@ -5,7 +5,7 @@ import { AgendaApi } from '@helpers/request';
 import CourseProgress from './CourseProgress';
 
 // Do handly if they cannot get data from URI params
-import { UseCurrentUser } from '@context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { EventsApi } from '@helpers/request';
 
 import type AgendaType from '@Utilities/types/AgendaType';
@@ -27,7 +27,7 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
     eventId,
   } = props;
 
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
   if (cUser.value == null || cUser.value == undefined) {
     return <></>;
   }

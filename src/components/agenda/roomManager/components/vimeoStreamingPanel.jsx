@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Button, Typography, Space, Row, Col, Card, Tabs } from "antd";
 import AgendaContext from "../../../../context/AgendaContext";
-import { UseCurrentUser } from "../../../../context/userContext";
+import { useCurrentUser } from '@context/userContext';
 
 const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
   const vimeoUrl = "https://vimeo.com/";
@@ -12,7 +12,7 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
     "https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts";
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`;
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   //   const eventContext = useContext(CurrentEventContext);
   const { transmition } = useContext(AgendaContext);
   const { names, email, picture } = cUser.value;

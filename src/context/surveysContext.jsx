@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
 import { UseEventContext } from './eventContext';
-import { UseCurrentUser } from './userContext';
+import { useCurrentUser } from './userContext';
 export const SurveysContext = React.createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
@@ -55,7 +55,7 @@ const reducer = (state, action) => {
 export function SurveysProvider({ children }) {
   //  console.group('surveyContext');
   let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   /** ACTION DISPACHERS **/

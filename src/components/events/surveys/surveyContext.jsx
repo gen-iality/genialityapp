@@ -1,6 +1,6 @@
 import { useState, useReducer, useEffect } from 'react';
 import { UseEventContext } from '@/context/eventContext';
-import { UseCurrentUser } from '@/context/userContext';
+import { useCurrentUser } from '@/context/userContext';
 import { GetCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
 
 export const SurveyContext = React.createContext();
@@ -31,7 +31,7 @@ function reducer(state, action) {
 
 export function SurveyProvider({ children }) {
   let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
 
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
