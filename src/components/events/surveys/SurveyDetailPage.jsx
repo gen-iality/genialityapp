@@ -123,6 +123,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       {console.log('1000.cSurvey.shouldDisplaySurveyAttendeeAnswered()', cSurvey.shouldDisplaySurveyAttendeeAnswered())}
       {cSurvey.shouldDisplaySurveyAttendeeAnswered() ? (
         <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
+          <em>{cSurvey.surveyStatsString}</em>
           <Result
             style={{ height: '50%', padding: '75px 75px 20px' }}
             status='success'
@@ -157,6 +158,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       ) : (
         <Card className='surveyCard'>
           <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} queryData={query.data} />
+          <em>{cSurvey.surveyStatsString}</em>
         </Card>
       )}
     </div>

@@ -12,31 +12,19 @@ export function setCurrentUserSurveyStatus(surveyData, currentUser, status) {
   return firebaseRef.set({ surveyCompleted: status }, { merge: true });
 }
 
-export function getCurrentUserSurveyStatus(surveyId, userId) {
-  /* return firestore
+export async function  getCurrentUserSurveyStatus(surveyId, userId) {
+  const result = await firestore
     .collection('votingStatusByUser')
     .doc(userId)
     .collection('surveyStatus')
     .doc(surveyId)
-    .get(); */
+    .get();
 
-  return new Promise((resolve, reject) => {
-    firestore
-      .collection('votingStatusByUser')
-      .doc(userId)
-      .collection('surveyStatus')
-      .doc(surveyId)
-      .get()
-      .then(result => {
-        if (result.exists) {
-          console.log('1000.result.data()', result.data());
-          resolve(result.data());
-        } else {
-          resolve();
-        }
-      })
-      .catch(err => {
-        reject('Hubo un problema ', err);
-      });
-  });
+  if (result.exists) {
+    const document = result.data();
+    console.log('1000.result.data()', document);
+    return document;
+  } else {
+    console.debug('1000.result.data()', 'no exist', surveyId, userId);
+  }
 }

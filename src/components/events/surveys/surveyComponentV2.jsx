@@ -1,7 +1,7 @@
 /** Hooks, CustomHooks  and react libraries*/
 import { useState, useEffect } from 'react';
 import * as Survey from 'survey-react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 /** Helpers and services */
 import { SurveyPage } from './services/services';
@@ -24,6 +24,8 @@ import { useCurrentUser } from '@context/userContext';
 
 /** Componentes */
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
+import { addTriesNumber } from './functions/surveyStatus';
+import { useSurveyContext } from './surveyContext';
 
 function getRandomlySampleQuestions(survey) {
   console.debug('survey.survey', survey)
@@ -84,6 +86,8 @@ function SurveyComponent(props) {
 
   const cEvent = UseEventContext();
   const currentUser = useCurrentUser();
+  const history = useHistory();
+  const cSurvey = useSurveyContext();
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -218,7 +222,14 @@ function SurveyComponent(props) {
   async function saveSurveyStatus() {
     const status = surveyModel.state;
     console.log('200.status', status);
-    await setCurrentUserSurveyStatus(queryData, currentUser, status);
+    // await SetCurrentUserSurveyStatus(queryData, currentUser, status);
+    await addTriesNumber(
+      queryData._id, // Survey ID
+      currentUser.value._id, // User Id
+      cSurvey.currentSurveyStatus.tried, // Tried amount
+      cSurvey.currentSurvey.tries, // Max tries
+      status,
+    );
   }
 
   async function saveSurveyCurrentPage() {
@@ -328,17 +339,15 @@ function SurveyComponent(props) {
           </div>
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Link to={`/landing/${eventId}/evento`} replace>
-                <Button
-                  onClick={() => {
-                    saveSurveyStatus();
-                  }}
-                  type='primary'
-                  key='console'
-                >
-                  Volver al curso {isSavingPoints && <Spin />}
-                </Button>
-              </Link>
+              <Button
+                onClick={() => {
+                  saveSurveyStatus().then(() => history.push(`/landing/${eventId}/evento`))
+                }}
+                type='primary'
+                key='console'
+              >
+                Volver al curso {isSavingPoints && <Spin />}
+              </Button>
             </div>
           )}
         </>

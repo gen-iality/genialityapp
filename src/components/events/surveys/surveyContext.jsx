@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 
 import { useState, useReducer, useEffect } from 'react';
 import { UseEventContext } from '@/context/eventContext';
@@ -90,6 +90,16 @@ export function SurveyProvider({ children }) {
     return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
   }
 
+  const surveyStatsString = useMemo(() => {
+    // Beware of editing this without thinking
+    if (!state.currentSurveyStatus || !state.currentSurvey) return 'cuestionario nuevo';
+    const currentStatus = state.currentSurveyStatus[state.currentSurvey._id];
+    if (!currentStatus) return 'cuestionario nuevo';
+
+    const tried = currentStatus.tried || 0;
+    return `${tried} ${tried > 1 ? 'intentos':'intento'} de ${state.currentSurvey?.tries || 1}`;
+  }, [state.currentSurvey, state.currentSurveyStatus]);
+
   return (
     <SurveyContext.Provider
       value={{
@@ -100,6 +110,7 @@ export function SurveyProvider({ children }) {
         shouldDisplaySurveyClosedMenssage,
         shouldDisplayGraphics,
         shouldDisplayRanking,
+        surveyStatsString,
       }}
     >
       {children}
