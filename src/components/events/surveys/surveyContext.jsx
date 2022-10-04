@@ -52,17 +52,17 @@ export function SurveyProvider({ children }) {
     });
   }, [cEventContext, cUser, state.survey]);
 
-  function loadSurvey(survey) {
+  const loadSurvey = (survey) => {
     dispatch({ type: 'survey_loaded', payload: survey });
-  }
+  };
 
-  function checkIfSurveyWasAnswered() {
+  const checkIfSurveyWasAnswered = () => {
     if (!state.surveyStatus) {
       return false;
     }
 
     return state.surveyStatus?.surveyCompleted === 'completed';
-  }
+  };
 
   const checkThereIsAnotherTry = () => {
     // If tried (in Firebase) is < that tries (in MongoDB), then the user can see the survey
@@ -81,21 +81,21 @@ export function SurveyProvider({ children }) {
     dispatch({ type: 'answering', payload: true });
   };
 
-  function shouldDisplaySurveyAttendeeAnswered() {
+  const shouldDisplaySurveyAttendeeAnswered = () => {
     if (checkThereIsAnotherTry() && state.answering) {
       return false;
     }
     return checkIfSurveyWasAnswered();
-  }
+  };
 
-  function shouldDisplaySurveyClosedMenssage() {
+  const shouldDisplaySurveyClosedMenssage = () => {
     if (!state.survey) {
       return false;
     }
     return state.survey.isOpened === 'false';
-  }
+  };
 
-  function shouldDisplayGraphics() {
+  const shouldDisplayGraphics = () => {
     if (!state.survey) {
       console.debug('not show graphics because there is no survey');
       return false;
@@ -112,14 +112,14 @@ export function SurveyProvider({ children }) {
 
     console.debug('not show graphics because survey.displayGraphsInSurveys is false');
     return false;
-  }
+  };
 
-  function shouldDisplayRanking() {
+  const shouldDisplayRanking = () => {
     if (!state.survey) {
       return false;
     }
     return state.survey.rankingVisible === 'true' || state.survey.rankingVisible === true;
-  }
+  };
 
   const surveyStatsString = useMemo(() => {
     // Beware of editing this without thinking
