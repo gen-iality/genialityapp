@@ -53,7 +53,7 @@ export function SurveyProvider({ children }) {
     dispatch({ type: 'survey_loaded', payload: survey });
   }
 
-  function attendeeAllReadyAnswered() {
+  function checkIfSurveyWasAnswered() {
     if (!state.surveyStatus) {
       return false;
     }
@@ -62,7 +62,7 @@ export function SurveyProvider({ children }) {
   }
 
   function shouldDisplaySurveyAttendeeAnswered() {
-    return attendeeAllReadyAnswered();
+    return checkIfSurveyWasAnswered();
   }
 
   function shouldDisplaySurveyClosedMenssage() {
@@ -78,11 +78,12 @@ export function SurveyProvider({ children }) {
       return false;
     }
 
-    if (!attendeeAllReadyAnswered()) {
-      console.debug('not show graphics because attendeeAllReadyAnswered() is false');
+    if (!checkIfSurveyWasAnswered()) {
+      console.debug('not show graphics because checkIfSurveyWasAnswered() is false');
     }
 
     if (state.survey.displayGraphsInSurveys === 'true' || state.survey.displayGraphsInSurveys === true) {
+      console.debug('enable showing graphics');
       return true;
     }
 
@@ -112,7 +113,7 @@ export function SurveyProvider({ children }) {
       value={{
         ...state,
         loadSurvey,
-        attendeeAllReadyAnswered,
+        checkIfSurveyWasAnswered,
         shouldDisplaySurveyAttendeeAnswered,
         shouldDisplaySurveyClosedMenssage,
         shouldDisplayGraphics,
