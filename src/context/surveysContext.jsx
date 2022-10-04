@@ -70,6 +70,7 @@ export function SurveysProvider({ children }) {
     dispatch({ type: 'set_current_activity', payload: currentActivity });
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaySurvey() {
     if (!state.currentSurvey) {
       return false;
@@ -82,6 +83,7 @@ export function SurveysProvider({ children }) {
     );
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplayGraphics() {
     if (!state.currentSurvey) {
       return false;
@@ -95,6 +97,7 @@ export function SurveysProvider({ children }) {
     );
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaySurveyClosedMenssage() {
     if (!state.currentSurvey) {
       return false;
@@ -102,10 +105,12 @@ export function SurveysProvider({ children }) {
     return state.currentSurvey.isOpened === 'false';
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaySurveyAttendeeAnswered() {
     return !attendeeAllReadyAnswered();
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function attendeeAllReadyAnswered() {
     console.log('survey state', state)
     if (!state.currentSurveyStatus) {
@@ -121,6 +126,7 @@ export function SurveysProvider({ children }) {
     return (currentStatus.tried || 0) < (state.currentSurvey?.tries || 1);
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplayRanking() {
     if (!state.currentSurvey) {
       return false;
@@ -128,6 +134,7 @@ export function SurveysProvider({ children }) {
     return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function surveysToBeListedByActivity() {
     let listOfSurveysFilteredByActivity;
     if (state.currentActivity) {
@@ -140,6 +147,7 @@ export function SurveysProvider({ children }) {
     return listOfSurveysFilteredByActivity;
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaysurveyAssignedToThisActivity() {
     let recentlyOpenedSurvey;
     if (!state.currentSurvey && !surveysToBeListedByActivity()) {
@@ -201,6 +209,7 @@ export function UseSurveysContext() {
   return contextsurveys;
 }
 
+/** @deprecated Use this method from surveyContext instead */
 function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
   let shouldActivateSurvey = false;
   if (surveyChangedNew) {
