@@ -24,6 +24,7 @@ import ModalNoRegister from '../components/authentication/ModalNoRegister';
 import BlockedEvent from '@/components/events/Landing/BlockedEvent';
 import ModalAuthAnonymous from '@/components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@/components/events/Landing/ModalUpdate';
+import { SurveyProvider } from '@/components/events/surveys/surveyContext';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../pages/home'));
@@ -56,7 +57,8 @@ const ContentContainer = () => {
       basename='/'
       getUserConfirmation={() => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
-      }}>
+      }}
+    >
       <main className='main'>
         <Switch>
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
@@ -122,24 +124,27 @@ function QRedirect({ match }) {
 const RouteContext = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(props) => (
+    render={props => (
       <CurrentEventProvider>
         <CurrentUserEventProvider>
           <CurrentUserProvider>
             <AgendaContextProvider>
               <HelperContextProvider>
                 <SurveysProvider>
-                  <Layout
-                    style={{
-                      minHeight: '100vh',
-                    }}>
-                    <Header />
-                    <Component {...props} />
-                    <ModalAuth />
-                    <ModalAuthAnonymous />
-                    <ModalNoRegister />
-                    <ModalUpdate />
-                  </Layout>
+                  <SurveyProvider>
+                    <Layout
+                      style={{
+                        minHeight: '100vh',
+                      }}
+                    >
+                      <Header />
+                      <Component {...props} />
+                      <ModalAuth />
+                      <ModalAuthAnonymous />
+                      <ModalNoRegister />
+                      <ModalUpdate />
+                    </Layout>
+                  </SurveyProvider>
                 </SurveysProvider>
               </HelperContextProvider>
             </AgendaContextProvider>
@@ -155,7 +160,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) => (
+      render={props => (
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>

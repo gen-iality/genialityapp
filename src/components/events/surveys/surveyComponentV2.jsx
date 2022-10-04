@@ -12,7 +12,7 @@ import { Result, Spin, Button, Col } from 'antd';
 
 /** Funciones externas */
 import StateMessages from './functions/stateMessagesV2';
-import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
+import { SetCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
 import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 import GetResponsesIndex from './functions/getResponsesIndex';
 import SavingResponseByUserId from './functions/savingResponseByUserId';
