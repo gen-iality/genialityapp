@@ -1,10 +1,8 @@
-function SingleAnswerType(question) {
-  return new Promise((resolve, reject) => {
-    const optionIndex = question.choices.findIndex(
-      (item) => item.propertyHash.value === question.value || item.itemValue === question.value
-    );
-    resolve(optionIndex);
-  });
+function singleAnswerType(question) {
+  const optionIndex = question.choices.findIndex(
+    (item) => item.propertyHash.value === question.value || item.itemValue === question.value
+  );
+  return optionIndex;
 }
 
-export default SingleAnswerType;
+export default singleAnswerType;

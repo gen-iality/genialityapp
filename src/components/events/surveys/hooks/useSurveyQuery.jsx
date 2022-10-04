@@ -52,7 +52,6 @@ function useSurveyQuery(eventId, idSurvey) {
     };
   }, [idSurvey]);
 
-  console.log('500.query', query);
   return query;
 }
 
