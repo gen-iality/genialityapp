@@ -1,40 +1,73 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import { useState, useReducer, useEffect } from 'react';
+import { ReactNode, useReducer, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
 import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { getUserSurveyStatus } from './functions/userSurveyStatus';
 
-export const SurveyContext = createContext();
-
-export function useSurveyContext() {
-  const contextsurvey = useContext(SurveyContext);
-  // console.log('SurveyContext', contextsurvey);
-  if (!contextsurvey) {
-    throw new Error('SurveyContext debe estar dentro del proveedor');
-  }
-  return contextsurvey;
+export enum SurveyContextAction {
+  SURVEY_LOADED = 'SURVEY_LOADED',
+  SURVEY_STATUS_LOADED = 'SURVEY_STATUS_LOADED',
+  ANSWERING_AGAIN = 'ANSWERING_AGAIN',
 }
 
-let initialContextState = {
+export type SurveyContextReducerActionType =
+| { type: SurveyContextAction.SURVEY_LOADED, survey: any }
+| { type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: any }
+| { type: SurveyContextAction.ANSWERING_AGAIN, answering: any }
+
+export type SurveyContextType = {
+  status: string,
+  survey: any,
+  surveyStatus: any,
+  answering: boolean,
+};
+
+export type CustomContextMethodType = {
+  surveyStatsString: string,
+  loadSurvey: (survey: any) => void,
+  checkIfSurveyWasAnswered: () => boolean,
+  shouldDisplaySurveyAttendeeAnswered: () => boolean,
+  shouldDisplaySurveyClosedMenssage: () => boolean,
+  shouldDisplayGraphics: () => boolean,
+  shouldDisplayRanking: () => boolean,
+  checkThereIsAnotherTry: () => boolean,
+  startAnswering: () => void,
+  stopAnswering: () => void,
+};
+
+const initialContextState: SurveyContextType = {
   status: 'LOADING',
   survey: null,
   surveyStatus: null,
   answering: false,
 };
 
-function reducer(state, action) {
+export const SurveyContext = createContext<SurveyContextType & CustomContextMethodType>({} as never);
+
+export function useSurveyContext() {
+  const contextsurvey = useContext(SurveyContext);
+
+  if (!contextsurvey) {
+    throw new Error('SurveyContext debe estar dentro del proveedor');
+  }
+
+  return contextsurvey;
+}
+
+function reducer(state: SurveyContextType, action: SurveyContextReducerActionType): SurveyContextType {
   switch (action.type) {
-    case 'survey_loaded':
-      return { ...state, survey: action.payload, status: 'LOADED' };
-    case 'survey_status_loaded':
-      return { ...state, surveyStatus: action.payload };
-    case 'answering':
-      return { ...state, answering: action.payload };
+    case SurveyContextAction.SURVEY_LOADED:
+      return { ...state, survey: action.survey, status: 'LOADED' };
+    case SurveyContextAction.SURVEY_STATUS_LOADED:
+      return { ...state, surveyStatus: action.surveyStatus };
+    case SurveyContextAction.ANSWERING_AGAIN:
+      return { ...state, answering: action.answering };
   }
 }
 
-export function SurveyProvider({ children }) {
+export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   let cEventContext = UseEventContext();
   let cUser = useCurrentUser();
 
@@ -48,12 +81,12 @@ export function SurveyProvider({ children }) {
     console.log('1000. Aquí se ejecuta el use Effect');
 
     getUserSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
-      dispatch({ type: 'survey_status_loaded', payload: data });
+      dispatch({ type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: data });
     });
   }, [cEventContext, cUser, state.survey]);
 
-  const loadSurvey = (survey) => {
-    dispatch({ type: 'survey_loaded', payload: survey });
+  const loadSurvey = (survey: any) => {
+    dispatch({ type: SurveyContextAction.SURVEY_LOADED, survey });
   };
 
   const checkIfSurveyWasAnswered = () => {
@@ -73,12 +106,12 @@ export function SurveyProvider({ children }) {
 
   const startAnswering = () => {
     console.log('start answering again');
-    if (checkThereIsAnotherTry()) dispatch({ type: 'answering', payload: true });
+    if (checkThereIsAnotherTry()) dispatch({ type: SurveyContextAction.ANSWERING_AGAIN, answering: true });
   };
 
   const stopAnswering = () => {
     console.log('stop answering again');
-    dispatch({ type: 'answering', payload: true });
+    dispatch({ type: SurveyContextAction.ANSWERING_AGAIN, answering: false });
   };
 
   const shouldDisplaySurveyAttendeeAnswered = () => {
