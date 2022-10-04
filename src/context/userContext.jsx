@@ -1,10 +1,10 @@
-import React from 'react';
+import { createContext, useContext } from 'react';
 import { app, firestore } from '../helpers/firebase';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import privateInstance from '../helpers/request';
 
-export const CurrentUserContext = React.createContext();
+export const CurrentUserContext = createContext();
 let initialContextState = { status: 'LOADING', value: undefined };
 
 export function CurrentUserProvider({ children }) {
@@ -90,11 +90,9 @@ export function CurrentUserProvider({ children }) {
 }
 
 export function useCurrentUser() {
-  const contextuser = React.useContext(CurrentUserContext);
+  const contextuser = useContext(CurrentUserContext);
   if (!contextuser) {
     throw new Error('currentUser debe estar dentro del proveedor');
   }
   return contextuser;
 }
-
-export const UseCurrentUserContext = useCurrentUser;

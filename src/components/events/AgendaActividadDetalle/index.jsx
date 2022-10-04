@@ -19,7 +19,7 @@ import AditionalInformation from './AditionalInformation';
 import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
-import { UseCurrentUserContext } from '@/context/userContext';
+import { useCurrentUser } from '@/context/userContext';
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 
 const { setHasOpenSurveys } = SurveyActions;
@@ -32,7 +32,7 @@ const AgendaActividadDetalle = props => {
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);
   const [activity, setactivity] = useState('');
-  const cUser = UseCurrentUserContext();
+  const cUser = useCurrentUser();
   let cEventUser = UseUserEvent();
   const cEvent = UseEventContext();
 

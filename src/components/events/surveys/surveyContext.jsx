@@ -1,14 +1,14 @@
-import React from 'react';
+import { createContext, useContext } from 'react';
 
 import { useState, useReducer, useEffect } from 'react';
 import { UseEventContext } from '@/context/eventContext';
 import { useCurrentUser } from '@/context/userContext';
 import { getCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
 
-export const SurveyContext = React.createContext();
+export const SurveyContext = createContext();
 
 export function UseSurveyContext() {
-  const contextsurvey = React.useContext(SurveyContext);
+  const contextsurvey = useContext(SurveyContext);
   console.log('SurveyContext', contextsurvey);
   if (!contextsurvey) {
     throw new Error('SurveyContext debe estar dentro del proveedor');
