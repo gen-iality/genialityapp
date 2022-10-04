@@ -5,7 +5,6 @@ export const hourWithAdditionalMinutes = (minutes: number) => {
   const fecha = new Date();
   fecha.setMinutes(fecha.getMinutes() + minutes);
   const m = dayjs(fecha);
-  console.debug('create new default dayjs:', m);
   return m;
 };
 

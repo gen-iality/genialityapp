@@ -94,8 +94,7 @@ const Landing = props => {
   let history = useHistory();
 
   const loadData = async () => {
-    const { data } = await AgendaApi.byEvent(cEventContext.value?._id);
-    console.log('data:', data);
+    const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data);
     const existentActivities = data.map(async activity => {
       let activity_attendee = await firestore
