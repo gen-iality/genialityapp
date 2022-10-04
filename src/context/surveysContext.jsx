@@ -1,9 +1,11 @@
+import { createContext, useContext } from 'react';
+
 import { useEffect, useReducer } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
 import { UseEventContext } from './eventContext';
-import { UseCurrentUser } from './userContext';
-export const SurveysContext = React.createContext();
+import { useCurrentUser } from './userContext';
+export const SurveysContext = createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
 let initialContextState = {
@@ -55,7 +57,7 @@ const reducer = (state, action) => {
 export function SurveysProvider({ children }) {
   //  console.group('surveyContext');
   let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   /** ACTION DISPACHERS **/
@@ -185,7 +187,7 @@ export function SurveysProvider({ children }) {
 }
 
 export function UseSurveysContext() {
-  const contextsurveys = React.useContext(SurveysContext);
+  const contextsurveys = useContext(SurveysContext);
   console.log('contextsurveys', contextsurveys);
   if (!contextsurveys) {
     throw new Error('eventContext debe estar dentro del proveedor');

@@ -12,7 +12,7 @@ import { Result, Spin, Button, Col } from 'antd';
 
 /** Funciones externas */
 import StateMessages from './functions/stateMessagesV2';
-import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
+import { setCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
 import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 import GetResponsesIndex from './functions/getResponsesIndex';
 import SavingResponseByUserId from './functions/savingResponseByUserId';
@@ -20,7 +20,7 @@ import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 
 /** Context´s */
 import { UseEventContext } from '../../../context/eventContext';
-import { UseCurrentUser } from '@context/userContext';
+import { useCurrentUser } from '@context/userContext';
 
 /** Componentes */
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
@@ -83,7 +83,7 @@ function SurveyComponent(props) {
   } = props;
 
   const cEvent = UseEventContext();
-  const currentUser = UseCurrentUser();
+  const currentUser = useCurrentUser();
 
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -218,7 +218,7 @@ function SurveyComponent(props) {
   async function saveSurveyStatus() {
     const status = surveyModel.state;
     console.log('200.status', status);
-    await SetCurrentUserSurveyStatus(queryData, currentUser, status);
+    await setCurrentUserSurveyStatus(queryData, currentUser, status);
   }
 
   async function saveSurveyCurrentPage() {

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { firestore, fireRealtime, app } from '../../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../../helpers/request';
 import { UseEventContext } from '../eventContext';
-import { UseCurrentUser } from '../userContext';
+import { useCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
@@ -32,7 +32,7 @@ let initialStateUserContext = { status: 'LOADING', value: undefined };
 
 export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let cEventuser = UseUserEvent();
   let history = useHistory();
   const intl = useIntl();

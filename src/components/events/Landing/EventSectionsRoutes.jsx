@@ -12,7 +12,7 @@ import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
-import { UseCurrentUser } from '@/context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { Row, Col, Card, Typography } from 'antd';
 import { activityContentValues } from '@context/activityType/constants/ui';
 import QuizApprovedStatus from '@components/quiz/QuizApprovedStatus';
@@ -53,7 +53,7 @@ const EventSectionRoutes = props => {
   let { event_id, event_name } = useParams();
   let { GetPermissionsEvent } = useHelper();
   let cEventUser = UseUserEvent();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let history = useHistory();
 
   //redirigir a curso Cancilleria

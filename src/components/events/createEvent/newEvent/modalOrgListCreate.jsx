@@ -1,6 +1,6 @@
 import { PictureOutlined } from '@ant-design/icons';
 import { Button, Form, Input, List, Modal, Row, Spin, message, Upload, Typography, Space, Tabs } from 'antd';
-import { UseCurrentUser } from '../../../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { useState, useEffect } from 'react';
 import { useContextNewEvent } from '../../../../context/newEventContext';
 import ImgCrop from 'antd-img-crop';
@@ -8,7 +8,7 @@ import functionCreateNewOrganization from '../../../profile/functionCreateNewOrg
 
 const ModalOrgListCreate = ({ modalListOrgIsVisible, orgId }) => {
   const { newOrganization, OrganizationsList, state, dispatch, createOrganization } = useContextNewEvent();
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
   let [imageAvatar, setImageAvatar] = useState(null);
   const [form] = Form.useForm();
   const { TabPane } = Tabs;

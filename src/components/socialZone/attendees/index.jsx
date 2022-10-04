@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseCurrentUser } from '../../../context/userContext';
+import { useCurrentUser } from '../../../context/userContext';
 import UsersCard from '../../shared/usersCard';
 import { imageforDefaultProfile } from '@/helpers/constants';
 import { knowMaleOrFemale } from '@/Utilities/knowMaleOrFemale';
@@ -15,7 +15,7 @@ const AttendeList = function(props) {
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
   let { attendeeListPresence, attendeeList, maleIcons, femaleicons } = useHelper();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   const pag = 15;
 
   function whatGenderIs(gender) {
