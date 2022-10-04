@@ -30,7 +30,7 @@ function reducer(state, action) {
     case 'survey_status_loaded':
       return { ...state, surveyStatus: action.payload };
     case 'answering':
-      return { ...state, answering: action.playload };
+      return { ...state, answering: action.payload };
   }
 }
 
@@ -73,10 +73,18 @@ export function SurveyProvider({ children }) {
 
   const startAnswering = () => {
     console.log('start answering again');
+    if (checkThereIsAnotherTry()) dispatch({ type: 'answering', payload: true });
+  };
+
+  const stopAnswering = () => {
+    console.log('stop answering again');
     dispatch({ type: 'answering', payload: true });
   };
 
   function shouldDisplaySurveyAttendeeAnswered() {
+    if (checkThereIsAnotherTry() && state.answering) {
+      return false;
+    }
     return checkIfSurveyWasAnswered();
   }
 
@@ -134,6 +142,7 @@ export function SurveyProvider({ children }) {
         surveyStatsString,
         checkThereIsAnotherTry,
         startAnswering,
+        stopAnswering,
       }}
     >
       {children}

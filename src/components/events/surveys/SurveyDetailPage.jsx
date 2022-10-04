@@ -48,6 +48,8 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     setShowingResultsPanel(true);
   }
 
+  useEffect(() => cSurvey.stopAnswering(), []);
+
   useEffect(() => {
     if (!cEvent.value?._id) return;
     if (!currentUser?.value?._id) return;
