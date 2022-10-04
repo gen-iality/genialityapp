@@ -7,15 +7,14 @@ import { Link, useHistory } from 'react-router-dom';
 import { SurveyPage } from './services/services';
 
 /** Antd services */
-import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Result, Spin, Button, Col } from 'antd';
 
 /** Funciones externas */
-import StateMessages from './functions/stateMessagesV2';
-import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
-import GetResponsesIndex from './functions/getResponsesIndex';
-import SavingResponseByUserId from './functions/savingResponseByUserId';
-import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
+import stateMessages from './functions/stateMessagesV2';
+import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
+import getResponsesIndex from './functions/getResponsesIndex';
+import savingResponseByUserId from './functions/savingResponseByUserId';
+import saveAcumulativePoints from './functions/saveAcumulativePoints';
 
 /** Context´s */
 import { UseEventContext } from '@context/eventContext';
@@ -85,7 +84,6 @@ function SurveyComponent(props) {
   const cSurvey = useSurveyContext();
 
   const eventStyles = cEvent.value.styles;
-  const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
 
   const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
@@ -171,7 +169,7 @@ function SurveyComponent(props) {
     console.log('200.createQuestionsFeedback page.questions', page.questions[0].value);
     console.log('200.createQuestionsFeedback surveyModel.data', surveyModel.data);
 
-    let mensaje = StateMessages(pointsScored ? 'success' : 'error');
+    let mensaje = stateMessages(pointsScored ? 'success' : 'error');
     return (
       <>
         <Result
@@ -179,15 +177,14 @@ function SurveyComponent(props) {
           {...mensaje}
           extra={[
             <Button
-              onClick={async () => {
+              type='primary'
+              onClick={() => {
                 setShowingFeedback(false);
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
                   setIsSaveButtonShown(true);
                 }
               }}
-              type='primary'
-              key='console'
             >
               Next
             </Button>,
@@ -221,8 +218,8 @@ function SurveyComponent(props) {
     await addTriesNumber(
       queryData._id, // Survey ID
       currentUser.value._id, // User Id
-      cSurvey.surveyStatus.tried, // Tried amount
-      cSurvey.survey.tries, // Max tries
+      cSurvey.surveyStatus?.tried || 0, // Tried amount
+      cSurvey.survey.tries || 1, // Max tries
       status,
     );
   }
@@ -262,8 +259,6 @@ function SurveyComponent(props) {
     let optionQuantity = 0;
     let correctAnswer = false;
 
-    console.log('200.saveSurveyAnswers surveyModel', surveyModel);
-    console.log('200.saveSurveyAnswers surveyQuestions', surveyQuestions);
     if (surveyQuestions.length === 1) {
       question = surveyModel.currentPage.questions[0];
     } else {
@@ -277,7 +272,7 @@ function SurveyComponent(props) {
     console.log('200.saveSurveyAnswers correctAnswer', correctAnswer);
 
     /** funcion para validar tipo de respuesta multiple o unica */
-    const responseIndex = await GetResponsesIndex(question);
+    const responseIndex = await getResponsesIndex(question);
     optionQuantity = question.choices.length;
     let optionIndex = responseIndex;
 
@@ -289,8 +284,8 @@ function SurveyComponent(props) {
     // Se envia al servicio el id de la encuesta, de la pregunta y los datos
     // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
     if (!(Object.keys(currentUser).length === 0)) {
-      SavingResponseByUserId(queryData, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
-      console.log('200.saveSurveyAnswers SavingResponseByUserId');
+      savingResponseByUserId(queryData, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
+      console.log('200.saveSurveyAnswers savingResponseByUserId');
     }
   }
 
@@ -309,7 +304,7 @@ function SurveyComponent(props) {
     console.log('200.onSurveyCompleted');
     await saveSurveyData(sender);
     //survey_just_finished();
-    await MessageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id);
+    await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id);
   }
 
   return (
@@ -335,11 +330,10 @@ function SurveyComponent(props) {
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
+                type='primary'
                 onClick={() => {
                   saveSurveyStatus().then(() => history.push(`/landing/${eventId}/evento`))
                 }}
-                type='primary'
-                key='console'
               >
                 Volver al curso {isSavingPoints && <Spin />}
               </Button>

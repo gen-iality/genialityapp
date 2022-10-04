@@ -7,7 +7,7 @@ import { firestore } from '@helpers/firebase';
  * @param userId The current user ID.
  * @param nextPoints The acumulative points.
  */
-export async function saveAcumulativePoints(
+export default async function saveAcumulativePoints(
   surveyId: string,
   userId: string,
   nextPoints: number,
