@@ -103,14 +103,21 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           />
           <QuizProgress eventId={cEvent.value._id} userId={currentUser.value._id} surveyId={surveyId} />
           <Button
-            onClick={() => {
-              showResultsPanel();
-            }}
+            onClick={() => showResultsPanel()}
             type='primary'
             key='console'
           >
             Ver mis respuestas
           </Button>
+          {cSurvey.checkThereIsAnotherTry() && (
+            <Button
+              onClick={() => cSurvey.startAnswering()}
+              type='primary'
+              key='console'
+            >
+              Responder de nuevo
+            </Button>
+          )}
           {showingResultsPanel && (
             <ResultsPanel eventId={cEvent.value?._id} currentUser={currentUser} idSurvey={surveyId} />
           )}
@@ -122,12 +129,12 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         </Space>
       ) : cSurvey.shouldDisplaySurveyClosedMenssage() ? (
         <Result title='Esta evaluación ha sido cerrada' />
-      ) : cSurvey.shouldDisplayGraphics() ? (
-        <>
-          <Divider />
-          <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation='participationPercentage' />
-        </>
-      ) : (
+      ) : //cSurvey.shouldDisplayGraphics() ? (
+      //   <>
+      //     <Divider />
+      //     <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation='participationPercentage' />
+      //   </>
+      /* ) :*/ (
         <Card className='surveyCard'>
           <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} queryData={query.data} />
           <em>{cSurvey.surveyStatsString}</em>
