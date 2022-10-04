@@ -20,6 +20,7 @@ let initialContextState = {
   status: 'LOADING',
   survey: null,
   surveyStatus: null,
+  answering: false,
 };
 
 function reducer(state, action) {
@@ -28,6 +29,8 @@ function reducer(state, action) {
       return { ...state, survey: action.payload, status: 'LOADED' };
     case 'survey_status_loaded':
       return { ...state, surveyStatus: action.payload };
+    case 'answering':
+      return { ...state, answering: action.playload };
   }
 }
 
@@ -44,7 +47,7 @@ export function SurveyProvider({ children }) {
 
     console.log('1000. Aquí se ejecuta el use Effect');
 
-    getUserSurveyStatus(state.survey._id, cUser.value._id).then(data => {
+    getUserSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
       dispatch({ type: 'survey_status_loaded', payload: data });
     });
   }, [cEventContext, cUser, state.survey]);
@@ -67,6 +70,12 @@ export function SurveyProvider({ children }) {
     console.debug(`survey tries:${state.survey.tries} tried:${state.surveyStatus.tried}`);
     return (state.surveyStatus.tried || 0) < (state.survey.tries || 1);
   };
+
+  const startAnswering = () => {
+    console.log('start answering again');
+    dispatch({ type: 'answering', payload: true });
+  };
+
   function shouldDisplaySurveyAttendeeAnswered() {
     return checkIfSurveyWasAnswered();
   }
@@ -124,6 +133,7 @@ export function SurveyProvider({ children }) {
         shouldDisplayRanking,
         surveyStatsString,
         checkThereIsAnotherTry,
+        startAnswering,
       }}
     >
       {children}
