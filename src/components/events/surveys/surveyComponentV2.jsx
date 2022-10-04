@@ -12,14 +12,13 @@ import { Result, Spin, Button, Col } from 'antd';
 
 /** Funciones externas */
 import StateMessages from './functions/stateMessagesV2';
-import { setCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
 import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 import GetResponsesIndex from './functions/getResponsesIndex';
 import SavingResponseByUserId from './functions/savingResponseByUserId';
 import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 
 /** Context´s */
-import { UseEventContext } from '../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
 /** Componentes */
@@ -28,10 +27,9 @@ import { addTriesNumber } from './functions/surveyStatus';
 import { useSurveyContext } from './surveyContext';
 
 function getRandomlySampleQuestions(survey) {
-  console.debug('survey.survey', survey)
-  const getRandomIndex = (max) => {
-    return Math.floor(Math.random() * max)
-  };
+  console.debug('survey.survey', survey);
+
+  const getRandomIndex = (max) => Math.floor(Math.random() * max);
 
   let newSurvey = {};
   if (survey.random_survey) {
@@ -61,10 +59,7 @@ function getRandomlySampleQuestions(survey) {
       // Now, use these indeces to get the questions
       takenIndeces
       const newPages = survey.pages.filter((question, index) => takenIndeces.includes(index))
-      newSurvey = {
-        ...survey,
-        pages: newPages,
-      }
+      newSurvey = { ...survey, pages: newPages };
     } else {
       newSurvey = { ...survey };
     }
@@ -221,13 +216,13 @@ function SurveyComponent(props) {
 
   async function saveSurveyStatus() {
     const status = surveyModel.state;
-    console.log('200.status', status);
+    console.debug('200.status', status);
     // await SetCurrentUserSurveyStatus(queryData, currentUser, status);
     await addTriesNumber(
       queryData._id, // Survey ID
       currentUser.value._id, // User Id
-      cSurvey.currentSurveyStatus.tried, // Tried amount
-      cSurvey.currentSurvey.tries, // Max tries
+      cSurvey.surveyStatus.tried, // Tried amount
+      cSurvey.survey.tries, // Max tries
       status,
     );
   }

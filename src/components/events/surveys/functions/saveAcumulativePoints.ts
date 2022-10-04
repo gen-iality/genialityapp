@@ -18,21 +18,24 @@ export async function saveAcumulativePoints(
     .doc(userId)
     .collection('surveyStatus')
     .doc(surveyId);
-    
-  const result = await firebaseRef.get();
 
   // Create the payload
   let acumulativePoints = 0;
 
-  // Check if there is saved points
-  if (result.exists) {
-    const {
-      right = 0,
-    } = result.data() as QuizStatus;
-    acumulativePoints = acumulativePoints + right;
-    // Add points
+  try {
+    const result = await firebaseRef.get();
+    // Check if there is saved points
+    if (result.exists) {
+      const {
+        right = 0, // By default
+      } = result.data() as QuizStatus;
+      acumulativePoints = acumulativePoints + right;
+      // Add points
+    }
+    // Speak pretty goodly with Firestore
+    await firebaseRef.set({ right: acumulativePoints + nextPoints } as QuizStatus, {merge: true});
+    console.debug(`save survey status /votingStatusByUser/${userId}/surveyStatus/${surveyId}`, 'value', acumulativePoints, '->', acumulativePoints + nextPoints);
+  } catch (err) {
+    console.error(`surveyId:${surveyId}, userId:${userId}`, err);
   }
-  // Speak pretty goodly with Firestore
-  await firebaseRef.set({ right: acumulativePoints + nextPoints } as QuizStatus, {merge: true});
-  console.debug(`save survey status /votingStatusByUser/${userId}/surveyStatus/${surveyId}`, 'value', acumulativePoints, '->', acumulativePoints + nextPoints);
 }

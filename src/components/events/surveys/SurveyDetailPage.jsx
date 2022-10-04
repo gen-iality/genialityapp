@@ -11,29 +11,28 @@ import { SurveysApi } from '@/helpers/request';
 
 /** Contexts */
 import { useCurrentUser } from '@context/userContext';
-import { UseSurveysContext } from '@context/surveysContext';
 import { useSurveyContext } from './surveyContext';
-import WithEviusContext from '@/context/withContext';
+import WithEviusContext from '@context/withContext';
 
 /** Components */
 import SurveyComponent from './surveyComponentV2';
 import Graphics from './graphics';
 import ResultsPanel from './resultsPanel';
-import QuizProgress from '@/components/quiz/QuizProgress';
+import QuizProgress from '@components/quiz/QuizProgress';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
-  //const cSurveys = UseSurveysContext();
   const cSurvey = useSurveyContext();
   const currentUser = useCurrentUser();
 
   const query = useSurveyQuery(cEvent.value?._id, surveyId);
 
-  console.log('200.SurveyDetailPage currentUser', currentUser.value);
-  console.log('200.SurveyDetailPage eventId', cEvent.value?._id);
-  console.log('200.SurveyDetailPage surveyId', surveyId);
-  console.log('200.SurveyDetailPage query.data', query.data);
+  // console.log('200.SurveyDetailPage userId', currentUser.value?._id);
+  // console.log('200.SurveyDetailPage eventId', cEvent.value?._id);
+  // console.log('200.SurveyDetailPage surveyId', surveyId);
+  // console.log('200.SurveyDetailPage query.data', query.data);
 
   const history = useHistory();
+
   const handleGoToCertificate = useCallback(() => {
     history.push(`/landing/${cEvent.value?._id}/certificate`);
   }, [cEvent.value]);
@@ -64,7 +63,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         const stats = await useAsyncPrepareQuizStats(cEvent.value._id, survey._id, currentUser?.value?._id, survey);
 
         console.debug(
-          `stats: cEvent.value._id=${cEvent.value._id}, survey._id=${survey._id}, currentUser?.value?._id=${currentUser?.value?._id}, survey=${survey}`,
+          `stats: eventId=${cEvent.value._id}, surveyId=${survey._id}, userId=${currentUser?.value?._id}, survey=${survey}`,
         );
         console.debug('stats object:', stats);
         if (stats.minimum > 0) {
@@ -88,13 +87,12 @@ function SurveyDetailPage({ surveyId, cEvent }) {
     return <h1>Cargando..</h1>;
   }
 
-  if (!cSurvey.currentSurvey) {
-    return <h1>No hay nada publicado, {surveyId}</h1>;
+  if (!cSurvey.survey) {
+    return <h1>No hay nada publicado {surveyId}</h1>;
   }
 
   return (
     <div>
-      {console.log('1000.cSurvey.shouldDisplaySurveyAttendeeAnswered()', cSurvey.shouldDisplaySurveyAttendeeAnswered())}
       {cSurvey.shouldDisplaySurveyAttendeeAnswered() ? (
         <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
           <em>{cSurvey.surveyStatsString}</em>

@@ -134,7 +134,6 @@ export function SurveysProvider({ children }) {
     return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
   }
 
-  /** @deprecated Use this method from surveyContext instead */
   function surveysToBeListedByActivity() {
     let listOfSurveysFilteredByActivity;
     if (state.currentActivity) {

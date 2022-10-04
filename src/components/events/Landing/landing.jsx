@@ -247,7 +247,6 @@ const Landing = props => {
             props.setUserAgenda(null);
           }}
         />
-        {console.log('activitiesAttendee', activitiesAttendee, 'activities', activities)}
         <CourseProgressBar
           eventId={cEventContext.value._id}
           activities={activities}

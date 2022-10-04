@@ -11,10 +11,10 @@ function useSurveyQuery(eventId, idSurvey) {
   const [innerQuery, setInnerQuery] = useState(undefined);
   const [innerRealTimeQuery, setInnerRealTimeQuery] = useState(undefined);
 
-  async function getUserCurrentSurveyPage(idSurvey, user_id) {
+  async function getUserCurrentSurveyPage(idSurvey, userId) {
     let currentPageNo = 0;
-    if (idSurvey && user_id) {
-      currentPageNo = await SurveyPage.getCurrentPage(idSurvey, user_id);
+    if (idSurvey && userId) {
+      currentPageNo = await SurveyPage.getCurrentPage(idSurvey, userId);
     }
     return currentPageNo;
   }

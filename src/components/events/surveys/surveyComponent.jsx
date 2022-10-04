@@ -15,7 +15,7 @@ import HelpFiftyFifty from './functions/helpFiftyFifty';
 import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 
 import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
-import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
+import { setUserSurveyStatus } from './functions/userSurveyStatus';
 import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
 import useSurveyQuery from './hooks/useSurveyQuery';
 import { Button } from 'antd';
@@ -129,7 +129,7 @@ function SurveyComponent(props) {
     const status = surveyModel.state;
     console.log('200.sendData status', status);
 
-    await SetCurrentUserSurveyStatus(query.data, currentUser, status);
+    await setUserSurveyStatus(query.data._id, currentUser.value._id, status);
 
     if (status === 'completed') {
       props.setShowSurveyTemporarily(true);
