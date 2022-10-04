@@ -100,11 +100,9 @@ export function SurveyProvider({ children }) {
 
   const surveyStatsString = useMemo(() => {
     // Beware of editing this without thinking
-    if (!state.surveyStatus || !state.survey) return 'cuestionario nuevo';
-    const currentStatus = state.surveyStatus[state.survey._id];
-    if (!currentStatus) return 'cuestionario nuevo';
+    if (!state.surveyStatus || !state.survey) return 'cuestionario sin datos';
 
-    const tried = currentStatus.tried || 0;
+    const tried = state.surveyStatus.tried || 0;
     return `${tried} ${tried > 1 ? 'intentos':'intento'} de ${state.survey?.tries || 1}`;
   }, [state.survey, state.surveyStatus]);
 
