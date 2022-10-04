@@ -40,7 +40,6 @@ const ModalAuthAnonymous = (props: any) => {
 
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
-  const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
   const cEvent = UseEventContext();
   const cUser = useCurrentUser();
@@ -105,7 +104,6 @@ const ModalAuthAnonymous = (props: any) => {
   }, [cEvent, cUser]);
 
   useEffect(() => {
-    form1.resetFields();
     setErrorRegisterUSer(false);
     setErrorLogin(false);
   }, [typeModal, currentAuthScreen]);
