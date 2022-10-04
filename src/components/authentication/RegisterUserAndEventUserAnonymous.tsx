@@ -57,7 +57,11 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                 setLoading(false);
               });
               // Esto es temporal por el evento de audi, se va planear de una mejor manera
-              openNewWindow('https://checkout.wompi.co/l/VPOS_N4aqRq', cEvent.value._id, true);
+              openNewWindow(
+                'https://donaronline.org/fundacion-ellen-riegner-de-casas/pink-yoga-by-audi',
+                cEvent.value._id,
+                true
+              );
             }
           });
       })
