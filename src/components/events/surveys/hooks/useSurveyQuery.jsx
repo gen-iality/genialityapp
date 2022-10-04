@@ -30,6 +30,7 @@ function useSurveyQuery(eventId, idSurvey) {
 
   //no realtime Query
   useEffect(() => {
+    if (!idSurvey) return;
     const innerAsyncCall = async () => {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
       //loadedSurvey.currentPage = 0;
