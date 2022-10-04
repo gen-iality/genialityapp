@@ -42,34 +42,8 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
   useEffect(() => {
-    cSurvey.load_survey({ ...query.data });
+    cSurvey.loadSurvey({ ...query.data });
   }, [query.data]);
-
-  //Effect for when prop.idSurvey changes
-  /*  useEffect(() => {
-    if (!surveyId) return;
-    console.log('200.survey surveyid userid', surveyId, currentUser.value);
-    let unsubscribe;
-    (async () => {
-      let loadedSurvey = await LoadSelectedSurvey(cEvent.value._id, surveyId);
-      //listener que nos permite saber los cambios de la encuesta en tiempo real
-      unsubscribe = initRealTimeSurveyListening(surveyId, updateSurveyData);
-
-      // Esto permite obtener datos para la grafica de gamificacion
-      //UserGamification.getListPoints(eventId, setRankingList);
-      //Se obtiene el EventUser para los casos que se necesite saber el peso voto
-      //await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
-      function updateSurveyData(surveyConfig) {
-        if (!surveyConfig) return;
-        console.log('600.surveyConfig', surveyConfig);
-        cSurveys.select_survey({ ...surveyConfig, ...loadedSurvey });
-      }
-    })();
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [surveyId]); */
 
   function showResultsPanel() {
     setShowingResultsPanel(true);

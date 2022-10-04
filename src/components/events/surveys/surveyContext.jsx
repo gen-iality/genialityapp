@@ -49,7 +49,7 @@ export function SurveyProvider({ children }) {
     });
   }, [cEventContext, cUser, state.currentSurvey]);
 
-  function load_survey(survey) {
+  function loadSurvey(survey) {
     dispatch({ type: 'survey_loaded', payload: survey });
   }
 
@@ -104,7 +104,7 @@ export function SurveyProvider({ children }) {
     <SurveyContext.Provider
       value={{
         ...state,
-        load_survey,
+        loadSurvey,
         attendeeAllReadyAnswered,
         shouldDisplaySurveyAttendeeAnswered,
         shouldDisplaySurveyClosedMenssage,
