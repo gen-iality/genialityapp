@@ -61,6 +61,12 @@ export function SurveyProvider({ children }) {
     return state.surveyStatus?.surveyCompleted === 'completed';
   }
 
+  const checkThereIsAnotherTry = () => {
+    // If tried (in Firebase) is < that tries (in MongoDB), then the user can see the survey
+    if (!state.survey || !state.surveyStatus) return true;
+    console.debug(`survey tries:${state.survey.tries} tried:${state.surveyStatus.tried}`);
+    return (state.surveyStatus.tried || 0) < (state.survey.tries || 1);
+  };
   function shouldDisplaySurveyAttendeeAnswered() {
     return checkIfSurveyWasAnswered();
   }
@@ -117,6 +123,7 @@ export function SurveyProvider({ children }) {
         shouldDisplayGraphics,
         shouldDisplayRanking,
         surveyStatsString,
+        checkThereIsAnotherTry,
       }}
     >
       {children}
