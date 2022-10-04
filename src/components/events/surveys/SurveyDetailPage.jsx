@@ -9,10 +9,10 @@ import { connect } from 'react-redux';
 /** Helpers */
 import { SurveysApi } from '@/helpers/request';
 
-/** Context´s */
+/** Contexts */
 import { useCurrentUser } from '@context/userContext';
 import { UseSurveysContext } from '@context/surveysContext';
-import { UseSurveyContext } from './surveyContext';
+import { useSurveyContext } from './surveyContext';
 import WithEviusContext from '@/context/withContext';
 
 /** Components */
@@ -23,7 +23,7 @@ import QuizProgress from '@/components/quiz/QuizProgress';
 
 function SurveyDetailPage({ surveyId, cEvent }) {
   //const cSurveys = UseSurveysContext();
-  const cSurvey = UseSurveyContext();
+  const cSurvey = useSurveyContext();
   const currentUser = useCurrentUser();
 
   const query = useSurveyQuery(cEvent.value?._id, surveyId);

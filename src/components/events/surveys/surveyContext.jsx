@@ -7,7 +7,7 @@ import { getCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStat
 
 export const SurveyContext = createContext();
 
-export function UseSurveyContext() {
+export function useSurveyContext() {
   const contextsurvey = useContext(SurveyContext);
   console.log('SurveyContext', contextsurvey);
   if (!contextsurvey) {
