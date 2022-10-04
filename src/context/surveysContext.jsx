@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useEffect, useReducer } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';

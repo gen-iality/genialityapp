@@ -1,6 +1,6 @@
 import { firestore } from '../../../../helpers/firebase';
 
-export function SetCurrentUserSurveyStatus(surveyData, currentUser, status) {
+export function setCurrentUserSurveyStatus(surveyData, currentUser, status) {
   const surveyId = surveyData._id;
   const userId = currentUser.value._id;
   const firebaseRef = firestore
@@ -12,7 +12,7 @@ export function SetCurrentUserSurveyStatus(surveyData, currentUser, status) {
   return firebaseRef.set({ surveyCompleted: status }, { merge: true });
 }
 
-export function GetCurrentUserSurveyStatus(surveyId, userId) {
+export function getCurrentUserSurveyStatus(surveyId, userId) {
   /* return firestore
     .collection('votingStatusByUser')
     .doc(userId)

@@ -1,7 +1,9 @@
+import React from 'react';
+
 import { useState, useReducer, useEffect } from 'react';
 import { UseEventContext } from '@/context/eventContext';
 import { useCurrentUser } from '@/context/userContext';
-import { GetCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
+import { getCurrentUserSurveyStatus } from './functions/setCurrentUserSurveyStatus';
 
 export const SurveyContext = React.createContext();
 
@@ -42,7 +44,7 @@ export function SurveyProvider({ children }) {
 
     console.log('1000. Aquí se ejecuta el use Effect');
 
-    GetCurrentUserSurveyStatus(state.currentSurvey._id, cUser.value._id).then(data => {
+    getCurrentUserSurveyStatus(state.currentSurvey._id, cUser.value._id).then(data => {
       dispatch({ type: 'survey_status_loaded', payload: data });
     });
   }, [cEventContext, cUser, state.currentSurvey]);
