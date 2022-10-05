@@ -9,12 +9,11 @@ import Service from '@/components/agenda/roomManager/service';
 
 function SurveyActivity(props) {
   let { currentActivity } = useHelper();
-  console.log('100.propsSurveyActivity', props);
 
-  const [activityState, setactivityState] = useState('');
+  const [activityState, setActivityState] = useState();
 
-  async function listeningStateStreamingRoom(event_id, activity_id) {
-    firestore
+  function listeningStateStreamingRoom(event_id, activity_id) {
+    return firestore
       .collection('events')
       .doc(event_id)
       .collection('activities')
@@ -22,32 +21,25 @@ function SurveyActivity(props) {
       .onSnapshot(infoActivity => {
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
-        //const { habilitar_ingreso, meeting_id } = data;
         console.log('realtime', data);
-        setactivityState(data);
-        //setmeetingId(meeting_id);
-        //setTransmition(data.transmition);
+        setActivityState(data);
       });
   }
 
   useEffect(() => {
-    console.log('100.currentActivity', currentActivity);
     if (!currentActivity || !props.cEvent) return;
 
-    async function GetStateStreamingRoom() {
-      const service = new Service(firestore);
-      await listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id);
+    let unsubscribe;
+    if (currentActivity != null) {
+      unsubscribe = listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id);
     }
 
-    if (currentActivity != null) {
-      GetStateStreamingRoom();
-    }
+    return () => { unsubscribe && unsubscribe() }
   }, [currentActivity, props.cEvent]);
 
   return (
     <>
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      {console.log('100.activityState', activityState)}
       <SurveyDetailPage surveyId={activityState?.meeting_id} />
     </>
   );

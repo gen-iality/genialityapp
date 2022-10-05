@@ -11,12 +11,12 @@ function QuizActivity(props) {
   let { currentActivity } = useHelper();
   console.log('100.propsSurveyActivity', props);
 
-  const [activityState, setactivityState] = useState('');
+  const [activityState, setActivityState] = useState('');
 
-  async function listeningStateStreamingRoom(event_id, activity_id) {
+  function listeningStateStreamingRoom(event_id, activity_id) {
     console.log('100.listeningStateStreamingRoom - event_id - activity_id', event_id, activity_id);
 
-    firestore
+    return firestore
       .collection('events')
       .doc(event_id)
       .collection('activities')
@@ -24,11 +24,8 @@ function QuizActivity(props) {
       .onSnapshot(infoActivity => {
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
-        //const { habilitar_ingreso, meeting_id } = data;
         console.log('realtime', data);
-        setactivityState(data);
-        //setmeetingId(meeting_id);
-        //setTransmition(data.transmition);
+        setActivityState(data);
       });
   }
 
@@ -36,15 +33,13 @@ function QuizActivity(props) {
     console.log('100.currentActivity', currentActivity);
     console.log('100.props.cEvent', props.cEvent);
     if (!currentActivity || !props.cEvent) return;
-
-    async function GetStateStreamingRoom() {
-      const service = new Service(firestore);
-      await listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id);
-    }
-
+    
+    let unsubscribe;
     if (currentActivity != null) {
-      GetStateStreamingRoom();
+      unsubscribe = listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id);
     }
+
+    return () => { unsubscribe && unsubscribe() }
   }, [currentActivity, props.cEvent]);
 
   return (
