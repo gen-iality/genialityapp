@@ -101,8 +101,6 @@ function SurveyComponent(props) {
   const history = useHistory();
   const cSurvey = useSurveyContext();
 
-  const eventStyles = cEvent.value.styles;
-
   const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [questionFeedback, setQuestionFeedback] = useState(false);
@@ -123,6 +121,7 @@ function SurveyComponent(props) {
     // Survey.JsonObject.metaData.addProperty('question', 'points');
 
     // Asigna los colores configurables a  la UI de la encuesta
+    const eventStyles = cEvent.value.styles;
     assignStylesToSurveyFromEvent(eventStyles);
   }, []);
 
