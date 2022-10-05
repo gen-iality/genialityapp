@@ -171,8 +171,7 @@ function SurveyComponent(props) {
       pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
     });
     console.log('200.pointsScored', pointsScored);
-    totalPoints += pointsScored;
-    setTotalPoints(totalPoints);
+    setTotalPoints(totalPoints + pointsScored);
     return pointsScored;
   }
 
