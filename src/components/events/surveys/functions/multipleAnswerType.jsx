@@ -1,4 +1,4 @@
-function MultipleAnswerType(question) {
+function multipleAnswerType(question) {
    let optionIndex = [];
    return new Promise((resolve, reject) => {
       question.value.forEach((value) => {
@@ -11,4 +11,4 @@ function MultipleAnswerType(question) {
    });
 }
 
-export default MultipleAnswerType;
+export default multipleAnswerType;

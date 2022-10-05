@@ -1,3 +1,5 @@
+import { SurveyProvider } from '@components/events/surveys/surveyContext';
+
 import RenderComponent from './RenderComponent';
 import StreamingActivity from './ActivityTypes/StreamingActivity';
 import MeetingActivity from './ActivityTypes/MeetingActivity';
@@ -24,9 +26,9 @@ function ActivityTypeSwitch({ activity }) {
       return <VideoActivity />;
     case 'quiz':
     case 'quizing':
-      return <QuizActivity />;
+      return <SurveyProvider><QuizActivity /></SurveyProvider>;
     case 'survey':
-      return <SurveyActivity />;
+      return <SurveyProvider><SurveyActivity /></SurveyProvider>;
     default:
       return <GenericActivity />;
   }

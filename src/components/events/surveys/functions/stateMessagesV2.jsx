@@ -1,7 +1,7 @@
 import { FrownOutlined, SmileOutlined, MehOutlined } from '@ant-design/icons';
 
 // Componente que nos muesta mensajes correspondientes segun el estado
-function StateMessages(state) {
+function stateMessages(state) {
   const objMessage = {
     title: '',
     subTitle: '',
@@ -46,4 +46,4 @@ function StateMessages(state) {
   }
 }
 
-export default StateMessages;
+export default stateMessages;

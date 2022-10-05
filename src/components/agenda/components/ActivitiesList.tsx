@@ -11,7 +11,7 @@ import { firestore } from '@/helpers/firebase';
 import { ActivityCustomIcon } from './ActivityCustomIcon';
 import { activityContentValues } from '@/context/activityType/constants/ui';
 import QuizProgress from '@/components/quiz/QuizProgress';
-import { UseCurrentUser } from '@context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import Service from '@components/agenda/roomManager/service';
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
 
@@ -47,7 +47,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([]);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  const currentUser = UseCurrentUser();
+  const currentUser = useCurrentUser();
 
   useEffect(() => {
     if (!eventId) return;

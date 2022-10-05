@@ -17,7 +17,7 @@ import EventOrganization from '../components/eventOrganization';
 import Organization from '@/pages/eventOrganization/index';
 import MainProfile from '../components/profile/main';
 
-import { UseCurrentUser } from '../context/userContext';
+import { useCurrentUser } from '../context/userContext';
 import loadable from '@loadable/component';
 import ModalAuth from '../components/authentication/ModalAuth';
 import ModalNoRegister from '../components/authentication/ModalNoRegister';
@@ -56,7 +56,8 @@ const ContentContainer = () => {
       basename='/'
       getUserConfirmation={() => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
-      }}>
+      }}
+    >
       <main className='main'>
         <Switch>
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
@@ -122,7 +123,7 @@ function QRedirect({ match }) {
 const RouteContext = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(props) => (
+    render={props => (
       <CurrentEventProvider>
         <CurrentUserEventProvider>
           <CurrentUserProvider>
@@ -132,7 +133,8 @@ const RouteContext = ({ component: Component, ...rest }) => (
                   <Layout
                     style={{
                       minHeight: '100vh',
-                    }}>
+                    }}
+                  >
                     <Header />
                     <Component {...props} />
                     <ModalAuth />
@@ -151,11 +153,11 @@ const RouteContext = ({ component: Component, ...rest }) => (
 );
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
   return (
     <Route
       {...rest}
-      render={(props) => (
+      render={props => (
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>

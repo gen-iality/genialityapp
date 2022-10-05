@@ -2,7 +2,7 @@ import { SurveysApi } from '../../../../helpers/request';
 
 async function LoadSelectedSurvey(eventId, idSurvey) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
-
+  if (!idSurvey) throw new Error('Missing idSurvey');
 
   let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 

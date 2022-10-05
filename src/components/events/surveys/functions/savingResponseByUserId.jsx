@@ -1,7 +1,7 @@
-import SurveyAnswers from '../services/surveyAnswersService';
+import surveyAnswers from '../services/surveyAnswersService';
 
-function SavingResponseByUserId(surveyData, question, infoUser, eventUsers, voteWeight, infoOptionQuestion) {
-   SurveyAnswers.registerWithUID(
+function savingResponseByUserId(surveyData, question, infoUser, eventUsers, voteWeight, infoOptionQuestion) {
+   surveyAnswers.registerWithUID(
       surveyData._id,
       question.id,
       {
@@ -16,4 +16,4 @@ function SavingResponseByUserId(surveyData, question, infoUser, eventUsers, vote
    );
 }
 
-export default SavingResponseByUserId;
+export default savingResponseByUserId;

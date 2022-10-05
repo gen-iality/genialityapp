@@ -7,7 +7,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { SurveysApi } from '@/helpers/request';
 import { Survey } from './types';
 
-import { UseCurrentUser } from '@context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
 
 export interface QuizApprovedStatusProps {
@@ -21,7 +21,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
   const [backgroundColor, setBackgroundColor] = useState('#9C835F');
   const [isApproved, setIsApproved] = useState(false);
 
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
 
   // NOTE: if you want to add colors, create a state and check the logic that says if the quiz was passed or not completed.
 

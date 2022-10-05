@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 //context
 import { UseUserEvent } from '../../context/eventUserContext';
 import { UseEventContext } from '../../context/eventContext';
-import { UseCurrentUser } from '../../context/userContext';
+import { useCurrentUser } from '../../context/userContext';
 
 import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
@@ -155,7 +155,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
-  let userCurrentContext = UseCurrentUser();
+  let userCurrentContext = useCurrentUser();
 
   const changeAgendaStatus = (newStatus) => {
     if (!fetching) {

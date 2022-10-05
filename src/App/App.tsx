@@ -1,6 +1,6 @@
 import './App.less';
 import loadable from '@loadable/component';
-import { UseCurrentUserContext } from './../context/userContext';
+import { useCurrentUser } from './../context/userContext';
 
 // import MainRouter from '../containers/router';
 import ContentContainer from '@/containers/content';
@@ -16,7 +16,7 @@ const { Footer, Sider, Content } = Layout;
 const Header = loadable(() => import('./../containers/header'));
 
 const App = () => {
-  const cUser = UseCurrentUserContext();
+  const cUser = useCurrentUser();
   if (cUser.status == 'LOADING') return <PreloaderApp />;
 
   return (

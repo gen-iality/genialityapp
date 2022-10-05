@@ -1,8 +1,5 @@
-import Avatar from 'antd/lib/avatar/avatar';
-
 import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
-import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
-import { UseCurrentUser } from '../../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { formatDataToString } from '../../../helpers/utils';
 
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
@@ -19,7 +16,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 
 const DrawerProfile = (props) => {
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
   let { propertiesProfile, requestSend, handleChangeTypeModal } = useHelper();

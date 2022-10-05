@@ -18,7 +18,7 @@ import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
 import QuizProgress from '@/components/quiz/QuizProgress';
 import { activityContentValues } from '@/context/activityType/constants/ui';
-import { UseCurrentUser } from '@context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { ActivityCustomIcon } from '@/components/agenda/components/ActivityCustomIcon';
 
 const { gotoActivity } = StageActions;
@@ -33,7 +33,7 @@ function AgendaActivityItem(props) {
   function HandleGoActivity(activity_id) {
     history.push(`${urlactivity}${activity_id}`);
   }
-  const currentUser = UseCurrentUser();
+  const currentUser = useCurrentUser();
 
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();

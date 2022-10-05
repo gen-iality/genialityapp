@@ -1,9 +1,9 @@
 import { Button, Space, Tooltip } from 'antd';
 import { VideoCameraAddOutlined, UsergroupAddOutlined, CommentOutlined } from '@ant-design/icons';
-import { UseCurrentUser } from '../../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 
 const ContactRequest = (props) => {
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
 
   return (
     <Space size='middle'>

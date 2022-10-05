@@ -2,7 +2,7 @@ import { Dayjs } from 'dayjs';
 
 export type Question = {
   title: string;
-  type: "radiogroup" | string;
+  type: 'radiogroup' | 'checkbox' | 'ranking' | 'ranking' | 'matrix' | 'comment' | 'text' | string;
   choices: string[];
   id: string;
   image: string | null;

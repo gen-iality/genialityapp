@@ -1,7 +1,7 @@
 import getAcumulativePoints from './getAcumulativePoints';
 
 // Componente que se ejecuta antes del curso onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
-async function MessageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
+async function messageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
   let totalSurveyPoints = 0;
 
   let questions = surveyConfig.pages;
@@ -49,4 +49,4 @@ async function MessageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
   }
 }
 
-export default MessageWhenCompletingSurvey;
+export default messageWhenCompletingSurvey;

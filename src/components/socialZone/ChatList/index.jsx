@@ -1,7 +1,7 @@
 import { List, Badge, Tabs } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../context/eventContext';
-import { UseCurrentUser } from '../../../context/userContext';
+import { useCurrentUser } from '../../../context/userContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -24,7 +24,7 @@ const styleList = {
 };
 
 const ChatList = (props) => {
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
 

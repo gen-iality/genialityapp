@@ -7,7 +7,7 @@ import loadable from '@loadable/component';
 import { Layout } from 'antd';
 
 import WithFooter from '../components/withFooter';
-import { UseCurrentUser } from '../context/userContext';
+import { useCurrentUser } from '../context/userContext';
 import { CurrentUserEventProvider } from '../context/eventUserContext';
 import { CurrentEventProvider } from '../context/eventContext';
 import { CurrentUserProvider } from '../context/userContext';
@@ -27,7 +27,7 @@ const NotFoundPage = loadable(() => import('../components/notFoundPage'));
 const Header = loadable(() => import('./header'));
 
 const MainRouter = (props) => {
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   useEffect(() => {
     props.dispatch(fetchCategories());
     props.dispatch(fetchTypes());

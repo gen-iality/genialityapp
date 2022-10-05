@@ -1,6 +1,6 @@
 import { Modal, notification, Button } from 'antd';
 import { UseEventContext } from '@/context/eventContext';
-import { UseCurrentUser } from '@/context/userContext';
+import { useCurrentUser } from '@/context/userContext';
 import withContext from '../../authentication/ModalAuthAnonymous';
 import { recordTypeForThisEvent } from '@/components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useEffect, useState } from 'react';

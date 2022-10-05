@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 
 import { Button, Card, Typography } from 'antd';
-import { UseCurrentUser } from '@context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { useContext } from 'react';
 import AgendaContext from '@context/AgendaContext';
 import type { ActivityType } from '@context/activityType/types/activityType';
@@ -22,7 +22,7 @@ const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare';
 const GoToMeet = (props: GoToMeetProps) => {
   const { dataLive } = useContext(AgendaContext);
 
-  const user = UseCurrentUser();
+  const user = useCurrentUser();
 
   const urlReunion = useMemo(() => (
     `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`),

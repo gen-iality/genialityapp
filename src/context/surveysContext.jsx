@@ -1,9 +1,9 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useMemo, createContext, useContext } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
 import { UseEventContext } from './eventContext';
-import { UseCurrentUser } from './userContext';
-export const SurveysContext = React.createContext();
+import { useCurrentUser } from './userContext';
+export const SurveysContext = createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
 let initialContextState = {
@@ -55,7 +55,7 @@ const reducer = (state, action) => {
 export function SurveysProvider({ children }) {
   //  console.group('surveyContext');
   let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   /** ACTION DISPACHERS **/
@@ -70,6 +70,7 @@ export function SurveysProvider({ children }) {
     dispatch({ type: 'set_current_activity', payload: currentActivity });
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaySurvey() {
     if (!state.currentSurvey) {
       return false;
@@ -82,6 +83,7 @@ export function SurveysProvider({ children }) {
     );
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplayGraphics() {
     if (!state.currentSurvey) {
       return false;
@@ -95,6 +97,7 @@ export function SurveysProvider({ children }) {
     );
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaySurveyClosedMenssage() {
     if (!state.currentSurvey) {
       return false;
@@ -102,18 +105,28 @@ export function SurveysProvider({ children }) {
     return state.currentSurvey.isOpened === 'false';
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaySurveyAttendeeAnswered() {
     return !attendeeAllReadyAnswered();
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function attendeeAllReadyAnswered() {
+    console.log('survey state', state)
     if (!state.currentSurveyStatus) {
       return true;
     }
 
     return state.currentSurveyStatus[state.currentSurvey._id]?.surveyCompleted !== 'completed';
+
+    // If tried (in Firebase) is equal that tries (in MongoDB), then the user can see the survey
+    const currentStatus = state.currentSurveyStatus[state.currentSurvey._id];
+    if (!currentStatus) return true;
+    console.debug('survey tries tried', state.currentSurvey?.tries, currentStatus.tried);
+    return (currentStatus.tried || 0) < (state.currentSurvey?.tries || 1);
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplayRanking() {
     if (!state.currentSurvey) {
       return false;
@@ -133,6 +146,7 @@ export function SurveysProvider({ children }) {
     return listOfSurveysFilteredByActivity;
   }
 
+  /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaysurveyAssignedToThisActivity() {
     let recentlyOpenedSurvey;
     if (!state.currentSurvey && !surveysToBeListedByActivity()) {
@@ -185,7 +199,7 @@ export function SurveysProvider({ children }) {
 }
 
 export function UseSurveysContext() {
-  const contextsurveys = React.useContext(SurveysContext);
+  const contextsurveys = useContext(SurveysContext);
   console.log('contextsurveys', contextsurveys);
   if (!contextsurveys) {
     throw new Error('eventContext debe estar dentro del proveedor');
@@ -194,6 +208,7 @@ export function UseSurveysContext() {
   return contextsurveys;
 }
 
+/** @deprecated Use this method from surveyContext instead */
 function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
   let shouldActivateSurvey = false;
   if (surveyChangedNew) {

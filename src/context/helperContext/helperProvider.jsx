@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { firestore, fireRealtime } from '../../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../../helpers/request';
 import { UseEventContext } from '../eventContext';
-import { UseCurrentUser } from '../userContext';
+import { useCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
@@ -26,7 +26,7 @@ export const HelperContextProvider = ({ children }) => {
   const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
 
   let cEvent = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let cEventuser = UseUserEvent();
   let history = useHistory();
   const intl = useIntl();
@@ -50,7 +50,7 @@ export const HelperContextProvider = ({ children }) => {
   const [privateChatsList, setPrivatechatlist] = useState();
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
-  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(false);
+  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });

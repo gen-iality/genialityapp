@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { UseEventContext } from '../../../context/eventContext';
-import { UseCurrentUser } from '../../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { useHistory, Link } from 'react-router-dom';
 /** ant design */
@@ -85,7 +85,7 @@ const IconRender = type => {
 
 const Landing = props => {
   let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
+  let cUser = useCurrentUser();
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
@@ -94,8 +94,7 @@ const Landing = props => {
   let history = useHistory();
 
   const loadData = async () => {
-    const { data } = await AgendaApi.byEvent(cEventContext.value?._id);
-    console.log('data:', data);
+    const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data);
     const existentActivities = data.map(async activity => {
       let activity_attendee = await firestore
@@ -247,7 +246,6 @@ const Landing = props => {
             props.setUserAgenda(null);
           }}
         />
-        {console.log('activitiesAttendee', activitiesAttendee, 'activities', activities)}
         <CourseProgressBar
           eventId={cEventContext.value._id}
           activities={activities}

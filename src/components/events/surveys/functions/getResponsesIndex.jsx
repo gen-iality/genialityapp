@@ -1,19 +1,13 @@
-import SingleAnswerType from './singleAnswerType';
-import MultipleAnswerType from './multipleAnswerType';
+import singleAnswerType from './singleAnswerType';
+import multipleAnswerType from './multipleAnswerType';
 
-function GetResponsesIndex(question) {
-  return new Promise((resolve, reject) => {
-    if (typeof question.value === 'object') {
-      // Busca el index de la opcion escogida
-      MultipleAnswerType(question).then((response) => {
-        resolve(response);
-      });
-    } else {
-      SingleAnswerType(question).then((response) => {
-        resolve(response);
-      });
-    }
-  });
+async function getResponsesIndex(question) {
+  if (typeof question.value === 'object') {
+    // Busca el index de la opcion escogida
+    return await multipleAnswerType(question)
+  } else {
+    return await singleAnswerType(question)
+  }
 }
 
-export default GetResponsesIndex;
+export default getResponsesIndex;

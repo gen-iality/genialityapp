@@ -16,7 +16,7 @@ import RegisterUser from './RegisterUser';
 import { UseEventContext } from '../../context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
 import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
-import { UseCurrentUser } from '../../context/userContext';
+import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
 const { TabPane } = Tabs;
@@ -42,7 +42,7 @@ const ModalAuth = (props) => {
   let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
  
   const cEvent = UseEventContext();
-  const cUser = UseCurrentUser();
+  const cUser = useCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
