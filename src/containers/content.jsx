@@ -24,7 +24,6 @@ import ModalNoRegister from '../components/authentication/ModalNoRegister';
 import BlockedEvent from '@/components/events/Landing/BlockedEvent';
 import ModalAuthAnonymous from '@/components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@/components/events/Landing/ModalUpdate';
-import { SurveyProvider } from '@/components/events/surveys/surveyContext';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../pages/home'));
@@ -131,20 +130,18 @@ const RouteContext = ({ component: Component, ...rest }) => (
             <AgendaContextProvider>
               <HelperContextProvider>
                 <SurveysProvider>
-                  <SurveyProvider>
-                    <Layout
-                      style={{
-                        minHeight: '100vh',
-                      }}
-                    >
-                      <Header />
-                      <Component {...props} />
-                      <ModalAuth />
-                      <ModalAuthAnonymous />
-                      <ModalNoRegister />
-                      <ModalUpdate />
-                    </Layout>
-                  </SurveyProvider>
+                  <Layout
+                    style={{
+                      minHeight: '100vh',
+                    }}
+                  >
+                    <Header />
+                    <Component {...props} />
+                    <ModalAuth />
+                    <ModalAuthAnonymous />
+                    <ModalNoRegister />
+                    <ModalUpdate />
+                  </Layout>
                 </SurveysProvider>
               </HelperContextProvider>
             </AgendaContextProvider>
