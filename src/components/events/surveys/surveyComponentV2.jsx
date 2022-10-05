@@ -193,6 +193,7 @@ function SurveyComponent(props) {
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
                   setIsSaveButtonShown(true);
+                  SurveyPage.setCurrentPage(queryData._id, currentUser.value._id, 0);
                 }
               }}
             >
