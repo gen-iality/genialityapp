@@ -6,6 +6,9 @@ import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { getUserSurveyStatus } from './functions/userSurveyStatus';
 
+// Temporally
+import { firestore } from '@helpers/firebase';
+
 export enum SurveyContextAction {
   SURVEY_LOADED = 'SURVEY_LOADED',
   SURVEY_STATUS_LOADED = 'SURVEY_STATUS_LOADED',
@@ -28,13 +31,14 @@ export type CustomContextMethodType = {
   surveyStatsString: string,
   loadSurvey: (survey: any) => void,
   checkIfSurveyWasAnswered: () => boolean,
-  shouldDisplaySurveyAttendeeAnswered: () => boolean,
+  shouldDisplaySurveyAnswered: () => boolean,
   shouldDisplaySurveyClosedMenssage: () => boolean,
   shouldDisplayGraphics: () => boolean,
   shouldDisplayRanking: () => boolean,
   checkThereIsAnotherTry: () => boolean,
   startAnswering: () => void,
   stopAnswering: () => void,
+  resetSurveyStatus: (userId: string) => Promise<void>,
 };
 
 const initialContextState: SurveyContextType = {
@@ -114,7 +118,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     dispatch({ type: SurveyContextAction.ANSWERING_AGAIN, answering: false });
   };
 
-  const shouldDisplaySurveyAttendeeAnswered = () => {
+  const shouldDisplaySurveyAnswered = () => {
     if (checkThereIsAnotherTry() && state.answering) {
       return false;
     }
@@ -154,9 +158,21 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     return state.survey.rankingVisible === 'true' || state.survey.rankingVisible === true;
   };
 
+  const resetSurveyStatus = async (userId: string) => {
+    const firebaseRef = firestore
+      .collection('votingStatusByUser')
+      .doc(userId)
+      .collection('surveyStatus')
+      .doc(state.survey._id);
+    await firebaseRef.set(
+      { surveyCompleted: 'running', right: 0 },
+      {merge: true},
+    );
+  };
+
   const surveyStatsString = useMemo(() => {
     // Beware of editing this without thinking
-    if (!state.surveyStatus || !state.survey) return 'cuestionario sin datos';
+    if (!state.surveyStatus || !state.survey) return 'Cuestionario sin datos';
 
     const tried = state.surveyStatus.tried || 0;
     return `${tried} ${tried > 1 ? 'intentos':'intento'} de ${state.survey?.tries || 1}`;
@@ -168,7 +184,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
         ...state,
         loadSurvey,
         checkIfSurveyWasAnswered,
-        shouldDisplaySurveyAttendeeAnswered,
+        shouldDisplaySurveyAnswered,
         shouldDisplaySurveyClosedMenssage,
         shouldDisplayGraphics,
         shouldDisplayRanking,
@@ -176,6 +192,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
         checkThereIsAnotherTry,
         startAnswering,
         stopAnswering,
+        resetSurveyStatus,
       }}
     >
       {children}

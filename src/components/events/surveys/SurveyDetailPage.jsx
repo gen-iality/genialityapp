@@ -95,7 +95,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
 
   return (
     <div>
-      {cSurvey.shouldDisplaySurveyAttendeeAnswered() ? (
+      {cSurvey.shouldDisplaySurveyAnswered() ? (
         <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
           <em>{cSurvey.surveyStatsString}</em>
           <Result
@@ -113,7 +113,9 @@ function SurveyDetailPage({ surveyId, cEvent }) {
           </Button>
           {cSurvey.checkThereIsAnotherTry() && (
             <Button
-              onClick={() => cSurvey.startAnswering()}
+              onClick={() => {
+                cSurvey.resetSurveyStatus(currentUser.value._id).then(cSurvey.startAnswering);
+              }}
               type='primary'
               key='console'
             >

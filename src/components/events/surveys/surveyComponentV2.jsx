@@ -25,6 +25,9 @@ import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFrom
 import { addTriesNumber } from './functions/surveyStatus';
 import { useSurveyContext } from './surveyContext';
 
+Survey.JsonObject.metaData.addProperty('question', 'id');
+Survey.JsonObject.metaData.addProperty('question', 'points');
+
 function getRandomlySampleQuestions(survey) {
   console.debug('survey.survey', survey);
 
@@ -70,6 +73,21 @@ function getRandomlySampleQuestions(survey) {
   return newSurvey;
 }
 
+/**
+ * Create a Survey Modal from a survey data.
+ * @param {any} survey The survey from MongoDB.
+ * @returns A Survey Modal object.
+ */
+function createSurveyModel(survey) {
+  const surveyModelData = new Survey.Model(survey);
+  surveyModelData.currentPageNo = survey.currentPage;
+  surveyModelData.locale = 'es';
+  // Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
+  // uno en el header y otro encima del botón de inicio de encuesta
+  delete surveyModelData.localizableStrings.title.values.default;
+  return surveyModelData;
+}
+
 function SurveyComponent(props) {
   const {
     eventId, // The event id
@@ -95,33 +113,27 @@ function SurveyComponent(props) {
   const [eventUsers, setEventUsers] = useState([]);
   const [voteWeight, setVoteWeight] = useState(0); // Inquietud: Es util?
 
-  let [totalPoints, setTotalPoints] = useState(null);
+  const [totalPoints, setTotalPoints] = useState(null);
   var survey;
 
   useEffect(() => {
     // Configuración para poder relacionar el id de la pregunta en la base de datos
     // con la encuesta visible para poder almacenar las respuestas
-    Survey.JsonObject.metaData.addProperty('question', 'id');
-    Survey.JsonObject.metaData.addProperty('question', 'points');
+    // Survey.JsonObject.metaData.addProperty('question', 'id');
+    // Survey.JsonObject.metaData.addProperty('question', 'points');
+
+    // Asigna los colores configurables a  la UI de la encuesta
+    assignStylesToSurveyFromEvent(eventStyles);
   }, []);
 
-  // Asigna los colores configurables a  la UI de la encuesta
+  /**
+   * Take questions and create the model for the Survey component. If the settings
+   * says that it must be getting randomly, then only some questions will be taken.
+   */
   useEffect(() => {
     if (!(queryData?.questions.length > 0)) return;
-    assignStylesToSurveyFromEvent(eventStyles);
     setSurveyModel(createSurveyModel(getRandomlySampleQuestions(queryData)));
-    // survey.onCurrentPageChanging.add(displayFeedbackafterQuestionAnswered);
   }, [queryData]);
-
-  function createSurveyModel(survey) {
-    let surveyModelData = new Survey.Model(survey);
-    surveyModelData.currentPageNo = survey.currentPage;
-    surveyModelData.locale = 'es';
-    // Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
-    // uno en el header y otro encima del botón de inicio de encuesta
-    delete surveyModelData.localizableStrings.title.values.default;
-    return surveyModelData;
-  }
 
   const displayFeedbackAfterEachQuestion = (sender, options) => {
     if (shouldDisplayFeedback()) {
@@ -165,11 +177,11 @@ function SurveyComponent(props) {
   }
 
   function createQuestionsFeedback(page) {
-    let pointsScored = calculateScoredPoints(page.questions);
+    const pointsScored = calculateScoredPoints(page.questions);
     console.log('200.createQuestionsFeedback page.questions', page.questions[0].value);
     console.log('200.createQuestionsFeedback surveyModel.data', surveyModel.data);
 
-    let mensaje = stateMessages(pointsScored ? 'success' : 'error');
+    const mensaje = stateMessages(pointsScored ? 'success' : 'error');
     return (
       <>
         <Result
@@ -195,8 +207,8 @@ function SurveyComponent(props) {
   }
 
   function setReadOnlyTheQuestions(questions) {
-    //Volvemos de solo lectura las respuestas
-    questions.map((question, index) => {
+    // Volvemos de solo lectura las respuestas
+    questions.forEach((question, index) => {
       if (index === 0) return;
       question.readOnly = true;
     });
@@ -274,9 +286,9 @@ function SurveyComponent(props) {
     /** funcion para validar tipo de respuesta multiple o unica */
     const responseIndex = await getResponsesIndex(question);
     optionQuantity = question.choices.length;
-    let optionIndex = responseIndex;
+    const optionIndex = responseIndex;
 
-    let infoOptionQuestion =
+    const infoOptionQuestion =
       queryData.allow_gradable_survey === 'true'
         ? { optionQuantity, optionIndex, correctAnswer }
         : { optionQuantity, optionIndex };
@@ -303,7 +315,7 @@ function SurveyComponent(props) {
   async function onSurveyCompleted(sender) {
     console.log('200.onSurveyCompleted');
     await saveSurveyData(sender);
-    //survey_just_finished();
+    // survey_just_finished();
     await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id);
   }
 
@@ -312,11 +324,7 @@ function SurveyComponent(props) {
       {/* {&& queryData.allow_gradable_survey === 'true' } */}
       {surveyModel && (
         <>
-          {isSavingPoints && (
-            <>
-              Guardando puntos <Spin />
-            </>
-          )}
+          {isSavingPoints && <p>Guardando puntos <Spin /></p>}
           {showingFeedback && questionFeedback}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
             <Survey.Survey
