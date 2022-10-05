@@ -168,6 +168,20 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
       { surveyCompleted: 'running', right: 0 },
       {merge: true},
     );
+
+    await firestore
+      .collection('surveys')
+      .doc(state.survey._id)
+      .collection('userProgress')
+      .doc(userId)
+      .delete();
+    
+      await firestore
+      .collection('surveys')
+      .doc(state.survey._id)
+      .collection('answers')
+      .doc(userId)
+      .delete();
   };
 
   const surveyStatsString = useMemo(() => {
