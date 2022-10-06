@@ -1,5 +1,4 @@
 import { firestore } from '../../../../helpers/firebase';
-import { SurveyPage } from '../services/services';
 
 function initRealTimeSurveyListening(idSurvey, updateSurveyDataCallback) {
   console.log('initRealTimeSurveyListening');
