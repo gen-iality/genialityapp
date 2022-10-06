@@ -87,7 +87,7 @@ export default function createSurveyModelFromSurvey(surveyData: SurveyPreModel) 
   // Now create a object with this
   const model = new Survey.Model(shuffleSurveyQuestion(exclude(jsonObj)));
 
-  // NOTE: You can use `SurveyPage.getCurrentPage` service to know this value
+  // NOTE: You can use `services/surveys` service to know this value
   model.currentPageNo = jsonObj.currentPage || 0;
   model.locale = 'es';
   // Se borra el título que genera el modelo de la encuesta para evitar

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import LoadSelectedSurvey from './../functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './../functions/initRealTimeSurveyListening';
-import { SurveyPage } from '../services/services';
-import { useCurrentUser } from '../../../../context/userContext';
+import { getCurrentPage } from '../services/surveys';
+import { useCurrentUser } from '@context/userContext';
 
 ////open, publish, freezeGame
 function useSurveyQuery(eventId, idSurvey) {
@@ -14,7 +14,7 @@ function useSurveyQuery(eventId, idSurvey) {
   async function getUserCurrentSurveyPage(idSurvey, userId) {
     let currentPageNo = 0;
     if (idSurvey && userId) {
-      currentPageNo = await SurveyPage.getCurrentPage(idSurvey, userId);
+      currentPageNo = await getCurrentPage(idSurvey, userId);
     }
     return currentPageNo;
   }

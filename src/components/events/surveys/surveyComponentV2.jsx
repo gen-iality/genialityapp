@@ -4,7 +4,7 @@ import * as Survey from 'survey-react';
 import { Link, useHistory } from 'react-router-dom';
 
 /** Helpers and services */
-import { SurveyPage } from './services/services';
+import { setCurrentPage } from './services/surveys';
 
 /** Antd services */
 import { Result, Spin, Button, Col } from 'antd';
@@ -192,7 +192,7 @@ function SurveyComponent(props) {
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
                   setIsSaveButtonShown(true);
-                  SurveyPage.setCurrentPage(queryData._id, currentUser.value._id, 0);
+                  setCurrentPage(queryData._id, currentUser.value._id, 0);
                 }
               }}
             >
@@ -237,7 +237,7 @@ function SurveyComponent(props) {
   async function saveSurveyCurrentPage() {
     if (!(Object.keys(currentUser).length === 0)) {
       // Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-      await SurveyPage.setCurrentPage(queryData._id, currentUser.value._id, surveyModel.currentPageNo);
+      await setCurrentPage(queryData._id, currentUser.value._id, surveyModel.currentPageNo);
     }
   }
 

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Result, Spin } from 'antd';
 import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
-import { SurveyPage } from './services/services';
 import UserGamification from './services/userGamificationService';
 import setUserPointsPerSurvey from './services/setUserPointsPerSurveyService';
 import Graphics from './graphics';
@@ -16,6 +15,7 @@ import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey
 
 import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import { setStatus as setSurveyStatus, addRightPoints } from './services/surveyStatus';
+import { getCurrentPage, setCurrentPage } from './services/surveys';
 import useSurveyQuery from './hooks/useSurveyQuery';
 import { Button } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -112,7 +112,7 @@ function SurveyComponent(props) {
   async function getUserCurrentSurveyPage(idSurvey, user_id) {
     let currentPageNo = 0;
     if (idSurvey && user_id) {
-      currentPageNo = await SurveyPage.getCurrentPage(idSurvey, user_id);
+      currentPageNo = await getCurrentPage(idSurvey, user_id);
     }
     return currentPageNo;
   }
@@ -152,7 +152,7 @@ function SurveyComponent(props) {
     await registerRankingPoints(pointsForCorrectAnswer, surveyModel, query.data, currentUser.value, eventId);
     if (!(Object.keys(currentUser).length === 0)) {
       //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-      SurveyPage.setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
+      setCurrentPage(query.data._id, currentUser.value._id, surveyModel.currentPageNo);
     }
 
     let isLastPage = surveyModel.isLastPage;
