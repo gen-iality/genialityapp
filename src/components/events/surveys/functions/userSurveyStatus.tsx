@@ -1,6 +1,9 @@
 import { firestore } from '@helpers/firebase';
 
-export function setUserSurveyStatus(surveyId: string, userId: string, status: string) {
+export const setUserSurveyStatus = setStatus;
+export const getUserSurveyStatus = getStatus;
+
+export async function setStatus(surveyId: string, userId: string, status: string): Promise<void> {
   const firebaseRef = firestore
     .collection('votingStatusByUser')
     .doc(userId)
@@ -8,14 +11,14 @@ export function setUserSurveyStatus(surveyId: string, userId: string, status: st
     .doc(surveyId);
 
   try {
-    firebaseRef.set({ surveyCompleted: status }, { merge: true });
+    await firebaseRef.set({ surveyCompleted: status }, { merge: true });
     console.debug(`surveyId:${surveyId}, userId:${userId}`, 'changed');
   } catch (err) {
     console.error(`surveyId:${surveyId}, userId:${userId}`, err);
   }
 }
 
-export async function getUserSurveyStatus(surveyId: string, userId: string): Promise<any> {
+export async function getStatus(surveyId: string, userId: string): Promise<any> {
   const firebaseRef = firestore
     .collection('votingStatusByUser')
     .doc(userId)
