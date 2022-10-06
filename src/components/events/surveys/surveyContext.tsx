@@ -6,8 +6,7 @@ import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { getStatus as getSurveyStatus, resetStatusByRestartAnswering } from './services/surveyStatus';
 
-// Temporally
-import { firestore } from '@helpers/firebase';
+import { getAnswersRef, getUserProgressRef } from './services/surveys';
 
 export enum SurveyContextAction {
   SURVEY_LOADED = 'SURVEY_LOADED',
@@ -158,23 +157,10 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     return state.survey.rankingVisible === 'true' || state.survey.rankingVisible === true;
   };
 
-  /** @deprecated use the function in src/components/surveys/functions instead */
   const resetSurveyStatus = async (userId: string) => {
     await resetStatusByRestartAnswering(state.survey._id, userId);
-
-    await firestore
-      .collection('surveys')
-      .doc(state.survey._id)
-      .collection('userProgress')
-      .doc(userId)
-      .delete();
-    
-      await firestore
-      .collection('surveys')
-      .doc(state.survey._id)
-      .collection('answers')
-      .doc(userId)
-      .delete();
+    await getUserProgressRef(state.survey._id, userId).delete();
+    await getAnswersRef(state.survey._id, userId).delete();
   };
 
   const surveyStatsString = useMemo(() => {

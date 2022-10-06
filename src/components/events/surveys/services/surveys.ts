@@ -12,7 +12,11 @@ export const getUserProgressRef = (surveyId: string, userId: string) => (
     .doc(userId)
 );
 
-// TODO: add getAnswersRef
+export const getAnswersRef = (surveyId: string, userId: string) => (
+  getRef(surveyId)
+    .collection('answers')
+    .doc(userId)
+);
 
 export const getCurrentPage = async (surveyId: string, userId: string) => {
   const firebaseRef = getUserProgressRef(surveyId, userId);
