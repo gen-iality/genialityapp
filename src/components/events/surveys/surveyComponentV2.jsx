@@ -23,10 +23,12 @@ import { useCurrentUser } from '@context/userContext';
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
 import { addTriesNumber, addRightPoints  } from './services/surveyStatus';
 import { useSurveyContext } from './surveyContext';
+import SurveyQuestionsFeedback from './SurveyQuestionsFeedback';
 
 Survey.JsonObject.metaData.addProperty('question', 'id');
 Survey.JsonObject.metaData.addProperty('question', 'points');
 
+/** @deprecated Just because */
 function getRandomlySampleQuestions(survey) {
   console.debug('survey.survey', survey);
 
@@ -102,7 +104,7 @@ function SurveyComponent(props) {
 
   const [surveyModel, setSurveyModel] = useState(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
-  const [questionFeedback, setQuestionFeedback] = useState(false);
+  const [currentQuestionsForFeedback, setCurrentQuestionsForFeedback] = useState([]); /** @type any[] */
 
   const [isSaveButtonShown, setIsSaveButtonShown] = useState(false);
   const [isSavingPoints, setIsSavingPoints] = useState(false);
@@ -110,7 +112,6 @@ function SurveyComponent(props) {
   const [eventUsers, setEventUsers] = useState([]);
   const [voteWeight, setVoteWeight] = useState(0); // Inquietud: Es util?
 
-  const [totalPoints, setTotalPoints] = useState(null);
   var survey;
 
   useEffect(() => {
@@ -134,20 +135,16 @@ function SurveyComponent(props) {
   }, [queryData]);
 
   const displayFeedbackAfterEachQuestion = (sender, options) => {
-    if (shouldDisplayFeedback()) {
+    if (showingFeedback !== true) {
       stopChangeToNextQuestion(options);
       hideTimerPanel();
       displayFeedback(Survey, sender.currentPage);
-      setQuestionFeedback(createQuestionsFeedback(sender.currentPage));
+      setCurrentQuestionsForFeedback(sender.currentPage.questions);
       setReadOnlyTheQuestions(sender.currentPage.questions);
     } else {
       showTimerPanel();
     }
   };
-
-  function shouldDisplayFeedback() {
-    return showingFeedback !== true;
-  }
 
   function stopChangeToNextQuestion(options) {
     options.allowChanging = false;
@@ -162,48 +159,6 @@ function SurveyComponent(props) {
     setShowingFeedback(true);
   }
 
-  function calculateScoredPoints(questions) {
-    let pointsScored = 0;
-    questions.map(question => {
-      console.log('200.Is value empty', question.isValueEmpty());
-      pointsScored += question.correctAnswerCount ? question.correctAnswerCount : 0;
-    });
-    console.log('200.pointsScored', pointsScored);
-    setTotalPoints(totalPoints + pointsScored);
-    return pointsScored;
-  }
-
-  function createQuestionsFeedback(page) {
-    const pointsScored = calculateScoredPoints(page.questions);
-    console.log('200.createQuestionsFeedback page.questions', page.questions[0].value);
-    console.log('200.createQuestionsFeedback surveyModel.data', surveyModel.data);
-
-    const mensaje = stateMessages(pointsScored ? 'success' : 'error');
-    return (
-      <>
-        <Result
-          className='animate__animated animate__fadeIn'
-          {...mensaje}
-          extra={[
-            <Button
-              type='primary'
-              onClick={() => {
-                setShowingFeedback(false);
-                surveyModel.nextPage();
-                if (surveyModel.state === 'completed') {
-                  setIsSaveButtonShown(true);
-                  setCurrentPage(queryData._id, currentUser.value._id, 0);
-                }
-              }}
-            >
-              Next
-            </Button>,
-          ]}
-        />
-      </>
-    );
-  }
-
   function setReadOnlyTheQuestions(questions) {
     // Volvemos de solo lectura las respuestas
     questions.forEach((question, index) => {
@@ -215,10 +170,6 @@ function SurveyComponent(props) {
   function showTimerPanel() {
     surveyModel.showTimerPanel = 'top';
     surveyModel.startTimer();
-  }
-
-  function temporizador(sender, options) {
-    options.text = `Tienes ${sender.maxTimeToFinishPage} para responder. Tu tiempo es ${sender.currentPage.timeSpent}`;
   }
 
   async function saveSurveyStatus() {
@@ -323,7 +274,19 @@ function SurveyComponent(props) {
       {surveyModel && (
         <>
           {isSavingPoints && <p>Guardando puntos <Spin /></p>}
-          {showingFeedback && questionFeedback}
+          {showingFeedback && (
+            <SurveyQuestionsFeedback
+              questions={currentQuestionsForFeedback}
+              onNextClick={() => {
+                setShowingFeedback(false);
+                surveyModel.nextPage();
+                if (surveyModel.state === 'completed') {
+                  setIsSaveButtonShown(true);
+                  setCurrentPage(queryData._id, currentUser.value._id, 0);
+                }
+              }}
+            />
+          )}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
             <Survey.Survey
               model={surveyModel}
