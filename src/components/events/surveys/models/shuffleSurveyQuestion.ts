@@ -1,9 +1,9 @@
-import { SurveyFromMongoDB } from './types';
+import { SurveyFromMongoDB, SurveyPreModel } from './types';
 import { SurveyModel } from 'survey-react';
 
 const getRandomIndex = (max: number) => Math.floor(Math.random() * max);
 
-export default (survey: SurveyFromMongoDB & SurveyModel) => {
+export default (survey: (SurveyFromMongoDB | SurveyPreModel) & SurveyModel) => {
   let newSurvey: SurveyFromMongoDB & SurveyModel = {} as any;
 
   if (survey.random_survey) {

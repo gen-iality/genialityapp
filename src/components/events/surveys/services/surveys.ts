@@ -52,3 +52,16 @@ export const setCurrentPage = async (surveyId: string, userId: string, currentPa
     console.error(`surveyId:${surveyId}, userId:${userId}`, err);
   }
 };
+
+export const initRealtime = (surveyId: string, onChange: (surveyData: any) => void) => {
+  console.debug('start realtime to surveyId', surveyId);
+  const unsubscribe = getRef(surveyId)
+    .onSnapshot((result) => {
+      const document = result.data();
+      console.debug('realtime change survey to:', document);
+      const surveyRealTime = { ...document, _id_firebase: result.id };
+      onChange(surveyRealTime);
+    });
+
+  return unsubscribe;
+}

@@ -1,11 +1,10 @@
 import * as Survey from'survey-react';
-import shuffleSurveyQuestion from './shuffleSurveyQuestion';
 import { SurveyPreModel } from './types';
 
 Survey.JsonObject.metaData.addProperty('question', 'id');
 Survey.JsonObject.metaData.addProperty('question', 'points');
 
-export default function createSurveyModelFromSurvey(surveyData: SurveyPreModel) {
+export default (surveyData: SurveyPreModel) => {
   const jsonObj = surveyData as (SurveyPreModel & Survey.SurveyModel);
   
   // Posición del botón next
@@ -53,7 +52,10 @@ export default function createSurveyModelFromSurvey(surveyData: SurveyPreModel) 
     });
   }
 
-  if (jsonObj.questions === undefined) return;
+  if (jsonObj.questions === undefined) {
+    console.warn('survey data with no questions:', jsonObj);
+    return jsonObj;
+  };
 
   jsonObj['questions'].forEach((page: any, index: number) => {
     let newPage = page;
@@ -82,17 +84,6 @@ export default function createSurveyModelFromSurvey(surveyData: SurveyPreModel) 
   });
 
   // Se excluyen las propiedades
-  const exclude = ({ survey, id, ...rest }: any) => rest;
-
-  // Now create a object with this
-  const model = new Survey.Model(shuffleSurveyQuestion(exclude(jsonObj)));
-
-  // NOTE: You can use `services/surveys` service to know this value
-  model.currentPageNo = jsonObj.currentPage || 0;
-  model.locale = 'es';
-  // Se borra el título que genera el modelo de la encuesta para evitar
-  // duplicados: uno en el header y otro encima del botón de inicio de encuesta
-  delete model.localizableStrings.title.values.default;
-
-  return model;
+  const exclude = ({ survey, id, ...rest }: any): typeof jsonObj => rest;
+  return exclude(jsonObj);
 }
