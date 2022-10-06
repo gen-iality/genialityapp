@@ -1,13 +1,13 @@
 import { QuizStatus } from '@/components/quiz/types';
 import { firestore } from '@helpers/firebase';
 
-export const getRef = (surveyId: string, userId: string) => (
-  firestore
+export const getRef = (surveyId: string, userId: string) => {
+  return firestore
     .collection('votingStatusByUser')
     .doc(userId)
     .collection('surveyStatus')
-    .doc(surveyId)
-);
+    .doc(surveyId);
+};
 
 export const setStatus = async (surveyId: string, userId: string, status: string): Promise<void> => {
   const firebaseRef = getRef(surveyId, userId);

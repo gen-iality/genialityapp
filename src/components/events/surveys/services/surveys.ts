@@ -1,22 +1,22 @@
 import { firestore } from '@helpers/firebase';
 
-export const getRef = (surveyId: string) => (
-  firestore
+export const getRef = (surveyId: string) => {
+  return firestore
     .collection('surveys')
-    .doc(surveyId)
-);
+    .doc(surveyId);
+};
 
-export const getUserProgressRef = (surveyId: string, userId: string) => (
-  getRef(surveyId)
+export const getUserProgressRef = (surveyId: string, userId: string) => {
+  return getRef(surveyId)
     .collection('userProgress')
     .doc(userId)
-);
+};
 
-export const getAnswersRef = (surveyId: string, userId: string) => (
-  getRef(surveyId)
+export const getAnswersRef = (surveyId: string, userId: string) => {
+  return getRef(surveyId)
     .collection('answers')
-    .doc(userId)
-);
+    .doc(userId);
+};
 
 export const getCurrentPage = async (surveyId: string, userId: string) => {
   const firebaseRef = getUserProgressRef(surveyId, userId);
