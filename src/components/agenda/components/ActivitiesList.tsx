@@ -14,6 +14,7 @@ import QuizProgress from '@/components/quiz/QuizProgress';
 import { useCurrentUser } from '@context/userContext';
 import Service from '@components/agenda/roomManager/service';
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
+import { getRef } from '@components/events/surveys/functions/userSurveyStatus';
 
 type TruncatedAgenda = {
   title: string;
@@ -187,13 +188,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   .collection('userProgress')
                   .doc(userId)
                   .delete();
-
-                await firestore
-                  .collection('votingStatusByUser')
-                  .doc(userId)
-                  .collection('surveyStatus')
-                  .doc(surveyId)
-                  .delete();
+                
+                await getRef(surveyId, userId).delete();
               }
 
               if (userId && surveyId) {

@@ -4,7 +4,7 @@ import { ReactNode, useReducer, useEffect } from 'react';
 import type { FunctionComponent } from 'react';
 import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { getUserSurveyStatus } from './functions/userSurveyStatus';
+import { getStatus as getSurveyStatus, resetStatusByRestartAnswering } from './functions/userSurveyStatus';
 
 // Temporally
 import { firestore } from '@helpers/firebase';
@@ -84,7 +84,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
 
     console.log('1000. Aquí se ejecuta el use Effect');
 
-    getUserSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
+    getSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
       dispatch({ type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: data });
     });
   }, [cEventContext, cUser, state.survey]);
@@ -158,16 +158,9 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     return state.survey.rankingVisible === 'true' || state.survey.rankingVisible === true;
   };
 
+  /** @deprecated use the function in src/components/surveys/functions instead */
   const resetSurveyStatus = async (userId: string) => {
-    const firebaseRef = firestore
-      .collection('votingStatusByUser')
-      .doc(userId)
-      .collection('surveyStatus')
-      .doc(state.survey._id);
-    await firebaseRef.set(
-      { surveyCompleted: 'running', right: 0 },
-      {merge: true},
-    );
+    await resetStatusByRestartAnswering(state.survey._id, userId);
 
     await firestore
       .collection('surveys')

@@ -15,8 +15,7 @@ import HelpFiftyFifty from './functions/helpFiftyFifty';
 import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 
 import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
-import { setUserSurveyStatus } from './functions/userSurveyStatus';
-import { saveAcumulativePoints } from './functions/saveAcumulativePoints';
+import { setStatus as setSurveyStatus, addRightPoints } from './services/surveyStatus';
 import useSurveyQuery from './hooks/useSurveyQuery';
 import { Button } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -129,7 +128,7 @@ function SurveyComponent(props) {
     const status = surveyModel.state;
     console.log('200.sendData status', status);
 
-    await setUserSurveyStatus(query.data._id, currentUser.value._id, status);
+    await setSurveyStatus(query.data._id, currentUser.value._id, status);
 
     if (status === 'completed') {
       props.setShowSurveyTemporarily(true);
@@ -145,7 +144,7 @@ function SurveyComponent(props) {
     }
 
     console.log('200.sendData question', question);
-    await saveAcumulativePoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0);
+    await addRightPoints(query.data._id, currentUser.value._id, parseInt(question.points) || 0);
     const pointsForCorrectAnswer = RegisterVote(query.data, question, currentUser, eventUsers, voteWeight);
 
     setRankingPoints(pointsForCorrectAnswer);

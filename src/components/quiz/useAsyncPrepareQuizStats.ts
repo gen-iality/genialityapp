@@ -1,6 +1,6 @@
 import { SurveysApi } from '@/helpers/request';
 import { QuizStatus, QuizStats, Survey } from './types';
-import useRequestQuizStatus from './useRequestQuizStatus';
+import { getStatus as getSurveyStatus } from '../events/surveys/functions/userSurveyStatus';
 
 /**
  * Get the survey answer stats.
@@ -17,14 +17,13 @@ export default async function useQuizStatusRequesting(
   survey?: Survey
 ) {
   console.debug('finding quiz status for userId', userId, 'with surveyId', surveyId);
-  const { getMethod } = useRequestQuizStatus(userId, surveyId);
 
   let quizStatus: QuizStatus = {
     right: 0,
     surveyCompleted: '',
   };
 
-  const result = await getMethod();
+  const result = await getSurveyStatus(surveyId, userId);
   if (result.exists) {
     const data = result.data() as QuizStatus;
     quizStatus = { ...quizStatus, ...data };

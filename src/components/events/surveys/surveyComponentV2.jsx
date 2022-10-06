@@ -14,7 +14,6 @@ import stateMessages from './functions/stateMessagesV2';
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 import getResponsesIndex from './functions/getResponsesIndex';
 import savingResponseByUserId from './functions/savingResponseByUserId';
-import saveAcumulativePoints from './functions/saveAcumulativePoints';
 
 /** Context´s */
 import { UseEventContext } from '@context/eventContext';
@@ -22,7 +21,7 @@ import { useCurrentUser } from '@context/userContext';
 
 /** Componentes */
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
-import { addTriesNumber } from './functions/surveyStatus';
+import { addTriesNumber, addRightPoints  } from './functions/userSurveyStatus';
 import { useSurveyContext } from './surveyContext';
 
 Survey.JsonObject.metaData.addProperty('question', 'id');
@@ -256,7 +255,7 @@ function SurveyComponent(props) {
     try {
       const value = parseInt(question.points) || 0;
       console.log('200.saveGainedSurveyPoints survey correct?', correctAnswer);
-      await saveAcumulativePoints(queryData._id, currentUser.value._id, correctAnswer ? value : 0);
+      await addRightPoints(queryData._id, currentUser.value._id, correctAnswer ? value : 0);
       console.log('600 savedGainedSurveyPoints value', value);
       setIsSavingPoints(false);
     } catch (err) {
