@@ -1,4 +1,4 @@
-import { getRightPoints } from './userSurveyStatus';
+import { getRightPoints } from '../services/surveyStatus';
 
 // Componente que se ejecuta antes del curso onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
 async function messageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {

@@ -21,7 +21,7 @@ import { useCurrentUser } from '@context/userContext';
 
 /** Componentes */
 import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
-import { addTriesNumber, addRightPoints  } from './functions/userSurveyStatus';
+import { addTriesNumber, addRightPoints  } from './services/surveyStatus';
 import { useSurveyContext } from './surveyContext';
 
 Survey.JsonObject.metaData.addProperty('question', 'id');

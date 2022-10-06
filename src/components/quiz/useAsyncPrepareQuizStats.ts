@@ -1,6 +1,6 @@
 import { SurveysApi } from '@/helpers/request';
 import { QuizStatus, QuizStats, Survey } from './types';
-import { getStatus as getSurveyStatus } from '../events/surveys/functions/userSurveyStatus';
+import { getStatus as getSurveyStatus } from '../events/surveys/services/surveyStatus';
 
 /**
  * Get the survey answer stats.

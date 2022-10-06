@@ -4,7 +4,7 @@ import { ReactNode, useReducer, useEffect } from 'react';
 import type { FunctionComponent } from 'react';
 import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { getStatus as getSurveyStatus, resetStatusByRestartAnswering } from './functions/userSurveyStatus';
+import { getStatus as getSurveyStatus, resetStatusByRestartAnswering } from './services/surveyStatus';
 
 // Temporally
 import { firestore } from '@helpers/firebase';

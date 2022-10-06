@@ -14,7 +14,7 @@ import QuizProgress from '@/components/quiz/QuizProgress';
 import { useCurrentUser } from '@context/userContext';
 import Service from '@components/agenda/roomManager/service';
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
-import { getRef } from '@components/events/surveys/functions/userSurveyStatus';
+import { getRef } from '@components/events/surveys/services/surveyStatus';
 
 type TruncatedAgenda = {
   title: string;
@@ -177,6 +177,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 })();
               }, []);
 
+              /** @deprecated use the function in src/components/surveys/functions instead */
               async function deleteSurveyAnswers(surveyId: any, userId: any) {
                 // No se eliminan las respuestas, con solo eliminar el userProgress y surveyStatus el usuario puede volver a contestar la encuesta, sobreescribiendo las anteriores respuestas.
                 console.log('700.surveyId', surveyId);
