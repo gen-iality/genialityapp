@@ -1,4 +1,4 @@
-import Survey from'survey-react';
+import * as Survey from'survey-react';
 import shuffleSurveyQuestion from './shuffleSurveyQuestion';
 import { SurveyPreModel } from './types';
 
