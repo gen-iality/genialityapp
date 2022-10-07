@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Menu, Badge } from 'antd';
 import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { stylesMenuItems } from '@helpers/csshelpers';
+import { stylesMenuItems } from '../helpers/csshelpers';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import withContext from '@context/withContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useEventContext } from '@context/eventContext';
-import { recordTypeForThisEvent } from '@helpers/thisRouteCanBeDisplayed';
+import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed';
 
 const MenuRigth = (props) => {
   let cEvent = useEventContext();
