@@ -22,19 +22,18 @@ export default async function useQuizStatusRequesting(
     right: 0,
     surveyCompleted: '',
   };
-
-  const result = await getSurveyStatus(surveyId, userId);
-  if (result.exists) {
-    const data = result.data() as QuizStatus;
-    quizStatus = { ...quizStatus, ...data };
-  }
-  console.debug(result);
-
   let minimumScore = 0;
-  // let questionLength = 0;
   let totalPoints = 0;
 
+  if (!surveyId) return { total: totalPoints, right: quizStatus.right, minimum: minimumScore } as QuizStats;
+
   try {
+    const result = await getSurveyStatus(surveyId, userId);
+    if (result.exists) {
+      const data = result.data() as QuizStatus;
+      quizStatus = { ...quizStatus, ...data };
+    }
+    console.debug(result);
     console.debug('finding eventId', eventId, 'with activityId', surveyId);
 
     const surveyIn: Survey = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
