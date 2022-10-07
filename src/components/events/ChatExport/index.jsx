@@ -3,7 +3,7 @@ import { Tag, Button, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { utils, writeFileXLSX } from 'xlsx';
 import dayjs from 'dayjs';
-import { getColumnSearchProps } from '../../../components/speakers/getColumnSearch';
+import { getColumnSearchProps } from '@components/speakers/getColumnSearch';
 import Table from '@antdComponents/Table';
 import { handleRequestError } from '@helpers/utils';
 import { firestoreeviuschat, firestore } from '@helpers/firebase';

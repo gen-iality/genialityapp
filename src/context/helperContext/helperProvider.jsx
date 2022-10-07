@@ -9,7 +9,7 @@ import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
+import { createChatInitalPrivate, createChatRoom } from '@components/networking/agendaHook';
 import { maleIcons, femaleicons, imageforDefaultProfile } from '../../helpers/constants';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';

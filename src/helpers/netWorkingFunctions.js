@@ -1,4 +1,4 @@
-import { getUserByEmail } from '../components/networking/services';
+import { getUserByEmail } from '@components/networking/services';
 import { EventsApi } from './request';
 import { firestore } from './firebase';
 import { GetTokenUserFirebase } from './HelperAuth';

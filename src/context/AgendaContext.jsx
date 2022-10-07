@@ -7,7 +7,7 @@ import {
 import { message } from 'antd';
 
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
-import Service from '../components/agenda/roomManager/service';
+import Service from '@components/agenda/roomManager/service';
 import { fireRealtime, firestore } from '@helpers/firebase';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';

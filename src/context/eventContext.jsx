@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { EventsApi, eventTicketsApi } from '@helpers/request';
-import NotFoundPage from '../components/notFoundPage';
+import NotFoundPage from '@components/notFoundPage';
 
 export const CurrentEventContext = React.createContext();
 

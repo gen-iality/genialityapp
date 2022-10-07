@@ -1,8 +1,8 @@
 import { Grid, Spin, Layout } from 'antd';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import Event from '../components/events/event';
+import Event from '@components/events/event';
 import { ApiUrl } from '../helpers/constants';
-import WithFooter from '../components/withFooter';
+import WithFooter from '@components/withFooter';
 
 import { CurrentUserEventProvider } from '@context/eventUserContext';
 import { CurrentEventProvider } from '@context/eventContext';
@@ -13,14 +13,14 @@ import { NewEventProvider } from '@context/newEventContext';
 import { HelperContextProvider } from '@context/helperContext/helperProvider';
 import { AgendaContextProvider } from '@context/AgendaContext';
 
-import EventOrganization from '../components/eventOrganization';
+import EventOrganization from '@components/eventOrganization';
 import Organization from '@/pages/eventOrganization/index';
-import MainProfile from '../components/profile/main';
+import MainProfile from '@components/profile/main';
 
 import { useCurrentUser } from '@context/userContext';
 import loadable from '@loadable/component';
-import ModalAuth from '../components/authentication/ModalAuth';
-import ModalNoRegister from '../components/authentication/ModalNoRegister';
+import ModalAuth from '@components/authentication/ModalAuth';
+import ModalNoRegister from '@components/authentication/ModalNoRegister';
 import BlockedEvent from '@components/events/Landing/BlockedEvent';
 import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@components/events/Landing/ModalUpdate';

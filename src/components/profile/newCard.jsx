@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, message, Space, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ModalCreateOrg from './modalCreateOrg';
-import ModalOrgListCreate from '../../components/events/createEvent/newEvent/modalOrgListCreate';
+import ModalOrgListCreate from '@components/events/createEvent/newEvent/modalOrgListCreate';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
 import { useContextNewEvent } from '@context/newEventContext';
 

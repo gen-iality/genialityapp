@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useMemo, createContext, useContext } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
-import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
+import InitSurveysCompletedListener from '@components/events/surveys/functions/initSurveyCompletedListener';
 import { UseEventContext } from './eventContext';
 import { useCurrentUser } from './userContext';
 export const SurveysContext = createContext();

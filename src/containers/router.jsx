@@ -6,7 +6,7 @@ import { fetchTypes } from '../redux/types/actions';
 import loadable from '@loadable/component';
 import { Layout } from 'antd';
 
-import WithFooter from '../components/withFooter';
+import WithFooter from '@components/withFooter';
 import { useCurrentUser } from '@context/userContext';
 import { CurrentUserEventProvider } from '@context/eventUserContext';
 import { CurrentEventProvider } from '@context/eventContext';
@@ -14,8 +14,8 @@ import { CurrentUserProvider } from '@context/userContext';
 import { SurveysProvider } from '@context/surveysContext';
 import { HelperContextProvider } from '@context/helperContext/helperProvider';
 import { AgendaContextProvider } from '@context/AgendaContext';
-import ModalAuth from '../components/authentication/ModalAuth';
-import ModalNoRegister from '../components/authentication/ModalNoRegister';
+import ModalAuth from '@components/authentication/ModalAuth';
+import ModalNoRegister from '@components/authentication/ModalNoRegister';
 import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@components/events/Landing/ModalUpdate';
 //PAGES

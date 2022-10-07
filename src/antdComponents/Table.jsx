@@ -12,10 +12,10 @@ import {
   CrownOutlined,
 } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
-// import ExportExcel from '../components/newComponent/ExportExcel';
+// import ExportExcel from '@components/newComponent/ExportExcel';
 import dayjs from 'dayjs';
 import { Suspense } from 'react';
-import { ExportExcel } from '../components/newComponent/ExportExcel';
+import { ExportExcel } from '@components/newComponent/ExportExcel';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 //import { UseCurrentUser } from '@context/userContext';
 

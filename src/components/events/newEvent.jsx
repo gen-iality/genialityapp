@@ -10,7 +10,7 @@ import Apariencia from './newEvent/apariencia';
 import Tranmitir from './newEvent/transmitir';
 /*vista de resultado de la creacion de un curso */
 import { cNewEventContext } from '@context/newEventContext';
-import Service from '../../components/agenda/roomManager/service';
+import Service from '@components/agenda/roomManager/service';
 import { firestore } from '@helpers/firebase';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';

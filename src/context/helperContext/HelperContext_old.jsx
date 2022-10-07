@@ -8,7 +8,7 @@ import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
+import { createChatInitalPrivate, createChatRoom } from '@components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
 import { maleIcons, femaleicons } from '../../helpers/constants';
 import Logout from '@2fd/ant-design-icons/lib/Logout';

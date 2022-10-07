@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import { CopyFilled, CheckCircleFilled } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import WOWZAPlayer from '../../../../components/livetransmision/WOWZAPlayer';
+import WOWZAPlayer from '@components/livetransmision/WOWZAPlayer';
 import {
   createLiveStream,
   getLiveStream,
