@@ -7,29 +7,32 @@ import { Card, Result, Divider, Button, Space } from 'antd';
 import { connect } from 'react-redux';
 
 /** Helpers */
-import { SurveysApi } from '@/helpers/request';
+import { SurveysApi } from '@helpers/request';
 
 /** Contexts */
 import { useCurrentUser } from '@context/userContext';
 import { useSurveyContext } from './surveyContext';
-import WithEviusContext from '@context/withContext';
+import WithEviusContext from '@context/withContextV2';
 
 /** Components */
-import SurveyComponent from './SurveyComponentV2';
+import SurveyComponent from './SurveyComponent';
 import Graphics from './graphics';
 import ResultsPanel from './resultsPanel';
 import QuizProgress from '@components/quiz/QuizProgress';
 
-function SurveyDetailPage({ surveyId, cEvent }) {
+interface SurveyDetailPageProps {
+  cEvent: any,
+  cUser: any,
+  cEventUser: any,
+  cHelper: any,
+  surveyId: string,
+};
+
+const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
   const cSurvey = useSurveyContext();
   const currentUser = useCurrentUser();
 
   const query = useSurveyQuery(cEvent.value?._id, surveyId);
-
-  // console.log('200.SurveyDetailPage userId', currentUser.value?._id);
-  // console.log('200.SurveyDetailPage eventId', cEvent.value?._id);
-  // console.log('200.SurveyDetailPage surveyId', surveyId);
-  // console.log('200.SurveyDetailPage query.data', query.data);
 
   const history = useHistory();
 
@@ -41,7 +44,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
   useEffect(() => {
-    cSurvey.loadSurvey({ ...query.data });
+    cSurvey.loadSurvey({ ...(query.data as any) });
   }, [query.data]);
 
   function showResultsPanel() {
@@ -65,7 +68,10 @@ function SurveyDetailPage({ surveyId, cEvent }) {
         const stats = await useAsyncPrepareQuizStats(cEvent.value._id, survey._id, currentUser?.value?._id, survey);
 
         console.debug(
-          `stats: eventId=${cEvent.value._id}, surveyId=${survey._id}, userId=${currentUser?.value?._id}, survey=${survey}`,
+          `stats: eventId=${cEvent.value._id},',
+          'surveyId=${survey._id},',
+          'userId=${currentUser?.value?._id},',
+          'survey=${survey}`,
         );
         console.debug('stats object:', stats);
         if (stats.minimum > 0) {
@@ -140,7 +146,7 @@ function SurveyDetailPage({ surveyId, cEvent }) {
       //   </>
       /* ) :*/ (
         <Card className='surveyCard'>
-          <SurveyComponent idSurvey={surveyId} eventId={cEvent.value?._id} queryData={query.data} />
+          <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
           <em>{cSurvey.surveyStatsString}</em>
         </Card>
       )}
@@ -148,8 +154,8 @@ function SurveyDetailPage({ surveyId, cEvent }) {
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   isVisible: state.survey.data.surveyVisible,
 });
 
-export default connect(mapStateToProps)(WithEviusContext(SurveyDetailPage));
+export default connect(mapStateToProps)(WithEviusContext<SurveyDetailPageProps>(SurveyDetailPage));

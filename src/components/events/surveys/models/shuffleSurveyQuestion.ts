@@ -4,7 +4,7 @@ import { SurveyModel } from 'survey-react';
 const getRandomIndex = (max: number) => Math.floor(Math.random() * max);
 
 export default (survey: (SurveyData | SurveyPreModel) & SurveyModel) => {
-  let newSurvey: SurveyData & SurveyModel = {} as any;
+  let newSurvey: (SurveyData | SurveyPreModel) & SurveyModel = {} as any;
 
   if (survey.random_survey) {
     // To avoid foolishness

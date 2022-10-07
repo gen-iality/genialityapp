@@ -197,8 +197,9 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
 
     /** funcion para validar tipo de respuesta multiple o unica */
     const responseIndex = await getResponsesIndex(question);
-    optionQuantity = question.choices.length;
     const optionIndex = responseIndex;
+
+    optionQuantity = question.choices.length;
 
     const infoOptionQuestion =
       queryData.allow_gradable_survey === 'true'
@@ -216,7 +217,6 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   async function saveSurveyData(sender: Survey.SurveyModel) {
     console.log('200.saveSurveyData');
 
-    // saveSurveyStatus(); -- temporally ignored
     await saveSurveyCurrentPage();
     await saveSurveyAnswers(sender.currentPage.questions);
     await saveGainedSurveyPoints(sender.currentPage.questions)
@@ -227,13 +227,11 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   async function onSurveyCompleted(sender: Survey.SurveyModel) {
     console.log('200.onSurveyCompleted');
     await saveSurveyData(sender);
-    // survey_just_finished();
     await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id);
   }
 
   return (
     <>
-      {/* {&& queryData.allow_gradable_survey === 'true' } */}
       {surveyModel && (
         <>
           {isSavingPoints && <p>Guardando puntos <Spin /></p>}
@@ -251,13 +249,17 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             />
           )}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
-            <Survey.Survey
-              model={surveyModel}
-              onCurrentPageChanging={displayFeedbackAfterEachQuestion}
-              onPartialSend={saveSurveyData}
-              onCompleting={displayFeedbackAfterEachQuestion}
-              onComplete={onSurveyCompleted}
-            />
+            {isSavingPoints ? (
+              <Spin/>
+            ) : (
+              <Survey.Survey
+                model={surveyModel}
+                onCurrentPageChanging={displayFeedbackAfterEachQuestion}
+                onPartialSend={saveSurveyData}
+                onCompleting={displayFeedbackAfterEachQuestion}
+                onComplete={onSurveyCompleted}
+              />
+            )}
           </div>
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
