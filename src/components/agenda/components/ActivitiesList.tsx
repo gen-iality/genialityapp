@@ -216,8 +216,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             RibbonComponent: ({ children }: { children: any }) => {
               const [isLive, setIsLive] = useState(false);
               useEffect(() => {
-                service.getConfiguration(eventId, agenda._id).then(config => {
-                  const is = config.habilitar_ingreso === 'open_meeting_room';
+                service.getConfiguration(eventId, agenda._id).then((config) => {
+                  const is = config?.habilitar_ingreso === 'open_meeting_room';
                   console.log('isLive change to:', is);
                   setIsLive(is);
                 });
