@@ -30,8 +30,11 @@ export default (survey: (SurveyData | SurveyPreModel) & SurveyModel) => {
         }
       }
       // Now, use these indeces to get the questions
-      takenIndeces
-      const newPages = survey.pages.filter((question: any, index: number) => takenIndeces.includes(index))
+      console.debug('takenIndeces', takenIndeces);
+      const newPages = [
+        survey.pages[0],
+        ...survey.pages.filter((question: any, index: number) => takenIndeces.includes(index+1)),
+      ];
       newSurvey = { ...survey, pages: newPages } as any;
     } else {
       newSurvey = { ...survey } as any;
