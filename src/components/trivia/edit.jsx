@@ -32,8 +32,8 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import FormQuestionEdit from './formEdit';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import Loading from '../profile/loading';
 import { DispatchMessageService } from '../../context/MessageService';
 import { useHelper } from '@context/helperContext/hooks/useHelper';

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { OrganizationApi, TypesApi } from '@helpers/request';
 import { Form, Input, Row, Col, Select } from 'antd';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const formLayout = {

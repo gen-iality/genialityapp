@@ -19,7 +19,7 @@ import useValideChangesInFormData from '../hooks/useValideChangesInFormData';
 import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaDocument';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import EviusReactQuill from '../../shared/eviusReactQuill';
-import BackTop from '../../../antdComponents/BackTop';
+import BackTop from '@antdComponents/BackTop';
 import Loading from '../../profile/loading';
 import RequiredStar from './RequiredStar';
 

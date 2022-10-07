@@ -43,8 +43,8 @@ import {
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
-import Header from '../../antdComponents/Header';
-import TableA from '../../antdComponents/Table';
+import Header from '@antdComponents/Header';
+import TableA from '@antdComponents/Table';
 import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';

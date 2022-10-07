@@ -4,7 +4,7 @@ import { MessageApi } from '@helpers/request';
 import MessageUser from './messageUser';
 import EmailPrev from './emailPreview';
 import { Row, Col, Tabs, Empty } from 'antd';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 
 const { TabPane } = Tabs;
 

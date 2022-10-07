@@ -46,8 +46,8 @@ import {
   DatePicker,
 } from 'antd';
 import { firestore } from '@helpers/firebase';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '@helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';

@@ -1,8 +1,8 @@
 import { Component, Fragment } from 'react';
 import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber, Result } from 'antd';
 import { Actions, OrganizationApi } from '@helpers/request';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import { CurrentUserContext } from '@context/userContext';

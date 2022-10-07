@@ -4,7 +4,7 @@ import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutl
 import { utils, writeFileXLSX } from 'xlsx';
 import dayjs from 'dayjs';
 import { getColumnSearchProps } from '../../../components/speakers/getColumnSearch';
-import Table from '../../../antdComponents/Table';
+import Table from '@antdComponents/Table';
 import { handleRequestError } from '@helpers/utils';
 import { firestoreeviuschat, firestore } from '@helpers/firebase';
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';

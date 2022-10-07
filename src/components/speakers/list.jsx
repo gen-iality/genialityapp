@@ -6,7 +6,7 @@ import { Table, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { columns } from './columns';
 import { DispatchMessageService } from '../../context/MessageService';
 import { useHelper } from '@context/helperContext/hooks/useHelper';

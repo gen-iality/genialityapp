@@ -17,7 +17,7 @@ import useGetEventCompanies from './customHooks/useGetEventCompanies';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { firestore } from '@helpers/firebase';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 

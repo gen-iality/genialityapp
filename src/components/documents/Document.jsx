@@ -5,7 +5,7 @@ import { handleRequestError } from '@helpers/utils';
 import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin, Progress } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { fireStorage } from '@helpers/firebase';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import dayjs from 'dayjs';
 import { DispatchMessageService } from '../../context/MessageService';
 

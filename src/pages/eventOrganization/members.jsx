@@ -11,7 +11,7 @@ import ModalMembers from '@components/modal/modalMembers';
 import dayjs from 'dayjs';
 import withContext from '../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);

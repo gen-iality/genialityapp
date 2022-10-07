@@ -8,7 +8,7 @@ import { parseData2Excel } from '@helpers/utils';
 import { utils, writeFileXLSX } from 'xlsx';
 import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { HelperContext } from '@context/helperContext/helperContext';
 
 class eventUsersList extends Component {

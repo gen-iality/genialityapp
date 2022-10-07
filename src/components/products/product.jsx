@@ -14,7 +14,7 @@ import arrayMove from 'array-move';
 import { EventsApi } from '@helpers/request';
 import Loading from '../loaders/loading';
 import { withRouter } from 'react-router-dom';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
 import { UseEventContext } from '@context/eventContext';
 import { HelperContext } from '@context/helperContext/helperContext';
