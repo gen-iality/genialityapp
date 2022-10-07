@@ -1,6 +1,6 @@
 type FoolBoolean = boolean | 'true' | 'false';
 
-interface SurveyQuestion {
+export interface SurveyQuestion {
   title: string;
   type: 'radiogroup' | 'checkbox' | 'ranking' | 'ranking' | 'matrix' | 'comment' | 'text' | string;
   choices: string[];

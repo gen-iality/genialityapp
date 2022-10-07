@@ -1,17 +1,17 @@
-import { SurveyData, SurveyPreModel } from './types';
+import { SurveyQuestion } from './types';
 import { SurveyModel } from 'survey-react';
 
 const getRandomIndex = (max: number) => Math.floor(Math.random() * max);
 
-export default (survey: (SurveyData | SurveyPreModel) & SurveyModel) => {
-  let newSurvey: (SurveyData | SurveyPreModel) & SurveyModel = {} as any;
+export default (surveyQuestions: SurveyQuestion[], isRandomSurvey: boolean, randomSurveyCount?: number) => {
+  const newQuestions: SurveyQuestion[] = [];
 
-  if (survey.random_survey) {
+  if (isRandomSurvey) {
     // To avoid foolishness
-    const sampleCount = Math.min(survey.random_survey_count, survey.questions.length);
+    const sampleCount = randomSurveyCount === undefined ? surveyQuestions.length : Math.min(randomSurveyCount, surveyQuestions.length);
     console.debug('sampleCount', sampleCount);
-    if (sampleCount < survey.questions.length) {
-      const possibleIndeces: number[] = survey.questions.map((question, index) => index);
+    if (sampleCount < surveyQuestions.length) {
+      const possibleIndeces: number[] = surveyQuestions.map((question, index) => index);
       const takenIndeces: number[] = [];
       // Take `sampleCount` question-indeces
       let taken = 0;
@@ -24,25 +24,21 @@ export default (survey: (SurveyData | SurveyPreModel) & SurveyModel) => {
           takenIndeces.push(index);
           taken++;
         }
-        if (watchDog > survey.questions.length * 2) {
+        if (watchDog > surveyQuestions.length * 2) {
           console.error('tanking random index has crashed and the loop has overflowed the survey questions length');
           break;
         }
       }
       // Now, use these indeces to get the questions
       console.debug('takenIndeces', takenIndeces);
-      const newPages = [
-        survey.pages[0],
-        ...survey.pages.filter((question: any, index: number) => takenIndeces.includes(index+1)),
-      ];
-      newSurvey = { ...survey, pages: newPages } as any;
+      newQuestions.push(...surveyQuestions.filter((question: any, index: number) => takenIndeces.includes(index+1)));
     } else {
-      newSurvey = { ...survey } as any;
+      newQuestions.push(...surveyQuestions);
     }
   } else {
-    newSurvey = { ...survey } as any;
+    newQuestions.push(...surveyQuestions);
   }
   
-  console.debug('survey.survey', newSurvey);
-  return newSurvey;
+  console.debug('survey.survey', newQuestions);
+  return newQuestions;
 }
