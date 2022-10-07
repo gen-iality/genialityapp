@@ -100,7 +100,7 @@ class AddUser extends Component {
       );
       if (type === 'boolean') {
         input = (
-          <React.Fragment>
+          <>
             <Form.Item label={name} htmlFor={name} style={{ textTransform: 'capitalize' }}>
               <Checkbox
                 name={name}
@@ -111,7 +111,7 @@ class AddUser extends Component {
                 }}
               />
             </Form.Item>
-          </React.Fragment>
+          </>
         );
       }
       if (type === 'list') {

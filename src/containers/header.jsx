@@ -195,7 +195,7 @@ const Headers = (props) => {
   }, [fixed]);
 
   return (
-    <React.Fragment>
+    <>
       <Header
         style={{
           position: 'sticky',
@@ -355,7 +355,7 @@ const Headers = (props) => {
       )}
 
       {dataGeneral.serverError && <ErrorServe errorData={errorData} />}
-    </React.Fragment>
+    </>
   );
 };
 

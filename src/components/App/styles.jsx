@@ -438,7 +438,7 @@ class Styles extends Component {
   render() {
     const { stylesIsLoading } = this.state;
     return (
-      <React.Fragment>
+      <>
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Configuración de Estilos'} save form />
 
@@ -579,7 +579,7 @@ class Styles extends Component {
           </Row>
           <BackTop />
         </Form>
-      </React.Fragment>
+      </>
     );
   }
 }

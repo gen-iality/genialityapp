@@ -936,7 +936,7 @@ class ListEventUser extends Component {
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
     return (
-      <React.Fragment>
+      <>
         <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
@@ -1204,7 +1204,7 @@ class ListEventUser extends Component {
             </Col>
           </Row>
         </Drawer>
-      </React.Fragment>
+      </>
     );
   }
 }

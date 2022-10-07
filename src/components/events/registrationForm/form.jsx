@@ -846,7 +846,7 @@ const FormRegister = ({
 
         if (type === 'tituloseccion') {
           input = (
-            <React.Fragment>
+            <>
               <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
                 <div
                   dangerouslySetInnerHTML={{
@@ -854,7 +854,7 @@ const FormRegister = ({
                   }}></div>
               </div>
               <Divider />
-            </React.Fragment>
+            </>
           );
         }
 

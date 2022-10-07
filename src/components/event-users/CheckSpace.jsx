@@ -143,7 +143,7 @@ class CheckSpace extends Component {
             </>,
           ]}>
           {!qrData.another && (
-            <React.Fragment>
+            <>
               {qrData.user ? (
                 <div>
                   {qrData.user.checked_in && (
@@ -160,7 +160,7 @@ class CheckSpace extends Component {
                   <p>Correo: {qrData.user.properties.email}</p>
                 </div>
               ) : (
-                <React.Fragment>
+                <>
                   <Tabs defaultActiveKey='1'>
                     <TabPane
                       tab={
@@ -217,9 +217,9 @@ class CheckSpace extends Component {
                       </Row>
                     </TabPane>
                   </Tabs>
-                </React.Fragment>
+                </>
               )}
-            </React.Fragment>
+            </>
           )}
         </Modal>
         {/* <div className={`modal is-active`}>
@@ -231,7 +231,7 @@ class CheckSpace extends Component {
             </header>
             <section className='modal-card-body'>
               {!qrData.another && (
-                <React.Fragment>
+                <>
                   {qrData.user ? (
                     <div>
                       {qrData.user.checked_in && (
@@ -248,7 +248,7 @@ class CheckSpace extends Component {
                       <p>Correo: {qrData.user.properties.email}</p>
                     </div>
                   ) : (
-                    <React.Fragment>
+                    <>
                       <div className='tabs is-centered tab-qr'>
                         <ul>
                           <li
@@ -274,7 +274,7 @@ class CheckSpace extends Component {
                         </ul>
                       </div>
                       {this.state.tabActive === 'camera' ? (
-                        <React.Fragment>
+                        <>
                           <div className='field'>
                             <div className='control has-icons-left'>
                               <div className='select'>
@@ -300,7 +300,7 @@ class CheckSpace extends Component {
                               className={'column is-half is-offset-one-quarter'}
                             />
                           </div>
-                        </React.Fragment>
+                        </>
                       ) : (
                         <div style={{ textAlign: 'center' }}>
                           <div className='field'>
@@ -326,9 +326,9 @@ class CheckSpace extends Component {
                           </button>
                         </div>
                       )}
-                    </React.Fragment>
+                    </>
                   )}
-                </React.Fragment>
+                </>
               )}
               <p>{qrData.msg}</p>
             </section>

@@ -127,7 +127,7 @@ const Importacion = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <div className='importacion-txt'>
         <p>
           Para importar los usuarios de tu curso, debes cargar un archivo excel (.xls) con las columnas organizadas
@@ -164,7 +164,7 @@ const Importacion = (props) => {
           </Button>
         </Col>
       </Row>
-    </React.Fragment>
+    </>
   );
 };
 

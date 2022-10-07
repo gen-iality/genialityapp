@@ -85,7 +85,7 @@ class UserRegistration extends Component {
 
     if (!loading)
       return !registeredUser ? (
-        <React.Fragment>
+        <>
           {/* initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals } */}
           <FormComponent
             initialValues={initialValues}
@@ -95,7 +95,7 @@ class UserRegistration extends Component {
             conditionals={conditionals}
             showSection={this.props.showSection}
           />
-        </React.Fragment>
+        </>
       ) : (
         <FormComponent
           showSection={this.props.showSection}
