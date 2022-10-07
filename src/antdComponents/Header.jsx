@@ -3,13 +3,13 @@ import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-//import { UseCurrentUser } from '@context/userContext';
+//import { useCurrentUser } from '@context/userContext';
 
 const { Title } = Typography;
 
 const Header = (props) => {
   const history = useHistory();
-  //let cUser = UseCurrentUser();
+  //let cUser = useCurrentUser();
   const { eventIsActive } = useHelper();
   const {
     title, //titulo del encabezado

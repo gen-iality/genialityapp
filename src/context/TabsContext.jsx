@@ -2,7 +2,7 @@
 // import { useState } from 'react';
 // import { firestore, fireRealtime } from '@helpers/firebase';
 // import { useEventContext } from './eventContext';
-// import { UseCurrentUser } from './userContext';
+// import { useCurrentUser } from './userContext';
 // import { notification, Button, Row, Col } from 'antd';
 // import { MessageOutlined, SendOutlined } from '@ant-design/icons';
 // import dayjs from 'dayjs';
@@ -11,7 +11,7 @@
 
 // export const HelperTabsProvider = ({ children }) => {
 //   let cEvent = useEventContext();
-//   let cUser = UseCurrentUser();
+//   let cUser = useCurrentUser();
 //   const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
 //   const [chatActual, setchatActual] = useState({
 //     chatid: null,

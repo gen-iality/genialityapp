@@ -17,13 +17,13 @@ import dayjs from 'dayjs';
 import { Suspense } from 'react';
 import { ExportExcel } from '@components/newComponent/ExportExcel';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-//import { UseCurrentUser } from '@context/userContext';
+//import { useCurrentUser } from '@context/userContext';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = (props) => {
-  //let cUser = UseCurrentUser();
+  //let cUser = useCurrentUser();
   const { eventIsActive } = useHelper();
   let {
     header,
