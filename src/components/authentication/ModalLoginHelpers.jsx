@@ -2,10 +2,10 @@ import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/i
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row } from 'antd';
 import { useState } from 'react';
 import { EventsApi } from '@helpers/request';
-import withContext from '../../context/withContext';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import withContext from '@context/withContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from '../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 
 const { useBreakpoint } = Grid;
 

@@ -5,7 +5,7 @@ import { CertsApi, RolAttApi } from '@helpers/request';
 import { Button, Card, Col, Alert, Modal, Spin, Row } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 
 import certificateImage from '../events/certificateImage';
 

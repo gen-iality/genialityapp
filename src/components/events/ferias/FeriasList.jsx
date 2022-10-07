@@ -9,7 +9,7 @@ import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import FeriaStand from './FeriasStand';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { firestore } from '@helpers/firebase';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 
 const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);

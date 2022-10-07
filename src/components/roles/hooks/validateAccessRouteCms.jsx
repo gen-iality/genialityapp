@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import useHasRole from './userhasRole';
 import { Spin } from 'antd';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { UseUserEvent } from '@context/eventUserContext';
 import { theRoleExists } from '@Utilities/roleValidations';
 import { getOrganizationUser } from '@Utilities/organizationValidations';
 

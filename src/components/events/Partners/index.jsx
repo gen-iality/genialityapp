@@ -3,7 +3,7 @@ import { Card } from 'antd';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import PartnersList from '../PartnersList';
 import PartnersDetail from '../PartnersDetail';
-import { UseEventContext } from '../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 
 export default function Partners() {
   let cEvent = UseEventContext();

@@ -1,8 +1,8 @@
 import { Layout, Spin, Row, Image } from 'antd';
 import MenuEvent from './Menus/MenuEvent';
 import { EyeOutlined } from '@ant-design/icons';
-import { UseEventContext } from '../../../context/eventContext';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { UseEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = () => {

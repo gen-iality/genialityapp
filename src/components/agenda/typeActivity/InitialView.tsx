@@ -1,13 +1,13 @@
 import { Card, Result, Button, Spin, Typography } from 'antd';
 import ModalStepByStep from './ModalStepByStep';
 import ManagerView from './ManagerView';
-import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 
 import InitialSVG from './components/svg/InitialSVG';
 import { AgendaApi } from '@helpers/request';
-import { CurrentEventContext } from '../../../context/eventContext';
+import { CurrentEventContext } from '@context/eventContext';
 import ModalPreviewVideo from './ModalPreviewVideo';
 
 const { Title } = Typography;

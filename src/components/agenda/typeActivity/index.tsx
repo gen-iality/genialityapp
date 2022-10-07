@@ -1,5 +1,5 @@
-// import withContext from '../../../context/withContext';
-import { TypeActivityProvider } from '../../../context/typeactivity/typeActivityProvider';
+// import withContext from '@context/withContext';
+import { TypeActivityProvider } from '@context/typeactivity/typeActivityProvider';
 
 import InitialView from './InitialView';
 

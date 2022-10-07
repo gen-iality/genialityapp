@@ -2,8 +2,8 @@ import { Badge, Col, Menu, Row, Space } from 'antd';
 import { useRouteMatch, Link } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
-import { UseEventContext } from '../../../../context/eventContext';
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
+import { UseEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 

@@ -6,7 +6,7 @@ import SurveyList from './surveyList';
 import SurveyDetailPage from './SurveyDetailPage';
 import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;

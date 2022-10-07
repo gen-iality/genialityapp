@@ -1,6 +1,6 @@
 import { Row, Col, Button, Typography, Modal, Space, Card } from 'antd';
 import { PhoneOutlined, MailOutlined, CopyOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 function Contact(props) {
   let numWhatsapp = props.codPais + props.tel;

@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import GcorePlayer from '../../livetransmision/GcorePlayer';
-import { CurrentUserContext } from '../../../context/userContext';
+import { CurrentUserContext } from '@context/userContext';
 import { Grid } from 'antd';
-import AgendaContext from '../../../context/AgendaContext';
-import { CurrentEventUserContext } from '../../../context/eventUserContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi';
 
 const { useBreakpoint } = Grid;

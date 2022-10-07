@@ -4,7 +4,7 @@ import CreatePost from './createPost';
 import ListWall from './listWall';
 
 import { saveFirebase } from './helpers';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
 

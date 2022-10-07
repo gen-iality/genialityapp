@@ -7,7 +7,7 @@ import Header from '@antdComponents/Header';
 import BackTop from '@antdComponents/BackTop';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { handleRequestError } from '@helpers/utils';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { removeObjectFromArray, renderTypeImage } from '@Utilities/imgUtils';
 import Loading from '../profile/loading';

@@ -5,7 +5,7 @@ import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '@helpers/re
 import dayjs from 'dayjs';
 import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
 import { CloseOutlined, UserOutlined } from '@ant-design/icons';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import ReactQuill from 'react-quill';
 
 const { Meta } = Card;

@@ -1,6 +1,6 @@
 import { Card, Space, Col, Row, Result, PageHeader } from 'antd';
-import { UseEventContext } from '../../../context/eventContext';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { UseEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useState } from 'react';
 import VideoCard from '../../shared/videoCard';
 import Feedback from '../ferias/feedback';

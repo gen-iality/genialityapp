@@ -46,7 +46,7 @@ import QrModal from './qrModal';
 import Header from '@antdComponents/Header';
 import TableA from '@antdComponents/Table';
 import Highlighter from 'react-highlight-words';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import Loading from '../profile/loading';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@context/helperContext/helperContext';

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { UseEventContext } from '../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { UseUserEvent } from '@context/eventUserContext';
 import { useHistory, Link } from 'react-router-dom';
 /** ant design */
 import { Layout, Spin, notification, Button, Result, Steps, Tooltip } from 'antd';
@@ -27,10 +27,10 @@ import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 
 import loadable from '@loadable/component';
-import { DispatchMessageService } from '../../../context/MessageService.tsx';
-import WithEviusContext from '../../../context/withContext';
+import { DispatchMessageService } from '@context/MessageService.tsx';
+import WithEviusContext from '@context/withContext';
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import initBroadcastViewers from '@containers/broadcastViewers';
 import DateEvent from '../dateEvent';
 import dayjs from 'dayjs';

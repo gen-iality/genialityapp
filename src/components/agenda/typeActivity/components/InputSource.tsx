@@ -1,5 +1,5 @@
 import { Input, Form } from 'antd';
-import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 
 /**
   addonBefore: 'https://vimeo.com/event/' || https://youtu.be/ || <LinkOutlined />

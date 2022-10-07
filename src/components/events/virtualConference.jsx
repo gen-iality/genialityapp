@@ -5,7 +5,7 @@ import { firestore } from '@helpers/firebase';
 import Moment from 'moment-timezone';
 import { FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import { UseEventContext } from '../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import { Link } from 'react-router-dom';
 import { truncate } from 'lodash-es';
 import { imageUtils } from '../../Utilities/ImageUtils';

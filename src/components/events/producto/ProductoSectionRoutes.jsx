@@ -2,7 +2,7 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 /** --------------------
  *  secciones del curso
  * ---------------------*/
-import { UseEventContext } from '../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import DetailsProduct from './productDetails';
 import ProductList from './productList';
 

@@ -3,7 +3,7 @@ import { Row, Col, Checkbox, Form } from 'antd';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { EventsApi } from '@helpers/request';
 import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },

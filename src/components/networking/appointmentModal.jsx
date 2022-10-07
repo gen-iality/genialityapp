@@ -4,7 +4,7 @@ import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 
 import { getDatesRange } from '@helpers/utils';
 import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';

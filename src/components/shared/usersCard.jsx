@@ -3,9 +3,9 @@ import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
 import { MessageTwoTone, EyeOutlined, CrownFilled, FileImageOutlined } from '@ant-design/icons';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { useCurrentUser } from '../../context/userContext';
-import { UseEventContext } from '../../context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useCurrentUser } from '@context/userContext';
+import { UseEventContext } from '@context/eventContext';
 import { imageforDefaultProfile } from '@helpers/constants';
 import dayjs from 'dayjs';
 

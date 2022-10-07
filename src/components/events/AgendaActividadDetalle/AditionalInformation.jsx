@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space } from 'antd';
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
 import ModalSpeaker from '../modalSpeakers';

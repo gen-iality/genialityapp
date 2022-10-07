@@ -2,14 +2,14 @@ import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typ
 import { useCurrentUser } from '@context/userContext';
 import { formatDataToString } from '@helpers/utils';
 
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
-import { UseEventContext } from '../../../context/eventContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { UseEventContext } from '@context/eventContext';
+import { UseUserEvent } from '@context/eventUserContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';

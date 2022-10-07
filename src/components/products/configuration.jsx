@@ -6,7 +6,7 @@ import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import { firestore } from '@helpers/firebase';
 import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false);

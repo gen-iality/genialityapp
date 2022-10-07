@@ -7,14 +7,14 @@ import {
   MailOutlined,
 } from '@ant-design/icons';
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
-import withContext from '../../context/withContext';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import withContext from '@context/withContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { app } from '@helpers/firebase';
 import { useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import RegisterUserAnonymous from './RegisterUserAnonymous';
-import { UseEventContext } from '../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import RegisterUserAndEventUserAnonymous from './RegisterUserAndEventUserAnonymous';
 import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';

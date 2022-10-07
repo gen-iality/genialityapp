@@ -7,7 +7,7 @@ import Loading from '../../loaders/loading';
 import DocumentsList from '../documentsList';
 import { DocumentsApi } from '@helpers/request';
 import { Tabs } from 'antd';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 const { TabPane } = Tabs;
 

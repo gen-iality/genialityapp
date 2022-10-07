@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { Col, Modal, Row, Transfer, Typography, Grid } from 'antd';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 
 const { useBreakpoint } = Grid;
 

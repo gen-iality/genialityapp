@@ -1,6 +1,6 @@
 import { Card, Badge, Typography, Skeleton } from 'antd';
 import { useState } from 'react';
-import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 
 interface PropsOptions {
   id: string;

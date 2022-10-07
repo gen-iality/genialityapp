@@ -2,9 +2,9 @@ import { Component } from 'react';
 import 'dayjs/locale/es';
 import { Actions } from '@helpers/request';
 import UserRegistration from '../events/userRegistration';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 class TicketsForm extends Component {
   constructor(props) {

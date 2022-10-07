@@ -21,7 +21,7 @@ import UserModal from '../modal/modalUser';
 import dayjs from 'dayjs';
 import Header from '@antdComponents/Header';
 import Table from '@antdComponents/Table';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const html = document.querySelector('html');
 

@@ -3,7 +3,7 @@ import { Card, Row, Col } from 'antd';
 import { firestore } from '@helpers/firebase';
 import { ExternalSurvey } from '@helpers/request';
 import { EditOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 export default class SurveyExternal extends Component {
   constructor(props) {

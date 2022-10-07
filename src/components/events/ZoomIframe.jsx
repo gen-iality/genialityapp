@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { UseUserEvent } from '../../context/eventUserContext';
+import { UseUserEvent } from '@context/eventUserContext';
 import { isHost } from '../../helpers/helperEventUser';
-import { UseEventContext } from '../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import { getLiveStreamStatus, getLiveStreamStats, ResetLiveStream } from '../../adaptors/wowzaStreamingAPI';
 
 const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, isHost }) => {

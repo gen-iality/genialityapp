@@ -6,7 +6,7 @@ import { fireStoreApi } from '@helpers/request';
 import CompanyStand from './exhibitor/Exhibitor';
 import { getEventCompanies } from '../../empresas/services';
 import './Exhibitors.css';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 class Company extends Component {
   constructor(props) {

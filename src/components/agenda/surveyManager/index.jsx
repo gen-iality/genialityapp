@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Card, Row, Col } from 'antd';
 import { firestore, fireRealtime } from '@helpers/firebase';
 import SurveyItem from './surveyItem';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 export default class SurveyManager extends Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
  * ---------------------*/
 import NoticiasList from './NoticiasList';
 
-import { UseEventContext } from '../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import NoticiasDetailsConnect from './NoticiasDetails';
 
 const NoticiasSectionRoutes = () => {

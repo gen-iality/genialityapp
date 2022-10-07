@@ -1,6 +1,6 @@
 import { Typography, Layout, Row, Col, Button, Spin } from 'antd';
 import { useState } from 'react';
-import { useTypeActivity } from '../../../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 
 const { Header, Content, Footer } = Layout;
 

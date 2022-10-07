@@ -3,7 +3,7 @@ import { OrganizationApi } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
 import { Modal } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { confirm } = Modal;
 

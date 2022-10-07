@@ -28,7 +28,7 @@ import { formatDataToString } from '@helpers/utils';
 import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../helpers/netWorkingFunctions';
 const { Meta } = Card;
 const { TabPane } = Tabs;

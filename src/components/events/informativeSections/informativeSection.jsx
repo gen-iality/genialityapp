@@ -1,6 +1,6 @@
 import { Component, Fragment } from 'react';
 import { Alert, Button, Card, Col, Input, Row, Space, Typography } from 'antd';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { EventsApi } from '@helpers/request';
 import { SettingOutlined, WarningOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';

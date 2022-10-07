@@ -30,11 +30,11 @@ import {
 } from '../../../../adaptors/wowzaStreamingAPI';
 import { realTimeviuschat } from '@helpers/firebase';
 import { useCurrentUser } from '@context/userContext';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';
 import Loading from '../../../profile/loading';
-import { CurrentEventContext } from '../../../../context/eventContext';
-import { DispatchMessageService } from '../../../../context/MessageService';
+import { CurrentEventContext } from '@context/eventContext';
+import { DispatchMessageService } from '@context/MessageService';
 
 const WowzaStreamingPanel = ({
   meeting_id,

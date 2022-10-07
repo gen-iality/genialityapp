@@ -1,4 +1,4 @@
-import { UseEventContext } from '../../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 
 export function EnableAnalyticsByEVENT() {
   let cEventContext = UseEventContext();

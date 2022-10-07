@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd';
 import LoadingTypeActivity from './LoadingTypeActivity';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { useEffect } from 'react';
 import {
   deleteLiveStream,
@@ -11,7 +11,7 @@ import {
   deleteAllVideos,
 } from '../../../../adaptors/gcoreStreamingApi';
 import { useQueryClient } from 'react-query';
-import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { CurrentEventContext } from '@context/eventContext';
 const CardStartTransmition = (props: any) => {

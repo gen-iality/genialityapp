@@ -50,7 +50,7 @@ import Header from '@antdComponents/Header';
 import BackTop from '@antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { handleRequestError } from '@helpers/utils';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
 import {

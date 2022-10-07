@@ -12,7 +12,7 @@ import { getEventCompany } from '../../empresas/services.js';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import Feedback from './feedback.jsx';
-import { UseEventContext } from '../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import ReactPlayer from 'react-player';
 
 const { useBreakpoint } = Grid;

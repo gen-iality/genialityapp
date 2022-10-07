@@ -4,7 +4,7 @@ import API from '@helpers/request';
 import { firestore } from '@helpers/firebase';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 class Test extends Component {
   constructor(props) {

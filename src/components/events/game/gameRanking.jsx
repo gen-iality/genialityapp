@@ -4,7 +4,7 @@ import { Row, Col, Avatar, Divider } from 'antd';
 import RankingList from '../../events/surveys/rankingList';
 import RankingMyScore from '../../events/surveys/rankingMyScore';
 
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 
 function GameRanking(props) {
   const { cUser, cEvent, cHelper } = props;

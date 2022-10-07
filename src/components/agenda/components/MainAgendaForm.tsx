@@ -13,7 +13,7 @@ import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils';
 import Select from 'react-select';
 import Creatable from 'react-select';
 
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import useCreatableStyles from '../hooks/useCreatableStyles';
 import useValideChangesInFormData from '../hooks/useValideChangesInFormData';
 import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaDocument';

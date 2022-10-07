@@ -3,7 +3,7 @@ import { useEffect, useState, createElement } from 'react';
 import dayjs from 'dayjs';
 import { Row, Col, Card, Spin, Alert, Button, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { CertsApi, RolAttApi, SurveysApi } from '@helpers/request';
 import { Survey } from '../quiz/types';
 import useAsyncPrepareQuizStats from '../quiz/useAsyncPrepareQuizStats';

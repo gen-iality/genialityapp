@@ -1,6 +1,6 @@
 import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
 import { CopyFilled } from '@ant-design/icons';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { useContext, useEffect, useState } from 'react';
 
 const CardRTMP = () => {

@@ -1,7 +1,7 @@
 import { getLiveStreamStatus } from '../../../../adaptors/wowzaStreamingAPI';
 import { Select, Button, Space, Row, Col, Card, Badge } from 'antd';
-import AgendaContext from '../../../../context/AgendaContext';
-import { CurrentEventContext } from '../../../../context/eventContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventContext } from '@context/eventContext';
 import { useState, useContext } from 'react';
 import { useEffect } from 'react';
 import ModalListRequestsParticipate from './ModalListRequestsParticipate';

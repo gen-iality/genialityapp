@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { FaqsApi } from '@helpers/request';
 import { Collapse, Col, Row } from 'antd';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import ReactQuill from 'react-quill';
 
 const { Panel } = Collapse;

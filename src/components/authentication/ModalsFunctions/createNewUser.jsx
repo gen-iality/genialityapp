@@ -1,7 +1,7 @@
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { UsersApi } from '@helpers/request';
 import { message } from 'antd';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const createNewUser = async (props) => {
   const { picture, email, names, password, resetFields, setModalInfo, setOpenOrCloseTheModalFeedback, cEvent } = props;

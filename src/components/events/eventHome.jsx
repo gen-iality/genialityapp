@@ -1,6 +1,6 @@
 import { Row, Col } from 'antd';
 import EventLanding from './eventLanding';
-import { UseEventContext } from '../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import Lobby from '../fair/lobby/Lobby';
 import { withRouter } from 'react-router-dom';
 import { useContext, useEffect } from 'react';

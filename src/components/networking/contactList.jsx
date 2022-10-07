@@ -5,9 +5,9 @@ import { EventFieldsApi } from '@helpers/request';
 import { formatDataToString } from '@helpers/utils';
 
 //context
-import { UseUserEvent } from '../../context/eventUserContext';
-import { UseEventContext } from '../../context/eventContext';
-import { useCurrentUser } from '../../context/userContext';
+import { UseUserEvent } from '@context/eventUserContext';
+import { UseEventContext } from '@context/eventContext';
+import { useCurrentUser } from '@context/userContext';
 
 const { Meta } = Card;
 

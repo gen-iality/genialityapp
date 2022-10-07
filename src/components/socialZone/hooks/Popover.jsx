@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { Tooltip, Skeleton, Card, Avatar, notification, Spin } from 'antd';
 import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { UseEventContext } from '../../../context/eventContext';
+import { UseUserEvent } from '@context/eventUserContext';
+import { UseEventContext } from '@context/eventContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
 import { EventsApi } from '@helpers/request';
 

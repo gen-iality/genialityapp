@@ -3,7 +3,7 @@ import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert, Select, F
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { getColumnSearchProps } from '../../speakers/getColumnSearch';
 import { firestore } from '@helpers/firebase';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { Suspense } from 'react';
 
 const Header = lazy(() => import('../../../antdComponents/Header'));

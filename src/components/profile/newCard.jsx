@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import ModalCreateOrg from './modalCreateOrg';
 import ModalOrgListCreate from '../../components/events/createEvent/newEvent/modalOrgListCreate';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
-import { useContextNewEvent } from '../../context/newEventContext';
+import { useContextNewEvent } from '@context/newEventContext';
 
 // Componente modal para la creacion de una organizacion <ModalCreateOrg/>
 

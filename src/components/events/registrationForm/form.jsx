@@ -29,12 +29,12 @@ import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { UseEventContext } from '../../../context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { UseUserEvent } from '@context/eventUserContext';
+import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { app } from '@helpers/firebase';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */
 

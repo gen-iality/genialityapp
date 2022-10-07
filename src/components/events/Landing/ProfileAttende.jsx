@@ -1,4 +1,4 @@
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { List } from 'antd';
 
 import { formatDataToString } from '@helpers/utils';

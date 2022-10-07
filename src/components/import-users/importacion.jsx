@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import { Row, Col, Button, Divider, Upload } from 'antd';
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import content from '@containers/content';
 
 dayjs.locale('es');

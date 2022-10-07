@@ -1,11 +1,11 @@
 import { Card, Button, Space, Typography, Spin, Popconfirm } from 'antd';
 import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
-import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
-import AgendaContext from '../../../../context/AgendaContext';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
+import AgendaContext from '@context/AgendaContext';
 import { useContext, useState } from 'react';
 import { deleteLiveStream, deleteAllVideos } from '../../../../adaptors/gcoreStreamingApi';
 import { AgendaApi, TypesAgendaApi } from '@helpers/request';
-import { CurrentEventContext } from '../../../../context/eventContext';
+import { CurrentEventContext } from '@context/eventContext';
 import Service from '../../../agenda/roomManager/service';
 import { firestore } from '@helpers/firebase';
 const TransmitionOptions = (props: any) => {

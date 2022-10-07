@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { List, Result, Card } from 'antd';
 import GoogleControllerOff from '@2fd/ant-design-icons/lib/GoogleControllerOff';
 import UsersCard from '../../shared/usersCard';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 
 const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
 

@@ -1,4 +1,4 @@
-import { UseEventContext } from '../../../context/eventContext';
+import { UseEventContext } from '@context/eventContext';
 import { useHistory } from 'react-router-dom';
 const EviusFooter = () => {
   let cEventContext = UseEventContext();

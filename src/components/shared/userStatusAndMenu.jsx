@@ -6,7 +6,7 @@ import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';

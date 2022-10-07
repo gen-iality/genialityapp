@@ -2,7 +2,7 @@ import { Component } from 'react';
 //custom
 import { Button } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const imageWidh = 1280;
 const imageheigh = 960;

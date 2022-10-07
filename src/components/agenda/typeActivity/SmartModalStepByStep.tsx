@@ -6,7 +6,7 @@ import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity'
 import ContentSource from '../typeActivity/components/layout/ContentSource';
 import ContentInformative from '../typeActivity/components/layout/ContentInformative';
 import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons'; //Este icono para el addonBefore
-import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import InputUploadVideo from './components/InputUploadVideo';
 
 const newContentSource = {

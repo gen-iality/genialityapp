@@ -8,13 +8,13 @@ import { Redirect } from 'react-router-dom';
 import { Actions } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
 import { Modal } from 'antd';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
 import { handleRequestError } from '@helpers/utils';
 

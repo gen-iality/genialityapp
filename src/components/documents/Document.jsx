@@ -7,7 +7,7 @@ import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-
 import { fireStorage } from '@helpers/firebase';
 import Header from '@antdComponents/Header';
 import dayjs from 'dayjs';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { confirm } = Modal;
 

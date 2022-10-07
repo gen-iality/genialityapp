@@ -4,7 +4,7 @@ import UserLoginWithEmailPass from '../UserLoginWithEmailPass';
 
 import UserLoginRecoveryPass from '../UserLoginRecoveryPass';
 import UserOneTimeLoginLink from '../UserOneTimeLoginLink';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { SmileOutlined } from '@ant-design/icons';
 
 //import UserLoginRecoveryPass from "../UserLoginRecoveryPass"

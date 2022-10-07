@@ -27,7 +27,7 @@ import ReportNetworking from '../networking/report';
 import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { Layout, Space, Row, Col, Button, Result } from 'antd';
 import { AdminUsers } from '../../components/AdminUsers/AdminUsers';
 import loadable from '@loadable/component';

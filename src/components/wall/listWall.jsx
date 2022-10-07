@@ -6,11 +6,11 @@ import CommentEditor from './commentEditor';
 import Comments from './comments';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import dayjs from 'dayjs';
 import { firestore } from '@helpers/firebase';
-import { WallContextProvider } from '../../context/WallContext';
-import { DispatchMessageService } from '../../context/MessageService';
+import { WallContextProvider } from '@context/WallContext';
+import { DispatchMessageService } from '@context/MessageService';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>

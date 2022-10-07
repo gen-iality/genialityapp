@@ -3,11 +3,11 @@ import { Modal } from 'antd';
 import RoomConfig from './config';
 import Service from './service';
 import dayjs from 'dayjs';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { stopLiveStream, deleteLiveStream, getLiveStreamStatus } from '../../../adaptors/wowzaStreamingAPI';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 class RoomManager extends Component {
   constructor(props) {

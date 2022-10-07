@@ -5,7 +5,7 @@ import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },

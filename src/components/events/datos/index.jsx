@@ -20,7 +20,7 @@ import { firestore } from '@helpers/firebase';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 import Header from '@antdComponents/Header';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 

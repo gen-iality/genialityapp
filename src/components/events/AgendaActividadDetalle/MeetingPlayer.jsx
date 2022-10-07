@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { CurrentUserContext } from '../../../context/userContext';
+import { CurrentUserContext } from '@context/userContext';
 import { Grid } from 'antd';
 
 const { useBreakpoint } = Grid;

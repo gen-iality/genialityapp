@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Button, Typography } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { TextArea } = Input;
 

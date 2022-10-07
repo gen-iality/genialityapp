@@ -3,14 +3,14 @@ import { withRouter } from 'react-router-dom';
 import { OrganizationFuction, UsersApi } from '@helpers/request';
 import { Steps, Button, Card, Row, Spin } from 'antd';
 import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 /*vistas de paso a paso */
 
 import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import AccessType from './newEvent/accessTypeEvent';
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '../../../context/newEventContext';
+import { cNewEventContext } from '@context/newEventContext';
 const { Step } = Steps;
 
 /* Objeto que compone el paso a paso y su contenido */

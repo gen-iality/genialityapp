@@ -1,7 +1,7 @@
 import { Card, Space, Col, Row } from 'antd';
 import VideoCard from './videoCard';
-import { UseEventContext } from '../../context/eventContext';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import { UseEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useState } from 'react';
 
 const ListVideoCard = () => {

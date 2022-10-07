@@ -12,7 +12,7 @@ import { toolbarEditor } from '../../helpers/constants';
 import dayjs from 'dayjs';
 import { firestore } from '@helpers/firebase';
 import { withRouter } from 'react-router-dom';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { confirm } = Modal;
 const { Option } = Select;

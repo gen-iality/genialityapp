@@ -3,15 +3,15 @@ import { Redirect, Route, Switch, useHistory, useRouteMatch, withRouter } from '
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { UseUserEvent } from '@context/eventUserContext';
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@containers/broadcastViewers';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { useCurrentUser } from '@context/userContext';
 import { Row, Col, Card, Typography } from 'antd';
 import { activityContentValues } from '@context/activityType/constants/ui';

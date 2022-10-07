@@ -3,10 +3,10 @@ import { firestore } from '@helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
 import { Divider } from 'antd';
-import { UseSurveysContext } from '../../../context/surveysContext';
-import { useCurrentUser } from '../../../context/userContext';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseEventContext } from '../../../context/eventContext';
+import { UseSurveysContext } from '@context/surveysContext';
+import { useCurrentUser } from '@context/userContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { UseEventContext } from '@context/eventContext';
 
 function RankingTrivia(props) {
   const { setGameRanking, setMyScore } = useHelper();

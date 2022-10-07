@@ -3,7 +3,7 @@ import { Card, Col, Input, Row, Space, Typography, Modal, Button, Select, TimePi
 import { CalendarOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { useContextNewEvent } from '../../../../context/newEventContext';
+import { useContextNewEvent } from '@context/newEventContext';
 import { OrganizationApi, PlansApi } from '@helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
 /**

@@ -8,8 +8,8 @@ import * as surveysActions from '../../../redux/survey/actions';
 import SurveyCard from './components/surveyCard';
 
 /** Context´s */
-import { useCurrentUser } from '../../../context/userContext';
-import { UseSurveysContext } from '../../../context/surveysContext';
+import { useCurrentUser } from '@context/userContext';
+import { UseSurveysContext } from '@context/surveysContext';
 
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 

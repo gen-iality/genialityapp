@@ -7,7 +7,7 @@ import ReactQuill from 'react-quill';
 import Header from '@antdComponents/Header';
 import BackTop from '@antdComponents/BackTop';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
 
