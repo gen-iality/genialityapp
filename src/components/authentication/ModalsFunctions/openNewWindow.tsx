@@ -5,6 +5,7 @@ const openNewWindow = (url: string, eventId: string | null, canOpenNewWindow: bo
   if (eventId !== AuidEventID) return;
   window.open(url, '_blank');
 };
+
 openNewWindow.defaultProps = {
   url: 'https://checkout.wompi.co/l/VPOS_N4aqRq',
   canOpenNewWindow: true,

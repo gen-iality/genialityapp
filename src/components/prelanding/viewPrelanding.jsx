@@ -21,7 +21,7 @@ import SponsorBlock from './block/sponsorBlock';
 import { obtenerConfigActivity } from './hooks/helperFunction';
 import MenuScrollBlock from './MenuScrollBlock';
 import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
-
+import useScript from './hooks/useScript';
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
@@ -103,7 +103,7 @@ const ViewPrelanding = ({ preview }) => {
     paddingTop: '25px',
     paddingBottom: '25px',
   };
-
+  useScript('https://p.teads.tv/teads-fellow.js', idEvent);
   // Funciones para el render
   const obtenerOrder = (name) => {
     if (sections) {
