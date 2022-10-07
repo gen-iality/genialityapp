@@ -19,7 +19,7 @@ export default function RankingTrivia({ currentSurvey, currentUser }) {
       .collection('ranking')
       .doc(currentUser._id)
       .onSnapshot(function(result) {
-        if (result.exists) {
+        if (result?.exists) {
           const data = result.data();
           setMyScore({ ...initialValues, score: data.correctAnswers });
         } else {

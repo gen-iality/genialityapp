@@ -24,7 +24,7 @@ export const getCurrentPage = async (surveyId: string, userId: string) => {
   try {
     const result = await firebaseRef.get();
 
-    if (result.exists) {
+    if (result?.exists) {
       const data = result.data();
       return (data && data.currentPageNo) || 0;
     }

@@ -103,7 +103,7 @@ class Service {
         .doc(activity_id)
         .get()
         .then((result) => {
-          if (result.exists) {
+          if (result?.exists) {
             resolve(result.data());
           } else {
             resolve();

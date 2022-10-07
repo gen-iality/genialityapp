@@ -88,7 +88,7 @@ export const addRightPoints = async (
   try {
     const result = await firebaseRef.get();
     // Check if there is saved points
-    if (result.exists) {
+    if (result?.exists) {
       const {
         right = 0, // By default
       } = result.data() as QuizStatus;
@@ -111,7 +111,7 @@ export const getStatus = async (surveyId: string, userId: string): Promise<any> 
 
   try {
     const result = await firebaseRef.get();
-    if (result.exists) {
+    if (result?.exists) {
       const document = result.data();
       console.debug(`surveyId:${surveyId}, userId:${userId}`, document);
       return document;
@@ -128,7 +128,7 @@ export const getRightPoints = async (surveyId: string, userId: string) => {
 
   try {
     const result = await firebaseRef.get();
-    if (result.exists) {
+    if (result?.exists) {
       const data = result.data();
       return data?.right || 0;
     }

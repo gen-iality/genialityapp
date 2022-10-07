@@ -30,7 +30,7 @@ async function setCurrentUserSurveyStatus(
     surveyCompleted: status,
     right: 0,
   };
-  if (result.exists) {
+  if (result?.exists) {
     const {
       right = 0,
     } = result.data() as typeof payload;
