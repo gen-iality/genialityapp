@@ -5,7 +5,7 @@ import { EventFieldsApi } from '@helpers/request';
 import { formatDataToString } from '@helpers/utils';
 
 //context
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
@@ -17,7 +17,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  let userEventContext = UseUserEvent();
+  let userEventContext = useUserEvent();
   let eventContext = useEventContext();
   let userCurrentContext = useCurrentUser();
 

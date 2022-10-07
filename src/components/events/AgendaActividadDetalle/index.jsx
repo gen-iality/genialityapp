@@ -17,7 +17,7 @@ import HOCActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '@helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import { checkinAttendeeInActivity } from '@helpers/HelperAuth';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
@@ -33,7 +33,7 @@ const AgendaActividadDetalle = props => {
   let [blockActivity, setblockActivity] = useState(false);
   const [activity, setactivity] = useState('');
   const cUser = useCurrentUser();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
   const cEvent = useEventContext();
 
   const intl = useIntl();

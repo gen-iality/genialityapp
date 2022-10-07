@@ -5,7 +5,7 @@ import { firestore, fireRealtime } from '@helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '@helpers/request';
 import { useEventContext } from '../eventContext';
 import { useCurrentUser } from '../userContext';
-import { UseUserEvent } from '../eventUserContext';
+import { useUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -27,7 +27,7 @@ export const HelperContextProvider = ({ children }) => {
 
   let cEvent = useEventContext();
   let cUser = useCurrentUser();
-  let cEventuser = UseUserEvent();
+  let cEventuser = useUserEvent();
   let history = useHistory();
   const intl = useIntl();
 

@@ -13,7 +13,7 @@ import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '@helpers/helperEvent';
 import { useEventContext } from '@context/eventContext';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
 import QuizProgress from '@components/quiz/QuizProgress';
@@ -46,7 +46,7 @@ function AgendaActivityItem(props) {
   const timeZone = Moment.tz.guess();
   let { item, event_image, registerStatus, event } = props;
 
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
 
   // Take data
   useEffect(() => {

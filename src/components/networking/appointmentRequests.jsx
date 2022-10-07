@@ -4,7 +4,7 @@ import { find, map, pathOr, propEq, props } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 //context
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
@@ -27,7 +27,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   const [sendRespuesta, setSendRespuesta] = useState(false);
 
   //contextos
-  let userEventContext = UseUserEvent();
+  let userEventContext = useUserEvent();
   let eventContext = useEventContext();
 
   useEffect(() => {
@@ -153,7 +153,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   const userName = data.name;
   const userEmail = data.email;
   //contextos
-  let userEventContext = UseUserEvent();
+  let userEventContext = useUserEvent();
   let eventContext = useEventContext();
   let userCurrentContext = useCurrentUser();
 

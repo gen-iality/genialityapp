@@ -30,7 +30,7 @@ import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { app } from '@helpers/firebase';
@@ -162,7 +162,7 @@ const FormRegister = ({
 }) => {
   const intl = useIntl();
   const cEvent = useEventContext();
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
   const cUser = useCurrentUser();
   const {
     currentAuthScreen,

@@ -4,11 +4,11 @@ import withContext from '@context/withContext';
 import { useIntl } from 'react-intl';
 import { recordTypeForThisEvent, iAmRegisteredInThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useEventContext } from '@context/eventContext';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 
 const ModalNoRegister = (props) => {
   let cEvent = useEventContext();
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
   const intl = useIntl();
 
   // Mensajes para curso privado

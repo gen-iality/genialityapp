@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 import { UsersApi } from '@helpers/request';
 import { async } from 'ramda-adjunct';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 const ModalUpdate = (props: any) => {
   let cEvent = useEventContext();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
 
   const [isVisible, setIsVisible] = useState(false);
   let { handleChangeTypeModal } = useHelper();

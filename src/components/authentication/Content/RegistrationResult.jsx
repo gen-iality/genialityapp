@@ -3,7 +3,7 @@ import { Result, Row, Space, Typography, Alert, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { FrasesInspiradoras } from '../ModalsFunctions/utils';
 import { app } from '@helpers/firebase';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@context/MessageService';
@@ -67,7 +67,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
 };
 
 const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
   let { helperDispatch } = useHelper();
   const intl = useIntl();
   const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);

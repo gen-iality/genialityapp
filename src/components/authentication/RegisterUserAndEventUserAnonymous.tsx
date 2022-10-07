@@ -17,14 +17,14 @@ import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEve
 import { fieldNameEmailFirst } from '@helpers/utils';
 import { app } from '@helpers/firebase';
 import { AttendeeApi } from '@helpers/request';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 const { Step } = Steps;
 const { Title } = Typography;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
   const intl = useIntl();
   const cEvent = useEventContext();
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
   let { helperDispatch } = useHelper();
   const [loading, setLoading] = useState(false);
   const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {};

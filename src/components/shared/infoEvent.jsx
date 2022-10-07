@@ -3,7 +3,7 @@ import { Button, Divider, PageHeader, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useIntl } from 'react-intl';
@@ -14,7 +14,7 @@ dayjs.extend(localizedFormat);
 const InfoEvent = () => {
   const cEvent = useEventContext();
   let { handleChangeTypeModal, eventIsActive } = useHelper();
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
   const cUser = useCurrentUser();
 
   const intl = useIntl();

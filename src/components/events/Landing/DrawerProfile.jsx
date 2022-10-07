@@ -7,7 +7,7 @@ import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
 import { useEventContext } from '@context/eventContext';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
 import withContext from '@context/withContext';
 import { useEffect } from 'react';
@@ -18,7 +18,7 @@ import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutli
 const DrawerProfile = (props) => {
   let cUser = useCurrentUser();
   let cEvent = useEventContext();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
   let { propertiesProfile, requestSend, handleChangeTypeModal } = useHelper();
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();

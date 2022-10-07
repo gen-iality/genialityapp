@@ -6,7 +6,7 @@ import Moment from 'moment-timezone';
 import { CaretRightOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { useEventContext } from '@context/eventContext';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { Link } from 'react-router-dom';
 import * as StageActions from '../../redux/stage/actions';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
@@ -62,7 +62,7 @@ let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActi
 
 const VirtualConference = () => {
   let cEvent = useEventContext();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
   let urlactivity = `/landing/${cEvent.value._id}/activity/`;
   let urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
 

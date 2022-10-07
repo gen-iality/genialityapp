@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useHistory, Link } from 'react-router-dom';
 /** ant design */
 import { Layout, Spin, notification, Button, Result, Steps, Tooltip } from 'antd';
@@ -86,7 +86,7 @@ const IconRender = type => {
 const Landing = props => {
   let cEventContext = useEventContext();
   let cUser = useCurrentUser();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
   let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
   const [activitiesAttendee, setActivitiesAttendee] = useState([]);

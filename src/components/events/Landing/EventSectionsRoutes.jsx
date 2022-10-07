@@ -6,7 +6,7 @@ import { setSpaceNetworking } from '../../../redux/networking/actions';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
-import { UseUserEvent } from '@context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
@@ -52,7 +52,7 @@ const EventSectionRoutes = props => {
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
   let { GetPermissionsEvent } = useHelper();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
   let cUser = useCurrentUser();
   let history = useHistory();
 
