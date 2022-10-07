@@ -1,5 +1,5 @@
 import { Alert, Tag, Button } from 'antd';
-import { AuthUrl } from '../../../helpers/constants';
+import { AuthUrl } from '@helpers/constants';
 import { useIntl } from 'react-intl';
 
 const AttendeeNotAllowedCheck = (props) => {

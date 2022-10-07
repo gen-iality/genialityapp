@@ -8,7 +8,7 @@ import withContext from '@context/withContext';
 
 import { getDatesRange } from '@helpers/utils';
 import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
-import { addNotification } from '../../helpers/netWorkingFunctions';
+import { addNotification } from '@helpers/netWorkingFunctions';
 
 const { Option } = Select;
 

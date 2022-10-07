@@ -11,7 +11,7 @@ import {
 import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { useEventWithCedula } from '../../../helpers/helperEvent';
+import { useEventWithCedula } from '@helpers/helperEvent';
 import { UseEventContext } from '@context/eventContext';
 import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';

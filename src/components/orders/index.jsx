@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ApiUrl } from '../../helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 import IFrame from '../shared/iFrame';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 

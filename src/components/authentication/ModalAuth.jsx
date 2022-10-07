@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from '@context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
+import { isHome, useEventWithCedula } from '@helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 

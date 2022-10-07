@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { Button, Form, Input, Row, Col, Modal } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
-import { AuthUrl } from '../../helpers/constants';
+import { AuthUrl } from '@helpers/constants';
 import WallContext, { WallContextProvider } from '@context/WallContext';
 
 /*let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {

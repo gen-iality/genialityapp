@@ -14,7 +14,7 @@ import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
 import HOCActividad from './HOC_Actividad';
-import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
+import { activitiesCode, cityValid, codeActivity } from '@helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import { checkinAttendeeInActivity } from '@helpers/HelperAuth';
 import { UseUserEvent } from '@context/eventUserContext';

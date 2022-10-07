@@ -5,7 +5,7 @@ import { formatDataToString } from '@helpers/utils';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
-import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
+import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
 import { UseEventContext } from '@context/eventContext';
 import { UseUserEvent } from '@context/eventUserContext';
 import { setUserAgenda } from '../../../redux/networking/actions';

@@ -16,7 +16,7 @@ import RegisterUser from './RegisterUser';
 import RegisterUserAnonymous from './RegisterUserAnonymous';
 import { UseEventContext } from '@context/eventContext';
 import RegisterUserAndEventUserAnonymous from './RegisterUserAndEventUserAnonymous';
-import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
+import { isHome, useEventWithCedula } from '@helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEvent';

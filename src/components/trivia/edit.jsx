@@ -5,7 +5,7 @@ import { handleRequestError } from '@helpers/utils';
 import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
-import { toolbarEditor } from '../../helpers/constants';
+import { toolbarEditor } from '@helpers/constants';
 import {
   Button,
   Row,

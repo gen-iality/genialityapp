@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '@helpers/request';
-import { host_list } from '../../helpers/constants';
+import { host_list } from '@helpers/constants';
 import { Steps, Button, Card, Row, Spin } from 'antd';
 import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */

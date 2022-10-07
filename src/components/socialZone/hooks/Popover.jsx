@@ -6,7 +6,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
-import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
+import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
 import { UseUserEvent } from '@context/eventUserContext';
 import { UseEventContext } from '@context/eventContext';
 import { setUserAgenda } from '../../../redux/networking/actions';

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { DispatchMessageService } from '@context/MessageService';
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '@helpers/request';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import { configEventsTemplate } from '../helpers/constants';
+import { configEventsTemplate } from '@helpers/constants';
 
 export const cNewEventContext = createContext();
 //INITIAL STATE

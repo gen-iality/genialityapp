@@ -1,5 +1,5 @@
 import { Component, createRef, Fragment } from 'react';
-import { typeInputs } from '../../../helpers/constants';
+import { typeInputs } from '@helpers/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';

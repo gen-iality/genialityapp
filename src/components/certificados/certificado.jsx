@@ -8,7 +8,7 @@ import Header from '@antdComponents/Header';
 import BackTop from '@antdComponents/BackTop';
 import ReactQuill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { toolbarEditor } from '../../helpers/constants';
+import { toolbarEditor } from '@helpers/constants';
 import dayjs from 'dayjs';
 import { firestore } from '@helpers/firebase';
 import { withRouter } from 'react-router-dom';

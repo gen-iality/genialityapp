@@ -1,7 +1,7 @@
 import { Grid, Spin, Layout } from 'antd';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import Event from '@components/events/event';
-import { ApiUrl } from '../helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 import WithFooter from '@components/withFooter';
 
 import { CurrentUserEventProvider } from '@context/eventUserContext';

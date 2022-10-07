@@ -4,7 +4,7 @@ import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 import { Networking, UsersApi } from '@helpers/request';
 import { getCurrentUser } from './services';
-import { addNotification } from '../../helpers/netWorkingFunctions';
+import { addNotification } from '@helpers/netWorkingFunctions';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 import { CurrentEventUserContext } from '@context/eventUserContext';

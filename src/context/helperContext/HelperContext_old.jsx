@@ -10,7 +10,7 @@ import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/ic
 import dayjs from 'dayjs';
 import { createChatInitalPrivate, createChatRoom } from '@components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
-import { maleIcons, femaleicons } from '../../helpers/constants';
+import { maleIcons, femaleicons } from '@helpers/constants';
 import Logout from '@2fd/ant-design-icons/lib/Logout';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';

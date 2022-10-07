@@ -24,7 +24,7 @@ import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
 
-import { areaCode } from '../../../helpers/constants';
+import { areaCode } from '@helpers/constants';
 import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';

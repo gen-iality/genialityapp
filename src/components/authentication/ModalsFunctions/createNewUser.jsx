@@ -1,4 +1,4 @@
-import { saveImageStorage } from '../../../helpers/helperSaveImage';
+import { saveImageStorage } from '@helpers/helperSaveImage';
 import { UsersApi } from '@helpers/request';
 import { message } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';

@@ -9,7 +9,7 @@ import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
 import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
-import { addNotification } from '../../helpers/netWorkingFunctions';
+import { addNotification } from '@helpers/netWorkingFunctions';
 
 const { Meta } = Card;
 

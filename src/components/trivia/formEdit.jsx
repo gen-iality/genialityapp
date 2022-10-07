@@ -26,7 +26,7 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Actions } from '@helpers/request';
-import { saveImageStorage } from '../../helpers/helperSaveImage';
+import { saveImageStorage } from '@helpers/helperSaveImage';
 import { DispatchMessageService } from '@context/MessageService';
 import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import LikertScaleEditor from '../quiz/LikertScaleEditor';

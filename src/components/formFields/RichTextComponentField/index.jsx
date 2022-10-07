@@ -6,7 +6,7 @@ import { useCallback, useRef } from 'react';
 //import EviusReactQuill from "../../shared/eviusReactQuill";
 
 import ReactQuill from 'react-quill';
-import { toolbarEditor } from '../../../helpers/constants';
+import { toolbarEditor } from '@helpers/constants';
 
 const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
 const NOT_PROPS_KEYS = concat(FORM_ITEM_PROPS_KEYS, ['component', 'name', 'maxLength', 'children']);

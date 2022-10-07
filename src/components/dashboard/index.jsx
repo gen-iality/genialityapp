@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ApiUrl } from '../../helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 import { Tooltip, Button, Card, Col, Row, Statistic, Table, Spin, Typography } from 'antd';
 import {
   EyeOutlined,

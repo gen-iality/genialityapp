@@ -11,7 +11,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
-import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
+import { zoomExternoHandleOpen } from '@helpers/helperEvent';
 import { UseEventContext } from '@context/eventContext';
 import { UseUserEvent } from '@context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';

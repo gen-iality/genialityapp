@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, Drawer, Row, Avatar, Image } from 'antd';
 import { EyeOutlined, MenuOutlined } from '@ant-design/icons';
-import { drawerButton, imageCenter } from '../helpers/csshelpers';
+import { drawerButton, imageCenter } from '@helpers/csshelpers';
 import { UseEventContext } from '@context/eventContext';
 import MenuEvent from './MenuEvent';
 const MenuTablets = () => {
