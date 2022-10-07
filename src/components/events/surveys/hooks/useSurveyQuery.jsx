@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import LoadSelectedSurvey from './../functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './../functions/initRealTimeSurveyListening';
-import { SurveyPage } from '../services/services';
-import { useCurrentUser } from '../../../../context/userContext';
+import { getCurrentPage } from '../services/surveys';
+import { useCurrentUser } from '@context/userContext';
 
 ////open, publish, freezeGame
 function useSurveyQuery(eventId, idSurvey) {
@@ -11,10 +11,10 @@ function useSurveyQuery(eventId, idSurvey) {
   const [innerQuery, setInnerQuery] = useState(undefined);
   const [innerRealTimeQuery, setInnerRealTimeQuery] = useState(undefined);
 
-  async function getUserCurrentSurveyPage(idSurvey, user_id) {
+  async function getUserCurrentSurveyPage(idSurvey, userId) {
     let currentPageNo = 0;
-    if (idSurvey && user_id) {
-      currentPageNo = await SurveyPage.getCurrentPage(idSurvey, user_id);
+    if (idSurvey && userId) {
+      currentPageNo = await getCurrentPage(idSurvey, userId);
     }
     return currentPageNo;
   }
@@ -30,6 +30,7 @@ function useSurveyQuery(eventId, idSurvey) {
 
   //no realtime Query
   useEffect(() => {
+    if (!idSurvey) return;
     const innerAsyncCall = async () => {
       let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
       //loadedSurvey.currentPage = 0;
@@ -52,7 +53,6 @@ function useSurveyQuery(eventId, idSurvey) {
     };
   }, [idSurvey]);
 
-  console.log('500.query', query);
   return query;
 }
 

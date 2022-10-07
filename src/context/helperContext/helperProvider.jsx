@@ -50,7 +50,7 @@ export const HelperContextProvider = ({ children }) => {
   const [privateChatsList, setPrivatechatlist] = useState();
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
-  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(false);
+  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
