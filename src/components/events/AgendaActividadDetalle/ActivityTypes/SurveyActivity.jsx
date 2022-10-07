@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import SurveyDetailPage from '../../surveys/SurveyDetailPage';
 import HeaderColumnswithContext from '../HeaderColumns';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
-import WithEviusContext from '@/context/withContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import WithEviusContext from '@context/withContext';
 import { withRouter } from 'react-router-dom';
-import { firestore } from '@/helpers/firebase';
+import { firestore } from '@helpers/firebase';
+import { Spin } from 'antd';
 import Service from '@/components/agenda/roomManager/service';
 
 function SurveyActivity(props) {
@@ -40,7 +41,11 @@ function SurveyActivity(props) {
   return (
     <>
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      <SurveyDetailPage surveyId={activityState?.meeting_id} />
+      {activityState?.meeting_id ? (
+        <SurveyDetailPage surveyId={activityState.meeting_id} />
+      ) : (
+        <Spin/>
+      )}
     </>
   );
 }

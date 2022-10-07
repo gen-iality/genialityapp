@@ -1,4 +1,4 @@
-import getAcumulativePoints from './getAcumulativePoints';
+import { getRightPoints } from '../services/surveyStatus';
 
 // Componente que se ejecuta antes del curso onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
 async function messageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
@@ -29,8 +29,8 @@ async function messageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
     if (correctAnswer) totalPoints += parseInt(question.points);
   }); */
 
-  let totalPoints = await getAcumulativePoints(surveyConfig._id, userId);
-  console.log('600 MessageWhenCompletingSurvey getAcumulativePoints totalPoints', totalPoints);
+  let totalPoints = await getRightPoints(surveyConfig._id, userId);
+  console.log('600 MessageWhenCompletingSurvey getRightPoints totalPoints', totalPoints);
 
   if (surveyConfig.allow_gradable_survey === 'true') {
     //const { minimumScore } = surveyConfig;

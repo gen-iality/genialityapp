@@ -4,10 +4,9 @@ import { ReactNode, useReducer, useEffect } from 'react';
 import type { FunctionComponent } from 'react';
 import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { getUserSurveyStatus } from './functions/userSurveyStatus';
+import { getStatus as getSurveyStatus, resetStatusByRestartAnswering } from './services/surveyStatus';
 
-// Temporally
-import { firestore } from '@helpers/firebase';
+import { getAnswersRef, getUserProgressRef } from './services/surveys';
 
 export enum SurveyContextAction {
   SURVEY_LOADED = 'SURVEY_LOADED',
@@ -84,7 +83,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
 
     console.log('1000. Aquí se ejecuta el use Effect');
 
-    getUserSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
+    getSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
       dispatch({ type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: data });
     });
   }, [cEventContext, cUser, state.survey]);
@@ -159,29 +158,9 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
   };
 
   const resetSurveyStatus = async (userId: string) => {
-    const firebaseRef = firestore
-      .collection('votingStatusByUser')
-      .doc(userId)
-      .collection('surveyStatus')
-      .doc(state.survey._id);
-    await firebaseRef.set(
-      { surveyCompleted: 'running', right: 0 },
-      {merge: true},
-    );
-
-    await firestore
-      .collection('surveys')
-      .doc(state.survey._id)
-      .collection('userProgress')
-      .doc(userId)
-      .delete();
-    
-      await firestore
-      .collection('surveys')
-      .doc(state.survey._id)
-      .collection('answers')
-      .doc(userId)
-      .delete();
+    await resetStatusByRestartAnswering(state.survey._id, userId);
+    await getUserProgressRef(state.survey._id, userId).delete();
+    await getAnswersRef(state.survey._id, userId).delete();
   };
 
   const surveyStatsString = useMemo(() => {
