@@ -75,7 +75,7 @@ const InitialView = (props: any) => {
       case 'finish':
         return (
           <ManagerView
-            type={objecKeys[previewKey]}
+            type={(objecKeys as any)[previewKey]}
             activityName={props.activityName}
             activityId={props.activityId}
             onDelete={props.onDelete}

@@ -553,7 +553,7 @@ const FormRegister = ({
                         }
                         // }
                       } else {
-                        setErrorLogin(true);
+                        // setErrorLogin(true); -> setErrorLogin is undefined
                       }
                     });
                 };
@@ -863,10 +863,9 @@ const FormRegister = ({
           input = <ReactSelect options={m.options} isMulti name={name} />;
         }
 
+        let textoError = intl.formatMessage({ id: 'form.field.required' });
         if (type === 'boolean') {
           if (mandatory) {
-            let textoError = intl.formatMessage({ id: 'form.field.required' });
-
             rule = {
               validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
             };

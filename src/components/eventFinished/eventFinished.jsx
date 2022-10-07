@@ -1,3 +1,4 @@
+/* globals require */
 import { withRouter } from 'react-router-dom';
 import { Result } from 'antd';
 import { imageUtils } from '../../Utilities/ImageUtils';

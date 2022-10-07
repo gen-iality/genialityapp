@@ -109,7 +109,8 @@ const CardPreview = (props: any) => {
             allowFullScreen
             onLoad={(e) => {
               if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
-                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
+                const target = e.target as any | undefined;
+                setErrorOcurred(urlErrorCodeValidation(target?.src, true));
               }
             }}></iframe>
         )}

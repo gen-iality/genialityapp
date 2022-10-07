@@ -16,7 +16,7 @@ class Test extends Component {
   }
 
   async componentDidMount() {
-    const evius_tokenawait = await GetTokenUserFirebase();
+    const evius_token = await GetTokenUserFirebase();
     const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
 
     if (resp.status !== 200 && resp.status !== 202) {

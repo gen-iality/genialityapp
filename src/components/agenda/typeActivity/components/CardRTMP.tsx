@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 
 const CardRTMP = () => {
   const { dataLive, copyToClipboard } = useContext(AgendaContext);
-  const [dataRtmp, setDataRtmp] = useState(null);
+  const [dataRtmp, setDataRtmp] = useState<any>(null);
   useEffect(() => {
     if (dataLive && dataLive?.push_url) {
       const data = dataLive?.push_url.split('/');

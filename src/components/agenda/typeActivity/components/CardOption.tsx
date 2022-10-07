@@ -35,7 +35,7 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
           id='cardOption'
           loading={loading}
           hoverable={true}
-          style={{ width: '100%', borderRadius: '8px', minHeight: description?.length > 0 ? '333px' : 'auto' }}
+          style={{ width: '100%', borderRadius: '8px', minHeight: (description ? description.length : 0) > 0 ? '333px' : 'auto' }}
           cover={
             <img
               onLoad={() => setloading(false)}

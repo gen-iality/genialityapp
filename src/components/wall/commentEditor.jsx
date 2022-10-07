@@ -76,7 +76,7 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
         visible={visibleNoUser}
         cancelButtonProps={{ hidden: true }}
         onOk={() => {
-          setVisibleNoUser(false);
+          // setVisibleNoUser(false); -> it is not defined in this subcomponent
         }}>
         <p>
           <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión para poder realizar

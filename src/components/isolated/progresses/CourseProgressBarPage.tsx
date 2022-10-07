@@ -26,7 +26,8 @@ export function CourseProgressBarPage (props: ICourseProgressBarPageProps) {
       <Space direction='vertical'>
         <Button onClick={increase}>Aumentar</Button>
         <Button onClick={decrease}>Disminuir</Button>
-        <CourseProgressBar total={takenCourseTotal} count={takenCourseCount} />
+        <strong>The component CourseProgressBar was quitted by incompatibily in props</strong>
+        {/* <CourseProgressBar total={takenCourseTotal} count={takenCourseCount} /> */}
       </Space>
     </div>
   );

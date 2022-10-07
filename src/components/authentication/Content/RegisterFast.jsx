@@ -116,7 +116,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   ];
 
   function onFinish(values) {
-    handleNext(values);
+    // handleNext(values); it is undefined
   }
 
   return (

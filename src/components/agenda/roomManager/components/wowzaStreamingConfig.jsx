@@ -1,4 +1,4 @@
-export default WowzaStreamingConfig = ({ streamconfig }) => {
+const WowzaStreamingConfig = ({ streamconfig }) => {
   return (
     <>
       {streamconfig && (
@@ -35,3 +35,5 @@ export default WowzaStreamingConfig = ({ streamconfig }) => {
     </>
   );
 };
+
+export default WowzaStreamingConfig;

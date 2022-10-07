@@ -39,7 +39,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     switch (id) {
       case 'initial':
         //await deleteTypeActivity();
-        typeActivityDispatch({ type: 'initial', payload: { activityState: payload } });
+        typeActivityDispatch({ type: 'initial', payload: { activityState: payload! } });
         break;
       case 'type':
         typeActivityDispatch({ type: 'toggleType', payload: { id } });
@@ -57,7 +57,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         typeActivityDispatch({ type: 'toggleUrl', payload: { id } });
         break;
       case 'cargarvideo':
-        typeActivityDispatch({ type: 'toggleCargarvideo', payload: { id } });
+        typeActivityDispatch({ type: 'toggleCargarvideo', payload: { id, sendData: null } });
         break;
       case 'eviusStreaming':
         typeActivityDispatch({ type: 'toggleEviusStreaming', payload: { id } });

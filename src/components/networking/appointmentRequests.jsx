@@ -169,7 +169,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1',
           };
           addNotification(notificationr, eventContext.value, userCurrentContext.value);
-          setSendRespuesta(true);
+          // setSendRespuesta(true); -> this setter is not in this subcomponent
           setFetching(false);
         })
         .catch((error) => {

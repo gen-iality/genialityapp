@@ -1,3 +1,4 @@
+/* globals process */
 import app from 'firebase/compat/app';
 
 import 'firebase/compat/auth';

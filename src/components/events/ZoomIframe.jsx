@@ -3,6 +3,7 @@ import { useUserEvent } from '@context/eventUserContext';
 import { isHost } from '@helpers/helperEventUser';
 import { useEventContext } from '@context/eventContext';
 import { getLiveStreamStatus, getLiveStreamStats, ResetLiveStream } from '../../adaptors/wowzaStreamingAPI';
+import WOWZAPlayer from '../livetransmision/WOWZAPlayer';
 
 const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, isHost }) => {
   const [ platformurl, setPlatformurl ] = useState(null);
@@ -15,10 +16,10 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 
   const checkStreamStatus = async () => {
     let live_stream_status = await getLiveStreamStatus(meeting_id);
-    setStreamStatus(live_stream_status);
+    // setStreamStatus(live_stream_status); -> it is undefinded
 
     let live_stream_stats = await getLiveStreamStats(meeting_id);
-    setStreamStats(live_stream_stats);
+    // setStreamStats(live_stream_stats); -> it is undefinded
 
     setTimeout(checkStreamStatus, 5000);
   };
