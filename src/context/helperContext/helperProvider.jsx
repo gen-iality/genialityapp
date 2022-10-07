@@ -3,7 +3,7 @@ import { HelperContext } from './helperContext';
 import { useState } from 'react';
 import { firestore, fireRealtime } from '@helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '@helpers/request';
-import { UseEventContext } from '../eventContext';
+import { useEventContext } from '../eventContext';
 import { useCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
@@ -25,7 +25,7 @@ const initialStateNotification = {
 export const HelperContextProvider = ({ children }) => {
   const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
 
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cUser = useCurrentUser();
   let cEventuser = UseUserEvent();
   let history = useHistory();

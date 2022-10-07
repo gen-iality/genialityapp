@@ -5,7 +5,7 @@ import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 //context
 import { UseUserEvent } from '@context/eventUserContext';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
 import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
@@ -28,7 +28,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
 
   //contextos
   let userEventContext = UseUserEvent();
-  let eventContext = UseEventContext();
+  let eventContext = useEventContext();
 
   useEffect(() => {
     if (eventContext.value != null && userEventContext.value !== null) {
@@ -154,7 +154,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   const userEmail = data.email;
   //contextos
   let userEventContext = UseUserEvent();
-  let eventContext = UseEventContext();
+  let eventContext = useEventContext();
   let userCurrentContext = useCurrentUser();
 
   const changeAgendaStatus = (newStatus) => {

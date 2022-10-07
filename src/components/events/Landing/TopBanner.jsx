@@ -1,9 +1,9 @@
 import BannerEvent from '../bannerEvent';
 import { Link } from 'react-router-dom';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 const TopBanner = ({ currentActivity }) => {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let event = cEvent.value;
 
   if (!event) return null;

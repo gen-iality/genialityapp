@@ -31,7 +31,7 @@ import { setSectionPermissions } from '../../../redux/sectionPermissions/actions
 import { connect } from 'react-redux';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '@context/eventUserContext';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { app } from '@helpers/firebase';
 import { DispatchMessageService } from '@context/MessageService';
@@ -161,7 +161,7 @@ const FormRegister = ({
   validateEventUser,
 }) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const cEventUser = UseUserEvent();
   const cUser = useCurrentUser();
   const {

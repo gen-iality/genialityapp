@@ -6,7 +6,7 @@ import { formatDataToString } from '@helpers/utils';
 
 //context
 import { UseUserEvent } from '@context/eventUserContext';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
 const { Meta } = Card;
@@ -18,7 +18,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
   const [loading, setLoading] = useState(false);
 
   let userEventContext = UseUserEvent();
-  let eventContext = UseEventContext();
+  let eventContext = useEventContext();
   let userCurrentContext = useCurrentUser();
 
   useEffect(() => {

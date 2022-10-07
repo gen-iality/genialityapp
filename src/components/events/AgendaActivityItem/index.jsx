@@ -12,7 +12,7 @@ import * as StageActions from '../../../redux/stage/actions';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { zoomExternoHandleOpen } from '@helpers/helperEvent';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { UseUserEvent } from '@context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
@@ -26,7 +26,7 @@ const { useBreakpoint } = Grid;
 
 function AgendaActivityItem(props) {
   let history = useHistory();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   let urlactivity =
     cEvent && !cEvent?.isByname ? `/landing/${props.event._id}/activity/` : `/event/${cEvent?.nameEvent}/activity/`;
   const screens = useBreakpoint();

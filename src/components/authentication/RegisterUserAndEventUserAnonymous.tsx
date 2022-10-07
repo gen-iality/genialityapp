@@ -10,7 +10,7 @@ import { UsersApi } from '@helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '@context/MessageService';
 import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEvent';
@@ -23,7 +23,7 @@ const { Title } = Typography;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const cEventUser = UseUserEvent();
   let { helperDispatch } = useHelper();
   const [loading, setLoading] = useState(false);

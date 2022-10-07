@@ -1,7 +1,7 @@
 import { Divider, List, Typography, Button, Avatar } from 'antd';
 import { ReadFilled } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '@helpers/request';
 
 const dataDuration = [
@@ -23,7 +23,7 @@ const dataTooling = [
 ];
 
 const HostList = () => {
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   let [speakers, setSpeakers] = useState([]);
 
   useEffect(() => {

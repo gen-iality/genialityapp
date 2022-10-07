@@ -70,7 +70,7 @@ export function CurrentEventProvider({ children }) {
   );
 }
 
-export function UseEventContext() {
+export function useEventContext() {
   const contextevent = React.useContext(CurrentEventContext);
   if (!contextevent) {
     throw new Error('eventContext debe estar dentro del proveedor');

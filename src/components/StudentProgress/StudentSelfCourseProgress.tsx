@@ -4,7 +4,7 @@ import { AgendaApi } from '@helpers/request';
 
 import CourseProgress from './CourseProgress';
 
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { UseUserEvent } from '@context/eventUserContext';
 
 import type AgendaType from '@Utilities/types/AgendaType';
@@ -27,7 +27,7 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
     customTitle,
   } = props;
 
-  const cEventContext = UseEventContext();
+  const cEventContext = useEventContext();
   const cEventUser = UseUserEvent();
 
   const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>([]);

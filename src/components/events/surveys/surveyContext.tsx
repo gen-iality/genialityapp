@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo } from 'react';
 
 import { ReactNode, useReducer, useEffect } from 'react';
 import type { FunctionComponent } from 'react';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { getStatus as getSurveyStatus, resetStatusByRestartAnswering } from './services/surveyStatus';
 
@@ -71,7 +71,7 @@ function reducer(state: SurveyContextType, action: SurveyContextReducerActionTyp
 }
 
 export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let cUser = useCurrentUser();
 
   const [state, dispatch] = useReducer(reducer, initialContextState);

@@ -10,7 +10,7 @@ import { UsersApi } from '@helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '@context/MessageService';
 
@@ -18,7 +18,7 @@ const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const [current, setCurrent] = useState(0);
   const [basicDataUser, setbasicDataUser] = useState({
     names: '',

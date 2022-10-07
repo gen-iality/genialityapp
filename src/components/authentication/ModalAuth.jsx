@@ -13,7 +13,7 @@ import { app } from '@helpers/firebase';
 import { useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
 import { isHome, useEventWithCedula } from '@helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';
@@ -41,7 +41,7 @@ const ModalAuth = (props) => {
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
  
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const cUser = useCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
   const [msjError, setmsjError] = useState('');

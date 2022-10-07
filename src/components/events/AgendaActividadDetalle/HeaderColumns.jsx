@@ -14,7 +14,7 @@ import {
 import WithEviusContext from '@context/withContext';
 
 import Moment from 'moment-timezone';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
 import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
 import AgendaContext from '@context/AgendaContext';
@@ -25,7 +25,7 @@ import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplay
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useHelper();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cEventUSer = useContext(CurrentEventUserContext);
   let [loading, setLoading] = useState(false);
   let {

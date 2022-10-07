@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import ReactPixel from 'react-facebook-pixel';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 export function EnableFacebookPixelByEVENT() {
   const [trackSingleCustom, setTrackSingleCustom] = useState(false);
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let pixelId = cEventContext.value.facebookpixelid;
 
   const options = {

@@ -1,7 +1,7 @@
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useHistory } from 'react-router-dom';
 const EviusFooter = () => {
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let history = useHistory();
   return (
     <>

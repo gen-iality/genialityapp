@@ -7,11 +7,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import withContext from '@context/withContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { recordTypeForThisEvent } from '@helpers/thisRouteCanBeDisplayed';
 
 const MenuRigth = (props) => {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   const [typeEvent, settypeEvent] = useState();
 
   let {

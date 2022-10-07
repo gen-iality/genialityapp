@@ -1,5 +1,5 @@
 import { Modal, notification, Button } from 'antd';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import withContext from '../../authentication/ModalAuthAnonymous';
 import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
@@ -9,7 +9,7 @@ import { async } from 'ramda-adjunct';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '@context/eventUserContext';
 const ModalUpdate = (props: any) => {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cEventUser = UseUserEvent();
 
   const [isVisible, setIsVisible] = useState(false);

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Button, Result, Typography } from 'antd';
 import { UseUserEvent } from '@context/eventUserContext';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import Loading from '../../../profile/loading';
 import { useIntl } from 'react-intl';
@@ -32,7 +32,7 @@ function ThisRouteCanBeDisplayed({ children }) {
   let cEventUser = UseUserEvent();
   let eventUserId = cEventUser?.value?._id;
   let eventUserStatus = cEventUser.status;
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let { handleChangeTypeModal } = useHelper();
 
   useEffect(() => {

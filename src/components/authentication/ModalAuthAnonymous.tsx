@@ -14,7 +14,7 @@ import { useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import RegisterUserAnonymous from './RegisterUserAnonymous';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import RegisterUserAndEventUserAnonymous from './RegisterUserAndEventUserAnonymous';
 import { isHome, useEventWithCedula } from '@helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';
@@ -41,7 +41,7 @@ const ModalAuthAnonymous = (props: any) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const cUser = useCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
 

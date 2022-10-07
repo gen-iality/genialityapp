@@ -3,7 +3,7 @@ import { Card, Col, Row, Spin, Result, Button } from 'antd';
 import TicketsForm from '../../tickets/formTicket';
 import { connect } from 'react-redux';
 import { UseUserEvent } from '@context/eventUserContext';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { Redirect } from 'react-router-dom';
 import { EventsApi } from '@helpers/request';
@@ -15,7 +15,7 @@ import UserLoginContainer from '../UserLoginContainer';
 
 const PageNotPermissions = (props) => {
   let EventUser = UseUserEvent();
-  let EventContext = UseEventContext();
+  let EventContext = useEventContext();
   let redirect;
   let urlsection = `/landing/${EventContext.value._id}/`;
   const [products, setProducts] = useState([]);

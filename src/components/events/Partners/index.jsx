@@ -3,10 +3,10 @@ import { Card } from 'antd';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import PartnersList from '../PartnersList';
 import PartnersDetail from '../PartnersDetail';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 export default function Partners() {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
 
   const [companies, loadingCompanies] = useGetEventCompanies((cEvent.value && cEvent.value._id) || null);
   const [viewPartnerDetail, setViewPartnerDetail] = useState(false);

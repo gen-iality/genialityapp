@@ -1,7 +1,7 @@
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 export function EnableAnalyticsByEVENT() {
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let createElement = null;
   let dataLayer = `dataLayerAnalytics${cEventContext.value._id}`;
   let htmlElementId = 'analyticsScrip';

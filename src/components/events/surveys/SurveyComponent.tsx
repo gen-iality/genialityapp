@@ -17,7 +17,7 @@ import savingResponseByUserId from './functions/savingResponseByUserId';
 import shuffleSurveyQuestion from './models/shuffleSurveyQuestion';
 
 /** Contexts */
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
 /** Componentes */
@@ -58,7 +58,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     queryData, // The survey data
   } = props;
 
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const currentUser = useCurrentUser();
   const history = useHistory();
   const cSurvey = useSurveyContext();

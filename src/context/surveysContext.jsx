@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useMemo, createContext, useContext } from 'react';
 import { listenSurveysData } from '@helpers/helperEvent';
 import InitSurveysCompletedListener from '@components/events/surveys/functions/initSurveyCompletedListener';
-import { UseEventContext } from './eventContext';
+import { useEventContext } from './eventContext';
 import { useCurrentUser } from './userContext';
 export const SurveysContext = createContext();
 
@@ -54,7 +54,7 @@ const reducer = (state, action) => {
 
 export function SurveysProvider({ children }) {
   //  console.group('surveyContext');
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let cUser = useCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
 

@@ -5,7 +5,7 @@ import { EventsApi } from '@helpers/request';
 import withContext from '@context/withContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 const { useBreakpoint } = Grid;
 
@@ -20,7 +20,7 @@ const stylePaddingMobile = {
 
 const ModalLoginHelpers = (props) => {
   let { handleChangeTypeModal, typeModal, helperDispatch } = useHelper();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);

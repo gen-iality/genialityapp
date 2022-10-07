@@ -1,7 +1,7 @@
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 export function EnableGTMByEVENT() {
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let createElement = null;
   let dataLayer = `dataLayerTagManager${cEventContext.value._id}`;
   let htmlElementId = 'gtmScrip';

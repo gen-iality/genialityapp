@@ -12,7 +12,7 @@ import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { useEventWithCedula } from '@helpers/helperEvent';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
@@ -28,7 +28,7 @@ function getBase64(img, callback) {
 
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const [takingPhoto, setTakingPhoto] = useState(false);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [form] = Form.useForm();

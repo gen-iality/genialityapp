@@ -5,7 +5,7 @@ import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutli
 import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useCurrentUser } from '@context/userContext';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { imageforDefaultProfile } from '@helpers/constants';
 import dayjs from 'dayjs';
 
@@ -41,7 +41,7 @@ const styleListPointer = {
 
 function UsersCard(props) {
   let cUser = useCurrentUser();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let eventValues = cEvent.value;
 
   let eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';

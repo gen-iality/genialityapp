@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { UseUserEvent } from '@context/eventUserContext';
 import { useHistory, Link } from 'react-router-dom';
@@ -84,7 +84,7 @@ const IconRender = type => {
 };
 
 const Landing = props => {
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let cUser = useCurrentUser();
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();

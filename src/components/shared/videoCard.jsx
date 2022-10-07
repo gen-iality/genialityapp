@@ -2,7 +2,7 @@ import { Card, Space, Typography, Badge } from 'antd';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import './videoCard.css';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import ReactPlayer from 'react-player';
 import { CalendarOutlined } from '@ant-design/icons';
 import { useState } from 'react';

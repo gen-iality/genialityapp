@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { EventsApi } from '@helpers/request';
-import { UseEventContext } from './eventContext';
+import { useEventContext } from './eventContext';
 import { app } from '@helpers/firebase';
 import { useCurrentUser } from './userContext';
 export const CurrentEventUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };
 
 export function CurrentUserEventProvider({ children }) {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cUser = useCurrentUser();
   const [userEvent, setuserEvent] = useState(initialContextState);
   let [updateUser, setUpdateUser] = useState(true);

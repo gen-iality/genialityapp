@@ -1,6 +1,6 @@
 import { List, Badge, Tabs } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { UseUserEvent } from '@context/eventUserContext';
 import { connect } from 'react-redux';
@@ -25,7 +25,7 @@ const styleList = {
 
 const ChatList = (props) => {
   let cUser = useCurrentUser();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cEventUser = UseUserEvent();
 
   let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useHelper();

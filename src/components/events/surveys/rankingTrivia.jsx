@@ -6,13 +6,13 @@ import { Divider } from 'antd';
 import { UseSurveysContext } from '@context/surveysContext';
 import { useCurrentUser } from '@context/userContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 function RankingTrivia(props) {
   const { setGameRanking, setMyScore } = useHelper();
   let cSurveys = UseSurveysContext();
   let cUser = useCurrentUser();
-  let eventContext = UseEventContext();
+  let eventContext = useEventContext();
   let currentSurvey = cSurveys.currentSurvey;
   let currentUser = cUser.value;
   let currentEvent = eventContext.value;

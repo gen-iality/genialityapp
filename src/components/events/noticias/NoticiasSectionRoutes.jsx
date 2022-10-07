@@ -4,12 +4,12 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
  * ---------------------*/
 import NoticiasList from './NoticiasList';
 
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import NoticiasDetailsConnect from './NoticiasDetails';
 
 const NoticiasSectionRoutes = () => {
   let { path } = useRouteMatch();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;
   return (

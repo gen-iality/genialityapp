@@ -2,7 +2,7 @@ import { createContext, useEffect, useReducer } from 'react';
 import { useState } from 'react';
 import { firestore, fireRealtime, app } from '@helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '@helpers/request';
-import { UseEventContext } from '../eventContext';
+import { useEventContext } from '../eventContext';
 import { useCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
@@ -31,7 +31,7 @@ let initialStateEvenUserContext = { status: 'LOADING', value: null };
 let initialStateUserContext = { status: 'LOADING', value: undefined };
 
 export const HelperContextProvider = ({ children }) => {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cUser = useCurrentUser();
   let cEventuser = UseUserEvent();
   let history = useHistory();

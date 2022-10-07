@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
 import { UseUserEvent } from '@context/eventUserContext';
-import { UseEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
 import { EventsApi } from '@helpers/request';
 
@@ -17,7 +17,7 @@ const { Meta } = Card;
 const PopoverInfoUser = (props) => {
   const [userSelected, setUserSelected] = useState();
   let eventUserContext = UseUserEvent();
-  let eventContext = UseEventContext();
+  let eventContext = useEventContext();
   let {
     containtNetworking,
     getPropertiesUserWithId,
