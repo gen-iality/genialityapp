@@ -1,8 +1,17 @@
 type FoolBoolean = boolean | 'true' | 'false';
 
-interface SurveyQuestion { [x: string]: any };
+interface SurveyQuestion {
+  title: string;
+  type: 'radiogroup' | 'checkbox' | 'ranking' | 'ranking' | 'matrix' | 'comment' | 'text' | string;
+  choices: string[];
+  id: string;
+  image: string | null;
+  points: number;
+  correctAnswer: string;
+  correctAnswerIndex: number;
+};
 
-export interface SurveyFromMongoDB {
+export interface SurveyData {
   _id?: string,
   survey: string,
   show_horizontal_bar: boolean,
@@ -16,7 +25,7 @@ export interface SurveyFromMongoDB {
   win_Message: string,
   neutral_Message: string,
   lose_Message: string,
-  allow_anonymous_answers: boolean,
+  allow_anonymous_answers: FoolBoolean,
   allow_gradable_survey: FoolBoolean,
   hasMinimumScore: FoolBoolean,
   isGlobal: FoolBoolean,
@@ -34,8 +43,28 @@ export interface SurveyFromMongoDB {
   random_survey: boolean,
 }
 
-export interface SurveyFromFirebase {};
+export interface SurveyRealtimeData {
+  activity_id: string,
+  allow_anonymous_answers: FoolBoolean,
+  allow_gradable_survey: FoolBoolean,
+  category: any,
+  displayGraphsInSurveys: FoolBoolean,
+  eventId: string,
+  freezeGame: boolean,
+  hasMinimumScore: FoolBoolean,
+  isGlobal: FoolBoolean,
+  isOpened: FoolBoolean,
+  isPublished: FoolBoolean,
+  minimumScore: number,
+  name: string,
+  random_survey: boolean,
+  random_survey_count: number,
+  rankingVisible: FoolBoolean,
+  showNoVotos: FoolBoolean,
+  time_limit: number,
+  tries: number,
+};
 
-export interface SurveyPreModel extends SurveyFromFirebase, SurveyFromMongoDB {
+export interface SurveyPreModel extends SurveyRealtimeData, SurveyData {
   currentPage: number,
 };
