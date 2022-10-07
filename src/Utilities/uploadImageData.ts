@@ -1,5 +1,5 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError, uploadImage } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError, uploadImage } from '@helpers/utils';
 
 export const uploadImageData = async (image: string | object) => {
   let imagenUrl = null;

@@ -12,8 +12,8 @@ import {
   center,
   textLeft,
   assignmentOfConditionsToAdditionalFields,
-} from '@/Utilities/formUtils';
-import { AttendeeInformation, FormEnrollAttendeeToEventPropsTypes } from '@/Utilities/types/types';
+} from '@Utilities/formUtils';
+import { AttendeeInformation, FormEnrollAttendeeToEventPropsTypes } from '@Utilities/types/types';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';

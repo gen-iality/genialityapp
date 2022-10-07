@@ -5,7 +5,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 import WithEviusContext from '@context/withContext';
 import { withRouter } from 'react-router-dom';
 import { firestore } from '@helpers/firebase';
-import Service from '@/components/agenda/roomManager/service';
+import Service from '@components/agenda/roomManager/service';
 import { Spin } from 'antd';
 
 function QuizActivity(props) {

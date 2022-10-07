@@ -13,7 +13,7 @@ import ThisRouteCanBeDisplayed, {
   recordTypeForThisEvent,
 } from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
 import AnonymousEvenUserForm from '../hooks/anonymousEvenUserForm';
-import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
+import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 

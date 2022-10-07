@@ -7,7 +7,7 @@ import { deleteLiveStream, deleteAllVideos } from '../../../../adaptors/gcoreStr
 import { AgendaApi, TypesAgendaApi } from '../../../../helpers/request';
 import { CurrentEventContext } from '../../../../context/eventContext';
 import Service from '../../../agenda/roomManager/service';
-import { firestore } from '@/helpers/firebase';
+import { firestore } from '@helpers/firebase';
 const TransmitionOptions = (props: any) => {
   const { toggleActivitySteps, executer_stopStream, loadingStop } = useTypeActivity();
   const [loadingDelete, setLoadingDelete] = useState(false);

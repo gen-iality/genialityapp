@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Space, Typography } from 'antd';
-import controllerInternetConnection from '@/Utilities/controllerInternetConnection';
+import controllerInternetConnection from '@Utilities/controllerInternetConnection';
 import WebRemoveIcon from '@2fd/ant-design-icons/lib/WebRemove';
 import WebCheckIcon from '@2fd/ant-design-icons/lib/WebCheck';
 

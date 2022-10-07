@@ -4,8 +4,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { useCurrentUser } from '../../../context/userContext';
 import UsersCard from '../../shared/usersCard';
-import { imageforDefaultProfile } from '@/helpers/constants';
-import { knowMaleOrFemale } from '@/Utilities/knowMaleOrFemale';
+import { imageforDefaultProfile } from '@helpers/constants';
+import { knowMaleOrFemale } from '@Utilities/knowMaleOrFemale';
 
 const AttendeList = function(props) {
   //contextos

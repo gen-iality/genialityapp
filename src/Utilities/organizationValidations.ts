@@ -1,4 +1,4 @@
-import { OrganizationApi } from '@/helpers/request';
+import { OrganizationApi } from '@helpers/request';
 
 /**
  * Get the user details for a member of an organization

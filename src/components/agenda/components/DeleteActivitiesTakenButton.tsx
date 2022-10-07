@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import { AgendaApi } from '@/helpers/request';
-import { firestore } from '@/helpers/firebase';
+import { AgendaApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import { Link } from 'react-router-dom';
 import { useCallback } from 'react';
 

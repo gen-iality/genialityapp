@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { UsersApi } from '../../../helpers/request';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 
 const EditInformation = ({ cUser }) => {
   const { value, setCurrentUser } = cUser;

@@ -8,7 +8,7 @@ import { addNotification } from '../../helpers/netWorkingFunctions';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import { CurrentEventUserContext } from '../../context/eventUserContext';
-import { CurrentEventContext } from '@/context/eventContext';
+import { CurrentEventContext } from '@context/eventContext';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {

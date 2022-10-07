@@ -7,17 +7,17 @@ import { Tabs, Row, Col, Form, Switch, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import AgendaContext from '@context/AgendaContext';
-import Header from '@/antdComponents/Header';
-import BackTop from '@/antdComponents/BackTop';
-import { RouterPrompt } from '@/antdComponents/RoutePrompt';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
+import { RouterPrompt } from '@antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@context/MessageService';
 
-import { handleRequestError } from '@/helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 import {
   AgendaApi,
   DocumentsApi,
-} from '@/helpers/request';
-import { firestore } from '@/helpers/firebase';
+} from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 
 import Loading from '../profile/loading';
 import RoomController from './roomManager/controller';

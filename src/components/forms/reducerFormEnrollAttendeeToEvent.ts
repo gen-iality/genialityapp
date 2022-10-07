@@ -1,5 +1,5 @@
 import getBasicFields from './getBasicFields';
-import { thereAreExtraFields, validateButtonText } from '@/Utilities/formUtils';
+import { thereAreExtraFields, validateButtonText } from '@Utilities/formUtils';
 export const helperInitialState: any = {
   basicFields: [],
   aditionalFields: [],

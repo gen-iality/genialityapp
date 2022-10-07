@@ -35,7 +35,7 @@ import { UseEventContext } from '../../../context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { app } from '../../../helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
-import { countryApi } from '@/helpers/request';
+import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;

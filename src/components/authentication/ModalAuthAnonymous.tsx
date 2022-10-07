@@ -19,8 +19,8 @@ import RegisterUserAndEventUserAnonymous from './RegisterUserAndEventUserAnonymo
 import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
-import FormEnrollAttendeeToEvent from '@/components/forms/FormEnrollAttendeeToEvent';
-import AnonymousEvenUserForm from '@/components/socialZone/hooks/anonymousEvenUserForm';
+import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEvent';
+import AnonymousEvenUserForm from '@components/socialZone/hooks/anonymousEvenUserForm';
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 

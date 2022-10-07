@@ -22,7 +22,7 @@ import Header from '../../../antdComponents/Header';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);

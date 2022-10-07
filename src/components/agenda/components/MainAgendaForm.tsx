@@ -7,8 +7,8 @@ import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Car
 import { Select as SelectAntd } from 'antd';
 import { ExclamationCircleOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
-import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
+import { CategoriesAgendaApi, SpeakersApi } from '@helpers/request';
+import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils';
 
 import Select from 'react-select';
 import Creatable from 'react-select';

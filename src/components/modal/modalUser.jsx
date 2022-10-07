@@ -16,7 +16,7 @@ import { FaBullseye } from 'react-icons/fa';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
-import { handleRequestError } from '@/helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 
 const { confirm } = Modal;
 

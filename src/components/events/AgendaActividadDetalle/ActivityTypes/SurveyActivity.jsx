@@ -6,7 +6,7 @@ import WithEviusContext from '@context/withContext';
 import { withRouter } from 'react-router-dom';
 import { firestore } from '@helpers/firebase';
 import { Spin } from 'antd';
-import Service from '@/components/agenda/roomManager/service';
+import Service from '@components/agenda/roomManager/service';
 
 function SurveyActivity(props) {
   let { currentActivity } = useHelper();

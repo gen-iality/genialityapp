@@ -1,8 +1,8 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
-import { UseEventContext } from '@/context/eventContext';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { UseEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 //import { UseCurrentUser } from '../context/userContext';
 
 const { Title } = Typography;

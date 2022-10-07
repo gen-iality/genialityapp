@@ -13,7 +13,7 @@ import {
 import { useQueryClient } from 'react-query';
 import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { CurrentEventContext } from '@/context/eventContext';
+import { CurrentEventContext } from '@context/eventContext';
 const CardStartTransmition = (props: any) => {
   const [loading, setloading] = useState(false);
   const [loadingComponent, setloadingComponent] = useState(true);

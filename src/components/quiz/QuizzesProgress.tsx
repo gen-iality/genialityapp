@@ -7,7 +7,7 @@ import { Survey } from './types';
 import QuizStatusMessage from './quizStatus';
 import QuizBadge from './QuizBadge';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
-import { SurveysApi } from '@/helpers/request';
+import { SurveysApi } from '@helpers/request';
 
 type Status = {
   right: number,

@@ -4,7 +4,7 @@ import { UseEventContext } from '../../context/eventContext';
 import Lobby from '../fair/lobby/Lobby';
 import { withRouter } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
-import { CurrentEventUserContext } from '@/context/eventUserContext';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 
 const EventHome = props => {
   /*Contextos*/

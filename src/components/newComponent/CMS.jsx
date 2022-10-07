@@ -8,7 +8,7 @@ import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import Service from '../agenda/roomManager/service';
-import { firestore, fireRealtime } from '@/helpers/firebase';
+import { firestore, fireRealtime } from '@helpers/firebase';
 import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
 const { confirm } = Modal;
 

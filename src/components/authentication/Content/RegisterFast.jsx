@@ -13,7 +13,7 @@ import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { useEventWithCedula } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import './RegisterFast.css';

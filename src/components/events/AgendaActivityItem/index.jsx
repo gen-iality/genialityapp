@@ -16,10 +16,10 @@ import { UseEventContext } from '../../../context/eventContext';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
-import QuizProgress from '@/components/quiz/QuizProgress';
-import { activityContentValues } from '@/context/activityType/constants/ui';
+import QuizProgress from '@components/quiz/QuizProgress';
+import { activityContentValues } from '@context/activityType/constants/ui';
 import { useCurrentUser } from '@context/userContext';
-import { ActivityCustomIcon } from '@/components/agenda/components/ActivityCustomIcon';
+import { ActivityCustomIcon } from '@components/agenda/components/ActivityCustomIcon';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;

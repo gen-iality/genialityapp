@@ -49,7 +49,7 @@ import Highlighter from 'react-highlight-words';
 import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import { HelperContext } from '@context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 
 const { Title, Text } = Typography;

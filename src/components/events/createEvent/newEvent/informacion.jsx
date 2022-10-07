@@ -27,7 +27,7 @@ import {
   disabledEndDateTime,
   disabledStartDate,
   disabledStartDateTime,
-} from '@/Utilities/disableTimeAndDatePickerInEventDate';
+} from '@Utilities/disableTimeAndDatePickerInEventDate';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;

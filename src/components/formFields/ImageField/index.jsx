@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import { concat, omit, pick } from 'ramda';
 import { Field } from 'formik';
 import { useIntl } from 'react-intl';
-import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 
 const FORMIK_PROPS_KEYS = ['form', 'field', 'meta'];
 const FORM_ITEM_PROPS_KEYS = ['label', 'required'];

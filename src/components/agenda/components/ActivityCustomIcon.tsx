@@ -1,6 +1,6 @@
 import { DesktopOutlined, FileDoneOutlined, ReadFilled, VideoCameraOutlined } from '@ant-design/icons';
-import { activityContentValues } from '@/context/activityType/constants/ui';
-import { ActivityType } from '@/context/activityType/types/activityType';
+import { activityContentValues } from '@context/activityType/constants/ui';
+import { ActivityType } from '@context/activityType/types/activityType';
 
 interface ActivityCustomIconProps {
   type: ActivityType.ContentValue,

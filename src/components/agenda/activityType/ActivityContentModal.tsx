@@ -16,7 +16,7 @@ import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout'
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 
-import { useGetWidgetForContentType } from '@/context/activityType/hooks/useGetWidgetForContentType';
+import { useGetWidgetForContentType } from '@context/activityType/hooks/useGetWidgetForContentType';
 
 export interface ActivityContentModalProps extends ModalWrapperUIProps {
   widget: ActivityType.CardUI | ActivityType.FormUI,

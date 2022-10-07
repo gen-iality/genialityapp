@@ -1,4 +1,4 @@
-import { firestore, app } from '@/helpers/firebase';
+import { firestore, app } from '@helpers/firebase';
 
 export const remoteLogOutValidator = (params: any) => {
   // /* Creating a reference to the connection object. */

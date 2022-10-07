@@ -1,4 +1,4 @@
-import { firestore } from '@/helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 export const featureBlockingListener = (eventId: string, helperDispatch: ({}) => void, isMap: string) => {
   if (!eventId) return;

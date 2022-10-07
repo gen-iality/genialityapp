@@ -3,8 +3,8 @@ import { Redirect } from 'react-router-dom';
 import useHasRole from './userhasRole';
 import { Spin } from 'antd';
 import { UseUserEvent } from '../../../context/eventUserContext';
-import { theRoleExists } from '@/Utilities/roleValidations';
-import { getOrganizationUser } from '@/Utilities/organizationValidations';
+import { theRoleExists } from '@Utilities/roleValidations';
+import { getOrganizationUser } from '@Utilities/organizationValidations';
 
 function ValidateAccessRouteCms({ children }) {
   const { eventId } = children.props;

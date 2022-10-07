@@ -10,7 +10,7 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
-import initBroadcastViewers from '@/containers/broadcastViewers';
+import initBroadcastViewers from '@containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { useCurrentUser } from '@context/userContext';
 import { Row, Col, Card, Typography } from 'antd';

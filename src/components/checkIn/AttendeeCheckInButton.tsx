@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
-import { AttendeeCheckInPropsTypes } from '@/Utilities/types/types';
+import { AttendeeCheckInPropsTypes } from '@Utilities/types/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
 

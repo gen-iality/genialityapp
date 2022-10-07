@@ -13,11 +13,11 @@ import { useIntl } from 'react-intl';
 import { UseEventContext } from '../../context/eventContext';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
-import FormEnrollAttendeeToEvent from '@/components/forms/FormEnrollAttendeeToEvent';
-import { fieldNameEmailFirst } from '@/helpers/utils';
+import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEvent';
+import { fieldNameEmailFirst } from '@helpers/utils';
 import { app } from '../../helpers/firebase';
-import { AttendeeApi } from '@/helpers/request';
-import { UseUserEvent } from '@/context/eventUserContext';
+import { AttendeeApi } from '@helpers/request';
+import { UseUserEvent } from '@context/eventUserContext';
 const { Step } = Steps;
 const { Title } = Typography;
 

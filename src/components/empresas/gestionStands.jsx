@@ -13,7 +13,7 @@ import { firestore } from '../../helpers/firebase';
 import { SketchPicker } from 'react-color';
 import Header from '../../antdComponents/Header';
 import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const { Option } = Select;
 const { confirm } = Modal;

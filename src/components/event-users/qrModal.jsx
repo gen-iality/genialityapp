@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
 import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd';
-import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
+import { getFieldDataFromAnArrayOfFields } from '@Utilities/generalUtils';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
-import { assignMessageAndTypeToQrmodalAlert } from '@/Utilities/checkInUtils';
+import { assignMessageAndTypeToQrmodalAlert } from '@Utilities/checkInUtils';
 import QrAndDocumentForm from './qrAndDocumentForm';
 import PageNextOutlineIcon from '@2fd/ant-design-icons/lib/PageNextOutline';
-import { CurrentEventContext } from '@/context/eventContext';
+import { CurrentEventContext } from '@context/eventContext';
 import { getAttendeeByParameter } from '@/services/checkinServices/checkinServices';
 import { saveOrUpdateAttendeeInAEvent } from '@/services/formServices/formServices';
 

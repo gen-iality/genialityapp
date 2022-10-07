@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { ApiService, isError, multipleRequest } from '../interfaces/interfaces';
-import { ApiUrl } from '@/helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 
 export const useApiMultiple = () => {
   const [responseData, setresponseData] = useState({});

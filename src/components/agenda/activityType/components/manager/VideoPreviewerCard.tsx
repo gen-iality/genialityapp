@@ -25,7 +25,7 @@ import AgendaContext from '@context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
 import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
-import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
+import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation';
 import type { ActivityType } from '@context/activityType/types/activityType';
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
 import { TypeDisplayment } from '@context/activityType/constants/enum'

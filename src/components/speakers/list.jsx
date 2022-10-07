@@ -9,7 +9,7 @@ import arrayMove from 'array-move';
 import Header from '../../antdComponents/Header';
 import { columns } from './columns';
 import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);

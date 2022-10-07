@@ -58,8 +58,8 @@ import {
   disabledEndDate,
   disabledStartDateTime,
   disabledStartDate,
-} from '@/Utilities/disableTimeAndDatePickerInEventDate';
-import { CurrentUserContext } from '@/context/userContext';
+} from '@Utilities/disableTimeAndDatePickerInEventDate';
+import { CurrentUserContext } from '@context/userContext';
 
 dayjs.locale('es');
 const { Title, Text } = Typography;

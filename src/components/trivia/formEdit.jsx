@@ -28,7 +28,7 @@ import {
 import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DispatchMessageService } from '../../context/MessageService';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import LikertScaleEditor from '../quiz/LikertScaleEditor';
 
 const { Option } = Select;

@@ -3,11 +3,11 @@ import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import AgendaContext from '@context/AgendaContext';
 import { useContext, useState, useMemo } from 'react';
 import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
-import { AgendaApi } from '@/helpers/request';
+import { AgendaApi } from '@helpers/request';
 import { CurrentEventContext } from '@context/eventContext';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import type { ActivityType } from '@context/activityType/types/activityType';
-import { TypeDisplayment, MainUI } from '@/context/activityType/constants/enum';
+import { TypeDisplayment, MainUI } from '@context/activityType/constants/enum';
 
 export interface TransmitionOptionsCardProps {
   type: ActivityType.TypeAsDisplayment,

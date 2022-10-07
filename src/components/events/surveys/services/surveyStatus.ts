@@ -1,4 +1,4 @@
-import { QuizStatus } from '@/components/quiz/types';
+import { QuizStatus } from '@components/quiz/types';
 import { firestore } from '@helpers/firebase';
 
 export const getRef = (surveyId: string, userId: string) => {

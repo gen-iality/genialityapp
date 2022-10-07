@@ -6,7 +6,7 @@ import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useCurrentUser } from '../../context/userContext';
 import { UseEventContext } from '../../context/eventContext';
-import { imageforDefaultProfile } from '@/helpers/constants';
+import { imageforDefaultProfile } from '@helpers/constants';
 import dayjs from 'dayjs';
 
 const { Paragraph, Title, Text } = Typography;

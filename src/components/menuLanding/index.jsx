@@ -5,8 +5,8 @@ import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
-import { CurrentUserContext } from '@/context/userContext';
-import { CurrentEventContext } from '@/context/eventContext';
+import { CurrentUserContext } from '@context/userContext';
+import { CurrentEventContext } from '@context/eventContext';
 
 const { Title } = Typography;
 const { Option } = Select;

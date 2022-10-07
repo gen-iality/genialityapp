@@ -2,8 +2,8 @@ import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { ApiUrl, areaCode } from '@/helpers/constants';
-import { beforeUpload, getImagename } from '@/Utilities/formUtils';
+import { ApiUrl, areaCode } from '@helpers/constants';
+import { beforeUpload, getImagename } from '@Utilities/formUtils';
 import { useEffect, useState } from 'react';
 /**
  * This solution is distributed as is:
@@ -22,8 +22,8 @@ import { useEffect, useState } from 'react';
  dayjs.extend(localeData);
  dayjs.extend(weekOfYear);
  dayjs.extend(weekYear);
-import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
-import { countryApi } from '@/helpers/request';
+import { deleteFireStorageData } from '@Utilities/deleteFireStorageData';
+import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */
 
 import { async } from 'ramda-adjunct';

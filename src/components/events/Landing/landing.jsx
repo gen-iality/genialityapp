@@ -31,7 +31,7 @@ import { DispatchMessageService } from '../../../context/MessageService.tsx';
 import WithEviusContext from '../../../context/withContext';
 import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import initBroadcastViewers from '@/containers/broadcastViewers';
+import initBroadcastViewers from '@containers/broadcastViewers';
 import DateEvent from '../dateEvent';
 import dayjs from 'dayjs';
 import { AgendaApi } from '@helpers/request';

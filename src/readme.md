@@ -6,7 +6,7 @@ Ahora existe una nueva forma de importar los componentes o elementos de la aplic
 `import { DocumentsApi } from '../../../helpers/request';`
 
 **Nueva forma:**
-`import { DocumentsApi } from '@helpers/request';` || `import { DocumentsApi } from '@/helpers/request';`
+`import { DocumentsApi } from '@helpers/request';` || `import { DocumentsApi } from '@helpers/request';`
 
 Es decir, para acceder al componente se debe agregar "@" o "@/"
 

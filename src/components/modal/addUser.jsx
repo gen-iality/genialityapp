@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import { UsersApi, eventTicketsApi } from '@/helpers/request';
+import { UsersApi, eventTicketsApi } from '@helpers/request';
 import { Modal, Form, Input, Select, Checkbox, Button } from 'antd';
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 
 const { Option } = Select;
 

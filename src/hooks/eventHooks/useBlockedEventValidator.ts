@@ -1,5 +1,5 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import { AlertsPlanApi } from '@/helpers/request';
+import { DispatchMessageService } from '@context/MessageService';
+import { AlertsPlanApi } from '@helpers/request';
 import dayjs from 'dayjs';
 
 export const useBlockedEventValidator = (event: any, cUser: any) => {

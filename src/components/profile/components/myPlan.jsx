@@ -14,11 +14,11 @@ import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
-import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 
 const myPlan = ({ cUser }) => {
   const plan = cUser.value?.plan;

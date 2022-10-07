@@ -9,7 +9,7 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import { handleRequestError } from '../../helpers/utils';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import { removeObjectFromArray, renderTypeImage } from '@/Utilities/imgUtils';
+import { removeObjectFromArray, renderTypeImage } from '@Utilities/imgUtils';
 import Loading from '../profile/loading';
 
 export const toolbarEditor = {

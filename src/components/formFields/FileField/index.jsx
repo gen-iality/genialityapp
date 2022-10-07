@@ -4,8 +4,8 @@ import { pick } from 'ramda';
 import { Field } from 'formik';
 import { Upload, Spin, Card } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
-import { uploadImagedummyRequest, handleImageName } from '@/Utilities/imgUtils';
-import { uploadImageData } from '@/Utilities/uploadImageData';
+import { uploadImagedummyRequest, handleImageName } from '@Utilities/imgUtils';
+import { uploadImageData } from '@Utilities/uploadImageData';
 
 const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
 

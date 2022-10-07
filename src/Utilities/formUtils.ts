@@ -1,5 +1,5 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import getAdditionalFields from '@/components/forms/getAdditionalFields';
+import { DispatchMessageService } from '@context/MessageService';
+import getAdditionalFields from '@components/forms/getAdditionalFields';
 import { aditionalFieldsPropsTypes, updateFieldsVisibilityPropsTypes } from './types/types';
 
 export const textLeft: {} = {
