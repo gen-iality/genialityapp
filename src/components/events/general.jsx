@@ -357,7 +357,7 @@ class General extends Component {
         .doc(event._id)
         .get()
         .then((result) => {
-          if (result.exists) {
+          if (result?.exists) {
             const data = result.data();
             data ? resolve(data) : resolve(false);
           } else {

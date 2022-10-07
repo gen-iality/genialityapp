@@ -54,7 +54,7 @@ export const getConfiguration = (event_id, activityId) => {
       .doc(activityId)
       .get()
       .then((result) => {
-        if (result.exists) {
+        if (result?.exists) {
           resolve(result.data());
         } else {
           resolve();

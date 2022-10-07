@@ -27,13 +27,19 @@ export default async function useQuizStatusRequesting(
 
   if (!surveyId) return { total: totalPoints, right: quizStatus.right, minimum: minimumScore } as QuizStats;
 
+  // Get info from Firebase: status that contains the `right` and `surveyCompleted` values
   try {
     const result = await getSurveyStatus(surveyId, userId);
-    if (result.exists) {
+    if (result?.exists) {
       const data = result.data() as QuizStatus;
       quizStatus = { ...quizStatus, ...data };
     }
-    console.debug(result);
+  } catch (err) {
+    console.error(err);
+  }
+
+  // Get info about the survey from the API to get the minimum value
+  try {
     console.debug('finding eventId', eventId, 'with activityId', surveyId);
 
     const surveyIn: Survey = survey ? survey : await SurveysApi.getOne(eventId, surveyId);

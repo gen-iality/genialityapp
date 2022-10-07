@@ -122,7 +122,7 @@ export const getSurveyConfiguration = (surveyId) => {
       .doc(surveyId)
       .get()
       .then((result) => {
-        if (result.exists) {
+        if (result?.exists) {
           const data = result.data();
           resolve(data);
         }
