@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 
 import { Button, Alert, Spin, Row, Col } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
-// import InitialSVG from './components/svg/InitialSVG';
 
 import ActivityTypeModal from './ActivityTypeModal';
 import useActivityType from '@context/activityType/hooks/useActivityType';

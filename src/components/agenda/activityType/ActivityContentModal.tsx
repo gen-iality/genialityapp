@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Alert, Modal } from 'antd';
 
 import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCards';
-// import { ActivityTypeSelectableCardsProps } from './components/ActivityTypeSelectableCards';
 
 import ActivityContentModalLayout, { WidgetData } from './components/ActivityContentModalLayout';
 

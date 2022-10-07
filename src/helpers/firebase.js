@@ -1,4 +1,3 @@
-//import { initializeApp } from 'firebase/app';
 import app from 'firebase/compat/app';
 
 import 'firebase/compat/auth';

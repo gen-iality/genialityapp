@@ -3,7 +3,6 @@ import { Field } from 'formik';
 import { concat, omit, pick } from 'ramda';
 import { isValidNumber, isNotValidNumber } from 'ramda-adjunct';
 import { useCallback, useRef } from 'react';
-//import EviusReactQuill from "../../shared/eviusReactQuill";
 
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '@helpers/constants';

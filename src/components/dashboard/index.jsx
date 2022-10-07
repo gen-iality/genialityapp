@@ -32,8 +32,6 @@ import API from '@helpers/request';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 
-// const [google, setGoogle] = useState(null)
-
 const { Title } = Typography;
 //ESTILOS PAGINA PDF
 const pageStyle = `

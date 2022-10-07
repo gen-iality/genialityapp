@@ -3,8 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '@helpers/utils';
 import { firestore } from '@helpers/firebase';
 import { FormattedMessage, useIntl } from 'react-intl';
-/* import CheckSpace from '../event-users/checkSpace_old'; */
-// import * as XLSX from '../../xlsx/xlsx.mjs'
 import { Activity, RolAttApi } from '@helpers/request';
 import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd';
 import {

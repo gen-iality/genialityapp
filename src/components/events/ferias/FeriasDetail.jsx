@@ -7,7 +7,6 @@ import Contact from './contact';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { setTopBanner } from '../../../redux/topBanner/actions';
-//import { useLocation } from "react-router-dom";
 import { getEventCompany } from '../../empresas/services.js';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';

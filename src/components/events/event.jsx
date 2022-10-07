@@ -40,7 +40,6 @@ import { featureBlockingListener, featureBlockingStatusSave } from '@/services/f
 import IsolatedRoutes from '../isolated/IsolatedRoutes';
 
 const { Sider, Content } = Layout;
-//import Styles from '../App/styles';
 
 // Code splitting
 const General = loadable(() => import('./general'));

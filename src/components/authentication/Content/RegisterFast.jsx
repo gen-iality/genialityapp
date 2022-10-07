@@ -18,7 +18,6 @@ import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import './RegisterFast.css';
 
-//import styles from './ReigsterFast.less';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
