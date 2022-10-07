@@ -1,4 +1,3 @@
-import * as React from 'react';
 import TriviaEdit from '../trivia/edit';
 
 export interface ISurveyCMSProps {

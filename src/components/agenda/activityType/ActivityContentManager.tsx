@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useContext, useMemo, useEffect } from 'react';
 
 import {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import { Button, Alert, Spin, Row, Col } from 'antd';

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useEffect, useState, createElement } from 'react';
 import dayjs from 'dayjs';
 import { Row, Col, Card, Spin, Alert, Button, Modal } from 'antd';

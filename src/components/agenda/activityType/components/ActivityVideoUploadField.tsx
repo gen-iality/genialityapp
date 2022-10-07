@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { message, Result, Spin, Upload } from 'antd';
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline';

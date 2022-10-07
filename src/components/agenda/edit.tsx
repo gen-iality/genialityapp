@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { useState, useContext, useEffect } from 'react';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
 

@@ -1,5 +1,4 @@
 import LikertScaleEditor, { DataSource } from '@components/quiz/LikertScaleEditor';
-import * as React from 'react';
 import { useState } from 'react';
 
 

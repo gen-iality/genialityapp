@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import { Col, Comment, Modal, Row, Typography } from 'antd';
 import dayjs from 'dayjs';

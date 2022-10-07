@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useMemo } from 'react';
 
 import { Card, Badge, Space, Typography, Button } from 'antd';

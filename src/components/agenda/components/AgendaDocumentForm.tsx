@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Select, Spin } from 'antd';
 import { DocumentsApi } from '@helpers/request';

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Typography } from 'antd';
 import QuizProgress from '../../quiz/QuizProgress';
 import QuizzesProgress from '@components/quiz/QuizzesProgress';

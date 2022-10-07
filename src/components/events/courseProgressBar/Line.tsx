@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useMemo, memo } from 'react';
 import './Line.css';
 
