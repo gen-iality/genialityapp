@@ -1,5 +1,5 @@
 /** Hooks, CustomHooks  and react libraries*/
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FunctionComponent } from 'react';
 import * as Survey from 'survey-react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ import getResponsesIndex from './functions/getResponsesIndex';
 import savingResponseByUserId from './functions/savingResponseByUserId';
 import shuffleSurveyQuestion from './models/shuffleSurveyQuestion';
 
-/** Context´s */
+/** Contexts */
 import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 
@@ -25,16 +25,19 @@ import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFrom
 import { addTriesNumber, addRightPoints  } from './services/surveyStatus';
 import { useSurveyContext } from './surveyContext';
 import SurveyQuestionsFeedback from './SurveyQuestionsFeedback';
+import { SurveyPreModel } from './models/types';
 
+// Configuración para poder relacionar el id de la pregunta en la base de datos
+// con la encuesta visible para poder almacenar las respuestas
 Survey.JsonObject.metaData.addProperty('question', 'id');
 Survey.JsonObject.metaData.addProperty('question', 'points');
 
 /**
  * Create a Survey Modal from a survey data.
- * @param {any} survey The survey from MongoDB.
+ * @param {SurveyPreModel} survey The survey from MongoDB.
  * @returns A Survey Modal object.
  */
-function createSurveyModel(survey) {
+function createSurveyModel(survey: SurveyPreModel) {
   const surveyModelData = new Survey.Model(survey);
   surveyModelData.currentPageNo = survey.currentPage;
   surveyModelData.locale = 'es';
@@ -44,11 +47,14 @@ function createSurveyModel(survey) {
   return surveyModelData;
 }
 
-function SurveyComponent(props) {
+export interface SurveyComponentProps {
+  eventId: string,
+  queryData: any,
+};
+
+const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   const {
     eventId, // The event id
-    idSurvey, // The survey ID
-    survey_just_finished,
     queryData, // The survey data
   } = props;
 
@@ -57,7 +63,7 @@ function SurveyComponent(props) {
   const history = useHistory();
   const cSurvey = useSurveyContext();
 
-  const [surveyModel, setSurveyModel] = useState(null);
+  const [surveyModel, setSurveyModel] = useState<Survey.SurveyModel | undefined>();
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [currentQuestionsForFeedback, setCurrentQuestionsForFeedback] = useState([]); /** @type any[] */
 
@@ -67,14 +73,7 @@ function SurveyComponent(props) {
   const [eventUsers, setEventUsers] = useState([]);
   const [voteWeight, setVoteWeight] = useState(0); // Inquietud: Es util?
 
-  var survey;
-
   useEffect(() => {
-    // Configuración para poder relacionar el id de la pregunta en la base de datos
-    // con la encuesta visible para poder almacenar las respuestas
-    // Survey.JsonObject.metaData.addProperty('question', 'id');
-    // Survey.JsonObject.metaData.addProperty('question', 'points');
-
     // Asigna los colores configurables a  la UI de la encuesta
     const eventStyles = cEvent.value.styles;
     assignStylesToSurveyFromEvent(eventStyles);
@@ -86,14 +85,14 @@ function SurveyComponent(props) {
    */
   useEffect(() => {
     if (!(queryData?.questions.length > 0)) return;
-    setSurveyModel(createSurveyModel(shuffleSurveyQuestion(queryData)));
+    setSurveyModel(createSurveyModel(shuffleSurveyQuestion(queryData as any) as SurveyPreModel));
   }, [queryData]);
 
-  const displayFeedbackAfterEachQuestion = (sender, options) => {
+  const displayFeedbackAfterEachQuestion = (sender: Survey.SurveyModel, options: any) => {
     if (showingFeedback !== true) {
       stopChangeToNextQuestion(options);
       hideTimerPanel();
-      displayFeedback(Survey, sender.currentPage);
+      displayFeedback();
       setCurrentQuestionsForFeedback(sender.currentPage.questions);
       setReadOnlyTheQuestions(sender.currentPage.questions);
     } else {
@@ -101,20 +100,21 @@ function SurveyComponent(props) {
     }
   };
 
-  function stopChangeToNextQuestion(options) {
+  function stopChangeToNextQuestion(options: any) {
     options.allowChanging = false;
   }
 
   function hideTimerPanel() {
+    if (surveyModel === undefined) return;
     surveyModel.showTimerPanel = 'none';
     surveyModel.stopTimer();
   }
 
-  function displayFeedback(Survey, page) {
+  function displayFeedback() {
     setShowingFeedback(true);
   }
 
-  function setReadOnlyTheQuestions(questions) {
+  function setReadOnlyTheQuestions(questions: any[]) {
     // Volvemos de solo lectura las respuestas
     questions.forEach((question, index) => {
       if (index === 0) return;
@@ -123,11 +123,14 @@ function SurveyComponent(props) {
   }
 
   function showTimerPanel() {
+    if (surveyModel === undefined) return;
     surveyModel.showTimerPanel = 'top';
     surveyModel.startTimer();
   }
 
   async function saveSurveyStatus() {
+    if (surveyModel === undefined) return;
+
     const status = surveyModel.state;
     console.debug('200.status', status);
     // await SetCurrentUserSurveyStatus(queryData, currentUser, status);
@@ -141,13 +144,16 @@ function SurveyComponent(props) {
   }
 
   async function saveSurveyCurrentPage() {
+    if (surveyModel === undefined) return;
     if (!(Object.keys(currentUser).length === 0)) {
       // Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
       await setCurrentPage(queryData._id, currentUser.value._id, surveyModel.currentPageNo);
     }
   }
 
-  async function saveGainedSurveyPoints(surveyQuestions) {
+  async function saveGainedSurveyPoints(surveyQuestions: Survey.SurveyQuestion[]) {
+    if (surveyModel === undefined) return;
+  
     let question;
     if (surveyQuestions.length === 1) {
       question = surveyModel.currentPage.questions[0];
@@ -170,7 +176,9 @@ function SurveyComponent(props) {
     }
   }
 
-  async function saveSurveyAnswers(surveyQuestions) {
+  async function saveSurveyAnswers(surveyQuestions: Survey.SurveyQuestion[]) {
+    if (surveyModel === undefined) return;
+
     let question;
     let optionQuantity = 0;
     let correctAnswer = false;
@@ -205,7 +213,7 @@ function SurveyComponent(props) {
     }
   }
 
-  async function saveSurveyData(sender) {
+  async function saveSurveyData(sender: Survey.SurveyModel) {
     console.log('200.saveSurveyData');
 
     // saveSurveyStatus(); -- temporally ignored
@@ -216,7 +224,7 @@ function SurveyComponent(props) {
       .catch(err => console.error('600 saveSurveyData saveGainedSurveyPoints error:', err));
   }
 
-  async function onSurveyCompleted(sender) {
+  async function onSurveyCompleted(sender: Survey.SurveyModel) {
     console.log('200.onSurveyCompleted');
     await saveSurveyData(sender);
     // survey_just_finished();
