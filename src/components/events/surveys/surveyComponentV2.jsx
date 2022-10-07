@@ -14,6 +14,7 @@ import stateMessages from './functions/stateMessagesV2';
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 import getResponsesIndex from './functions/getResponsesIndex';
 import savingResponseByUserId from './functions/savingResponseByUserId';
+import shuffleSurveyQuestion from './models/shuffleSurveyQuestion';
 
 /** Context´s */
 import { UseEventContext } from '@context/eventContext';
@@ -27,52 +28,6 @@ import SurveyQuestionsFeedback from './SurveyQuestionsFeedback';
 
 Survey.JsonObject.metaData.addProperty('question', 'id');
 Survey.JsonObject.metaData.addProperty('question', 'points');
-
-/** @deprecated Just because */
-function getRandomlySampleQuestions(survey) {
-  console.debug('survey.survey', survey);
-
-  const getRandomIndex = (max) => Math.floor(Math.random() * max);
-
-  let newSurvey = {};
-  if (survey.random_survey) {
-    // To avoid foolishness
-    const sampleCount = Math.min(survey.random_survey_count, survey.questions.length);
-    console.debug('sampleCount', sampleCount);
-    if (sampleCount < survey.questions.length) {
-      /** @type number[] */
-      const possibleIndeces = survey.questions.map((question, index) => index);
-      const takenIndeces = [];
-      // Take `sampleCount` question-indeces
-      let taken = 0;
-      let watchDog = 0;
-      while (taken < sampleCount) {
-        watchDog++;
-        const index = getRandomIndex(possibleIndeces.length);
-        if (!takenIndeces.includes(index)) {
-          possibleIndeces.splice(index, 1); // like pop
-          takenIndeces.push(index);
-          taken++;
-        }
-        if (watchDog > survey.questions.length * 2) {
-          console.error('tanking random index has crashed and the loop has overflowed the survey questions length');
-          break;
-        }
-      }
-      // Now, use these indeces to get the questions
-      takenIndeces
-      const newPages = survey.pages.filter((question, index) => takenIndeces.includes(index))
-      newSurvey = { ...survey, pages: newPages };
-    } else {
-      newSurvey = { ...survey };
-    }
-  } else {
-    newSurvey = { ...survey };
-  }
-  
-  console.debug('survey.survey', newSurvey);
-  return newSurvey;
-}
 
 /**
  * Create a Survey Modal from a survey data.
@@ -131,7 +86,7 @@ function SurveyComponent(props) {
    */
   useEffect(() => {
     if (!(queryData?.questions.length > 0)) return;
-    setSurveyModel(createSurveyModel(getRandomlySampleQuestions(queryData)));
+    setSurveyModel(createSurveyModel(shuffleSurveyQuestion(queryData)));
   }, [queryData]);
 
   const displayFeedbackAfterEachQuestion = (sender, options) => {
