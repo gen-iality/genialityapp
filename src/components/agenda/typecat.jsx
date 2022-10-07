@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
+import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request';
 import { Tag } from 'antd';
 import CMS from '../newComponent/CMS';
 

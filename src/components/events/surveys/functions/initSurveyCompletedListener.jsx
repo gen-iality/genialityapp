@@ -1,4 +1,4 @@
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 async function InitSurveysCompletedListener(currentUser, dispatch) {
    const userId = currentUser.value._id;

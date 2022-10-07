@@ -3,9 +3,9 @@ import { FormattedDate, FormattedTime } from 'react-intl';
 import { IoIosCamera, IoIosQrScanner } from 'react-icons/io';
 import { FaCamera } from 'react-icons/fa';
 import QrReader from 'react-qr-reader';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { toast } from 'react-toastify';
-import { handleRequestError } from '../../helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 import { Modal, Tabs, Form, Select, Row, Col, Input, Button } from 'antd';
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
 

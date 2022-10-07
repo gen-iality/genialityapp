@@ -4,7 +4,7 @@ import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeA
 import AgendaContext from '../../../../context/AgendaContext';
 import { useContext, useState } from 'react';
 import { deleteLiveStream, deleteAllVideos } from '../../../../adaptors/gcoreStreamingApi';
-import { AgendaApi, TypesAgendaApi } from '../../../../helpers/request';
+import { AgendaApi, TypesAgendaApi } from '@helpers/request';
 import { CurrentEventContext } from '../../../../context/eventContext';
 import Service from '../../../agenda/roomManager/service';
 import { firestore } from '@helpers/firebase';

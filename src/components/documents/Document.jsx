@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
-import { DocumentsApi } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
+import { DocumentsApi } from '@helpers/request';
+import { handleRequestError } from '@helpers/utils';
 import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin, Progress } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { fireStorage } from '@helpers/firebase';

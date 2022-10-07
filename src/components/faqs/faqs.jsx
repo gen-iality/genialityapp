@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaqsApi } from '../../helpers/request';
+import { FaqsApi } from '@helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 

@@ -11,7 +11,7 @@ import { useState, useContext, useEffect } from 'react';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventContext } from '../../../context/eventContext';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
-import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
+import { obtenerVideos } from '@adaptors/gcoreStreamingApi';
 import CardListVideo from './components/CardListVideo';
 import LoadingTypeActivity from './components/LoadingTypeActivity';
 const ManagerView = (props: any) => {

@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Col, Divider, Menu, Row } from 'antd';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import { useEffect } from 'react';
 import { MenuItems } from './utils';
 import { ApartmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';

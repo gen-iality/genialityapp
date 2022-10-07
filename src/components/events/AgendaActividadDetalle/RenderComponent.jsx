@@ -7,7 +7,7 @@ import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
 import GameDrawer from '../game/gameDrawer';
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import AgendaContext from '../../../context/AgendaContext';

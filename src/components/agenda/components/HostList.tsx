@@ -2,7 +2,7 @@ import { Divider, List, Typography, Button, Avatar } from 'antd';
 import { ReadFilled } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { UseEventContext } from '../../../context/eventContext';
-import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../../helpers/request';
+import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '@helpers/request';
 
 const dataDuration = [
   {

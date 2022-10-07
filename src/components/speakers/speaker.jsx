@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
-import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
+import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '@helpers/utils';
+import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request';
 import Creatable from 'react-select';
 import { Button, Typography, Row, Col, Form, Input, Image, Empty, Switch, Modal, Tooltip, Select } from 'antd';
 import {

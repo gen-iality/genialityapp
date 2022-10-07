@@ -4,7 +4,7 @@ import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import withContext from '../../../context/withContext';
 import { useLocation, withRouter } from 'react-router-dom';
-import { NewsFeed } from '../../../helpers/request';
+import { NewsFeed } from '@helpers/request';
 import { Card, Row, Spin, Col, Space, Tag, Grid, Image, Typography, Divider } from 'antd';
 import NoticiaList from './NoticiasList';
 import ReactPlayer from 'react-player';

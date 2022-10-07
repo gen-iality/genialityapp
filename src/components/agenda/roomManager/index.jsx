@@ -4,7 +4,7 @@ import RoomConfig from './config';
 import Service from './service';
 import dayjs from 'dayjs';
 import AgendaContext from '../../../context/AgendaContext';
-import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { stopLiveStream, deleteLiveStream, getLiveStreamStatus } from '../../../adaptors/wowzaStreamingAPI';
 import { DispatchMessageService } from '../../../context/MessageService';

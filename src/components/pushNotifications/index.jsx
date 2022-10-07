@@ -3,7 +3,7 @@ import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
 import { Button } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
-import { UsersApi } from '../../helpers/request';
+import { UsersApi } from '@helpers/request';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import ModalNotifications from './modalNotificacions';
 

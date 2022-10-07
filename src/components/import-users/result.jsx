@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import Async from 'async';
-import { Actions } from '../../helpers/request';
+import { Actions } from '@helpers/request';
 import { Row, Col, Tag, Tabs, Table, Spin } from 'antd';
 
 const { TabPane } = Tabs;

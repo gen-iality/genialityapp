@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es-us';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 /* import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; */
 import { FormattedMessage } from 'react-intl';

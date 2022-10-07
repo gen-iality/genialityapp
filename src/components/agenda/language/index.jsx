@@ -1,9 +1,9 @@
 import { Component, Fragment } from 'react';
-import { AgendaApi } from '../../../helpers/request';
+import { AgendaApi } from '@helpers/request';
 import { Typography, Select, Form, Table, Button, InputNumber, notification, Input } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ModalEdit from './modalEdit';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 const { Title } = Typography;
 const { Option } = Select;

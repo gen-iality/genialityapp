@@ -4,7 +4,7 @@ import { PictureOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icon
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
-import { UsersApi } from '../../../helpers/request';
+import { UsersApi } from '@helpers/request';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
 import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 

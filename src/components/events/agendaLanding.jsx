@@ -10,9 +10,9 @@ import {
   DocumentsApi,
   AttendeeApi,
   discountCodesApi,
-} from '../../helpers/request';
+} from '@helpers/request';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge, Row } from 'antd';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';

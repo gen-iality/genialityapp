@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Form, Input, Col, Row, Button, Spin, Card } from 'antd';
-import { app } from '../../../helpers/firebase';
+import { app } from '@helpers/firebase';
 import FormTags from './constants';
 import { injectIntl } from 'react-intl';
 

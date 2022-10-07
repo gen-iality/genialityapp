@@ -1,4 +1,4 @@
-import { firestore, fireStorage } from '../../helpers/firebase';
+import { firestore, fireStorage } from '@helpers/firebase';
 import { DispatchMessageService } from '../../context/MessageService';
 
 export const saveFirebase = {

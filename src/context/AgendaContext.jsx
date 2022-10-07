@@ -3,12 +3,12 @@ import {
   getVideosLiveStream,
   startRecordingLiveStream,
   stopRecordingLiveStream,
-} from '@/adaptors/gcoreStreamingApi';
+} from '@adaptors/gcoreStreamingApi';
 import { message } from 'antd';
 
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
 import Service from '../components/agenda/roomManager/service';
-import { fireRealtime, firestore } from '../helpers/firebase';
+import { fireRealtime, firestore } from '@helpers/firebase';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';
 import { DispatchMessageService } from './MessageService';

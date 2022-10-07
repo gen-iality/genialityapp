@@ -20,7 +20,7 @@ import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../../context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
-import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
+import { startRecordingLiveStream, stopRecordingLiveStream } from '@adaptors/gcoreStreamingApi';
 import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation';
 
 const CardPreview = (props: any) => {

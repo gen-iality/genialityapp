@@ -1,5 +1,5 @@
-import { firestore, fireRealtime } from '../../../../helpers/firebase';
-import { SurveysApi } from '../../../../helpers/request';
+import { firestore, fireRealtime } from '@helpers/firebase';
+import { SurveysApi } from '@helpers/request';
 import countAnswers from './counstAnswersService';
 
 const surveyAnswers = {

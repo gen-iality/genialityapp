@@ -28,7 +28,7 @@ import {
   getLiveStreamStats,
   ResetLiveStream,
 } from '../../../../adaptors/wowzaStreamingAPI';
-import { realTimeviuschat } from '../../../../helpers/firebase';
+import { realTimeviuschat } from '@helpers/firebase';
 import { useCurrentUser } from '@context/userContext';
 import AgendaContext from '../../../../context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';

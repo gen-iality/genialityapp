@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import AgendaContext from '../../../context/AgendaContext';
 
 import InitialSVG from './components/svg/InitialSVG';
-import { AgendaApi } from '../../../helpers/request';
+import { AgendaApi } from '@helpers/request';
 import { CurrentEventContext } from '../../../context/eventContext';
 import ModalPreviewVideo from './ModalPreviewVideo';
 

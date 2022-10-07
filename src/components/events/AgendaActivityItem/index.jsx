@@ -4,8 +4,8 @@ import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, 
 import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
-import { firestore } from '../../../helpers/firebase';
-import { AgendaApi } from '../../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import { AgendaApi } from '@helpers/request';
 import { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';

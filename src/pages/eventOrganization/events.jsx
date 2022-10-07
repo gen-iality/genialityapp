@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { OrganizationApi } from '../../helpers/request';
+import { OrganizationApi } from '@helpers/request';
 import { Table, Button, Row, Col } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';

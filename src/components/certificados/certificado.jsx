@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { CertsApi, RolAttApi } from '../../helpers/request';
+import { CertsApi, RolAttApi } from '@helpers/request';
 import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '../../helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
@@ -10,7 +10,7 @@ import ReactQuill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { toolbarEditor } from '../../helpers/constants';
 import dayjs from 'dayjs';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { withRouter } from 'react-router-dom';
 import { DispatchMessageService } from '../../context/MessageService';
 

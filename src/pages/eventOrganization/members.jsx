@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '../../helpers/request';
+import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '@helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { firestore } from '@helpers/firebase';
 /** export Excel */

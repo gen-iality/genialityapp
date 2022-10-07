@@ -1,6 +1,6 @@
 //import  { createContext, useEffect } from 'react';
 // import { useState } from 'react';
-// import { firestore, fireRealtime } from '../helpers/firebase';
+// import { firestore, fireRealtime } from '@helpers/firebase';
 // import { UseEventContext } from './eventContext';
 // import { UseCurrentUser } from './userContext';
 // import { notification, Button, Row, Col } from 'antd';

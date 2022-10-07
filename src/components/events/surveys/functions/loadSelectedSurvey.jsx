@@ -1,4 +1,4 @@
-import { SurveysApi } from '../../../../helpers/request';
+import { SurveysApi } from '@helpers/request';
 
 async function LoadSelectedSurvey(eventId, idSurvey) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */

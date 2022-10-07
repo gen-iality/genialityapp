@@ -1,12 +1,12 @@
 import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
-import { firestore } from '../../helpers/firebase';
-import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
-import { AgendaApi } from '../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request';
+import { AgendaApi } from '@helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
-import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
+import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '@helpers/utils';
 import dayjs from 'dayjs';
 import {
   Button,

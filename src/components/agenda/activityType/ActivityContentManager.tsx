@@ -13,7 +13,7 @@ import {
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import AgendaContext from '@context/AgendaContext';
 import { CurrentEventContext } from '@context/eventContext';
-import { obtenerVideos } from '@/adaptors/gcoreStreamingApi';
+import { obtenerVideos } from '@adaptors/gcoreStreamingApi';
 import VideoPreviewerCard from './components/manager/VideoPreviewerCard';
 import TransmitionStatusCard from './components/manager/TransmitionStatusCard';
 import VideoListCard from './components/manager/VideoListCard';

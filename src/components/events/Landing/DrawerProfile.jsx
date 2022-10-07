@@ -1,6 +1,6 @@
 import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
 import { useCurrentUser } from '@context/userContext';
-import { formatDataToString } from '../../../helpers/utils';
+import { formatDataToString } from '@helpers/utils';
 
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';

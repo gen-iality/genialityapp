@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal, Form, Input, Button, Typography, Spin } from 'antd';
 import { DefaultProperties } from './propertiesdefault';
-import { OrganizationPlantillaApi } from '../../helpers/request';
+import { OrganizationPlantillaApi } from '@helpers/request';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { DispatchMessageService } from '../../context/MessageService';
 

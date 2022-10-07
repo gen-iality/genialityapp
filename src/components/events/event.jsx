@@ -3,7 +3,7 @@ import { Route, Redirect, Switch, Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import Loading from '../loaders/loading';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import ListEventUser from '../event-users';
 import { fetchRol } from '../../redux/rols/actions';
 import { fetchPermissions } from '../../redux/permissions/actions';

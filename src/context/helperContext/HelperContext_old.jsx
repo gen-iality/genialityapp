@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer } from 'react';
 import { useState } from 'react';
-import { firestore, fireRealtime, app } from '../../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../../helpers/request';
+import { firestore, fireRealtime, app } from '@helpers/firebase';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '@helpers/request';
 import { UseEventContext } from '../eventContext';
 import { useCurrentUser } from '../userContext';
 import { UseUserEvent } from '../eventUserContext';

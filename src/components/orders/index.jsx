@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { ApiUrl } from '../../helpers/constants';
 import IFrame from '../shared/iFrame';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 
 class OrdersEvent extends Component {
   constructor(props) {

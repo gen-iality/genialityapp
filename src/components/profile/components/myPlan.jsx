@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request';
+import { PlansApi, AlertsPlanApi, BillssPlanApi } from '@helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
 import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal } from 'antd';

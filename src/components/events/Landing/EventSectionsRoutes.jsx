@@ -7,7 +7,7 @@ import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
 import { UseUserEvent } from '../../../context/eventUserContext';
-import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@containers/broadcastViewers';

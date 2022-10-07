@@ -4,7 +4,7 @@ import { CalendarOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../../context/newEventContext';
-import { OrganizationApi, PlansApi } from '../../../../helpers/request';
+import { OrganizationApi, PlansApi } from '@helpers/request';
 import ModalOrgListCreate from './modalOrgListCreate';
 /**
  * This solution is distributed as is:

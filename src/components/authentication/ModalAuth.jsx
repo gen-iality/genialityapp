@@ -9,7 +9,7 @@ import {
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
 import withContext from '../../context/withContext';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { app } from '../../helpers/firebase';
+import { app } from '@helpers/firebase';
 import { useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';

@@ -1,6 +1,6 @@
 import { sortBy, prop } from 'ramda';
-import { firestore } from '../../helpers/firebase';
-import API, { UsersApi, EventsApi } from '../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import API, { UsersApi, EventsApi } from '@helpers/request';
 
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 

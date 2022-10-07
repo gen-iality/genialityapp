@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import MyAgenda from './myAgenda';
 import { userRequest } from './services';
 import { Spin } from 'antd';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import withContext from '../../context/withContext';
 
 class AgendaIndepent extends Component {

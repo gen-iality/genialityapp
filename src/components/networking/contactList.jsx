@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd';
-import { Networking } from '../../helpers/request';
-import { EventFieldsApi } from '../../helpers/request';
-import { formatDataToString } from '../../helpers/utils';
+import { Networking } from '@helpers/request';
+import { EventFieldsApi } from '@helpers/request';
+import { formatDataToString } from '@helpers/utils';
 
 //context
 import { UseUserEvent } from '../../context/eventUserContext';

@@ -10,7 +10,7 @@ import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../.
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { UseEventContext } from '../../../context/eventContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 
 const { Meta } = Card;
 

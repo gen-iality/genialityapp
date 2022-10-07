@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { NewsFeed } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
+import { NewsFeed } from '@helpers/request';
+import { handleRequestError } from '@helpers/utils';
 import { Col, Row, Input, Form, DatePicker, Modal } from 'antd';
 /**
  * This solution is distributed as is:

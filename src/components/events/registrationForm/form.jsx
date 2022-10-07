@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
+import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
   Collapse,
@@ -33,7 +33,7 @@ import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { UseEventContext } from '../../../context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { app } from '../../../helpers/firebase';
+import { app } from '@helpers/firebase';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */

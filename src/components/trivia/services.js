@@ -1,4 +1,4 @@
-import { firestore, fireRealtime } from '../../helpers/firebase';
+import { firestore, fireRealtime } from '@helpers/firebase';
 import dayjs from 'dayjs';
 
 const refSurvey = firestore.collection('surveys');

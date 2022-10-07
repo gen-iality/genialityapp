@@ -8,7 +8,7 @@ import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
 import withContext from '../../context/withContext';
 import dayjs from 'dayjs';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { WallContextProvider } from '../../context/WallContext';
 import { DispatchMessageService } from '../../context/MessageService';
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { RolAttApi } from '../../../helpers/request';
+import { RolAttApi } from '@helpers/request';
 import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '../../../helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../../antdComponents/Header';

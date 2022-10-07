@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
-import { SurveysApi } from '../../helpers/request';
+import { SurveysApi } from '@helpers/request';
 import { getTotalVotes } from './services';
 
 import { List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from 'antd';

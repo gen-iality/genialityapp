@@ -5,7 +5,7 @@ import { Col, Card, Result, Row, Space } from 'antd';
 import { CloudDownloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Loading from '../../loaders/loading';
 import DocumentsList from '../documentsList';
-import { DocumentsApi } from '../../../helpers/request';
+import { DocumentsApi } from '@helpers/request';
 import { Tabs } from 'antd';
 import withContext from '../../../context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { OrganizationFuction, UsersApi } from '../../../helpers/request';
+import { OrganizationFuction, UsersApi } from '@helpers/request';
 import { Steps, Button, Card, Row, Spin } from 'antd';
 import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../../context/MessageService';

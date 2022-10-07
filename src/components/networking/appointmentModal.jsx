@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
 
-import { getDatesRange } from '../../helpers/utils';
+import { getDatesRange } from '@helpers/utils';
 import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 

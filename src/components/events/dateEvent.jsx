@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import { Button, notification } from 'antd';
 
 import DayPicker, { DateUtils } from 'react-day-picker';

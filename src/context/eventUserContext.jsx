@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { EventsApi } from '../helpers/request';
+import { EventsApi } from '@helpers/request';
 import { UseEventContext } from './eventContext';
-import { app } from '../helpers/firebase';
+import { app } from '@helpers/firebase';
 import { useCurrentUser } from './userContext';
 export const CurrentEventUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };

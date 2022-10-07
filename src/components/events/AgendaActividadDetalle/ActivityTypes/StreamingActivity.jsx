@@ -6,7 +6,7 @@ import WithEviusContext from '../../../../context/withContext';
 import ImageComponentwithContext from '../ImageComponent';
 import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import GcoreStreamingPlayer from '../GcoreStreamingPlayer';
 import AgendaContext from '../../../../context/AgendaContext';
 import ReactPlayer from 'react-player';

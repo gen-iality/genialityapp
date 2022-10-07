@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react';
 import { selectOptions, surveyTimeOptions } from './constants';
-import { SurveysApi, AgendaApi } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
+import { SurveysApi, AgendaApi } from '@helpers/request';
+import { handleRequestError } from '@helpers/utils';
 import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';

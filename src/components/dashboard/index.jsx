@@ -28,8 +28,8 @@ import { Bar, Line } from 'react-chartjs-2';
 import ReactToPrint from 'react-to-print';
 import dayjs from 'dayjs';
 import { utils, writeFileXLSX } from 'xlsx';
-import API from '../../helpers/request';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import API from '@helpers/request';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 
 // const [google, setGoogle] = useState(null)

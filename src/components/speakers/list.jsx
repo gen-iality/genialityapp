@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { withRouter } from 'react-router-dom';
-import { SpeakersApi } from '../../helpers/request';
+import { SpeakersApi } from '@helpers/request';
 import { Table, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';

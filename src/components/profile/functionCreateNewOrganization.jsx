@@ -1,5 +1,5 @@
 import { saveImageStorage } from '../../helpers/helperSaveImage';
-import { OrganizationApi } from '../../helpers/request';
+import { OrganizationApi } from '@helpers/request';
 import { DispatchMessageService } from '../../context/MessageService';
 
 const functionCreateNewOrganization = (props) => {

@@ -1,5 +1,5 @@
-import { Actions } from '../../helpers/request';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { Actions } from '@helpers/request';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 
 export function fetchPermissions(event) {
   return async (dispatch) => {

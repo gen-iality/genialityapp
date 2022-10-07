@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
-import { app, firestore } from '../helpers/firebase';
+import { app, firestore } from '@helpers/firebase';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import privateInstance from '../helpers/request';
+import privateInstance from '@helpers/request';
 
 export const CurrentUserContext = createContext();
 let initialContextState = { status: 'LOADING', value: undefined };

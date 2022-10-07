@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
 import { Divider } from 'antd';

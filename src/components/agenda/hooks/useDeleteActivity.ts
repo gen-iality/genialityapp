@@ -1,5 +1,5 @@
 import { DispatchMessageService } from '@context/MessageService';
-import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
+import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi';
 import { AgendaApi } from '@helpers/request';
 import { firestore, fireRealtime } from '@helpers/firebase';
 import Service from '../roomManager/service';

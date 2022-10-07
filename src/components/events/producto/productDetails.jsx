@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Alert, Button, Card, Col, Divider, Input, message, Row, Space, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import { IssuesCloseOutlined } from '@ant-design/icons';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import OfertaProduct from './OfertaProducto';
 
 function DetailsProduct(props) {

@@ -6,7 +6,7 @@ import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
-import { UsersApi } from '../../helpers/request';
+import { UsersApi } from '@helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';

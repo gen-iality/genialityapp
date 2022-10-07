@@ -1,4 +1,4 @@
-import { fireRealtime, app } from '../helpers/firebase';
+import { fireRealtime, app } from '@helpers/firebase';
 import { uniqueID } from '@helpers/utils';
 import dayjs from 'dayjs';
 

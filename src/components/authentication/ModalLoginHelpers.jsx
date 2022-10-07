@@ -1,7 +1,7 @@
 import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row } from 'antd';
 import { useState } from 'react';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import withContext from '../../context/withContext';
 import { useHelper } from '../../context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';

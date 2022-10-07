@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NewsFeed } from '../../helpers/request';
+import { NewsFeed } from '@helpers/request';
 import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
 import CMS from '../newComponent/CMS';

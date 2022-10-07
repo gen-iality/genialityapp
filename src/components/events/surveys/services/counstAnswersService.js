@@ -1,4 +1,4 @@
-import { firestore, fireRealtime } from '../../../../helpers/firebase';
+import { firestore, fireRealtime } from '@helpers/firebase';
 import updateTotalVoteMultipleAnswer from '../functions/updateTotalVoteMultipleAnswer';
 import updateTotalVoteSingleAnswer from '../functions/updateTotalVoteSingleAnswer';
 

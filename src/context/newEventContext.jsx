@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import dayjs from 'dayjs';
 import { DispatchMessageService } from '../context/MessageService';
-import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/request';
-import { GetTokenUserFirebase } from '../helpers/HelperAuth';
+import { Actions, AgendaApi, EventsApi, OrganizationApi } from '@helpers/request';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { configEventsTemplate } from '../helpers/constants';
 
 export const cNewEventContext = createContext();

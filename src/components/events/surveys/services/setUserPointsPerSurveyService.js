@@ -1,4 +1,4 @@
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 async function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestions, timeSpent) {
   const { email, _id } = user;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { handleRequestError } from '../../helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import Header from '../../antdComponents/Header';
@@ -9,7 +9,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 import Loading from '../profile/loading';
 import Service from '../agenda/roomManager/service';
 import { firestore, fireRealtime } from '@helpers/firebase';
-import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
+import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi';
 const { confirm } = Modal;
 
 const CMS = (props) => {

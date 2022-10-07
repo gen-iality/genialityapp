@@ -29,7 +29,7 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import loadable from '@loadable/component';
 import { DispatchMessageService } from '../../../context/MessageService.tsx';
 import WithEviusContext from '../../../context/withContext';
-import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
+import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import initBroadcastViewers from '@containers/broadcastViewers';
 import DateEvent from '../dateEvent';

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Badge, Space, Grid } from 'antd';
-import { AgendaApi } from '../../helpers/request';
-import { firestore } from '../../helpers/firebase';
+import { AgendaApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import Moment from 'moment-timezone';
 import { CaretRightOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';

@@ -6,7 +6,7 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 import { UseEventContext } from '../../../context/eventContext';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { Redirect } from 'react-router-dom';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import ProductCard from '../producto/productCard';
 import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
