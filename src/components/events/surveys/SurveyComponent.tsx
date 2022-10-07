@@ -249,17 +249,14 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             />
           )}
           <div style={{ display: showingFeedback ? 'none' : 'block' }}>
-            {isSavingPoints ? (
-              <Spin/>
-            ) : (
-              <Survey.Survey
-                model={surveyModel}
-                onCurrentPageChanging={displayFeedbackAfterEachQuestion}
-                onPartialSend={saveSurveyData}
-                onCompleting={displayFeedbackAfterEachQuestion}
-                onComplete={onSurveyCompleted}
-              />
-            )}
+            <Survey.Survey
+              style={{ display: isSavingPoints ? 'none':'' }}
+              model={surveyModel}
+              onCurrentPageChanging={displayFeedbackAfterEachQuestion}
+              onPartialSend={saveSurveyData}
+              onCompleting={displayFeedbackAfterEachQuestion}
+              onComplete={onSurveyCompleted}
+            />
           </div>
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
