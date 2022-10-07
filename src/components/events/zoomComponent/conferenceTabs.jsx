@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createElement } from 'react';
 import { Tabs, Button, Menu, Row, Col, Tooltip } from 'antd';
 import {
   CommentOutlined,
@@ -31,7 +31,7 @@ export default function ConferenceTabsComponent(props) {
   return (
     <div className='zoom-collapsed'>
       <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>
-        {React.createElement(collapsed ? RightOutlined : LeftOutlined, {
+        {createElement(collapsed ? RightOutlined : LeftOutlined, {
           className: 'trigger',
           onClick: () => setCollapsed(collapsed === false ? true : false),
         })}

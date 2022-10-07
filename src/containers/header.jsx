@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createElement } from 'react';
 import { useHistory } from 'react-router-dom';
 import ErrorServe from '@components/modal/serverError';
 import UserStatusAndMenu from '@components/shared/userStatusAndMenu';
@@ -217,7 +217,7 @@ const Headers = (props) => {
                 <Col span={2} offset={3} data-target='navbarBasicExample'>
                   <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
                     <Button style={zIndex} onClick={() => showDrawer()}>
-                      {React.createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                      {createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                         className: 'trigger',
                         onClick: () => {
                           console.log('CERRAR');

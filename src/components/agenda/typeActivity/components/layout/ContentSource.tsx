@@ -1,8 +1,9 @@
+import { ReactNode } from 'react';
 import { Result, Typography } from 'antd';
 import InputSource from '../InputSource';
 
 interface propsOptions {
-  addonBefore: React.ReactNode;
+  addonBefore: ReactNode;
   placeholder?: string;
   icon: string;
   subtitle?: string;

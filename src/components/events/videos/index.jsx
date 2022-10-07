@@ -1,7 +1,7 @@
 import { Card, Space, Col, Row, Result, PageHeader } from 'antd';
 import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import VideoCard from '../../shared/videoCard';
 import Feedback from '../ferias/feedback';
 
@@ -20,7 +20,8 @@ const Videos = () => {
         }
       });
   }
-  React.useEffect(() => {
+
+  useEffect(() => {
     ExistvideoInActivity();
   }, [activitiesEvent]);
 

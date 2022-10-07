@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, createContext, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import { EventsApi, eventTicketsApi } from '@helpers/request';
 import NotFoundPage from '@components/notFoundPage';
 
-export const CurrentEventContext = React.createContext();
+export const CurrentEventContext = createContext();
 
 export function CurrentEventProvider({ children }) {
   let { event_id, event_name, event } = useParams();
@@ -71,7 +70,7 @@ export function CurrentEventProvider({ children }) {
 }
 
 export function useEventContext() {
-  const contextevent = React.useContext(CurrentEventContext);
+  const contextevent = useContext(CurrentEventContext);
   if (!contextevent) {
     throw new Error('eventContext debe estar dentro del proveedor');
   }

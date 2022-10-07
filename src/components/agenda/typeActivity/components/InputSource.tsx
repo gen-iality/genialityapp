@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Input, Form } from 'antd';
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 
@@ -5,7 +6,7 @@ import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
   addonBefore: 'https://vimeo.com/event/' || https://youtu.be/ || <LinkOutlined />
 */
 interface propsOptions {
-  addonBefore: React.ReactNode;
+  addonBefore: ReactNode;
   placeholder?: string;
   type: string;
 }

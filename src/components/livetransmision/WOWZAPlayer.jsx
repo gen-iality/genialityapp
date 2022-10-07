@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, memo } from 'react';
 import ReactPlayer from 'react-player';
 import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
@@ -129,4 +129,4 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   );
 }
 
-export default React.memo(WOWZAPlayer);
+export default memo(WOWZAPlayer);

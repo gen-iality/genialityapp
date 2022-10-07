@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ReactNode } from 'react';
 import type { ActivityType } from './activityType';
 
 export type ProcessingType = {
@@ -34,5 +34,5 @@ export type ActivityTypeContextType = {
 };
 
 export type ActivityTypeProviderProps = {
-  children: React.ReactNode,
+  children: ReactNode,
 };

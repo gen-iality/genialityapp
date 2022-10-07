@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Grid, Spin, Layout } from 'antd';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import Event from '@components/events/event';
@@ -199,4 +200,4 @@ const PageWithFooter = () => {
   );
 };
 
-export default React.memo(ContentContainer);
+export default memo(ContentContainer);

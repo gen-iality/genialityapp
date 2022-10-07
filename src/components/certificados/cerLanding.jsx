@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, createElement } from 'react';
 import dayjs from 'dayjs';
 import { firestore } from '@helpers/firebase';
 import { CertsApi, RolAttApi } from '@helpers/request';
@@ -13,7 +13,7 @@ import certificateImage from '../events/certificateImage';
 
 const IconText = ({ icon, text, onSubmit }) => (
   <Button htmlType='submit' type='primary' onClick={onSubmit}>
-    {React.createElement(icon, { style: { marginRight: 8 } })}
+    {createElement(icon, { style: { marginRight: 8 } })}
     {text}
   </Button>
 );

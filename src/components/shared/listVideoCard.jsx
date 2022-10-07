@@ -2,7 +2,7 @@ import { Card, Space, Col, Row } from 'antd';
 import VideoCard from './videoCard';
 import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const ListVideoCard = () => {
   let cEvent = useEventContext();
@@ -18,7 +18,7 @@ const ListVideoCard = () => {
         }
       });
   }
-  React.useEffect(() => {
+  useEffect(() => {
     ExistvideoInActivity();
   }, [activitiesEvent]);
 

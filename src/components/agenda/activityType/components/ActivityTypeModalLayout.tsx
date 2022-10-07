@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ReactNode } from 'react';
 
 import { Typography, Layout, Row, Col, Button, Spin } from 'antd';
 
@@ -9,7 +9,7 @@ const { Title } = Typography;
 
 export interface ActivityTypeModalLayoutProps extends ModalWrapperUIProps {
   somethingWasSelected: boolean,
-  render: () => React.ReactNode,
+  render: () => ReactNode,
 };
 
 function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {

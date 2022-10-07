@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component, createRef } from 'react';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { IoIosCamera, IoIosQrScanner } from 'react-icons/io';
 import { FaCamera } from 'react-icons/fa';
@@ -21,7 +21,7 @@ class CheckSpace extends Component {
       tabActive: 'camera',
       newCC: '',
     };
-    this.txtInput = React.createRef();
+    this.txtInput = createRef();
   }
 
   changeType = (type) => {

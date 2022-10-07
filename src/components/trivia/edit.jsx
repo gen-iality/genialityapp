@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment, createRef } from 'react';
 import { selectOptions, surveyTimeOptions } from './constants';
 import { SurveysApi, AgendaApi } from '@helpers/request';
 import { handleRequestError } from '@helpers/utils';
@@ -49,7 +49,7 @@ const { Title } = Typography;
 class triviaEdit extends Component {
   constructor(props) {
     super(props);
-    this.formEditRef = React.createRef();
+    this.formEditRef = createRef();
     this.state = {
       isUserUnconsciousReloading: false,
       title: props.title || 'Evaluación',

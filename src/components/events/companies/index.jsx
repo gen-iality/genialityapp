@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import { notification } from 'antd';
 import { isFunction, isNonEmptyArray } from 'ramda-adjunct';
 import { Component } from 'react';
@@ -16,7 +17,7 @@ class Company extends Component {
       companies: [],
       shownCompanyIndex: -1,
     };
-    this.standsListRef = React.createRef();
+    this.standsListRef = createRef();
   }
 
   componentDidMount() {
