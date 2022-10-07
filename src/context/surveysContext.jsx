@@ -198,7 +198,7 @@ export function SurveysProvider({ children }) {
   );
 }
 
-export function UseSurveysContext() {
+export function useSurveysContext() {
   const contextsurveys = useContext(SurveysContext);
   console.log('contextsurveys', contextsurveys);
   if (!contextsurveys) {

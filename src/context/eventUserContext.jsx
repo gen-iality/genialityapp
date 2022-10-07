@@ -60,7 +60,7 @@ export function CurrentUserEventProvider({ children }) {
 export function useUserEvent() {
   const contextuser = React.useContext(CurrentEventUserContext);
   if (!contextuser) {
-    throw new Error('UseEventuser debe estar dentro del proveedor');
+    throw new Error('useEventuser debe estar dentro del proveedor');
   }
 
   return contextuser;

@@ -9,7 +9,7 @@ import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '@helpers/request';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { UseSurveysContext } from '@context/surveysContext';
+import { useSurveysContext } from '@context/surveysContext';
 import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
@@ -27,7 +27,7 @@ const { setHasOpenSurveys } = SurveyActions;
 const AgendaActividadDetalle = props => {
   let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
   let [orderedHost, setOrderedHost] = useState([]);
-  let cSurveys = UseSurveysContext();
+  let cSurveys = useSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);

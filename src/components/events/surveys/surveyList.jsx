@@ -9,12 +9,12 @@ import SurveyCard from './components/surveyCard';
 
 /** Context´s */
 import { useCurrentUser } from '@context/userContext';
-import { UseSurveysContext } from '@context/surveysContext';
+import { useSurveysContext } from '@context/surveysContext';
 
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-  let cSurveys = UseSurveysContext();
+  let cSurveys = useSurveysContext();
   const { activity, setCurrentSurvey, setSurveyResult } = props;
 
   const currentUser = useCurrentUser();
