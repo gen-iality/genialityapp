@@ -143,7 +143,7 @@ class triviaEdit extends Component {
       openSurvey: firebaseSurvey.isOpened || this.state.openSurvey,
       publish: firebaseSurvey.isPublished || this.state.publish,
 
-      tries: 1,
+      tries: firebaseSurvey.tries || 1,
       random_survey: firebaseSurvey.random_survey || false,
       random_survey_count: firebaseSurvey.random_survey_count || 0,
 

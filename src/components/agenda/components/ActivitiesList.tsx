@@ -202,7 +202,10 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                     }}
                     size='small'
                     icon={<DeleteOutlined />}
-                    onClick={() => deleteSurveyAnswers(surveyId, userId)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteSurveyAnswers(surveyId, userId);
+                    }}
                   >
                     Eliminar respuestas
                   </Button>

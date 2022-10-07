@@ -14,7 +14,6 @@ import stateMessages from './functions/stateMessagesV2';
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
 import getResponsesIndex from './functions/getResponsesIndex';
 import savingResponseByUserId from './functions/savingResponseByUserId';
-import shuffleSurveyQuestion from './models/shuffleSurveyQuestion';
 
 /** Contexts */
 import { UseEventContext } from '@context/eventContext';
@@ -85,7 +84,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
    */
   useEffect(() => {
     if (!(queryData?.questions.length > 0)) return;
-    setSurveyModel(createSurveyModel(shuffleSurveyQuestion(queryData as any) as SurveyPreModel));
+    setSurveyModel(createSurveyModel(queryData));
   }, [queryData]);
 
   const displayFeedbackAfterEachQuestion = (sender: Survey.SurveyModel, options: any) => {

@@ -1,10 +1,13 @@
 import { SurveysApi } from '../../../../helpers/request';
+import shuffleSurveyQuestion from '../models/shuffleSurveyQuestion';
 
-async function LoadSelectedSurvey(eventId, idSurvey) {
+async function loadSelectedSurvey(eventId, idSurvey) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
   if (!idSurvey) throw new Error('Missing idSurvey');
 
   let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+
+  dataSurvey.questions = shuffleSurveyQuestion(dataSurvey.questions, dataSurvey.random_survey, dataSurvey.random_survey_count)
 
   /** Posición del botón next*/
   dataSurvey.showNavigationButtons = 'bottom';
@@ -92,4 +95,4 @@ async function LoadSelectedSurvey(eventId, idSurvey) {
   return exclude(dataSurvey);
 }
 
-export default LoadSelectedSurvey;
+export default loadSelectedSurvey;

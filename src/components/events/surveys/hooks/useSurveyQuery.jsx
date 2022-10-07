@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import LoadSelectedSurvey from './../functions/loadSelectedSurvey';
+import loadSelectedSurvey from './../functions/loadSelectedSurvey';
 import initRealTimeSurveyListening from './../functions/initRealTimeSurveyListening';
 import { getCurrentPage } from '../services/surveys';
 import { useCurrentUser } from '@context/userContext';
@@ -32,7 +32,7 @@ function useSurveyQuery(eventId, idSurvey) {
   useEffect(() => {
     if (!idSurvey) return;
     const innerAsyncCall = async () => {
-      let loadedSurvey = await LoadSelectedSurvey(eventId, idSurvey);
+      let loadedSurvey = await loadSelectedSurvey(eventId, idSurvey);
       //loadedSurvey.currentPage = 0;
       loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
       console.log('500.innerAsyncCall loadedSurvey', loadedSurvey);
