@@ -29,7 +29,6 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
       console.log('700.cEventUserId:', cEventUserId);
       await Promise.all(
         data.map(async (activity: any) => {
-          console.log('700.Eliminación map');
           await firestore
             .collection(`${activity._id}_event_attendees`)
             .doc(cEventUserId)

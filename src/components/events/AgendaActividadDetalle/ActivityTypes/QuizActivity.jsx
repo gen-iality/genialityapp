@@ -46,7 +46,6 @@ function QuizActivity(props) {
   return (
     <>
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      {console.log('100.activityState', activityState)}
       {activityState?.meeting_id ? (
         <SurveyDetailPage surveyId={activityState.meeting_id} />
       ) : (

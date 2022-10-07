@@ -264,7 +264,6 @@ class UserModal extends Component {
 
       if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
-        /* console.log("10. resp ", resp) */
       } else {
         if (!this.props.edit) {
           try {
@@ -293,7 +292,6 @@ class UserModal extends Component {
             this.props.value._id
           );
         }
-        /* console.log("10. USERADD==>",resp) */
       }
 
       /**FIXME: No se esta guardando la informacion al actualizar un usuario desde el panel de checkIn por actividad*/

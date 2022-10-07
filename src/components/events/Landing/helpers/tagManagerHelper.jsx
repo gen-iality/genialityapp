@@ -10,7 +10,6 @@ export function EnableGTMByEVENT() {
   if (!tagManagerId) return null;
 
   if (!window[dataLayer]) {
-    //   console.log('10. Start TagManager');
     window[dataLayer] = window[dataLayer] || [];
     window[dataLayer].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     var f = document.getElementsByClassName(htmlElementId)[0];
