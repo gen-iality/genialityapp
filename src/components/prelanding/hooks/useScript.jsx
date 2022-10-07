@@ -12,7 +12,7 @@ const useScript = (url, id) => {
     return () => {
       document.body.removeChild(script);
     };
-  }, [url]);
+  }, [url, id]);
 };
 
 export default useScript;
