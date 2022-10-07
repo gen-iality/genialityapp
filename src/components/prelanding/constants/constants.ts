@@ -15,7 +15,6 @@ window.teads_buyer_pixel_id = 7127;
 `;
 
 export const scriptTeadeBodyAudi = `
-
   window.teads_e.push({
     conversionType: "Lead"
   });
