@@ -15,7 +15,7 @@ import { useSurveyContext } from './surveyContext';
 import WithEviusContext from '@context/withContext';
 
 /** Components */
-import SurveyComponent from './surveyComponentV2';
+import SurveyComponent from './SurveyComponentV2';
 import Graphics from './graphics';
 import ResultsPanel from './resultsPanel';
 import QuizProgress from '@components/quiz/QuizProgress';
