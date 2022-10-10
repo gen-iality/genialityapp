@@ -53,12 +53,13 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     loadingRecord,
     record,
     platform,
+    obtenerDetalleActivity,
   } = useContext(AgendaContext);
 
   const [viewModal, setViewModal] = useState(false);
   const [videos, setVideos] = useState<any[] | null>(null);
 
-  const refActivity = useMemo(() => (
+  const refActivity: string = useMemo(() => (
     `request/${eventContext.value?._id}/activities/${activityEdit}`), [eventContext, activityEdit]);
   const refActivityViewers = useMemo(() => (
     `viewers/${eventContext.value?._id}/activities/${activityEdit}`), [eventContext, activityEdit]);
@@ -100,6 +101,17 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   };
 
   useEffect(() => {
+    // Force to get data from Firebase (because it is not realtime by evius design),
+    // this next line checks if the activity type is survey-like and the `contentSource`
+    // and meeting_id are null both. Then it calls to `obtenerDetalleActivity` from
+    // AgendaContext to get meeting_id again.
+    // NOTE: if this does not work, move it to an useEffect that watches the contentSource changes.
+    if (!meeting_id && ['quiz', 'quizing', 'survey'].includes(activityContentType!)) {
+      if (!contentSource) {
+        console.log('ActivityContentManager forces to request meeting_id from Firebase with `obtenerDetalleActivity`');
+        obtenerDetalleActivity();
+      }
+    }
     meeting_id && !(['quiz', 'quizing', 'survey'].includes(activityContentType!)) && getVideoList();
 
     if (type !== TypeDisplayment.EVIUS_MEET) return;
