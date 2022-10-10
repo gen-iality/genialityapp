@@ -14,7 +14,7 @@ export default async function useQuizStatusRequesting(
   eventId: string,
   surveyId: string,
   userId: string,
-  survey?: Survey
+  survey?: Survey,
 ) {
   console.debug('finding quiz status for userId', userId, 'with surveyId', surveyId);
 
@@ -30,17 +30,16 @@ export default async function useQuizStatusRequesting(
   // Get info from Firebase: status that contains the `right` and `surveyCompleted` values
   try {
     const result = await getSurveyStatus(surveyId, userId);
-    if (result?.exists) {
-      const data = result.data() as QuizStatus;
-      quizStatus = { ...quizStatus, ...data };
-    }
+
+    quizStatus = { ...quizStatus, ...result };
+    console.log('quizStatus', quizStatus);
   } catch (err) {
     console.error(err);
   }
 
   // Get info about the survey from the API to get the minimum value
   try {
-    console.debug('finding eventId', eventId, 'with activityId', surveyId);
+    console.debug('finding eventId', eventId, 'with surveyId', surveyId);
 
     const surveyIn: Survey = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
 
@@ -48,7 +47,7 @@ export default async function useQuizStatusRequesting(
     // questionLength = surveyIn.questions ? surveyIn.questions.length : 0;
     totalPoints = (surveyIn.questions || []) // For each question
       .map((question: any) => parseInt(question.points || 0)) // Get their points
-      .reduce((a, b) => a+b, 0); // And sum
+      .reduce((a, b) => a + b, 0); // And sum
   } catch (err) {
     console.error('SurveysApi.getOne', err);
   }
@@ -59,6 +58,8 @@ export default async function useQuizStatusRequesting(
     right: quizStatus.right,
     minimum: minimumScore,
   };
+
+  console.log('stats', stats);
 
   return stats;
 }
