@@ -1,5 +1,5 @@
 import { Divider, List, Typography, Button, Spin, Badge, Space } from 'antd';
-import { ReadFilled, DeleteOutlined } from '@ant-design/icons';
+import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -68,7 +68,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       }
 
       setTruncatedAgendaList([
-        ...agendaList.map(agenda => {
+        ...agendaList.map((agenda) => {
           // Logic here
           let diff = Math.floor(Math.random() * 60 * 60);
 
@@ -218,7 +218,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                     {isDeleted ? 'Respuestas eliminadas' : 'Eliminar respuestas'}
                     {isDeleting && (
                       <>
-                      {' '}<Spin/>
+                        <LoadingOutlined style={{ fontSize: '12px', color: '#FFF', marginLeft: '10px' }} />
                       </>
                     )}
                   </Button>
