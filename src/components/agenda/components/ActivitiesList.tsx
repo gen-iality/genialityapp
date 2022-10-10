@@ -15,7 +15,7 @@ import { useCurrentUser } from '@context/userContext';
 import Service from '@components/agenda/roomManager/service';
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
 import { getRef as getSurveyStatusRef } from '@components/events/surveys/services/surveyStatus';
-import { getUserProgressRef } from '@components/events/surveys/services/surveys';
+import { getAnswersRef, getUserProgressRef } from '@components/events/surveys/services/surveys';
 
 type TruncatedAgenda = {
   title: string;
@@ -183,8 +183,9 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 console.log('700.surveyId', surveyId);
                 console.log('700.userId', userId);
 
-                await getUserProgressRef(surveyId, userId).delete();                
+                await getUserProgressRef(surveyId, userId).delete();
                 await getSurveyStatusRef(surveyId, userId).delete();
+                await getAnswersRef(surveyId, userId).delete();
               }
 
               if (userId && surveyId) {
