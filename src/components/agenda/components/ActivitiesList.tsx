@@ -148,6 +148,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 return <></>;
 
               const [surveyId, setSurveyId] = useState<string | undefined>();
+              const [isDeleted, setIsDeleted] = useState(false);
+              const [isDeleting, setIsDeleting] = useState(false);
 
               useEffect(() => {
                 (async () => {
@@ -192,7 +194,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 return (
                   <Button
                     style={{
-                      background: '#B8415A',
+                      background: isDeleted ? '#947A7A' : '#B8415A',
                       color: '#fff',
                       border: 'none',
                       fontSize: '12px',
@@ -201,14 +203,24 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                       borderRadius: '10px',
                       marginLeft: '2px',
                     }}
+                    disabled={isDeleted}
                     size='small'
                     icon={<DeleteOutlined />}
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteSurveyAnswers(surveyId, userId);
+                      setIsDeleting(true);
+                      deleteSurveyAnswers(surveyId, userId).then(() => {
+                        setIsDeleted(true);
+                        setIsDeleting(false);
+                      });
                     }}
                   >
-                    Eliminar respuestas
+                    {isDeleted ? 'Respuestas eliminadas' : 'Eliminar respuestas'}
+                    {isDeleting && (
+                      <>
+                      {' '}<Spin/>
+                      </>
+                    )}
                   </Button>
                 );
               }
@@ -278,19 +290,20 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         renderItem={(item: TruncatedAgenda) => (
           <item.RibbonComponent>
             <List.Item className='shadow-box'>
-              <Link
-                to={item.link}
+              <div
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   width: '100%',
                 }}
               >
-                <div>
-                  {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
-                  <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
-                  <span>{item.title}</span>
-                </div>
+                <Link to={item.link}>
+                  <div>
+                    {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
+                    <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                    <span>{item.title}</span>
+                  </div>
+                </Link>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <span style={{ marginRight: '.5em' }}>
                     {item.Component && <item.Component isDeleted={isDeleted} setIsDeleted={setIsDeleted} />}
@@ -299,16 +312,18 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                       <item.DeleteSurveyAnswersButton userId={currentUser.value._id} />
                     )}
                   </span>
-                  <span
-                    style={{
-                      fontWeight: '100',
-                      fontSize: '1.2rem',
-                    }}
-                  >
-                    {item.timeString}
-                  </span>
+                  <Link to={item.link}>
+                    <span
+                      style={{
+                        fontWeight: '100',
+                        fontSize: '1.2rem',
+                      }}
+                    >
+                      {item.timeString}
+                    </span>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             </List.Item>
           </item.RibbonComponent>
         )}
