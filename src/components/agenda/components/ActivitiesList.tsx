@@ -1,3 +1,4 @@
+import { FunctionComponent } from 'react';
 import { Divider, List, Typography, Button, Spin, Badge, Space } from 'antd';
 import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
@@ -22,11 +23,10 @@ type TruncatedAgenda = {
   type?: ActivityType.ContentValue;
   timeString: string;
   link: string;
-  Component?: any;
-  Component2?: any;
-  DeleteSurveyAnswersButton?: any;
-  DeleteActivitiesTakenButton?: any;
-  RibbonComponent: any;
+  Component?: FunctionComponent<{}>;
+  Component2?: FunctionComponent<{ userId: string, isAnswersDeleted: boolean, }>;
+  DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string, onAnswersDeleted: (x: boolean) => void, }>;
+  RibbonComponent: FunctionComponent<{ children: any }>;
 };
 
 interface ActivitiesListProps {
@@ -105,7 +105,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto' />;
               return <></>;
             },
-            Component2: ({ userId, isAnswersDeleted }: { userId: string; isAnswersDeleted: boolean }) => {
+            Component2: ({ userId, isAnswersDeleted }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
 
@@ -155,9 +155,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             DeleteSurveyAnswersButton: ({
               userId,
               onAnswersDeleted,
-            }: {
-              userId: string;
-              onAnswersDeleted: (x: boolean) => void;
             }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
@@ -242,7 +239,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               }
               return <></>;
             },
-            RibbonComponent: ({ children }: { children: any }) => {
+            RibbonComponent: ({ children }) => {
               const [isLive, setIsLive] = useState(false);
               useEffect(() => {
                 service.getConfiguration(eventId, agenda._id).then((config) => {
