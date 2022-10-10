@@ -79,7 +79,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
   useEffect(() => {
     if (!cEventContext || !cEventContext.value) return;
     if (!cUser || !cUser.value) return;
-    if (!state.survey) return;
+    if (!state.survey?._id) return;
 
     console.log('1000. Aquí se ejecuta el use Effect');
 
