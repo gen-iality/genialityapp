@@ -83,11 +83,11 @@ const AgendaActividadDetalle = props => {
     if (!currentActivity) return;
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
-      // console.log(cEvent.value.type_event)
-      if (cEvent.value.type_event === 'onlineEvent') {
-        console.log('Haciendo checking en la actividad');
-        checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id);
-      }
+      console.log('cEvent.value.type_event', cEvent.value.type_event);
+      // if (cEvent.value.type_event === 'onlineEvent') {
+      //   console.log('Haciendo checking en la actividad');
+      checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id);
+      // }
     }
   }, [currentActivity, cEventUser.status]);
 
