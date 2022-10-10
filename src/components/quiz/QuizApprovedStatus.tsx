@@ -46,17 +46,19 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
         }
       }
 
-      if (passed === 0 && surveys.length === 0) {
+      if (surveys.length > 0) {
+        if (passed === surveys.length) {
+          setStatus('Aprobado');
+          setIsApproved(true);
+          setBackgroundColor('#5EB841');
+        } else {
+          setStatus('No aprobado');
+          setBackgroundColor('#E86710');
+        }
+      } else {
         setStatus('Curso sin exámenes');
         setBackgroundColor('#2C3647');
-      } else if (passed === surveys.length && passed > 0) {
-        setStatus('Aprobado');
-        setIsApproved(true);
-        setBackgroundColor('#5EB841');
-      } else {
-        setStatus('No aprobado');
-        setBackgroundColor('#E86710');
-      };
+      }
 
       setIsLoaded(true);      
     })();
