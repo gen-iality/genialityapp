@@ -23,8 +23,8 @@ type TruncatedAgenda = {
   type?: ActivityType.ContentValue;
   timeString: string;
   link: string;
-  Component?: FunctionComponent<{}>;
-  Component2?: FunctionComponent<{ userId: string, isAnswersDeleted: boolean, }>;
+  ViewedStatusComponent?: FunctionComponent<{}>;
+  QuizProgressComponent?: FunctionComponent<{ userId: string, isAnswersDeleted: boolean, }>;
   DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string, onAnswersDeleted: (x: boolean) => void, }>;
   RibbonComponent: FunctionComponent<{ children: any }>;
 };
@@ -86,7 +86,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               .format('h:mm')
               .concat(' min'),
             link: `/landing/${eventId}/activity/${agenda._id}`,
-            Component: () => {
+            ViewedStatusComponent: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
                 if (!cEventUserId) return;
@@ -105,7 +105,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto' />;
               return <></>;
             },
-            Component2: ({ userId, isAnswersDeleted }) => {
+            QuizProgressComponent: ({ userId, isAnswersDeleted }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
 
@@ -319,9 +319,9 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 </Link>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <span style={{ marginRight: '.5em' }}>
-                    {item.Component && <item.Component />}
-                    {item.Component2 && currentUser.value?._id && (
-                      <item.Component2 userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
+                    {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
+                    {item.QuizProgressComponent && currentUser.value?._id && (
+                      <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
                     )}
                     {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
                       <item.DeleteSurveyAnswersButton
