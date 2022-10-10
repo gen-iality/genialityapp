@@ -154,17 +154,16 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             },
             DeleteSurveyAnswersButton: ({
               userId,
-              isAnswersDeleted,
-              setAnswersIsDeleted,
+              onAnswersDeleted,
             }: {
               userId: string;
-              isAnswersDeleted: boolean;
-              setAnswersIsDeleted: any;
+              onAnswersDeleted: (x: boolean) => void;
             }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
 
               const [surveyId, setSurveyId] = useState<string | undefined>();
+              const [isDeleted, setIsDeleted] = useState(false);
               const [isDeleting, setIsDeleting] = useState(false);
 
               useEffect(() => {
@@ -210,7 +209,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 return (
                   <Button
                     style={{
-                      background: isAnswersDeleted ? '#947A7A' : '#B8415A',
+                      background: isDeleted ? '#947A7A' : '#B8415A',
                       color: '#fff',
                       border: 'none',
                       fontSize: '12px',
@@ -219,19 +218,20 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                       borderRadius: '10px',
                       marginLeft: '2px',
                     }}
-                    disabled={isAnswersDeleted}
+                    disabled={isDeleted}
                     size='small'
                     icon={<DeleteOutlined />}
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsDeleting(true);
                       deleteSurveyAnswers(surveyId, userId).then(() => {
-                        setAnswersIsDeleted(true);
+                        setIsDeleted(true);
+                        onAnswersDeleted(true);
                         setIsDeleting(false);
                       });
                     }}
                   >
-                    {isAnswersDeleted ? 'Respuestas eliminadas' : 'Eliminar respuestas'}
+                    {isDeleted ? 'Respuestas eliminadas' : 'Eliminar respuestas'}
                     {isDeleting && (
                       <>
                         <LoadingOutlined style={{ fontSize: '12px', color: '#FFF', marginLeft: '10px' }} />
@@ -329,8 +329,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                     {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
                       <item.DeleteSurveyAnswersButton
                         userId={currentUser.value._id}
-                        isAnswersDeleted={isAnswersDeleted}
-                        setAnswersIsDeleted={setAnswersIsDeleted}
+                        onAnswersDeleted={(x: boolean) => setAnswersIsDeleted(x)}
                       />
                     )}
                   </span>
