@@ -58,7 +58,10 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
       //   setBackgroundColor('#9C835F');
       // };
 
-      if (passed === surveys.length) {
+      if (passed === 0 && surveys.length === 0) {
+        setStatus('Curso sin exámenes');
+        setBackgroundColor('#2C3647');
+      } else if (passed === surveys.length && passed > 0) {
         setStatus('Aprobado');
         setIsApproved(true);
         setBackgroundColor('#5EB841');
