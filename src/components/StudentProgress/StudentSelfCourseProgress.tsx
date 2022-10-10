@@ -8,7 +8,7 @@ import { UseEventContext } from '@context/eventContext';
 import { UseUserEvent } from '@context/eventUserContext';
 
 import type AgendaType from '@Utilities/types/AgendaType';
-import { Spin } from 'antd';
+import { Spin, Typography } from 'antd';
 
 type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
@@ -68,6 +68,15 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
   const progressStats = useMemo(() => (
     isLoading ? <Spin/> : `${activitiesAttendee.length || 0}/${allActivities.length || 0}`
   ), [isLoading, activitiesAttendee, allActivities]);
+
+  if (allActivities.length === 0) {
+    return (
+      <span>
+        <Typography.Text strong>{customTitle}:</Typography.Text>
+        <Typography.Text> sin datos</Typography.Text>
+      </span>
+    );
+  }
 
   return (
     <CourseProgress
