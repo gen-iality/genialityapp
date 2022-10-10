@@ -13,11 +13,7 @@ import initUserPresence from '../../../containers/userPresenceInEvent';
 import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { useCurrentUser } from '@context/userContext';
-import { Row, Col, Card, Typography } from 'antd';
 import { activityContentValues } from '@context/activityType/constants/ui';
-import QuizApprovedStatus from '@components/quiz/QuizApprovedStatus';
-
-import StudentSelfCourseProgress from '@components/StudentProgress/StudentSelfCourseProgress';
 
 //Code spliting
 const DocumentsForm = loadable(() => import('../../documents/front/documentsLanding'));
@@ -183,36 +179,6 @@ const EventSectionRoutes = props => {
     <>
       {props.viewVirtualconference && (
         <>
-          <Row justify='start'>
-            <Col span={24}>
-              <div style={{ padding: '25px' }}>
-                {((props.location?.pathname || '').endsWith('evento') ||
-                  (props.location?.pathname || '').endsWith('curso')) && (
-                  <>
-                    <StudentSelfCourseProgress
-                      hasProgressLabel
-                      customTitle='Avance del curso'
-                      activityFilter={a =>
-                        ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
-                      }
-                    />
-                    <StudentSelfCourseProgress
-                      hasProgressLabel
-                      customTitle='Avance de exámenes'
-                      activityFilter={a =>
-                        [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
-                      }
-                    />
-                    <Card>
-                      <Typography.Text>Estado del curso:</Typography.Text>{' '}
-                      <QuizApprovedStatus eventId={event_id} approvedLink={`/landing/${event_id}/certificate`} />
-                    </Card>
-                  </>
-                )}
-              </div>
-            </Col>
-          </Row>
-
           {props.cEvent.value?.styles?.show_title &&
             (props.cEvent.value?.styles.show_title === true || props.cEvent.value?.styles?.show_title === 'true') && (
               <InfoEvent />

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-import { Card } from 'antd';
+import { Card, Typography } from 'antd';
 import ReactQuill from 'react-quill';
 import ReactPlayer from 'react-player';
 import { Row, Col } from 'antd';
@@ -10,6 +10,9 @@ import { parseUrl } from '@helpers/constants';
 import withContext from '@context/withContext';
 import ActivitiesList from '@components/agenda/components/ActivitiesList';
 import HostList from '@components/agenda/components/HostList';
+import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress';
+import { activityContentValues } from '@context/activityType/constants/ui';
+import QuizApprovedStatus from '../quiz/QuizApprovedStatus';
 class eventLanding extends Component {
   constructor(props) {
     super(props);
@@ -69,7 +72,30 @@ class eventLanding extends Component {
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
-        {/* {console.log(this.props.cEvent.value.styles)} */}
+
+        {this.props.cEvent.value && (
+          <>
+            <StudentSelfCourseProgress
+              hasProgressLabel
+              customTitle='Avance del curso'
+              activityFilter={a =>
+                ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+              }
+            />
+            <StudentSelfCourseProgress
+              hasProgressLabel
+              customTitle='Avance de exámenes'
+              activityFilter={a =>
+                [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+              }
+            />
+            <Card>
+              <Typography.Text>Estado del curso:</Typography.Text>{' '}
+              <QuizApprovedStatus eventId={this.props.cEvent.value._id} approvedLink={`/landing/${this.props.cEvent.value._id}/certificate`} />
+            </Card>
+          </>
+        )}
+
         {this.isVisible() ? (
           <Card
             className='event-description'
