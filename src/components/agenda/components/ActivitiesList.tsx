@@ -47,7 +47,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([]);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [isActivitiesAttendeeDeleted, setActivitiesAttendeeIsDeleted] = useState(false);
+  const [isAnswersDeleted, setAnswersIsDeleted] = useState(false);
 
   const currentUser = useCurrentUser();
 
@@ -104,7 +105,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto' />;
               return <></>;
             },
-            Component2: ({ userId }: { userId: string }) => {
+            Component2: ({ userId, isAnswersDeleted }: { userId: string; isAnswersDeleted: boolean }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
 
@@ -137,18 +138,33 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   }
                   setSurveyId(meetingId);
                 })();
-              }, []);
+              }, [isAnswersDeleted]);
               if (cEventUserId && surveyId) {
-                return <QuizProgress short eventId={eventId} userId={userId} surveyId={surveyId} />;
+                return (
+                  <QuizProgress
+                    short
+                    eventId={eventId}
+                    userId={userId}
+                    surveyId={surveyId}
+                    isAnswersDeleted={isAnswersDeleted}
+                  />
+                );
               }
               return <></>;
             },
-            DeleteSurveyAnswersButton: ({ userId }: { userId: string }) => {
+            DeleteSurveyAnswersButton: ({
+              userId,
+              isAnswersDeleted,
+              setAnswersIsDeleted,
+            }: {
+              userId: string;
+              isAnswersDeleted: boolean;
+              setAnswersIsDeleted: any;
+            }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
 
               const [surveyId, setSurveyId] = useState<string | undefined>();
-              const [isDeleted, setIsDeleted] = useState(false);
               const [isDeleting, setIsDeleting] = useState(false);
 
               useEffect(() => {
@@ -194,7 +210,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 return (
                   <Button
                     style={{
-                      background: isDeleted ? '#947A7A' : '#B8415A',
+                      background: isAnswersDeleted ? '#947A7A' : '#B8415A',
                       color: '#fff',
                       border: 'none',
                       fontSize: '12px',
@@ -203,19 +219,19 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                       borderRadius: '10px',
                       marginLeft: '2px',
                     }}
-                    disabled={isDeleted}
+                    disabled={isAnswersDeleted}
                     size='small'
                     icon={<DeleteOutlined />}
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsDeleting(true);
                       deleteSurveyAnswers(surveyId, userId).then(() => {
-                        setIsDeleted(true);
+                        setAnswersIsDeleted(true);
                         setIsDeleting(false);
                       });
                     }}
                   >
-                    {isDeleted ? 'Respuestas eliminadas' : 'Eliminar respuestas'}
+                    {isAnswersDeleted ? 'Respuestas eliminadas' : 'Eliminar respuestas'}
                     {isDeleting && (
                       <>
                         <LoadingOutlined style={{ fontSize: '12px', color: '#FFF', marginLeft: '10px' }} />
@@ -270,7 +286,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setIsLoading(false);
     })();
-  }, [eventId, cEventUserId, isDeleted]);
+  }, [eventId, cEventUserId, isActivitiesAttendeeDeleted]);
 
   if (isLoading) return <Spin />;
 
@@ -279,7 +295,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       <DeleteActivitiesTakenButton
         eventId={eventId}
         cEventUserId={cEventUserId}
-        setIsDeleted={setIsDeleted}
+        setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
         setActivitiesAttendee={setActivitiesAttendee}
       />
       <List
@@ -306,10 +322,16 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 </Link>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <span style={{ marginRight: '.5em' }}>
-                    {item.Component && <item.Component isDeleted={isDeleted} setIsDeleted={setIsDeleted} />}
-                    {item.Component2 && currentUser.value?._id && <item.Component2 userId={currentUser.value._id} />}
+                    {item.Component && <item.Component />}
+                    {item.Component2 && currentUser.value?._id && (
+                      <item.Component2 userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
+                    )}
                     {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
-                      <item.DeleteSurveyAnswersButton userId={currentUser.value._id} />
+                      <item.DeleteSurveyAnswersButton
+                        userId={currentUser.value._id}
+                        isAnswersDeleted={isAnswersDeleted}
+                        setAnswersIsDeleted={setAnswersIsDeleted}
+                      />
                     )}
                   </span>
                   <Link to={item.link}>

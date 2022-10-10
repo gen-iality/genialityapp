@@ -23,6 +23,7 @@ interface QuizProgressProps {
    * Mark as short badge
    */
   short?: boolean;
+  isAnswersDeleted?: boolean;
 }
 
 function QuizProgress(props: QuizProgressProps) {
@@ -43,7 +44,7 @@ function QuizProgress(props: QuizProgressProps) {
       .catch((err: any) => {
         console.error('Cannot request with SurveysApi or Firestore:', err);
       });
-  }, [props.eventId, props.surveyId, props.userId, isLoading]);
+  }, [props.eventId, props.surveyId, props.userId, isLoading, props.isAnswersDeleted]);
 
   return (
     <QuizBadge

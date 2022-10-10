@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 interface DeleteActivitiesTakenButtonProps {
   eventId: string;
   cEventUserId?: string;
-  setIsDeleted?: any;
+  setActivitiesAttendeeIsDeleted?: any;
   setActivitiesAttendee?: any;
 }
 
@@ -16,7 +16,7 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
   const {
     eventId, // The event ID
     cEventUserId, // The event user ID
-    setIsDeleted,
+    setActivitiesAttendeeIsDeleted,
     setActivitiesAttendee,
   } = props;
 
@@ -38,7 +38,7 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
       );
 
       setActivitiesAttendee([]);
-      setIsDeleted((prevState: any) => !prevState);
+      setActivitiesAttendeeIsDeleted((prevState: any) => !prevState);
     },
     [cEventUserId, eventId],
   );
