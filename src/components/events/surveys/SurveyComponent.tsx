@@ -88,6 +88,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   }, [queryData]);
 
   const displayFeedbackAfterEachQuestion = (sender: Survey.SurveyModel, options: any) => {
+    console.log('200.displayFeedbackAfterEachQuestion called')
     if (showingFeedback !== true) {
       stopChangeToNextQuestion(options);
       hideTimerPanel();
@@ -146,7 +147,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     if (surveyModel === undefined) return;
     if (!(Object.keys(currentUser).length === 0)) {
       // Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-      await setCurrentPage(queryData._id, currentUser.value._id, surveyModel.currentPageNo);
+      await setCurrentPage(queryData._id, currentUser.value._id, surveyModel.currentPageNo + 1);
     }
   }
 
@@ -238,6 +239,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             <SurveyQuestionsFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
+                console.log('200.SurveyQuestionsFeedback');
                 setShowingFeedback(false);
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
