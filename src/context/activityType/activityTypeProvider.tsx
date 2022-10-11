@@ -396,23 +396,23 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
             if (theseAreLiveToo.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.LIVE);
-              setContentSource(meetingId);
+              // setContentSource(meetingId); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (theseAreVideo.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.VIDEO);
-              setContentSource(agendaInfo.video || null);
+              // setContentSource(agendaInfo.video || null); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', agendaInfo.video || null);
             } else if (theseAreMeeting.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.MEETING);
-              setContentSource(meetingId);
+              // setContentSource(meetingId); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if (['quizing', 'quiz'].includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.QUIZ);
-              setContentSource(meetingId);
+              // setContentSource(meetingId); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if ((typeIncoming as ActivityType.ContentValue) === 'survey') {
               setActivityType(MainUI.SURVEY);
-              setContentSource(meetingId);
+              // setContentSource(meetingId); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
@@ -432,12 +432,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   }, [activityEdit]);
 
   useEffect(() => {
-    if (!activityContentType) return;
     if (!meetingId) return;
-    if (theseAreVideo.includes(activityContentType)) {
-      console.debug('not reload content source in type', activityContentType);
-      return;
-    }
+
     console.debug('reset contentSource to meetingId:', meetingId);
     setContentSource(meetingId);
   }, [meetingId]);
