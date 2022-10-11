@@ -13,7 +13,7 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
   // Try to get last questions (created by pool question process)
   const lastQuestions = [];
 
-  if (dataSurvey.questions.length === dataSurvey.questions.length) {
+  if (dataSurvey.questions.length === dataSurvey.questions.length && dataSurvey.questions.length > 0) {
     console.debug('loadSelectedSurvey: load last questions');
     lastQuestions.push(...pooledQuestions.pooled);
   } else {
