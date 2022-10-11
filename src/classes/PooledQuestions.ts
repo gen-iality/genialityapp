@@ -53,13 +53,21 @@ export default class PooledQuestions {
     const questionsRef = getQuestionsRef(this.#surveyId!, this.#userId!);
 
     // Get data
-    const result = await questionsRef.get();
-
-    // Load if it exists
     let document: any = {};
-    if (result.exists) {
-      const data = result.data();
-      if (data) document = data;      
+    try {
+      const result = await questionsRef.get();
+
+      // Load if it exists
+      if (result.exists) {
+        const data = result.data();
+        if (data) document = data;      
+      }
+    } catch (err) {
+      console.error(
+        'PooledQuestions.pull tried request for questions', // error log
+        `for surveyId: ${this.#surveyId}, and userId: ${this.#userId}`, // data dumping
+        'getting:', err, // error message
+      );
     }
 
     // Update
