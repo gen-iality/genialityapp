@@ -60,6 +60,7 @@ export default class PooledQuestions {
       // Load if it exists
       if (result.exists) {
         const data = result.data();
+        console.debug('PooledQuestions.pull: data from Firebase', data);
         if (data) document = data;      
       }
     } catch (err) {

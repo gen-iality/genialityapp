@@ -31,7 +31,7 @@ export default (surveyQuestions: SurveyQuestion[], isRandomSurvey: boolean, rand
       }
       // Now, use these indeces to get the questions
       console.debug('takenIndeces', takenIndeces);
-      newQuestions.push(...surveyQuestions.filter((question: any, index: number) => takenIndeces.includes(index+1)));
+      newQuestions.push(...surveyQuestions.filter((question: any, index: number) => takenIndeces.includes(index)));
     } else {
       newQuestions.push(...surveyQuestions);
     }
