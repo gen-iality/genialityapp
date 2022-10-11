@@ -1,6 +1,7 @@
 import { SurveysApi } from '@/helpers/request';
 import { QuizStatus, QuizStats, Survey } from './types';
 import { getStatus as getSurveyStatus } from '../events/surveys/services/surveyStatus';
+import { getQuestionsRef } from '../events/surveys/services/surveys';
 
 /**
  * Get the survey answer stats.
@@ -45,9 +46,19 @@ export default async function useQuizStatusRequesting(
 
     minimumScore = surveyIn.minimumScore ? surveyIn.minimumScore : 0;
     // questionLength = surveyIn.questions ? surveyIn.questions.length : 0;
-    totalPoints = (surveyIn.questions || []) // For each question
+
+    let surveyPooled = await getQuestionsRef(surveyId, userId).get();
+    console.log('surveyPooled', surveyPooled);
+    let questionFireStore: any[] = [];
+
+    if (surveyPooled.exists) {
+      questionFireStore = [surveyPooled.data()];
+      console.log('questionFireStore', questionFireStore);
+    }
+
+    totalPoints = (questionFireStore[0].pooled || []) // For each question
       .map((question: any) => parseInt(question.points || 0)) // Get their points
-      .reduce((a, b) => a + b, 0); // And sum
+      .reduce((a: any, b: any) => a + b, 0); // And sum
   } catch (err) {
     console.error('SurveysApi.getOne', err);
   }
