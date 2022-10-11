@@ -73,13 +73,13 @@ const CMS = (props) => {
       setList(
         data.data.sort(function(a, b) {
           return a.created_at.localeCompare(-b.created_at);
-        })
+        }).map((it, index) => ({ ...it, key: `table_cms_${index}`}))
       );
     } else {
       setList(
         data.sort(function(a, b) {
           return a.created_at.localeCompare(-b.created_at);
-        })
+        }).map((it, index) => ({ ...it, key: `table_cms_${index}`}))
       );
     }
     setLoading(false);
