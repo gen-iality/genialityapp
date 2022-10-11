@@ -5,7 +5,7 @@ import { getCurrentPage } from '../services/surveys';
 import { useCurrentUser } from '@context/userContext';
 
 ////open, publish, freezeGame
-function useSurveyQuery(eventId, idSurvey) {
+function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
   const currentUser = useCurrentUser();
   const [query, setQuery] = useState({ loading: true, error: false, data: undefined });
   const [innerQuery, setInnerQuery] = useState(undefined);
@@ -40,7 +40,7 @@ function useSurveyQuery(eventId, idSurvey) {
       setInnerQuery(loadedSurvey);
     };
     innerAsyncCall();
-  }, [idSurvey, currentUser.value]);
+  }, [idSurvey, currentUser.value, isResetingSurvey]);
 
   //realtime Query
   useEffect(() => {

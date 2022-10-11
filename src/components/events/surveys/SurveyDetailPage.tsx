@@ -29,13 +29,6 @@ interface SurveyDetailPageProps {
 };
 
 const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
-  const cSurvey = useSurveyContext();
-  const currentUser = useCurrentUser();
-
-  const query = useSurveyQuery(cEvent.value?._id, surveyId);
-
-  const history = useHistory();
-
   const handleGoToCertificate = useCallback(() => {
     history.push(`/landing/${cEvent.value?._id}/certificate`);
   }, [cEvent.value]);
@@ -44,6 +37,12 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
 
   const [isResetingSurvey, setIsResetingSurvey] = useState(false);
+
+  const cSurvey = useSurveyContext();
+  const currentUser = useCurrentUser();
+
+  const query = useSurveyQuery(cEvent.value?._id, surveyId, isResetingSurvey);
+  const history = useHistory();
 
   useEffect(() => {
     cSurvey.loadSurvey({ ...(query.data as any) });
