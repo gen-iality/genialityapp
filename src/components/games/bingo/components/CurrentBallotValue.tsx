@@ -4,7 +4,6 @@ import { CurrentBallotValueInterface } from '../interfaces/bingo';
 const { Text } = Typography;
 
 const CurrentBallotValue = ({ ballotValue, cEvent }: CurrentBallotValueInterface) => {
-  console.log('🚀 ~ file: CurrentBallotValue.tsx ~ line 7 ~ CurrentBallotValue ~ ballotValue', ballotValue);
   return (
     <Card bordered={false} style={{ overflow: 'hidden' }}>
       <Row justify='center' align='middle' style={{ height: '180px' }}>

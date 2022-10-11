@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import { useIntl } from 'react-intl';
-import { Row, Card, Alert } from 'antd';
+import { Row, Card, Alert, Button } from 'antd';
 import WithEviusContext from '../../../context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '../../../helpers/request';
@@ -20,7 +20,7 @@ import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUserContext } from '@/context/userContext';
-
+import DrawerBingo from '@components/games/bingo/components/DrawerBingo';
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {

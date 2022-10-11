@@ -33,8 +33,6 @@ const BingoCard = ({
 
   const dialImage = bingo?.bingo_appearance?.dial_image;
   const dimensions = bingo?.dimensions;
-  console.log('bingo', bingo?.dimensions);
-  console.log('arrayDataBingo', arrayDataBingo);
 
   // funcion para determinar la cantidad de palabras en un string
   const determineNumberWords = (text: string) => {

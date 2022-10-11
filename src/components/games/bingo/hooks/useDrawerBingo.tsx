@@ -22,7 +22,6 @@ export const useDrawerBingo = () => {
   const [ballotValue, setBallotValue] = useState<PickedNumberInterface>({ type: '', value: '¡BINGO!' });
   const [userCartons, setUserCartons] = useState<string[]>(['1']);
   const [bingoData, setBingoData] = useState<Bingo>();
-  console.log('🚀 ~ file: useDrawerBingo.tsx ~ line 25 ~ useDrawerBingo ~ bingoData', bingoData);
 
   const [mediaUrl, setMediaUrl] = useState<string>(
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'

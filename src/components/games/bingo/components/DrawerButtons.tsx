@@ -21,10 +21,8 @@ const DrawerButtons = ({
     });
   };
   const { bingo } = useBingo();
-  console.log('🚀 ~ file: DrawerButtons.tsx ~ line 24 ~ bingo', bingo);
   const bingoColor = bingo?.bingo_appearance.background_color;
   const validateLength = bingo?.dimensions.amount || 25;
-  console.log('🚀 ~ file: DrawerButtons.tsx ~ line 27 ~ validateLength', validateLength);
   const singBingo = () => {
     DispatchMessageService({
       type: 'success',

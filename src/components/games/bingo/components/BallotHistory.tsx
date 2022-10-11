@@ -9,7 +9,6 @@ import { BallotHistoryInterface } from '../interfaces/bingo';
 const { Title } = Typography;
 
 const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: BallotHistoryInterface) => {
-  console.log('🚀 ~ file: BallotHistory.tsx ~ line 12 ~ BallotHistory ~ demonstratedBallots', demonstratedBallots);
   const cEvent = UseEventContext();
 
   const ballotsAnnounced = (numberBallots: number): string | number => {
