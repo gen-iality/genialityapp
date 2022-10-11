@@ -10,7 +10,10 @@ import {
   gridText,
   gridStyleText_4x4,
   gridStyleImage_4x4,
+  gridStyleImage_3x3,
+  gridStyleText_3x3,
 } from '../constants/styleConstants';
+
 const { useBreakpoint } = Grid;
 
 const BingoCard = ({
@@ -59,7 +62,62 @@ const BingoCard = ({
     let format = dimensions?.format || '5x5';
     switch (format) {
       case '3x3':
-        return <p>3x3</p>;
+        return (
+          <Card.Grid
+            hoverable={false}
+            style={item?.carton_value.type === 'text' ? gridStyleText_3x3 : gridStyleImage_3x3}
+            onClick={() => changeValueLocalStorage(index)}
+            key={index}>
+            {item?.carton_value.type === 'text' && (
+              <Typography.Text style={determineFontStyles(item?.carton_value?.value.toString())} strong>
+                {item?.carton_value?.value}
+              </Typography.Text>
+            )}
+            {item?.carton_value.type === 'image' && (
+              <Image
+                width={'100%'}
+                height={'100%'}
+                preview={false}
+                style={{ objectFit: 'contain' }}
+                src={item?.carton_value?.value}
+                alt={item?.carton_value.value.toString()}></Image>
+            )}
+            <div
+              className={
+                arrayLocalStorage[index] === 1
+                  ? 'animate__animated animate__bounceIn'
+                  : 'animate__animated animate__bounceOut'
+              }
+              style={gridStyleSelected}>
+              {dialImage ? (
+                <img style={{ width: '80%', aspectRatio: '4/4', opacity: '0.8' }} src={dialImage} alt='' />
+              ) : (
+                <svg width='207' height='207' viewBox='0 0 207 207' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                  <rect
+                    x='39.5068'
+                    y='143.952'
+                    width='147'
+                    height='34'
+                    rx='8'
+                    transform='rotate(-45 39.5068 143.952)'
+                    fill='#FF4D4F'
+                    fill-opacity='0.8'
+                  />
+                  <rect
+                    x='63.5493'
+                    y='40.0066'
+                    width='147'
+                    height='34'
+                    rx='8'
+                    transform='rotate(45 63.5493 40.0066)'
+                    fill='#FF4D4F'
+                    fill-opacity='0.8'
+                  />
+                </svg>
+              )}
+            </div>
+          </Card.Grid>
+        );
       case '4x4':
         return (
           <Card.Grid
