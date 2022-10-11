@@ -1,6 +1,6 @@
+import PooledQuestions from '@/classes/PooledQuestions';
 import { SurveysApi } from '../../../../helpers/request';
 import shuffleSurveyQuestion from '../models/shuffleSurveyQuestion';
-import { getQuestionsRef } from '../services/surveys';
 
 async function loadSelectedSurvey(eventId, idSurvey, userId) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
@@ -8,22 +8,25 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
 
   let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
+  const pooledQuestions = await PooledQuestions.fromFirebase(idSurvey, userId);
+
   // Try to get last questions (created by pool question process)
-  let lastQuestions = [];
-  const questionsRef = getQuestionsRef(idSurvey, userId);
-  const result = await questionsRef.get();
-  if (result.exists) {
+  const lastQuestions = [];
+
+  if (dataSurvey.questions.length === dataSurvey.questions.length) {
     console.debug('loadSelectedSurvey: load last questions');
-    const questionsFromFirebase = result.data();
-    lastQuestions = [ ...questionsFromFirebase.pooled ];
+    lastQuestions.push(...pooledQuestions.pooled);
   } else {
-    // Create a new pooled questions
+    // We update
     console.debug('loadSelectedSurvey: create new pooled questions');
+    // Create a new pooled questions
     lastQuestions = shuffleSurveyQuestion(dataSurvey.questions, dataSurvey.random_survey, dataSurvey.random_survey_count);
     // Save in Firebase
     console.debug('loadSelectedSurvey: save pooled question in Firebase');
-    await questionsRef.set({ pooled: lastQuestions }, { merge: false }) // Overwrite
+    pooledQuestions.pooled = lastQuestions; // Update this value
+    await pooledQuestions.push(); // Overwrite
   }
+
   dataSurvey.questions = lastQuestions;
 
   /** Posición del botón next*/
