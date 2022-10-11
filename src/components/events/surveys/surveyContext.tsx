@@ -6,7 +6,7 @@ import { UseEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { getStatus as getSurveyStatus, resetStatusByRestartAnswering } from './services/surveyStatus';
 
-import { getAnswersRef, getUserProgressRef } from './services/surveys';
+import { getAnswersRef, getQuestionsRef, getUserProgressRef } from './services/surveys';
 
 export enum SurveyContextAction {
   SURVEY_LOADED = 'SURVEY_LOADED',
@@ -161,6 +161,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     await resetStatusByRestartAnswering(state.survey._id, userId);
     await getUserProgressRef(state.survey._id, userId).delete();
     await getAnswersRef(state.survey._id, userId).delete();
+    await getQuestionsRef(state.survey._id, userId).delete();
   };
 
   const surveyStatsString = useMemo(() => {
