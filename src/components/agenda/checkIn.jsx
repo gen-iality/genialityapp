@@ -94,7 +94,7 @@ class CheckAgenda extends Component {
       let roles = rolesList?.map((role) => {
         return { label: role.name, value: role._id };
       });
-      console.log('AGENDA ID==>', agendaID, this.props.location.state);
+
       let userRef = firestore
         .collection(`${event._id}_event_attendees`)
         .doc('activity')

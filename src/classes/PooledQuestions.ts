@@ -1,6 +1,14 @@
 import { SurveyQuestion } from "@components/events/surveys/models/types";
 import { getQuestionsRef } from "@components/events/surveys/services/surveys";
 
+/**
+ * This class enable creating a representation of the polled questions in local
+ * and remoto (Firebase, using the Firebase API, according to the surveyId and userId).
+ * 
+ * Addiction, defines two methods (pull & push) to refresh data in local or remote.
+ * 
+ * Use `fromFirebase` to create an object from given IDs.
+ */
 export default class PooledQuestions {
   #userId?: string;
   #surveyId?: string;
@@ -14,7 +22,7 @@ export default class PooledQuestions {
   }
 
   /**
-   * Returns true if all IDs is defined.
+   * Returns true if all IDs are defined.
    * @returns true if IDS are defined.
    */
   private checkIDs() {
@@ -80,6 +88,7 @@ export default class PooledQuestions {
    */
   static async fromFirebase(surveyId: string, userId: string) {
     console.debug('PooledQuestions.fromFirebase', `surveyId: ${surveyId}, userId: ${userId}`);
+    // Create an empty object, and do pull to get the remote data.
     const pooledQuestions = new PooledQuestions([], userId, surveyId);
     await pooledQuestions.pull();
     return pooledQuestions;

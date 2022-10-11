@@ -68,10 +68,10 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
         const stats = await useAsyncPrepareQuizStats(cEvent.value._id, survey._id, currentUser?.value?._id, survey);
 
         console.debug(
-          `stats: eventId=${cEvent.value._id},',
-          'surveyId=${survey._id},',
-          'userId=${currentUser?.value?._id},',
-          'survey=${survey}`,
+          `stats: eventId=${cEvent.value._id},`,
+          `surveyId=${survey._id},`,
+          `userId=${currentUser?.value?._id},`,
+          `survey=${survey}`,
         );
         console.debug('stats object:', stats);
         if (stats.minimum > 0) {
