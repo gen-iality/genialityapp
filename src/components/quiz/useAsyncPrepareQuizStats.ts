@@ -50,7 +50,7 @@ export default async function useQuizStatusRequesting(
     const pooledQuestions = await PooledQuestions.fromFirebase(surveyId, userId);
     console.log('PooledQuestions', pooledQuestions);
 
-    totalPoints = pooledQuestions.pooled // For each question
+    totalPoints = (pooledQuestions.pooled || []) // For each question
       .map((question: any) => parseInt(question.points || 0)) // Get their points
       .reduce((a: any, b: any) => a + b, 0); // And sum
   } catch (err) {
