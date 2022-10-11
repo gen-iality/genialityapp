@@ -63,7 +63,7 @@ export default class PooledQuestions {
     }
 
     // Update
-    this.pooled = document.pooled as any[];
+    this.pooled = (document.pooled as any[] || []);
   }
 
   async push() {
