@@ -13,19 +13,20 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
   // Try to get last questions (created by pool question process)
   const lastQuestions = [];
 
-  if (dataSurvey.questions.length === dataSurvey.questions.length && dataSurvey.questions.length > 0) {
+  if (pooledQuestions.pooled.length === dataSurvey.questions.length && dataSurvey.questions.length > 0) {
     console.debug('loadSelectedSurvey: load last questions');
     lastQuestions.push(...pooledQuestions.pooled);
   } else {
     // We update
     console.debug('loadSelectedSurvey: create new pooled questions');
     // Create a new pooled questions
-    lastQuestions = shuffleSurveyQuestion(dataSurvey.questions, dataSurvey.random_survey, dataSurvey.random_survey_count);
+    lastQuestions.push(...shuffleSurveyQuestion(dataSurvey.questions, dataSurvey.random_survey, dataSurvey.random_survey_count));
     // Save in Firebase
     console.debug('loadSelectedSurvey: save pooled question in Firebase');
     pooledQuestions.pooled = lastQuestions; // Update this value
     await pooledQuestions.push(); // Overwrite
   }
+  console.debug('loadSelectedSurvey:', `${lastQuestions.length} questions loaded`);
 
   dataSurvey.questions = lastQuestions;
 
