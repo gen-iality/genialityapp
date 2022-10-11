@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats';
 import useSurveyQuery from './hooks/useSurveyQuery';
-import { Card, Result, Divider, Button, Space } from 'antd';
+import { Card, Result, Divider, Button, Space, Spin } from 'antd';
 import { connect } from 'react-redux';
 
 /** Helpers */
@@ -42,6 +42,8 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
 
   const [enableGoToCertificate, setEnableGoToCertificate] = useState(false);
   const [showingResultsPanel, setShowingResultsPanel] = useState(false);
+
+  const [isResetingSurvey, setIsResetingSurvey] = useState(false);
 
   useEffect(() => {
     cSurvey.loadSurvey({ ...(query.data as any) });
@@ -120,12 +122,17 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
           {cSurvey.checkThereIsAnotherTry() && (
             <Button
               onClick={() => {
-                cSurvey.resetSurveyStatus(currentUser.value._id).then(cSurvey.startAnswering);
+                setIsResetingSurvey(true);
+                cSurvey.resetSurveyStatus(currentUser.value._id).then(() => {
+                  cSurvey.startAnswering();
+                  setIsResetingSurvey(false);
+                });
               }}
               type='primary'
               key='console'
+              disabled={isResetingSurvey}
             >
-              Responder de nuevo
+              Responder de nuevo {isResetingSurvey && <Spin/>}
             </Button>
           )}
           {showingResultsPanel && (
