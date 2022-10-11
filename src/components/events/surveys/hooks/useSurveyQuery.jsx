@@ -31,15 +31,16 @@ function useSurveyQuery(eventId, idSurvey) {
   //no realtime Query
   useEffect(() => {
     if (!idSurvey) return;
+    if (!currentUser.value?._id) return;
     const innerAsyncCall = async () => {
-      let loadedSurvey = await loadSelectedSurvey(eventId, idSurvey);
+      let loadedSurvey = await loadSelectedSurvey(eventId, idSurvey, currentUser.value._id);
       //loadedSurvey.currentPage = 0;
       loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
       console.log('500.innerAsyncCall loadedSurvey', loadedSurvey);
       setInnerQuery(loadedSurvey);
     };
     innerAsyncCall();
-  }, [idSurvey]);
+  }, [idSurvey, currentUser.value]);
 
   //realtime Query
   useEffect(() => {

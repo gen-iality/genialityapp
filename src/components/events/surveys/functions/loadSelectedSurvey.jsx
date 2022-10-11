@@ -1,13 +1,30 @@
 import { SurveysApi } from '../../../../helpers/request';
 import shuffleSurveyQuestion from '../models/shuffleSurveyQuestion';
+import { getQuestionsRef } from '../services/surveys';
 
-async function loadSelectedSurvey(eventId, idSurvey) {
+async function loadSelectedSurvey(eventId, idSurvey, userId) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
   if (!idSurvey) throw new Error('Missing idSurvey');
 
   let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
-  dataSurvey.questions = shuffleSurveyQuestion(dataSurvey.questions, dataSurvey.random_survey, dataSurvey.random_survey_count)
+  // Try to get last questions (created by pool question process)
+  let lastQuestions = [];
+  const questionsRef = getQuestionsRef(idSurvey, userId);
+  const result = await questionsRef.get();
+  if (result.exists) {
+    console.debug('loadSelectedSurvey: load last questions');
+    const questionsFromFirebase = result.data();
+    lastQuestions = [ ...questionsFromFirebase.pooled ];
+  } else {
+    // Create a new pooled questions
+    console.debug('loadSelectedSurvey: create new pooled questions');
+    lastQuestions = shuffleSurveyQuestion(dataSurvey.questions, dataSurvey.random_survey, dataSurvey.random_survey_count);
+    // Save in Firebase
+    console.debug('loadSelectedSurvey: save pooled question in Firebase');
+    await questionsRef.set({ pooled: lastQuestions }, { merge: false }) // Overwrite
+  }
+  dataSurvey.questions = lastQuestions;
 
   /** Posición del botón next*/
   dataSurvey.showNavigationButtons = 'bottom';
