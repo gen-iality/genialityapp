@@ -37,6 +37,7 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { handleRequestError } from '@/helpers/utils';
 import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
 import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
+import Bingo from '../games/bingo';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -294,6 +295,14 @@ class Event extends Component {
                 eventId={event._id}
                 event={event}
                 componentKey='adminUsers'
+              />
+              <Protected
+                path={`${match.url}/bingo`}
+                component={Bingo}
+                eventId={event._id}
+                event={event}
+                updateEvent={this.updateEvent}
+                componentKey='bingo'
               />
               <Protected
                 path={`${match.url}/empresas`}

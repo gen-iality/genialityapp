@@ -34,7 +34,7 @@ const AgendaActividadDetalle = (props) => {
   const cUser = UseCurrentUserContext();
   let cEventUser = UseUserEvent();
   const cEvent = UseEventContext();
-
+  const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
   const intl = useIntl();
   {
     Moment.locale(window.navigator.language);
@@ -202,6 +202,21 @@ const AgendaActividadDetalle = (props) => {
                   type='warning'
                 />
               </Row>
+            </>
+          )}
+          {cEvent.value?.bingo && (
+            <>
+              <Row align='middle' justify='center' style={{ padding: '10px' }}>
+                <Button
+                  size='large'
+                  type='primary'
+                  onClick={() => {
+                    setOpenOrCloseModalDrawer(true);
+                  }}>
+                  ¡Jugar BINGO!
+                </Button>
+              </Row>
+              <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
             </>
           )}
           <AditionalInformation orderedHost={orderedHost} />

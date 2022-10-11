@@ -400,6 +400,56 @@ export const EventsApi = {
     return await Actions.delete(`/api/descriptions/${sectionId}?token=${token}`);
   },
 };
+export const BingoApi = {
+  getOne: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${event}/bingos?token=${token}`, true);
+  },
+  createOne: async (event, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/events/${event}/bingos?token=${token}`, data, true);
+  },
+  editOne: async (event, data, id) => {
+    // console.log(event, data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/events/${event}/bingos/${id}?token=${token}`, data, true);
+  },
+  editDimension: async (event, data, id) => {
+    // console.log(event, data, id);
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/events/${event}/bingos/${id}?token=${token}?reset_bingo=yes`, data, true);
+  },
+  deleteOne: async (event, id) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${event}/bingos/${id}?token=${token}`, id, true);
+  },
+  getByUser: async (userId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/me/${userId}/bingocard?token=${token}`, true);
+  },
+  createDataImport: async (event, bingo, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/events/${event}/bingos/${bingo}/import-values?token=${token}`, data, true);
+  },
+  editValue: async (event, bingo, index, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/events/${event}/bingos/${bingo}/values/${index}?token=${token}`, data, true);
+  },
+  deleteValue: async (event, bingo, index) => {
+    // console.log(event, bingo, index, 'deleteValue');
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${event}/bingos/${bingo}/values/${index}?token=${token}`, true);
+  },
+  createValue: async (event, bingo, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/events/${event}/bingos/${bingo}/values?token=${token}`, data, true);
+  },
+  getByCarton: async (carton) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/bingocards/${carton}?token=${token}`, true);
+  },
+};
+
 export const InvitationsApi = {
   getAll: async (id) => {
     return await Actions.getAll(`/api/events/${id}/invitation`);

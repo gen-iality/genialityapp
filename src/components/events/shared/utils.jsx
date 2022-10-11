@@ -6,6 +6,7 @@ import {
   EditOutlined,
   BarChartOutlined,
   PrinterOutlined,
+  RocketOutlined,
 } from '@ant-design/icons';
 const handleClick = (e) => {
   if (!navigator.onLine) e.preventDefault();
@@ -118,6 +119,19 @@ export const MenuItems = [
         name: 'Producto',
         path: '/product',
         key: 'producto',
+        onClick: handleClick,
+      },
+    ],
+  },
+  {
+    name: 'Juegos',
+    icon: <RocketOutlined />,
+    key: 'games',
+    items: [
+      {
+        name: 'Bingo',
+        path: '/bingo',
+        key: 'bingo',
         onClick: handleClick,
       },
     ],

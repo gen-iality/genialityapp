@@ -59,7 +59,7 @@ const ImageUploaderDragAndDrop = ({
             minWidth: width as number,
             minHeight: height as number,
             convertSize: 5000000,
-            success: async (compressedImage) => {
+            success: async (compressedImage: any) => {
               const typeOfImage = file.originFileObj.type;
               const imageData = typeOfImage === 'image/gif' ? file.originFileObj : compressedImage;
 
@@ -104,7 +104,14 @@ const ImageUploaderDragAndDrop = ({
       <Card hoverable={hoverable} style={styles}>
         <Dragger {...draggerprops}>
           {image ? (
-            <Image preview={false} alt='preview' src={image} />
+            <Image
+              preview={false}
+              width={'100%'}
+              height={'150px'}
+              style={{ objectFit: 'contain' }}
+              alt='preview'
+              src={image}
+            />
           ) : (
             <>
               <p className='ant-upload-drag-icon'>
