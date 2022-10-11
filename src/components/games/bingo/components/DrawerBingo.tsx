@@ -83,7 +83,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
                   borderRadius: '20px',
                 }}>
                 {/* @ts-ignore */}
-                <HCOActividad />
+                <HCOActividad isBingo={true} />
               </Card>
             </Col>
             <Col span={24}>

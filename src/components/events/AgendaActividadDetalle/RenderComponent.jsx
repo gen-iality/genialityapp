@@ -93,7 +93,7 @@ const RenderComponent = (props) => {
       }
     }
   }, [chatAttendeChats]);
-
+  console.log('isBingo', props.isBingo, props.isBingo === false || props.isBingo === undefined);
   const RenderizarComponente = useCallback((plataforma, actividad_estado, reder_Game) => {
     switch (plataforma) {
       case 'vimeo':
@@ -241,8 +241,7 @@ const RenderComponent = (props) => {
 
   return (
     <>
-      {' '}
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      {props.isBingo === undefined && <HeaderColumnswithContext isVisible={true} activityState={activityState} />}
       {RenderizarComponente(platform, activityState, renderGame)}
     </>
   );
