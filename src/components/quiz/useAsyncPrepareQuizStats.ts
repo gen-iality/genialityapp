@@ -50,6 +50,11 @@ export default async function useQuizStatusRequesting(
     const pooledQuestions = await PooledQuestions.fromFirebase(surveyId, userId);
     console.log('PooledQuestions', pooledQuestions);
 
+    if (pooledQuestions.pooled.length === 0) {
+      console.log('WARN: quiz progress tried to get the pool but found no questions. We will use mongodb-survey-data questions instead');
+      pooledQuestions.pooled = surveyIn.questions;
+    }
+
     totalPoints = (pooledQuestions.pooled || []) // For each question
       .map((question: any) => parseInt(question.points || 0)) // Get their points
       .reduce((a: any, b: any) => a + b, 0); // And sum
