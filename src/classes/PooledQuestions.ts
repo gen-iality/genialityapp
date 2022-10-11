@@ -83,7 +83,7 @@ export default class PooledQuestions {
     const questionsRef = getQuestionsRef(this.#surveyId!, this.#userId!);
 
     // Set data
-    await questionsRef.set(this, { merge: false });
+    await questionsRef.set({...this}, { merge: false });
 
     return this;
   }
