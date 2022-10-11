@@ -18,6 +18,12 @@ export const getAnswersRef = (surveyId: string, userId: string) => {
     .doc(userId);
 };
 
+export const getQuestionsRef = (surveyId: string, userId: string) => {
+  return getRef(surveyId)
+    .collection('questions')
+    .doc(userId);
+};
+
 export const getCurrentPage = async (surveyId: string, userId: string) => {
   const firebaseRef = getUserProgressRef(surveyId, userId);
 
