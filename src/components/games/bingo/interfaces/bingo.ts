@@ -208,14 +208,14 @@ export interface BingoValuesAddStateInterface {
   event?: EventBingo;
   dataFirebaseBingo: DataFirebaseBingoInterface;
   bingoValues: BingoValue[];
-  dimensions: DimensionInterface;
+  dimensions?: DimensionInterface;
 }
 
 export interface StartGameInterface {
   event?: EventBingo;
   dataFirebaseBingo: DataFirebaseBingoInterface;
   bingoValues: BingoValue[];
-  dimensions: DimensionInterface;
+  dimensions?: DimensionInterface;
 }
 export interface RestartGameInterface {
   event: EventBingo;

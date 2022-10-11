@@ -223,7 +223,7 @@ const playBingo = () => {
         key: 'error',
         msj:
           'No hay suficientes valores para jugar, por favor agregue mas valores ' +
-          (dimensions.minimun_values - bingoValues.length) +
+          (dimensions!.minimun_values - bingoValues.length) +
           ' valores faltantes como mínimo',
         action: 'show',
       });

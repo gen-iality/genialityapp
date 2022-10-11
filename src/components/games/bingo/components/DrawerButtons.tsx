@@ -29,6 +29,7 @@ const DrawerButtons = ({
       key: 'send',
       msj: '📣 ¡BINGO!',
       action: 'show',
+      /* ts-ignore */
       additionalMessage: false,
     });
     postBingoByUser();
