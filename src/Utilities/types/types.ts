@@ -103,7 +103,10 @@ export type AttendeeCheckInPropsTypes = {
 
 export type AttendeeInformation = {
   checkedin_type: string | null;
+  checked_in: boolean;
+  checkedin_at: string | null;
   properties: {};
   _id: string;
   activityProperties: [];
+  youDoNotExistInThisActivity?: boolean;
 };

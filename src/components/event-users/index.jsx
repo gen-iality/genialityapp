@@ -179,7 +179,6 @@ class ListEventUser extends Component {
   getAttendes = async () => {
     let self = this;
     const activityId = this.props.match.params.id;
-    console.debug('🚀 -->  - activityId', activityId);
 
     this.checkFirebasePersistence();
     try {
@@ -368,7 +367,6 @@ class ListEventUser extends Component {
           //includeMetadataChanges: true
         },
         async (snapshot) => {
-          console.debug('🚀 -->  - snapshot', snapshot);
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
 
@@ -457,7 +455,6 @@ class ListEventUser extends Component {
           }
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
-          console.debug('🚀 -->  - attendees', attendees);
 
           this.setState({
             unSusCribeConFigFast,

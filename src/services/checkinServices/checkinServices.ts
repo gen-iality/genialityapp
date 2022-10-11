@@ -21,6 +21,18 @@ export const checkinByEventOrByActivity = (attendee: AttendeeInformation, activi
     }
   });
 
+  /* If the attendee is not in the activity, his information is still returned so that he can be added if necessary. */
+  if (!usersInTheActivity[0]) {
+    let theAttendeeDoesNotExistInTheActivity = attendee;
+
+    theAttendeeDoesNotExistInTheActivity.checked_in = false;
+    theAttendeeDoesNotExistInTheActivity.checkedin_at = null;
+    theAttendeeDoesNotExistInTheActivity.checkedin_type = null;
+    theAttendeeDoesNotExistInTheActivity.youDoNotExistInThisActivity = true;
+
+    return theAttendeeDoesNotExistInTheActivity;
+  }
+
   return usersInTheActivity[0];
 };
 

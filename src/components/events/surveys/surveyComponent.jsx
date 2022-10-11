@@ -98,7 +98,14 @@ function SurveyComponent(props) {
 
     SetCurrentUserSurveyStatus(surveyData, currentUser, status);
     if (status === 'completed') {
+      console.log('test envio de comunicaciones ---se ejecuta');
+
       props.setShowSurveyTemporarily(true);
+      let canSendComunications = cEvent?.value?.sms_notification;
+      let eventUserId = cEventUser?.value?._id;
+      if (canSendComunications && canSendComunications === true) {
+        await sendCommunicationUser(idSurvey, eventUserId);
+      }
     }
     let question;
     let surveyQuestions = surveyModel.currentPage.questions;
@@ -116,11 +123,7 @@ function SurveyComponent(props) {
       SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
     }
     let isLastPage = surveyModel.isLastPage;
-    let canSendComunications = cEvent?.value?.sms_notification;
-    let eventUserId = cEventUser?.value?._id;
-    if (canSendComunications && canSendComunications === true) {
-      await sendCommunicationUser(idSurvey, eventUserId);
-    }
+
     if (surveyData.allow_gradable_survey === 'true') {
       if (isLastPage) {
         setShowMessageOnComplete(false);
