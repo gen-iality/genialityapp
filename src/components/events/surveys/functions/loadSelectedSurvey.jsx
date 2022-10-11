@@ -8,12 +8,15 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
 
   let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
+  // The random_survey_count or survey.questions.length
+  const sampleCount = dataSurvey.random_survey === undefined ? dataSurvey.questions.length : Math.min(dataSurvey.random_survey_count, dataSurvey.questions.length);
+
   const pooledQuestions = await PooledQuestions.fromFirebase(idSurvey, userId);
 
   // Try to get last questions (created by pool question process)
   const lastQuestions = [];
 
-  if (pooledQuestions.pooled.length === dataSurvey.questions.length && dataSurvey.questions.length > 0) {
+  if (pooledQuestions.pooled.length === sampleCount && sampleCount > 0) {
     console.debug('loadSelectedSurvey: load last questions');
     lastQuestions.push(...pooledQuestions.pooled);
   } else {
