@@ -25,6 +25,7 @@ import { addTriesNumber, addRightPoints  } from './services/surveyStatus';
 import { useSurveyContext } from './surveyContext';
 import SurveyQuestionsFeedback from './SurveyQuestionsFeedback';
 import { SurveyPreModel } from './models/types';
+import { LoadingOutlined } from '@ant-design/icons';
 
 // Configuración para poder relacionar el id de la pregunta en la base de datos
 // con la encuesta visible para poder almacenar las respuestas
@@ -234,7 +235,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     <>
       {surveyModel && (
         <>
-          {isSavingPoints && <p>Guardando puntos <Spin /></p>}
+          {isSavingPoints && <p>Guardando puntos <LoadingOutlined /></p>}
           {showingFeedback && (
             <SurveyQuestionsFeedback
               questions={currentQuestionsForFeedback}
@@ -249,9 +250,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
               }}
             />
           )}
-          <div style={{ display: showingFeedback ? 'none' : 'block' }}>
+          <div style={{ display: (showingFeedback || isSavingPoints) ? 'none' : 'block' }}>
             <Survey.Survey
-              style={{ display: isSavingPoints ? 'none':'' }}
               model={surveyModel}
               onCurrentPageChanging={displayFeedbackAfterEachQuestion}
               onPartialSend={saveSurveyData}
