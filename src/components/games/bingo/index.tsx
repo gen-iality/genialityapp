@@ -1,5 +1,5 @@
-import { UploadOutlined } from '@ant-design/icons';
-import { Form, Tabs, Input, InputNumber, Card, Row, Col, Button, Affix, Image } from 'antd';
+import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Tabs, Input, InputNumber, Card, Row, Col, Button, Affix, Image, Space, Typography, List } from 'antd';
 import Header from '../../../antdComponents/Header';
 import { useState, useEffect } from 'react';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
@@ -212,7 +212,35 @@ export default function index({ event }: { event: {} }) {
                 </Row>
               </Tabs.TabPane>
 
-              <Tabs.TabPane tab='Jugar Bingo' key='3'>
+              <Tabs.TabPane tab='Asignación de cartones' key='3' disabled={dataFirebaseBingo?.startGame}>
+                <Row gutter={[16, 16]} style={{ padding: '40px' }}>
+                  <Col span={24} style={{ textAlign: 'right' }}></Col>
+                  <Col span={12}>
+                    <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                      <Row justify='space-between' /* align='middle' */ wrap>
+                        <Typography.Title level={5}>Lista de participantes</Typography.Title>
+                        <Space direction='vertical'>
+                          <Button type='primary'>Generar cartones a todos</Button>
+                          <Button type='primary'>Generar cartones faltantes</Button>
+                        </Space>
+                      </Row>
+                      <br />
+                      <Input.Search
+                        addonBefore={<UserOutlined />}
+                        placeholder='Buscar participante'
+                        allowClear
+                        style={{ width: '100%' }}
+                        /* onSearch={onSearch} */
+                      />
+                      <br />
+                      {/* <List></List> */}
+                    </Card>
+                  </Col>
+                  <Col span={12}></Col>
+                </Row>
+              </Tabs.TabPane>
+
+              <Tabs.TabPane tab='Jugar Bingo' key='4'>
                 <PlayBingo
                   bingoValues={formDataBingo.bingo_values}
                   event={event}
