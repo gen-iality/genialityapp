@@ -2,9 +2,8 @@ import React from 'react';
 import { Card, Form, Input } from 'antd';
 import { useBingo } from '@/components/games/bingo/hooks/useBingo';
 import SelectDimension from './SelectDimension';
-
-export default function CreateBingo() {
-  const { formDataBingo, setFormDataBingo, changeBingoDimensions } = useBingo();
+import { CreateBingoProps } from '../interfaces/bingo';
+export default function CreateBingo({ formDataBingo, setFormDataBingo, changeBingoDimensionsNew }: CreateBingoProps) {
   return (
     <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
       <Form.Item
@@ -21,7 +20,7 @@ export default function CreateBingo() {
           onChange={(e) => setFormDataBingo({ ...formDataBingo, name: e.target.value })}
         />
       </Form.Item>
-      <SelectDimension dimensions={formDataBingo.dimensions} changeBingoDimensions={changeBingoDimensions} />
+      <SelectDimension dimensions={formDataBingo.dimensions} changeBingoDimensions={changeBingoDimensionsNew} />
     </Card>
   );
 }

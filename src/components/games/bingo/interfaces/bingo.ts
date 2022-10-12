@@ -15,6 +15,11 @@ export interface Bingo {
   bingo_values: BingoValue[];
   dimensions: DimensionInterface;
 }
+export interface CreateBingoProps {
+  formDataBingo: any;
+  setFormDataBingo: (data: any) => void;
+  changeBingoDimensionsNew: (dimensions: DimensionInterface) => Promise<void>;
+}
 
 export interface BingoAppearance {
   banner: string;
@@ -86,7 +91,7 @@ export interface FormDataBingoInterface {
   amount_of_bingo: number;
   regulation: string;
   bingo_values: BingoValue[];
-  dimensions: DimensionInterface | undefined;
+  dimensions?: DimensionInterface;
 }
 
 export interface DataFirebaseBingoInterface {
