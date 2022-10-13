@@ -3,7 +3,7 @@ import firebase from 'firebase/compat/app';
 
 import { useEffect, useState } from 'react';
 
-import { createInitialSessionPayload, convertSessionPayloadToOffline } from './utils';
+import { createSessionPayload, destroySessionPayload } from './utils';
 import type { UserSessionId } from './types';
 
 export interface PresenceProps {
@@ -38,7 +38,7 @@ function Presence(props: PresenceProps) {
     global: isGlobal,
   } = props;
 
-  const [payload, setPayload] = useState(createInitialSessionPayload(props.userId, props.organizationId));
+  const [payload, setPayload] = useState(createSessionPayload(props.userId, props.organizationId));
 
   useEffect(() => {
     if (!props.userId) return;
@@ -79,7 +79,7 @@ function Presence(props: PresenceProps) {
       presence.on('value', async (snapshot) => {
         if (snapshot.val() === false) {
           // Disconnect locally
-          await userSessionsRealtime.update(convertSessionPayloadToOffline(payload));
+          await userSessionsRealtime.update(destroySessionPayload(payload));
           LOG('manually mask as disconnected');
           return;
         }
@@ -87,10 +87,9 @@ function Presence(props: PresenceProps) {
         // Get this object to save a value when the FB gets be disconnected
         onDisconnect = userSessionsRealtime.onDisconnect();
         // Save the disconnection value
-        await onDisconnect.update(convertSessionPayloadToOffline(payload));
+        await onDisconnect.update(destroySessionPayload(payload));
         // Mask as connected
         await userSessionsRealtime.set(payload);
-        // myDbRef.set({ ...fakePayload, status: 'on', size: 'P' });
         LOG('Connected');
       });
     })();
@@ -111,7 +110,7 @@ function Presence(props: PresenceProps) {
             ERROR('cannot disconnect');
           }
           
-          userSessionsRealtime.update(convertSessionPayloadToOffline(payload));
+          userSessionsRealtime.update(destroySessionPayload(payload));
           LOG('disconnect manually by unmount');
         }
       };

@@ -1,9 +1,9 @@
-import { fireRealtime, firestore, ServerValue, FieldValue, app } from '@helpers/firebase';
-import type { SessionPayload, UserSessionId } from './types';
+import { ServerValue } from '@helpers/firebase';
+import type { SessionPayload } from './types';
 import { sessionStatus } from '../constants';
 
-export function createInitialSessionPayload(userId: string, organizationId: string) {
-  const payload: SessionPayload = {
+export function createSessionPayload<T = any>(userId: string, organizationId: string) {
+  const payload: SessionPayload<T> = {
     userId,
     organizationId,
     startTimestamp: ServerValue.TIMESTAMP,
@@ -20,7 +20,7 @@ export function createInitialSessionPayload(userId: string, organizationId: stri
  * @param payload The sesion payload.
  * @returns A modified session payload.
  */
- export function convertSessionPayloadToOffline(payload: SessionPayload): SessionPayload {
+ export function destroySessionPayload<T = any>(payload: SessionPayload<T>): SessionPayload<T> {
   const newPayload = { ...payload };
   delete newPayload.startTimestamp;
   newPayload.status = sessionStatus.OFFLINE;
