@@ -11,19 +11,24 @@ import { fireRealtime, firestore, ServerValue, FieldValue, app } from '@helpers/
 import { useEffect, useState } from 'react';
 
 import Logger from '@Utilities/logger';
-import { sessionStatus } from '../constants';
 import { createInitialSessionPayload, convertSessionPayloadToOffline } from '../utils';
 import type { SessionPayload, UserSessionId } from '../types';
-
-const { LOG } = Logger('presence.global');
 
 export interface PresenceGlobalProps {
   userId: string;
   organizationId: string;
+  debuglog: (...args: any[]) => void,
+  errorlog: (...args: any[]) => void,
 };
 
-
 function PresenceGlobal(props: PresenceGlobalProps) {
+  /* eslint-disable no-console */
+  const {
+    debuglog = console.debug,
+    errorlog = console.error,
+  } = props;
+  /* eslint-enable no-console */
+
   const [payload, setPayload] = useState(createInitialSessionPayload(props.userId, props.organizationId));
 
   useEffect(() => {
@@ -43,13 +48,13 @@ function PresenceGlobal(props: PresenceGlobalProps) {
         const document = result.data() as UserSessionId;
         if (typeof document.lastId === 'number') {
           lastId = document.lastId;
-          LOG('update lastId to', lastId);
+          debuglog('update lastId to', lastId);
         }
       }
 
       // Update last ID
       await userSessionsIdDB.set({ lastId: lastId + 1 });
-      LOG('mask as connected');
+      debuglog('mask as connected');
 
       // Get the path in realtime
       userSessionsRealtime = fireRealtime.ref(`/user_sessions/${props.userId}/${lastId}`);
@@ -62,7 +67,7 @@ function PresenceGlobal(props: PresenceGlobalProps) {
         if (snapshot.val() === false) {
           // Disconnect locally
           await userSessionsRealtime.update(convertSessionPayloadToOffline(payload));
-          LOG('manually mask as disconnected');
+          debuglog('manually mask as disconnected');
           return;
         }
 
@@ -73,10 +78,10 @@ function PresenceGlobal(props: PresenceGlobalProps) {
         // Mask as connected
         await userSessionsRealtime.set(payload);
         // myDbRef.set({ ...fakePayload, status: 'on', size: 'P' });
-        LOG('Connected');
+        debuglog('Connected');
       });
     })();
-    console.log('OK');
+    debuglog('OK');
   }, []);
 
   return (
