@@ -378,7 +378,13 @@ export default function index({ event }: { event: {} }) {
                               </>,
                             ]}>
                             <List.Item.Meta
-                              avatar={<Avatar src={user?.properties?.picture} />}
+                              avatar={
+                                user?.properties?.picture ? (
+                                  <Avatar src={user?.properties?.picture} size={47} />
+                                ) : (
+                                  <Avatar icon={<UserOutlined />} size={47} />
+                                )
+                              }
                               title={user?.properties?.names}
                               description={user?.properties?.email}
                             />
