@@ -37,27 +37,74 @@ function Presence(props: PresenceProps) {
   } = props;
 
   const [payload, setPayload] = useState(createSessionPayload(props.userId, props.organizationId));
-  const [isDisconnected, setIsDisconnected] = useState(false);
+
+  let userSessionsRealtime: firebase.database.Reference;
+  let userSessionsRealtimeBlocker: firebase.database.Reference | undefined;
+  let onDisconnect: firebase.database.OnDisconnect;
+
+  const sessionHandler = async (isConnected: boolean) => {
+    if (isConnected) {
+      LOG('it is online');
+      // If it is global mode and the blocker is define, we have to set
+      // in false when globally gets disconnected
+      if (userSessionsRealtimeBlocker) {
+        try {
+          await userSessionsRealtimeBlocker.onDisconnect().set(false);
+        } catch (err) {
+          ERROR('tried set a value in disconnection for userSessionsRealtimeBlocker:', err);
+        }
+      }
+
+      // Get this object to save a value when the FB gets be disconnected
+      onDisconnect = userSessionsRealtime.onDisconnect();
+      // Save the disconnection value
+      try {
+        await onDisconnect.update(destroySessionPayload(payload));
+      } catch (err) {
+        ERROR('tried set a value in disconnection for userSessionsRealtime:', err);
+      }
+      // Mask as connected
+      try {
+        await userSessionsRealtime.set(payload);
+        LOG('Connected');
+      } catch (err) {
+        ERROR('tried update the session collection:', err);
+      }
+    } else {
+      LOG('will manually mask as disconnected');
+
+      // Disconnect locally
+      try {
+        await userSessionsRealtime.update(destroySessionPayload(payload));
+      } catch (err) {
+        ERROR('tred to update locally', err);
+      }
+
+      if (userSessionsRealtimeBlocker) {
+        try {
+          await userSessionsRealtimeBlocker.set(false);
+        } catch (err) {
+          ERROR('tried disconnect locally:', err);
+        }
+      }
+      LOG('manually mask as disconnected');
+    }
+  };
 
   useEffect(() => {
     if (!props.userId) return;
     if (!props.organizationId) return;
 
-    let userSessionsRealtime: firebase.database.Reference;
-    let userSessionsRealtimeBlocker: firebase.database.Reference | undefined;
-    let onDisconnect: firebase.database.OnDisconnect;
+    // Get the path in realtime
+    if (isGlobal) {
+      userSessionsRealtime = realtimeDB.ref(`/user_sessions/global`).child(`${props.userId}`).push();
+      userSessionsRealtimeBlocker = realtimeDB.ref(`/user_sessions/beacon`).child(`${props.userId}`);
+    } else {
+      userSessionsRealtime = realtimeDB.ref(`/user_sessions/local`).child(`${props.userId}`).push();
+    }
 
     (async () => {
-      LOG('mask as connected');
-
-      // Get the path in realtime
-      if (isGlobal) {
-        userSessionsRealtime = realtimeDB.ref(`/user_sessions/global`).child(`${props.userId}`).push();
-        userSessionsRealtimeBlocker = realtimeDB.ref(`/user_sessions/beacon`).child(`${props.userId}`);
-      } else {
-        userSessionsRealtime = realtimeDB.ref(`/user_sessions/local`).child(`${props.userId}`).push();
-      }
-
+      LOG('component will be mount');
       /**
        * Check if the component is in global mode to check if the user is already
        * connected.
@@ -70,7 +117,7 @@ function Presence(props: PresenceProps) {
          * If beacon is true, then the user is connected in another page
          */
         if (beacon) {
-          LOG('user is connected globally');
+          LOG('the user is ALREADY connected globally');
           return;
         } else {
           await userSessionsRealtimeBlocker.set(true);
@@ -85,65 +132,19 @@ function Presence(props: PresenceProps) {
       presence.on('value', async (snapshot) => {
         const value: boolean = snapshot.val();
         LOG('snapshot', value);
-
-        if (value === false) {
-          LOG('will manually mask as disconnected');
-          setIsDisconnected(true);
-
-          // Disconnect locally
-          try {
-            await userSessionsRealtime.update(destroySessionPayload(payload));
-          } catch (err) {
-            ERROR('tred to update locally', err);
-          }
-
-          if (userSessionsRealtimeBlocker) {
-            try {
-              await userSessionsRealtimeBlocker.set(false);
-            } catch (err) {
-              ERROR('tried disconnect locally:', err);
-            }
-          }
-          LOG('manually mask as disconnected');
-          return;
-        }
-        setIsDisconnected(false);
-
-        // If it is global mode and the blocker is define, we have to set
-        // in false when globally gets disconnected
-        if (userSessionsRealtimeBlocker) {
-          try {
-            await userSessionsRealtimeBlocker.onDisconnect().set(false);
-          } catch (err) {
-            ERROR('tried set a value in disconnection for userSessionsRealtimeBlocker:', err);
-          }
-        }
-
-        // Get this object to save a value when the FB gets be disconnected
-        onDisconnect = userSessionsRealtime.onDisconnect();
-        // Save the disconnection value
-        try {
-          await onDisconnect.update(destroySessionPayload(payload));
-        } catch (err) {
-          ERROR('tried set a value in disconnection for userSessionsRealtime:', err);
-        }
-        // Mask as connected
-        try {
-          await userSessionsRealtime.set(payload);
-          LOG('Connected');
-        } catch (err) {
-          ERROR('tried update the session collection:', err);
-        }
+        sessionHandler(value);
       });
     })().catch((err) => ERROR('error in Presence component:', err));
-
-    LOG('OK');
 
     /**
      * If the component is configured as global, then we don't have to
      * disconnect when the component gets be unmounted.
      */
-    if (isGlobal) return;
+    if (isGlobal) {
+      LOG('component mount as global: OK');
+      return;
+    }
+    LOG('component mount as local: OK');
     
     return () => {
       if (userSessionsRealtime) {
@@ -167,14 +168,6 @@ function Presence(props: PresenceProps) {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (isDisconnected) {
-      LOG('it is disconnencted');
-    } else {
-      LOG('it is online');
-    }
-  }, [isDisconnected]);
 
   return (
     <></>
