@@ -66,7 +66,11 @@ function Presence(props: PresenceProps) {
       LOG('mask as connected');
 
       // Get the path in realtime
-      userSessionsRealtime = database.ref(`/user_sessions/${props.userId}/${lastId}`);
+      if (isGlobal) {
+        userSessionsRealtime = database.ref(`/user_sessions/${props.userId}/global/${lastId}`);
+      } else {
+        userSessionsRealtime = database.ref(`/user_sessions/${props.userId}/local/${lastId}`);
+      }
 
       // Get presence
       const presence = database.ref('.info/connected');
