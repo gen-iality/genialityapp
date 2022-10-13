@@ -32,6 +32,9 @@
       } else if (location.hostname === 'stagingevius.netlify.app') {
         // se agrega el dominio de staging para poder renderizar el sitio
         document.domain = 'stagingevius.netlify.app';
+      } else if (location.hostname === 'dinamicasevius.netlify.app') {
+        // se agrega el dominio de staging para poder renderizar el sitio
+        document.domain = 'dinamicasevius.netlify.app';
       } else {
         document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
       }
