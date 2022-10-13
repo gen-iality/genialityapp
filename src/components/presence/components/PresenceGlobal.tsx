@@ -11,8 +11,8 @@ import { fireRealtime, firestore, ServerValue, FieldValue, app } from '@helpers/
 import { useEffect, useState } from 'react';
 
 import Logger from '@Utilities/logger';
-import { sessionStatus } from './constants';
-import type { SessionPayload, UserSessionId } from './types';
+import { sessionStatus } from '../constants';
+import type { SessionPayload, UserSessionId } from '../types';
 
 const { LOG } = Logger('presence.global');
 
@@ -21,31 +21,7 @@ export interface PresenceGlobalProps {
   organizationId: string;
 };
 
-export function createInitialSessionPayload(userId: string, organizationId: string) {
-  const payload: SessionPayload = {
-    userId,
-    organizationId,
-    startTimestamp: ServerValue.TIMESTAMP,
-    status: sessionStatus.ONLINE,
-  };
 
-  return payload;
-}
-
-/**
- * Given an session payload, this function modifies it to convert to a session
- * payload that says offline.
- * 
- * @param payload The sesion payload.
- * @returns A modified session payload.
- */
-export function convertSessionPayloadToOffline(payload: SessionPayload): SessionPayload {
-  const newPayload = { ...payload };
-  delete newPayload.startTimestamp;
-  newPayload.status = sessionStatus.OFFLINE;
-  newPayload.endTimestamp = ServerValue.TIMESTAMP;
-  return newPayload;
-};
 
 function PresenceGlobal(props: PresenceGlobalProps) {
   const [payload, setPayload] = useState(createInitialSessionPayload(props.userId, props.organizationId));

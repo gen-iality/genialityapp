@@ -2,8 +2,8 @@ import { fireRealtime, firestore, ServerValue, FieldValue, app } from '@helpers/
 import { useEffect, useState } from 'react';
 
 import Logger from '@Utilities/logger';
-import { sessionStatus } from './constants';
-import type { SessionPayload, UserSessionId } from './types';
+import { sessionStatus } from '../constants';
+import type { SessionPayload, UserSessionId } from '../types';
 
 const { LOG } = Logger('presence');
 
