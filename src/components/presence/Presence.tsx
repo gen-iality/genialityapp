@@ -100,21 +100,21 @@ function Presence(props: PresenceProps) {
      * If the component is configured as global, then we don't have to
      * disconnect when the component gets be unmounted.
      */
-    if (!isGlobal) {
-      return () => {
-        if (userSessionsRealtime) {
-          if (onDisconnect) {
-            onDisconnect.cancel(); // Avoid that
-            LOG('cancel disconnection updating');
-          } else {
-            ERROR('cannot disconnect');
-          }
-          
-          userSessionsRealtime.update(destroySessionPayload(payload));
-          LOG('disconnect manually by unmount');
+    if (isGlobal) return;
+    
+    return () => {
+      if (userSessionsRealtime) {
+        if (onDisconnect) {
+          onDisconnect.cancel(); // Avoid that
+          LOG('cancel disconnection updating');
+        } else {
+          ERROR('cannot disconnect because the onDisconnect is invalid');
         }
-      };
-    }
+        
+        userSessionsRealtime.update(destroySessionPayload(payload));
+        LOG('disconnect manually by unmount');
+      }
+    };
   }, []);
 
   return (
