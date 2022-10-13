@@ -27,8 +27,8 @@ export interface PresenceProps {
 function Presence(props: PresenceProps) {
   /* eslint-disable no-console */
   const {
-    debuglog = console.debug,
-    errorlog = console.error,
+    debuglog: LOG = console.debug,
+    errorlog: ERROR = console.error,
   } = props;
   /* eslint-enable no-console */
 
@@ -57,13 +57,13 @@ function Presence(props: PresenceProps) {
         const document = result.data() as UserSessionId;
         if (typeof document.lastId === 'number') {
           lastId = document.lastId;
-          debuglog('update lastId to', lastId);
+          LOG('update lastId to', lastId);
         }
       }
 
       // Update last ID
       await userSessionsIdDB.set({ lastId: lastId + 1 });
-      debuglog('mask as connected');
+      LOG('mask as connected');
 
       // Get the path in realtime
       userSessionsRealtime = database.ref(`/user_sessions/${props.userId}/${lastId}`);
@@ -76,7 +76,7 @@ function Presence(props: PresenceProps) {
         if (snapshot.val() === false) {
           // Disconnect locally
           await userSessionsRealtime.update(convertSessionPayloadToOffline(payload));
-          debuglog('manually mask as disconnected');
+          LOG('manually mask as disconnected');
           return;
         }
 
@@ -87,11 +87,11 @@ function Presence(props: PresenceProps) {
         // Mask as connected
         await userSessionsRealtime.set(payload);
         // myDbRef.set({ ...fakePayload, status: 'on', size: 'P' });
-        debuglog('Connected');
+        LOG('Connected');
       });
     })();
 
-    debuglog('OK');
+    LOG('OK');
 
     /**
      * If the component is configured as global, then we don't have to
@@ -102,13 +102,13 @@ function Presence(props: PresenceProps) {
         if (userSessionsRealtime) {
           if (onDisconnect) {
             onDisconnect.cancel(); // Avoid that
-            debuglog('cancel disconnection updating');
+            LOG('cancel disconnection updating');
           } else {
-            errorlog('cannot disconnect');
+            ERROR('cannot disconnect');
           }
           
           userSessionsRealtime.update(convertSessionPayloadToOffline(payload));
-          debuglog('disconnect manually by unmount');
+          LOG('disconnect manually by unmount');
         }
       };
     }
