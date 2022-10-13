@@ -6,6 +6,7 @@ export interface IPresencePageProps {
 }
 
 const { LOG, ERROR } = Logger('presence');
+const { LOG: GLOG, ERROR: GERROR } = Logger('presence-global');
 
 export function PresencePage (props: IPresencePageProps) {
   
@@ -18,6 +19,14 @@ export function PresencePage (props: IPresencePageProps) {
         organizationId='org'
         debuglog={LOG}
         errorlog={ERROR} 
+        realtimeDB={fireRealtime}
+      />
+      <Presence
+        global
+        userId='paco'
+        organizationId='org'
+        debuglog={GLOG}
+        errorlog={GERROR} 
         realtimeDB={fireRealtime}
       />
     </div>

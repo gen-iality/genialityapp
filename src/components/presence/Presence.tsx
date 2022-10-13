@@ -37,12 +37,14 @@ function Presence(props: PresenceProps) {
   } = props;
 
   const [payload, setPayload] = useState(createSessionPayload(props.userId, props.organizationId));
+  const [isBlocked, setIsBlocked] = useState(false);
 
   useEffect(() => {
     if (!props.userId) return;
     if (!props.organizationId) return;
 
     let userSessionsRealtime: firebase.database.Reference;
+    let userSessionsRealtimeBlocker: firebase.database.Reference | undefined;
     let onDisconnect: firebase.database.OnDisconnect;
 
     (async () => {
@@ -51,8 +53,29 @@ function Presence(props: PresenceProps) {
       // Get the path in realtime
       if (isGlobal) {
         userSessionsRealtime = realtimeDB.ref(`/user_sessions/global`).child(`${props.userId}`).push();
+        userSessionsRealtimeBlocker = realtimeDB.ref(`/user_sessions/beacon`).child(`${props.userId}`);
       } else {
         userSessionsRealtime = realtimeDB.ref(`/user_sessions/local`).child(`${props.userId}`).push();
+      }
+
+      /**
+       * Check if the component is in global mode to check if the user is already
+       * connected.
+       */
+      if (isGlobal && userSessionsRealtimeBlocker) {
+        const data = await userSessionsRealtimeBlocker.get();
+        const beacon = data.exists() && data.val();
+
+        /**
+         * If beacon is true, then the user is connected in another page
+         */
+        if (beacon) {
+          LOG('user is connected globally');
+          return;
+        } else {
+          await userSessionsRealtimeBlocker.set(true);
+          LOG('mark globally as connected');
+        }        
       }
 
       // Get presence
@@ -63,8 +86,15 @@ function Presence(props: PresenceProps) {
         if (snapshot.val() === false) {
           // Disconnect locally
           await userSessionsRealtime.update(destroySessionPayload(payload));
+          if (userSessionsRealtimeBlocker) await userSessionsRealtimeBlocker.set(false);
           LOG('manually mask as disconnected');
           return;
+        }
+
+        // If it is global mode and the blocker is define, we have to set
+        // in false when globally gets disconnected
+        if (userSessionsRealtimeBlocker) {
+          userSessionsRealtimeBlocker.onDisconnect().set(false);
         }
 
         // Get this object to save a value when the FB gets be disconnected
