@@ -37,7 +37,7 @@ function Presence(props: PresenceProps) {
   } = props;
 
   const [payload, setPayload] = useState(createSessionPayload(props.userId, props.organizationId));
-  const [isBlocked, setIsBlocked] = useState(false);
+  const [isDisconnected, setIsDisconnected] = useState(false);
 
   useEffect(() => {
     if (!props.userId) return;
@@ -83,29 +83,59 @@ function Presence(props: PresenceProps) {
 
       // Use presence
       presence.on('value', async (snapshot) => {
-        if (snapshot.val() === false) {
+        const value: boolean = snapshot.val();
+        LOG('snapshot', value);
+
+        if (value === false) {
+          LOG('will manually mask as disconnected');
+          setIsDisconnected(true);
+
           // Disconnect locally
-          await userSessionsRealtime.update(destroySessionPayload(payload));
-          if (userSessionsRealtimeBlocker) await userSessionsRealtimeBlocker.set(false);
+          try {
+            await userSessionsRealtime.update(destroySessionPayload(payload));
+          } catch (err) {
+            ERROR('tred to update locally', err);
+          }
+
+          if (userSessionsRealtimeBlocker) {
+            try {
+              await userSessionsRealtimeBlocker.set(false);
+            } catch (err) {
+              ERROR('tried disconnect locally:', err);
+            }
+          }
           LOG('manually mask as disconnected');
           return;
         }
+        setIsDisconnected(false);
 
         // If it is global mode and the blocker is define, we have to set
         // in false when globally gets disconnected
         if (userSessionsRealtimeBlocker) {
-          userSessionsRealtimeBlocker.onDisconnect().set(false);
+          try {
+            await userSessionsRealtimeBlocker.onDisconnect().set(false);
+          } catch (err) {
+            ERROR('tried set a value in disconnection for userSessionsRealtimeBlocker:', err);
+          }
         }
 
         // Get this object to save a value when the FB gets be disconnected
         onDisconnect = userSessionsRealtime.onDisconnect();
         // Save the disconnection value
-        await onDisconnect.update(destroySessionPayload(payload));
+        try {
+          await onDisconnect.update(destroySessionPayload(payload));
+        } catch (err) {
+          ERROR('tried set a value in disconnection for userSessionsRealtime:', err);
+        }
         // Mask as connected
-        await userSessionsRealtime.set(payload);
-        LOG('Connected');
+        try {
+          await userSessionsRealtime.set(payload);
+          LOG('Connected');
+        } catch (err) {
+          ERROR('tried update the session collection:', err);
+        }
       });
-    })();
+    })().catch((err) => ERROR('error in Presence component:', err));
 
     LOG('OK');
 
@@ -118,17 +148,33 @@ function Presence(props: PresenceProps) {
     return () => {
       if (userSessionsRealtime) {
         if (onDisconnect) {
-          onDisconnect.cancel(); // Avoid that
-          LOG('cancel disconnection updating');
+          try {
+            onDisconnect.cancel(); // Avoid that
+            LOG('cancel disconnection updating');
+          } catch (err) {
+            ERROR('tried cancel disconnection:', err);
+          }
         } else {
           ERROR('cannot disconnect because the onDisconnect is invalid');
         }
         
-        userSessionsRealtime.update(destroySessionPayload(payload));
-        LOG('disconnect manually by unmount');
+        try {
+          userSessionsRealtime.update(destroySessionPayload(payload));
+          LOG('disconnect manually by unmount');
+        } catch (err) {
+          ERROR('tried update manually session as disconnected:', err);
+        }
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (isDisconnected) {
+      LOG('it is disconnencted');
+    } else {
+      LOG('it is online');
+    }
+  }, [isDisconnected]);
 
   return (
     <></>
