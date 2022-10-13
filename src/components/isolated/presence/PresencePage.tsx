@@ -18,8 +18,8 @@ export function PresencePage (props: IPresencePageProps) {
         organizationId='org'
         debuglog={LOG}
         errorlog={ERROR} 
-        database={fireRealtime}
-        firestore={firestore}
+        realtimeDB={fireRealtime}
+        firestoreDB={firestore}
       />
     </div>
   );
