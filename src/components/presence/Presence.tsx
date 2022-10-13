@@ -39,17 +39,27 @@ function Presence(props: PresenceProps) {
   const [payload, setPayload] = useState(createSessionPayload(props.userId, props.organizationId));
 
   let userSessionsRealtime: firebase.database.Reference;
-  let userSessionsRealtimeBlocker: firebase.database.Reference | undefined;
+  let beaconRealtime: firebase.database.Reference | undefined;
   let onDisconnect: firebase.database.OnDisconnect;
 
   const sessionHandler = async (isConnected: boolean) => {
     if (isConnected) {
       LOG('it is online');
+      // Check if the beacon is false to set true
+      if (isGlobal && beaconRealtime) {
+        const data = await beaconRealtime.get();
+        const beacon = data.exists() && data.val();
+
+        if (!beacon) {
+          LOG('restore the beacon to true globally');
+          await beaconRealtime.set(true);
+        }        
+      }
       // If it is global mode and the blocker is define, we have to set
       // in false when globally gets disconnected
-      if (userSessionsRealtimeBlocker) {
+      if (beaconRealtime) {
         try {
-          await userSessionsRealtimeBlocker.onDisconnect().set(false);
+          await beaconRealtime.onDisconnect().set(false);
         } catch (err) {
           ERROR('tried set a value in disconnection for userSessionsRealtimeBlocker:', err);
         }
@@ -65,7 +75,7 @@ function Presence(props: PresenceProps) {
       }
       // Mask as connected
       try {
-        await userSessionsRealtime.set(payload);
+        await userSessionsRealtime.update(payload);
         LOG('Connected');
       } catch (err) {
         ERROR('tried update the session collection:', err);
@@ -80,9 +90,9 @@ function Presence(props: PresenceProps) {
         ERROR('tred to update locally', err);
       }
 
-      if (userSessionsRealtimeBlocker) {
+      if (beaconRealtime) {
         try {
-          await userSessionsRealtimeBlocker.set(false);
+          await beaconRealtime.set(false);
         } catch (err) {
           ERROR('tried disconnect locally:', err);
         }
@@ -98,7 +108,7 @@ function Presence(props: PresenceProps) {
     // Get the path in realtime
     if (isGlobal) {
       userSessionsRealtime = realtimeDB.ref(`/user_sessions/global`).child(`${props.userId}`).push();
-      userSessionsRealtimeBlocker = realtimeDB.ref(`/user_sessions/beacon`).child(`${props.userId}`);
+      beaconRealtime = realtimeDB.ref(`/user_sessions/beacon`).child(`${props.userId}`);
     } else {
       userSessionsRealtime = realtimeDB.ref(`/user_sessions/local`).child(`${props.userId}`).push();
     }
@@ -109,8 +119,8 @@ function Presence(props: PresenceProps) {
        * Check if the component is in global mode to check if the user is already
        * connected.
        */
-      if (isGlobal && userSessionsRealtimeBlocker) {
-        const data = await userSessionsRealtimeBlocker.get();
+      if (isGlobal && beaconRealtime) {
+        const data = await beaconRealtime.get();
         const beacon = data.exists() && data.val();
 
         /**
@@ -120,7 +130,7 @@ function Presence(props: PresenceProps) {
           LOG('the user is ALREADY connected globally');
           return;
         } else {
-          await userSessionsRealtimeBlocker.set(true);
+          await beaconRealtime.set(true);
           LOG('mark globally as connected');
         }        
       }
