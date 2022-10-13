@@ -8,6 +8,7 @@ import { QuizStatusEditorPage } from './quiz/QuizStatusEditorPage';
 import { CourseProgressBarPage } from './progresses/CourseProgressBarPage';
 import { DatePickerAndDayJSPage } from './date/DatePickerAndDayJSPage';
 import { LikertScaleEditorPage } from './quiz/LikertScaleEditorPage';
+import { PresencePage } from './presence/PresencePage';
 
 type UI = {
   url: string;
@@ -46,7 +47,12 @@ const uiSet: UI[] = [
     url: 'likertScaleEditorPage',
     text: 'Likert Scale Editor Page',
     Component: LikertScaleEditorPage,
-  }
+  },
+  {
+    url: 'presence',
+    text: 'PresencePage',
+    Component: PresencePage,
+  },
 ];
 
 function Home(props: HomeProps) {
