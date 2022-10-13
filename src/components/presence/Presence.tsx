@@ -2,7 +2,7 @@
 import { fireRealtime, firestore, app } from '@helpers/firebase';
 import { useEffect, useState } from 'react';
 
-import { createInitialSessionPayload, convertSessionPayloadToOffline } from '../utils';
+import { createInitialSessionPayload, convertSessionPayloadToOffline } from './utils';
 import type { UserSessionId } from './types';
 
 export interface PresenceProps {
