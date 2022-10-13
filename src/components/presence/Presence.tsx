@@ -8,8 +8,15 @@ import type { UserSessionId } from './types';
 export interface PresenceProps {
   userId: string;
   organizationId: string;
-  debuglog: (...args: any[]) => void,
-  errorlog: (...args: any[]) => void,
+  debuglog: (...args: any[]) => void;
+  errorlog: (...args: any[]) => void;
+  /**
+   * This prop enable us to configure as a global presence manager, and avoid
+   * disconnect the session when the component gets be unmounted.
+   * 
+   * NOTE: The component in global mode should be rendered only once.
+   */
+  global?: boolean;
 };
 
 function Presence(props: PresenceProps) {
@@ -19,6 +26,10 @@ function Presence(props: PresenceProps) {
     errorlog = console.error,
   } = props;
   /* eslint-enable no-console */
+
+  const {
+    global: isGlobal,
+  } = props;
 
   const [payload, setPayload] = useState(createInitialSessionPayload(props.userId, props.organizationId));
 
@@ -75,19 +86,25 @@ function Presence(props: PresenceProps) {
 
     debuglog('OK');
 
-    return () => {
-      if (userSessionsRealtime) {
-        if (onDisconnect) {
-          onDisconnect.cancel(); // Avoid that
-          debuglog('cancel disconnection updating');
-        } else {
-          errorlog('cannot disconnect');
+    /**
+     * If the component is configured as global, then we don't have to
+     * disconnect when the component gets be unmounted.
+     */
+    if (!isGlobal) {
+      return () => {
+        if (userSessionsRealtime) {
+          if (onDisconnect) {
+            onDisconnect.cancel(); // Avoid that
+            debuglog('cancel disconnection updating');
+          } else {
+            errorlog('cannot disconnect');
+          }
+          
+          userSessionsRealtime.update(convertSessionPayloadToOffline(payload));
+          debuglog('disconnect manually by unmount');
         }
-        
-        userSessionsRealtime.update(convertSessionPayloadToOffline(payload));
-        debuglog('disconnect manually by unmount');
-      }
-    };
+      };
+    }
   }, []);
 
   return (
