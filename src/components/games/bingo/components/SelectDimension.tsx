@@ -4,7 +4,7 @@ import { Dimension_3x3, Dimension_4x4, Dimension_5x5 } from '../constants/consta
 import { DimensionInterface } from '../interfaces/bingo';
 
 interface Props {
-  dimensions: DimensionInterface;
+  dimensions?: DimensionInterface;
   changeBingoDimensions: (dimensions: DimensionInterface) => Promise<void>;
 }
 

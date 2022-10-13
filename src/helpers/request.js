@@ -417,7 +417,7 @@ export const BingoApi = {
   editDimension: async (event, data, id) => {
     // console.log(event, data, id);
     let token = await GetTokenUserFirebase();
-    return await Actions.put(`api/events/${event}/bingos/${id}?token=${token}?reset_bingo=yes`, data, true);
+    return await Actions.put(`api/events/${event}/bingos/${id}?token=${token}&reset_bingo=yes`, data, true);
   },
   deleteOne: async (event, id) => {
     let token = await GetTokenUserFirebase();

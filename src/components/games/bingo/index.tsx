@@ -31,6 +31,7 @@ export default function index({ event }: { event: {} }) {
     editBallotValue,
     onCancelValueTable,
     getBingoListenerNotifications,
+    changeBingoDimensionsNew,
     dataNotifications,
     getBingoListener,
     dataFirebaseBingo,
@@ -222,7 +223,13 @@ export default function index({ event }: { event: {} }) {
               </Tabs.TabPane>
             </Tabs>
           )}
-          {bingo === undefined && <CreateBingo />}
+          {bingo === undefined && (
+            <CreateBingo
+              formDataBingo={formDataBingo}
+              setFormDataBingo={setFormDataBingo}
+              changeBingoDimensionsNew={changeBingoDimensionsNew}
+            />
+          )}
         </>
       )}
     </Form>
