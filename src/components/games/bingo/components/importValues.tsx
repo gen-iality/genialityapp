@@ -105,22 +105,27 @@ const ImportValues = ({
       });
     }
   };
-
+  console.log('🚀 ~ file: importValues.tsx ~ line 119 ~ extraFields.forEach ~ extraFields', extraFields);
   const downloadExcel = () => {
-    let rowTitles = new Array();
-
-    let cleanAttribute: string = '';
+    // let rowTitles = new Array();
+    const ExampleData = [
+      {
+        'Tipo carton': 'texto',
+        'Valor en el cartón': 'Logo de evius',
+        'Tipo balota': 'imagen',
+        'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+      },
+    ];
+    // let cleanAttribute: string = 'Hola';
     let name: string | undefined = '';
-    extraFields.forEach((extra) => {
-      if (extra.name === '') return;
-      let key: string = extra.name;
-      rowTitles.push({ [key]: cleanAttribute });
-    });
-
-    const ws = utils.json_to_sheet(rowTitles);
+    // extraFields.forEach((extra) => {
+    //   if (extra.name === '') return;
+    //   let key: string = extra.name;
+    //   rowTitles.push({ [key]: cleanAttribute });
+    // });
+    const ws = utils.json_to_sheet(ExampleData);
     const wb = utils.book_new();
     name = templateName ? templateName : event.name;
-
     utils.book_append_sheet(wb, ws, 'Template');
     writeFileXLSX(wb, `${name}${Moment().format('DD_MM_YYYY')}.xls`);
   };
