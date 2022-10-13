@@ -91,7 +91,7 @@ export interface FormDataBingoInterface {
   amount_of_bingo: number;
   regulation: string;
   bingo_values: BingoValue[];
-  dimensions?: DimensionInterface;
+  dimensions: DimensionInterface;
 }
 
 export interface DataFirebaseBingoInterface {
