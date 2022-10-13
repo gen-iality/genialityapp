@@ -1,5 +1,6 @@
 /* eslint no-console: error */
-import { fireRealtime, firestore, app } from '@helpers/firebase';
+import firebase from 'firebase/compat/app';
+
 import { useEffect, useState } from 'react';
 
 import { createInitialSessionPayload, convertSessionPayloadToOffline } from './utils';
@@ -8,6 +9,10 @@ import type { UserSessionId } from './types';
 export interface PresenceProps {
   userId: string;
   organizationId: string;
+  // Firebase stuffs
+  database: firebase.database.Database,
+  firestore: firebase.firestore.Firestore,
+  // Loggers
   debuglog: (...args: any[]) => void;
   errorlog: (...args: any[]) => void;
   /**
@@ -28,6 +33,8 @@ function Presence(props: PresenceProps) {
   /* eslint-enable no-console */
 
   const {
+    database,
+    firestore,
     global: isGlobal,
   } = props;
 
@@ -39,8 +46,8 @@ function Presence(props: PresenceProps) {
 
     const userSessionsIdDB = firestore.collection('user_sessions').doc(props.userId);
 
-    let userSessionsRealtime: app.database.Reference;
-    let onDisconnect: app.database.OnDisconnect;
+    let userSessionsRealtime: firebase.database.Reference;
+    let onDisconnect: firebase.database.OnDisconnect;
     let lastId = 0;
 
     (async () => {
@@ -59,10 +66,10 @@ function Presence(props: PresenceProps) {
       debuglog('mask as connected');
 
       // Get the path in realtime
-      userSessionsRealtime = fireRealtime.ref(`/user_sessions/${props.userId}/${lastId}`);
+      userSessionsRealtime = database.ref(`/user_sessions/${props.userId}/${lastId}`);
 
       // Get presence
-      const presence = fireRealtime.ref('.info/connected');
+      const presence = database.ref('.info/connected');
 
       // Use presence
       presence.on('value', async (snapshot) => {
