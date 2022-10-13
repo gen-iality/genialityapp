@@ -1,5 +1,27 @@
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Tabs, Input, InputNumber, Card, Row, Col, Button, Affix, Image, Space, Typography, List } from 'antd';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  ExclamationCircleOutlined,
+  UploadOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import {
+  Form,
+  Tabs,
+  Input,
+  InputNumber,
+  Card,
+  Row,
+  Col,
+  Button,
+  Affix,
+  Image,
+  Space,
+  Typography,
+  List,
+  Modal,
+  Avatar,
+} from 'antd';
 import Header from '../../../antdComponents/Header';
 import { useState, useEffect } from 'react';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
@@ -12,6 +34,8 @@ import ImportModal from './components/importModal';
 import Loading from '@/components/profile/loading';
 import PlayBingo from './components/PlayBingo';
 import SelectDimension from './components/SelectDimension';
+import { BingoApi } from '@/helpers/request';
+import { DispatchMessageService } from '@/context/MessageService';
 export default function index({ event }: { event: {} }) {
   const {
     bingo,
@@ -47,6 +71,7 @@ export default function index({ event }: { event: {} }) {
   const formItemsImageTable = useFormItemsTable();
   const formItemsApperance = useApperanceFormItems();
   const columnsTable = useColumnsTable({ actionEditBallotValue, deleteBallotValue });
+  let [listUsers, setListUsers] = useState([]);
 
   const saveImage = async (image: any, setImag: any, name: string) => {
     setImag(image);
@@ -59,9 +84,109 @@ export default function index({ event }: { event: {} }) {
     });
   };
 
+  //List of users that have or haven't bingo
+  const getListUsersWithOrWithoutBingo = async () => {
+    let list = [];
+    try {
+      list = await BingoApi.getListUsersWithOrWithoutBingo(event?._id); /* '633d9b3101de36465758db36' */
+      setListUsers(list);
+    } catch (err) {
+      console.log(err, 'err');
+    }
+  };
+
+  //Generate bingo for all users
+  const generateBingoForAllUsers = async () => {
+    Modal.confirm({
+      title: `¿Está seguro de que desea generar de nuevo los cartones de bingo para todos los usuarios?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez generado los cartones de bingo debe esperar unos segundos para que la acción quede completa',
+      okText: 'Confirmar',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onGenerate = async () => {
+          DispatchMessageService({
+            type: 'loading',
+            key: 'loading',
+            msj: 'Por favor espere mientras se generan los cartones de bingos para todos los usuarios...',
+            action: 'show',
+          });
+          try {
+            await BingoApi.generateBingoForAllUsers(event, bingo);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: '¡Se generaron correctamente los cartones de bingos para todos los usuarios!',
+              action: 'show',
+            });
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: '¡Error generando los cartones de bingos para todos los usuarios!',
+              action: 'show',
+            });
+          }
+        };
+        onGenerate();
+      },
+    });
+  };
+
+  //Generate bingo for exclusive users
+  const generateBingoForExclusiveUsers = async () => {
+    Modal.confirm({
+      title: `¿Está seguro de que desea generar cartones de bingo para los usuarios restantes?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez generado los cartones de bingo debe esperar unos segundos para que la acción quede completa',
+      okText: 'Confirmar',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onGenerate = async () => {
+          try {
+            DispatchMessageService({
+              type: 'loading',
+              key: 'loading',
+              msj: 'Por favor espere mientras se generan los cartones de bingos para los usuarios restantes...',
+              action: 'show',
+            });
+            await BingoApi.generateBingoForExclusiveUsers(event);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: '¡Se generaron correctamente los cartones de bingos para los usuarios restantes!',
+              action: 'show',
+            });
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: '¡Error generando los cartones de bingos para los usuarios restantes!',
+              action: 'show',
+            });
+          }
+        };
+        onGenerate();
+      },
+    });
+  };
+
   useEffect(() => {
     const unSubscribe = getBingoListenerNotifications();
     const unSubscribe2 = getBingoListener();
+    getListUsersWithOrWithoutBingo();
     return () => {
       unSubscribe();
       unSubscribe2();
@@ -220,8 +345,12 @@ export default function index({ event }: { event: {} }) {
                       <Row justify='space-between' /* align='middle' */ wrap>
                         <Typography.Title level={5}>Lista de participantes</Typography.Title>
                         <Space direction='vertical'>
-                          <Button type='primary'>Generar cartones a todos</Button>
-                          <Button type='primary'>Generar cartones faltantes</Button>
+                          <Button type='primary' onClick={generateBingoForAllUsers}>
+                            Generar cartones a todos
+                          </Button>
+                          <Button type='primary' onClick={generateBingoForExclusiveUsers}>
+                            Generar cartones faltantes
+                          </Button>
                         </Space>
                       </Row>
                       <br />
@@ -233,7 +362,29 @@ export default function index({ event }: { event: {} }) {
                         /* onSearch={onSearch} */
                       />
                       <br />
-                      {/* <List></List> */}
+                      <List
+                        dataSource={listUsers}
+                        style={{ marginTop: '10px' }}
+                        renderItem={(user) => (
+                          <List.Item
+                            key={user?._id}
+                            actions={[
+                              <>
+                                {user?.bingo ? (
+                                  <CheckCircleOutlined style={{ color: 'green', fontSize: '18px' }} />
+                                ) : (
+                                  <CloseCircleOutlined style={{ color: 'red', fontSize: '18px' }} />
+                                )}
+                              </>,
+                            ]}>
+                            <List.Item.Meta
+                              avatar={<Avatar src={user?.properties?.picture} />}
+                              title={user?.properties?.names}
+                              description={user?.properties?.email}
+                            />
+                          </List.Item>
+                        )}
+                      />
                     </Card>
                   </Col>
                   <Col span={12}></Col>
