@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 
 import Logger from '@Utilities/logger';
 import { sessionStatus } from '../constants';
+import { createInitialSessionPayload, convertSessionPayloadToOffline } from '../utils';
 import type { SessionPayload, UserSessionId } from '../types';
 
 const { LOG } = Logger('presence.global');
@@ -20,7 +21,6 @@ export interface PresenceGlobalProps {
   userId: string;
   organizationId: string;
 };
-
 
 
 function PresenceGlobal(props: PresenceGlobalProps) {
