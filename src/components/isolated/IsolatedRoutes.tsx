@@ -82,9 +82,10 @@ function IsolatedRoutes({ ...props }) {
     <Fragment>
       <Switch>
         <Route exact path={`${match.url}/`} render={() => <Home event={event} matchUrl={match.url} />} />
-        {uiSet.map((ui) => (
+        {uiSet.map((ui, index) => (
           <Route
             exact
+            key={index}
             path={`${match.url}/${ui.url}`}
             render={() => <ui.Component event={event} matchUrl={match.url} />}
           />
