@@ -37,7 +37,6 @@ export default function index({ event }: { event: {} }) {
     dataFirebaseBingo,
     saveValueData,
   } = useBingo();
-  // console.log('🚀 debug - index - formDataBingo', formDataBingo?.bingo_appearance);
   const [openAndCloseImportModal, setOpenAndCloseImportModal] = useState(false);
 
   const formLayout = {

@@ -6,7 +6,6 @@ import { UseEventContext } from '@/context/eventContext';
 const { Title } = Typography;
 
 const DrawerRules = ({ showDrawerRules, setshowDrawerRules, bingoData }: DrawerRulesInterface) => {
-  /*  console.log('🚀 debug -', HTMLReactParser(bingoData?.regulation ? bingoData?.regulation : '')); */
   let cEvent = UseEventContext();
 
   return (
