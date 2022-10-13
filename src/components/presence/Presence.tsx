@@ -4,7 +4,6 @@ import firebase from 'firebase/compat/app';
 import { useEffect, useState } from 'react';
 
 import { createSessionPayload, destroySessionPayload } from './utils';
-import type { UserSessionId } from './types';
 
 export interface PresenceProps {
   userId: string;

@@ -14,7 +14,3 @@ export type SessionPayload<T = any> = {
   status: PossibleSessionStatus;
   data?: T,
 };
-
-export type UserSessionId = {
-  lastId: string;
-};
