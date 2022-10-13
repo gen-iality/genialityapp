@@ -12,7 +12,7 @@ export function PresencePage (props: IPresencePageProps) {
   return (
     <div>
       ok
-      <Presence.Local userId='paco' organizationId='org' debuglog={LOG} errorlog={ERROR} />
+      <Presence userId='paco' organizationId='org' debuglog={LOG} errorlog={ERROR} />
     </div>
   );
 }
