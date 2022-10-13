@@ -1,6 +1,6 @@
 import Presence from '@components/presence/Presence';
 import Logger from '@Utilities/logger';
-import { fireRealtime, firestore } from '@helpers/firebase';
+import { fireRealtime } from '@helpers/firebase';
 
 export interface IPresencePageProps {
 }
@@ -19,7 +19,6 @@ export function PresencePage (props: IPresencePageProps) {
         debuglog={LOG}
         errorlog={ERROR} 
         realtimeDB={fireRealtime}
-        firestoreDB={firestore}
       />
     </div>
   );

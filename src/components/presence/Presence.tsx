@@ -11,7 +11,6 @@ export interface PresenceProps {
   organizationId: string;
   // Firebase stuffs
   realtimeDB: firebase.database.Database,
-  firestoreDB: firebase.firestore.Firestore,
   // Loggers
   debuglog: (...args: any[]) => void;
   errorlog: (...args: any[]) => void;
@@ -34,7 +33,6 @@ function Presence(props: PresenceProps) {
 
   const {
     realtimeDB,
-    firestoreDB,
     global: isGlobal,
   } = props;
 
@@ -44,32 +42,17 @@ function Presence(props: PresenceProps) {
     if (!props.userId) return;
     if (!props.organizationId) return;
 
-    const userSessionsIdDB = firestoreDB.collection('user_sessions').doc(props.userId);
-
     let userSessionsRealtime: firebase.database.Reference;
     let onDisconnect: firebase.database.OnDisconnect;
-    let lastId = 0;
 
     (async () => {
-      const result = await userSessionsIdDB.get();
-      // Get last ID
-      if (result.exists) {
-        const document = result.data() as UserSessionId;
-        if (typeof document.lastId === 'number') {
-          lastId = document.lastId;
-          LOG('update lastId to', lastId);
-        }
-      }
-
-      // Update last ID
-      await userSessionsIdDB.set({ lastId: lastId + 1 });
       LOG('mask as connected');
 
       // Get the path in realtime
       if (isGlobal) {
-        userSessionsRealtime = realtimeDB.ref(`/user_sessions/${props.userId}/global/${lastId}`);
+        userSessionsRealtime = realtimeDB.ref(`/user_sessions/global`).child(`${props.userId}`).push();
       } else {
-        userSessionsRealtime = realtimeDB.ref(`/user_sessions/${props.userId}/local/${lastId}`);
+        userSessionsRealtime = realtimeDB.ref(`/user_sessions/local`).child(`${props.userId}`).push();
       }
 
       // Get presence
