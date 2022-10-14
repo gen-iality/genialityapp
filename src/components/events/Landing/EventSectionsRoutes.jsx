@@ -184,6 +184,7 @@ const EventSectionRoutes = props => {
     <>
       {cUser.value?._id && (
         <Presence
+          global
           debuglog={LOG}
           errorlog={ERROR}
           realtimeDB={fireRealtime}
