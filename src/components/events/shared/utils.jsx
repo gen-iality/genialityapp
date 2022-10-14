@@ -89,6 +89,12 @@ export const MenuItems = [
         key: 'noticias',
         onClick: handleClick,
       },
+      {
+        name: 'Time tracking',
+        path: '/timetracking',
+        key: 'timetracking',
+        onClick: handleClick,
+      },
       // {
       //   name: 'Preguntas frecuentes',
       //   path: '/faqs',
