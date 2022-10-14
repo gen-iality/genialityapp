@@ -20,6 +20,11 @@ export interface CreateBingoProps {
   setFormDataBingo: (data: any) => void;
   changeBingoDimensionsNew: (dimensions: DimensionInterface) => Promise<void>;
 }
+export interface AssignmentCardsProps {
+  generateBingoForAllUsers: () => void;
+  generateBingoForExclusiveUsers: () => void;
+  listUsers: any;
+}
 
 export interface BingoAppearance {
   banner: string;

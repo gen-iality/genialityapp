@@ -7,6 +7,8 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 import { extraFields, ImportValuesInterface } from '../interfaces/bingo';
 import MicrosoftExcelIcon from '@2fd/ant-design-icons/lib/MicrosoftExcel';
+import { TemplateData } from '../../bingo/constants/constants';
+import { useState } from 'react';
 
 Moment.locale('es');
 momentLocalizer();
@@ -26,7 +28,7 @@ const ImportValues = ({
     for (var i = 0; i < C; ++i) o[i] = { name: utils.encode_col(i), key: i };
     return o;
   };
-
+  const [downloadWithTemplate, setDownloadWithTemplate] = useState(true);
   const handleXlsFile = (files: any) => {
     if (files.status === 'error') {
       DispatchMessageService({
@@ -105,31 +107,25 @@ const ImportValues = ({
       });
     }
   };
-  console.log('🚀 ~ file: importValues.tsx ~ line 119 ~ extraFields.forEach ~ extraFields', extraFields);
   const downloadExcel = () => {
-    // let rowTitles = new Array();
-    const ExampleData = [
-      {
-        'Tipo carton': 'texto',
-        'Valor en el cartón': 'Logo de evius',
-        'Tipo balota': 'imagen',
-        'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
-      },
-    ];
-    // let cleanAttribute: string = 'Hola';
+    let data: any = [];
+    let cleanAttribute: string = '';
     let name: string | undefined = '';
-    // extraFields.forEach((extra) => {
-    //   if (extra.name === '') return;
-    //   let key: string = extra.name;
-    //   rowTitles.push({ [key]: cleanAttribute });
-    // });
-    const ws = utils.json_to_sheet(ExampleData);
+    if (downloadWithTemplate === true) {
+      data = TemplateData;
+    } else {
+      extraFields.forEach((extra) => {
+        if (extra.name === '') return;
+        let key: string = extra.name;
+        data.push({ [key]: cleanAttribute });
+      });
+    }
+    const ws = utils.json_to_sheet(data);
     const wb = utils.book_new();
     name = templateName ? templateName : event.name;
     utils.book_append_sheet(wb, ws, 'Template');
     writeFileXLSX(wb, `${name}${Moment().format('DD_MM_YYYY')}.xls`);
   };
-
   return (
     <>
       <h2 className='has-text-grey has-text-weight-bold'>CAMPOS REQUERIDOS</h2>

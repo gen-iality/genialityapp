@@ -36,6 +36,7 @@ import PlayBingo from './components/PlayBingo';
 import SelectDimension from './components/SelectDimension';
 import { BingoApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
+import AssignmentCards from './components/AssignmentCards';
 export default function index({ event }: { event: {} }) {
   const {
     bingo,
@@ -337,63 +338,11 @@ export default function index({ event }: { event: {} }) {
               </Tabs.TabPane>
 
               <Tabs.TabPane tab='Asignación de cartones' key='3' disabled={dataFirebaseBingo?.startGame}>
-                <Row gutter={[16, 16]} style={{ padding: '40px' }}>
-                  <Col span={24} style={{ textAlign: 'right' }}></Col>
-                  <Col span={12}>
-                    <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
-                      <Row justify='space-between' /* align='middle' */ wrap>
-                        <Typography.Title level={5}>Lista de participantes</Typography.Title>
-                        <Space direction='vertical'>
-                          <Button type='primary' onClick={generateBingoForAllUsers}>
-                            Generar cartones a todos
-                          </Button>
-                          <Button type='primary' onClick={generateBingoForExclusiveUsers}>
-                            Generar cartones faltantes
-                          </Button>
-                        </Space>
-                      </Row>
-                      <br />
-                      <Input.Search
-                        addonBefore={<UserOutlined />}
-                        placeholder='Buscar participante'
-                        allowClear
-                        style={{ width: '100%' }}
-                        /* onSearch={onSearch} */
-                      />
-                      <br />
-                      <List
-                        dataSource={listUsers}
-                        style={{ marginTop: '10px' }}
-                        renderItem={(user) => (
-                          <List.Item
-                            key={user?._id}
-                            actions={[
-                              <>
-                                {user?.bingo ? (
-                                  <CheckCircleOutlined style={{ color: 'green', fontSize: '18px' }} />
-                                ) : (
-                                  <CloseCircleOutlined style={{ color: 'red', fontSize: '18px' }} />
-                                )}
-                              </>,
-                            ]}>
-                            <List.Item.Meta
-                              avatar={
-                                user?.properties?.picture ? (
-                                  <Avatar src={user?.properties?.picture} size={47} />
-                                ) : (
-                                  <Avatar icon={<UserOutlined />} size={47} />
-                                )
-                              }
-                              title={user?.properties?.names}
-                              description={user?.properties?.email}
-                            />
-                          </List.Item>
-                        )}
-                      />
-                    </Card>
-                  </Col>
-                  <Col span={12}></Col>
-                </Row>
+                <AssignmentCards
+                  generateBingoForExclusiveUsers={generateBingoForExclusiveUsers}
+                  generateBingoForAllUsers={generateBingoForAllUsers}
+                  listUsers={listUsers}
+                />
               </Tabs.TabPane>
 
               <Tabs.TabPane tab='Jugar Bingo' key='4'>

@@ -10,3 +10,53 @@ export const Dimension_4x4 =
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2FCart%C3%B3n%204x4.png?alt=media&token=09f80505-9faa-48de-a134-cb8eb8c98a5f';
 export const Dimension_5x5 =
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2FCart%C3%B3n%205x5.png?alt=media&token=610bd911-2503-48d1-8801-ef8eb62e3602';
+export const TemplateData = [
+  {
+    'Tipo carton': 'texto',
+    'Valor en el cartón': 'Logo de evius',
+    'Tipo balota': 'imagen',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+  },
+  {
+    'Tipo carton': 'texto',
+    'Valor en el cartón': '¿Evius es una plataforma de?',
+    'Tipo balota': 'texto',
+    'Valor en la balota': 'Eventos',
+  },
+  {
+    'Tipo carton': 'imagen',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Tipo balota': 'imagen',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+  },
+  {
+    'Tipo carton': 'imagen',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Tipo balota': 'texto',
+    'Valor en la balota': 'Logo de evius',
+  },
+  {
+    'Tipo carton': 'text',
+    'Valor en el cartón': 'Logo de evius',
+    'Tipo balota': 'image',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+  },
+  {
+    'Tipo carton': 'text',
+    'Valor en el cartón': '¿Evius es una plataforma de?',
+    'Tipo balota': 'text',
+    'Valor en la balota': 'Eventos',
+  },
+  {
+    'Tipo carton': 'image',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Tipo balota': 'image',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+  },
+  {
+    'Tipo carton': 'image',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Tipo balota': 'text',
+    'Valor en la balota': 'Logo de evius',
+  },
+];
