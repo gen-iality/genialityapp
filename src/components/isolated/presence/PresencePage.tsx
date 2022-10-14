@@ -14,13 +14,13 @@ export function PresencePage (props: IPresencePageProps) {
   return (
     <div>
       ok
-      <Presence
+      {/* <Presence
         userId='paco'
         organizationId='org'
         debuglog={LOG}
         errorlog={ERROR} 
         realtimeDB={fireRealtime}
-      />
+      /> */}
       <Presence
         global
         userId='paco'
