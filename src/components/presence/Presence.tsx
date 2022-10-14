@@ -5,9 +5,8 @@ import { useEffect, useState } from 'react';
 
 import { createSessionPayload, destroySessionPayload } from './utils';
 
-export interface PresenceProps {
-  userId: string;
-  organizationId: string;
+export interface PresenceProps<T> {
+  data?: T,
   // Firebase stuffs
   realtimeDB: firebase.database.Database,
   // Loggers
@@ -23,7 +22,7 @@ export interface PresenceProps {
   global?: boolean;
 };
 
-function Presence(props: PresenceProps) {
+function Presence<T = any>(props: PresenceProps<T>) {
   /* eslint-disable no-console */
   const {
     debuglog: LOG = console.debug,
@@ -34,9 +33,10 @@ function Presence(props: PresenceProps) {
   const {
     realtimeDB,
     global: isGlobal,
+    data,
   } = props;
 
-  const [payload, setPayload] = useState(createSessionPayload(props.userId, props.organizationId));
+  const [payload, setPayload] = useState(createSessionPayload<T>(data));
   const [isDeactive, setIsDeactive] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -139,9 +139,6 @@ function Presence(props: PresenceProps) {
   };
 
   useEffect(() => {
-    if (!props.userId) return;
-    if (!props.organizationId) return;
-
     LOG('component have been mounted');
 
     // Get & use presence

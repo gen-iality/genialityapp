@@ -2,10 +2,9 @@ import { ServerValue } from '@helpers/firebase';
 import type { SessionPayload } from './types';
 import { sessionStatus } from './constants';
 
-export function createSessionPayload<T = any>(userId: string, organizationId: string) {
+export function createSessionPayload<T>(data?: T) {
   const payload: SessionPayload<T> = {
-    userId,
-    organizationId,
+    data,
     startTimestamp: ServerValue.TIMESTAMP,
     status: sessionStatus.ONLINE,
   };

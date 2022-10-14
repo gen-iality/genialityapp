@@ -7,8 +7,6 @@ export type SessionStatus = {
 };
 
 export type SessionPayload<T = any> = {
-  userId: string;
-  organizationId: string;
   startTimestamp?: any;
   endTimestamp?: any;
   status: PossibleSessionStatus;
