@@ -38,6 +38,7 @@ import { handleRequestError } from '@/helpers/utils';
 import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
 import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
 import IsolatedRoutes from '../isolated/IsolatedRoutes';
+import TimeTrackingRoutes from '../time-tracking/TimeTrackingRoutes';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -488,6 +489,12 @@ class Event extends Component {
                 component={IsolatedRoutes}
                 event={this.state.event}
                 componentKey='isolated'
+              />
+              <Protected
+                path={`${match.url}/timetracking`}
+                component={TimeTrackingRoutes}
+                event={this.state.event}
+                componentKey={'timetracking'}
               />
               {/* Este componente se muestra si una ruta no coincide */}
               <Protected
