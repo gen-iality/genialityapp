@@ -14,6 +14,11 @@ import initBroadcastViewers from '@/containers/broadcastViewers';
 import withContext from '../../../context/withContext';
 import { useCurrentUser } from '@context/userContext';
 import { activityContentValues } from '@context/activityType/constants/ui';
+import { fireRealtime } from '@helpers/firebase';
+import Logger from '@Utilities/logger';
+import Presence from '@components/presence/Presence';
+
+const { LOG, ERROR } = Logger('studentlanding');
 
 //Code spliting
 const DocumentsForm = loadable(() => import('../../documents/front/documentsLanding'));
@@ -177,6 +182,14 @@ const EventSectionRoutes = props => {
 
   return (
     <>
+      {cUser.value?._id && (
+        <Presence
+          debuglog={LOG}
+          errorlog={ERROR}
+          realtimeDB={fireRealtime}
+          collectionId={cUser.value._id}
+        />
+      )}
       {props.viewVirtualconference && (
         <>
           {props.cEvent.value?.styles?.show_title &&
