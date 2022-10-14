@@ -10,6 +10,7 @@ import { DatePickerAndDayJSPage } from './date/DatePickerAndDayJSPage';
 import { LikertScaleEditorPage } from './quiz/LikertScaleEditorPage';
 import { PresencePage } from './presence/PresencePage';
 import { PresenceListPage } from './presence/PresenceListPage';
+import { PresenceUsersPage } from './presence/PresenceUsersPage';
 
 type UI = {
   url: string;
@@ -58,6 +59,11 @@ const uiSet: UI[] = [
     url: 'presenceList',
     text: 'PresenceListPage',
     Component: PresenceListPage,
+  },
+  {
+    url: 'presenceUsers',
+    text: 'PresenceUsersPage',
+    Component: PresenceUsersPage,
   },
 ];
 
