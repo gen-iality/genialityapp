@@ -20,14 +20,16 @@ export function PresencePage (props: IPresencePageProps) {
         debuglog={LOG}
         errorlog={ERROR} 
         realtimeDB={fireRealtime}
+        collectionNameCreator={() => ({ collectionName: 'local', childName: 'paco'})}
       /> */}
       <Presence
         global
         userId='paco'
         organizationId='org'
         debuglog={GLOG}
-        errorlog={GERROR} 
+        errorlog={GERROR}
         realtimeDB={fireRealtime}
+        collectionNameCreator={() => ({ collectionName: 'global', childName: 'paco'})}
       />
     </div>
   );
