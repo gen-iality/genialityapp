@@ -12,7 +12,7 @@ export interface PresenceProps<T> {
   // Loggers
   debuglog: (...args: any[]) => void;
   errorlog: (...args: any[]) => void;
-  collectionNameCreator: () => { collectionName: string, childName: string };
+  collectionId: string,
   /**
    * This prop enable us to configure as a global presence manager, and avoid
    * disconnect the session when the component gets be unmounted.
@@ -52,11 +52,14 @@ function Presence<T = any>(props: PresenceProps<T>) {
 
       // Get the path in realtime
       LOG('reset the collection path');
-      const { collectionName, childName } = props.collectionNameCreator();
-      userSessionsRealtime = realtimeDB.ref(`/user_sessions/${collectionName}`).child(childName).push();
+      if (isGlobal) {
+        userSessionsRealtime = realtimeDB.ref(`/user_sessions/global`).child(props.collectionId).push();
+      } else {
+        userSessionsRealtime = realtimeDB.ref(`/user_sessions/local`).child(props.collectionId).push();
+      }
 
       if (isGlobal) {
-        beaconRealtime = realtimeDB.ref(`/user_sessions/beacon`).child(childName);
+        beaconRealtime = realtimeDB.ref(`/user_sessions/beacon`).child(props.collectionId);
 
         // Check if the beacon is false to set true
         const data = await beaconRealtime.get();

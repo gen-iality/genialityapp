@@ -38,7 +38,7 @@ export function PresencePage (props: IPresencePageProps) {
         debuglog={GLOG}
         errorlog={GERROR}
         realtimeDB={fireRealtime}
-        collectionNameCreator={() => ({ collectionName: 'global', childName: 'paco'})}
+        collectionId={'paco'}
       />
     </div>
   );
