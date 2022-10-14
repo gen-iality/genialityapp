@@ -1,6 +1,6 @@
-import { useState, useEffect, FunctionComponent } from 'react';
+import { useState, useEffect } from 'react';
 
-import { Result, Space, Typography, List } from 'antd';
+import { Result, Space, Typography, List, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { firestore, fireRealtime } from '@helpers/firebase';
@@ -10,6 +10,8 @@ import Logger from '@Utilities/logger';
 import { AgendaApi } from '@helpers/request';
 import type { ExtendedAgendaType } from '@Utilities/types/AgendaType';
 import { useCurrentUser } from '@context/userContext';
+
+import Online from '@components/online/Online';
 
 type UserSessionInfo = {
   userId: string;
@@ -57,21 +59,6 @@ function TimeTracking(props: TimeTrackingProps) {
     })
     LOG(uniqueActivities.length, 'attendess');
     setAttendees(uniqueActivities);
-
-    // allActivities.flat().map();
-    // const allUserIds = result.docs.map((one) => {
-    //   // Get the user ID
-    //   if (!one.exists) return null;
-    //   const data = one.data();
-    //   return data.account_id as string;
-    // });
-
-    // const filteredUserIds = allUserIds.filter((value) => !!value) as string[];
-
-    // setUserIds((previous) => [...previous, ...filteredUserIds]);
-    // return 0;
-
-
   };
 
   useEffect(() => {
@@ -96,6 +83,7 @@ function TimeTracking(props: TimeTrackingProps) {
         const attendee = attendees[i];
         const snapshot = await beaconRef.child(attendee.account_id).get();
         const beacon = snapshot.val();
+        LOG('userId:', attendee.account_id, 'beacon:', beacon);
         data.push({
           userId: attendee.account_id,
           names: attendee.user.names,
@@ -123,24 +111,18 @@ function TimeTracking(props: TimeTrackingProps) {
     );
   }
 
-  const Online: FunctionComponent<{ isOnline: boolean | null }> = ({ isOnline }) => {
-    return (
-      <div
-        style={{
-          display: 'inline-block',
-          width: '16px',
-          height: '16px',
-          borderRadius: '8px',
-          backgroundColor: isOnline === null ? 'gray' : isOnline ? 'green' : 'red',
-        }}
-      ></div>
-    );
-  };
-
   return (
     <>
     <section>
       <Typography.Title>Time tracking for this event</Typography.Title>
+      <Button
+        onClick={() => {
+          if (cEvent.value?._id) {
+            setIsLoading(true);
+            requestAllAttendees(cEvent.value._id);
+          }
+        }}
+      >Recargar</Button>
       <List
         header={'User session info'}
         dataSource={userSessionInfoList}
