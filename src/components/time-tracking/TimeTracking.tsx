@@ -127,6 +127,7 @@ function TimeTracking(props: TimeTrackingProps) {
     return (
       <div
         style={{
+          display: 'inline-block',
           width: '16px',
           height: '16px',
           borderRadius: '8px',
@@ -145,10 +146,11 @@ function TimeTracking(props: TimeTrackingProps) {
         dataSource={userSessionInfoList}
         renderItem={(item, index) => (
           <List.Item key={index}>
-            <Online isOnline={item.online}/>
-            {' | '}
-            {item.names}
-            {/* TODO: Add more data representation, etc. */}
+            <Space>
+              <Online isOnline={item.online}/>
+              {item.names}
+              {/* TODO: Add more data representation, etc. */}
+            </Space>
           </List.Item>
         )}
       />
