@@ -1,8 +1,10 @@
+import { useHistory } from 'react-router';
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty } from 'antd';
-import { EditOutlined, UserOutlined } from '@ant-design/icons';
+import { EditOutlined, PicLeftOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 
 export const columns = (columnsData, editModalUser) => {
+  const history = useHistory();
   return [
     {
       title: 'Avatar',
@@ -94,6 +96,17 @@ export const columns = (columnsData, editModalUser) => {
       width: 80,
       render(val, item, index) {
         return (
+          <>
+          <Tooltip title='Time tracking'>
+            <Button
+              type='primary'
+              size='small'
+              onClick={() => {
+                history.push(`./members/timetracking/${item._id}`)
+              }}
+              icon={<PicLeftOutlined />}
+            ></Button>
+          </Tooltip>
           <Tooltip title='Editar'>
             <Button
               id={`editAction${index}`}
@@ -104,6 +117,7 @@ export const columns = (columnsData, editModalUser) => {
               }}
               icon={<EditOutlined />}></Button>
           </Tooltip>
+          </>
         );
       },
     },
