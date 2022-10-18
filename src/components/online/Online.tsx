@@ -10,7 +10,7 @@ const Online: FunctionComponent<OnlineProps> = (props) => {
   return (
     <div
       style={{
-        display: 'inline-block',
+        display: 'block',
         width: '16px',
         height: '16px',
         borderRadius: '8px',
