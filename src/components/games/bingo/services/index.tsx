@@ -266,3 +266,31 @@ export const addWinnerBadgeToBingoNotification = async ({
     .doc(notificationId)
     .set({ hasWon: true }, { merge: true });
 };
+
+export const getListUsersWithOrWithoutBingo = async (eventId: string) => {
+  try {
+    const response = await BingoApi.getListUsersWithOrWithoutBingo(eventId);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al eliminar el dato', action: 'show' });
+    return null;
+  }
+};
+export const generateBingoForAllUsers = async (eventId: string, bingo: any) => {
+  try {
+    const response = await BingoApi.generateBingoForAllUsers(eventId, bingo);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al eliminar el dato', action: 'show' });
+    return null;
+  }
+};
+export const generateBingoForExclusiveUsers = async (eventId: string) => {
+  try {
+    const response = await BingoApi.generateBingoForExclusiveUsers(eventId);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al eliminar el dato', action: 'show' });
+    return null;
+  }
+};

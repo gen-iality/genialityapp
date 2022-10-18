@@ -57,10 +57,15 @@ export default function index({ event }: { event: {} }) {
     onCancelValueTable,
     getBingoListenerNotifications,
     changeBingoDimensionsNew,
+    onGetListUsersWithOrWithoutBingo,
+    onGenerateBingoForExclusiveUsers,
+    onGenerateBingoForAllUsers,
     dataNotifications,
     getBingoListener,
     dataFirebaseBingo,
     saveValueData,
+    listUsers,
+    setListUsers,
   } = useBingo();
   const [openAndCloseImportModal, setOpenAndCloseImportModal] = useState(false);
 
@@ -71,7 +76,6 @@ export default function index({ event }: { event: {} }) {
   const formItemsImageTable = useFormItemsTable();
   const formItemsApperance = useApperanceFormItems();
   const columnsTable = useColumnsTable({ actionEditBallotValue, deleteBallotValue });
-  let [listUsers, setListUsers] = useState([]);
 
   const saveImage = async (image: any, setImag: any, name: string) => {
     setImag(image);
@@ -84,109 +88,10 @@ export default function index({ event }: { event: {} }) {
     });
   };
 
-  //List of users that have or haven't bingo
-  const getListUsersWithOrWithoutBingo = async () => {
-    let list = [];
-    try {
-      list = await BingoApi.getListUsersWithOrWithoutBingo(event?._id); /* '633d9b3101de36465758db36' */
-      setListUsers(list);
-    } catch (err) {
-      console.log(err, 'err');
-    }
-  };
-
-  //Generate bingo for all users
-  const generateBingoForAllUsers = async () => {
-    Modal.confirm({
-      title: `¿Está seguro de que desea generar de nuevo los cartones de bingo para todos los usuarios?`,
-      icon: <ExclamationCircleOutlined />,
-      content: 'Una vez generado los cartones de bingo debe esperar unos segundos para que la acción quede completa',
-      okText: 'Confirmar',
-      cancelText: 'Cancelar',
-      onOk() {
-        const onGenerate = async () => {
-          DispatchMessageService({
-            type: 'loading',
-            key: 'loading',
-            msj: 'Por favor espere mientras se generan los cartones de bingos para todos los usuarios...',
-            action: 'show',
-          });
-          try {
-            await BingoApi.generateBingoForAllUsers(event, bingo);
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: '¡Se generaron correctamente los cartones de bingos para todos los usuarios!',
-              action: 'show',
-            });
-          } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: '¡Error generando los cartones de bingos para todos los usuarios!',
-              action: 'show',
-            });
-          }
-        };
-        onGenerate();
-      },
-    });
-  };
-
-  //Generate bingo for exclusive users
-  const generateBingoForExclusiveUsers = async () => {
-    Modal.confirm({
-      title: `¿Está seguro de que desea generar cartones de bingo para los usuarios restantes?`,
-      icon: <ExclamationCircleOutlined />,
-      content: 'Una vez generado los cartones de bingo debe esperar unos segundos para que la acción quede completa',
-      okText: 'Confirmar',
-      cancelText: 'Cancelar',
-      onOk() {
-        const onGenerate = async () => {
-          try {
-            DispatchMessageService({
-              type: 'loading',
-              key: 'loading',
-              msj: 'Por favor espere mientras se generan los cartones de bingos para los usuarios restantes...',
-              action: 'show',
-            });
-            await BingoApi.generateBingoForExclusiveUsers(event);
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: '¡Se generaron correctamente los cartones de bingos para los usuarios restantes!',
-              action: 'show',
-            });
-          } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: '¡Error generando los cartones de bingos para los usuarios restantes!',
-              action: 'show',
-            });
-          }
-        };
-        onGenerate();
-      },
-    });
-  };
-
   useEffect(() => {
     const unSubscribe = getBingoListenerNotifications();
     const unSubscribe2 = getBingoListener();
-    getListUsersWithOrWithoutBingo();
+    onGetListUsersWithOrWithoutBingo();
     return () => {
       unSubscribe();
       unSubscribe2();
@@ -339,8 +244,8 @@ export default function index({ event }: { event: {} }) {
 
               <Tabs.TabPane tab='Asignación de cartones' key='3' disabled={dataFirebaseBingo?.startGame}>
                 <AssignmentCards
-                  generateBingoForExclusiveUsers={generateBingoForExclusiveUsers}
-                  generateBingoForAllUsers={generateBingoForAllUsers}
+                  generateBingoForExclusiveUsers={onGenerateBingoForExclusiveUsers}
+                  generateBingoForAllUsers={onGenerateBingoForAllUsers}
                   listUsers={listUsers}
                 />
               </Tabs.TabPane>

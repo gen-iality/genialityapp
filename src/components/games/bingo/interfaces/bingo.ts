@@ -23,7 +23,16 @@ export interface CreateBingoProps {
 export interface AssignmentCardsProps {
   generateBingoForAllUsers: () => void;
   generateBingoForExclusiveUsers: () => void;
-  listUsers: any;
+  listUsers: listUsers[];
+}
+export interface listUsers {
+  bingo: boolean;
+  _id: string;
+  properties: {
+    names: string;
+    email: string;
+    picture: string;
+  };
 }
 
 export interface BingoAppearance {

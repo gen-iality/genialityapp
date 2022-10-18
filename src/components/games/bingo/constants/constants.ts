@@ -15,7 +15,7 @@ export const TemplateData = [
     'Tipo carton': 'texto',
     'Valor en el cartón': 'Logo de evius',
     'Tipo balota': 'imagen',
-    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
   },
   {
     'Tipo carton': 'texto',
@@ -25,13 +25,13 @@ export const TemplateData = [
   },
   {
     'Tipo carton': 'imagen',
-    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
     'Tipo balota': 'imagen',
-    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
   },
   {
     'Tipo carton': 'imagen',
-    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
     'Tipo balota': 'texto',
     'Valor en la balota': 'Logo de evius',
   },
@@ -39,7 +39,7 @@ export const TemplateData = [
     'Tipo carton': 'text',
     'Valor en el cartón': 'Logo de evius',
     'Tipo balota': 'image',
-    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
   },
   {
     'Tipo carton': 'text',
@@ -49,13 +49,13 @@ export const TemplateData = [
   },
   {
     'Tipo carton': 'image',
-    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
     'Tipo balota': 'image',
-    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en la balota': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
   },
   {
     'Tipo carton': 'image',
-    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Evius.png',
+    'Valor en el cartón': 'https://evius.co/wp-content/uploads/2022/09/Logo-2-258x300.png',
     'Tipo balota': 'text',
     'Valor en la balota': 'Logo de evius',
   },

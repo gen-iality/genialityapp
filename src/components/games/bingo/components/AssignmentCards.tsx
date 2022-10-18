@@ -1,12 +1,38 @@
 import { CheckCircleOutlined, CloseCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Input, List, Row, Space, Typography } from 'antd';
 import { AssignmentCardsProps } from '../interfaces/bingo';
+import SearchUser from './SearchUser';
+import { useState, useEffect } from 'react';
 
 export default function AssignmentCards({
   generateBingoForAllUsers,
   generateBingoForExclusiveUsers,
   listUsers,
 }: AssignmentCardsProps) {
+  const [keyboard, setKeyboard] = useState('');
+  const [searchData, setDataSearchData] = useState<any[]>([]);
+  const onSubmit = (values: string) => {
+    const userSearch = listUsers.filter(
+      (user) =>
+        user.properties.names.toLocaleLowerCase().includes(values) ||
+        user._id.includes(values) ||
+        user.properties.email.toLocaleLowerCase().includes(values)
+    );
+    if (keyboard === '') {
+      setDataSearchData(listUsers);
+    }
+    setDataSearchData(userSearch);
+  };
+  const handleChange = (event: any) => {
+    setKeyboard(event.target.value);
+  };
+  useEffect(() => {
+    onSubmit(keyboard);
+    return () => {
+      setDataSearchData([]);
+    };
+  }, [keyboard, listUsers]);
+
   return (
     <Row gutter={[16, 16]} style={{ padding: '40px' }}>
       <Col span={24} style={{ textAlign: 'right' }}></Col>
@@ -24,16 +50,10 @@ export default function AssignmentCards({
             </Space>
           </Row>
           <br />
-          <Input.Search
-            addonBefore={<UserOutlined />}
-            placeholder='Buscar participante'
-            allowClear
-            style={{ width: '100%' }}
-            /* onSearch={onSearch} */
-          />
+          <SearchUser onSubmit={onSubmit} handleChange={handleChange} keyboard={keyboard} />
           <br />
           <List
-            dataSource={listUsers}
+            dataSource={searchData}
             style={{ marginTop: '10px' }}
             renderItem={(user: any) => (
               <List.Item
