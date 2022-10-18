@@ -38,6 +38,7 @@ import { handleRequestError } from '@/helpers/utils';
 import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
 import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
 import Bingo from '../games/bingo';
+import WhereIs from '../games/whereIs';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -303,6 +304,14 @@ class Event extends Component {
                 event={event}
                 updateEvent={this.updateEvent}
                 componentKey='bingo'
+              />
+              <Protected
+                path={`${match.url}/whereIs`}
+                component={WhereIs}
+                eventId={event._id}
+                event={event}
+                updateEvent={this.updateEvent}
+                componentKey='whereIs'
               />
               <Protected
                 path={`${match.url}/empresas`}

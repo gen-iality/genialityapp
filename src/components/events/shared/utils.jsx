@@ -134,6 +134,12 @@ export const MenuItems = [
         key: 'bingo',
         onClick: handleClick,
       },
+      {
+        name: '¿Dónde se encuentra?',
+        path: '/whereIs',
+        key: 'whereIs',
+        onClick: handleClick,
+      },
     ],
   },
   {
