@@ -4,10 +4,13 @@ import { sessionStatus } from './constants';
 
 export function createSessionPayload<T>(data?: T) {
   const payload: SessionPayload<T> = {
-    data,
     startTimestamp: firebase.database.ServerValue.TIMESTAMP,
     status: sessionStatus.ONLINE,
   };
+
+  if (data !== undefined) {
+    payload.data = data;
+  }
 
   return payload;
 }
