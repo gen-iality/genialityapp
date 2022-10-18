@@ -1072,3 +1072,43 @@ a {
 .hide-toolbar .ql-toolbar {
   display: none;
 }
+
+.desplazar::-webkit-scrollbar {
+  width: 5px;
+  /* Tamaño del scroll en vertical */
+  height: 5px;
+  /* Tamaño del scroll en horizontal */
+  display: block;
+  /* Ocultar scroll */
+}
+
+/* Ponemos un color de fondo y redondeamos las esquinas del thumb */
+.desplazar::-webkit-scrollbar-thumb {
+  background: #dbdbdb65;
+  border-radius: 4px;
+}
+
+/* Cambiamos el fondo y agregamos una sombra cuando esté en hover */
+.desplazar::-webkit-scrollbar-thumb:hover {
+  background: #2296ff;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Cambiamos el fondo cuando esté en active */
+.desplazar::-webkit-scrollbar-thumb:active {
+  background-color: #40a9ff;
+}
+
+/* Ponemos un color de fondo y redondeamos las esquinas del track */
+.desplazar::-webkit-scrollbar-track {
+  background: #ffffff00;
+  border-radius: 4px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* Cambiamos el fondo cuando esté en active o hover */
+.desplazar::-webkit-scrollbar-track:hover,
+.desplazar::-webkit-scrollbar-track:active {
+  background: #dfdede;
+}
