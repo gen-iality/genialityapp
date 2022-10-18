@@ -14,11 +14,7 @@ import { isMobile } from 'react-device-detect';
 import * as SurveyActions from '../../../redux/survey/actions';
 import SurveyDrawer from '../surveys/components/surveyDrawer';
 import HCOActividad from './HOC_Actividad';
-import {
-	activitiesCode,
-	cityValid,
-	codeActivity,
-} from '../../../helpers/constants';
+import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
 import { checkinAttendeeInActivity } from '../../../helpers/HelperAuth';
 import { UseUserEvent } from '@/context/eventUserContext';
@@ -27,14 +23,10 @@ import { UseCurrentUserContext } from '@/context/userContext';
 import DrawerBingo from '@components/games/bingo/components/DrawerBingo';
 import SharePhotoInLanding from '@/components/games/sharePhoto/views/SharePhotoInLanding';
 const { setHasOpenSurveys } = SurveyActions;
+const sharePhotoEventStatus = false;
 
 const AgendaActividadDetalle = props => {
-	let {
-		chatAttendeChats,
-		HandleOpenCloseMenuRigth,
-		currentActivity,
-		helperDispatch,
-	} = useHelper();
+	let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
 	let [orderedHost, setOrderedHost] = useState([]);
 	let cSurveys = UseSurveysContext();
 	const [videoStyles, setVideoStyles] = useState(null);
@@ -52,10 +44,7 @@ const AgendaActividadDetalle = props => {
 
 	useEffect(() => {
 		async function getActividad() {
-			return await AgendaApi.getOne(
-				props.match.params.activity_id,
-				cEvent.value._id
-			);
+			return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id);
 		}
 
 		function orderHost(hosts) {
@@ -76,11 +65,7 @@ const AgendaActividadDetalle = props => {
 		props.setVirtualConference(false);
 
 		HandleOpenCloseMenuRigth(false);
-		if (
-			props.socialzonetabs?.publicChat ||
-			props.socialzonetabs?.privateChat ||
-			props.socialzonetabs?.attendees
-		) {
+		if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
 			HandleOpenCloseMenuRigth(false);
 		} else {
 			HandleOpenCloseMenuRigth(true);
@@ -104,11 +89,7 @@ const AgendaActividadDetalle = props => {
 				const eventId = cEvent.value._id;
 				const activityId = props.match.params.activity_id;
 
-				unSuscribe = checkinAttendeeInActivity(
-					cEventUser.value,
-					eventId,
-					activityId
-				);
+				unSuscribe = checkinAttendeeInActivity(cEventUser.value, eventId, activityId);
 			}
 		}
 
@@ -173,9 +154,7 @@ const AgendaActividadDetalle = props => {
 	return (
 		<div>
 			<div className=' container_agenda-information container-calendar2'>
-				<Card
-					style={{ padding: '1 !important' }}
-					className='agenda_information'>
+				<Card style={{ padding: '1 !important' }} className='agenda_information'>
 					{/* <HeaderColumnswithContext isVisible={true} /> */}
 					{!blockActivity ? (
 						<>
@@ -217,10 +196,7 @@ const AgendaActividadDetalle = props => {
 									message={
 										<>
 											¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-											<a
-												style={{ color: '#3273dc' }}
-												target='_blank'
-												href='https://iberofest.co/producto/edc/'>
+											<a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
 												https://iberofest.co/producto/edc/
 											</a>{' '}
 										</>
@@ -242,27 +218,21 @@ const AgendaActividadDetalle = props => {
 									¡Jugar BINGO!
 								</Button>
 							</Row>
-							<DrawerBingo
-								openOrClose={openOrCloseModalDrawer}
-								setOpenOrClose={setOpenOrCloseModalDrawer}
-							/>
+							<DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
 						</>
 					)}
-					{
+					{sharePhotoEventStatus && (
 						<>
 							<Row align='middle' justify='center' style={{ padding: '10px' }}>
 								<SharePhotoInLanding />
 							</Row>
 						</>
-					}
+					)}
 					<AditionalInformation orderedHost={orderedHost} />
 				</Card>
 			</div>
 			{/* Drawer encuestas */}
-			<SurveyDrawer
-				colorFondo={cEvent.value.styles.toolbarDefaultBg}
-				colorTexto={cEvent.value.styles.textMenu}
-			/>
+			<SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
 		</div>
 	);
 };
@@ -287,7 +257,4 @@ const mapDispatchToProps = {
 };
 
 // let AgendaActividadDetalleWithContext = WithEviusContext(AgendaActividadDetalle);
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withRouter(AgendaActividadDetalle));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
