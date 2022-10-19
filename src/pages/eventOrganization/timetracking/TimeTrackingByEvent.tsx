@@ -4,12 +4,13 @@ import Logger from '@Utilities/logger';
 import { Typography, Card, Space } from 'antd';
 import { useEffect, useMemo, useState, type FunctionComponent } from 'react';
 
-const { LOG, ERROR } = Logger('time-tracking-by-event');
+const { LOG, ERROR, WARN } = Logger('time-tracking-by-event');
 
 export interface TimeTrackingByEventProps {
   eventId: string,
   eventName: string,
   userId: string,
+  timeMode: 'seconds' | 'hours' | 'days',
 }
 
 const TimeTrackingByEvent: FunctionComponent<TimeTrackingByEventProps> = (props) => {
@@ -33,11 +34,28 @@ const TimeTrackingByEvent: FunctionComponent<TimeTrackingByEventProps> = (props)
     })();
   }, []);
 
-  const loggedSeconds = useMemo(() => {
-    return loadSessionPayloadItems.map((log) => (log.endTimestamp - log.startTimestamp) / 1000).reduce((a, b) => a+b, 0);
-  }, [loadSessionPayloadItems]);
-
-  const loggedHours = useMemo(() => loggedSeconds/3600, [loggedSeconds]);
+  const loggedTime = useMemo(() => {
+    let divisor = 1;
+    let description = 'segundo(s)';
+    switch(props.timeMode) {
+      case 'seconds':
+        divisor = 1;
+        description = 'segundo(s)';
+        break;
+      case 'hours':
+        divisor = 3600;
+        description = 'hora(s)';
+        break;
+      case 'days':
+        divisor = 3600*24;
+        description = 'día(s)';
+        break;
+      default:
+        WARN('the prop', props.timeMode, 'is unknown');
+    }
+    const time = loadSessionPayloadItems.map((log) => (log.endTimestamp - log.startTimestamp) / 1000 / divisor).reduce((a, b) => a+b, 0);
+    return { time, description };    
+  }, [loadSessionPayloadItems, props.timeMode]);
 
   return (
     <Card title={props.eventName}>
@@ -47,8 +65,7 @@ const TimeTrackingByEvent: FunctionComponent<TimeTrackingByEventProps> = (props)
         </Typography.Text>
         {loadSessionPayloadItems.length > 0 && (
           <Space direction='horizontal'>
-          <Card>{loggedSeconds.toPrecision(4)} segundos</Card>
-          <Card>{loggedHours.toPrecision(2)} horas</Card>
+          <Card>{loggedTime.time.toPrecision(4)} {loggedTime.description}</Card>
           </Space>
         )}
       </Space>

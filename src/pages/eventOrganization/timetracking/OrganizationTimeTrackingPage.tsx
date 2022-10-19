@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, type FunctionComponent } from 'react';
-import { Avatar, Card, Divider, Result, Space, Typography } from 'antd';
+import { Avatar, Card, Divider, Result, Select, Space, Typography } from 'antd';
 import { fireRealtime } from '@helpers/firebase';
 import Logger from '@Utilities/logger';
 import Online from '@components/online/Online';
@@ -8,7 +8,7 @@ import { LoadingOutlined, UserOutlined } from '@ant-design/icons';
 import TimeTrackingByEvent from './TimeTrackingByEvent';
 import { type SessionPayload } from '@components/presence/types';
 
-const { LOG, ERROR } = Logger('time-tracking-page');
+const { LOG, ERROR, WARN } = Logger('time-tracking-page');
 
 export interface OrganizationTimeTrackingPageProps {
   match: any,
@@ -31,6 +31,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({} as OrganizationUserInfo);
   const [logs, setLogs] = useState<SessionPayload[]>([]);
+  const [timeMode, setTimeMode] = useState<'seconds'|'hours'|'days'>('seconds');
 
   useEffect(() => {
     if (!memberId) return;
@@ -81,11 +82,28 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
     })();
   }, [memberId]);
 
-  const loggedSeconds = useMemo(() => {
-    return logs.map((log) => (log.endTimestamp - log.startTimestamp) / 1000).reduce((a, b) => a+b, 0);
-  }, [logs]);
-
-  const loggedHours = useMemo(() => loggedSeconds/3600, [loggedSeconds]);
+  const loggedTime = useMemo(() => {
+    let divisor = 1;
+    let description = 'segundo(s)';
+    switch(timeMode) {
+      case 'seconds':
+        divisor = 1;
+        description = 'segundo(s)';
+        break;
+      case 'hours':
+        divisor = 3600;
+        description = 'hora(s)';
+        break;
+      case 'days':
+        divisor = 3600*24;
+        description = 'día(s)';
+        break;
+      default:
+        WARN('the prop', timeMode, 'is unknown');
+    }
+    const time = logs.map((log) => (log.endTimestamp - log.startTimestamp) / 1000 / divisor).reduce((a, b) => a+b, 0);
+    return { time, description };    
+  }, [logs, timeMode]);
 
   if (isLoading) {
     return (
@@ -102,16 +120,26 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
     <Typography.Title>Usuario en {organization.name}</Typography.Title>
     <Card
       title={
-        <Space direction='horizontal'>
-          <Online isOnline={userInfo.isOnline}/>
-          <Avatar
-            style={{ backgroundColor: '#87d068' }}
-            icon={<UserOutlined />}
-            src={userInfo.picture}
-          >
-            {userInfo.name}
-          </Avatar>
-          <Typography.Text>{userInfo.name}</Typography.Text>
+        <Space direction='horizontal' style={{justifyContent: 'space-between', display: 'flex'}}>
+          <Space direction='horizontal'>
+            <Online isOnline={userInfo.isOnline}/>
+            <Avatar
+              style={{ backgroundColor: '#87d068' }}
+              icon={<UserOutlined />}
+              src={userInfo.picture}
+            >
+              {userInfo.name}
+            </Avatar>
+            <Typography.Text>{userInfo.name}</Typography.Text>
+          </Space>
+          <Space direction='horizontal'>
+            <Typography.Text>Modo:</Typography.Text>
+            <Select onChange={(mode) => setTimeMode(mode)} defaultValue={timeMode} style={{minWidth: 120}}>
+              <Select.Option value='seconds'>Segundos</Select.Option>
+              <Select.Option value='hours'>Horas</Select.Option>
+              <Select.Option value='days'>Días</Select.Option>
+            </Select>
+          </Space>
         </Space>
       }
     >
@@ -126,14 +154,19 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       <Space direction='vertical'>
         <Typography.Text>{logs.length} registros globales cerrados</Typography.Text>
         <Space direction='horizontal'>
-          <Card>{loggedSeconds.toPrecision(4)} segundos</Card>
-          <Card>{loggedHours.toPrecision(2)} horas</Card>
+          <Card>{loggedTime.time.toPrecision(4)} {loggedTime.description}</Card>
         </Space>
       </Space>
       <Divider/>
       {userId && (
         events.map((event, index) => (
-          <TimeTrackingByEvent key={index} eventName={event.name} eventId={event._id} userId={userId} />
+          <TimeTrackingByEvent
+            key={index}
+            eventName={event.name}
+            eventId={event._id}
+            userId={userId}
+            timeMode={timeMode}
+          />
         ))
       )}
     </Card>
