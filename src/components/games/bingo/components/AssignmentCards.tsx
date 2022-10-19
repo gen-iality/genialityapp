@@ -44,6 +44,12 @@ export default function AssignmentCards({
               <Button type='primary' onClick={generateBingoForAllUsers}>
                 Generar cartones a todos
               </Button>
+              <Button type='primary' onClick={generateBingoForAllUsers}>
+                Imprimir Cartones
+              </Button>
+              <Button type='primary' onClick={generateBingoForAllUsers}>
+                Enviar cartones a correo
+              </Button>
               <Button type='primary' onClick={generateBingoForExclusiveUsers}>
                 Generar cartones faltantes
               </Button>

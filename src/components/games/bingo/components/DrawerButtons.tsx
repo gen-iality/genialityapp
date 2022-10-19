@@ -93,6 +93,16 @@ const DrawerButtons = ({
             Chat
           </Button>
         </Col>
+        <Col span={24}>
+          <Button
+            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+            onClick={() => setshowDrawerChat(true)}
+            icon={<CommentOutlined />}
+            size='large'
+            block>
+            Imprimir Carton
+          </Button>
+        </Col>
       </Row>
     </Card>
   );
