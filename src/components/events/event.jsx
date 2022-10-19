@@ -315,12 +315,12 @@ class Event extends Component {
                 componentKey='whereIs'
               />
               <Protected
-                path={`${match.url}/whereIs`}
-                component={WhereIs}
+                path={`${match.url}/share-photo`}
+                component={SharePhoto}
                 eventId={event._id}
                 event={event}
                 updateEvent={this.updateEvent}
-                componentKey='whereIs'
+                componentKey='sharePhoto'
               />
               <Protected
                 path={`${match.url}/empresas`}

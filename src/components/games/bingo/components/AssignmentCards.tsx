@@ -34,23 +34,16 @@ export default function AssignmentCards({
   }, [keyboard, listUsers]);
 
   return (
-    <Row gutter={[16, 16]} style={{ padding: '40px' }}>
-      <Col span={24} style={{ textAlign: 'right' }}></Col>
-      <Col span={12}>
+    <Row gutter={[16, 16]} style={{ padding: '20px' }}>
+      <Col span={24}>
         <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
-          <Row justify='space-between' /* align='middle' */ wrap>
+          <Row justify='space-between'>
             <Typography.Title level={5}>Lista de participantes</Typography.Title>
-            <Space direction='vertical'>
-              <Button type='primary' onClick={generateBingoForAllUsers}>
+            <Space wrap>
+              <Button type='primary' style={{ minWidth: '250px' }} onClick={generateBingoForAllUsers}>
                 Generar cartones a todos
               </Button>
-              <Button type='primary' onClick={generateBingoForAllUsers}>
-                Imprimir Cartones
-              </Button>
-              <Button type='primary' onClick={generateBingoForAllUsers}>
-                Enviar cartones a correo
-              </Button>
-              <Button type='primary' onClick={generateBingoForExclusiveUsers}>
+              <Button type='primary' style={{ minWidth: '250px' }} onClick={generateBingoForExclusiveUsers}>
                 Generar cartones faltantes
               </Button>
             </Space>
@@ -60,7 +53,8 @@ export default function AssignmentCards({
           <br />
           <List
             dataSource={searchData}
-            style={{ marginTop: '10px' }}
+            className='desplazar'
+            style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
             renderItem={(user: any) => (
               <List.Item
                 key={user?._id}
@@ -89,7 +83,7 @@ export default function AssignmentCards({
           />
         </Card>
       </Col>
-      <Col span={12}></Col>
+      {/* <Col span={12}></Col> */}
     </Row>
   );
 }
