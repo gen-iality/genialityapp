@@ -97,34 +97,6 @@ const SmartInitialView = (props: any) => {
     return resp;
   };
 
-  // const renderComponet = () => {
-  //   switch (selectedKey) {
-  //     case 'finish':
-  //       return (
-  //         <ManagerView
-  //           type={objecKeys[previewKey]}
-  //           activityName={props.activityName}
-  //           activityId={props.activityId}
-  //         />
-  //       );
-  //     default:
-  //       return (
-  //         <Card>
-  //           <Result
-  //             icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-  //             status='info'
-  //             title='Define el tipo de contenido'
-  //             extra={
-  //               <Button onClick={() => toggleActivitySteps('type')} type='primary'>
-  //                 Escoge un tipo de contenido
-  //               </Button>
-  //             }
-  //           />
-  //         </Card>
-  //       );
-  //   }
-  // };
-
   return (
     <>
       <ModalPreviewVideo />

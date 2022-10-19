@@ -47,21 +47,12 @@ const Header = (props) => {
           {title}
         </Tooltip>
       </Title>
-      {/* <small>
-        {listLenght?.length === cUser.value.plan.availables.speakers && (
-          <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
-        )}
-        {messageHeaderAlert && (
-          <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
-        )}
-      </small> */}
       {!eventIsActive && window.location.toString().includes('eventadmin') && (
         <Typography.Text style={{ color: 'red' }}>Tu curso se encuentra bloqueado</Typography.Text>
       )}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
-        {/* {listLenght?.length !== cUser.value.plan.availables.speakers && ( */}
         <Col>
           {addUrl && (
             <Link to={addUrl}>
@@ -85,7 +76,6 @@ const Header = (props) => {
             </Button>
           )}
         </Col>
-        {/* )} */}
         <Col>
           {save && (
             <Button

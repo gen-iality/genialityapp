@@ -6,11 +6,6 @@ function PartnerItemList({ company, handleOpenPartnerDetail, companyId }) {
       <Card style={{ marginBottom: '12px' }}>
         <Row gutter={[8, 8]} /* justify='center'  */ align='middle'>
           <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
-            {/* <Avatar 
-              src={company.list_image} 
-              size={100}
-              size={{ xs: 160, sm: 160, md: 100, lg: 100, xl: 100, xxl: 100 }}
-            />*/}
             <div className='img-contact'>
               <img width={'200px'} src={company.list_image ? company.list_image : 'error'} />
             </div>

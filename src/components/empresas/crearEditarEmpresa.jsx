@@ -304,8 +304,6 @@ function CrearEditarEmpresa(props) {
 
                 <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
 
-                {/* <Field name='visible' component={SwitchField} label='Visible' /> */}
-
                 <ImageField required name='stand_image' label='Banner de la empresa' />
 
                 <ImageField name='list_image' label='Logo de la empresa' />
@@ -662,21 +660,6 @@ function CrearEditarEmpresa(props) {
                     );
                   }}
                 />
-
-                {/* <Form.Item {...buttonsLayout}>
-                  <Link to={`/event/${event._id}/empresas`}>
-                    <Button
-                      disabled={isSubmitting}
-                      loading={isSubmitting}
-                      icon={<CaretLeftOutlined />}
-                      style={{ marginRight: '20px' }}>
-                      {'Volver'}
-                    </Button>
-                  </Link>
-                  <Button type='primary' htmlType='submit' disabled={isSubmitting} loading={isSubmitting}>
-                    {'Guardar'}
-                  </Button>
-                </Form.Item> */}
               </Col>
             </Row>
             <BackTop />

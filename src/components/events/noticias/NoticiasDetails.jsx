@@ -128,7 +128,6 @@ const NoticiasDetails = (props) => {
                 <Divider orientation='left' style={{ fontWeight: 'bold' }}>
                   Otras noticias que te pueden interesar
                 </Divider>
-                {/* <br /> */}
                 <NoticiaList size={screens.xs ? 1 : screens.lg ? 3 : 2} newId={noticia._id} />
               </Card>
             </Col>

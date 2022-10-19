@@ -101,20 +101,6 @@ function DetailsProduct(props) {
                       __html: product && product.description ? product.description : 'Sin descripción',
                     }}></div>
                 </Text>
-                {/* <Row gutter={[12,12]}> 
-                     <Col span={8}>
-                     <span><strong>Oferta actual</strong></span>
-                     <Alert style={{padding:'4px 15px'}} type="success" message={product && product.price? product.price:"Sin precio"}/>  
-                     </Col>
-                     <Col span={8}> 
-                       <span ><strong>Valor a ofrecer</strong></span>
-                       <Input type='number' style={{width:'100%'}} min='1000' max={99999999} value=''  />
-                      <span style={{color:'red',fontSize:8}}>Valor a ofrecer incorrecto</span>
-                     </Col>            
-                   </Row> 
-                    <Button type='primary' size='middle'>
-                        Pujar
-                    </Button> */}
               </Space>
             </Card>
           </Col>

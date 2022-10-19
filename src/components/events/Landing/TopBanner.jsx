@@ -13,7 +13,6 @@ const TopBanner = ({ currentActivity }) => {
 
   return (
     <>
-      {/* <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1> */}
       {(styles.show_banner === undefined || styles.show_banner === 'true') && currentActivity === null && (
         <BannerEvent
           bgImage={bgImage}

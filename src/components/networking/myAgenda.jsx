@@ -164,23 +164,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   return (
     <div>
-      {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-      {/* <Switch>
-          <Route path={props.match.url+"listadoCitas"} render={(props) => (
-             <ListadoCitas {...props}/>
-          )} />
-            
-            <Route path={props.match.url+"/reunion"} render={(props) => (
-          
-            <Reunion {...props}/>
-            )} />
-          
-          <Route path={props.match.url+""} render={(props) => (
-            <ListadoCitas {...props}/>
-            )} />
-        </Switch> */}
-
       {isNonEmptyArray(eventDatesRange) ? (
         <Tabs>
           {eventDatesRange.map((eventDate, eventDateIndex) => {
@@ -292,7 +275,6 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         }
         title={
           <Space wrap>
-            {/* <div style={{ textTransform: 'capitalize' }}>{dayjs(data.timestamp_start).format('MMMM DD')}</div> */}
             <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
               {dayjs(data.timestamp_start).format('hh:mm a')}
             </Typography.Text>
@@ -301,7 +283,6 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             </Typography.Text>
           </Space>
         }>
-        {/* <div style={{ marginBottom: '10px' }}>{'Cita con: '}</div> */}
         <Meta
           avatar={
             userImage ? (

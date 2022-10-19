@@ -744,15 +744,6 @@ class General extends Component {
     return (
       <>
         {/* RESTRICIONES */}
-        {/* {iMustValidate && (
-          <>
-            <ValidateEventStart
-              startDate={event.datetime_from}
-              callBackTheEventIsActive={this.theEventIsActive}
-              user={cUser}
-            />
-          </>
-        )} */}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1'>

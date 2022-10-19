@@ -626,8 +626,6 @@ const FormEdit = (
               {(fields, { add, remove }) => {
                 return (
                   <>
-                  {/* <pre>{JSON.stringify(rankingCorrectAnswers)}</pre>
-                  <pre>{JSON.stringify(correctAnswerIndex)}</pre> */}
                   <style>
                     {`
                     .abc-ranking, .abc-ranking > .ant-space-item { width: 100%; }

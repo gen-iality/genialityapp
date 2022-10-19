@@ -25,9 +25,6 @@ function GameList(props) {
 
   return (
     <Card style={{ borderRadius: '10px', marginTop: '6px' }} bodyStyle={bodyStyle}>
-      {/* <div
-        className='container-ranking'
-        style={{ marginTop: 16, height: 'auto', overflowY: 'auto', overflowX: 'hidden' }}> */}
       <List
         loading={isLoading}
         itemLayout='horizontal'
@@ -48,7 +45,6 @@ function GameList(props) {
           emptyText: <Result icon={<GoogleControllerOff />} title='No hay juegos disponibles para esta lección' />,
         }}
       />
-      {/* </div> */}
     </Card>
   );
 }

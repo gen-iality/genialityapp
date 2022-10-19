@@ -621,38 +621,6 @@ class Datos extends Component {
                   </Tooltip>
                 )}
               </Col>
-              {/* {key.name !== 'email' && key.name !== 'contrasena' && (
-                <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-              )}
-            </Col>
-            <Col>
-              {key.name !== 'email' &&
-                key.name !== 'names' &&
-                key.type !== 'checkInField' &&
-                key.name !== 'birthdate' &&
-                key.name !== 'bloodtype' &&
-                key.name !== 'gender' && (
-                  <Tooltip placement='topLeft' title='Eliminar'>
-                    <Button
-                      key={`removeAction${key.index}`}
-                      id={`removeAction${key.index}`}
-                      onClick={() => this.removeField(key._id || key.name)}
-                      icon={<DeleteOutlined />}
-                      type='danger'
-                      size='small'
-                    />
-                  </Tooltip>
-                )}
-            </Col>
-            {/* {key.name !== 'email' && key.name !== 'contrasena' && (
-              <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-            )}
-            {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
-              <DeleteOutlined
-                style={{ float: 'right' }}
-                onClick={() => this.setState({ deleteModal: key._id || key.name })}
-              />
-            )} */}
             </Row>
           );
         },

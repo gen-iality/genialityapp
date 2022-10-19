@@ -273,7 +273,6 @@ function UsersCard(props) {
             size={45}
           />
           {/* {!imageProfile && name && name.charAt(0).toUpperCase()} */}
-          {/* </Avatar> */}
         </Badge>
       );
     });

@@ -88,14 +88,10 @@ function GameRanking(props) {
   };
   return (
     <>
-      {/* {!(Object.keys(currentUser).length === 0) && ( */}
-      <>
-        {/*RANKING*/}
-        <RankingMyScore />
-        <Divider />
-        <RankingList />
-      </>
-      {/* )} */}
+      {/*RANKING*/}
+      <RankingMyScore />
+      <Divider />
+      <RankingList />
     </>
   );
 }

@@ -300,7 +300,6 @@ function AgendaActivityItem(props) {
                             }>
                             {
                               <>
-                                {/*  */}
                                 <Comment
                                   className='descripcion'
                                   content={
@@ -329,16 +328,6 @@ function AgendaActivityItem(props) {
                                 <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
                                   <Avatar size={25} src={speaker.image} />
                                   {speaker.name}
-                                  {/* <table>
-                                    <tr>
-                                      <th>
-                                        <Avatar size={25} src={speaker.image} />
-                                      </th>
-                                      <th style={{ marginRight: '12px' }}>
-                                        <div className='speaker-name'>{speaker.name}</div>
-                                      </th>
-                                    </tr>
-                                  </table> */}
                                 </Space>
                               ))}
                             </>

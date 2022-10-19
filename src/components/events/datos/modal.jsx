@@ -1,4 +1,4 @@
-import { Component, createRef, Fragment } from 'react';
+import { Component, createRef } from 'react';
 import { typeInputs } from '@helpers/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
@@ -271,8 +271,7 @@ class DatosModal extends Component {
     const { edit } = this.props;
 
     return (
-      <Fragment>
-        {/* <section className='modal-card-body'> */}
+      <>
         <Form
           autoComplete='off' // this was added
           initialValues={this.props.info}
@@ -300,19 +299,6 @@ class DatosModal extends Component {
               //onChange={this.handleChange}
             />
           </Form.Item>
-          {/* <Form.Item label={'Posición Nombre del Campo'} name='labelPosition'>
-            <Radio.Group onChange={this.handleChange} value={info.labelPosition} name={'labelPosition'}>
-              <Radio value={'arriba'} checked={info.labelPosition === 'arriba' || !info.labelPosition}>
-                Arriba &nbsp;
-              </Radio>
-              <Radio value={'izquierda'} checked={info.labelPosition === 'izquierda'}>
-                Izquierda &nbsp;
-              </Radio>
-              <Radio value={'derecha'} checked={info.labelPosition === 'derecha'}>
-                Derecha &nbsp;
-              </Radio>
-            </Radio.Group>
-          </Form.Item> */}
           <Form.Item
             initialValue={info?.type}
             label={'Tipo de dato'}
@@ -416,183 +402,7 @@ class DatosModal extends Component {
             </Row>
           </Form.Item>
         </Form>
-        {/* <div className='field'>
-            <label className='label required has-text-grey-light'>Nombre campo </label>
-            <div className='control'>
-              <input
-                className='input'
-                name={'label'}
-                type='text'
-                placeholder='Ej: Celular'
-                value={info.label}
-                onChange={this.handleChange}
-              />
-            </div>
-          </div>
-          <input
-            className='input is-small'
-            name={'name'}
-            type='text'
-            placeholder='Nombre del campo en base de datos'
-            value={info.name}
-            disabled={true}
-            onChange={this.handleChange}
-          />
-          <div className='field'>
-            <label className='label has-text-grey-light'>Posición Nombre del Campo </label>
-            <div className=''>
-              <label>
-                <input
-                  type='radio'
-                  name='labelPosition'
-                  value='arriba'
-                  className='form-check-input'
-                  checked={info.labelPosition === 'arriba' || !info.labelPosition}
-                  onChange={this.handleChange}
-                />
-                Arriba &nbsp;
-              </label>
-
-              <label>
-                <input
-                  type='radio'
-                  name='labelPosition'
-                  value='izquierda'
-                  className='form-check-input'
-                  checked={info.labelPosition === 'izquierda'}
-                  onChange={this.handleChange}
-                />
-                Izquierda &nbsp;
-              </label>
-              <label>
-                <input
-                  type='radio'
-                  name='labelPosition'
-                  value='derecha'
-                  className='form-check-input'
-                  checked={info.labelPosition === 'derecha'}
-                  onChange={this.handleChange}
-                />
-                Derecha &nbsp;
-              </label>
-            </div>
-          </div>
-
-          <div className='field'>
-            <div className='control'>
-              <label className='label required'>Tipo de dato</label>
-              <div className='control'>
-                <div className='select'>
-                  <select
-                    disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
-                    onChange={this.handleChange}
-                    name={'type'}
-                    value={info.type}>
-                    <option value={''}>Seleccione...</option>
-                    {typeInputs.map((type, key) => {
-                      return (
-                        <option key={key} value={type.value}>
-                          {type.label}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              </div>
-            </div>
-            {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
-              <div className='control'>
-                <CreatableSelect
-                  components={{ DropdownIndicator: null }}
-                  inputValue={inputValue}
-                  isClearable
-                  isMulti
-                  menuIsOpen={false}
-                  onChange={this.changeOption}
-                  onInputChange={this.handleInputChange}
-                  onKeyDown={(e) => {
-                    this.handleKeyDown(e);
-                  }}
-                  placeholder='Escribe la opción y presiona Enter o Tab...x'
-                  value={info.options}
-                  //required={true}
-                />
-                <Checkbox
-                  name={`justonebyattendee`}
-                  checked={info.justonebyattendee}
-                  onChange={this.changeFieldjustonebyattendee}>
-                  Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
-                </Checkbox>
-              </div>
-            )}
-          </div>
-          <div className='field'>
-            <input
-              className='is-checkradio is-primary'
-              id={`mandatoryModal`}
-              type='checkbox'
-              name={`mandatory`}
-              checked={info.mandatory}
-              onChange={this.changeFieldCheck}
-            />
-            <label htmlFor={`mandatoryModal`}>Obligatorio</label>
-          </div>
-
-          <div className='field'>
-            <input
-              className='is-checkradio is-primary'
-              id={`visibleByContactsModal`}
-              type='checkbox'
-              name={`visibleByContacts`}
-              checked={info.visibleByContacts}
-              onChange={this.changeFieldCheckVisibleByContacts}
-            />
-            <label htmlFor={`visibleByContactsModal`}>Visible para Contactos</label>
-          </div>
-
-          <div className='field'>
-            <input
-              className='is-checkradio is-primary'
-              id={`visibleByAdminModal`}
-              type='checkbox'
-              name={`visibleByAdmin`}
-              checked={info.visibleByAdmin}
-              onChange={this.changeFieldCheckVisibleByAdmin}
-            />
-            <label htmlFor={`visibleByAdminModal`}>Visible para Admin</label>
-          </div>
-
-          <div className='field'>
-            <label className='label has-text-grey-light'>Descripción</label>
-            <textarea
-              className='textarea'
-              placeholder='descripción corta'
-              name={'description'}
-              value={info.description || ''}
-              onChange={this.handleChange}
-            />
-          </div>
-
-          <div className='field'>
-            <label className='label has-text-grey-light'>Posición / Orden </label>
-            <div className='control'>
-              <input
-                className='input'
-                name={'order_weight'}
-                type='number'
-                placeholder='1'
-                value={info.order_weight}
-                onChange={this.handleChange}
-              />
-            </div>
-          </div> */}
-        {/* </section>
-        <footer className='modal-card-foot'>
-          <Button type='primary' onClick={this.saveField} disabled={valid}>
-            {edit ? 'Guardar' : 'Agregar'}
-          </Button>
-        </footer> */}
-      </Fragment>
+      </>
     );
   }
 }

@@ -321,12 +321,6 @@ const Document = (props) => {
         }>
         <Row justify='center' wrap gutter={12}>
           <Col span={14}>
-            {/* <Form.Item label={'¿Desea crear carpeta?'} >
-              <Checkbox 
-                checked={folder}
-                onChange={(e) => setFolder(e.target.checked)}
-              />
-            </Form.Item> */}
             {!folder && (
               <Form.Item
                 label={

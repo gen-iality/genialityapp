@@ -173,7 +173,6 @@ class CertificadoLanding extends Component {
           <Row gutter={[8, 8]} wrap justify='center'>
             <Col span={24}>
               <Card>
-                {/* {checkedInUsers.length > 0 ? ( */}
                 <>
                   {/* Alert informativo de certificados disponibles */}
                   <Alert message='Certificados disponibles' type='success' />
@@ -192,12 +191,6 @@ class CertificadoLanding extends Component {
                     </div>
                   ))}
                 </>
-                {/* ) : (
-                  <h1
-                    style={{
-                      fontSize: '27px',
-                    }}>{'En este momento no tiene certificados'}</h1>
-                )} */}
               </Card>
             </Col>
           </Row>

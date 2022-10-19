@@ -78,12 +78,6 @@ class EventOrganization extends Component {
           backgroundImage: `url(${this.state.organization?.styles?.BackgroundImage})`,
           backgroundColor: `${this.state.organization?.styles?.containerBgColor || '#FFFFFF'}`,
         }}>
-        {console.log('Org', this.state.organization)}
-        {/* <ModalAuth
-          organization={'landing'}
-          idOrganization={this.props.match.params.id}
-          logo={this.state.organization?.styles?.event_image}
-        /> */}
         <ModalLoginHelpers />
         {!this.state.loading && this.state.orgId ? (
           <>
@@ -98,28 +92,6 @@ class EventOrganization extends Component {
                 ) : (
                   ''
                 )}
-                {/* <Space
-                  direction='horizontal'
-                  size={10}
-                  style={{
-                    position: 'fixed',
-                    top: '100px',
-                    left: `${this.state.view ? '0px' : '-110px'}`,
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '2px',
-                    padding: '10px',
-                    zIndex: 5,
-                    transition: '1s all',
-                  }}>
-                  <InstagramOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
-                  <FacebookOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
-                  <GlobalOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
-                  {this.state.view ? (
-                    <LeftOutlined onClick={this.handleView} style={{ fontSize: '25px', color: '#007ACC' }} />
-                  ) : (
-                    <RightOutlined onClick={this.handleView} style={{ fontSize: '25px', color: '#007ACC' }} />
-                  )}
-                </Space> */}
               </div>
             )}
 

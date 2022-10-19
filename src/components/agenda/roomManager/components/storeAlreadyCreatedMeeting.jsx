@@ -13,7 +13,6 @@ export default function StoreAlreadyCreatedMeeting({
   const { platform } = useContext(AgendaContext);
   return (
     <>
-      {/*rules={[{ required: true }]}*/}
       <Form.Item
         name="meeting_id"
         label={"Ingrese el identificador de la conferencia/streaming"}
@@ -70,12 +69,6 @@ export default function StoreAlreadyCreatedMeeting({
         type="warning"
         showIcon
       />
-
-      {/* <Form.Item>
-        <Button type='primary' htmlType='submit'>
-          Guardar
-        </Button>
-      </Form.Item> */}
     </>
   );
 }

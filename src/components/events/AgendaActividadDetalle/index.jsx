@@ -151,7 +151,6 @@ const AgendaActividadDetalle = props => {
     <div>
       <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
-          {/* <HeaderColumnswithContext isVisible={true} /> */}
 
           {activity?.type === undefined ? <PreloaderApp /> : <HOCActividad activity={activity} />}
 

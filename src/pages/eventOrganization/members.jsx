@@ -183,11 +183,6 @@ function OrgMembers(props) {
                   Exportar
                 </Button>
               )}
-              {/* <ExportExcel 
-                columns={columns(columnsData, editModalUser)} 
-                list={membersData} 
-                fileName={'memberReport'} 
-              /> */}
             </Col>
             <Col>
               <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>

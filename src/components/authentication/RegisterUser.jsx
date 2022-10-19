@@ -158,9 +158,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         autoComplete='off'
         layout='vertical'
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-        {/* <Typography.Title level={4} type='secondary'>
-                      Nueva organizacion
-                    </Typography.Title> */}
         <Form.Item>
           <ImgCrop rotate shape='round'>
             <Upload

@@ -183,8 +183,6 @@ const VirtualConference = () => {
                           <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                             {item.habilitar_ingreso == 'open_meeting_room' ? (
                               <>
-                                {/* <img src={ENVIVO} style={{ height: '50px' }} /> */}
-
                                 {screens.xs === false && (
                                   <CaretRightOutlined style={{ fontSize: '50px', color: '#FF4E50' }} />
                                 )}
@@ -245,14 +243,6 @@ const VirtualConference = () => {
                               </span>
                             </h2>
                           </div>
-                          {/* <div>
-                          <MeetingConferenceButton
-                            activity={item}
-                            event={cEvent.value}
-                            setActivity={gotoActivity}
-                            eventUser={cEventUser.value}
-                          />
-                        </div> */}
                         </Col>
                         <Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
                           <div

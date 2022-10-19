@@ -259,7 +259,6 @@ class WallList extends Component {
                         description={
                           <div style={{ marginTop: '-10px' }}>
                             <Tooltip title={dayjs(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                              {/* <TimeStamp date={item.datePost.seconds} /> */}
                               <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span>
                             </Tooltip>
                           </div>
@@ -284,12 +283,6 @@ class WallList extends Component {
                       )}
                     </List.Item>
                     {this.state.displayedComments[item.id]}
-                    {/* <CommentEditor
-                      onSubmit={(comment) => {
-                        this.innerCreateComment(item, comment);
-                      }}
-                      user={this.props.cUser}
-                    /> */}
                   </Card>
                 )}
               />

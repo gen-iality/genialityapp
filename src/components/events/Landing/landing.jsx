@@ -225,10 +225,6 @@ const Landing = props => {
 
   return (
     <>
-      {/* <ModalFeedback /> */}
-      {/* <ModalNoRegister /> */}
-      {/* <ModalAuth /> */}
-
       <ModalLoginHelpers />
       {cEventContext.value.visibility !== 'ANONYMOUS' && <ModalPermission />}
       <ModalFeedback />

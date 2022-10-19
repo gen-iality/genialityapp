@@ -219,16 +219,6 @@ class Event extends Component {
 
     return (
       <Layout className='columns'>
-        {/* RESTRICIONES */}
-        {/* {iMustValidate && (
-          <>
-            <ValidateEndEvent
-              endDate={event.datetime_to}
-              callBackTheEventIsActive={this.theEventIsActive}
-              user={cUser}
-            />
-          </>
-        )} */}
         <Sider
           style={{
             overflow: 'auto',
@@ -392,12 +382,6 @@ class Event extends Component {
                 event={event}
                 componentKey='tipo-asistentes'
               />
-              {/* <Protected
-                path={`${match.url}/ticket`}
-                component={TicketInfo}
-                event={this.state.event}
-                componentKey='ticket'
-              /> */}
               <Protected
                 path={`${match.url}/dashboard`}
                 component={DashboardEvent}
@@ -419,12 +403,6 @@ class Event extends Component {
                 event={event}
                 componentKey='espacios'
               />
-              {/* <Protected
-                path={`${match.url}/reporte-certificados`}
-                component={ReporteCertificados}
-                event={this.state.event}
-                componentKey='reporte-certificados'
-              /> */}
               <Protected
                 path={`${match.url}/speakers`}
                 component={Speakers}
@@ -441,13 +419,6 @@ class Event extends Component {
                 componentKey='styles'
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
-              {/* <Protected
-                path={`${match.url}/configurationApp`}
-                component={ConfigurationApp}
-                eventId={this.state.event._id}
-                event={this.state.event}
-                componentKey='configurationApp'
-              /> */}
               <Protected
                 path={`${match.url}/notificationsApp`}
                 component={NotificationsApp}

@@ -258,16 +258,6 @@ class Speakers extends Component {
                                             <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
                                               {speaker.profession}
                                             </Paragraph>
-                                            {/* <p
-                                              style={{
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                              }}>
-                                              <Tooltip placement='bottomLeft' title={speaker.profession}>
-                                                <span>{speaker.profession}</span>
-                                              </Tooltip>
-                                            </p> */}
                                           </div>,
                                         ]}
                                       />
@@ -287,7 +277,6 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        {/* <div style={{ padding: '40px' }}> */}
         <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
           {/* Mapeo de datos para mostrar los Speakers */}
           {speakersWithoutCategory.length > 0 &&
@@ -339,25 +328,6 @@ class Speakers extends Component {
                       }
                       actions={speaker.description && [this.btnViewMore(speaker)]}>
                       <Meta
-                        /* title={[
-                            <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
-                              <Title level={4} >
-                                {speaker.name}
-                              </Title>
-                              <p
-                                style={{
-                                  fontSize: '18px',
-                                  fontWeight: 'bold',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden',
-                                }}>
-                                <Tooltip placement='bottomLeft' title={speaker.name}>
-                                  {speaker.name}
-                                </Tooltip>
-                              </p>
-                            </div>,
-                          ]} */
                         description={[
                           <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
                             <Title level={4} style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
@@ -366,11 +336,6 @@ class Speakers extends Component {
                             <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
                               {speaker.profession}
                             </Paragraph>
-                            {/* <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                <Tooltip placement='bottomLeft' title={speaker.profession}>
-                                  <span>{speaker.profession}</span>
-                                </Tooltip>
-                              </p> */}
                           </div>,
                         ]}
                       />
@@ -380,7 +345,6 @@ class Speakers extends Component {
               </>
             ))}
         </Row>
-        {/* </div> */}
 
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus lecciones */}
 

@@ -119,7 +119,6 @@ function Organization(props) {
                     path={`${props.match.url}/`}
                     render={() => <Redirect to={`${props.match.url}/events`} />}
                   />
-                  {/* <Route exact path={`${props.match.url}/events`} render={() => <OrgEvents org={organization} />} /> */}
                   <Protected
                     exact
                     path={`${props.match.url}/events`}

@@ -104,23 +104,6 @@ class CheckAgenda extends Component {
 
       let arrayFields = Array.from(eventFields);
 
-      /* arrayFields.push({
-        author: null,
-        categories: [],
-        label: 'Rol',
-        mandatory: true,
-        name: 'rol_id',
-        organizer: null,
-        tickets: [],
-        type: 'list',
-        fields_conditions: [],
-        unique: false,
-        options: roles,
-        visibleByAdmin: false,
-        visibleByContacts: 'public',
-        _id: { $oid: '614260d226e7862220497eac11' },
-      });*/
-
       arrayFields.push({
         author: null,
         categories: [],
@@ -186,19 +169,6 @@ class CheckAgenda extends Component {
             self.checkIn(item._id);
           }}
         />
-        {/* <input
-          className='is-checkradio is-primary is-small'
-          id={'checkinUser' + item._id}
-          disabled={item.checkedin_at}
-          type='checkbox'
-          name={'checkinUser' + item._id}
-          checked={item.checkedin_at}
-          // eslint-disable-next-line no-unused-vars
-          onChange={(e) => {
-            self.checkIn(item._id);
-          }}
-        />
-        <label htmlFor={'checkinUser' + item._id} /> */}
       </div>
     );
   };
@@ -567,12 +537,6 @@ class CheckAgenda extends Component {
           scroll={{ x: 'auto' }}
           titleTable={
             <Row gutter={[8, 8]} wrap justify='end'>
-              {/* <Col>
-                Queda pendiente por actualizar
-                <Button onClick={this.checkModal} type='primary' icon={<QrcodeOutlined />}>
-                  {'Leer Código QR'}
-                </Button>
-              </Col> */}
               <Col>
                 <Button onClick={this.goToSendMessage} type='primary' icon={<SendOutlined />}>
                   {'Enviar comunicación/correo'}

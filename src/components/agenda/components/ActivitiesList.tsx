@@ -313,7 +313,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               >
                 <Link to={item.link}>
                   <div>
-                    {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
                     <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
                     <span>{item.title}</span>
                   </div>

@@ -700,7 +700,6 @@ class Agenda extends Component {
                 showIcon
               />
             )}
-            {/* <Alert message="" type="info" /> */}
             <p>Ingresa el código de pago</p>
             <Input value={this.state.discountCode} onChange={e => this.setState({ discountCode: e.target.value })} />
           </div>
@@ -756,8 +755,6 @@ class Agenda extends Component {
                     this.props.cEvent.value.styles.hideDatesAgenda === true ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
                     <>
-                      {/* {days.map((day) => this.getActivitiesByDay(day))} */}
-                      {/* this.getActivitiesByDay(null)*/}
                       <div
                         style={{
                           backgroundColor: 'white',
@@ -770,40 +767,6 @@ class Agenda extends Component {
                           setActivitiesAttendee={this.props.setActivitiesAttendee}
                         />
                       </div>
-                      {/*<Tabs
-                      //tabBarExtraContent={{right:<DoubleRightOutlined />, left:<DoubleLeftOutlined/>}}
-                      defaultActiveKey='0'
-                      size='large'
-                      style={{ paddingTop: '5px' }}
-                      tabBarStyle={{
-                        backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                        borderRadius: '10px',
-                        paddingLeft: '25px',
-                      }}>
-                      {days.map(
-                        (day, index) =>
-                          this.getActivitiesByDayVisibility(day) &&
-                          this.getActivitiesByDayVisibility(day).length > 0 && (
-                            <TabPane
-                              style={{ paddingLeft: '20px', paddingRight: '20px' }}
-                              tab={
-                                <span
-                                  style={{
-                                    fontWeight: 'bolder',
-                                    color: this.props.cEvent.value.styles.textMenu,
-                                    backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                                  }}>
-                                  {Moment(day)
-                                    .format('LL')
-                                    .toUpperCase()}
-                                </span>
-                              }
-                              key={index}>
-                              {this.getActivitiesByDay(day)}
-                            </TabPane>
-                          )
-                      )}
-                    </Tabs>*/}
                     </>
                   )}
               </div>

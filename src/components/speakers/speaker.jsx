@@ -395,32 +395,6 @@ function Speaker(props) {
                 />
               )}
             </Form.Item>
-
-            {/* <Form.Item label='Categoría'>
-              <Row wrap gutter={16}>
-                <Col span={22}>
-                  <Creatable
-                    isClearable
-                    styles={catStyles}
-                    onChange={selectCategory}
-                    isDisabled={isloadingSelect.categories}
-                    isLoading={isloadingSelect.categories}
-                    options={categories}
-                    placeholder={'Sin categoría....'}
-                    value={selectedCategories}
-                  />
-                </Col>
-                <Col span={2}>
-                  <Form.Item>
-                    <Button
-                      id='goToCategory'
-                      onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)}
-                      icon={<SettingOutlined />}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form.Item> */}
           </Col>
         )}
       </Row>

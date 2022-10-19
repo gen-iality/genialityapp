@@ -62,7 +62,6 @@ const AditionalInformation = (props) => {
               <div></div>
             ) : (
               <div className='List-conferencistas'>
-                {/* <Title level={5}>{intl.formatMessage({ id: 'title.panelists' })} </Title> */}
                 <p style={{ marginTop: '5%', marginBottom: '5%' }}>
                   {props.orderedHost.length > 0 ? (
                     <Row>

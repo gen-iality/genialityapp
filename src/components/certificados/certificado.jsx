@@ -416,19 +416,6 @@ const Certificado = (props) => {
 
           <Form.Item label={'Certificado'}>
             <EviusReactQuill name='content' data={certificado.content} handleChange={chgTxt} />
-            {/* <div className='editor-certificado'>
-              <div style={{ border: '1px solid', width: '800px', position: 'relative', margin: 'auto' }}>
-                <div className='texto-certificado'>
-                  <ReactQuill
-                    id='certContent'
-                    value={certificado.content}
-                    name={'content'}
-                    onChange={chgTxt}
-                    modules={toolbarEditor}
-                  />
-                </div>
-              </div>
-            </div> */}
           </Form.Item>
         </Col>
       </Row>

@@ -176,7 +176,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           </ImgCrop>
         </Form.Item>
 
-        {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
+        {/* En desktop el upload no toma fotos toca hacerlo por separado */}
         <Form.Item>
           {takingPhoto && (
             <div className='avatarCamera'>

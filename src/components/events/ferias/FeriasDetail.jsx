@@ -142,7 +142,6 @@ const FeriasDetail = (props) => {
             <TabPane tab='Contactos' key='3'>
               {/* componente  de contactos */}
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
-                {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
                 {companyDetail && companyDetail.advisor.length > 0 ? (
                   companyDetail.advisor.map((contactos, index) => (
                     <Contact
@@ -190,37 +189,6 @@ const FeriasDetail = (props) => {
             </TabPane>
           )}
         </Tabs>
-
-        {/* componente  de Productos */}
-        {/* <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '6vw' }}>
-        <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
-        <div style={{ paddingLeft: '5vw', paddingRight: '5vw', marginTop: '6vw' }}>
-          {
-            product.map((prod)=>
-            <Product
-              imgProduct={prod.imgProduct}
-              title={prod.title}
-              etiqueta={prod.etiqueta}
-              description={prod.description} />
-            )
-          } </div>    
-      </div> */}
-
-        {/* componente  de contactos */}
-        {/* <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '6vw' }}>
-          <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
-            {
-            contact.map((contactos)=>
-              <Contact
-              img={contactos.img} 
-              name={contactos.name}
-              position={contactos.position}
-              tel={contactos.tel}
-              email={contactos.email}
-                /> 
-            )
-            }
-        </div> */}
       </div>
     </div>
   );

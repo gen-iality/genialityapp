@@ -391,21 +391,6 @@ const ModalAuth = (props) => {
                     stylePaddingDesktop={stylePaddingDesktop}
                   />
                 )}
-
-                {/* {props.organization != 'register' && <FormComponent />}
-                  {props.organization == 'register' && (
-                    <FormComponent
-                      conditionalsOther={[]}
-                      initialOtherValue={{}}
-                      eventUserOther={{}}
-                      fields={fieldsUser}
-                      organization={true}
-                      options={[]}
-                      callback={(values) => registerUser(values)}
-                      loadingregister={loading}
-                      errorRegisterUser={errorRegisterUSer}
-                    />
-                  )} */}
               </div>
             </TabPane>
           )}

@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component  } from 'react';
 import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber, Result } from 'antd';
 import { Actions, OrganizationApi } from '@helpers/request';
 import Header from '@antdComponents/Header';
@@ -6,9 +6,7 @@ import BackTop from '@antdComponents/BackTop';
 import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 import { CurrentUserContext } from '@context/userContext';
-import { CurrentEventContext } from '@context/eventContext';
 
-const { Title } = Typography;
 const { Option } = Select;
 const formLayout = {
   labelCol: { span: 24 },
@@ -377,7 +375,7 @@ class menuLanding extends Component {
     console.log('props', this.props.event.visibility);
     const userPlan = userContext.value?.plan;
     return (
-      <Fragment>
+      <>
         <Form {...formLayout} onFinish={this.submit}>
           <Header
             title={
@@ -453,96 +451,7 @@ class menuLanding extends Component {
           </Spin>
           <BackTop />
         </Form>
-
-        {/* <Title level={3}>
-          {this.props.organization != 1 ? 'Habilitar secciones del curso' : 'Secciones a habilitar para cada curso'}
-        </Title>
-        <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3> */}
-        {/* <Row gutter={16}>
-          {console.log('MENU SECTIONS ', this.state.menu)}
-          {Object.keys(this.state.menu).map((key) => {
-            return (
-              <div key={key}>
-                <Col style={{ marginTop: '3%', marginRight: this.props.organization == 1 ? 20 : '' }} span={8}>
-                  <Card
-                    title={<Title level={4}>{this.state.menu[key].name}</Title>}
-                    bordered={true}
-                    style={{ width: this.props.organization == 1 ? 350 : 300, marginTop: '2%' }}>
-                    <div style={{ marginBottom: '3%' }}>
-                      <Button
-                        onClick={() => {
-                          this.mapActiveItemsToAvailable(key);
-                        }}>
-                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                      </Button>
-                    </div>
-
-                    <div style={{ marginTop: '4%' }}>
-                      <label>Cambiar nombre de la sección</label>
-                      <Input
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                       //value={this.state.menu[key].name}
-                        onChange={(e) => {
-                          this.changeNameMenu(key, e.target.value);
-                        }}
-                        placeholder={this.state.menu[key].name}
-                      />
-                    </div>
-                    <div style={{ marginTop: '4%' }}>
-                      <label>Permisos para la sección</label>
-                      <Select
-                        key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].permissions}
-                        style={{ width: 200 }}
-                        onChange={(e) => {
-                          this.changePermissions(key, e);
-                        }}>
-                        <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al curso</Option>
-                      </Select>
-                    </div>
-                    <div>
-                      <label>Posición en el menú</label>
-                      <Input
-                        type='number'
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].position}
-                        onChange={(e) => this.orderPosition(key, e.target.value)}
-                      />
-                    </div>
-                  </Card>
-                </Col>
-              </div>
-            );
-          })}
-        </Row> */}
-        {/* <Row>
-                    <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection"].checked && (
-                            <>
-                                <label>Información para insercion en {this.state.menu["informativeSection"].name}</label>
-                               
-                                <textarea type="textbox" defaultValue={this.state.menu["informativeSection"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection", e.target.value) }} />
-                            </>
-                        )}
-                    </div>
-                    <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection1"].checked && (
-                            <>
-                                <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
-                                <br/>
-                                <textarea defaultValue={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection1", e.target.value) }} />
-                            </>
-                        )}
-                    </div>
-                </Row> */}
-        {/* <Row>
-          <Button style={{ marginTop: '1%' }} type='primary' size='large' onClick={this.submit}>
-            Guardar
-          </Button>
-        </Row> */}
-      </Fragment>
+      </>
     );
   }
 }

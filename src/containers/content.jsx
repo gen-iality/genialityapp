@@ -101,7 +101,6 @@ const ContentContainer = () => {
           <Route exact path='/transition/:event' component={Transition} />
           <Route exact path='/eventfinished' component={EventFinished} />
 
-          {/* <Route exact path='/' component={RedirectPortal} /> */}
           <Route path='/loginWithCode' component={LoginWithCode} />
 
           <Route

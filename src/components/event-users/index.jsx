@@ -1089,9 +1089,6 @@ class ListEventUser extends Component {
             </Row>
           }
         />
-        {/* ) : (
-          <Loading />
-        )} */}
 
         {!loading && editUser && (
           <UserModal

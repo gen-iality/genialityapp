@@ -109,17 +109,6 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
           )}
         </>
       )}
-      {/* {livestreamStatus?.state === 'started' ? (
-        <>
-          {livestreamStats?.connected.value === 'Yes' ? (
-            <WOWZAPlayer meeting_id={meeting_id} />
-          ) : (
-            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
-          )}
-        </>
-      ) : (
-        <h1>Streaming detenido</h1>
-      )} */}
     </>
   );
 }

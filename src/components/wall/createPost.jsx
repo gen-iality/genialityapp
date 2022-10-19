@@ -254,21 +254,6 @@ class CreatePost extends Component {
                       Subir foto
                     </Button>
                   </Upload>
-                  {/* <Space className='file-label ant-btn ant-btn-primary'>
-                    <input
-                      key={this.state.inputKey}
-                      style={{ width: 120 }}
-                      className='file-input '
-                      accept='image/*'
-                      type='file'
-                      onChange={this.previewImage}
-                    />
-                    <span style={{ paddingLeft: 2 }}>Subir foto</span>
-                    <span>
-                      <CloudUploadOutlined />
-                    </span>
-                  </Space> */}
-
                   {/* Boton para abrir la camara */}
                   <Space>
                     <Button

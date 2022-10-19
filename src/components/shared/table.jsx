@@ -56,22 +56,6 @@ export default function EviusTable(props) {
 
   return (
     <>
-      {/* <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage,
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>*/}
-
       <table>
         <thead className='ant-table-thead'>
           {headerGroups.map((headerGroup) => (

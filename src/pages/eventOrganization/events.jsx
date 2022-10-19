@@ -45,7 +45,6 @@ function OrgEvents(props) {
         pagination={false}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
-            <Col>{/* <ExportExcel columns={columns(goToEvent)} list={eventData} fileName={'eventReport'} /> */}</Col>
             <Col>
               <Button
                 type='primary'

@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -75,17 +75,10 @@ class ReportQuestion extends Component {
   render() {
     let { nameQuestion, listOfUserResponse } = this.state;
     return (
-      <Fragment>
+      <>
         <Header title={nameQuestion} back />
-
         <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={nameQuestion} />
-
-        {/* <EventContent title={nameQuestion} closeAction={this.goBack}>
-          <Divider orientation='right'>Reporte</Divider>
-          <Button onClick={this.exportReport}>Exportar resultados </Button>
-          <TableA dataSource={listOfUserResponse} columns={columns} />;
-        </EventContent> */}
-      </Fragment>
+      </>
     );
   }
 }

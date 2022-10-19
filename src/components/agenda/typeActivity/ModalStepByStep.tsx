@@ -34,8 +34,6 @@ const ModalStepByStep = (props: any) => {
         {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' && typeOptions.key !== 'url' ? (
           <ContentTypeActivity options={typeOptions.typeOptions} />
         ) : null}
-        {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
-        {/* <LoadingTypeActivity /> */}
         {typeOptions.key === 'cargarvideo' ? <InputUploadVideo activityName={props.activityName} /> : null}
         {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {

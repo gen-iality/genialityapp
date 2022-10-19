@@ -155,13 +155,6 @@ function QueryTesting() {
               )}
             </div>
           </Card>
-          {/* Prueba botones para probar funciones para medir tiempo */}
-          {/* <Button type='primary' onClick={startTimer}>
-                  iniciar
-               </Button>
-               <Button type='primary' onClick={endTimer}>
-                  detener
-               </Button> */}
         </Card>
       </Col>
     </Row>

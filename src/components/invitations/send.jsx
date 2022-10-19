@@ -243,7 +243,6 @@ class SendRsvp extends Component {
                     data={this.state.rsvp.content_header}
                     handleChange={(e) => this.QuillComplement1(e)}
                   />
-                  {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
                 </Form.Item>
 
                 <Form.Item label={'Específicar fecha del curso'}>
@@ -325,7 +324,6 @@ class SendRsvp extends Component {
                     data={this.state.rsvp.message}
                     handleChange={(e) => this.QuillComplement2(e)}
                   />
-                  {/* <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' /> */}
                 </Form.Item>
 
                 <Form.Item>

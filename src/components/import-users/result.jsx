@@ -188,7 +188,6 @@ class Result extends Component {
                 </Spin>
               </TabPane>
               <TabPane tab='Incorrectos' key='1'>
-                {/* <Spin tip={'Cargando...'} spinning={data[0].length === 0}> */}
                 <Table
                   size='small'
                   rowKey='index'
@@ -200,7 +199,6 @@ class Result extends Component {
                   <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis={true} />
                   <Column title='Estado' dataIndex='status' ellipsis={true} />
                 </Table>
-                {/* </Spin> */}
               </TabPane>
             </Tabs>
           </>

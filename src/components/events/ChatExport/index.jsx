@@ -349,8 +349,6 @@ const ChatExport = ({ eventId, event }) => {
   return (
     <Tabs defaultActiveKey='1' onChange={(getChat, getBlocketdUsers)}>
       <TabPane tab='Gestión de chats del curso' key='1'>
-        {/* <Header title={'Gestión de chats del curso'} /> */}
-
         <Table
           header={columns}
           list={datamsjevent}

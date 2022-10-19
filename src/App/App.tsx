@@ -8,10 +8,7 @@ import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 import { Layout } from 'antd';
 import InternetConnectionAlert from '@components/InternetConnectionAlert/InternetConnectionAlert';
 
-const { Footer, Sider, Content } = Layout;
-
 //Code splitting
-const Header = loadable(() => import('./../containers/header'));
 
 const App = () => {
   const cUser = useCurrentUser();
@@ -20,10 +17,7 @@ const App = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <InternetConnectionAlert />
-      {/* <Header /> */}
-      {/* <MainRouter /> */}
       <ContentContainer />
-      {/* <Footer>Footer</Footer> */}
     </Layout>
   );
 };

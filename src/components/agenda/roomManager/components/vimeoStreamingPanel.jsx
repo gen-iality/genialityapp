@@ -87,10 +87,6 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
                   allowfullscreen
                   style={{ width: "100%", height: "100%" }}
                 ></iframe>
-                {/* </>
-                ) : (
-                  <></>
-                )} */}
               </Col>
               <Col span={14}>
                 <Tabs defaultActiveKey="1">

@@ -113,15 +113,7 @@ class eventLanding extends Component {
                 : {})
             }
           >
-            {/* {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
-              ''
-            ) : (
-              <Row justify='center'>
-                <h1 className='is-size-4-desktop has-text-weight-semibold'>{this.props.cEvent.value.name}</h1>
-              </Row>
-            )} */}
             {/* Si event video existe */}
-            {/* {console.log("this.props.cEvent.value?.video_position",this.props.cEvent.value?.video)} */}
             {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
               <div className='mediaplayer'>
                 <ReactPlayer

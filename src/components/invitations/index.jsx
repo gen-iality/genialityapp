@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import InvitedUsers from './eventUsersList';
 import CreateMessage from './send';
@@ -54,7 +54,7 @@ function ListaInvitados({ ...props }) {
   const [userProperties, setUserProperties] = useState([]);
 
   return (
-    <Fragment>
+    <>
       {/* <Tabla {...props} /> */}
       {/* <h1 style={{ color: "red" }}> ***TODO Esta sección falta hacerla. los usuarios invitados deben quedar en su propio modelo de personas invitadas.
       Cuando confirmen inscribiendose si es un curso gratis,
@@ -85,7 +85,7 @@ function ListaInvitados({ ...props }) {
           )}
         />
       </Switch>
-    </Fragment>
+    </>
   );
 }
 

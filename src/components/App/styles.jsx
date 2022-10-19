@@ -528,28 +528,6 @@ class Styles extends Component {
                         ))}
                       </Select>
                     </Form.Item>
-
-                    {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
-                              <Form.Item label={'Link de video'}>
-                                <Input
-                                  defaultValue={this.state.styles['data_loader_page']}
-                                  value={this.state.styles['data_loader_page']}
-                                  type='text'
-                                  onChange={(e) => this.getDataLoaderPage(e.target.value)}
-                                />
-                              </Form.Item>
-                            )}
-                            {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
-                              <Form.Item>
-                                <ReactQuill
-                                  id={item.name}
-                                  onChange={this.getDataLoaderPage}
-                                  defaultValue={this.state.styles.data_loader_page}
-                                  style={{ marginTop: '5%' }}
-                                  modules={toolbarEditor}
-                                />
-                              </Form.Item>
-                            )} */}
                   </div>
                 ))}
 
