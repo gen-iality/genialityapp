@@ -158,17 +158,23 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         </Space>
       </Space>
       <Divider/>
-      {userId && (
-        events.map((event, index) => (
-          <TimeTrackingByEvent
-            key={index}
-            eventName={event.name}
-            eventId={event._id}
-            userId={userId}
-            timeMode={timeMode}
-          />
-        ))
-      )}
+      <Space direction='vertical'>
+        <Typography.Text>{events.length} registros por área:</Typography.Text>
+        {events.length === 0 && (
+          <Typography.Text italic>Sin datos.</Typography.Text>
+        )}
+        {userId && (
+          events.map((event, index) => (
+            <TimeTrackingByEvent
+              key={index}
+              eventName={event.name}
+              eventId={event._id}
+              userId={userId}
+              timeMode={timeMode}
+            />
+          ))
+        )}
+      </Space>
     </Card>
     </>
   );
