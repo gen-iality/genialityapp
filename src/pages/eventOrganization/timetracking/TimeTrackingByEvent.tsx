@@ -65,7 +65,7 @@ const TimeTrackingByEvent: FunctionComponent<TimeTrackingByEventProps> = (props)
         </Typography.Text>
         {loadSessionPayloadItems.length > 0 && (
           <Space direction='horizontal'>
-          <Card>{loggedTime.time.toPrecision(4)} {loggedTime.description}</Card>
+          <Card>{loggedTime.time < 10 ? loggedTime.time.toPrecision(4) : loggedTime.time} {loggedTime.description}</Card>
           </Space>
         )}
       </Space>

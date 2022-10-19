@@ -71,7 +71,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
           .filter((log: any) => log.status === 'offline')
           .filter((log: any) => log.startTimestamp !== undefined)
           .filter((log: any) => log.endTimestamp !== undefined);
-        LOG(filteredLogDict.length, 'logs loaded');
+        LOG(filteredLogDict.length, 'logs loaded', filteredLogDict);
         setLogs(filteredLogDict as SessionPayload[]);
       } catch (err) {
         ERROR('Cannot get the organization member to orgId and userId:', organization._id, memberId, 'getting:', err);
@@ -154,7 +154,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       <Space direction='vertical'>
         <Typography.Text>{logs.length} registros globales cerrados</Typography.Text>
         <Space direction='horizontal'>
-          <Card>{loggedTime.time.toPrecision(4)} {loggedTime.description}</Card>
+          <Card>{loggedTime.time < 10 ? loggedTime.time.toPrecision(4) : loggedTime.time} {loggedTime.description}</Card>
         </Space>
       </Space>
       <Divider/>
