@@ -26,6 +26,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
     org: organization,
   } = props;
   const [memberId] = useState(props.match.params.memberIdParam);
+  const [userId, setUserId] = useState<string | undefined>();
   const [events, setEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({} as OrganizationUserInfo);
@@ -49,6 +50,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         const member = await OrganizationApi.getEpecificUser(organization._id, memberId);
         userInfo.name = member.user.names;
         userInfo.picture = member.user.picture;
+        setUserId(member.user._id);
 
         // Get info about the beacon status
         try {
@@ -129,9 +131,11 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         </Space>
       </Space>
       <Divider/>
-      {events.map((event, index) => (
-        <TimeTrackingByEvent key={index} eventName={event.name} eventId={event._id} userId={memberId} />
-      ))}
+      {userId && (
+        events.map((event, index) => (
+          <TimeTrackingByEvent key={index} eventName={event.name} eventId={event._id} userId={userId} />
+        ))
+      )}
     </Card>
     </>
   );
