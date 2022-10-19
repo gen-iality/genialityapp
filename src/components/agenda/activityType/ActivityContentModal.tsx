@@ -1,9 +1,7 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Alert, Modal } from 'antd';
 
 import ActivityTypeSelectableCards from './components/ActivityTypeSelectableCards';
-// import { ActivityTypeSelectableCardsProps } from './components/ActivityTypeSelectableCards';
 
 import ActivityContentModalLayout, { WidgetData } from './components/ActivityContentModalLayout';
 
@@ -16,7 +14,7 @@ import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout'
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 
-import { useGetWidgetForContentType } from '@/context/activityType/hooks/useGetWidgetForContentType';
+import { useGetWidgetForContentType } from '@context/activityType/hooks/useGetWidgetForContentType';
 
 export interface ActivityContentModalProps extends ModalWrapperUIProps {
   widget: ActivityType.CardUI | ActivityType.FormUI,

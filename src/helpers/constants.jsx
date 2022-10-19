@@ -1,3 +1,4 @@
+/* globals process */
 export const ApiUrl = process.env.VITE_API_URL;
 export const ApiDEVUrl = process.env.VITE_API_DEV_URL;
 export const AuthUrl = process.env.VITE_APP_AUTH_URL;

@@ -1,7 +1,7 @@
 import { Col, Row, Typography, Badge, Grid, Space, Divider, Image, Empty, Button } from 'antd';
 import { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { OrganizationFuction } from '../../helpers/request';
+import { OrganizationFuction } from '@helpers/request';
 import EventCard from '../shared/eventCard';
 import dayjs from 'dayjs';
 import ModalAuth from '../authentication/ModalAuth';

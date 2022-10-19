@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '../../helpers/request';
-import { host_list } from '../../helpers/constants';
+import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '@helpers/request';
+import { host_list } from '@helpers/constants';
 import { Steps, Button, Card, Row, Spin } from 'antd';
 import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */
@@ -9,11 +9,11 @@ import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import Tranmitir from './newEvent/transmitir';
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '../../context/newEventContext';
-import Service from '../../components/agenda/roomManager/service';
-import { firestore } from '../../helpers/firebase';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { cNewEventContext } from '@context/newEventContext';
+import Service from '@components/agenda/roomManager/service';
+import { firestore } from '@helpers/firebase';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Step } = Steps;
 

@@ -1,5 +1,5 @@
-import Datos from '@/components/events/datos';
-import { OrganizationApi } from '../../helpers/request';
+import Datos from '@components/events/datos';
+import { OrganizationApi } from '@helpers/request';
 
 function TemplateMemberSettings(props) {
   const organizationId = props.org._id;

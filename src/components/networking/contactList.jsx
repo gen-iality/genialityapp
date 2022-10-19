@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd';
-import { Networking } from '../../helpers/request';
-import { EventFieldsApi } from '../../helpers/request';
-import { formatDataToString } from '../../helpers/utils';
+import { Networking } from '@helpers/request';
+import { EventFieldsApi } from '@helpers/request';
+import { formatDataToString } from '@helpers/utils';
 
 //context
-import { UseUserEvent } from '../../context/eventUserContext';
-import { UseEventContext } from '../../context/eventContext';
-import { useCurrentUser } from '../../context/userContext';
+import { useUserEvent } from '@context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
+import { useCurrentUser } from '@context/userContext';
 
 const { Meta } = Card;
 
@@ -17,8 +17,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  let userEventContext = UseUserEvent();
-  let eventContext = UseEventContext();
+  let userEventContext = useUserEvent();
+  let eventContext = useEventContext();
   let userCurrentContext = useCurrentUser();
 
   useEffect(() => {

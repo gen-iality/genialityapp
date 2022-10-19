@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Modal, Result, Button, Divider, Typography, Space } from 'antd';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { useIntl } from 'react-intl';
 import { recordTypeForThisEvent, iAmRegisteredInThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
-import { UseEventContext } from '../../context/eventContext';
-import { UseUserEvent } from '../../context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
 
 const ModalNoRegister = (props) => {
-  let cEvent = UseEventContext();
-  const cEventUser = UseUserEvent();
+  let cEvent = useEventContext();
+  const cEventUser = useUserEvent();
   const intl = useIntl();
 
   // Mensajes para curso privado

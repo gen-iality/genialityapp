@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { UsersApi, EventsApi } from '../../../helpers/request';
+import { UsersApi, EventsApi } from '@helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import { Collapse, Form, Input, Col, Row, Checkbox, Alert, Card, Button, Result, Divider, Select, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;

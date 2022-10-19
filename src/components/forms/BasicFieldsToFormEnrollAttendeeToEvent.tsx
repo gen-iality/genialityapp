@@ -1,5 +1,5 @@
-import { imageforDefaultProfile } from '@/helpers/constants';
-import { nameAndEmailBasicFieldsStyles } from '@/Utilities/checkInUtils';
+import { imageforDefaultProfile } from '@helpers/constants';
+import { nameAndEmailBasicFieldsStyles } from '@Utilities/checkInUtils';
 import { Card, Comment, Image, Space, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 

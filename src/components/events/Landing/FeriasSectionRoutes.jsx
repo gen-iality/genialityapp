@@ -5,11 +5,11 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import FeriasDetail from '../../events/ferias/FeriasDetail';
 import FeriasList from '../../events/ferias/FeriasList';
 import FeriasStand from '../../events/ferias/FeriasStand';
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 const FeriasSectionRoutes = () => {
   let { path } = useRouteMatch();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;
   return (

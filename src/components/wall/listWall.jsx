@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment, createElement } from 'react';
 import { Avatar, Button, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image, Tooltip } from 'antd';
 import TimeStamp from 'react-timestamp';
 import { MessageOutlined, LikeOutlined, DeleteOutlined, LikeFilled } from '@ant-design/icons';
@@ -6,15 +6,15 @@ import CommentEditor from './commentEditor';
 import Comments from './comments';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import dayjs from 'dayjs';
-import { firestore } from '../../helpers/firebase';
-import { WallContextProvider } from '../../context/WallContext';
-import { DispatchMessageService } from '../../context/MessageService';
+import { firestore } from '@helpers/firebase';
+import { WallContextProvider } from '@context/WallContext';
+import { DispatchMessageService } from '@context/MessageService';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
-    {React.createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
+    {createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
     {text}
   </Button>
 );

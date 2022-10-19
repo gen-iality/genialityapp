@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Form, Select, Radio, Space, List, Typography, Image } from 'antd';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import WowzaStreamingPanel from './components/wowzaStreamingPanel';
 import VimeoStreamingPanel from './components/vimeoStreamingPanel';
 

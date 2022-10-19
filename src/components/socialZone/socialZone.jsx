@@ -11,11 +11,11 @@ import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import GameList from '../events/game/gameList';
 import { useRef } from 'react';
-import { UseEventContext } from '../../context/eventContext';
-import { useCurrentUser } from '../../context/userContext';
+import { useEventContext } from '@context/eventContext';
+import { useCurrentUser } from '@context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import ThisRouteCanBeDisplayed, { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
 
@@ -34,7 +34,7 @@ const styleTabAttendes = {
 
 let SocialZone = function(props) {
   //contextos
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cUser = useCurrentUser();
   let {
     attendeeList,

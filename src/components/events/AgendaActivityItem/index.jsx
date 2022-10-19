@@ -4,29 +4,29 @@ import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, 
 import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
-import { firestore } from '../../../helpers/firebase';
-import { AgendaApi } from '../../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import { AgendaApi } from '@helpers/request';
 import { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
-import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
-import { UseEventContext } from '../../../context/eventContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { zoomExternoHandleOpen } from '@helpers/helperEvent';
+import { useEventContext } from '@context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
-import QuizProgress from '@/components/quiz/QuizProgress';
-import { activityContentValues } from '@/context/activityType/constants/ui';
+import QuizProgress from '@components/quiz/QuizProgress';
+import { activityContentValues } from '@context/activityType/constants/ui';
 import { useCurrentUser } from '@context/userContext';
-import { ActivityCustomIcon } from '@/components/agenda/components/ActivityCustomIcon';
+import { ActivityCustomIcon } from '@components/agenda/components/ActivityCustomIcon';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
 
 function AgendaActivityItem(props) {
   let history = useHistory();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   let urlactivity =
     cEvent && !cEvent?.isByname ? `/landing/${props.event._id}/activity/` : `/event/${cEvent?.nameEvent}/activity/`;
   const screens = useBreakpoint();
@@ -46,7 +46,7 @@ function AgendaActivityItem(props) {
   const timeZone = Moment.tz.guess();
   let { item, event_image, registerStatus, event } = props;
 
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
 
   // Take data
   useEffect(() => {

@@ -4,9 +4,9 @@ import Importacion from './importacion';
 import Preview from './preview';
 import Result from './result';
 import Async from 'async';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { Steps } from 'antd';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Step } = Steps;
 

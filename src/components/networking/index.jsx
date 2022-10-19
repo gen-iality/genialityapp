@@ -23,18 +23,18 @@ import SearchComponent from '../shared/searchTable';
 import Pagination from '../shared/pagination';
 import Loading from '../loaders/loading';
 import FilterNetworking from './FilterNetworking';
-import { EventFieldsApi } from '../../helpers/request';
-import { formatDataToString } from '../../helpers/utils';
+import { EventFieldsApi } from '@helpers/request';
+import { formatDataToString } from '@helpers/utils';
 import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
-import withContext from '../../context/withContext';
-import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../helpers/netWorkingFunctions';
+import withContext from '@context/withContext';
+import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
 const { Meta } = Card;
 const { TabPane } = Tabs;
 import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 
 class ListEventUser extends Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import { handleSelect } from './utils';
 import { firestore } from './firebase';
 import dayjs from 'dayjs';
 import { GetTokenUserFirebase } from './HelperAuth';
-import { DispatchMessageService } from '../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const publicInstance = axios.create({
   url: ApiUrl,

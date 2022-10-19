@@ -1,12 +1,12 @@
 import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
-import { firestore } from '../../helpers/firebase';
-import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
-import { AgendaApi } from '../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request';
+import { AgendaApi } from '@helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
-import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
+import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '@helpers/utils';
 import dayjs from 'dayjs';
 import {
   Button,
@@ -43,13 +43,13 @@ import {
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
-import Header from '../../antdComponents/Header';
-import TableA from '../../antdComponents/Table';
+import Header from '@antdComponents/Header';
+import TableA from '@antdComponents/Table';
 import Highlighter from 'react-highlight-words';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import Loading from '../profile/loading';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import { HelperContext } from '@context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 
 const { Title, Text } = Typography;
@@ -936,7 +936,7 @@ class ListEventUser extends Component {
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
     return (
-      <React.Fragment>
+      <>
         <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
@@ -1204,7 +1204,7 @@ class ListEventUser extends Component {
             </Col>
           </Row>
         </Drawer>
-      </React.Fragment>
+      </>
     );
   }
 }

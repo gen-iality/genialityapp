@@ -1,7 +1,7 @@
 import { SmileOutlined } from '@ant-design/icons';
 import { Result, Grid } from 'antd';
 import ReactPlayer from 'react-player';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const { useBreakpoint } = Grid;
 

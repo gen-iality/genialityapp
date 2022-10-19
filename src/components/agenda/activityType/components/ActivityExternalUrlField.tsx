@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ReactNode } from 'react';
 import { Input, Form, Result, Typography } from 'antd';
 import rules from '../utils/formValidatorRules';
 import urlProcessorSet from '../utils/urlProcessorSet';
@@ -10,7 +10,7 @@ export interface ActivityExternalUrlFieldProps {
   subtitle?: string,
   iconSrc?: string,
   placeholder?: string,
-  addonBefore: React.ReactNode,
+  addonBefore: ReactNode,
   onInput: (input: string) => void,
 };
 

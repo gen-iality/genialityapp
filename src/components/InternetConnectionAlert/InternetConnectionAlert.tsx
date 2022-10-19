@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode, CSSProperties } from 'react';
 import { Alert, Space, Typography } from 'antd';
-import controllerInternetConnection from '@/Utilities/controllerInternetConnection';
+import controllerInternetConnection from '@Utilities/controllerInternetConnection';
 import WebRemoveIcon from '@2fd/ant-design-icons/lib/WebRemove';
 import WebCheckIcon from '@2fd/ant-design-icons/lib/WebCheck';
 
 interface propsOptions {
-  description?: string | React.ReactNode;
+  description?: string | ReactNode;
   placement?: 'top' | 'bottom';
-  action?: React.ReactNode;
+  action?: ReactNode;
 }
 
-const positionTop: React.CSSProperties = {
+const positionTop: CSSProperties = {
   position: 'fixed',
   top: '0',
   width: '100vw',
@@ -18,7 +18,7 @@ const positionTop: React.CSSProperties = {
   textAlign: 'center',
 };
 
-const positionBotton: React.CSSProperties = {
+const positionBotton: CSSProperties = {
   position: 'fixed',
   bottom: '0',
   width: '100vw',

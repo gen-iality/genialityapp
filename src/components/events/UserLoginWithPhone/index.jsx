@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Form, Input, Col, Row, Button, Spin, Card } from 'antd';
-import { app } from '../../../helpers/firebase';
+import { app } from '@helpers/firebase';
 import FormTags from './constants';
 import { injectIntl } from 'react-intl';
 
@@ -11,7 +11,7 @@ const textLeft = {
 class UserLogin extends Component {
   constructor(props) {
     super(props);
-    //this.reCaptchaRef = React.createRef();
+    //this.reCaptchaRef = createRef();
     this.state = {
       user: {},
       emailError: false,

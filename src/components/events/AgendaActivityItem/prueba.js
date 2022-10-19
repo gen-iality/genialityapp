@@ -4,7 +4,7 @@ import { Row, Col, Avatar, Card, Space, Timeline, Comment } from 'antd';
 
 import Moment from 'moment-timezone';
 import './style.scss';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import Icon, { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';

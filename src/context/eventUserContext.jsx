@@ -1,14 +1,13 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { EventsApi } from '../helpers/request';
-import { UseEventContext } from './eventContext';
-import { app } from '../helpers/firebase';
+import { useState, useEffect, createContext, useContext } from 'react';
+import { EventsApi } from '@helpers/request';
+import { useEventContext } from './eventContext';
+import { app } from '@helpers/firebase';
 import { useCurrentUser } from './userContext';
-export const CurrentEventUserContext = React.createContext();
+export const CurrentEventUserContext = createContext();
 let initialContextState = { status: 'LOADING', value: null };
 
 export function CurrentUserEventProvider({ children }) {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cUser = useCurrentUser();
   const [userEvent, setuserEvent] = useState(initialContextState);
   let [updateUser, setUpdateUser] = useState(true);
@@ -57,10 +56,10 @@ export function CurrentUserEventProvider({ children }) {
   );
 }
 
-export function UseUserEvent() {
-  const contextuser = React.useContext(CurrentEventUserContext);
+export function useUserEvent() {
+  const contextuser = useContext(CurrentEventUserContext);
   if (!contextuser) {
-    throw new Error('UseEventuser debe estar dentro del proveedor');
+    throw new Error('useEventuser debe estar dentro del proveedor');
   }
 
   return contextuser;

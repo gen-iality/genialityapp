@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Button, Form, Input, Row, Col, Modal } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
-import { AuthUrl } from '../../helpers/constants';
-import WallContext, { WallContextProvider } from '../../context/WallContext';
+import { AuthUrl } from '@helpers/constants';
+import WallContext, { WallContextProvider } from '@context/WallContext';
 
 /*let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
   if (!user) {
@@ -76,7 +76,7 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
         visible={visibleNoUser}
         cancelButtonProps={{ hidden: true }}
         onOk={() => {
-          setVisibleNoUser(false);
+          // setVisibleNoUser(false); -> it is not defined in this subcomponent
         }}>
         <p>
           <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión para poder realizar

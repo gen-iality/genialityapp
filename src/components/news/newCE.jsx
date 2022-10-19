@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { NewsFeed } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
+import { NewsFeed } from '@helpers/request';
+import { handleRequestError } from '@helpers/utils';
 import { Col, Row, Input, Form, DatePicker, Modal } from 'antd';
 /**
  * This solution is distributed as is:
@@ -19,12 +19,12 @@ import { Col, Row, Input, Form, DatePicker, Modal } from 'antd';
  dayjs.extend(localeData);
  dayjs.extend(weekOfYear);
  dayjs.extend(weekYear);
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
 

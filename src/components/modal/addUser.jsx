@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import { UsersApi, eventTicketsApi } from '@/helpers/request';
+import { UsersApi, eventTicketsApi } from '@helpers/request';
 import { Modal, Form, Input, Select, Checkbox, Button } from 'antd';
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 
 const { Option } = Select;
 
@@ -100,7 +100,7 @@ class AddUser extends Component {
       );
       if (type === 'boolean') {
         input = (
-          <React.Fragment>
+          <>
             <Form.Item label={name} htmlFor={name} style={{ textTransform: 'capitalize' }}>
               <Checkbox
                 name={name}
@@ -111,7 +111,7 @@ class AddUser extends Component {
                 }}
               />
             </Form.Item>
-          </React.Fragment>
+          </>
         );
       }
       if (type === 'list') {

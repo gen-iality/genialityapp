@@ -1,10 +1,10 @@
 import { Fragment, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { MessageApi } from '../../helpers/request';
+import { MessageApi } from '@helpers/request';
 import MessageUser from './messageUser';
 import EmailPrev from './emailPreview';
 import { Row, Col, Tabs, Empty } from 'antd';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 
 const { TabPane } = Tabs;
 

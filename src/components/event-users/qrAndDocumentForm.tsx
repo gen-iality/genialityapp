@@ -5,7 +5,7 @@ import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline';
 import { SearchAndCleanButtons } from './buttonsQrModal';
 // @ts-ignore: Unreachable code error
 import QrReader from 'react-qr-reader';
-import { divideInformationObtainedByTheCodeReader } from '@/Utilities/checkInUtils';
+import { divideInformationObtainedByTheCodeReader } from '@Utilities/checkInUtils';
 
 const { TabPane } = Tabs;
 

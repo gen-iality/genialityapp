@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { AgendaApi } from '../../helpers/request';
+import { AgendaApi } from '@helpers/request';
 import { Select, Table as TableA, Row, Col } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../../components/speakers/getColumnSearch';
+import { getColumnSearchProps } from '@components/speakers/getColumnSearch';
 
 const { Option } = Select;
 

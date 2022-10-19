@@ -1,10 +1,10 @@
 import { DispatchMessageService } from '@context/MessageService';
-import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
-import { AgendaApi } from '@/helpers/request';
-import { firestore, fireRealtime } from '@/helpers/firebase';
+import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi';
+import { AgendaApi } from '@helpers/request';
+import { firestore, fireRealtime } from '@helpers/firebase';
 import Service from '../roomManager/service';
 
-import { handleRequestError } from '@/helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 
 export default function useDeleteActivity () {
     const service = new Service(firestore);

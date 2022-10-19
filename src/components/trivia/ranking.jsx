@@ -5,8 +5,8 @@ import { utils, writeFileXLSX } from 'xlsx';
 
 import { getTriviaRanking } from './services';
 
-import Header from '../../antdComponents/Header';
-import Table from '../../antdComponents/Table';
+import Header from '@antdComponents/Header';
+import Table from '@antdComponents/Table';
 
 const columns = [
   {

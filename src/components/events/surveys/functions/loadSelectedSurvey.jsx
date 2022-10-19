@@ -1,6 +1,7 @@
 import PooledQuestions from '@/classes/PooledQuestions';
 import { SurveysApi } from '../../../../helpers/request';
 import shuffleSurveyQuestion from '../models/shuffleSurveyQuestion';
+import { SurveysApi } from '@helpers/request';
 
 async function loadSelectedSurvey(eventId, idSurvey, userId) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */

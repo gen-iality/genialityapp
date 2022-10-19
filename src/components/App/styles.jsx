@@ -1,13 +1,13 @@
 import { Component } from 'react';
-import { Actions, OrganizationApi } from '../../helpers/request';
+import { Actions, OrganizationApi } from '@helpers/request';
 import { injectIntl } from 'react-intl';
 import { SketchPicker } from 'react-color';
 import { Button, Typography, Modal, Space, Row, Col, Form, Tag, Select, Spin } from 'antd';
 import ReactQuill from 'react-quill';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
 
@@ -438,7 +438,7 @@ class Styles extends Component {
   render() {
     const { stylesIsLoading } = this.state;
     return (
-      <React.Fragment>
+      <>
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Configuración de Estilos'} save form />
 
@@ -579,7 +579,7 @@ class Styles extends Component {
           </Row>
           <BackTop />
         </Form>
-      </React.Fragment>
+      </>
     );
   }
 }

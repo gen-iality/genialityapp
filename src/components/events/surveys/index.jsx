@@ -1,13 +1,13 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Actions, TicketsApi } from '../../../helpers/request';
-import { firestore } from '../../../helpers/firebase';
+import { Actions, TicketsApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import SurveyList from './surveyList';
 import SurveyDetailPage from './SurveyDetailPage';
 import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
-import withContext from '../../../context/withContext';
-import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
+import withContext from '@context/withContext';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 

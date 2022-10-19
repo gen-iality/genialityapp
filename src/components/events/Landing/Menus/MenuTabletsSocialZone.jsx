@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Button, Badge, Drawer, Space } from 'antd';
 import { MessageOutlined, PieChartOutlined } from '@ant-design/icons';
 import SocialZone from '../../../socialZone/socialZone';
-import { UseEventContext } from '../../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { connect } from 'react-redux';
 
 const MenuTabletsSocialZone = (props) => {
   const [isDrawerVisible, setisDrawerVisible] = useState(false);
   let [optionselected, setOptionselected] = useState('1');
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
 
   return (
     <>

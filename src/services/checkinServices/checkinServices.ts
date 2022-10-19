@@ -1,9 +1,9 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import { firestore } from '@/helpers/firebase';
-import { TicketsApi } from '@/helpers/request';
-import { structureScannedInformation } from '@/Utilities/checkInUtils';
-import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
-import { newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from '@/Utilities/types/types';
+import { DispatchMessageService } from '@context/MessageService';
+import { firestore } from '@helpers/firebase';
+import { TicketsApi } from '@helpers/request';
+import { structureScannedInformation } from '@Utilities/checkInUtils';
+import { getFieldDataFromAnArrayOfFields } from '@Utilities/generalUtils';
+import { newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from '@Utilities/types/types';
 
 /**allows you to search by ID or document number for an eventuser in firebase */
 export const getAttendeeByParameter = ({

@@ -1,5 +1,5 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import { fireStorage } from '@/helpers/firebase';
+import { DispatchMessageService } from '@context/MessageService';
+import { fireStorage } from '@helpers/firebase';
 
 export const deleteFireStorageData = async (fileUrl: string) => {
   let theFileWasDeleted = '';

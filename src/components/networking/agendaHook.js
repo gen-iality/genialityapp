@@ -1,4 +1,4 @@
-import { firestoreeviuschat, app } from '../../helpers/firebase';
+import { firestoreeviuschat, app } from '@helpers/firebase';
 var hoy = new Date();
 
 function formatAMPM(hoy) {

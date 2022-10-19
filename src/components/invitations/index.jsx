@@ -3,7 +3,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import InvitedUsers from './eventUsersList';
 import CreateMessage from './send';
 import ImportUsers from '../import-users/importUser';
-import { EventsApi } from '@/helpers/request';
+import { EventsApi } from '@helpers/request';
 
 // function Tabla(props) {
 //   const [guests, setGuests] = useState([]);

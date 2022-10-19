@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import { Button, Input, Space, Alert } from 'antd';
 
 import { firestore } from '@helpers/firebase';
-import { QuizStatus } from '@/components/quiz/types';
+import { QuizStatus } from '@components/quiz/types';
 
 export interface QuizStatusEditorPageProps {
 }

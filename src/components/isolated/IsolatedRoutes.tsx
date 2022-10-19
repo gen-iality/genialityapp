@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ReactElement } from 'react';
 import { Fragment } from 'react';
 import { Route, Switch, withRouter, useHistory } from 'react-router-dom';
 import { Button, Typography } from 'antd';
@@ -15,7 +15,7 @@ import { PresenceUsersPage } from './presence/PresenceUsersPage';
 type UI = {
   url: string;
   text: string;
-  Component: (props: any) => React.ReactElement;
+  Component: (props: any) => ReactElement;
 };
 
 interface HomeProps {

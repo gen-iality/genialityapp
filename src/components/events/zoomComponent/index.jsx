@@ -3,13 +3,13 @@ import { Button, Result, Spin, Row } from 'antd';
 import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
 import SurveyForm from '../surveys';
-import API from '../../../helpers/request';
+import API from '@helpers/request';
 import connect from 'react-redux/es/connect/connect';
 import { fetchPermissions } from '../../../redux/permissions/actions';
 import { fetchRol } from '../../../redux/rols/actions';
 import ConferenceTabs from './conferenceTabs';
 
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 class ZoomComponent extends Component {
   constructor(props) {
     super(props);

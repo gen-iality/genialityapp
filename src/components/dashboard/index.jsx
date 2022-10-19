@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ApiUrl } from '../../helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 import { Tooltip, Button, Card, Col, Row, Statistic, Table, Spin, Typography } from 'antd';
 import {
   EyeOutlined,
@@ -28,11 +28,9 @@ import { Bar, Line } from 'react-chartjs-2';
 import ReactToPrint from 'react-to-print';
 import dayjs from 'dayjs';
 import { utils, writeFileXLSX } from 'xlsx';
-import API from '../../helpers/request';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
-
-// const [google, setGoogle] = useState(null)
+import API from '@helpers/request';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Title } = Typography;
 //ESTILOS PAGINA PDF

@@ -40,7 +40,7 @@ export default function EviusTable({ columns, data }) {
 
 /*  Inicio de metodo para cargar millones de datos trabajo en proceso
 
-  const RenderRow = React.useCallback(
+  const RenderRow = useCallback(
     ({ index, style }) => {
       const row = rows[index]
       prepareRow(row)

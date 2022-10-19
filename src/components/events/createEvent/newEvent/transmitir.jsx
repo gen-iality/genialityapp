@@ -1,9 +1,9 @@
 import { Col, Modal, Row, List } from 'antd';
 import { useEffect, useState } from 'react';
-import { useContextNewEvent } from '../../../context/newEventContext';
-import { OrganizationApi } from '../../../helpers/request';
+import { useContextNewEvent } from '@context/newEventContext';
+import { OrganizationApi } from '@helpers/request';
 import OptTranmitir from './optTransmitir';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 function Transmitir(props) {
   const {

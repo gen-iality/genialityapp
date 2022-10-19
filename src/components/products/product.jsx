@@ -11,13 +11,13 @@ import {
 } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import Loading from '../loaders/loading';
 import { withRouter } from 'react-router-dom';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
-import { UseEventContext } from '@/context/eventContext';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
+import { useEventContext } from '@context/eventContext';
+import { HelperContext } from '@context/helperContext/helperContext';
 
 const { Column } = Table;
 const { confirm } = Modal;

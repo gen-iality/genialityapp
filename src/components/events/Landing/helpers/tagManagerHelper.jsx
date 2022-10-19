@@ -1,7 +1,7 @@
-import { UseEventContext } from '../../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 export function EnableGTMByEVENT() {
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let createElement = null;
   let dataLayer = `dataLayerTagManager${cEventContext.value._id}`;
   let htmlElementId = 'gtmScrip';
@@ -10,7 +10,6 @@ export function EnableGTMByEVENT() {
   if (!tagManagerId) return null;
 
   if (!window[dataLayer]) {
-    //   console.log('10. Start TagManager');
     window[dataLayer] = window[dataLayer] || [];
     window[dataLayer].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     var f = document.getElementsByClassName(htmlElementId)[0];

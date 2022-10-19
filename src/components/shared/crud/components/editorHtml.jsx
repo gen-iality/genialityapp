@@ -28,9 +28,9 @@ class EditarHtml extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <button onClick={this.submit}>SUBMIT</button>
-      </React.Fragment>
+      </>
     );
   }
 }

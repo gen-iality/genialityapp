@@ -1,15 +1,15 @@
 import { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { UsersApi, eventTicketsApi } from '../../helpers/request';
+import { UsersApi, eventTicketsApi } from '@helpers/request';
 import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd';
 import { SearchOutlined, UserOutlined, DownloadOutlined, UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { parseData2Excel } from '../../helpers/utils';
+import { parseData2Excel } from '@helpers/utils';
 import { utils, writeFileXLSX } from 'xlsx';
 import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
-import Header from '../../antdComponents/Header';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import Header from '@antdComponents/Header';
+import { HelperContext } from '@context/helperContext/helperContext';
 
 class eventUsersList extends Component {
   constructor(props) {

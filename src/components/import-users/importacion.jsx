@@ -4,8 +4,8 @@ import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import { Row, Col, Button, Divider, Upload } from 'antd';
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../context/MessageService';
-import content from '@/containers/content';
+import { DispatchMessageService } from '@context/MessageService';
+import content from '@containers/content';
 
 dayjs.locale('es');
 momentLocalizer();
@@ -127,7 +127,7 @@ const Importacion = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <div className='importacion-txt'>
         <p>
           Para importar los usuarios de tu curso, debes cargar un archivo excel (.xls) con las columnas organizadas
@@ -164,7 +164,7 @@ const Importacion = (props) => {
           </Button>
         </Col>
       </Row>
-    </React.Fragment>
+    </>
   );
 };
 

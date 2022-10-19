@@ -3,11 +3,11 @@ import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-
 import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
-import { app } from '../../helpers/firebase';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import { app } from '@helpers/firebase';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { DispatchMessageService } from '@/context/MessageService';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { DispatchMessageService } from '@context/MessageService';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();

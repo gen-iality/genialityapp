@@ -1,4 +1,4 @@
-import { RolAttApi } from '@/helpers/request';
+import { RolAttApi } from '@helpers/request';
 
 /**
  * Get the permissions for a role in a given event.

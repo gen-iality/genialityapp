@@ -1,5 +1,5 @@
 import { List, Col, Spin } from 'antd';
-import { formatDataToString } from '../../../helpers/utils';
+import { formatDataToString } from '@helpers/utils';
 
 const PropertiesProfile = (props) => {
   return (

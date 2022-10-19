@@ -8,12 +8,12 @@ import {
   PlusCircleOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
-import { handleRequestError } from '../../helpers/utils';
-import { firestore } from '../../helpers/firebase';
+import { handleRequestError } from '@helpers/utils';
+import { firestore } from '@helpers/firebase';
 import { SketchPicker } from 'react-color';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const { Option } = Select;
 const { confirm } = Modal;

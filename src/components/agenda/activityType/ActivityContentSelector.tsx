@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import { Card, Button, Alert, Row, Col } from 'antd';
@@ -10,7 +9,7 @@ import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
 
 import useActivityType from '@context/activityType/hooks/useActivityType';
-import { useGetWidgetForActivityType } from '@/context/activityType/hooks/useGetWidgetForActivityType';
+import { useGetWidgetForActivityType } from '@context/activityType/hooks/useGetWidgetForActivityType';
 
 export interface SubActivityContentSelectorProps {
   activityId: string,

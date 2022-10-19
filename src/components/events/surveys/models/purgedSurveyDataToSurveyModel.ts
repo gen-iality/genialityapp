@@ -49,7 +49,7 @@ export default (surveyData: SurveyPreModel) => {
     jsonObj.questions.unshift({
       type: 'html',
       html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
-    });
+    } as any);
   }
 
   if (jsonObj.questions === undefined) {

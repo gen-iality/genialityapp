@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import { CopyFilled, CheckCircleFilled } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import WOWZAPlayer from '../../../../components/livetransmision/WOWZAPlayer';
+import WOWZAPlayer from '@components/livetransmision/WOWZAPlayer';
 import {
   createLiveStream,
   getLiveStream,
@@ -28,13 +28,13 @@ import {
   getLiveStreamStats,
   ResetLiveStream,
 } from '../../../../adaptors/wowzaStreamingAPI';
-import { realTimeviuschat } from '../../../../helpers/firebase';
+import { realTimeviuschat } from '@helpers/firebase';
 import { useCurrentUser } from '@context/userContext';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting';
 import Loading from '../../../profile/loading';
-import { CurrentEventContext } from '../../../../context/eventContext';
-import { DispatchMessageService } from '../../../../context/MessageService';
+import { CurrentEventContext } from '@context/eventContext';
+import { DispatchMessageService } from '@context/MessageService';
 
 const WowzaStreamingPanel = ({
   meeting_id,

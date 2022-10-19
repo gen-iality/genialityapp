@@ -3,15 +3,15 @@ import { Redirect, Route, Switch, useHistory, useRouteMatch, withRouter } from '
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
+import { useUserEvent } from '@context/eventUserContext';
+import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
-import initBroadcastViewers from '@/containers/broadcastViewers';
-import withContext from '../../../context/withContext';
+import initBroadcastViewers from '@containers/broadcastViewers';
+import withContext from '@context/withContext';
 import { useCurrentUser } from '@context/userContext';
 import { activityContentValues } from '@context/activityType/constants/ui';
 import { fireRealtime } from '@helpers/firebase';
@@ -53,7 +53,7 @@ const EventSectionRoutes = props => {
   let { path } = useRouteMatch();
   let { event_id, event_name } = useParams();
   let { GetPermissionsEvent } = useHelper();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
   let cUser = useCurrentUser();
   let history = useHistory();
 

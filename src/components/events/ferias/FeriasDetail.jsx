@@ -7,12 +7,11 @@ import Contact from './contact';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { setTopBanner } from '../../../redux/topBanner/actions';
-//import { useLocation } from "react-router-dom";
 import { getEventCompany } from '../../empresas/services.js';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import Feedback from './feedback.jsx';
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import ReactPlayer from 'react-player';
 
 const { useBreakpoint } = Grid;
@@ -24,7 +23,7 @@ const FeriasDetail = (props) => {
 
   const { Title } = Typography;
 
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
 
   const colorTexto = cEvent.value.styles.textMenu;
   const colorFondo = cEvent.value.styles.toolbarDefaultBg;

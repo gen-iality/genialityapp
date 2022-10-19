@@ -1,8 +1,8 @@
 import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import { Button, Card, Modal, Result, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import withContext from '../../../context/withContext';
-import { Actions } from '../../../helpers/request';
+import withContext from '@context/withContext';
+import { Actions } from '@helpers/request';
 
 const ResponsePayu = (props) => {
   const [referenceCode, setReferenceCode] = useState();

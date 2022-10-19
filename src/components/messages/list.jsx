@@ -1,5 +1,5 @@
 import { withRouter } from 'react-router-dom';
-import { MessageApi } from '../../helpers/request';
+import { MessageApi } from '@helpers/request';
 import { Button, Row, Col, Space, Typography } from 'antd';
 import { ExclamationCircleOutlined, LineChartOutlined, BarsOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';

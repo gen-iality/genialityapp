@@ -1,9 +1,9 @@
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { getLiveStream } from "../../../../adaptors/wowzaStreamingAPI";
+import { getLiveStream } from "@adaptors/wowzaStreamingAPI";
 import { Form, Input,  Alert } from "antd";
 import { useState, useContext } from "react";
-import AgendaContext from "../../../../context/AgendaContext";
-import { DispatchMessageService } from '../../../../context/MessageService';
+import AgendaContext from "@context/AgendaContext";
+import { DispatchMessageService } from '@context/MessageService';
 
 export default function StoreAlreadyCreatedMeeting({
   setMeetingId,

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import Async from 'async';
-import { Actions } from '../../helpers/request';
+import { Actions } from '@helpers/request';
 import { Row, Col, Tag, Tabs, Table, Spin } from 'antd';
 
 const { TabPane } = Tabs;
@@ -150,7 +150,7 @@ class Result extends Component {
     const { extraFields } = this.props;
     const data = [notok, ok];
     return (
-      <React.Fragment>
+      <>
         <Row justify='space-between' wrap>
           <Col>
             <Tag>{total}</Tag>
@@ -170,7 +170,7 @@ class Result extends Component {
           </Col>
         </Row>
         {total > 0 && (
-          <React.Fragment>
+          <>
             <Tabs defaultActiveKey='0'>
               <TabPane tab='Correctos' key='0'>
                 <Spin tip={'Cargando...'} spinning={data[1].length === 0}>
@@ -203,9 +203,9 @@ class Result extends Component {
                 {/* </Spin> */}
               </TabPane>
             </Tabs>
-          </React.Fragment>
+          </>
         )}
-      </React.Fragment>
+      </>
     );
   }
 }

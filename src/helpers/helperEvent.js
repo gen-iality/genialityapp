@@ -30,11 +30,8 @@ export function listenSurveysData(
         eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 
-      console.log('600.eventSurveys', eventSurveys);
-
       const changeInSurvey = changeInSurveyDocChanges(querySnapshot.docChanges());
       let publishedSurveys = eventSurveys;
-      console.log('600.publishedSurveys', publishedSurveys);
 
       dispatch({ type: 'data_loaded', payload: { publishedSurveys, changeInSurvey } });
       //if (activity)

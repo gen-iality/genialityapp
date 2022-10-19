@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SpacesApi } from '../../helpers/request';
+import { SpacesApi } from '@helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import dayjs from 'dayjs';

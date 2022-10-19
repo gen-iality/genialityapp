@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { withRouter } from 'react-router-dom';
-import { SpeakersApi } from '../../helpers/request';
+import { SpeakersApi } from '@helpers/request';
 import { Table, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { columns } from './columns';
-import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);

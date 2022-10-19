@@ -2,14 +2,14 @@ import { Badge, Col, Menu, Row, Space } from 'antd';
 import { useRouteMatch, Link } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
-import { UseEventContext } from '../../../../context/eventContext';
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 
 const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let { totalsolicitudes, eventPrivate } = useHelper();
   let event = cEvent.value;
 

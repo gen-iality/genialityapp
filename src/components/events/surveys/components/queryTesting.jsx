@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Form, Button, InputNumber, Card, Tag } from 'antd';
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import dayjs from 'dayjs';
 
 function QueryTesting() {

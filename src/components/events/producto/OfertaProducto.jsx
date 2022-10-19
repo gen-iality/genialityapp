@@ -1,10 +1,10 @@
 import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, Alert, Spin } from 'antd';
 import { useState } from 'react';
-import { EventsApi } from '../../../helpers/request';
-import withContext from '../../../context/withContext';
+import { EventsApi } from '@helpers/request';
+import withContext from '@context/withContext';
 import { useEffect } from 'react';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Title, Text } = Typography;
 

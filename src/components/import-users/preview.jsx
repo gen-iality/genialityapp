@@ -244,7 +244,7 @@ class Preview extends Component {
     const { list, auxArr, serverError, errorData } = this.state;
     const self = this;
     return (
-      <React.Fragment>
+      <>
         <Row justify='center' gutter={[24, 24]}>
           <Col span={10}>
             <Badge.Ribbon
@@ -432,7 +432,7 @@ class Preview extends Component {
         )} */}
 
         {serverError && <ErrorServe errorData={errorData} />}
-      </React.Fragment>
+      </>
     );
   }
 }

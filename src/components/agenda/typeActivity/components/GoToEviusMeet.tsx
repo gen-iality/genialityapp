@@ -1,7 +1,7 @@
 import { Button, Card, Typography } from 'antd';
 import { useCurrentUser } from '@context/userContext';
 import { useContext } from 'react';
-import AgendaContext from '@/context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 
 const GoToEviusMeet = (props: any) => {
   const { dataLive } = useContext(AgendaContext);

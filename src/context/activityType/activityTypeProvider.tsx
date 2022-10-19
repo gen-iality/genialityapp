@@ -2,7 +2,7 @@ import { message } from 'antd';
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
-import { AgendaApi, TypesAgendaApi } from '../../helpers/request';
+import { AgendaApi, TypesAgendaApi } from '@helpers/request';
 import AgendaContext from '../AgendaContext';
 import { CurrentEventContext } from '../eventContext';
 

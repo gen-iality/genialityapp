@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createElement } from 'react';
 import { useHistory } from 'react-router-dom';
-import ErrorServe from '../components/modal/serverError';
-import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
+import ErrorServe from '@components/modal/serverError';
+import UserStatusAndMenu from '@components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
-import MenuOld from '../components/events/shared/menu';
+import MenuOld from '@components/events/shared/menu';
 import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
-import withContext from '../context/withContext';
-import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
-import { recordTypeForThisEvent } from '../components/events/Landing/helpers/thisRouteCanBeDisplayed';
+import withContext from '@context/withContext';
+import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers';
+import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
 import { useIntl } from 'react-intl';
@@ -195,7 +195,7 @@ const Headers = (props) => {
   }, [fixed]);
 
   return (
-    <React.Fragment>
+    <>
       <Header
         style={{
           position: 'sticky',
@@ -217,7 +217,7 @@ const Headers = (props) => {
                 <Col span={2} offset={3} data-target='navbarBasicExample'>
                   <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
                     <Button style={zIndex} onClick={() => showDrawer()}>
-                      {React.createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                      {createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                         className: 'trigger',
                         onClick: () => {
                           console.log('CERRAR');
@@ -354,8 +354,10 @@ const Headers = (props) => {
         </div>
       )}
 
-      {dataGeneral.serverError && <ErrorServe errorData={errorData} />}
-    </React.Fragment>
+      {/* {dataGeneral.serverError && <ErrorServe errorData={errorData} />} */}
+      // where is errorData?, I think that it was `dataGeneral.serverError`
+      {dataGeneral.serverError && <ErrorServe errorData={dataGeneral.serverError} />}
+    </>
   );
 };
 

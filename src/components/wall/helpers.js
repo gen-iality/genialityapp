@@ -1,5 +1,5 @@
-import { firestore, fireStorage } from '../../helpers/firebase';
-import { DispatchMessageService } from '../../context/MessageService';
+import { firestore, fireStorage } from '@helpers/firebase';
+import { DispatchMessageService } from '@context/MessageService';
 
 export const saveFirebase = {
   async savePost(data, eventId) {

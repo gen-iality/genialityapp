@@ -3,8 +3,8 @@ import { Button, Row, Table, Tag } from 'antd';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { withRouter } from 'react-router';
-import API from '../../helpers/request';
-import Header from '../../antdComponents/Header';
+import API from '@helpers/request';
+import Header from '@antdComponents/Header';
 
 const OfertProduts = (props) => {
   const goBack = () => props.history.goBack();

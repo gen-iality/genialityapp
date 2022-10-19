@@ -1,5 +1,5 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import { UsersApi } from '@/helpers/request';
+import { DispatchMessageService } from '@context/MessageService';
+import { UsersApi } from '@helpers/request';
 
 /** function to create or edit an eventuser from the cms */
 export const saveOrUpdateAttendeeInAEvent = async ({

@@ -1,4 +1,4 @@
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 const userGamification = {
    getListPoints: (eventId, setRankingList) => {

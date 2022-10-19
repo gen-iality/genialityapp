@@ -6,16 +6,16 @@ import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import MenuRigth from './Menus/MenuRigth';
 import { connect } from 'react-redux';
 const { Sider } = Layout;
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import DrawerProfile from './DrawerProfile';
 
 
 
 const EventSectionMenuRigth = (props) => {
   let [optionselected, setOptionselected] = useState(1);
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useHelper();
 
   const ToggleVisibility = <Button

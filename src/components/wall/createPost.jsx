@@ -2,14 +2,14 @@ import { Component, createRef } from 'react';
 import CameraFeed from './cameraFeed';
 
 //custom
-import { AuthUrl } from '../../helpers/constants';
+import { AuthUrl } from '@helpers/constants';
 import { saveFirebase } from './helpers';
 import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin, Upload } from 'antd';
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
-import withContext from '../../context/withContext';
-import { DispatchMessageService } from '../../context/MessageService';
+import withContext from '@context/withContext';
+import { DispatchMessageService } from '@context/MessageService';
 
 const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, refText }) => (
   <Form ref={refText} onFinish={onSubmit}>

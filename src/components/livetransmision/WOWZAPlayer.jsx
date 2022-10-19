@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, memo } from 'react';
 import ReactPlayer from 'react-player';
 import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button, Spin } from 'antd';
-import AgendaContext from '@/context/AgendaContext';
-import { CurrentUserContext } from '@/context/userContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentUserContext } from '@context/userContext';
 import { Grid } from 'antd';
 
 const { useBreakpoint } = Grid;
@@ -57,7 +57,6 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         let url = live_stream.iframe_url;
         visibleReactPlayer && setVisibleReactPlayer(false);
 
-        //console.log('100. URL==>', live_stream.hls_playlist_url);
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */
         setTimeout(() => {
           const aditionalParameters = typeActivity !== 'url' ? '?muted=1&autoplay=1' : '';
@@ -85,7 +84,6 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
 
   return (
     <>
-      {/*console.log('10. TYPE ACTIVITY=====>', conected, visibleReactPlayer, typeActivity, meeting_id)*/}
       <div className='mediaplayer'>
         {/* { muted && conected !== 'No' && (
           <Button
@@ -129,4 +127,4 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   );
 }
 
-export default React.memo(WOWZAPlayer);
+export default memo(WOWZAPlayer);

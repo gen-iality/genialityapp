@@ -1,18 +1,18 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Button, Avatar, Row, Col, Tooltip, Typography, Spin } from 'antd';
-import { AgendaApi } from '../../helpers/request';
-import { firestore } from '../../helpers/firebase';
+import { AgendaApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import Moment from 'moment-timezone';
 import { FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import { UseEventContext } from '../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { Link } from 'react-router-dom';
 import { truncate } from 'lodash-es';
 import { imageUtils } from '../../Utilities/ImageUtils';
 const { Text } = Typography;
 
 const VirtualConference = () => {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let urlactivity = `/landing/${cEvent.value._id}/activity/`;
   let urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
 

@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useMemo, createContext, useContext } from 'react';
-import { listenSurveysData } from '../helpers/helperEvent';
-import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
-import { UseEventContext } from './eventContext';
+import { listenSurveysData } from '@helpers/helperEvent';
+import InitSurveysCompletedListener from '@components/events/surveys/functions/initSurveyCompletedListener';
+import { useEventContext } from './eventContext';
 import { useCurrentUser } from './userContext';
 export const SurveysContext = createContext();
 
@@ -54,7 +54,7 @@ const reducer = (state, action) => {
 
 export function SurveysProvider({ children }) {
   //  console.group('surveyContext');
-  let cEventContext = UseEventContext();
+  let cEventContext = useEventContext();
   let cUser = useCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
@@ -198,7 +198,7 @@ export function SurveysProvider({ children }) {
   );
 }
 
-export function UseSurveysContext() {
+export function useSurveysContext() {
   const contextsurveys = useContext(SurveysContext);
   console.log('contextsurveys', contextsurveys);
   if (!contextsurveys) {
@@ -230,54 +230,3 @@ function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
   }
   return shouldActivateSurvey;
 }
-
-//Si una encuesta esta publicada y esta abierta la seleccionamos automáticamente cómo activa
-//Esto debería quedar en un mejor lugar
-// if (querySnapshot.docChanges().length) {
-//    let lastChange = querySnapshot.docChanges()[querySnapshot.docChanges().length - 1];
-//    let currentSurvey = null;
-//    switch (lastChange.type) {
-//       case 'removed':
-//       case 'added':
-//          visualizarEncuesta(null);
-//          break;
-//       case 'modified':
-//       default:
-//          currentSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
-//          visualizarEncuesta(currentSurvey);
-//          break;
-//    }
-// }
-
-// /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
-// function visualizarEncuesta(survey) {
-//   if (!survey) {
-//     setCurrentSurvey(null);
-//   }
-//   if (survey && survey.isOpened === 'true' && survey !== null) {
-//     if (currentActivity !== null && survey.isOpened === 'true') {
-//       setSurveyResult('view');
-//     } else if (currentActivity !== null && survey.isOpened === 'false') {
-//       setSurveyResult('results');
-//     }
-//     setCurrentSurvey(survey);
-//   } else {
-//     setCurrentSurvey(survey);
-//     setSurveyResult('closedSurvey');
-//   }
-// }
-
-// /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
-// useEffect(() => {
-//   if (cUser.value !== null) {
-//     const unSuscribe = InitSurveysCompletedListener(cUser, props.setCurrentSurveyStatus);
-//     return unSuscribe;
-//   }
-// }, [cUser]);
-
-/** Listener para obtener todas las encuestas por lección */
-// useEffect(() => {
-//   if (currentActivity) {
-//     listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
-//   }
-// }, [currentActivity]);

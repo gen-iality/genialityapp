@@ -15,13 +15,13 @@ import {
 } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
-import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
-import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
-import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
+import { startRecordingLiveStream, stopRecordingLiveStream } from '@adaptors/gcoreStreamingApi';
+import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation';
 
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
@@ -109,7 +109,8 @@ const CardPreview = (props: any) => {
             allowFullScreen
             onLoad={(e) => {
               if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
-                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
+                const target = e.target as any | undefined;
+                setErrorOcurred(urlErrorCodeValidation(target?.src, true));
               }
             }}></iframe>
         )}

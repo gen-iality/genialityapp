@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, memo } from 'react';
 import ReactPlayer from 'react-player';
 import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button, Spin } from 'antd';
-import AgendaContext from '@/context/AgendaContext';
-import { CurrentUserContext } from '@/context/userContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentUserContext } from '@context/userContext';
 import { Grid } from 'antd';
 
 const { useBreakpoint } = Grid;
@@ -97,4 +97,4 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
   );
 }
 
-export default React.memo(GcorePlayer);
+export default memo(GcorePlayer);

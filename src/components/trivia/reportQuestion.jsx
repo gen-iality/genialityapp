@@ -3,8 +3,8 @@ import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { utils, writeFileXLSX } from 'xlsx';
 import { getAnswersByQuestion } from './services';
-import Header from '../../antdComponents/Header';
-import Table from '../../antdComponents/Table';
+import Header from '@antdComponents/Header';
+import Table from '@antdComponents/Table';
 
 let renderNombreUsuario = (name) => (!name ? <span>Usuario invitado</span> : <span>{name}</span>);
 const columns = [

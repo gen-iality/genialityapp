@@ -1,4 +1,4 @@
-import { ActivityType } from "@/context/activityType/types/activityType";
+import { ActivityType } from "@context/activityType/types/activityType";
 
 export default function lessonTypeToString (inputType: string) {
   let typeName = '';

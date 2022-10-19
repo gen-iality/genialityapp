@@ -18,9 +18,9 @@ import {
 import { CalendarOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { useContextNewEvent } from '../../../context/newEventContext';
-import { OrganizationApi } from '../../../helpers/request';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { useContextNewEvent } from '@context/newEventContext';
+import { OrganizationApi } from '@helpers/request';
+import { DispatchMessageService } from '@context/MessageService';
 import dayjs from 'dayjs';
 
 const { Text, Link, Title, Paragraph } = Typography;

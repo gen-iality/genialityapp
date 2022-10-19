@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Table, Typography, Alert } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -7,7 +6,7 @@ import { Survey } from './types';
 import QuizStatusMessage from './quizStatus';
 import QuizBadge from './QuizBadge';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
-import { SurveysApi } from '@/helpers/request';
+import { SurveysApi } from '@helpers/request';
 
 type Status = {
   right: number,

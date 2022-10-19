@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ApiService, isError } from './interfaces/interfaces';
 import axios from 'axios';
-import { ApiUrl } from '../helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 
 export default function useApiService() {
   const [isLoading, setIsLoading] = useState(true);

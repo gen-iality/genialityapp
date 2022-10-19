@@ -2,20 +2,20 @@ import { useEffect, useState } from 'react';
 import { Card, Col, Row, Spin, Result, Button } from 'antd';
 import TicketsForm from '../../tickets/formTicket';
 import { connect } from 'react-redux';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { UseEventContext } from '../../../context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { Redirect } from 'react-router-dom';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import ProductCard from '../producto/productCard';
 import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import UserLoginContainer from '../UserLoginContainer';
 
 const PageNotPermissions = (props) => {
-  let EventUser = UseUserEvent();
-  let EventContext = UseEventContext();
+  let EventUser = useUserEvent();
+  let EventContext = useEventContext();
   let redirect;
   let urlsection = `/landing/${EventContext.value._id}/`;
   const [products, setProducts] = useState([]);

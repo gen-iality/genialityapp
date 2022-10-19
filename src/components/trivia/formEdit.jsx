@@ -1,6 +1,6 @@
 import { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
-import { SurveysApi } from '../../helpers/request';
+import { SurveysApi } from '@helpers/request';
 import {
   Form,
   Input,
@@ -25,10 +25,10 @@ import {
   QuestionCircleOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Actions } from '../../helpers/request';
-import { saveImageStorage } from '../../helpers/helperSaveImage';
-import { DispatchMessageService } from '../../context/MessageService';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { Actions } from '@helpers/request';
+import { saveImageStorage } from '@helpers/helperSaveImage';
+import { DispatchMessageService } from '@context/MessageService';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import LikertScaleEditor from '../quiz/LikertScaleEditor';
 
 const { Option } = Select;

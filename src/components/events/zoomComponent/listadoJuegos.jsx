@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { Row, Col, Card, Avatar } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import RankingList from './rankingList';

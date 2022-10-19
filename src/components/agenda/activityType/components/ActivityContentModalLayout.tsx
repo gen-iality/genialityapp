@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ReactNode } from 'react';
 import { useMemo, useEffect } from 'react';
 
 import { Typography, Layout, Row, Col, Button, } from 'antd';
@@ -17,7 +17,7 @@ const { Title } = Typography;
 export interface ActivityContentModalLayoutProps extends ModalWrapperUIProps {
   selected: ActivityType.GeneralTypeValue | null,
   disabledNextButton: boolean,
-  render: (widgetData: ActivityType.CardUI | ActivityType.FormUI) => React.ReactNode,
+  render: (widgetData: ActivityType.CardUI | ActivityType.FormUI) => ReactNode,
   // Internal inhereted states
   widgetKeyStack: WidgetKeyStack,
   setWidgetKeyStack: (x: WidgetKeyStack) => void,

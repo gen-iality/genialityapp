@@ -2,13 +2,11 @@ import './App.less';
 import loadable from '@loadable/component';
 import { useCurrentUser } from './../context/userContext';
 
-// import MainRouter from '../containers/router';
-import ContentContainer from '@/containers/content';
+import ContentContainer from '@containers/content';
 
-//import MainRouter from '../containers/router';
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 import { Layout } from 'antd';
-import InternetConnectionAlert from '@/components/InternetConnectionAlert/InternetConnectionAlert';
+import InternetConnectionAlert from '@components/InternetConnectionAlert/InternetConnectionAlert';
 
 const { Footer, Sider, Content } = Layout;
 

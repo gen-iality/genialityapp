@@ -1,16 +1,16 @@
 import { useEffect, useReducer } from 'react';
 import { HelperContext } from './helperContext';
 import { useState } from 'react';
-import { firestore, fireRealtime } from '../../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../../helpers/request';
-import { UseEventContext } from '../eventContext';
+import { firestore, fireRealtime } from '@helpers/firebase';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '@helpers/request';
+import { useEventContext } from '../eventContext';
 import { useCurrentUser } from '../userContext';
-import { UseUserEvent } from '../eventUserContext';
+import { useUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
-import { maleIcons, femaleicons, imageforDefaultProfile } from '../../helpers/constants';
+import { createChatInitalPrivate, createChatRoom } from '@components/networking/agendaHook';
+import { maleIcons, femaleicons, imageforDefaultProfile } from '@helpers/constants';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { helperReducer, helperInitialState } from './helperReducer';
@@ -25,9 +25,9 @@ const initialStateNotification = {
 export const HelperContextProvider = ({ children }) => {
   const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
 
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cUser = useCurrentUser();
-  let cEventuser = UseUserEvent();
+  let cEventuser = useUserEvent();
   let history = useHistory();
   const intl = useIntl();
 

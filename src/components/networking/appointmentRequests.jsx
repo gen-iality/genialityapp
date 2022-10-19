@@ -4,12 +4,12 @@ import { find, map, pathOr, propEq, props } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 //context
-import { UseUserEvent } from '../../context/eventUserContext';
-import { UseEventContext } from '../../context/eventContext';
-import { useCurrentUser } from '../../context/userContext';
+import { useUserEvent } from '@context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
+import { useCurrentUser } from '@context/userContext';
 
 import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
-import { addNotification } from '../../helpers/netWorkingFunctions';
+import { addNotification } from '@helpers/netWorkingFunctions';
 
 const { Meta } = Card;
 
@@ -27,8 +27,8 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   const [sendRespuesta, setSendRespuesta] = useState(false);
 
   //contextos
-  let userEventContext = UseUserEvent();
-  let eventContext = UseEventContext();
+  let userEventContext = useUserEvent();
+  let eventContext = useEventContext();
 
   useEffect(() => {
     if (eventContext.value != null && userEventContext.value !== null) {
@@ -153,8 +153,8 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   const userName = data.name;
   const userEmail = data.email;
   //contextos
-  let userEventContext = UseUserEvent();
-  let eventContext = UseEventContext();
+  let userEventContext = useUserEvent();
+  let eventContext = useEventContext();
   let userCurrentContext = useCurrentUser();
 
   const changeAgendaStatus = (newStatus) => {
@@ -169,7 +169,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1',
           };
           addNotification(notificationr, eventContext.value, userCurrentContext.value);
-          setSendRespuesta(true);
+          // setSendRespuesta(true); -> this setter is not in this subcomponent
           setFetching(false);
         })
         .catch((error) => {

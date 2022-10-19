@@ -6,19 +6,19 @@ import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
-import { UsersApi } from '../../helpers/request';
+import { UsersApi } from '@helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from '../../context/eventContext';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '../../context/MessageService';
+import { useEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Step } = Steps;
 
 const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const [current, setCurrent] = useState(0);
   const [basicDataUser, setbasicDataUser] = useState({
     names: '',

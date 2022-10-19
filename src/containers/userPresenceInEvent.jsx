@@ -1,5 +1,5 @@
-import { fireRealtime, app } from '../helpers/firebase';
-import { getCurrentUser } from '../helpers/request';
+import { fireRealtime, app } from '@helpers/firebase';
+import { getCurrentUser } from '@helpers/request';
 let initUserPresence = async (cEvent) => {
   if (cEvent?.visibility === 'ANONYMOUS') return;
   const user = await getCurrentUser();

@@ -1,10 +1,10 @@
 import { Form, Button, Row, Col, Input, Typography } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { app } from '../../../helpers/firebase';
+import { app } from '@helpers/firebase';
 import { FormattedMessage } from 'react-intl';
-import { UseEventContext } from '../../../context/eventContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { AttendeeApi } from '../../../helpers/request';
+import { useEventContext } from '@context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
+import { AttendeeApi } from '@helpers/request';
 
 const layout = {
   labelCol: { span: 6 },
@@ -14,8 +14,8 @@ const { Text } = Typography;
 
 function AnonymousEvenUserForm() {
   const history = useHistory();
-  let cEvent = UseEventContext();
-  let cEventUser = UseUserEvent();
+  let cEvent = useEventContext();
+  let cEventUser = useUserEvent();
 
   const onFinish = (values) => {
     const { name, email } = values;

@@ -1,9 +1,9 @@
 import { Component, Fragment } from 'react';
 import dayjs from 'dayjs';
-import { RolAttApi } from '../../../helpers/request';
+import { RolAttApi } from '@helpers/request';
 import EvenTable from '../shared/table';
 import TableAction from '../shared/tableAction';
-import { handleRequestError, sweetAlert } from '../../../helpers/utils';
+import { handleRequestError, sweetAlert } from '@helpers/utils';
 import CMS from '../../newComponent/CMS';
 
 const TipoAsistentes = (props) => {

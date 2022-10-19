@@ -1,11 +1,11 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment, createRef } from 'react';
 import { selectOptions, surveyTimeOptions } from './constants';
-import { SurveysApi, AgendaApi } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
+import { SurveysApi, AgendaApi } from '@helpers/request';
+import { handleRequestError } from '@helpers/utils';
 import { createOrUpdateSurvey, getSurveyConfiguration, deleteSurvey } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
-import { toolbarEditor } from '../../helpers/constants';
+import { toolbarEditor } from '@helpers/constants';
 import {
   Button,
   Row,
@@ -32,11 +32,11 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import FormQuestionEdit from './formEdit';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import Loading from '../profile/loading';
-import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -49,7 +49,7 @@ const { Title } = Typography;
 class triviaEdit extends Component {
   constructor(props) {
     super(props);
-    this.formEditRef = React.createRef();
+    this.formEditRef = createRef();
     this.state = {
       isUserUnconsciousReloading: false,
       title: props.title || 'Evaluación',

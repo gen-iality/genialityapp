@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import Table from '../../antdComponents/Table';
+import Table from '@antdComponents/Table';
 
 const MessageUser = (props) => {
   const users = props.users;

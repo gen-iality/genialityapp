@@ -4,7 +4,7 @@ import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comm
 import ReactPlayer from 'react-player';
 import Moment from 'moment-timezone';
 import './style.scss';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import Icon, {
   TagOutlined,
   CaretRightFilled,

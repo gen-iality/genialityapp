@@ -1,4 +1,4 @@
-import { firestore, app } from '@/helpers/firebase';
+import { firestore, app } from '@helpers/firebase';
 import { remoteLogoutNotification } from './remoteLogoutNotification';
 import { logoutInterface } from '../interfaces/interfaces';
 

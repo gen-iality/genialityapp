@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '../../helpers/request';
+import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '@helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import { firestore } from '@/helpers/firebase';
+import { firestore } from '@helpers/firebase';
 /** export Excel */
 import { useHistory } from 'react-router-dom';
 import { Table, Button, Row, Col, Tag } from 'antd';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
-import ModalMembers from '@/components/modal/modalMembers';
+import ModalMembers from '@components/modal/modalMembers';
 import dayjs from 'dayjs';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);

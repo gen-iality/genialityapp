@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Button, Result, Typography } from 'antd';
-import { UseUserEvent } from '../../../../context/eventUserContext';
-import { UseEventContext } from '../../../../context/eventContext';
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
+import { useUserEvent } from '@context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import Loading from '../../../profile/loading';
 import { useIntl } from 'react-intl';
 
@@ -29,10 +29,10 @@ export function recordTypeForThisEvent(cEvent) {
 
 function ThisRouteCanBeDisplayed({ children }) {
   const intl = useIntl();
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
   let eventUserId = cEventUser?.value?._id;
   let eventUserStatus = cEventUser.status;
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let { handleChangeTypeModal } = useHelper();
 
   useEffect(() => {

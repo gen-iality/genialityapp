@@ -18,11 +18,11 @@ import dayjs from 'dayjs';
 import { find, map, mergeRight, path, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useMemo, useState } from 'react';
-import { firestore } from '../../helpers/firebase';
-import { getDatesRange } from '../../helpers/utils';
+import { firestore } from '@helpers/firebase';
+import { getDatesRange } from '@helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
 import { createChatRoom } from './agendaHook';
-import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
+import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion';
 
 const { TabPane } = Tabs;
 const { Meta } = Card;

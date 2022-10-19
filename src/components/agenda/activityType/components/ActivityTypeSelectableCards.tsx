@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { Row, Col, Alert } from 'antd';
 
 import SelectableCard from './SelectableCard';

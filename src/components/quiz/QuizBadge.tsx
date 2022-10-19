@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useMemo, useState, useEffect } from 'react';
 import { Badge, Space, Typography } from 'antd';
 

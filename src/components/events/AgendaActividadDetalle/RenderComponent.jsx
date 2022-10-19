@@ -1,16 +1,16 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 import ImageComponentwithContext from './ImageComponent';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
 import GameDrawer from '../game/gameDrawer';
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 
 const RenderComponent = (props) => {
   let tabsdefault = {

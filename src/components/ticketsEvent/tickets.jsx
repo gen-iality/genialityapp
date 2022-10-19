@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { eventTicketsApi } from '../../helpers/request';
+import { eventTicketsApi } from '@helpers/request';
 import dayjs from 'dayjs';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';

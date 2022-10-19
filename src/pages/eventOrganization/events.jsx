@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { OrganizationApi } from '../../helpers/request';
+import { OrganizationApi } from '@helpers/request';
 import { Table, Button, Row, Col } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
-import withContext from '../../context/withContext';
-import Header from '../../antdComponents/Header';
-// import ExportExcel from '../newComponent/ExportExcel';
+import withContext from '@context/withContext';
+import Header from '@antdComponents/Header';
 
 function OrgEvents(props) {
   const [eventData, setEventData] = useState([]);

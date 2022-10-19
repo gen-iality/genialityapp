@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { FaqsApi } from '../../helpers/request';
+import { FaqsApi } from '@helpers/request';
 import { useHistory } from 'react-router-dom';
-import { toolbarEditor } from '../../helpers/constants';
-import { handleRequestError } from '../../helpers/utils';
+import { toolbarEditor } from '@helpers/constants';
+import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import ReactQuill from 'react-quill';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { confirm } = Modal;
 

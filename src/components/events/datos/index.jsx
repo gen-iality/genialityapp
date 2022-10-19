@@ -1,5 +1,5 @@
 import { Component, Fragment, useState } from 'react';
-import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
+import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '@helpers/request';
 /* import { toast } from 'react-toastify'; */
 import { FormattedMessage, useIntl } from 'react-intl';
 import DatosModal from './modal';
@@ -16,13 +16,13 @@ import {
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import CMS from '../../newComponent/CMS';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
-import Header from '../../../antdComponents/Header';
-import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../../context/MessageService';
+import Header from '@antdComponents/Header';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);

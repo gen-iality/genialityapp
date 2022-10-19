@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import Moment from 'moment-timezone';
 import { connect } from 'react-redux';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import {
   AgendaApi,
   SpacesApi,
@@ -10,9 +10,9 @@ import {
   DocumentsApi,
   AttendeeApi,
   discountCodesApi,
-} from '../../helpers/request';
+} from '@helpers/request';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge, Row } from 'antd';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';

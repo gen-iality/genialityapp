@@ -3,15 +3,15 @@ import { Tag, Button, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { utils, writeFileXLSX } from 'xlsx';
 import dayjs from 'dayjs';
-import { getColumnSearchProps } from '../../../components/speakers/getColumnSearch';
-import Table from '../../../antdComponents/Table';
-import { handleRequestError } from '../../../helpers/utils';
-import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
+import { getColumnSearchProps } from '@components/speakers/getColumnSearch';
+import Table from '@antdComponents/Table';
+import { handleRequestError } from '@helpers/utils';
+import { firestoreeviuschat, firestore } from '@helpers/firebase';
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
 import Account from '@2fd/ant-design-icons/lib/Account';
-import { DispatchMessageService } from '../../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
-import { UseEventContext } from '@/context/eventContext';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
 
 const { TabPane } = Tabs;
 
@@ -31,7 +31,7 @@ const ChatExport = ({ eventId, event }) => {
   const [loading, setLoading] = useState(true);
   let [columnsData, setColumnsData] = useState({});
   let [listUsersBlocked, setlistUsersBlocked] = useState([]);
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   const { eventIsActive } = useHelper();
 
   const renderMensaje = (text, record) => (

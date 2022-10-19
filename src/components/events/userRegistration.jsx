@@ -1,9 +1,9 @@
 import { Component } from 'react';
-import API, { EventsApi, TicketsApi } from '../../helpers/request';
-import { fieldNameEmailFirst } from '../../helpers/utils';
+import API, { EventsApi, TicketsApi } from '@helpers/request';
+import { fieldNameEmailFirst } from '@helpers/utils';
 import FormComponent from './registrationForm/form';
 import { Spin, Skeleton } from 'antd';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 class UserRegistration extends Component {
@@ -85,7 +85,7 @@ class UserRegistration extends Component {
 
     if (!loading)
       return !registeredUser ? (
-        <React.Fragment>
+        <>
           {/* initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals } */}
           <FormComponent
             initialValues={initialValues}
@@ -95,7 +95,7 @@ class UserRegistration extends Component {
             conditionals={conditionals}
             showSection={this.props.showSection}
           />
-        </React.Fragment>
+        </>
       ) : (
         <FormComponent
           showSection={this.props.showSection}

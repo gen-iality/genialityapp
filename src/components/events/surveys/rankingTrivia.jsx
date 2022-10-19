@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
 import { Divider } from 'antd';
-import { UseSurveysContext } from '../../../context/surveysContext';
-import { useCurrentUser } from '../../../context/userContext';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseEventContext } from '../../../context/eventContext';
+import { useSurveysContext } from '@context/surveysContext';
+import { useCurrentUser } from '@context/userContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
 
 function RankingTrivia(props) {
   const { setGameRanking, setMyScore } = useHelper();
-  let cSurveys = UseSurveysContext();
+  let cSurveys = useSurveysContext();
   let cUser = useCurrentUser();
-  let eventContext = UseEventContext();
+  let eventContext = useEventContext();
   let currentSurvey = cSurveys.currentSurvey;
   let currentUser = cUser.value;
   let currentEvent = eventContext.value;

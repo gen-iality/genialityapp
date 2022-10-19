@@ -1,4 +1,4 @@
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 function initRealTimeSurveyListening(idSurvey, updateSurveyDataCallback) {
   console.log('initRealTimeSurveyListening');

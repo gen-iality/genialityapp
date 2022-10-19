@@ -77,12 +77,14 @@ const MessageReducer = ({ type, msj }: PropsOptions) => {
     }
   }
 
-  if (type === 'success') {
-    finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${formatUpperCaseMissing(msj)}`;
-  } else if (type === 'loading') {
-    finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${formatUpperCaseMissing(msj)}`;
-  } else {
-    finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${formatUpperCaseMissing(msj)}`;
+  if (msj !== undefined) {
+    if (type === 'success') {
+      finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${formatUpperCaseMissing(msj)}`;
+    } else if (type === 'loading') {
+      finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${formatUpperCaseMissing(msj)}`;
+    } else {
+      finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${formatUpperCaseMissing(msj)}`;
+    }
   }
 
   return finalMsj;

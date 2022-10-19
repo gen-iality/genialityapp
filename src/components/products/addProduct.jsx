@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Row, Input, Form, Col, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { EventsApi } from '../../helpers/request';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import { EventsApi } from '@helpers/request';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { handleRequestError } from '../../helpers/utils';
-import { DispatchMessageService } from '../../context/MessageService';
+import { handleRequestError } from '@helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import { removeObjectFromArray, renderTypeImage } from '@/Utilities/imgUtils';
+import { removeObjectFromArray, renderTypeImage } from '@Utilities/imgUtils';
 import Loading from '../profile/loading';
 
 export const toolbarEditor = {

@@ -1,22 +1,22 @@
 import { Component } from 'react';
-import { app, firestore } from '../../helpers/firebase';
-import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
+import { app, firestore } from '@helpers/firebase';
+import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '@helpers/request';
 import { injectIntl } from 'react-intl';
 import QRCode from 'qrcode.react';
-import { icon } from '../../helpers/constants';
+import { icon } from '@helpers/constants';
 import { Redirect } from 'react-router-dom';
-import { Actions } from '../../helpers/request';
+import { Actions } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
 import { Modal } from 'antd';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { ComponentCollection } from 'survey-react';
-import { saveImageStorage } from '../../helpers/helperSaveImage';
+import { saveImageStorage } from '@helpers/helperSaveImage';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FaBullseye } from 'react-icons/fa';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
-import { handleRequestError } from '@/helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 
 const { confirm } = Modal;
 
@@ -264,7 +264,6 @@ class UserModal extends Component {
 
       if (this.props.organizationId && !this.props.edit) {
         resp = await OrganizationApi.saveUser(this.props.organizationId, snap);
-        /* console.log("10. resp ", resp) */
       } else {
         if (!this.props.edit) {
           try {
@@ -293,7 +292,6 @@ class UserModal extends Component {
             this.props.value._id
           );
         }
-        /* console.log("10. USERADD==>",resp) */
       }
 
       /**FIXME: No se esta guardando la informacion al actualizar un usuario desde el panel de checkIn por actividad*/

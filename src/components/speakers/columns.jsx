@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { getColumnSearchProps } from './getColumnSearch';
 import { Link } from 'react-router-dom';
-import { SpeakersApi } from '../../helpers/request';
+import { SpeakersApi } from '@helpers/request';
 import { Button, Row, Col, Avatar, Tooltip, Popover, Image, Empty, Switch } from 'antd';
 import { DeleteOutlined, EditOutlined, UserOutlined, DragOutlined } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 export const columns = (columnsData) => [
   {

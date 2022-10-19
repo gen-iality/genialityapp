@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import useHasRole from './userhasRole';
 import { Spin } from 'antd';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { theRoleExists } from '@/Utilities/roleValidations';
-import { getOrganizationUser } from '@/Utilities/organizationValidations';
+import { useUserEvent } from '@context/eventUserContext';
+import { theRoleExists } from '@Utilities/roleValidations';
+import { getOrganizationUser } from '@Utilities/organizationValidations';
 
 function ValidateAccessRouteCms({ children }) {
   const { eventId } = children.props;
   const [component, setComponent] = useState(null);
   const [thisComponentIsLoading, setThisComponentIsLoading] = useState(true);
 
-  let cEventUser = UseUserEvent();
+  let cEventUser = useUserEvent();
 
   /** Validating role for the cms of an organization */
   useEffect(() => {

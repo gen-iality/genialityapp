@@ -17,7 +17,7 @@ import { Component, createRef } from 'react';
  dayjs.extend(weekOfYear);
  dayjs.extend(weekYear);
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '../../helpers/request';
+import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '@helpers/request';
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
@@ -45,12 +45,12 @@ import {
   TimePicker,
   DatePicker,
 } from 'antd';
-import { firestore } from '../../helpers/firebase';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import { firestore } from '@helpers/firebase';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
-import { handleRequestError } from '../../helpers/utils';
-import { DispatchMessageService } from '../../context/MessageService';
+import { handleRequestError } from '@helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
 import {
@@ -58,8 +58,8 @@ import {
   disabledEndDate,
   disabledStartDateTime,
   disabledStartDate,
-} from '@/Utilities/disableTimeAndDatePickerInEventDate';
-import { CurrentUserContext } from '@/context/userContext';
+} from '@Utilities/disableTimeAndDatePickerInEventDate';
+import { CurrentUserContext } from '@context/userContext';
 
 dayjs.locale('es');
 const { Title, Text } = Typography;

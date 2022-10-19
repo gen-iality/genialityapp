@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Badge, Space, Grid } from 'antd';
-import { AgendaApi } from '../../helpers/request';
-import { firestore } from '../../helpers/firebase';
+import { AgendaApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import Moment from 'moment-timezone';
 import { CaretRightOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import { UseEventContext } from '../../context/eventContext';
-import { UseUserEvent } from '../../context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { Link } from 'react-router-dom';
 import * as StageActions from '../../redux/stage/actions';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
@@ -61,8 +61,8 @@ let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActi
 };
 
 const VirtualConference = () => {
-  let cEvent = UseEventContext();
-  let cEventUser = UseUserEvent();
+  let cEvent = useEventContext();
+  let cEventUser = useUserEvent();
   let urlactivity = `/landing/${cEvent.value._id}/activity/`;
   let urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
 

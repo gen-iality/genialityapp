@@ -1,5 +1,5 @@
-import { app, firestore } from '../../helpers/firebase';
-import { EventsApi } from '../../helpers/request';
+import { app, firestore } from '@helpers/firebase';
+import { EventsApi } from '@helpers/request';
 import { useEffect, useState } from 'react';
 import ResultLink from './ResultLink';
 

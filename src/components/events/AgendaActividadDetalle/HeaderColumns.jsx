@@ -1,7 +1,7 @@
 import { Button, Col, Modal, Row, Spin } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import {
   ArrowLeftOutlined,
@@ -11,21 +11,21 @@ import {
   ExclamationCircleOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 
 import Moment from 'moment-timezone';
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
 import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
-import AgendaContext from '../../../context/AgendaContext';
-import { CurrentEventUserContext } from '../../../context/eventUserContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 import { imageUtils } from '../../../Utilities/ImageUtils';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useHelper();
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cEventUSer = useContext(CurrentEventUserContext);
   let [loading, setLoading] = useState(false);
   let {
@@ -251,7 +251,6 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-          {console.log("1. TIPE ACTIVITY==>",typeActivity,recordTypeForThisEvent( cEvent.value?._id) )}
             {typeActivity == 'eviusMeet' &&
               !request[cEventUSer.value?._id]?.active &&
               cEventUSer.value?._id &&

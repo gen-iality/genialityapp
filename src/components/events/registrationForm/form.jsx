@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
+import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
   Collapse,
@@ -24,18 +24,18 @@ import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
 
-import { areaCode } from '../../../helpers/constants';
+import { areaCode } from '@helpers/constants';
 import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { UseEventContext } from '../../../context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useUserEvent } from '@context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { app } from '../../../helpers/firebase';
-import { DispatchMessageService } from '../../../context/MessageService';
-import { countryApi } from '@/helpers/request';
+import { app } from '@helpers/firebase';
+import { DispatchMessageService } from '@context/MessageService';
+import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;
@@ -161,8 +161,8 @@ const FormRegister = ({
   validateEventUser,
 }) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
-  const cEventUser = UseUserEvent();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
   const cUser = useCurrentUser();
   const {
     currentAuthScreen,
@@ -553,7 +553,7 @@ const FormRegister = ({
                         }
                         // }
                       } else {
-                        setErrorLogin(true);
+                        // setErrorLogin(true); -> setErrorLogin is undefined
                       }
                     });
                 };
@@ -846,7 +846,7 @@ const FormRegister = ({
 
         if (type === 'tituloseccion') {
           input = (
-            <React.Fragment>
+            <>
               <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
                 <div
                   dangerouslySetInnerHTML={{
@@ -854,7 +854,7 @@ const FormRegister = ({
                   }}></div>
               </div>
               <Divider />
-            </React.Fragment>
+            </>
           );
         }
 
@@ -863,10 +863,9 @@ const FormRegister = ({
           input = <ReactSelect options={m.options} isMulti name={name} />;
         }
 
+        let textoError = intl.formatMessage({ id: 'form.field.required' });
         if (type === 'boolean') {
           if (mandatory) {
-            let textoError = intl.formatMessage({ id: 'form.field.required' });
-
             rule = {
               validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
             };

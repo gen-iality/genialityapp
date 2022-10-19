@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 
 class MySection extends Component {
   constructor(props) {

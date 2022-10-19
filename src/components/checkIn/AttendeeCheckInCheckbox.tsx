@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Checkbox, Modal } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import dayjs from 'dayjs';
-import { AttendeeCheckInPropsTypes } from '@/Utilities/types/types';
+import { AttendeeCheckInPropsTypes } from '@Utilities/types/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
 

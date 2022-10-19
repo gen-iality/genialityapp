@@ -1,15 +1,15 @@
 import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
 import { useCurrentUser } from '@context/userContext';
-import { formatDataToString } from '../../../helpers/utils';
+import { formatDataToString } from '@helpers/utils';
 
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
-import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
-import { UseEventContext } from '../../../context/eventContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
+import { useEventContext } from '@context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
@@ -17,8 +17,8 @@ import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutli
 
 const DrawerProfile = (props) => {
   let cUser = useCurrentUser();
-  let cEvent = UseEventContext();
-  let cEventUser = UseUserEvent();
+  let cEvent = useEventContext();
+  let cEventUser = useUserEvent();
   let { propertiesProfile, requestSend, handleChangeTypeModal } = useHelper();
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();

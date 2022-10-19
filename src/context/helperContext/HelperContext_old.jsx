@@ -1,16 +1,16 @@
 import { createContext, useEffect, useReducer } from 'react';
 import { useState } from 'react';
-import { firestore, fireRealtime, app } from '../../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '../../helpers/request';
-import { UseEventContext } from '../eventContext';
+import { firestore, fireRealtime, app } from '@helpers/firebase';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking, RolAttApi, OrganizationApi } from '@helpers/request';
+import { useEventContext } from '../eventContext';
 import { useCurrentUser } from '../userContext';
-import { UseUserEvent } from '../eventUserContext';
+import { useUserEvent } from '../eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { createChatInitalPrivate, createChatRoom } from '../../components/networking/agendaHook';
+import { createChatInitalPrivate, createChatRoom } from '@components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
-import { maleIcons, femaleicons } from '../../helpers/constants';
+import { maleIcons, femaleicons } from '@helpers/constants';
 import Logout from '@2fd/ant-design-icons/lib/Logout';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
@@ -31,9 +31,9 @@ let initialStateEvenUserContext = { status: 'LOADING', value: null };
 let initialStateUserContext = { status: 'LOADING', value: undefined };
 
 export const HelperContextProvider = ({ children }) => {
-  let cEvent = UseEventContext();
+  let cEvent = useEventContext();
   let cUser = useCurrentUser();
-  let cEventuser = UseUserEvent();
+  let cEventuser = useUserEvent();
   let history = useHistory();
   const intl = useIntl();
 

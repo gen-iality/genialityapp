@@ -3,7 +3,7 @@ import { Route, Redirect, Switch, Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import Loading from '../loaders/loading';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import ListEventUser from '../event-users';
 import { fetchRol } from '../../redux/rols/actions';
 import { fetchPermissions } from '../../redux/permissions/actions';
@@ -27,21 +27,20 @@ import ReportNetworking from '../networking/report';
 import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { Layout, Space, Row, Col, Button, Result } from 'antd';
-import { AdminUsers } from '../../components/AdminUsers/AdminUsers';
+import { AdminUsers } from '@components/AdminUsers/AdminUsers';
 import loadable from '@loadable/component';
 import NoMatchPage from '../notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms';
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
 import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
 import IsolatedRoutes from '../isolated/IsolatedRoutes';
 import TimeTrackingRoutes from '../time-tracking/TimeTrackingRoutes';
 
 const { Sider, Content } = Layout;
-//import Styles from '../App/styles';
 
 // Code splitting
 const General = loadable(() => import('./general'));

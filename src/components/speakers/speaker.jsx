@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
-import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
+import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '@helpers/utils';
+import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request';
 import Creatable from 'react-select';
 import { Button, Typography, Row, Col, Form, Input, Image, Empty, Switch, Modal, Tooltip, Select } from 'antd';
 import {
@@ -14,11 +14,11 @@ import {
   UpOutlined,
   EditOutlined,
 } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
-import { areaCode } from '../../helpers/constants';
-import { DispatchMessageService } from '../../context/MessageService';
-import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
+import { areaCode } from '@helpers/constants';
+import { DispatchMessageService } from '@context/MessageService';
+import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
 
 const { Title } = Typography;
