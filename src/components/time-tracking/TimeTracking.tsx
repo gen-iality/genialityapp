@@ -5,7 +5,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { firestore, fireRealtime } from '@helpers/firebase';
 
-import { UseEventContext as useEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import Logger from '@Utilities/logger';
 import { AgendaApi } from '@helpers/request';
 import type { ExtendedAgendaType } from '@Utilities/types/AgendaType';
