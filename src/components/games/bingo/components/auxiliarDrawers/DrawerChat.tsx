@@ -3,15 +3,17 @@ import { UseUserEvent } from '@/context/eventUserContext';
 import { UseCurrentUser } from '@/context/userContext';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import { CommentOutlined } from '@ant-design/icons';
-import { Drawer, PageHeader, Typography } from 'antd';
+import { Drawer, PageHeader, Typography, Grid } from 'antd';
 import { DrawerChatInterface } from '../../interfaces/bingo';
 
+const { useBreakpoint } = Grid;
 const { Title } = Typography;
 
 const DrawerChat = ({ showDrawerChat, setshowDrawerChat }: DrawerChatInterface) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
+  const screens = useBreakpoint();
 
   let userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
   let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
@@ -19,7 +21,7 @@ const DrawerChat = ({ showDrawerChat, setshowDrawerChat }: DrawerChatInterface) 
   return (
     <Drawer
       bodyStyle={{ padding: '0px' }}
-      width={'30vw'}
+      width={screens.xs ? '100vw' : '30vw'}
       headerStyle={{ border: 'none' }}
       title={
         <PageHeader
