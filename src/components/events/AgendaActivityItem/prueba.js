@@ -84,7 +84,7 @@ function AgendaActivityItem(props) {
               props.gotoActivity(item);
             }
           }}>
-          {/* aquie empieza la agenda en estilo mobile */}
+          {/* aquí empieza la agenda en estilo mobile */}
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
             {/* card de agenda en mobile */}
             <Card hoverable className='card-agenda-mobile agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>

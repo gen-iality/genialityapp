@@ -125,17 +125,6 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
-                  {/* RESTRICIONES */}
-                  {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
-                    <Typography.Paragraph style={{ color: 'red' }}>
-                      {blockedEvent && (
-                        <small>
-                          Tu evento está bloqueado desde el {dayjs(event.datetime_to).format('DD MMM YYYY')}
-                          <br /> En la landing estará bloqueado a partir de el {formatDate}
-                        </small>
-                      )}
-                    </Typography.Paragraph>
-                  )} */}
                 </Space>
                 </Link>
               }

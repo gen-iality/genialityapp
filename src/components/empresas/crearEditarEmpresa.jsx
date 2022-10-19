@@ -410,7 +410,6 @@ function CrearEditarEmpresa(props) {
                                 </Button>
                               )}
 
-                              {/* values.services.length < SERVICES_LIMIT && */}
                               {serviceIndex === values.services.length - 1 && (
                                 <Button
                                   type='primary'

@@ -89,10 +89,6 @@ export default function EviusTable(props) {
         </tbody>
       </table>
 
-      {/* 
-        Pagination can be built however you'd like. 
-        This is just a very basic UI implementation:
-      */}
       <div className='pagination'>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}

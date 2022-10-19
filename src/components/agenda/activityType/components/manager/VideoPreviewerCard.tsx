@@ -286,17 +286,6 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             </Select>
           </Space>
         )}
-        {/* {(roomStatus != '' || props.type === TypeDisplayment.MEETING || props.type === TypeDisplayment.VIDEO) && (
-          <Space direction='vertical'>
-            <Typography.Text strong>Estadisticas de la actividad:</Typography.Text>
-            <Typography.Text strong>Número de vistas totales: {totalViews.length}</Typography.Text>
-            <Typography.Text strong>Número de Usuarios unicos: {viewers.length}</Typography.Text>
-            {(roomStatus === 'open_meeting_room' || props.type === TypeDisplayment.MEETING || props.type === TypeDisplayment.VIDEO) && (
-              <Typography.Text strong>Visualizaciones en curso: {viewersOnline.length}</Typography.Text>
-            )}
-            <Typography.Text strong>Numero maximo de usuarios: {maxViewers ? maxViewers : 0}</Typography.Text>
-          </Space>
-        )} */}
       </Space>
     </Card>
   );

@@ -2,7 +2,7 @@ import { Row, Col, Card, Typography, Divider, Space } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 
-const plan = ({ plan, mine, children }) => {
+const plan = ({ plan, mine }) => {
   const intl = useIntl();
   return (
     <Card style={{ borderRadius: '15px' }}>
@@ -19,7 +19,6 @@ const plan = ({ plan, mine, children }) => {
       )}
 
       <Row gutter={[12, 12]} wrap>
-        {/* {children} */}
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
           <Space direction='vertical'>
             <Space>

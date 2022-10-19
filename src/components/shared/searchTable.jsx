@@ -159,12 +159,6 @@ class SearchComponent extends Component {
               </Tooltip>
             }
           />
-          {/* Total:{' '}
-          {this.props.users && this.props.users.length
-            ? this.props.users.length
-            : this.props.data && this.props.data.length
-            ? this.props.data.length
-            : '-'} */}
           {this.state.showMessage && (
             <Alert
               message={<FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />}

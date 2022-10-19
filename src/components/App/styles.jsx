@@ -504,7 +504,6 @@ class Styles extends Component {
                       label={item.title}
                       help={item.description}
                       onClick={() => this.handleClickSelectColor(key)}>
-                      {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
                       <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                         {this.state.styles[item.fieldColorName]}
                       </Tag>

@@ -64,7 +64,7 @@ const NoticiasDetails = (props) => {
                   description={
                     <div style={{ textAlign: 'center' }}>
                       <span>
-                        {/* {noticia && noticia.time}  |  */} Actualizado: {noticia && noticia.updated_at}
+                        Actualizado: {noticia && noticia.updated_at}
                       </span>
                     </div>
                   }

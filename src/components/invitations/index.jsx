@@ -55,12 +55,6 @@ function ListaInvitados({ ...props }) {
 
   return (
     <>
-      {/* <Tabla {...props} /> */}
-      {/* <h1 style={{ color: "red" }}> ***TODO Esta sección falta hacerla. los usuarios invitados deben quedar en su propio modelo de personas invitadas.
-      Cuando confirmen inscribiendose si es un curso gratis,
-      o pagando si es un curso pago pasan a asistentes(eventUsers)
-      </h1> */}
-
       <Switch>
         <Route
           exact

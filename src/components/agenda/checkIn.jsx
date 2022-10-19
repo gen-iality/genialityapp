@@ -565,15 +565,6 @@ class CheckAgenda extends Component {
             </Row>
           }
         />
-        {/* {qrModal && (
-          <CheckSpace
-            list={attendees}
-            closeModal={this.closeQRModal}
-            eventID={eventID}
-            agendaID={agendaID}
-            checkIn={this.checkIn}
-          />
-        )} */}
       </Fragment>
     );
   }

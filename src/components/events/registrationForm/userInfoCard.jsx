@@ -413,7 +413,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card title='Actualización de campos' bodyStyle={textLeft}>
-            {/* //Renderiza el formulario */}
             <Form
               form={form}
               layout='vertical'

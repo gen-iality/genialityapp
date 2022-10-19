@@ -272,7 +272,6 @@ function UsersCard(props) {
             style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }}
             size={45}
           />
-          {/* {!imageProfile && name && name.charAt(0).toUpperCase()} */}
         </Badge>
       );
     });

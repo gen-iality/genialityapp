@@ -186,27 +186,6 @@ const HeaderColumns = (props) => {
         <div style={{ padding: '8px' }}>
           <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
             {currentActivity && currentActivity?.name}
-            {/* {configfast && configfast.enableCount && (
-                            <>
-                                ( &nbsp;
-                                {configfast && configfast.totalAttendees
-                                    ? configfast.totalAttendees
-                                    : totalAttendees}
-                                {"/"} {totalAttendeesCheckedin}{" "}
-                                {"(" +
-                                    Math.round(
-                                        (totalAttendeesCheckedin /
-                                            (configfast.totalAttendees
-                                                ? configfast.totalAttendees
-                                                : totalAttendees)) *
-                                        100 *
-                                        100
-                                    ) /
-                                    100 +
-                                    "%)"}
-                                )
-                            </>
-                        )} */}
           </Row>
           <Row
             style={{

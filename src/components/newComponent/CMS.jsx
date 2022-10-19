@@ -168,7 +168,6 @@ const CMS = (props) => {
         messageHeaderAlert={messageHeaderAlert}
       />
 
-      {/* {list.length > 0 ? ( */}
       <Table
         header={columns}
         loading={loading}
@@ -204,9 +203,6 @@ const CMS = (props) => {
         extraPathUpdateTitle={extraPathUpdateTitle}
         updateMails={updateMails}
       />
-      {/* ) : (
-        <Loading />
-      )} */}
     </div>
   );
 };

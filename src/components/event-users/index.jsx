@@ -982,7 +982,6 @@ class ListEventUser extends Component {
           />
         )}
 
-        {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
           list={users.length > 0 && users}
           header={columns}

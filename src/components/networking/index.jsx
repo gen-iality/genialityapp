@@ -397,17 +397,6 @@ class ListEventUser extends Component {
                 {/*Alerta quemado para el eventop de finanzas de clima*/}
                 {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
                   <>
-                    {/* <Alert
-                    message='Sugerencias de Busqueda'
-                    description='Te recomendamos buscar de acuerdo a las 
-                      siguientes palabras claves: Adaptación, Mitigación, 
-                      Energía, Agropecuario, Industria, Circular, TIC, Residuos, 
-                      Turismo, Transporte, Forestal,  Vivienda, Start Up, Pyme, Entes territoriales, 
-                      Gran empresa, Pública, Privada, Mixta, ONG'
-                    type='info'
-                    showIcon
-                    closable
-                  /> */}
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                       <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
                         <FilterNetworking
@@ -511,13 +500,6 @@ class ListEventUser extends Component {
               </Row>
             </Form>
             <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-              {/* <Alert
-                message='Información Adicicional'
-                description='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
-              se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
-                type='info'
-                closable
-              /> */}
             </Col>
             {!this.state.loading && !eventUserId && (
               <div>

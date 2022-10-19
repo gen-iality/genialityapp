@@ -255,27 +255,6 @@ class SurveyForm extends Component {
 
     return (
       <div>
-        {/* {this.state.availableSurveysBar && publishedSurveys && publishedSurveys.length > 0 && (
-          <Button
-            className={` ${
-              publishedSurveys && !surveyVisible && !userVote && publishedSurveys.length > 0 ? 'parpadea' : ''
-            }`}
-            onClick={this.surveyVisible}>
-            {!userVote ? (
-              publishedSurveys.length > 0 && (
-                <span>
-                  {!surveyVisible ? 'Ver' : 'Ocultar'}{' '}
-                  <b style={surveyButtons.text}>&nbsp;{publishedSurveys && publishedSurveys.length}&nbsp;</b>
-                  {surveyLabel.name && surveyLabel.name.replace(/((e)?s)$|(e)?s\s/gi, this.pluralToSingular)}
-                  disponible(s).
-                </span>
-              )
-            ) : (
-              <span>{!surveyVisible ? 'Ver' : 'Ocultar'} Resultados</span>
-            )}
-          </Button>
-        )} */}
-
         <Card>
           <SurveyList
             //jsonData={publishedSurveys}

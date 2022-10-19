@@ -51,30 +51,6 @@ export default function ConferenceTabsComponent(props) {
                 <LiveChat {...props} />
               </TabPane>
             )}
-            {/* {surveys && (
-              <TabPane
-                tab={
-                  <>
-                    <PieChartOutlined style={{ fontSize: '26px', textAlign: 'center' }} />
-                    <p style={{ marginBottom: '0px' }}>Votaciones</p>
-                  </>
-                }
-                key='surveys'>
-                <Row justify='space-between'>
-                  <Col span={4}>
-                    <ArrowLeftOutlined onClick={() => props.handleConferenceStyles()} />
-                  </Col>
-                  <Col span={14}>
-                    <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
-                  </Col>
-                  <Col span={4}>
-                    <VideoCameraOutlined />
-                  </Col>
-                </Row>
-
-               
-              </TabPane>
-            )} */}
 
             {attendees && (
               <TabPane

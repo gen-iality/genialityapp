@@ -391,10 +391,6 @@ class menuLanding extends Component {
               {Object.keys(this.state.menu).map((key, index) => (
                 <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
                   <Card title={this.state.menu[key].name} bordered={true} style={{ maxHeight: '350px' }}>
-                    {/* RESTRICIONES */}
-                    {/* {this.state.menu[key].section === 'networking' && !userPlan?.availables?.networking ? (
-                      <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
-                    ) : ( */}
                     {(this.state.menu[key].section === 'networking' ||
                       this.state.menu[key].section === 'interviews' ||
                       this.state.menu[key].section === 'my_sesions') &&

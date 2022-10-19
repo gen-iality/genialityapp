@@ -723,12 +723,6 @@ class Datos extends Component {
             </TabPane>
           )}
 
-          {/* {this.props.eventId && this.props.type != 'organization' && (
-            <TabPane tab='Campos relacionados' key='2'>
-              <RelationField eventId={this.props.eventId} fields={fields} />
-            </TabPane>
-          )} */}
-
           {this.props.type == 'organization' && (
             <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
               {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (

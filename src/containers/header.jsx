@@ -355,7 +355,7 @@ const Headers = (props) => {
       )}
 
       {/* {dataGeneral.serverError && <ErrorServe errorData={errorData} />} */}
-      // where is errorData?, I think that it was `dataGeneral.serverError`
+      {/* where is errorData?, I think that it was `dataGeneral.serverError` */}
       {dataGeneral.serverError && <ErrorServe errorData={dataGeneral.serverError} />}
     </>
   );

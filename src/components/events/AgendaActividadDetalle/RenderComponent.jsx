@@ -177,14 +177,6 @@ const RenderComponent = (props) => {
             }
             return (
               <>
-                {/* {webHookStreamStatus && (
-                  <>
-                    <b>Evius Meets status: </b>
-                    {webHookStreamStatus}
-                    <br />
-                  </>
-                )} */}
-
                 <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
               </>
             );

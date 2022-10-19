@@ -1188,16 +1188,7 @@ const FormRegister = ({
         {!submittedForm ? (
           <Card
             bordered={false}
-            // title={
-            //   eventUser !== undefined && eventUser !== null
-            //     ? intl.formatMessage({ id: 'registration.title.update' })
-            //     : intl.formatMessage({ id: 'registration.title.create' })
-            // }
             bodyStyle={textLeft}>
-            {/* //Renderiza el formulario */}
-            {cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
-              <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} />
-            )}
             {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&

@@ -318,16 +318,6 @@ class ZoomComponent extends Component {
                 allowusermedia
                 style={conferenceStyles}></iframe>
 
-              {/* {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
-                <iframe
-                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
-                  frameBorder='0'
-                  allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullScreen
-                  allowusermedia
-                  style={{ width: '99vw', height: '100%' }}></iframe>
-              )} */}
-
               {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
                 <iframe
                   src={
@@ -394,7 +384,6 @@ class ZoomComponent extends Component {
             </Row>
           )}
 
-          {/* style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", margin: 0, padding: 0 }}*/}
           {this.state.event && platform === 'bigmarker' && (
             <>
               {!this.state.error_bigmarker && !this.state.urllogin_bigmarker && <Spin tip='Loading...'></Spin>}

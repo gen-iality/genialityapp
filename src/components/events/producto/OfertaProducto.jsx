@@ -203,7 +203,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 <Text type='secondary'>
                   Oferta actual:{' '}
                   <Title level={4}>
-                    {/* priceProduct && product?.currency +  */ ' $ ' + priceProduct.toLocaleString('es-CO')}
+                    {' $ ' + priceProduct.toLocaleString('es-CO')}
                   </Title>
                 </Text>
                 {hability && permission() && <Divider></Divider>}

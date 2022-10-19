@@ -202,17 +202,6 @@ const MainProfile = (props) => {
                 icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
                 Lección en GEN.iality
               </Menu.Item>
-              {/* RESTRICIONES seccion mi plan */}
-              {/* <Menu.Item
-                title={null}
-                onClick={() => {
-                  showContent('MY_PLAN');
-                  screens.xs && showSider();
-                }}
-                key={'myPlan'}
-                icon={<CashCheckIcon style={{ fontSize: '22px' }} />}>
-                Mi plan
-              </Menu.Item> */}
               <Menu.Item
                 title={null}
                 onClick={() => {

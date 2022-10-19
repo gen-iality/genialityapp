@@ -85,20 +85,6 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   return (
     <>
       <div className='mediaplayer'>
-        {/* { muted && conected !== 'No' && (
-          <Button
-            onClick={() => setMuted(false)}
-            shape='circle'
-            style={{
-             
-              position: 'absolute',
-              top: 'auto',
-              left: 'auto',
-              zIndex: '500',
-            }}
-            icon={<VolumeOff />}
-          />
-        )} */}
         {conected == 'Yes' && visibleReactPlayer ? (
           <ReactPlayer
             style={{ aspectRatio: '16/9' }}

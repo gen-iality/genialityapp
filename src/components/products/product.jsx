@@ -304,7 +304,6 @@ class Product extends Component {
               render={(data, prod) => <div>$ {prod.price}</div>}
               ellipsis={true}
             />
-            {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
             <Column
               title='Opciones'
               key='_id'

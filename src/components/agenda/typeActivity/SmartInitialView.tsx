@@ -105,7 +105,6 @@ const SmartInitialView = (props: any) => {
         activityName={props.activityName}
         onClosedForm={props.onClosedForm}
       />
-      {/* {!loading ? renderComponet() : <Spin />} */}
     </>
   );
 };

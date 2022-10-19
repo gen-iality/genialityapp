@@ -70,13 +70,6 @@ const OfertProduts = (props) => {
     <>
       <Header title={'Ofertas de la obra'} back />
       <Table columns={columns} dataSource={oferts.length > 0 && oferts} />
-      {/* <Row>
-            <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
-            <span style={{ marginLeft: 30 }}>Ofertas de la obra</span>
-          </Row>
-          <Row style={{marginTop:30}}>
-            <Table style={{width:'100%'}} columns={columns} dataSource={oferts.length>0 && oferts} />
-          </Row> */}
     </>
   );
 };

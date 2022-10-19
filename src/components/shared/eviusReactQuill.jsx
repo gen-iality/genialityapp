@@ -157,12 +157,6 @@ function EviusReactQuill(props) {
         onChange={props.handleChange}
         value={props.data}
       />
-      {/* {codeBlock && <TextArea value={props.data} onChange={(e) => props.handleChange(e.target.value)} autoSize />}
-      {codeBlock && (
-        <pre style={{ whiteSpace: 'normal', wordBreak: 'break-all' }} className='language-bash'>
-          {props.data}
-        </pre>
-      )} */}
     </>
   );
 }

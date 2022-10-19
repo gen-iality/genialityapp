@@ -126,7 +126,6 @@ class Lobby extends Component {
                   </div>
                   <div className='the-lobby-header-general-info-group-item'>
                     <div>
-                      {/* <div>{lobby_data.info.date}</div> */}
                       <div>{lobby_data.info.type}</div>
                       <div>Organizador: {lobby_data.info.organizer}</div>
                     </div>
