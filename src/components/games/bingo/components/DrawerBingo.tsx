@@ -1,4 +1,4 @@
-import { Card, Col, Drawer, Row, Tabs, Grid } from 'antd';
+import { Card, Col, Drawer, Row, Tabs, Grid, Button, Space } from 'antd';
 import { useBingo } from '@/components/games/bingo/hooks/useBingo';
 import { useDrawerBingo } from '@/components/games/bingo/hooks/useDrawerBingo';
 import { DrawerBingoInterface } from '../interfaces/bingo';
@@ -11,12 +11,14 @@ import PrinterIcon from '@2fd/ant-design-icons/lib/Printer';
 import DownloadIcon from '@2fd/ant-design-icons/lib/Download';
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import DrawerButtonsContainer from './DrawerButtonsContainer';
-
+import PrintCardBoard from './PrintCardBoard';
+import { useRef } from 'react';
 const { useBreakpoint } = Grid;
 
 const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => {} }: DrawerBingoInterface) => {
   const cEvent = UseEventContext();
   const screens = useBreakpoint();
+  const bingoCardRef = useRef<HTMLDivElement>(null);
   const {
     arrayLocalStorage,
     arrayDataBingo,
@@ -40,12 +42,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
 
   return (
     <Drawer
-      // extra={
-      //   <Space>
-      //     <Button disabled icon={<DownloadIcon />} />
-      //     <Button disabled icon={<PrinterIcon />} />
-      //   </Space>
-      // }
+      extra={<PrintCardBoard bingoCardRef={bingoCardRef} />}
       headerStyle={{
         padding: '1px 24px',
       }}
@@ -118,6 +115,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
                 changeValueLocalStorage={changeValueLocalStorage}
                 getBingoListener={getBingoListener}
                 setOpenOrClose={setOpenOrClose}
+                bingoCardRef={bingoCardRef}
               />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6} style={{ padding: '5px' }}>

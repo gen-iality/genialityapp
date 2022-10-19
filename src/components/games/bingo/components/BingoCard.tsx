@@ -23,6 +23,7 @@ const BingoCard = ({
   changeValueLocalStorage,
   getBingoListener,
   setOpenOrClose,
+  bingoCardRef,
 }: BingoCardInterface) => {
   useEffect(() => {
     const unSuscribe = getBingoListener();
@@ -240,7 +241,11 @@ const BingoCard = ({
   };
 
   return (
-    <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '0px' }}>
+    <Card
+      bingoCardRef={bingoCardRef}
+      bordered={false}
+      style={{ backgroundColor: 'transparent' }}
+      bodyStyle={{ padding: '0px' }}>
       <Col span={24}>
         <img
           style={{
