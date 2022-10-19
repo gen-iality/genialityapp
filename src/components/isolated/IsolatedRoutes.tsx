@@ -8,6 +8,9 @@ import { QuizStatusEditorPage } from './quiz/QuizStatusEditorPage';
 import { CourseProgressBarPage } from './progresses/CourseProgressBarPage';
 import { DatePickerAndDayJSPage } from './date/DatePickerAndDayJSPage';
 import { LikertScaleEditorPage } from './quiz/LikertScaleEditorPage';
+import { PresencePage } from './presence/PresencePage';
+import { PresenceListPage } from './presence/PresenceListPage';
+import { PresenceUsersPage } from './presence/PresenceUsersPage';
 
 type UI = {
   url: string;
@@ -46,7 +49,22 @@ const uiSet: UI[] = [
     url: 'likertScaleEditorPage',
     text: 'Likert Scale Editor Page',
     Component: LikertScaleEditorPage,
-  }
+  },
+  {
+    url: 'presence',
+    text: 'PresencePage',
+    Component: PresencePage,
+  },
+  {
+    url: 'presenceList',
+    text: 'PresenceListPage',
+    Component: PresenceListPage,
+  },
+  {
+    url: 'presenceUsers',
+    text: 'PresenceUsersPage',
+    Component: PresenceUsersPage,
+  },
 ];
 
 function Home(props: HomeProps) {
@@ -76,9 +94,10 @@ function IsolatedRoutes({ ...props }) {
     <Fragment>
       <Switch>
         <Route exact path={`${match.url}/`} render={() => <Home event={event} matchUrl={match.url} />} />
-        {uiSet.map((ui) => (
+        {uiSet.map((ui, index) => (
           <Route
             exact
+            key={index}
             path={`${match.url}/${ui.url}`}
             render={() => <ui.Component event={event} matchUrl={match.url} />}
           />

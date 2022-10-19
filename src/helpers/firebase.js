@@ -41,6 +41,8 @@ const firestore = eviusaauth.firestore();
 const fireStorage = eviusaauth.storage();
 const fireRealtime = eviusaauth.database();
 const auth = eviusaauth.auth();
+const ServerValue = app.database.ServerValue;
+const FieldValue = app.firestore.FieldValue;
 
 //const firestoreDB = getFirestore(app);
 
@@ -64,4 +66,4 @@ firestore
 
 window.firebase = app;
 
-export { app, auth, firestore, fireStorage, fireRealtime, firestoreeviuschat, realTimeviuschat };
+export { app, auth, firestore, fireStorage, fireRealtime, firestoreeviuschat, realTimeviuschat, ServerValue, FieldValue };

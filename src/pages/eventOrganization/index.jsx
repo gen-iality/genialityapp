@@ -24,6 +24,7 @@ import {
 import MenuLanding from '@/components/menuLanding/index';
 import NoMatchPage from '@/components/notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '@/components/roles/hooks/validateAccessRouteCms';
+import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage';
 
 function Organization(props) {
   const [organization, setOrganization] = useState({});
@@ -143,6 +144,13 @@ function Organization(props) {
                     exact
                     path={`${props.match.url}/members`}
                     component={OrgMembers}
+                    org={organization}
+                    componentKey='members'
+                  />
+                  <Protected
+                    exact
+                    path={`${props.match.url}/members/timetracking/:memberIdParam`}
+                    component={OrganizationTimeTrackingPage}
                     org={organization}
                     componentKey='members'
                   />

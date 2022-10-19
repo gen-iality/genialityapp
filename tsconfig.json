@@ -19,7 +19,6 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "src",
     "paths": {
-      "@/*": ["./*"],
       "@components/*": ["./components/*"],
       "@adaptors/*": ["./adaptors/*"],
       "@antdComponents/*": ["./antdComponents/*"],
@@ -32,7 +31,8 @@
       "@redux/*": ["./redux/*"],
       "@styles/*": ["./styles/*"],
       "@Utilities/*": ["./Utilities/*"],
-      "@Assets/*": ["./Assets/*"]
+      "@Assets/*": ["./Assets/*"],
+      "@/*": ["./*"]
     }
   },
   "include": ["./*.ts", "src", "src/**/**.jsx", "src/**/**.ts", "tests/**/*.ts"],
