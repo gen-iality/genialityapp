@@ -1,5 +1,4 @@
 import PooledQuestions from '@/classes/PooledQuestions';
-import { SurveysApi } from '../../../../helpers/request';
 import shuffleSurveyQuestion from '../models/shuffleSurveyQuestion';
 import { SurveysApi } from '@helpers/request';
 
