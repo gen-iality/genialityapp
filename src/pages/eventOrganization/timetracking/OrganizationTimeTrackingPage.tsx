@@ -1,11 +1,12 @@
-import { useState, useEffect, type FunctionComponent } from 'react';
-import { Avatar, Result, Space, Typography } from 'antd';
+import { useState, useEffect, useMemo, type FunctionComponent } from 'react';
+import { Avatar, Card, Divider, Result, Space, Typography } from 'antd';
 import { fireRealtime } from '@helpers/firebase';
 import Logger from '@Utilities/logger';
 import Online from '@components/online/Online';
 import { OrganizationApi, UsersApi } from '@helpers/request';
 import { LoadingOutlined, UserOutlined } from '@ant-design/icons';
 import TimeTrackingByEvent from './TimeTrackingByEvent';
+import { type SessionPayload } from '@components/presence/types';
 
 const { LOG, ERROR } = Logger('time-tracking-page');
 
@@ -28,6 +29,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   const [events, setEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({} as OrganizationUserInfo);
+  const [logs, setLogs] = useState<SessionPayload[]>([]);
 
   useEffect(() => {
     if (!memberId) return;
@@ -57,6 +59,17 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         } catch (err) {
           ERROR('Cannot get beacon status to userId', member.user._id, 'getting:', err);
         }
+
+        const globalRef = await fireRealtime.ref(`user_sessions/global/${member.user._id}`);
+        const result = await globalRef.get();
+        const logDict = (result && result.exists()) ? result.val() : {};
+        LOG(logDict);
+        const filteredLogDict = Object.values(logDict)
+          .filter((log: any) => log.status === 'offline')
+          .filter((log: any) => log.startTimestamp !== undefined)
+          .filter((log: any) => log.endTimestamp !== undefined);
+        LOG(filteredLogDict.length, 'logs loaded');
+        setLogs(filteredLogDict as SessionPayload[]);
       } catch (err) {
         ERROR('Cannot get the organization member to orgId and userId:', organization._id, memberId, 'getting:', err);
       }
@@ -65,6 +78,12 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       setIsLoading(false);
     })();
   }, [memberId]);
+
+  const loggedSeconds = useMemo(() => {
+    return logs.map((log) => (log.endTimestamp - log.startTimestamp) / 1000).reduce((a, b) => a+b, 0);
+  }, [logs]);
+
+  const loggedHours = useMemo(() => loggedSeconds/3600, [loggedSeconds]);
 
   if (isLoading) {
     return (
@@ -77,29 +96,44 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   }
 
   return (
-    <Space direction='vertical'>
+    <>
     <Typography.Title>Usuario en {organization.name}</Typography.Title>
-    <Space
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center'
-      }}
+    <Card
+      title={
+        <Space direction='horizontal'>
+          <Online isOnline={userInfo.isOnline}/>
+          <Avatar
+            style={{ backgroundColor: '#87d068' }}
+            icon={<UserOutlined />}
+            src={userInfo.picture}
+          >
+            {userInfo.name}
+          </Avatar>
+          <Typography.Text>{userInfo.name}</Typography.Text>
+        </Space>
+      }
     >
-      <Avatar
-        style={{ backgroundColor: '#87d068' }}
-        icon={<UserOutlined />}
-        src={userInfo.picture}
+      <Space
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}
       >
-        {userInfo.name}
-      </Avatar>
-      <Typography.Text>{userInfo.name}</Typography.Text>
-      <Online isOnline={userInfo.isOnline}/>
-    </Space>
-    {events.map((event, index) => (
-      <TimeTrackingByEvent key={index} eventName={event.name} eventId={event._id} userId={memberId} />
-    ))}
-    </Space>
+      </Space>
+      <Space direction='vertical'>
+        <Typography.Text>{logs.length} registros globales cerrados</Typography.Text>
+        <Space direction='horizontal'>
+          <Card>{loggedSeconds.toPrecision(4)} segundos</Card>
+          <Card>{loggedHours.toPrecision(2)} horas</Card>
+        </Space>
+      </Space>
+      <Divider/>
+      {events.map((event, index) => (
+        <TimeTrackingByEvent key={index} eventName={event.name} eventId={event._id} userId={memberId} />
+      ))}
+    </Card>
+    </>
   );
 };
 
