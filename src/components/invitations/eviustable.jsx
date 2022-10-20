@@ -14,8 +14,8 @@ export default function EviusTable({ columns, data }) {
   return (
     <table>
       <thead className='ant-table-thead'>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+        {headerGroups.map((headerGroup, index) => (
+          <tr key={index} {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
               <th className='ant-table-header-column'>{column.render('Header')}</th>
             ))}

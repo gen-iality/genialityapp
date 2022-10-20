@@ -75,7 +75,7 @@ function Home(props: HomeProps) {
   }
 
   const CustomButton = (ui: UI) => (
-    <Button onClick={createHandler(ui.url)}>{ui.text}</Button>
+    <Button key={`key_${ui.url}`} onClick={createHandler(ui.url)}>{ui.text}</Button>
   );
 
   return (

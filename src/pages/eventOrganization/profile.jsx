@@ -68,8 +68,8 @@ function OrganizationInformation(props) {
               name={['organization', 'type_event']}>
               <Select onChange={null}>
                 {' '}
-                {typeEvents.map((type) => (
-                  <Option value={type.label}>{type.label}</Option>
+                {typeEvents.map((type, index) => (
+                  <Option key={index} value={type.label}>{type.label}</Option>
                 ))}
               </Select>
             </Form.Item>

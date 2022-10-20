@@ -163,14 +163,14 @@ class Speakers extends Component {
       <div style={{ padding: '20px' }}>
         {renderSpeakerCategories && speakerCategories.length && (
           <>
-            {speakerCategories.map((category) => (
+            {speakerCategories.map((category, index) => (
               <>
                 {category.hasSpeaker && (
                   <>
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
-                          <Row wrap gutter={[16, 16]} justify='center'>
+                          <Row wrap key={index} gutter={[16, 16]} justify='center'>
                             <div
                               style={{
                                 width: '98%',

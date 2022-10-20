@@ -1047,9 +1047,9 @@ class ListEventUser extends Component {
                   onChange={(e) => this.handleChange(e)}
                   style={{ width: 220 }}>
                   <Option value='scanner-qr'>Escanear QR</Option>
-                  {fieldsForm.map((item) => {
+                  {fieldsForm.map((item, index) => {
                     if (item.type === 'checkInField')
-                      return <Option value='scanner-document'>Escanear {item.label}</Option>;
+                      return <Option key={index} value='scanner-document'>Escanear {item.label}</Option>;
                   })}
                 </Select>
               </Col>

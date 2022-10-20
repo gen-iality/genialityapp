@@ -15,7 +15,7 @@ import { useTable, usePagination, useRowSelect } from 'react-table';
  className="-highlight"} props 
  */
 export default function EviusTable(props) {
-  let { columns, data, onRowClick } = props;
+  const { columns, data, onRowClick } = props;
   // Use the useTable Hook to send the columns and data to build the table
 
   const keyHooks = (hooks) => {
@@ -58,8 +58,8 @@ export default function EviusTable(props) {
     <>
       <table>
         <thead className='ant-table-thead'>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+          {headerGroups.map((headerGroup, index) => (
+            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, key) => (
                 <th key={key} className='ant-table-header-column'>
                   {column.render('Header')}
