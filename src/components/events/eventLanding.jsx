@@ -107,13 +107,8 @@ class EventLanding extends Component {
               this.props.cEvent.value.styles.show_card_banner &&
               this.props.cEvent.value.styles.show_card_banner === true
                 ? { marginTop: '2%' }
-                : { marginTop: '0px' },
-              this.props.cEvent.value._id === '61af4b3dab505c39ed5b5855' ||
-              this.props.cEvent.value._id === '61ae65cdba621c0fc94aff12'
-                ? { backgroundColor: '#000', border: 'none' }
-                : {})
-            }
-          >
+                : { marginTop: '0px' })
+            }>
             {/* Si event video existe */}
             {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
               <div className='mediaplayer'>

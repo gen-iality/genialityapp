@@ -11,7 +11,12 @@ import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices'
  * @param {AttendeeCheckInPropsTypes}  - AttendeeCheckInPropsTypes
  * @returns A React component
  */
-const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCallbak }: AttendeeCheckInPropsTypes) => {
+const AttendeeCheckInCheckbox = ({
+  attendee,
+  activityId,
+  reloadComponent,
+  checkInAttendeeCallbak,
+}: AttendeeCheckInPropsTypes) => {
   const [attemdeeCheckIn, setAttemdeeCheckIn] = useState<boolean>(false);
   const [attemdeeCheckedinAt, setAttemdeeCheckedinAt] = useState<any>('');
   const { _id, checked_in, checkedin_at } = attendee || {};
@@ -35,6 +40,7 @@ const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCal
         setAttemdeeCheckIn,
         checkInAttendeeCallbak,
         checkInType: 'Físico',
+        activityId,
       });
       return;
     }
@@ -52,6 +58,7 @@ const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCal
           reloadComponent,
           setAttemdeeCheckIn,
           checkInAttendeeCallbak,
+          activityId,
         });
       },
     });

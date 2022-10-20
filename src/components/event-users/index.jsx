@@ -51,6 +51,7 @@ import Loading from '../profile/loading';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
+import { UsersPerEventOrActivity } from './utils/utils';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -152,9 +153,7 @@ class ListEventUser extends Component {
       usersReq: [],
       pageOfItems: [],
       listTickets: [],
-      usersRef: firestore.collection(
-        `${props.match.params.id ? props.match.params.id : props.event._id}_event_attendees`
-      ),
+      usersRef: firestore.collection(`${props.event._id}_event_attendees`),
       pilaRef: firestore.collection('pila'),
       total: 0,
       totalCheckedIn: 0,
@@ -196,6 +195,8 @@ class ListEventUser extends Component {
       typeScanner: 'CheckIn options',
       nameActivity: props.location.state?.item?.name || '',
       qrModalOpen: false,
+      unSusCribeConFigFast: () => {},
+      unSuscribeAttendees: () => {},
     };
   }
   static contextType = HelperContext;
@@ -251,11 +252,14 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    return <AttendeeCheckInCheckbox attendee={item} />;
+    const activityId = this.props.match.params.id;
+
+    return <AttendeeCheckInCheckbox attendee={item} activityId={activityId} />;
   };
 
   physicalCheckInComponent = (text, item, index) => {
-    return <AttendeeCheckInButton attendee={item} />;
+    const activityId = this.props.match.params.id;
+    return <AttendeeCheckInButton attendee={item} activityId={activityId} />;
   };
 
   checkInTypeComponent = (text, item, index) => {
@@ -300,6 +304,7 @@ class ListEventUser extends Component {
 
   getAttendes = async () => {
     const self = this;
+    const activityId = this.props.match.params.id;
 
     this.checkFirebasePersistence();
     try {
@@ -499,14 +504,14 @@ class ListEventUser extends Component {
       this.setState({ extraFields, rolesList, badgeEvent, fieldsForm });
       const { usersRef } = this.state;
 
-      firestore
+      const unSusCribeConFigFast = firestore
         .collection(`event_config`)
         .doc(event._id)
         .onSnapshot((doc) => {
           this.setState({ ...this.state, configfast: doc.data() });
         });
 
-      usersRef.orderBy('updated_at', 'desc').onSnapshot(
+      const unSuscribeAttendees = usersRef.orderBy('updated_at', 'desc').onSnapshot(
         {
           // Listen for document metadata changes
           //includeMetadataChanges: true
@@ -598,12 +603,15 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-          const sortedUsers = await this.sortUsersArray(updatedAttendees);
+
+          const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
           this.setState({
-            users: sortedUsers,
-            usersReq: sortedUsers,
-            auxArr: sortedUsers,
+            unSusCribeConFigFast,
+            unSuscribeAttendees,
+            users: attendees,
+            usersReq: updatedAttendees,
+            auxArr: attendees,
             loading: false,
           });
         },
@@ -619,6 +627,11 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     this.getAttendes();
+  }
+
+  async componentWillUnmount() {
+    this.state.unSusCribeConFigFast();
+    this.state.unSuscribeAttendees();
   }
 
   obtenerName = (fileUrl) => {
@@ -901,6 +914,15 @@ class ListEventUser extends Component {
     clearFilters();
     this.setState({ searchText: '' });
   };
+  printUser = () => {
+    const resp = this.props.badgeEvent;
+    if (resp._id) {
+      const badges = resp.BadgeFields;
+      console.log(this.ifrmPrint, badges);
+      if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
+      printBagdeUser(this.ifrmPrint, badges, this.state.user);
+    } else this.setState({ noBadge: true });
+  };
 
   render() {
     const {
@@ -924,7 +946,9 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
-    const { type, loading, componentKey } = this.props;
+    const activityId = this.props.match.params.id;
+
+    const { loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
     const inscritos =
@@ -948,6 +972,11 @@ class ListEventUser extends Component {
         />
         <Header
           title={type == 'activity' ? 'Inscripción de ' + nameActivity : 'Inscripción de curso'}
+          titleToMergingOrAdaptIt={
+            componentKey === 'activity-checkin'
+              ? 'Check-in actividad: ' + nameActivity
+              : `Check-in evento: ${this.props.event?.name}`
+          }
           description={`Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una
           búsqueda.`}
         />
@@ -979,6 +1008,8 @@ class ListEventUser extends Component {
             clearOption={this.clearOption}
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
+            badgeEvent={this.state.badgeEvent}
+            activityId={activityId}
           />
         )}
 
@@ -1002,26 +1033,31 @@ class ListEventUser extends Component {
           }
           titleTable={
             <Row gutter={[6, 6]}>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<UsergroupAddOutlined />}>
-                  <strong>Inscritos: </strong>
-                  <span style={{ fontSize: '13px' }}>{inscritos}</span>
-                </Tag>
-              </Col>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<StarOutlined />}>
-                  <strong>Participantes: </strong>
-                  <span style={{ fontSize: '13px' }}>
-                    {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-                  </span>
-                </Tag>
-              </Col>
+              {!activityId && (
+                <React.Fragment>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<UsergroupAddOutlined />}>
+                      <strong>Inscritos: </strong>
+                      <span style={{ fontSize: '13px' }}>{inscritos}</span>
+                    </Tag>
+                  </Col>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<StarOutlined />}>
+                      <strong>Participantes: </strong>
+                      <span style={{ fontSize: '13px' }}>
+                        {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
+                      </span>
+                    </Tag>
+                  </Col>
+                </React.Fragment>
+              )}
+
               <Col>
                 {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
                   <>
@@ -1034,11 +1070,15 @@ class ListEventUser extends Component {
                   </>
                 )}
               </Col>
-              <Col>
-                <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
-                  Expandir
-                </Button>
-              </Col>
+
+              {!activityId && (
+                <Col>
+                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                    Expandir
+                  </Button>
+                </Col>
+              )}
+
               <Col>
                 <Select
                   name={'type-scanner'}
@@ -1062,11 +1102,13 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 <Link
-                  to={
-                    !eventIsActive && window.location.toString().includes('eventadmin')
-                      ? ''
-                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
-                  }>
+                  to={{
+                    pathname:
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                        ? ''
+                        : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
+                    state: { activityId },
+                  }}>
                   <Button
                     type='primary'
                     icon={<UploadOutlined />}
@@ -1104,6 +1146,7 @@ class ListEventUser extends Component {
             edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}
             componentKey={componentKey}
+            activityId={activityId}
           />
         )}
 

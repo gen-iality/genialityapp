@@ -447,6 +447,15 @@ export const UsersApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.put(`/api/events/${eventId}/eventusers/${eventUserId}?token=${token}`, data, true);
   },
+
+  createUserInEventAndAssignToActivity: async (data, activityId) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.post(`api/activities/${activityId}/eventUsers?token=${token}`, data, true);
+  },
+  deleteAttendeeInActivity: async (activityId, eventUserId) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.delete(`/api/activities/${activityId}/eventUsers/${eventUserId}?token=${token}`);
+  },
 };
 
 export const AttendeeApi = {
@@ -470,7 +479,7 @@ export const AttendeeApi = {
   },
   delete: async (eventId, id) => {
     const token = await GetTokenUserFirebase();
-    return await Actions.delete(`api/events/${eventId}/eventusers`, `${id}?token=${token}`);
+    return await Actions.delete(`api/events/${eventId}/eventusers/`, `${id}?token=${token}`, true);
   },
 };
 
@@ -593,6 +602,12 @@ export const SurveysApi = {
   editQuestion: async (event, id, index, data) => {
     const token = await GetTokenUserFirebase();
     return await Actions.put(`/api/events/${event}/questionedit/${id}/?token=${token}&questionNo=${index}`, data, true);
+  },
+  sendCommunicationUser: async (surveyId, eventUserId) => {
+    return await Actions.get(`/api/surveys/${surveyId}/eventusers/${eventUserId}/sendcode`);
+  },
+  sendCommunicationOpen: async (surveyId) => {
+    return await Actions.get(`/api/surveys/${surveyId}/open`);
   },
 };
 
@@ -723,7 +738,8 @@ export const OrganizationApi = {
 };
 export const BadgeApi = {
   create: async (data) => {
-    return await Actions.post(`/api/escarapelas`, data);
+    const token = await GetTokenUserFirebase();
+    return await Actions.post(`/api/escarapelas?token=${token}`, data);
   },
   edit: async (data, id) => {
     return await Actions.edit('/api/escarapelas/', data, id);
@@ -1165,6 +1181,20 @@ export const Activity = {
       // activity_id,
     };
     return await Actions.put(`api/events/${event}/activities_attendees/${user_id}?token=${token}`, data);
+  },
+  addCheckIn: async (eventUser_id, checkInType, activityId) => {
+    const token = await GetTokenUserFirebase();
+    const checkedin_type = checkInType;
+    return await Actions.put(
+      `/api/eventUsers/${eventUser_id}/checkinactivity/${activityId}?token=${token}`,
+      { checkedin_type },
+      true
+    );
+  },
+  deleteCheckIn: async (eventUser_id, activityId) => {
+    const token = await GetTokenUserFirebase();
+
+    return await Actions.put(`api/eventUsers/${eventUser_id}/uncheckinactivity/${activityId}?token=${token}`, {}, true);
   },
 };
 

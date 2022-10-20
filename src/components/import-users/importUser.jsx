@@ -120,11 +120,11 @@ class ImportUsers extends Component {
     this.props.handleModal();
   };
 
-  getDerivedStateFromProps(nextProps) {
-    if (nextProps.modal !== this.props.modal) {
-      this.setState({ modal: nextProps.modal, step: 0 });
-    }
-  }
+  // getDerivedStateFromProps(nextProps) {
+  //   if (nextProps.modal !== this.props.modal) {
+  //     this.setState({ modal: nextProps.modal, step: 0 });
+  //   }
+  // }
 
   /* onChange = step => {
     console.log('onChange:', step);
@@ -153,6 +153,7 @@ class ImportUsers extends Component {
         eventId={this.props.eventId}
         extraFields={this.props.extraFields}
         organization={this.props.organization}
+        locationParams={this.props.locationParams}
       />,
     ];
     return (

@@ -124,9 +124,9 @@ function AgendaEdit(props: AgendaEditProps) {
   const [surveys, setSurveys] = useState<boolean>(false);
   const [games, setGames] = useState<boolean>(false);
   const [attendees, setAttendees] = useState<boolean>(false);
-  
+
   const agendaContext = useContext(AgendaContext);
-  
+
   const location = useLocation<LocationStateType>();
   const history = useHistory();
 
@@ -149,14 +149,14 @@ function AgendaEdit(props: AgendaEditProps) {
 
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaType = await AgendaApi.getOne(location.state.edit, props.event._id);
-        
+
         // Take the vimeo_id and save in info.
         const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
         setLoadedAgenda({
           ...agendaInfo,
           vimeo_id,
           space_id: agendaInfo.space_id || '',
-          requires_registration: agendaInfo.requires_registration || false
+          requires_registration: agendaInfo.requires_registration || false,
         });
 
         // Save the activity name
@@ -234,9 +234,9 @@ function AgendaEdit(props: AgendaEditProps) {
           const edit = location.state.edit || currentActivityID;
           await AgendaApi.editOne(builtInfo, edit, props.event._id);
 
-          await Promise.all(builtInfo.selected_document.map(
-            (selected) => DocumentsApi.editOne(data, selected, props.event._id)
-          ));
+          await Promise.all(
+            builtInfo.selected_document.map((selected) => DocumentsApi.editOne(data, selected, props.event._id))
+          );
         } else {
           agenda = await AgendaApi.create(props.event._id, builtInfo);
           setLoadedAgenda(agenda);
@@ -285,11 +285,10 @@ function AgendaEdit(props: AgendaEditProps) {
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          deleteActivity(props.event._id, currentActivityID, loadedAgenda.name)
-            .then(() => {
-              setShouldRedirect(true);
-              history.push(`${props.matchUrl}`);
-            });
+          deleteActivity(props.event._id, currentActivityID, loadedAgenda.name).then(() => {
+            setShouldRedirect(true);
+            history.push(`${props.matchUrl}`);
+          });
         },
       });
     }
@@ -452,7 +451,7 @@ function AgendaEdit(props: AgendaEditProps) {
                           matchUrl={props.matchUrl}
                         />
                         )}
-                        <BackTop/>
+                        <BackTop />
                       </Col>
                     </Row>
                   </TabPane>
@@ -470,7 +469,11 @@ function AgendaEdit(props: AgendaEditProps) {
                   <TabPane tab='Encuestas' key='4'>
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
-                        <SurveyManager event_id={props.event._id} activity_id={currentActivityID} />
+                        <SurveyManager
+                          event_id={props.event._id}
+                          activity_id={currentActivityID}
+                          canSendComunications={props.event?.sms_notification}
+                        />
                         <BackTop />
                       </Col>
                     </Row>

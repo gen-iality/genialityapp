@@ -22,6 +22,7 @@ export type searchDocumentOrIdPropsTypes = {
   searchValue: searchValue;
   fields: any;
   eventID: string;
+  activityId: string;
   setScannerData: (data: any) => void;
   setLoadingregister: (data: any) => void;
 };
@@ -51,6 +52,7 @@ export type FormEnrollAttendeeToEventPropsTypes = {
   options?: any;
   /** It allows to send a function to which the information of the event attendee will be passed and it will allow to create or update it */
   saveAttendee: (attendee: any) => void;
+  printUser?: () => void;
   loaderWhenSavingUpdatingOrDelete?: boolean;
   /** Allows setting the state for a loader. */
   checkInAttendeeCallbak?: (attendee: any) => void;
@@ -58,6 +60,8 @@ export type FormEnrollAttendeeToEventPropsTypes = {
   visibleInCms?: boolean;
   eventType?: string;
   submitButtonProps?: submitButtonPropsTypes;
+  badgeEvent?: object;
+  activityId?: string;
 };
 
 export type submitButtonPropsTypes = {
@@ -74,6 +78,7 @@ export type saveCheckInAttendeePropsTypes = {
   checkInAttendeeCallbak?: (attendee: any) => void;
   notification?: boolean;
   checkInType?: string;
+  activityId?: string;
 };
 
 export type aditionalFieldsPropsTypes = {
@@ -89,12 +94,17 @@ export type updateFieldsVisibilityPropsTypes = {
 };
 export type AttendeeCheckInPropsTypes = {
   attendee: any;
+  activityId?: string;
   reloadComponent?: (response: any) => void;
   checkInAttendeeCallbak: (attendee: any) => void;
 };
 
 export type AttendeeInformation = {
   checkedin_type: string | null;
+  checked_in: boolean;
+  checkedin_at: string | null;
   properties: {};
   _id: string;
+  activityProperties: [];
+  youDoNotExistInThisActivity?: boolean;
 };
