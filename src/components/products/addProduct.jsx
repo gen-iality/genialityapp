@@ -202,9 +202,9 @@ function AddProduct(props) {
           action: 'show',
         });
       }
-    } else {
+    } /* else {
       console.log('algo fallo', validators);
-    }
+    } */
   };
 
   const remove = () => {

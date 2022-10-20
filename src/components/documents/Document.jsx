@@ -234,7 +234,7 @@ const Document = (props) => {
     try {
       await uploadTaskRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         file = downloadURL;
-        console.log(downloadURL);
+        /* console.log(downloadURL); */
         setLoading(false);
       });
       setDocument({

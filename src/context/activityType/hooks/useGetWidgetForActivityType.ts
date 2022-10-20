@@ -29,14 +29,14 @@ export function useGetWidgetForActivityType (currentActivityType: ActivityType.N
   if (index !== undefined) {
     // Set the title, and the data to the views
     const currentOpenedCard: ActivityType.CardUI = formWidgetFlow.cards[index];
-    console.debug('opened widget is:', currentOpenedCard);
+    /* console.debug('opened widget is:', currentOpenedCard); */
     const title = currentOpenedCard.MainTitle;
 
     if (currentOpenedCard.widgetType === WidgetType.FORM) {
-      console.debug('Pass the form widget')
+      /* console.debug('Pass the form widget') */
       return [title, currentOpenedCard.form];
     } else {
-      console.debug('Whole widget was passed');
+      /* console.debug('Whole widget was passed'); */
       return [title, currentOpenedCard];
     }
   } else {

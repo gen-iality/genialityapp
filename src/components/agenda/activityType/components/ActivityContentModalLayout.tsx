@@ -51,7 +51,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       return;
     }
     
-    console.debug('go back', widgetKeyStack);
+    /* console.debug('go back', widgetKeyStack); */
   };
 
   const handleGoForward = () => {
@@ -67,7 +67,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       ];
       if (transmissions.includes(selected) || isTimeToCreate) {
         onConfirm();
-        console.debug('confirm saving data from form');
+        /* console.debug('confirm saving data from form'); */
         return;
       }
 
@@ -76,8 +76,8 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       setWidgetKeyStack(newTypeStack);
 
       // Get that card/form
-      console.debug(newTypeStack, selected);
-      console.debug('go forward:', widgetKeyStack);
+      /* console.debug(newTypeStack, selected);
+      console.debug('go forward:', widgetKeyStack); */
     }
   };
 

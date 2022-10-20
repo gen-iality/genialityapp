@@ -90,8 +90,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   }
 
   const saveActivityType = async () => {
-    console.debug('activity type provider is saving...');
-    console.debug('activityType is:', activityType);
+    /* console.debug('activity type provider is saving...');
+    console.debug('activityType is:', activityType); */
     if (!activityType) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -111,8 +111,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
     try {
       const agenda = await editActivityType(cEvent.value._id, activityEdit, activityType);
-      console.debug('activity type changes:', agenda);
-      console.debug('AT provider saves successfully');
+      /* console.debug('activity type changes:', agenda);
+      console.debug('AT provider saves successfully'); */
     } catch (err) {
       console.error(err);
     } finally {
@@ -131,7 +131,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       return;
     }
 
-    console.debug('AT provider is deleting');
+    /* console.debug('AT provider is deleting'); */
 
     setIsDeletingActivityType(true);
 
@@ -139,7 +139,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     setActivityContentType(null);
     try {
       await TypesAgendaApi.deleteOne(activityEdit, cEvent.value._id);
-      console.debug('AT provider delete successfully');
+      /* console.debug('AT provider delete successfully'); */
     } catch (err) {
       console.error('no puede eliminar tipo de actividad:', err);
     } finally {
@@ -159,7 +159,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       return;
     }
 
-    console.debug('AT provider is reseting');
+    /* console.debug('AT provider is reseting'); */
 
     setIsDeletingActivityType(true);
     setActivityContentType(null);
@@ -193,7 +193,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       return;
     }
 
-    console.debug('contentType:', contentType);
+    /* console.debug('contentType:', contentType); */
 
     setIsUpdatingActivityContent(true);
 
@@ -355,7 +355,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   };
 
   useEffect(() => {
-    console.debug('activityEdit changed, refresh activityTypeProvider data');
+    /* console.debug('activityEdit changed, refresh activityTypeProvider data'); */
     const request = async () => {
       if (!(cEvent?.value?._id)) {
         console.error('ActivityTypeProvider.saveActivityType cannot get cEvent.value._id');
@@ -375,7 +375,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             setActivityType(typeIncoming);
             setActivityContentType(null);
           } else {
-            console.debug(typeIncoming, 'is not in', onlyActivityTypes);
+            /* console.debug(typeIncoming, 'is not in', onlyActivityTypes); */
 
             setActivityContentType(typeIncoming as ActivityType.ContentValue);
 
@@ -384,25 +384,25 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
             if (theseAreLiveToo.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.LIVE);
               setContentSource(meetingId);
-              console.debug('from beginning contentSource is going to be:', meetingId);
+              /* console.debug('from beginning contentSource is going to be:', meetingId); */
             } else if (theseAreVideo.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.VIDEO);
               setContentSource(agendaInfo.video || null);
-              console.debug('from beginning contentSource is going to be:', agendaInfo.video || null);
+              /* console.debug('from beginning contentSource is going to be:', agendaInfo.video || null); */
             } else if (theseAreMeeting.includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.MEETING);
               setContentSource(meetingId);
-              console.debug('from beginning contentSource is going to be:', meetingId);
+              /* console.debug('from beginning contentSource is going to be:', meetingId); */
             } else if (['quizing', 'quiz'].includes(typeIncoming as ActivityType.ContentValue)) {
               setActivityType(MainUI.QUIZ);
               setContentSource(meetingId);
-              console.debug('from beginning contentSource is going to be:', meetingId);
+              /* console.debug('from beginning contentSource is going to be:', meetingId); */
             } else if ((typeIncoming as ActivityType.ContentValue) === 'survey') {
               setActivityType(MainUI.SURVEY);
               setContentSource(meetingId);
-              console.debug('from beginning contentSource is going to be:', meetingId);
+              /* console.debug('from beginning contentSource is going to be:', meetingId); */
             } else {
-              console.warn('set activity type as null because', typeIncoming, 'is weird');
+              /* console.warn('set activity type as null because', typeIncoming, 'is weird'); */
               setActivityType(null);
             }
           }
@@ -420,7 +420,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
   useEffect(() => {
     if (!contentSource && !!meetingId && !!activityContentType && (theseAreLiveToo.includes(activityContentType) || theseAreMeeting.includes(activityContentType) || ['survey', 'quiz', 'quizing'].includes(activityContentType))) {
-      console.debug('reset contentSource to meetingId:', meetingId);
+      /* console.debug('reset contentSource to meetingId:', meetingId); */
       setContentSource(meetingId);
     }
   }, [meetingId]);

@@ -46,7 +46,7 @@ const CardPreview = (props: any) => {
     maxViewers,
   } = useContext(AgendaContext);
 
-  console.log('DATALIVE ===>', dataLive);
+  /* console.log('DATALIVE ===>', dataLive); */
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {
@@ -122,7 +122,7 @@ const CardPreview = (props: any) => {
     );
   };
 
-  console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url);
+  /* console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url); */
 
   //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
   const filterData = data
@@ -134,7 +134,7 @@ const CardPreview = (props: any) => {
     : null;
 
   const handleDuration = (duration: number) => {
-    console.log('onDuration', duration);
+    /* console.log('onDuration', duration); */
     setDuration(duration);
   };
 

@@ -106,7 +106,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       const validateEmail = await UsersApi.validateEmail({
         email: basicDataUser.email,
       });
-      console.log(validateEmail, 'validateEmail');
+      /* console.log(validateEmail, 'validateEmail'); */
       if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
           loading: false,

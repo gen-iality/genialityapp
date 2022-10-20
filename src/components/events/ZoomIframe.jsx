@@ -28,7 +28,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
   };
 
   const getMeetingPath = async (platform, name, email, meeting_id, generalTabs, isHost) => {
-    console.log('platform', platform);
+    /* console.log('platform', platform); */
     let url = null;
     switch (platform) {
       case 'zoom':

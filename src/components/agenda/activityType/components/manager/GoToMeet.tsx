@@ -34,7 +34,7 @@ const GoToMeet = (props: GoToMeetProps) => {
     [props.activityId, user, dataLive],
   );
 
-  console.debug('GoToMeet:props:', props);
+  /* console.debug('GoToMeet:props:', props); */
 
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>

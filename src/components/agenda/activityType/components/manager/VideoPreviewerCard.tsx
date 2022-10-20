@@ -60,7 +60,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     saveConfig,
   } = useContext(AgendaContext);
 
-  console.debug('VideoPreviewerCard.dataLive:', dataLive);
+  /* console.debug('VideoPreviewerCard.dataLive:', dataLive); */
 
   if (!data) data = meeting_id;
 
@@ -128,7 +128,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     );
   };
 
-  console.debug('VideoPreviewerCard (99. data transmition):', dataLive?.live, dataLive?.hls_playlist_url);
+  /* console.debug('VideoPreviewerCard (99. data transmition):', dataLive?.live, dataLive?.hls_playlist_url); */
 
   // Check IDs to split the YouTube or Vimeo URL
   const filterData = useMemo(() => {
@@ -143,7 +143,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   }, [meeting_id, data]);
 
   const handleDuration = (duration: number) => {
-    console.debug('VideoPreviewerCard::onDuration:', duration);
+    /* console.debug('VideoPreviewerCard::onDuration:', duration); */
     setDuration(duration);
   };
 
@@ -274,7 +274,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             <Select
               value={roomStatus}
               onChange={(value) => {
-                console.debug('saves value of RoomStatus:', value);
+                /* console.debug('saves value of RoomStatus:', value); */
                 setRoomStatus(value);
                 saveConfig({ habilitar_ingreso: value })
                   .then(() => console.log('config saved - habilitar_ingreso:', value));

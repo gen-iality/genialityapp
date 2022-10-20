@@ -138,7 +138,7 @@ const EventSectionRoutes = (props) => {
             props.currentActivity.type.name === 'meeting' ||
             props.currentActivity.type.name === 'cargarvideo'
           ) {
-            console.log('Llegue aqui 4');
+            /* console.log('Llegue aqui 4'); */
             initBroadcastViewers(props.cEvent.value._id, props.currentActivity._id, props.currentActivity.name, cUser);
           }
         }

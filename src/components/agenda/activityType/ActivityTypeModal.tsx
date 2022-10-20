@@ -27,14 +27,14 @@ function ActivityTypeModal(props: ActivityTypeModalProps) {
   const somethingWasSelected = useMemo(() => selected !== null, [selected]);
 
   const handleConfirm = () => {
-    console.log('activity type saved:', selected);
+    /* console.log('activity type saved:', selected); */
     if (somethingWasSelected && selected) {
       props.onSelectionChange(selected);
     }
   }
 
   const handleSelectChange = (newSelected: ActivityType.Name) => {
-    console.log('selected changed to', newSelected);
+    /* console.log('selected changed to', newSelected); */
     setSelected(newSelected);
   }
 

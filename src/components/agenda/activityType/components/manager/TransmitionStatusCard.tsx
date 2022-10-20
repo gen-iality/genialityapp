@@ -50,7 +50,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   const { resetActivityType } = useActivityType();
 
   useEffect(() => {
-    console.debug('meeting_id is', meeting_id, 'rn');
+    /* console.debug('meeting_id is', meeting_id, 'rn'); */
     if (meeting_id) {
       saveConfig(null, 0);
       initializeStream();
@@ -59,7 +59,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     }
 
     async function initializeStream() {
-      console.debug('trying initialize stream to meeting_id:', meeting_id);
+      /* console.debug('trying initialize stream to meeting_id:', meeting_id); */
       try {
         const status = await getLiveStream(meeting_id);
         setDataLive(status);
@@ -77,7 +77,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   }, [meeting_id]);
 
   const deleteStreaming = async () => {
-    console.log('TransmitionStatusCard.deleteStreaming() called');
+    /* console.log('TransmitionStatusCard.deleteStreaming() called'); */
     setIsLoadingDelete(true);
     deleteAllVideos(dataLive?.name, meeting_id); // verificar si se va a eliminar los vídeos cuando se elimana la transmision
     deleteLiveStream(meeting_id);
@@ -87,17 +87,17 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     {
       // await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
       const value = 'created_meeting_room';
-      console.debug('saves value of RoomStatus:', value);
+      /* console.debug('saves value of RoomStatus:', value); */
       setRoomStatus(value);
       setMeetingId(null);
       await saveConfig({ habilitar_ingreso: value, data: null });
-      console.log('config saved - habilitar_ingreso:', value);
+      /* console.log('config saved - habilitar_ingreso:', value); */
     }
     // Transmition stuffs must go back to 'liveBroadcast'
     await resetActivityType('liveBroadcast'); // reset the content tab?
     setMeetingId(null);
     setIsLoadingDelete(false);
-    console.info('deleteStreaming called');
+    /* console.info('deleteStreaming called'); */
   };
 
   const executer_startStream = async () => {

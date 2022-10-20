@@ -1286,7 +1286,7 @@ export const Activity = {
 export const Networking = {
   getInvitationsReceived: async (eventId, userId) => {
     let token = await GetTokenUserFirebase();
-    console.log('OBTENINENDO INVITACIONES===>');
+    /* console.log('OBTENINENDO INVITACIONES===>'); */
     return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}?token=${token}`);
   },
   getInvitationsSent: async (eventId, userId) => {

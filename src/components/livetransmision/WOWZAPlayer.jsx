@@ -28,7 +28,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
   //console.log('DATOOS PLAYER===>', meeting_id, thereIsConnection);
-  console.log('11. WOWZA PLAYER===>', typeActivity);
+  /* console.log('11. WOWZA PLAYER===>', typeActivity); */
 
   useEffect(() => {
     if (typeActivity === 'meeting') {
@@ -44,20 +44,20 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
     //console.log('100. typeActivity=>', typeActivity, conected, meeting_id);
     if (!meeting_id) return;
     if (!thereIsConnection && ((typeActivity !== 'youTube' && typeActivity !== 'video') || !typeActivity)) {
-      console.log('100. INGRESA ACA 1===>');
+      /* console.log('100. INGRESA ACA 1===>'); */
       setConected('Yes');
       setLoopBackGround(typeActivity === 'url' ? true : false);
       setPlatformurl(typeActivity !== 'url' ? defaultVideo : meeting_id);
       setMuted(typeActivity !== 'url' ? true : false);
       setVisibleReactPlayer(true);
     } else if (thereIsConnection && (typeActivity !== 'youTube' || !typeActivity)) {
-      console.log('100. INGRESA ACA 2===>');
+      /* console.log('100. INGRESA ACA 2===>'); */
       let asyncfunction = async () => {
         setConected('Yes');
         setLoopBackGround(true);
         setPlatformurl('none');
         let live_stream = await getLiveStream(meeting_id);
-        console.log('LIVE STREAM===>', live_stream);
+        /* console.log('LIVE STREAM===>', live_stream); */
         let url = live_stream.iframe_url;
         visibleReactPlayer && setVisibleReactPlayer(false);
 

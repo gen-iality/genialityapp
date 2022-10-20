@@ -98,7 +98,7 @@ function SurveyComponent(props) {
 
     SetCurrentUserSurveyStatus(surveyData, currentUser, status);
     if (status === 'completed') {
-      console.log('test envio de comunicaciones ---se ejecuta');
+      /* console.log('test envio de comunicaciones ---se ejecuta'); */
 
       props.setShowSurveyTemporarily(true);
       let canSendComunications = cEvent?.value?.sms_notification;

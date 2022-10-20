@@ -8,9 +8,9 @@ const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
 export interface ActivityTypeModalLayoutProps extends ModalWrapperUIProps {
-  somethingWasSelected: boolean,
-  render: () => React.ReactNode,
-};
+  somethingWasSelected: boolean;
+  render: () => React.ReactNode;
+}
 
 function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
   const {
@@ -23,34 +23,26 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
   } = props;
 
   const handleSelectButton = () => {
-    console.debug('somethingWasSelected', somethingWasSelected);
+    /* console.debug('somethingWasSelected', somethingWasSelected); */
     if (somethingWasSelected) {
       onConfirm();
       onClose(true);
-      console.debug('confirm & close modal');
+      /* console.debug('confirm & close modal'); */
     }
   };
 
   return (
     <Layout>
       <Header style={{ textAlign: 'center', padding: '20px 0px 20px 0px' }}>
-        <Title level={3}>
-          {title}
-        </Title>
+        <Title level={3}>{title}</Title>
       </Header>
 
-      <Content style={{ padding: '60px 50px 60px 50px' }}>
-        {render()}
-      </Content>
+      <Content style={{ padding: '60px 50px 60px 50px' }}>{render()}</Content>
 
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
         <Row justify='end' gutter={[8, 8]}>
           <Col>
-            <Button
-              disabled={!somethingWasSelected}
-              type='primary'
-              onClick={handleSelectButton}
-            >
+            <Button disabled={!somethingWasSelected} type='primary' onClick={handleSelectButton}>
               Seleccionar
             </Button>
           </Col>

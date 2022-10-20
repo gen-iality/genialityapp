@@ -448,7 +448,7 @@ class Datos extends Component {
   //Función que se ejecuta cuando se termina de hacer drag
   onSortEnd = ({ oldIndex, newIndex }) => {
     let user_properties = this.state.user_properties;
-    console.log('FIELDSSTATE==>', this.state.fields);
+    /* console.log('FIELDSSTATE==>', this.state.fields); */
     const fields =
       this.state.fields.length > 0
         ? this.state.fields

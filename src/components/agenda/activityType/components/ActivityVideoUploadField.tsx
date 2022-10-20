@@ -13,8 +13,8 @@ const handleBeforeUpload = (file: RcFile) => {
 };
 
 export interface ActivityVideoUploadFieldProps {
-  activityName: string,
-};
+  activityName: string;
+}
 
 function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
   // const { selectOption, typeOptions } = useTypeActivity();
@@ -28,7 +28,7 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
         // selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
         const finalURL = `${response.video.iframe_url}*${response.video.id}`;
         setContentSource(finalURL);
-        console.debug('file uploaded to', finalURL);
+        /* console.debug('file uploaded to', finalURL); */
         setIsLoading(false);
         break;
       case 'error':
@@ -37,7 +37,7 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
         } else {
           message.error('Error al cargar el video');
         }
-        console.error(info)
+        console.error(info);
         setIsLoading(false);
         break;
       case 'removed':
@@ -52,7 +52,7 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
 
     if (status == 'error') {
     }
-  }
+  };
 
   return (
     <Upload.Dragger
@@ -71,6 +71,6 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
       {isLoading && <Spin />}
     </Upload.Dragger>
   );
-};
+}
 
 export default ActivityVideoUploadField;

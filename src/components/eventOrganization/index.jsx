@@ -78,7 +78,7 @@ class EventOrganization extends Component {
           backgroundImage: `url(${this.state.organization?.styles?.BackgroundImage})`,
           backgroundColor: `${this.state.organization?.styles?.containerBgColor || '#FFFFFF'}`,
         }}>
-        {console.log('Org', this.state.organization)}
+        {/* {console.log('Org', this.state.organization)} */}
         {/* <ModalAuth
           organization={'landing'}
           idOrganization={this.props.match.params.id}

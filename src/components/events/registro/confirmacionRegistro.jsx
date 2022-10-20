@@ -11,7 +11,7 @@ const formLayout = {
 };
 
 function ConfirmacionRegistro(props) {
-  console.log('props.event.validateEmail', props.event.validateEmail);
+  /* console.log('props.event.validateEmail', props.event.validateEmail); */
   //Se definen las variables de useState para enviar y obtener datos
   let [validateEmail, setValidateEmail] = useState(() => {
     if (props.event && props.event.validateEmail) {

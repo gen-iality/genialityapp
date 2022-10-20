@@ -25,17 +25,17 @@ const createLiveStream = async (activity_name) => {
 
 const getLiveStream = async (stream_id) => {
   if (!stream_id) return null;
-  console.log('ejecutando', stream_id);
+  /* console.log('ejecutando', stream_id); */
   const res = await gCoreCLient.get('streams/' + stream_id, {
     timeout: 5000,
   });
-  console.log('ejecutando', res.data);
+  /* console.log('ejecutando', res.data); */
   return res.data ? res.data : null;
 };
 
 const getLiveStreamStatus = async (stream_id) => {
   const res = await gCoreCLient.get('streams/' + stream_id);
-  console.log('10. RESPUESTA ACA===>', res);
+  /* console.log('10. RESPUESTA ACA===>', res); */
   return res.data ? res.data : null;
 };
 
@@ -60,7 +60,7 @@ const startLiveStream = async (stream_id) => {
   const res = await gCoreCLient.put('streams/' + stream_id, {
     active: true,
   });
-  console.log('RESPUESTA START===>', res);
+  /* console.log('RESPUESTA START===>', res); */
   return res.data ? res.data : null;
 };
 
@@ -68,7 +68,7 @@ const stopLiveStream = async (stream_id) => {
   const res = await gCoreCLient.put('streams/' + stream_id, {
     active: false,
   });
-  console.log('RESPUESTA STOP===>', res);
+  /* console.log('RESPUESTA STOP===>', res); */
   return res.data ? res.data : null;
 };
 const deleteLiveStream = async (stream_id) => {
@@ -135,7 +135,7 @@ const obtenerVideos = async (name_activity, stream_id) => {
                 created_at: dataVideo.created_at,
                 image: dataVideo.screenshot,
               });
-              console.log('1. DATA VIDEO===>', dataVideo);
+              /* console.log('1. DATA VIDEO===>', dataVideo); */
             }
           }
         })

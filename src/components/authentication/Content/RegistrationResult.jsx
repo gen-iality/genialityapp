@@ -25,7 +25,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
         if (validationGeneral.loading) {
           let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
           setfraseLoading(FrasesInspiradoras[ramdon]);
-          console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
+          /* console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]); */
         }
       } catch (err) {
         console.log(err);
