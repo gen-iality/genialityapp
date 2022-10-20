@@ -12,6 +12,9 @@ import {
   updateValueBingo,
   createValueBingo,
   UpdateBingoDimension,
+  getListUsersWithOrWithoutBingo,
+  generateBingoForExclusiveUsers,
+  generateBingoForAllUsers,
 } from '@/components/games/bingo/services';
 import { CurrentEventContext } from '@/context/eventContext';
 import { DispatchMessageService } from '@/context/MessageService';
@@ -38,6 +41,7 @@ export const useBingo = () => {
     demonstratedBallots: [],
     startGame: false,
   });
+  let [listUsers, setListUsers] = useState([]);
 
   const initialFormDataBingo = {
     name: '',
@@ -453,6 +457,104 @@ export const useBingo = () => {
     });
     setLoading(false);
   };
+  //List of users that have or haven't bingo
+  const onGetListUsersWithOrWithoutBingo = async () => {
+    let list = [];
+    try {
+      list = await getListUsersWithOrWithoutBingo(value._id); /* '633d9b3101de36465758db36' */
+      setListUsers(list);
+    } catch (err) {
+      console.log(err, 'err');
+    }
+  };
+
+  //Generate bingo for all users
+  const onGenerateBingoForAllUsers = async () => {
+    Modal.confirm({
+      title: `¿Está seguro de que desea generar de nuevo los cartones de bingo para todos los usuarios?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez generado los cartones de bingo debe esperar unos segundos para que la acción quede completa',
+      okText: 'Confirmar',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onGenerate = async () => {
+          DispatchMessageService({
+            type: 'loading',
+            key: 'loading',
+            msj: 'Por favor espere mientras se generan los cartones de bingos para todos los usuarios...',
+            action: 'show',
+          });
+          try {
+            await generateBingoForAllUsers(value._id, bingo?._id);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: '¡Se generaron correctamente los cartones de bingos para todos los usuarios!',
+              action: 'show',
+            });
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: '¡Error generando los cartones de bingos para todos los usuarios!',
+              action: 'show',
+            });
+          }
+        };
+        onGenerate();
+      },
+    });
+  };
+
+  //Generate bingo for exclusive users
+  const onGenerateBingoForExclusiveUsers = async () => {
+    Modal.confirm({
+      title: `¿Está seguro de que desea generar cartones de bingo para los usuarios restantes?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez generado los cartones de bingo debe esperar unos segundos para que la acción quede completa',
+      okText: 'Confirmar',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onGenerate = async () => {
+          try {
+            DispatchMessageService({
+              type: 'loading',
+              key: 'loading',
+              msj: 'Por favor espere mientras se generan los cartones de bingos para los usuarios restantes...',
+              action: 'show',
+            });
+            await generateBingoForExclusiveUsers(value._id);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: '¡Se generaron correctamente los cartones de bingos para los usuarios restantes!',
+              action: 'show',
+            });
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: '¡Error generando los cartones de bingos para los usuarios restantes!',
+              action: 'show',
+            });
+          }
+        };
+        onGenerate();
+      },
+    });
+  };
 
   return {
     bingo,
@@ -478,5 +580,10 @@ export const useBingo = () => {
     dataFirebaseBingo,
     saveValueData,
     changeBingoDimensionsNew,
+    onGenerateBingoForExclusiveUsers,
+    onGetListUsersWithOrWithoutBingo,
+    onGenerateBingoForAllUsers,
+    listUsers,
+    setListUsers,
   };
 };

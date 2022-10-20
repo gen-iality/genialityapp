@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Card, Col, Image, Modal, Row } from 'antd';
 import { Dimension_3x3, Dimension_4x4, Dimension_5x5 } from '../constants/constants';
 import { DimensionInterface } from '../interfaces/bingo';
-
+import { DispatchMessageService } from '@/context/MessageService';
 interface Props {
   dimensions?: DimensionInterface;
   changeBingoDimensions: (dimensions: DimensionInterface) => Promise<void>;
+  size?: number;
 }
 
 interface ArrayDimensionInterface extends DimensionInterface {
@@ -13,7 +14,7 @@ interface ArrayDimensionInterface extends DimensionInterface {
 }
 
 const SelectDimension = (props: Props) => {
-  const { dimensions, changeBingoDimensions } = props;
+  const { dimensions, changeBingoDimensions, size } = props;
   const arrayDimensions: ArrayDimensionInterface[] = [
     {
       format: '3x3',
@@ -40,8 +41,21 @@ const SelectDimension = (props: Props) => {
   );
 
   const showModal = (dimension: DimensionInterface) => {
-    setIsModalOpen(true);
-    setDimensionSelected(dimension);
+    if (size !== undefined) {
+      if (size <= dimension.minimun_values && dimension.format !== '3x3') {
+        DispatchMessageService({
+          type: 'info',
+          msj: `No cumple con los valores minimos para poder jugar, faltan ${dimension.minimun_values - size}`,
+          action: 'show',
+        });
+        return;
+      }
+      setIsModalOpen(true);
+      setDimensionSelected(dimension);
+    } else {
+      setIsModalOpen(true);
+      setDimensionSelected(dimension);
+    }
   };
 
   const handleOk = () => {
@@ -73,7 +87,9 @@ const SelectDimension = (props: Props) => {
 
                 overflow: 'hidden',
               }}
-              hoverable>
+              hoverable={
+                size !== undefined && format !== '3x3' && size >= 0 ? (size > minimun_values ? true : false) : true
+              }>
               <Image preview={false} src={image} />
             </Card>
           </Col>

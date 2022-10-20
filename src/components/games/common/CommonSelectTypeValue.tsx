@@ -2,7 +2,13 @@ import { Card, Col, Divider, Row, Space, Typography } from 'antd';
 import FormatTextIcon from '@2fd/ant-design-icons/lib/FormatText';
 import ImageOutlineIcon from '@2fd/ant-design-icons/lib/ImageOutline';
 
-const SelectTypeValue = ({ onChange, name }: { onChange: (values: string, name: string) => void; name: string }) => {
+const CommonSelectTypeValue = ({
+  onChange,
+  name,
+}: {
+  onChange: (values: string, name: string) => void;
+  name: string;
+}) => {
   return (
     <Row align='middle' justify='space-between'>
       <Col span={11}>
@@ -26,4 +32,4 @@ const SelectTypeValue = ({ onChange, name }: { onChange: (values: string, name: 
   );
 };
 
-export default SelectTypeValue;
+export default CommonSelectTypeValue;

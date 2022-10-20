@@ -64,6 +64,39 @@ export const gridStyleImage_4x4: React.CSSProperties = {
   userSelect: 'none',
   position: 'relative',
 };
+// estilos para los valores en el carton 3x3
+export const gridStyleText_3x3: React.CSSProperties = {
+  width: '30%',
+  aspectRatio: '5/4.2',
+  textAlign: 'center',
+  cursor: 'pointer',
+  marginRight: '4px',
+  backgroundColor: '#FFFFFF',
+  borderRadius: '5px',
+  padding: '5px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  overflow: 'hidden',
+  userSelect: 'none',
+  position: 'relative',
+};
+export const gridStyleImage_3x3: React.CSSProperties = {
+  width: '30%',
+  aspectRatio: '5/4.2',
+  textAlign: 'center',
+  cursor: 'pointer',
+  marginRight: '4px',
+  backgroundColor: '#FFFFFF',
+  borderRadius: '5px',
+  padding: '0px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  overflow: 'hidden',
+  userSelect: 'none',
+  position: 'relative',
+};
 // estilos para los valores en el carton que son marcados
 export const gridStyleSelected: React.CSSProperties = {
   position: 'absolute',

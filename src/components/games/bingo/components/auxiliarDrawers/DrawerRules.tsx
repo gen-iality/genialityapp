@@ -1,16 +1,18 @@
-import { Drawer, Input, PageHeader, Typography } from 'antd';
+import { Drawer, Input, PageHeader, Typography, Grid } from 'antd';
 import { FileProtectOutlined } from '@ant-design/icons';
 import { DrawerRulesInterface } from '../../interfaces/bingo';
 import { UseEventContext } from '@/context/eventContext';
 
+const { useBreakpoint } = Grid;
 const { Title } = Typography;
 
 const DrawerRules = ({ showDrawerRules, setshowDrawerRules, bingoData }: DrawerRulesInterface) => {
   let cEvent = UseEventContext();
+  const screens = useBreakpoint();
 
   return (
     <Drawer
-      width={'30vw'}
+      width={screens.xs ? '100vw' : '30vw'}
       headerStyle={{ border: 'none' }}
       bodyStyle={{ paddingRight: '10px' }}
       title={

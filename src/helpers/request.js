@@ -448,6 +448,26 @@ export const BingoApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.getAll(`api/bingocards/${carton}?token=${token}`, true);
   },
+  /* Recrear bingos para todos los usuarios
+  Method PUT: API-URL/events/{event}/bingos/{bingo}/reset-bingo-cards
+
+  Crear bingo para usuarios faltantes
+  Method POST: API-URL/events/{event}/eventusers/bingocards
+
+  Listar usuarios mostranto si tienen o no bingo
+  Method GET: API-URL/events/633d9b3101de36465758db36/eventusers/bingocards */
+  generateBingoForAllUsers: async (event, bingo) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/events/${event}/bingos/${bingo}/reset-bingo-cards?token=${token}`, true);
+  },
+  generateBingoForExclusiveUsers: async (event) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/events/${event}/eventusers/bingocards?token=${token}`, true);
+  },
+  getListUsersWithOrWithoutBingo: async (eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/events/${eventId}/eventusers/bingocards?token=${token}`, true);
+  },
 };
 
 export const InvitationsApi = {
@@ -1349,4 +1369,5 @@ export const OrderFunctions = {
     return await Actions.post(`/api/orders`, data);
   },
 };
+
 export default privateInstance;

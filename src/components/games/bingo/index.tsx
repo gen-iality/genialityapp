@@ -1,5 +1,27 @@
-import { UploadOutlined } from '@ant-design/icons';
-import { Form, Tabs, Input, InputNumber, Card, Row, Col, Button, Affix, Image } from 'antd';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  ExclamationCircleOutlined,
+  UploadOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import {
+  Form,
+  Tabs,
+  Input,
+  InputNumber,
+  Card,
+  Row,
+  Col,
+  Button,
+  Affix,
+  Image,
+  Space,
+  Typography,
+  List,
+  Modal,
+  Avatar,
+} from 'antd';
 import Header from '../../../antdComponents/Header';
 import { useState, useEffect } from 'react';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
@@ -12,6 +34,9 @@ import ImportModal from './components/importModal';
 import Loading from '@/components/profile/loading';
 import PlayBingo from './components/PlayBingo';
 import SelectDimension from './components/SelectDimension';
+import { BingoApi } from '@/helpers/request';
+import { DispatchMessageService } from '@/context/MessageService';
+import AssignmentCards from './components/AssignmentCards';
 export default function index({ event }: { event: {} }) {
   const {
     bingo,
@@ -32,13 +57,18 @@ export default function index({ event }: { event: {} }) {
     onCancelValueTable,
     getBingoListenerNotifications,
     changeBingoDimensionsNew,
+    onGetListUsersWithOrWithoutBingo,
+    onGenerateBingoForExclusiveUsers,
+    onGenerateBingoForAllUsers,
     dataNotifications,
     getBingoListener,
     dataFirebaseBingo,
     saveValueData,
+    listUsers,
+    setListUsers,
   } = useBingo();
   const [openAndCloseImportModal, setOpenAndCloseImportModal] = useState(false);
-
+  console.log('🚀 ~ file: index.tsx ~ line 70 ~ index ~ formDataBingo', formDataBingo);
   const formLayout = {
     labelCol: { span: 24 },
     wrapperCol: { span: 24 },
@@ -48,6 +78,10 @@ export default function index({ event }: { event: {} }) {
   const columnsTable = useColumnsTable({ actionEditBallotValue, deleteBallotValue });
 
   const saveImage = async (image: any, setImag: any, name: string) => {
+    console.log('🚀 ~ file: index.tsx ~ line 81 ~ saveImage ~ name', name);
+    console.log('🚀 ~ file: index.tsx ~ line 81 ~ saveImage ~ setImag', setImag);
+    console.log('🚀 ~ file: index.tsx ~ line 81 ~ saveImage ~ image', image);
+
     setImag(image);
     setValuesData({
       ...valuesData,
@@ -61,6 +95,7 @@ export default function index({ event }: { event: {} }) {
   useEffect(() => {
     const unSubscribe = getBingoListenerNotifications();
     const unSubscribe2 = getBingoListener();
+    onGetListUsersWithOrWithoutBingo();
     return () => {
       unSubscribe();
       unSubscribe2();
@@ -112,6 +147,7 @@ export default function index({ event }: { event: {} }) {
                           <SelectDimension
                             dimensions={formDataBingo.dimensions}
                             changeBingoDimensions={changeBingoDimensions}
+                            size={formDataBingo.bingo_values.length}
                           />
                         </Form.Item>
                         {/* <Form.Item label='Cantidad de cartones'>
@@ -211,7 +247,15 @@ export default function index({ event }: { event: {} }) {
                 </Row>
               </Tabs.TabPane>
 
-              <Tabs.TabPane tab='Jugar Bingo' key='3'>
+              <Tabs.TabPane tab='Asignación de cartones' key='3' disabled={dataFirebaseBingo?.startGame}>
+                <AssignmentCards
+                  generateBingoForExclusiveUsers={onGenerateBingoForExclusiveUsers}
+                  generateBingoForAllUsers={onGenerateBingoForAllUsers}
+                  listUsers={listUsers}
+                />
+              </Tabs.TabPane>
+
+              <Tabs.TabPane tab='Jugar Bingo' key='4'>
                 <PlayBingo
                   bingoValues={formDataBingo.bingo_values}
                   event={event}
