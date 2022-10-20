@@ -96,7 +96,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
 
   return (
     <Layout>
-      <Header style={{ textAlign: 'center', padding: '20px 0px 20px 0px' }}>
+      <Header style={{ textAlign: 'center', padding: '20px 0px 20px 0px', backgroundColor: 'transparent' }}>
         <Title level={3}>
           {title}
         </Title>
