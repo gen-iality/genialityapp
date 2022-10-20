@@ -199,7 +199,6 @@ export interface BingoCardInterface {
   changeValueLocalStorage: (index: number) => void;
   getBingoListener: () => any;
   setOpenOrClose: (state: boolean) => void;
-  bingoCardRef: HTMLDivElement;
 }
 
 export interface PlayBingoHeaderInterface {

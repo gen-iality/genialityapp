@@ -13,6 +13,7 @@ import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Activid
 import DrawerButtonsContainer from './DrawerButtonsContainer';
 import PrintCardBoard from './PrintCardBoard';
 import { useRef } from 'react';
+import PrintComponent from './PrintComponent';
 const { useBreakpoint } = Grid;
 
 const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => {} }: DrawerBingoInterface) => {
@@ -42,7 +43,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
 
   return (
     <Drawer
-      extra={<PrintCardBoard bingoCardRef={bingoCardRef} />}
+      extra={<PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode={cardboardCode} />}
       headerStyle={{
         padding: '1px 24px',
       }}
@@ -115,7 +116,6 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
                 changeValueLocalStorage={changeValueLocalStorage}
                 getBingoListener={getBingoListener}
                 setOpenOrClose={setOpenOrClose}
-                bingoCardRef={bingoCardRef}
               />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6} style={{ padding: '5px' }}>
@@ -129,6 +129,14 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
           </Row>
         </Col>
       </Row>
+      {bingo && (
+        <PrintComponent
+          bingo={bingo}
+          arrayDataBingo={arrayDataBingo}
+          bingoCardRef={bingoCardRef}
+          cardboardCode={cardboardCode}
+        />
+      )}
     </Drawer>
   );
 };
