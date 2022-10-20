@@ -920,6 +920,9 @@ class ListEventUser extends Component {
       const badges = resp.BadgeFields;
       console.log(this.ifrmPrint, badges);
       if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
+      const printBagdeUser = (...args) => {
+        console.warn('printBagdeUser function was copied here but not its definition. F');
+      }
       printBagdeUser(this.ifrmPrint, badges, this.state.user);
     } else this.setState({ noBadge: true });
   };
@@ -948,7 +951,7 @@ class ListEventUser extends Component {
 
     const activityId = this.props.match.params.id;
 
-    const { loading, componentKey } = this.props;
+    const { type, loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
     const inscritos =
