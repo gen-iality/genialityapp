@@ -19,10 +19,10 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
   const intl = useIntl();
 
   // status -> warning, info, success, error
-  let status = cHelper?.typeModal == 'loginSuccess' ? 'success' : cHelper?.typeModal == 'loginError' ? 'error' : 'info';
+  const status = cHelper?.typeModal == 'loginSuccess' ? 'success' : cHelper?.typeModal == 'loginError' ? 'error' : 'info';
 
   // title -> mensaje principal
-  let title =
+  const title =
     cHelper?.typeModal == 'loginSuccess'
       ? intl.formatMessage({
           id: 'modal.feedback.title.success',
@@ -32,7 +32,7 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
       ? intl.formatMessage({ id: 'modal.feedback.title.error', defaultMessage: 'Correo electrónico ya en uso' })
       : '¡Ups! algo salió mal';
 
-  let description =
+  const description =
     cHelper?.typeModal == 'loginSuccess' && cEvent.value != null
       ? intl.formatMessage({
           id: 'modal.feedback.description.success',

@@ -83,7 +83,7 @@ const NewCE = (props) => {
   };
 
   const onSubmit = async () => {
-    let values = {};
+    const values = {};
     if (notice.title === '' || !notice.title) {
       DispatchMessageService({
         type: 'error',

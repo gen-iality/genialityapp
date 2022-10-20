@@ -175,8 +175,8 @@ class RoomManager extends Component {
 
   // Encargado de recibir los cambios de los input y select
   handleChange = (e, nameS) => {
-    let { name } = e.target ? e.target : nameS;
-    let { value } = e.target ? e.target : e;
+    const { name } = e.target ? e.target : nameS;
+    const { value } = e.target ? e.target : e;
 
     this.setState({ [name]: value });
     if (nameS === 'select_host_manual') {
@@ -417,7 +417,7 @@ class RoomManager extends Component {
 
   //Eliminar trasmisión de zoom
   deleteRoom = async () => {
-    let self = this;
+    const self = this;
     const { service, meeting_id, platform } = self.state;
     const { event_id } = self.props;
     const streamingMeetingId = self.context.meeting_id;

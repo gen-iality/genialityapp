@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 const ListVideoCard = () => {
   const cEvent = useEventContext();
-  let { activitiesEvent } = useHelper();
+  const { activitiesEvent } = useHelper();
   const [existActivity, setexistActivity] = useState(0);
   function ExistvideoInActivity() {
     activitiesEvent &&

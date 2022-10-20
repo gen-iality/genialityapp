@@ -30,7 +30,7 @@ class Result extends Component {
   uploadByOne = (users) => {
     const self = this;
     const { extraFields } = this.props;
-    let ok = [],
+    const ok = [],
       notok = [];
     const toImport = users.filter((user) => !this.isEmptyObject(user));
     Async.eachOfSeries(

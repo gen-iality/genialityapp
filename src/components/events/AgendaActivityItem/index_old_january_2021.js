@@ -37,7 +37,7 @@ function AgendaActivityItem(props) {
   const intl = useIntl();
   const EnvivoIcon = (props) => <Icon component={EnVivoSvg} {...props} />;
   const timeZone = Moment.tz.guess();
-  let {
+  const {
     item,
     Surveys,
     Documents,
@@ -63,7 +63,7 @@ function AgendaActivityItem(props) {
         .doc(item._id)
         .onSnapshot((info) => {
           if (!info.exists) return;
-          let related_meetings = info.data().related_meetings;
+          const related_meetings = info.data().related_meetings;
           setRelatedMeetings(related_meetings);
         });
     };

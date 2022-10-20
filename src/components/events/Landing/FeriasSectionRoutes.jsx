@@ -8,7 +8,7 @@ import FeriasStand from '../../events/ferias/FeriasStand';
 import { useEventContext } from '@context/eventContext';
 
 const FeriasSectionRoutes = () => {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
   const cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;

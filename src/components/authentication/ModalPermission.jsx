@@ -17,7 +17,7 @@ const stylePaddingMobile = {
 };
 
 const ModalPermission = (props) => {
-  let { handleChangeTypeModal, typeModal } = useHelper();
+  const { handleChangeTypeModal, typeModal } = useHelper();
   const screens = useBreakpoint();
   const intl = useIntl();
 

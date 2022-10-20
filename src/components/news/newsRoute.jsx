@@ -9,7 +9,7 @@ import News from './news';
 import NewCE from './newCE';
 
 const NewsSectionRoutes = (props) => {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
 
   return (
     <Switch>

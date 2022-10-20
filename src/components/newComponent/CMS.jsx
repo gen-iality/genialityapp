@@ -61,7 +61,7 @@ const CMS = (props) => {
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
-  let { reloadTemplatesCms } = useHelper();
+  const { reloadTemplatesCms } = useHelper();
 
   useEffect(() => {
     getList();

@@ -15,7 +15,7 @@ export default function RoomController(props) {
 
   const [listOfGames, setListOfGames] = useState([]);
   const [updateMensaje, setUpdatedMensaje] = useState(false);
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
   const [showavailableGames, setShowavailableGames] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,7 +24,7 @@ export default function RoomController(props) {
   }, [games]);
 
   async function getGamesData() {
-    let gamesData = [];
+    const gamesData = [];
     const docRef = firestore.collection('gamesAvailable');
     await docRef.get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {

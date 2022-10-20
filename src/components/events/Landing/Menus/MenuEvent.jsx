@@ -8,10 +8,10 @@ import { setSectionPermissions } from '../../../../redux/sectionPermissions/acti
 import { connect } from 'react-redux';
 
 const MenuEvent = ({ isMobile }) => {
-  let { url } = useRouteMatch();
+  const { url } = useRouteMatch();
   const cEvent = useEventContext();
-  let { totalsolicitudes, eventPrivate } = useHelper();
-  let event = cEvent.value;
+  const { totalsolicitudes, eventPrivate } = useHelper();
+  const event = cEvent.value;
 
   return (
     <>
@@ -34,12 +34,12 @@ const MenuEvent = ({ isMobile }) => {
                 return <></>;
               }
 
-              let icon =
+              const icon =
                 event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
                   ? 'RocketOutlined'
                   : event.itemsMenu[key].icon;
 
-              let IconoComponente = iconComponents[icon];
+              const IconoComponente = iconComponents[icon];
 
               return key == 'networking' ? (
                 <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
@@ -100,12 +100,12 @@ const MenuEvent = ({ isMobile }) => {
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
                 //CAMBIO DE ICONO TRIPULACIÓN KELLOGS
-                let icon =
+                const icon =
                   event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
                     ? 'RocketOutlined'
                     : event.itemsMenu[key].icon;
 
-                let IconoComponente = iconComponents[icon];
+                const IconoComponente = iconComponents[icon];
 
                 if (!event.itemsMenu[key].name || !event.itemsMenu[key].section) {
                   return <></>;

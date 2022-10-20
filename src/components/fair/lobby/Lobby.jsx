@@ -25,7 +25,7 @@ class Lobby extends Component {
   }
 
   render() {
-    let lobby_data = {
+    const lobby_data = {
       info: {
         date: '26 Agosto 2021',
         time_from: '26 de Agosto 1:00 pm',

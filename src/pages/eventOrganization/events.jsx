@@ -10,7 +10,7 @@ import Header from '@antdComponents/Header';
 function OrgEvents(props) {
   const [eventData, setEventData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  let { _id: organizationId } = props.org;
+  const { _id: organizationId } = props.org;
   const history = useHistory();
 
   async function getEventsStatisticsData() {

@@ -8,7 +8,7 @@ import { OrganizationApi } from '@helpers/request';
  */
 export async function getOrganizationUser(orgId: string) {
   if (!orgId) return;
-  let { data } = await OrganizationApi.getMeUser(orgId);
+  const { data } = await OrganizationApi.getMeUser(orgId);
 
   return data;
 }

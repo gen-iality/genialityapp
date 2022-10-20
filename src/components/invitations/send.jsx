@@ -38,7 +38,7 @@ class SendRsvp extends Component {
   }
 
   componentDidMount() {
-    let default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> ';
+    const default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> ';
     this.setState({
       rsvp: {
         ...this.state.rsvp,
@@ -90,7 +90,7 @@ class SendRsvp extends Component {
   };
 
   handleChange = (e) => {
-    let { name, value } = e.target;
+    const { name, value } = e.target;
     this.setState({
       rsvp: { ...this.state.rsvp, [name]: value },
     });

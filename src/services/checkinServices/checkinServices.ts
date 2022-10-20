@@ -34,7 +34,7 @@ export const getAttendeeByParameter = ({
   switch (key) {
     case 'document':
       /** We divide the string taken with the scanner to be able to assign the values to their corresponding variable */
-      let split: string[] = searchValue.document.split('<>');
+      const split: string[] = searchValue.document.split('<>');
 
       const documentInformation: any = structureScannedInformation({
         split,
@@ -61,7 +61,7 @@ export const getAttendeeByParameter = ({
       break;
   }
 
-  let newData: newData = {
+  const newData: newData = {
     attendeeNotFound: false,
     attendeeFound: false,
     another: false,

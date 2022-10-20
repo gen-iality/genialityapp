@@ -14,7 +14,7 @@ const EditInformation = ({ cUser }) => {
   const validateDefaultPicture =
     picture === 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' ? null : picture;
 
-  let [imageAvatar, setImageAvatar] = useState(
+  const [imageAvatar, setImageAvatar] = useState(
     validateDefaultPicture ? [{ url: validateDefaultPicture }] : validateDefaultPicture
   );
   const [sendRecovery, setSendRecovery] = useState(null);

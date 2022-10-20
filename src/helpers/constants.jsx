@@ -12,7 +12,7 @@ export const ApiUrlCountry = process.env.VITE_API_COUNTRY_URL;
 export const KeyCountry = process.env.VITE_API_KEY_COUNTRY;
 export const parseUrl = (url) => {
   try {
-    let temporal = {};
+    const temporal = {};
     url
       .split('?')[1]
       .split('&')
@@ -25,7 +25,7 @@ export const parseUrl = (url) => {
   }
 };
 export const parseCookies = (cookies) => {
-  let temporal = [];
+  const temporal = [];
   cookies.split('&').map((obj) => {
     return temporal.push({ [obj.split('=')[0]]: obj.split('=')[1] });
   });

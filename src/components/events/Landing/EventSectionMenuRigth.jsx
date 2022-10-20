@@ -14,9 +14,9 @@ import DrawerProfile from './DrawerProfile';
 
 
 const EventSectionMenuRigth = (props) => {
-  let [optionselected, setOptionselected] = useState(1);
+  const [optionselected, setOptionselected] = useState(1);
   const cEvent = useEventContext();
-  let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useHelper();
+  const { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useHelper();
 
   const ToggleVisibility = <Button
   id='button_open_menu'

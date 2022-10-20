@@ -7,7 +7,7 @@ import Feedback from '../ferias/feedback';
 
 const Videos = () => {
   const cEvent = useEventContext();
-  let { activitiesEvent } = useHelper();
+  const { activitiesEvent } = useHelper();
   const [existActivity, setexistActivity] = useState(0);
 
   function ExistvideoInActivity() {

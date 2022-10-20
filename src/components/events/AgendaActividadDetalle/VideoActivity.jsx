@@ -6,7 +6,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 const { useBreakpoint } = Grid;
 
 export const VideoActivity = () => {
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
   const screens = useBreakpoint();
   return (
     <>

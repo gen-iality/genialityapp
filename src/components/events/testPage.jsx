@@ -44,7 +44,7 @@ class Test extends Component {
         this.setState({ currentUser: true });
 
         snapshot.forEach((doc) => {
-          var user = firestore.collection(`${this.props.event._id}_event_attendees`).doc(doc.id);
+          const user = firestore.collection(`${this.props.event._id}_event_attendees`).doc(doc.id);
 
           user
             .update({

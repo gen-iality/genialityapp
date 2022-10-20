@@ -3,9 +3,9 @@ import { Alert } from 'antd';
 
 function WithUserEventRegistered(Component) {
   return function WihLoadingComponent(props) {
-    let [currentUser, setCurrentUser] = useState(null);
-    let [usuarioRegistrado, setUsuarioRegistrado] = useState(null);
-    let [event, setEvent] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [usuarioRegistrado, setUsuarioRegistrado] = useState(null);
+    const [event, setEvent] = useState(null);
 
     useEffect(() => {
       (async () => {

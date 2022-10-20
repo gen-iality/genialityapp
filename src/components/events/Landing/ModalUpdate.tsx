@@ -13,7 +13,7 @@ const ModalUpdate = (props: any) => {
   const cEventUser = useUserEvent();
 
   const [isVisible, setIsVisible] = useState(false);
-  let { handleChangeTypeModal } = useHelper();
+  const { handleChangeTypeModal } = useHelper();
   const handleOpen = () => {
     setIsVisible(false);
     handleChangeTypeModal('update');

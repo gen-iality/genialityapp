@@ -14,8 +14,8 @@ const ImageUploaderDragAndDrop = ({
   height = 0,
 }: ImageUploaderDragAndDropType) => {
   const { Dragger } = Upload;
-  let [image, setImage] = useState<any>(null);
-  let [isUploading, setIsUploading] = useState<boolean>(false);
+  const [image, setImage] = useState<any>(null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const fileList = [
     {

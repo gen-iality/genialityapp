@@ -19,9 +19,9 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
   };
 
   function videoDuration(seconds) {
-    var hour = Math.floor(seconds / 3600);
-    var minute = Math.floor((seconds / 60) % 60);
-    var second = seconds % 60;
+    let hour = Math.floor(seconds / 3600);
+    let minute = Math.floor((seconds / 60) % 60);
+    let second = seconds % 60;
     hour = hour < 10 ? '0' + hour : hour;
     minute = minute < 10 ? '0' + minute : minute;
     second = second < 10 ? '0' + second : second;

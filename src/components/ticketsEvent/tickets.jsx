@@ -5,7 +5,7 @@ import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
 const Tickets = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
   const columns = [
     {
       title: 'Id',

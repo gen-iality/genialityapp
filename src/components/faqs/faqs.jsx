@@ -4,7 +4,7 @@ import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
 const Faqs = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
 
   const columns = [
     {

@@ -27,7 +27,7 @@ const { useBreakpoint } = Grid;
 function AgendaActivityItem(props) {
   const history = useHistory();
   const cEvent = useEventContext();
-  let urlactivity =
+  const urlactivity =
     cEvent && !cEvent?.isByname ? `/landing/${props.event._id}/activity/` : `/event/${cEvent?.nameEvent}/activity/`;
   const screens = useBreakpoint();
   function HandleGoActivity(activity_id) {
@@ -44,7 +44,7 @@ function AgendaActivityItem(props) {
   const [meetingId, setMeetingId] = useState(null);
 
   const timeZone = Moment.tz.guess();
-  let { item, event_image, registerStatus, event } = props;
+  const { item, event_image, registerStatus, event } = props;
 
   const cEventUser = useUserEvent();
 
@@ -55,7 +55,7 @@ function AgendaActivityItem(props) {
     const loadData = async () => {
       // Ask if that activity (item) is stored in <ID>_event_attendees
       console.log('item._id', item._id)
-      let activity_attendee = await firestore
+      const activity_attendee = await firestore
         .collection(`${item._id}_event_attendees`)
         .doc(cEventUser.value._id)
         .get(); //checkedin_at
@@ -93,7 +93,7 @@ function AgendaActivityItem(props) {
         .doc(item._id)
         .onSnapshot((info) => {
           if (!info.exists) return;
-          let related_meetings = info.data().related_meetings;
+          const related_meetings = info.data().related_meetings;
           setRelatedMeetings(related_meetings);
         });
     };

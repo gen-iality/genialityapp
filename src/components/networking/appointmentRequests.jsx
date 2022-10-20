@@ -163,7 +163,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
       acceptOrRejectAgenda(eventContext.value._id, userEventContext.value._id, data, newStatus)
         .then(() => {
           setRequestResponse(newStatus);
-          let notificationr = {
+          const notificationr = {
             idReceive: userCurrentContext.value._id,
             idEmited: data && data.id,
             state: '1',
@@ -189,7 +189,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             //   description: 'Error al actualizar la solicitud'
             // });
 
-            let notificationr = {
+            const notificationr = {
               idReceive: userCurrentContext.value._id,
               idEmited: data && data.id,
               state: '1',

@@ -13,7 +13,7 @@ dayjs.extend(localizedFormat);
 
 const InfoEvent = () => {
   const cEvent = useEventContext();
-  let { handleChangeTypeModal, eventIsActive } = useHelper();
+  const { handleChangeTypeModal, eventIsActive } = useHelper();
   const cEventUser = useUserEvent();
   const cUser = useCurrentUser();
 

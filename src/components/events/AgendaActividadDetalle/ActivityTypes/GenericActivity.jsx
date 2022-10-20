@@ -7,7 +7,7 @@ import HeaderColumnswithContext from '../HeaderColumns';
 const { useBreakpoint } = Grid;
 
 const GenericActivity = () => {
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
   const screens = useBreakpoint();
   const [activityState, setactivityState] = useState('');
 

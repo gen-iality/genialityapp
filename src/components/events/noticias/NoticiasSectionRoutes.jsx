@@ -8,7 +8,7 @@ import { useEventContext } from '@context/eventContext';
 import NoticiasDetailsConnect from './NoticiasDetails';
 
 const NoticiasSectionRoutes = () => {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
   const cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;

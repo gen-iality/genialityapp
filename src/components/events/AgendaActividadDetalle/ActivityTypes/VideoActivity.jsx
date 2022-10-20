@@ -5,7 +5,7 @@ import HeaderColumnswithContext from '../HeaderColumns';
 
 const VideoActivity = () => {
 
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
   const urlVideo = currentActivity?.video;
 
   const [activityState, setactivityState] = useState('');

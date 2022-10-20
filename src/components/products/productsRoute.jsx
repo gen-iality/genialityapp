@@ -10,7 +10,7 @@ import Configuration from './configuration';
 import OfertProduts from './oferts';
 
 const ProductSectionRoutes = (props) => {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
 
   return (
     <Switch>

@@ -16,7 +16,7 @@ import WallContext, { WallContextProvider } from '@context/WallContext';
 
 const { TextArea } = Input;
 const CommentEditor = ({ onSubmit, item }) => {
-  let [visibleNoUser, setVisibleNoUser] = useState(false);
+  const [visibleNoUser, setVisibleNoUser] = useState(false);
 
   return <RenderEditor onSubmit={onSubmit} item={item} visibleNoUser={visibleNoUser} />;
 };

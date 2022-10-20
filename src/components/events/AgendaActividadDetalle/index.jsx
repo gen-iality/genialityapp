@@ -25,12 +25,12 @@ import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 const { setHasOpenSurveys } = SurveyActions;
 
 const AgendaActividadDetalle = props => {
-  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
-  let [orderedHost, setOrderedHost] = useState([]);
+  const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
+  const [orderedHost, setOrderedHost] = useState([]);
   const cSurveys = useSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
-  let [blockActivity, setblockActivity] = useState(false);
+  const [blockActivity, setblockActivity] = useState(false);
   const [activity, setactivity] = useState('');
   const cUser = useCurrentUser();
   const cEventUser = useUserEvent();

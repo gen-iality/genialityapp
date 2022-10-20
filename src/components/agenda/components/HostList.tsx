@@ -24,7 +24,7 @@ const dataTooling = [
 
 const HostList = () => {
   const cEvent = useEventContext();
-  let [speakers, setSpeakers] = useState([]);
+  const [speakers, setSpeakers] = useState([]);
 
   useEffect(() => {
     let speakersApi = [];

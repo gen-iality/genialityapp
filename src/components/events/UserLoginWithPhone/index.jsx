@@ -34,7 +34,7 @@ class UserLogin extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let { loading } = this.state;
+    const { loading } = this.state;
 
     if (prevState.loading !== loading) {
       if (!loading) {
@@ -45,7 +45,7 @@ class UserLogin extends Component {
   }
 
   initializeCaptcha = () => {
-    let { initialValues } = this.state;
+    const { initialValues } = this.state;
     if (Object.entries(initialValues).length == 0) {
       //
       window.recaptchaVerifier = new app.auth.RecaptchaVerifier(this.reCaptchaRef.current.id, {
@@ -123,7 +123,7 @@ class UserLogin extends Component {
 
   handleVerificationWithPhoneNumber = (values) => {
     this.setState({ loading: false });
-    var credential = app.auth.PhoneAuthProvider.credential(
+    const credential = app.auth.PhoneAuthProvider.credential(
       window.confirmationResult.verificationId,
       values.verificationCode
     );

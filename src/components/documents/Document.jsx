@@ -21,9 +21,9 @@ const Document = (props) => {
   const history = useHistory();
   const [document, setDocument] = useState({});
   const [documentList, setDocumentList] = useState([]);
-  let [files, setFiles] = useState('');
-  let [fileName, setFileName] = useState('');
-  let [extention, setExtention] = useState('');
+  const [files, setFiles] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [extention, setExtention] = useState('');
   const [folder, setFolder] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadPercentage, setLoadPercentage] = useState(0);
@@ -220,7 +220,7 @@ const Document = (props) => {
 
     /* this.setState({ fileName: name }); */
     /* console.log(fileName, name); */
-    let uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files);
+    const uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files);
     /* setUploadTask(uploadTaskRef); */
     /* console.log(uploadTaskRef); */
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento

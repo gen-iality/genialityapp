@@ -9,7 +9,7 @@ import Service from '@components/agenda/roomManager/service';
 import { Spin } from 'antd';
 
 function QuizActivity(props) {
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
   console.log('100.propsSurveyActivity', props);
 
   const [activityState, setActivityState] = useState('');

@@ -9,7 +9,7 @@ const MeetingActivity = (props) => {
 
   const [activityState, setactivityState] = useState('');
 
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
 
   return (
     <>

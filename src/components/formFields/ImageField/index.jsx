@@ -10,8 +10,8 @@ const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS);
 
 function ImageField(rawProps) {
   const intl = useIntl();
-  let ancho = '200';
-  let alto = '200';
+  const ancho = '200';
+  const alto = '200';
   const props = omit(NOT_PROPS_KEYS, rawProps);
   const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps);
 
@@ -26,7 +26,7 @@ function ImageField(rawProps) {
   };
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
 
-  let handleImage = (imageUrl, field, form) => {
+  const handleImage = (imageUrl, field, form) => {
     handleChange(imageUrl, form, field);
     handleBlur(form, field);
   };

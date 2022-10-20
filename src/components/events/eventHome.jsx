@@ -8,7 +8,7 @@ import { CurrentEventUserContext } from '@context/eventUserContext';
 
 const EventHome = props => {
   /*Contextos*/
-  let { setActivitiesAttendee } = props;
+  const { setActivitiesAttendee } = props;
   const cEvent = useEventContext();
   const cEventUser = useContext(CurrentEventUserContext);
   if (!cEvent.value) {

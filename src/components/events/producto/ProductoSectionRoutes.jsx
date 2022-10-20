@@ -7,7 +7,7 @@ import DetailsProduct from './productDetails';
 import ProductList from './productList';
 
 const ProductoSectionRoutes = () => {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
   const cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;

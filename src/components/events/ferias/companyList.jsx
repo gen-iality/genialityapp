@@ -9,7 +9,7 @@ function Companylist(props) {
 
   function stripHtml(html) {
     // Crea un nuevo elemento div
-    var temporalDivElement = document.createElement('div');
+    const temporalDivElement = document.createElement('div');
     // Establecer el contenido HTML con el div
     temporalDivElement.innerHTML = html;
     // Recuperar la propiedad de texto del elemento

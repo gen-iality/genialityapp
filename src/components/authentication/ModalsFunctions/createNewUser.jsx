@@ -34,7 +34,7 @@ const createNewUser = async (props) => {
       password: password !== '' ? password : undefined,
     };
     try {
-      let response = await UsersApi.createUser(body);
+      const response = await UsersApi.createUser(body);
       if (response._id) {
         /* setModalInfo({
           status: 'success',
@@ -57,7 +57,7 @@ const createNewUser = async (props) => {
     }
   };
 
-  let resp = await sendData();
+  const resp = await sendData();
   return resp;
 };
 

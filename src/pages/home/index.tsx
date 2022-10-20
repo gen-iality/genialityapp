@@ -13,7 +13,7 @@ dayjs.locale('es');
 momentLocalizer();
 
 const Home = () => {
-  let { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } = useApiMultiple();
+  const { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } = useApiMultiple();
 
   const [typeEvent, settypeEvent] = useState<string>('nextEvents');
   const [hasMore, sethasMore] = useState(false);

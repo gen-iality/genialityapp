@@ -14,7 +14,7 @@ export default function ListadoJuegos(props) {
   useEffect(() => {
     props.changeContentDisplayed('games');
 
-    let gameId = '0biWfCwWbUGhbZmfhkvu';
+    const gameId = '0biWfCwWbUGhbZmfhkvu';
 
     //Consulta del puntaje del currentUser
     if (props.currentUser !== null) {
@@ -37,7 +37,7 @@ export default function ListadoJuegos(props) {
       .orderBy('puntaje', 'desc')
       .limit(10)
       .onSnapshot(function(querySnapshot) {
-        var puntajes = [];
+        const puntajes = [];
         querySnapshot.forEach(function(doc) {
           const result = doc.data();
           result['score'] = result.puntaje;

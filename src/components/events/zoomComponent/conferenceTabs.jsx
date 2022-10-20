@@ -17,7 +17,7 @@ import RankingTrivia from './rankingTrivia';
 const { TabPane } = Tabs;
 
 export default function ConferenceTabsComponent(props) {
-  let [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   function callback(key) {
     props.handleActiveTab(key);

@@ -46,7 +46,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   }, [basicDataUser.picture]);
 
   const handleTakePhotoAnimationDone = (dataUri) => {
-    let pic = [
+    const pic = [
       {
         uid: '1',
         name: 'avatar.png',

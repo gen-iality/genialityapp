@@ -14,10 +14,10 @@ const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 const AditionalInformation = (props) => {
-  let { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
+  const { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
-  let [idSpeaker, setIdSpeaker] = useState(false);
+  const [idSpeaker, setIdSpeaker] = useState(false);
   const screens = useBreakpoint();
 
   function handleChangeLowerTabs(tab) {

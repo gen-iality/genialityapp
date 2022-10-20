@@ -92,7 +92,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 if (!cEventUserId) return;
                 (async () => {
                   console.log('item._id', agenda._id);
-                  let activity_attendee = await firestore
+                  const activity_attendee = await firestore
                     .collection(`${agenda._id}_event_attendees`)
                     .doc(cEventUserId)
                     .get(); //checkedin_at

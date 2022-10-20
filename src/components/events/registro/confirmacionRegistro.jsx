@@ -13,7 +13,7 @@ const formLayout = {
 function ConfirmacionRegistro(props) {
   console.log('props.event.validateEmail', props.event.validateEmail);
   // Se definen las variables de useState para enviar y obtener datos
-  let [validateEmail, setValidateEmail] = useState(() => {
+  const [validateEmail, setValidateEmail] = useState(() => {
     if (props.event && props.event.validateEmail) {
       if (props.event.validateEmail === 'true' || props.event.validateEmail === true) {
         return true;
@@ -24,7 +24,7 @@ function ConfirmacionRegistro(props) {
       return false;
     }
   });
-  let [registrationMessage, setRegistrationMessage] = useState(
+  const [registrationMessage, setRegistrationMessage] = useState(
     props.event && props.event.registration_message ? props.event.registration_message : ''
   );
 
@@ -38,7 +38,7 @@ function ConfirmacionRegistro(props) {
       msj: ' Por favor espere mientras se guarda el contenido...',
       action: 'show',
     });
-    let data = {
+    const data = {
       registration_message: registrationMessage,
       validateEmail: validateEmail,
     };

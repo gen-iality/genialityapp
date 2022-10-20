@@ -5,7 +5,7 @@ import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import dayjs from 'dayjs';
 
 const Report = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
 
   const columns = [
     {

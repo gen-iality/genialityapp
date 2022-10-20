@@ -4,7 +4,7 @@ export function GetPermissionsEvent(
   seteventPrivate: any
 ) {
   if (cEvent.value != null) {
-    let routePermissions: any =
+    const routePermissions: any =
       cEvent.value &&
       cEvent.value.itemsMenu &&
       Object.values(cEvent.value.itemsMenu)?.filter((item: { section: string }) => item.section === 'tickets');

@@ -134,9 +134,9 @@ class DatosModal extends Component {
   }
 
   handleChange = (e) => {
-    let { name, value } = e.target;
+    const { name, value } = e.target;
 
-    let tmpInfo = { ...this.state.info };
+    const tmpInfo = { ...this.state.info };
 
     //Generamos el nombre del campo para la base de datos(name) a partir del  label solo si el campo se esta creando
     if (name == 'label') {
@@ -258,7 +258,7 @@ class DatosModal extends Component {
   };
   onSaveGeneral = async (values) => {
     if (values.type === 'country' || values.type === 'region' || values.type === 'city') {
-      let inputsCountry = [...extraInputs[values.type], values];
+      const inputsCountry = [...extraInputs[values.type], values];
       inputsCountry.map((input) => {
         this.saveField(input);
       });
