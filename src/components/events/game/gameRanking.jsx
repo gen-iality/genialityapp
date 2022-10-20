@@ -44,7 +44,7 @@ function GameRanking(props) {
       // .limit(10)
       .onSnapshot(async (querySnapshot) => {
         const puntajes = [];
-        puntajes = await Promise.all(
+        const newPuntajes = await Promise.all(
           querySnapshot.docs.map(async (doc, index) => {
             const result = doc.data();
 
@@ -55,6 +55,7 @@ function GameRanking(props) {
             return result;
           })
         );
+        puntajes.push(...newPuntajes);
         const cUserId = currentUser?._id;
         const filterForRankingUserId = puntajes.filter((rankingUsers) => rankingUsers.eventUser_id === cUserId);
 

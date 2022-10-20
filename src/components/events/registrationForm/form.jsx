@@ -183,7 +183,8 @@ const FormRegister = ({
   const [event, setEvent] = useState(null);
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
-  const [ImgUrl, setImgUrl] = useState('');
+  // eslint-disable-next-line prefer-const
+  let [ImgUrl, setImgUrl] = useState('');
   const [typeRegister, setTypeRegister] = useState('pay');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
@@ -829,7 +830,7 @@ const FormRegister = ({
                 optionFilterProp='children'
                 style={{ width: '100%' }}
                 onChange={(val) => {
-                  areacodeselected = val;
+                  setareacodeselected(val);
                 }}
                 placeholder='Código de area del pais'>
                 {areaCode.map((code, key) => {

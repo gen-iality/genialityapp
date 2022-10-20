@@ -58,7 +58,7 @@ function RankingTrivia(props) {
         // .limit(10)
         .onSnapshot(async (querySnapshot) => {
           const puntajes = [];
-          puntajes = await Promise.all(
+          const newPuntajes = await Promise.all(
             querySnapshot.docs.map(async (doc, index) => {
               const result = doc.data();
               let picture;
@@ -71,6 +71,7 @@ function RankingTrivia(props) {
               return result;
             })
           );
+          puntajes.push(...newPuntajes);
 
           /** Puntaje de todos los participantes */
           // /** Ordenamos por puntaje */

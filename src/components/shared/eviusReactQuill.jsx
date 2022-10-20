@@ -117,15 +117,15 @@ function EviusReactQuill(props) {
 
       editor.getModule('toolbar').addHandler('image', function(clicked) {
         if (clicked) {
-          const fileInput = this.container.querySelector('input.ql-image[type=file]');
+          let fileInput = this.container.querySelector('input.ql-image[type=file]');
           if (fileInput == null) {
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
             fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', function(e) {
-              const files = e.target.files,
-                file;
+              const files = e.target.files;
+              let file;
               if (files.length > 0) {
                 file = files[0];
                 const type = file.type;

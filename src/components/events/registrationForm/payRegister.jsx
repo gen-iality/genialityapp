@@ -72,7 +72,7 @@ export const ButtonPayment = ({ eventId, user }) => {
 
     // If you want to display the digest as a hexadecimal string, this will work:
     const view = new DataView(hash);
-    const hexstr = '';
+    let hexstr = '';
     for (let i = 0; i < view.byteLength; i++) {
       const b = view.getUint8(i);
       hexstr += '0123456789abcdef'[(b & 0xf0) >> 4];

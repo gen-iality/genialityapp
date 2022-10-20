@@ -55,7 +55,7 @@ class Wall extends Component {
     return true;*/
   };
   createComment = async (postId, message) => {
-    const updatedPost = await saveFirebase.createComment(
+    let updatedPost = await saveFirebase.createComment(
       postId,
       this.props.cEvent.value._id,
       message,

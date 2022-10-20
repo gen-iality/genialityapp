@@ -292,7 +292,7 @@ const Table = (props) => {
           return { ...data, index: key };
         });
       }
-      list = newData;
+      setList(newData);
     }
   }
 

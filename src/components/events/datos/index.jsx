@@ -162,7 +162,7 @@ class Datos extends Component {
             if (resp.docs.length > 0) {
               resp.docs.map((doc) => {
                 const datos = doc.data();
-                const objectP = datos.properties;
+                let objectP = datos.properties;
                 const properties = objectP;
                 objectP = { ...objectP, pesovoto: properties && properties.pesovoto ? properties.pesovoto : 1 };
                 datos.properties = objectP;

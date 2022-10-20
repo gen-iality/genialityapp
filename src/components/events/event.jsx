@@ -164,7 +164,7 @@ class Event extends Component {
       formatupperorlowercase = url.toString();
     }
 
-    const encodedUrl = formatupperorlowercase;
+    let encodedUrl = formatupperorlowercase;
     encodedUrl = encodedUrl.split(/\&+/).join('-and-');
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
