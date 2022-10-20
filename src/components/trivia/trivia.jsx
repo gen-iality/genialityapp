@@ -8,13 +8,13 @@ import { Result } from "antd";
 import { recordTypeForThisEvent } from "../events/Landing/helpers/thisRouteCanBeDisplayed";
 
 const trivia = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
   const [typeEvent, settypeEvent] = useState();
 
   useEffect(() => {
-    let cEvent = {};
+    const cEvent = {};
     cEvent.value = props.event;
-    let eventtype = recordTypeForThisEvent(cEvent);
+    const eventtype = recordTypeForThisEvent(cEvent);
     settypeEvent(eventtype);
   }, [props]);
 

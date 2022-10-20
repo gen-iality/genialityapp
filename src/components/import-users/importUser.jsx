@@ -39,7 +39,7 @@ class ImportUsers extends Component {
     });
 
     if (password) {
-      let genericPassword = [];
+      const genericPassword = [];
       for (let i = 0; i < users[0].list.length; i++) {
         genericPassword.push(password);
       }
@@ -60,14 +60,14 @@ class ImportUsers extends Component {
       Async.waterfall(
         [
           function(cb) {
-            let newUsers = users.filter((user) => {
+            const newUsers = users.filter((user) => {
               return user.used;
             });
             cb(null, newUsers);
           },
           function(newUsers, cb) {
-            let long = newUsers[0].list.length;
-            let itemsecondwaterfall = [];
+            const long = newUsers[0].list.length;
+            const itemsecondwaterfall = [];
             let initwaterfallcounter = 0;
             for (; initwaterfallcounter < long; ) {
               itemsecondwaterfall[initwaterfallcounter] = {};
@@ -78,7 +78,7 @@ class ImportUsers extends Component {
             }
           },
           function(items, newUsers, cb) {
-            let len = newUsers.length;
+            const len = newUsers.length;
             for (let i = 0; i < items.length; i++) {
               for (let j = 0; j < len; j++) {
                 items[i][newUsers[j].key] = newUsers[j].list[i];

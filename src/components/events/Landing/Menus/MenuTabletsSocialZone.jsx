@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 const MenuTabletsSocialZone = (props) => {
   const [isDrawerVisible, setisDrawerVisible] = useState(false);
   let [optionselected, setOptionselected] = useState('1');
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
 
   return (
     <>

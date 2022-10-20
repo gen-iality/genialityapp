@@ -23,16 +23,16 @@ class TriviaReport extends Component {
     SurveysApi.getOne(event._id, location.state.report)
       .then(async (response) => {
         const votes = new Promise((resolve) => {
-          let questions = [];
+          const questions = [];
 
           response.questions.forEach(async (question, index, arr) => {
-            let infoQuestion = await getTotalVotes(location.state.report, question);
+            const infoQuestion = await getTotalVotes(location.state.report, question);
             questions.push(infoQuestion);
             if (questions.length === arr.length) resolve(questions);
           });
         });
 
-        let questions = await votes;
+        const questions = await votes;
         this.setState({ surveyQuestions: questions, loading: false });
       })
       .catch(() => {
@@ -48,7 +48,7 @@ class TriviaReport extends Component {
   };
 
   toggleModal = () => {
-    let { visibleModal } = this.state;
+    const { visibleModal } = this.state;
     this.setState({ visibleModal: !visibleModal });
   };
 
@@ -59,7 +59,7 @@ class TriviaReport extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
-    let { surveyQuestions, loading } = this.state;
+    const { surveyQuestions, loading } = this.state;
     const { location } = this.props;
 
     if (!loading)

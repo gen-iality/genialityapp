@@ -29,11 +29,11 @@ const Importacion = (props) => {
         const sheetName = workbook.SheetNames[0];
         const sheetObj = workbook.Sheets[sheetName];
         if (sheetObj['!ref']) {
-          var range = utils.decode_range(sheetObj['!ref']);
-          let fields = [];
+          const range = utils.decode_range(sheetObj['!ref']);
+          const fields = [];
           for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
             const keyCell = sheetObj[utils.encode_cell({ r: range.s.r, c: colNum })];
-            let key = keyCell ? keyCell.v.trim() : undefined;
+            const key = keyCell ? keyCell.v.trim() : undefined;
             //columna vacia continuamos
             if (!key) continue;
             fields[colNum] = { key: key, list: [], used: false };
@@ -97,7 +97,7 @@ const Importacion = (props) => {
   };
 
   const downloadExcel = () => {
-    let data = [{}];
+    const data = [{}];
     props.extraFields.map((extra) => {
       return (data[0][extra.name] = '');
     });
@@ -119,7 +119,7 @@ const Importacion = (props) => {
 
   /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */
   const addMoreItemsToExtraFields = () => {
-    let modifiedExtraFields = [...props.extraFields /*{ name: 'rol', type: 'rol' }*/];
+    const modifiedExtraFields = [...props.extraFields /*{ name: 'rol', type: 'rol' }*/];
     /* if (password) {
       modifiedExtraFields = [...props.extraFields, { name: 'password', type: 'password' }];
     } */

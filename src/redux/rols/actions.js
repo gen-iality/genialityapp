@@ -3,11 +3,11 @@ import { GetTokenUserFirebase } from "../../helpers/HelperAuth";
 
 export function fetchRol() {
     return async dispatch => {
-        let token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase();
         dispatch(fetchRolBegin());
         Actions.getAll('/api/contributors/metadata/roles?token=' + token)
             .then((rolData) => {
-                let roles = rolData.map(state => ({
+                const roles = rolData.map(state => ({
                     value: state._id,
                     label: state.name
                 }));

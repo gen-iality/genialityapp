@@ -49,14 +49,14 @@ class CheckAgenda extends Component {
   }
 
   async componentDidMount() {
-    let self = this;
+    const self = this;
     this.cargarUsuarios(self);
   }
 
   //FUNCION QUE OBTIENE CHECKIN DE FIREBASE
   async obtaincheckin(user, ref) {
-    let resp = await ref.doc(user._id).get();
-    let userNew = {
+    const resp = await ref.doc(user._id).get();
+    const userNew = {
       ...user,
       checkedin_at:
         resp.exists && resp.data().checkedin_at !== null && resp.data().checkedin_at !== '' && resp.data().checkedin_at
@@ -69,9 +69,9 @@ class CheckAgenda extends Component {
 
   //FUNCION QUE LLAMA A FIREBASE PARA OBTENER CHECKIN POR CADA USUARIO
   async obtenerCheckinAttende(ref, listuser) {
-    let arrlist = [];
-    for (let user of listuser) {
-      let userNew = await this.obtaincheckin(user, ref);
+    const arrlist = [];
+    for (const user of listuser) {
+      const userNew = await this.obtaincheckin(user, ref);
       arrlist.push(userNew);
     }
 
@@ -85,24 +85,24 @@ class CheckAgenda extends Component {
     try {
       const { event } = this.props;
       const agendaID = this.props.match.params.id;
-      let { checkIn } = this.state;
+      const { checkIn } = this.state;
       const properties = event.user_properties;
       const rolesList = await RolAttApi.byEventRolsGeneral();
       //console.log('ROLES==>', rolesList);
-      let roles = rolesList?.map((role) => {
+      const roles = rolesList?.map((role) => {
         return { label: role.name, value: role._id };
       });
 
-      let userRef = firestore
+      const userRef = firestore
         .collection(`${event._id}_event_attendees`)
         .doc('activity')
         .collection(`${agendaID}`);
       this.createColumnsTable(properties, self);
 
       //Parse de campos para mostrar primero el nombre, email y luego el resto
-      let eventFields = fieldNameEmailFirst(properties);
+      const eventFields = fieldNameEmailFirst(properties);
 
-      let arrayFields = Array.from(eventFields);
+      const arrayFields = Array.from(eventFields);
 
       arrayFields.push({
         author: null,
@@ -127,7 +127,7 @@ class CheckAgenda extends Component {
       console.log('NEW LIST==>', newList);
 
       newList = newList.map((item) => {
-        let attendee = item.attendee
+        const attendee = item.attendee
           ? item.attendee
           : item.user
           ? { properties: { email: item.user.email, names: item.user.displayName } }
@@ -144,7 +144,7 @@ class CheckAgenda extends Component {
       this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn, properties };
       });
-      let usersData = this.createUserInformation(newList);
+      const usersData = this.createUserInformation(newList);
 
       this.setState({ usersData });
     } catch (error) {
@@ -175,8 +175,8 @@ class CheckAgenda extends Component {
 
   //Funcion para crear columnas para la tabla de ant
   createColumnsTable(properties, self) {
-    let columnsTable = [];
-    let editColumn = {
+    const columnsTable = [];
+    const editColumn = {
       title: 'Editar',
       ellipsis: true,
       key: 'edit',
@@ -212,10 +212,10 @@ class CheckAgenda extends Component {
 
   //Funcion para crear la lista de usuarios para la tabla de ant
   createUserInformation(newList) {
-    let usersData = [];
+    const usersData = [];
     for (let i = 0; newList.length > i; i++) {
       if (newList[i].properties) {
-        let newUser = newList[i].properties;
+        const newUser = newList[i].properties;
         newUser.key = newList[i]._id;
         newUser.rol = newList[i].rol_id;
         newUser.checkedin_at = newList[i].checkedin_at;
@@ -304,7 +304,7 @@ class CheckAgenda extends Component {
     const user = snap != null ? { ...snap, _id: id, ticket_id: '' } : attendees.find(({ _id }) => _id === id);
     const userRef = this.state.userRef;
 
-    let doc = await this.state.userRef.doc(user._id).get();
+    const doc = await this.state.userRef.doc(user._id).get();
     //Sino está chequeado se chequea
     user.checked_in = check !== null ? check : !user.checked_in;
 
@@ -342,7 +342,7 @@ class CheckAgenda extends Component {
     const addUser = attendees.find(({ _id }) => _id === id);
 
     if (addUser) {
-      let updateAttendes = this.state.usersData.map((attendee) => {
+      const updateAttendes = this.state.usersData.map((attendee) => {
         if (attendee._id === id) {
           return {
             ...(user.properties || user),
@@ -360,7 +360,7 @@ class CheckAgenda extends Component {
       });
       this.setState({ attendees: updateAttendes, usersData: updateAttendes });
     } else {
-      let updateAttendes = this.state.usersData;
+      const updateAttendes = this.state.usersData;
 
       updateAttendes.push({
         ...(user.properties || user),

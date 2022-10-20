@@ -14,11 +14,11 @@ class OrdersEvent extends Component {
 
   componentDidMount() {
     async function GetUserToken() {
-      let token = await GetTokenUserFirebase();
+      const token = await GetTokenUserFirebase();
       return token;
     }
 
-    let evius_token = GetUserToken();
+    const evius_token = GetUserToken();
     const { eventId } = this.props;
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/orders?evius_token=${evius_token}`;

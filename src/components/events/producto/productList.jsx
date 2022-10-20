@@ -8,7 +8,7 @@ import ProductCard from './productCard';
 
 const ProductList = (props) => {
   const [products, setProducts] = useState([]);
-  let history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     obtenerGaleria();

@@ -48,13 +48,13 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
       setVisibleReactPlayer(true);
     } else if (thereIsConnection && (typeActivity !== 'youTube' || !typeActivity)) {
       console.log('100. INGRESA ACA 2===>');
-      let asyncfunction = async () => {
+      const asyncfunction = async () => {
         setConected('Yes');
         setLoopBackGround(true);
         setPlatformurl('none');
-        let live_stream = await getLiveStream(meeting_id);
+        const live_stream = await getLiveStream(meeting_id);
         console.log('LIVE STREAM===>', live_stream);
-        let url = live_stream.iframe_url;
+        const url = live_stream.iframe_url;
         visibleReactPlayer && setVisibleReactPlayer(false);
 
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */

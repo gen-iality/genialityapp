@@ -55,7 +55,7 @@ export const resetStatusByRestartAnswering = async (surveyId: string, userId: st
   let newTried = triedCount + 1;
   newTried = Math.min(newTried, maxTries);
 
-  let surveyCompleted = status;
+  const surveyCompleted = status;
 
   try {
     await firebaseRef.set(

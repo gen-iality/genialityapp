@@ -19,8 +19,8 @@ const stylePaddingMobile = {
 };
 
 const ModalLoginHelpers = (props) => {
-  let { handleChangeTypeModal, typeModal, helperDispatch } = useHelper();
-  let cEvent = useEventContext();
+  const { handleChangeTypeModal, typeModal, helperDispatch } = useHelper();
+  const cEvent = useEventContext();
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
@@ -53,8 +53,7 @@ const ModalLoginHelpers = (props) => {
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
-      let resp;
-      resp = await EventsApi.changePasswordUser(email, window.location.href);
+      const resp = await EventsApi.changePasswordUser(email, window.location.href);
       if (resp) {
         setSendRecovery(
           `${intl.formatMessage({

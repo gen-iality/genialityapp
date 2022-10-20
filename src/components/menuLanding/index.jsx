@@ -204,7 +204,7 @@ class MenuLanding extends Component {
     const menuBase = this.state.menu;
     let menuLanding = {};
     if (this.props.organization != 1) {
-      let token = await GetTokenUserFirebase();
+      const token = await GetTokenUserFirebase();
       menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}?token=${token}`);
     } else {
       //OBTENER DE ORGANIZACIÓN
@@ -213,7 +213,7 @@ class MenuLanding extends Component {
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
       /* console.log('ITEMS==>', menuLanding.itemsMenu); */
       this.state.itemsMenu = menuLanding.itemsMenu;
-      let items = menuLanding.itemsMenu;
+      const items = menuLanding.itemsMenu;
     }
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
@@ -235,7 +235,7 @@ class MenuLanding extends Component {
 
   orderItemsMenu(itemsMenu) {
     let itemsMenuData = {};
-    let itemsMenuToSave = {};
+    const itemsMenuToSave = {};
     let items = Object.values(itemsMenu);
 
     items = items.map((item) => {
@@ -248,7 +248,7 @@ class MenuLanding extends Component {
 
     itemsMenuData = Object.assign({}, items);
 
-    for (let item in itemsMenuData) {
+    for (const item in itemsMenuData) {
       itemsMenuToSave[itemsMenuData[item].section] = itemsMenuData[item];
     }
     return itemsMenuToSave;
@@ -262,7 +262,7 @@ class MenuLanding extends Component {
       action: 'show',
     });
     const { itemsMenu } = this.state;
-    let menu = this.orderItemsMenu(itemsMenu);
+    const menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
 
     /*if (newMenu.itemsMenu.tickets) {
@@ -272,17 +272,17 @@ class MenuLanding extends Component {
     }*/
 
     if (this.props.organization !== 1) {
-      let token = await GetTokenUserFirebase();
+      const token = await GetTokenUserFirebase();
       const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
     } else {
       //ACTUALIZAR ORGANIZACION
       // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
       //console.log(this.props.organizationObj)
-      let updateOrganization = {
+      const updateOrganization = {
         ...this.props.organizationObj,
         itemsMenu: { ...menu },
       };
-      let resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
+      const resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
       if (resp) {
         /* console.log('MENU GUARDADDO==>', newMenu); */
       }
@@ -299,8 +299,8 @@ class MenuLanding extends Component {
   }
 
   async mapActiveItemsToAvailable(key) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
     console.log('items menù', itemsMenuDB);
     console.log('primero=>', menuBase[key]); */
@@ -317,8 +317,8 @@ class MenuLanding extends Component {
   }
 
   changeNameMenu(key, name) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('CHANGEMENU==>', key, name); */
     if (name !== '') {
       if (itemsMenuDB[key]) {
@@ -330,8 +330,8 @@ class MenuLanding extends Component {
   }
 
   changePositionMenu(key, position) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     if (position !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].position = position;
@@ -342,8 +342,8 @@ class MenuLanding extends Component {
   }
 
   changeMarkup(key, markup) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     if (markup !== '') {
       itemsMenuDB[key].markup = markup;
       menuBase[key].markup = itemsMenuDB[key].markup || markup;
@@ -352,8 +352,8 @@ class MenuLanding extends Component {
   }
 
   changePermissions(key, access) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('itemsMenuDB', itemsMenuDB); */
     if (itemsMenuDB[key]) {
       itemsMenuDB[key].permissions = access;
@@ -364,8 +364,8 @@ class MenuLanding extends Component {
   }
 
   orderPosition(key, order) {
-    let itemsMenu = { ...this.state.menu };
-    let itemsMenuToOrder = { ...this.state.itemsMenu };
+    const itemsMenu = { ...this.state.menu };
+    const itemsMenuToOrder = { ...this.state.itemsMenu };
     itemsMenuToOrder[key].position = order !== '' ? parseInt(order) : 0;
     itemsMenu[key].position = itemsMenuToOrder[key].position || order !== '' ? parseInt(order) : 0;
     this.setState({ itemsMenu: itemsMenuToOrder });

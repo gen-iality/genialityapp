@@ -4,7 +4,7 @@ import { getRightPoints } from '../services/surveyStatus';
 async function messageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
   let totalSurveyPoints = 0;
 
-  let questions = surveyConfig.pages;
+  const questions = surveyConfig.pages;
 
   /** iteramos las preguntas para validar el puntaje total para la comparativa de puntaje ganado vs puntaje total */
   questions.forEach(item => {
@@ -22,14 +22,14 @@ async function messageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
     totalSurveyPoints = surveyConfig.pages.length - 1;
   }
 
-  let textOnCompleted = surveyModel.completedHtml;
+  const textOnCompleted = surveyModel.completedHtml;
 
   /* survey.currentPage.questions.forEach((question) => {
     let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
     if (correctAnswer) totalPoints += parseInt(question.points);
   }); */
 
-  let totalPoints = await getRightPoints(surveyConfig._id, userId);
+  const totalPoints = await getRightPoints(surveyConfig._id, userId);
   console.log('600 MessageWhenCompletingSurvey getRightPoints totalPoints', totalPoints);
 
   if (surveyConfig.allow_gradable_survey === 'true') {

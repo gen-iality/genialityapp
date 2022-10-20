@@ -65,12 +65,12 @@ class Ranking extends Component {
   }
 
   exportReport = () => {
-    let { listOfUserResponse } = this.state;
+    const { listOfUserResponse } = this.state;
 
     // eslint-disable-next-line no-unused-vars
     const exclude = ({ _id, ...rest }) => rest;
 
-    let data = listOfUserResponse.map((item) => exclude(item));
+    const data = listOfUserResponse.map((item) => exclude(item));
 
     for (let i = 0; data.length > i; i++) {
       if (Array.isArray(data[i].response)) {
@@ -88,7 +88,7 @@ class Ranking extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
-    let { nameQuestion, listOfUserResponse } = this.state;
+    const { nameQuestion, listOfUserResponse } = this.state;
 
     return (
       <Fragment>

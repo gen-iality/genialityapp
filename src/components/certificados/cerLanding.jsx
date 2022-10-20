@@ -52,7 +52,7 @@ class CertificadoLanding extends Component {
   componentDidMount() {
     const { user_properties } = this.props.cEvent.value;
 
-    let fields = user_properties.filter((item) => item.name !== 'names' && item.name !== 'email');
+    const fields = user_properties.filter((item) => item.name !== 'names' && item.name !== 'email');
     const list = [...this.state.tags];
     fields.map((field) =>
       list.push({
@@ -165,7 +165,7 @@ class CertificadoLanding extends Component {
   }
 
   render() {
-    let checkedInUsers = this.props.cEventUser.value ? [this.props.cEventUser.value] : [];
+    const checkedInUsers = this.props.cEventUser.value ? [this.props.cEventUser.value] : [];
 
     return (
       <>
@@ -222,5 +222,5 @@ class CertificadoLanding extends Component {
   }
 }
 
-let CertificadoLandingwithContext = withContext(CertificadoLanding);
+const CertificadoLandingwithContext = withContext(CertificadoLanding);
 export default withRouter(CertificadoLandingwithContext);

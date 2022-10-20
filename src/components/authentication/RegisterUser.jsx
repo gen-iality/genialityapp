@@ -60,9 +60,9 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   ];
 
   const [form] = Form.useForm();
-  let [imageAvatar, setImageAvatar] = useState(null);
-  let [modalInfo, setModalInfo] = useState(null);
-  let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
+  const [imageAvatar, setImageAvatar] = useState(null);
+  const [modalInfo, setModalInfo] = useState(null);
+  const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   function resetFields() {
     form.resetFields();
@@ -85,7 +85,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     };
 
     try {
-      let resp = await createNewUser(newValues);
+      const resp = await createNewUser(newValues);
       if (resp == 1) {
         // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
         app

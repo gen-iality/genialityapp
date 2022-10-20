@@ -36,7 +36,7 @@ class Preview extends Component {
   }
 
   componentDidMount() {
-    let llaves = [],
+    const llaves = [],
       headers = [];
     const { list, extraFields } = this.props;
 
@@ -176,7 +176,7 @@ class Preview extends Component {
     list.map((item) => {
       return (item.used = this.headExist(item.key));
     });
-    let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
+    const auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
     this.setState({ list, loading: false, auxList });
   };
 
@@ -204,7 +204,7 @@ class Preview extends Component {
       })
       .indexOf(item.tag);
     headers[j].used = true;
-    let listCopy = JSON.parse(JSON.stringify(list));
+    const listCopy = JSON.parse(JSON.stringify(list));
     listCopy[key].used = true;
     listCopy[key].key = item.tag;
     auxHead.splice(i, 1);

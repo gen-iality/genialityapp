@@ -9,13 +9,13 @@ import { knowMaleOrFemale } from '@Utilities/knowMaleOrFemale';
 
 const AttendeList = function(props) {
   //contextos
-  let [myattendelist, setmyattendelist] = useState();
-  let [loading, setLoading] = useState(false);
-  let [page, setPage] = useState(0);
-  let [filteredlist, setfilteredlist] = useState([]);
-  let [hasMore, setHasMore] = useState(true);
-  let { attendeeListPresence, attendeeList, maleIcons, femaleicons } = useHelper();
-  let cUser = useCurrentUser();
+  const [myattendelist, setmyattendelist] = useState();
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [filteredlist, setfilteredlist] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const { attendeeListPresence, attendeeList, maleIcons, femaleicons } = useHelper();
+  const cUser = useCurrentUser();
   const pag = 15;
 
   function whatGenderIs(gender) {
@@ -30,11 +30,11 @@ const AttendeList = function(props) {
   }
 
   useEffect(() => {
-    let ordenadousers = [];
+    const ordenadousers = [];
     Object.keys(attendeeList).map((key) => {
       if (attendeeListPresence[key] != undefined || attendeeListPresence[key] != null) {
         if (attendeeList[key].properties) {
-          let attendeProfile = {
+          const attendeProfile = {
             uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
             idattendpresence: key,
             iduser: attendeeList[key].account_id,
@@ -102,10 +102,10 @@ const AttendeList = function(props) {
       return;
     }
 
-    let ini = pag * page;
-    let fin = pag * page + pag;
+    const ini = pag * page;
+    const fin = pag * page + pag;
 
-    let newDatos = myattendelist.slice(ini, fin);
+    const newDatos = myattendelist.slice(ini, fin);
     const datosg = filteredlist.concat(newDatos);
     let pagP = page;
     pagP = pagP += 1;

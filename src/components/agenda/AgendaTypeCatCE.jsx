@@ -25,7 +25,7 @@ const AgendaTypeCatCE = (props) => {
       ? CategoriesAgendaApi
       : TypesAgendaApi;
   const history = useHistory();
-  let [categoryValues, setCategoryValues] = useState({});
+  const [categoryValues, setCategoryValues] = useState({});
   const [name, setName] = useState('');
   const [color, setColor] = useState('#000000');
 

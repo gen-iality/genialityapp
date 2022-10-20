@@ -87,8 +87,8 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
-    let { changeItem } = this.state;
-    let showModal = window.sessionStorage.getItem('message') === null ? true : false;
+    const { changeItem } = this.state;
+    const showModal = window.sessionStorage.getItem('message') === null ? true : false;
     this.setState({ modalView: showModal });
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
     let eventUserList = [];
@@ -98,7 +98,7 @@ class ListEventUser extends Component {
     // }
 
     //Servicio que trae la lista de asistentes excluyendo el usuario logeado
-    let evius_token = await GetTokenUserFirebase();
+    const evius_token = await GetTokenUserFirebase();
     eventUserList = await userRequest.getEventUserList(this.props.cEvent.value._id, evius_token, this.state.eventUser);
 
     /** Inicia destacados
@@ -122,11 +122,11 @@ class ListEventUser extends Component {
 
       //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
       if (this.props.cEvent.value) {
-        let meproperties = this.state.eventUser.properties;
+        const meproperties = this.state.eventUser.properties;
 
         //
         if (this.props.cEvent.value._id === '60413a3cf215e97bb908bec9') {
-          let prospectos = eventUserList.filter((asistente) => asistente.properties.interes === 'Vender');
+          const prospectos = eventUserList.filter((asistente) => asistente.properties.interes === 'Vender');
           prospectos.forEach((prospecto) => {
             matches.push(prospecto);
           });
@@ -134,7 +134,7 @@ class ListEventUser extends Component {
 
         //Finanzas del clima
         else if (this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6') {
-          let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
+          const prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
           prospectos.map((prospecto) => {
             if (prospecto.properties.participacomo == 'Financiador') {
               matches.push(prospecto);
@@ -152,7 +152,7 @@ class ListEventUser extends Component {
 
         // Rueda de negocio naranja
         else if (this.props.cEvent.value._id === '5f7f21217828e17d80642856') {
-          let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
+          const prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
           prospectos.map((prospecto) => {
             if (
               prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones &&
@@ -171,7 +171,7 @@ class ListEventUser extends Component {
 
         // Fenalco Meetups
         else if (this.props.cEvent.value._id === '5f0622f01ce76d5550058c32') {
-          let prospectos = eventUserList.filter(
+          const prospectos = eventUserList.filter(
             (asistente) =>
               (asistente.properties.ingresasameetupspara === 'Hacer negocios' ||
                 asistente.properties.ingresasameetupspara === 'Asitir a Charlas + Hacer negocios') &&
@@ -227,7 +227,7 @@ class ListEventUser extends Component {
         }
       }
 
-      let asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
+      const asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
 
       this.setState((prevState) => {
         return {
@@ -275,10 +275,10 @@ class ListEventUser extends Component {
 
   //Se ejecuta cuando se selecciona el filtro
   handleSelectFilter = (value) => {
-    let inputSearch = document.getElementById('inputSearch');
-    let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    const inputSearch = document.getElementById('inputSearch');
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
     nativeInputValueSetter.call(inputSearch, value);
-    let ev2 = new Event('input', { bubbles: true });
+    const ev2 = new Event('input', { bubbles: true });
     inputSearch.dispatchEvent(ev2);
   };
 
@@ -300,10 +300,10 @@ class ListEventUser extends Component {
       this.searchResult(listByTypeuser);
     }
 
-    let inputSearch = document.getElementById('inputSearch');
-    let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    const inputSearch = document.getElementById('inputSearch');
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
     nativeInputValueSetter.call(inputSearch, '');
-    let ev1 = new Event('input', { bubbles: true });
+    const ev1 = new Event('input', { bubbles: true });
     inputSearch.dispatchEvent(ev1);
 
     // let filterSector = document.getElementById('filterSector')
@@ -319,8 +319,8 @@ class ListEventUser extends Component {
   }
 
   isMyContact(user) {
-    let formatUSer = { ...user, eventUserId: user._id };
-    let isContact = isMyContacts(formatUSer, this.props.cHelper.contacts);
+    const formatUSer = { ...user, eventUserId: user._id };
+    const isContact = isMyContacts(formatUSer, this.props.cHelper.contacts);
     return isContact;
   }
   componentWillUnmount() {
@@ -625,7 +625,7 @@ class ListEventUser extends Component {
                                                   loading: true,
                                                 };
                                                 this.setState({ users: this.state.users });
-                                                let sendResp = await SendFriendship(
+                                                const sendResp = await SendFriendship(
                                                   {
                                                     eventUserIdReceiver: users._id,
                                                     userName: users.properties.names || users.properties.email,
@@ -634,10 +634,10 @@ class ListEventUser extends Component {
                                                   this.props.cEvent.value
                                                 );
 
-                                                let us = users;
+                                                const us = users;
 
                                                 if (sendResp._id) {
-                                                  let notificationR = {
+                                                  const notificationR = {
                                                     idReceive: us.account_id,
                                                     idEmited: sendResp._id,
                                                     emailEmited:
@@ -852,5 +852,5 @@ const mapDispatchToProps = {
   setVirtualConference,
 };
 
-let ListEventUserWithContext = connect(null, mapDispatchToProps)(withContext(ListEventUser));
+const ListEventUserWithContext = connect(null, mapDispatchToProps)(withContext(ListEventUser));
 export default ListEventUserWithContext;

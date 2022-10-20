@@ -14,8 +14,8 @@ const { Text } = Typography;
 
 function AnonymousEvenUserForm() {
   const history = useHistory();
-  let cEvent = useEventContext();
-  let cEventUser = useUserEvent();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
 
   const onFinish = (values) => {
     const { name, email } = values;

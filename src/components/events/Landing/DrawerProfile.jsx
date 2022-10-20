@@ -16,10 +16,10 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 
 const DrawerProfile = (props) => {
-  let cUser = useCurrentUser();
-  let cEvent = useEventContext();
-  let cEventUser = useUserEvent();
-  let { propertiesProfile, requestSend, handleChangeTypeModal } = useHelper();
+  const cUser = useCurrentUser();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
+  const { propertiesProfile, requestSend, handleChangeTypeModal } = useHelper();
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);
@@ -31,7 +31,7 @@ const DrawerProfile = (props) => {
     if (props.profileuser) {
       console.log(props.profileuser._id, cEventUser.value, props.profileuser);
       if (props.profileuser._id !== cEventUser.value?.account_id) {
-        let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
+        const isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
         setIsMe(cUser.value._id == props.profileuser._id);
         setIsMyContact(isContact);
         setUserSelected(props.profileuser);
@@ -39,7 +39,7 @@ const DrawerProfile = (props) => {
       } else {
         //Si es mi usuario, no estaba mostrando el perfil de los demás usuarios
         if (cEventUser.value == null) return;
-        let isContact = isMyContacts(cEventUser.value, props.cHelper.contacts);
+        const isContact = isMyContacts(cEventUser.value, props.cHelper.contacts);
         setIsMe(cUser.value._id == cEventUser.value.user._id);
         setIsMyContact(isContact);
         setUserSelected(cEventUser.value);

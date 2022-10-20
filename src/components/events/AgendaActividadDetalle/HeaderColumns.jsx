@@ -24,11 +24,11 @@ import { DispatchMessageService } from '@context/MessageService';
 import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
 
 const HeaderColumns = (props) => {
-  let { currentActivity } = useHelper();
-  let cEvent = useEventContext();
-  let cEventUSer = useContext(CurrentEventUserContext);
-  let [loading, setLoading] = useState(false);
-  let {
+  const { currentActivity } = useHelper();
+  const cEvent = useEventContext();
+  const cEventUSer = useContext(CurrentEventUserContext);
+  const [loading, setLoading] = useState(false);
+  const {
     request,
     transmition,
     getRequestByActivity,
@@ -279,6 +279,6 @@ const HeaderColumns = (props) => {
   );
 };
 
-let HeaderColumnswithContext = WithEviusContext(HeaderColumns);
+const HeaderColumnswithContext = WithEviusContext(HeaderColumns);
 
 export default HeaderColumnswithContext;

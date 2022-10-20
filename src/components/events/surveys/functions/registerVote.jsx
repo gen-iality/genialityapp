@@ -8,7 +8,7 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
    let correctAnswer = false;
 
    // Asigna puntos si la encuesta tiene
-   let surveyPoints = question.points ? parseInt(question.points) : 1;
+   const surveyPoints = question.points ? parseInt(question.points) : 1;
    let pointsForCorrectAnswer = 0;
 
    //Validacion para permitir preguntas tipo texto (abiertas)
@@ -22,9 +22,9 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
       /** funcion para validar tipo de respuesta multiple o unica */
       GetResponsesIndex(question).then((responseIndex) => {
          optionQuantity = question.choices.length;
-         let optionIndex = responseIndex;
+         const optionIndex = responseIndex;
 
-         let infoOptionQuestion =
+         const infoOptionQuestion =
             surveyData.allow_gradable_survey === 'true'
                ? { optionQuantity, optionIndex, correctAnswer }
                : { optionQuantity, optionIndex };

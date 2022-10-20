@@ -14,8 +14,8 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
   const [fraseLoading, setfraseLoading] = useState('');
 
   useEffect(() => {
-    let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
-    setfraseLoading(FrasesInspiradoras[ramdon]);
+    const random = Math.floor(Math.random() * FrasesInspiradoras.length);
+    setfraseLoading(FrasesInspiradoras[random]);
   }, []);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
     async function FraseInpiradora() {
       try {
         if (validationGeneral.loading) {
-          let ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
+          const ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
           setfraseLoading(FrasesInspiradoras[ramdon]);
           console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
         }
@@ -37,7 +37,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
       }
     }
 
-    let intervalFrase = setTimeout(() => {
+    const intervalFrase = setTimeout(() => {
       FraseInpiradora();
     }, 8000);
 
@@ -68,7 +68,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
 
 const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
   const cEventUser = useUserEvent();
-  let { helperDispatch } = useHelper();
+  const { helperDispatch } = useHelper();
   const intl = useIntl();
   const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
 
@@ -126,7 +126,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
         });
     };
 
-    let loginInterval = setTimeout(() => {
+    const loginInterval = setTimeout(() => {
       if (basicDataUser.password) {
         loginFirebase();
       } else {

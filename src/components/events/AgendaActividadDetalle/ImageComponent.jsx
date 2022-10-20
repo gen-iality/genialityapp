@@ -4,8 +4,8 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { Result } from 'antd';
 
 const ImageComponent = (props) => {
-  let { willStartSoon } = props;
-  let { currentActivity } = useHelper();
+  const { willStartSoon } = props;
+  const { currentActivity } = useHelper();
   const [activityState, setactivityState] = useState('');
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const ImageComponent = (props) => {
       '?text=' +
       props.cEvent.value.name;
   }
-  let imageToShow = willStartSoon
+  const imageToShow = willStartSoon
     ? currentActivity?.image
       ? currentActivity?.image
       : props.cEvent.value.styles?.banner_image
@@ -71,5 +71,5 @@ const ImageComponent = (props) => {
   );
 };
 
-let ImageComponentwithContext = WithEviusContext(ImageComponent);
+const ImageComponentwithContext = WithEviusContext(ImageComponent);
 export default ImageComponentwithContext;

@@ -6,7 +6,7 @@ import { useCurrentUser } from './userContext';
 export const SurveysContext = createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
-let initialContextState = {
+const initialContextState = {
   status: 'LOADING',
   surveys: [],
   currentSurvey: null,
@@ -24,7 +24,7 @@ const reducer = (state, action) => {
       //Actualizamos el estado de la encuesta actual o se borra la encuesta actual si se despublico
 
       if (state.currentSurvey) {
-        let updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
+        const updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
         console.log('900.updatedcurrentSurvey', updatedcurrentSurvey);
         newState['currentSurvey'] = updatedcurrentSurvey;
       }
@@ -54,8 +54,8 @@ const reducer = (state, action) => {
 
 export function SurveysProvider({ children }) {
   //  console.group('surveyContext');
-  let cEventContext = useEventContext();
-  let cUser = useCurrentUser();
+  const cEventContext = useEventContext();
+  const cUser = useCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
 
   /** ACTION DISPACHERS **/
@@ -148,11 +148,10 @@ export function SurveysProvider({ children }) {
 
   /** @deprecated Use this method from surveyContext instead */
   function shouldDisplaysurveyAssignedToThisActivity() {
-    let recentlyOpenedSurvey;
     if (!state.currentSurvey && !surveysToBeListedByActivity()) {
       return false;
     }
-    recentlyOpenedSurvey =
+    const recentlyOpenedSurvey =
       surveysToBeListedByActivity() &&
       surveysToBeListedByActivity().filter(item => item?._id === state.currentSurvey?._id);
 
@@ -215,7 +214,7 @@ function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
     /** Se valida que el estado actual de la encuesta sea abierta y publicada */
     if (surveyChangedNew.isOpened === 'true' && surveyChangedNew.isPublished === 'true') {
       /** Se filtran la encuestas por id del array de encuestas en el estado anterior versus el id de la encuesta que se actualizo recientemente */
-      let surveyChangedPrevius = state.surveys.find(item => item._id === surveyChangedNew._id);
+      const surveyChangedPrevius = state.surveys.find(item => item._id === surveyChangedNew._id);
       // newState['surveyResult'] = 'view';
 
       /** Si la comparacion anterior da undefined es por la encuesta estaba abierta pero despublicada por ello se niega el surveyChanged, de lo contrario se valida que este cerrada o despublicada */

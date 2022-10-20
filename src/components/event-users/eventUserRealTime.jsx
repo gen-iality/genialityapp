@@ -4,12 +4,12 @@
  */
 
 function updateAttendees(currentAttendees, snapshot) {
-  let newItems = currentAttendees;
+  const newItems = currentAttendees;
 
   let user = 0;
   snapshot.docChanges().forEach((change) => {
     user = change.doc.data();
-    let userPropeties = { ...user.properties };
+    const userPropeties = { ...user.properties };
     delete userPropeties['_id'];
     user = { ...userPropeties, checkedin_at: user.checkedin_at, ...user };
 

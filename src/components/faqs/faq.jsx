@@ -30,7 +30,7 @@ const Faq = (props) => {
 
   const getOne = async () => {
     const response = await FaqsApi.getOne(locationState.edit, eventID);
-    let data = response.data.find((faqs) => faqs._id === locationState.edit);
+    const data = response.data.find((faqs) => faqs._id === locationState.edit);
 
     setFaq(data);
     setFaq(data); //este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar

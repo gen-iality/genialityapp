@@ -16,7 +16,7 @@ const imgNotFound =
 const { Paragraph, Text } = Typography;
 
 const NoticiasList = (props) => {
-  let { setVirtualConference, match, size, newId } = props;
+  const { setVirtualConference, match, size, newId } = props;
   const [eventId, setEventId] = useState(props.cEvent.value._id);
   const [loading, setLoading] = useState(true);
   const [noticias, setNoticias] = useState();
@@ -66,7 +66,7 @@ const NoticiasList = (props) => {
       setviewMenos(true);
     } else {
       if (size) {
-        let noticeList = noticiasAll.slice(0, size);
+        const noticeList = noticiasAll.slice(0, size);
         setNoticias(noticeList);
       }
       setviewMenos(false);
@@ -175,5 +175,5 @@ const NoticiasList = (props) => {
 const mapDispatchToProps = {
   setVirtualConference,
 };
-let NoticiasConnect = connect(null, mapDispatchToProps)(withContext(withRouter(NoticiasList)));
+const NoticiasConnect = connect(null, mapDispatchToProps)(withContext(withRouter(NoticiasList)));
 export default NoticiasConnect;

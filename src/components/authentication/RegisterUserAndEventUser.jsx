@@ -26,7 +26,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     password: '',
     picture: '',
   });
-  let { helperDispatch, currentAuthScreen } = useHelper();
+  const { helperDispatch, currentAuthScreen } = useHelper();
   const [dataEventUser, setdataEventUser] = useState({});
   const [buttonStatus, setbuttonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
@@ -153,9 +153,9 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const handleSubmit = () => {
     setCurrent(current + 1);
-    let SaveUserEvius = new Promise((resolve, reject) => {
+    const SaveUserEvius = new Promise((resolve, reject) => {
       async function CreateAccount() {
-        let resp = await createNewUser(basicDataUser);
+        const resp = await createNewUser(basicDataUser);
         resolve(resp);
       }
 
@@ -163,18 +163,18 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     });
 
     async function createEventUser() {
-      let clonBasicDataUser = { ...basicDataUser };
+      const clonBasicDataUser = { ...basicDataUser };
       delete clonBasicDataUser.password;
       delete clonBasicDataUser.picture;
 
-      let datauser = {
+      const datauser = {
         ...clonBasicDataUser,
         ...dataEventUser,
       };
 
-      let propertiesuser = { properties: { ...datauser } };
+      const propertiesuser = { properties: { ...datauser } };
       try {
-        let respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
+        const respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
         if (respUser && respUser._id) {
           setValidationGeneral({
             status: false,
@@ -246,7 +246,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   };
 
   function validateEmail(email) {
-    var re = /\S+@\S+\.\S+/;
+    const re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 

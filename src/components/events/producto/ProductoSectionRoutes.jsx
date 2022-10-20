@@ -8,7 +8,7 @@ import ProductList from './productList';
 
 const ProductoSectionRoutes = () => {
   let { path } = useRouteMatch();
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;
   return (

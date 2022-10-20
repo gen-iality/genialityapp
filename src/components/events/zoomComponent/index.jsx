@@ -50,7 +50,7 @@ class ZoomComponent extends Component {
   }
 
   async setUpUserForConference() {
-    let { userEntered } = this.props;
+    const { userEntered } = this.props;
 
     let displayName = 'Anónimo';
     let email = 'anonimo@evius.co';
@@ -66,7 +66,7 @@ class ZoomComponent extends Component {
     let urllogin_bigmarker = null;
     let error_bigmarker = null;
     if (this.state.event && this.state.event.event_platform === 'bigmarker') {
-      let data = {
+      const data = {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
         attendee_email: email,
@@ -98,7 +98,7 @@ class ZoomComponent extends Component {
   async componentDidMount() {
     try {
       await this.props.dispatch(fetchRol());
-      let eventId = this.props.match.params.event;
+      const eventId = this.props.match.params.event;
       await this.props.dispatch(fetchPermissions(eventId));
       // const event = await EventsApi.getOne(eventId);
       // const eventWithExtraFields = this.addNewFieldsToEvent(event);
@@ -249,7 +249,7 @@ class ZoomComponent extends Component {
 
   render() {
     const { toggleConference, event, activity } = this.props;
-    let {
+    const {
       url_conference,
       meeting_id,
       isMedium,

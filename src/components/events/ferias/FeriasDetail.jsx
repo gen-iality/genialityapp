@@ -23,7 +23,7 @@ const FeriasDetail = (props) => {
 
   const { Title } = Typography;
 
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
 
   const colorTexto = cEvent.value.styles.textMenu;
   const colorFondo = cEvent.value.styles.toolbarDefaultBg;
@@ -40,8 +40,8 @@ const FeriasDetail = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const { match } = props;
-    let eventId = match.params.event_id;
-    let idCompany = match.params.id;
+    const eventId = match.params.event_id;
+    const idCompany = match.params.id;
     //tabs quemados por visibilidad de cliente ya que no se tenia información
     if (eventId === '60cb7c70a9e4de51ac7945a2') {
       setVisibleTab(false);
@@ -53,7 +53,7 @@ const FeriasDetail = (props) => {
   }, []);
 
   const obtenerEmpresa = async (eventId, idCompany) => {
-    let resp = await getEventCompany(eventId, idCompany);
+    const resp = await getEventCompany(eventId, idCompany);
     return resp;
   };
 

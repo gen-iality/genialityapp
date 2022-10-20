@@ -11,19 +11,19 @@ class Pagination extends Component {
   }
 
   componentDidMount() {
-    let auxArr = this.props.items;
+    const auxArr = this.props.items;
     this.setPage(this.props.initialPage, auxArr);
   }
   componentDidUpdate(prevProps) {
     if (this.props.items !== prevProps.items || this.props.updatetable !== prevProps.updatetable) {
-      let auxArr = this.props.items;
+      const auxArr = this.props.items;
       this.setPage(this.state.pager.currentPage, auxArr);
     }
   }
 
   getDerivedStateFromProps(nextProps) {
     if (nextProps.items.length !== this.props.items.length || nextProps.change !== this.props.change) {
-      let auxArr = nextProps.items;
+      const auxArr = nextProps.items;
       this.setPage(nextProps.initialPage, auxArr);
     }
   }
@@ -85,11 +85,11 @@ class Pagination extends Component {
 
   render() {
     const totalItemsCount = this.props.totalItemsCount / 10;
-    let pages = [];
+    const pages = [];
     for (let i = 0; i < totalItemsCount; ++i) {
       pages.push(i + 1);
     }
-    let pager = this.state.pager;
+    const pager = this.state.pager;
     if (!pager.pages || pager.pages.length <= 1) {
       return null;
     }

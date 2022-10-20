@@ -13,7 +13,7 @@ function GameList(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   function getGamesData() {
-    let games = gamesData ? gamesData : [];
+    const games = gamesData ? gamesData : [];
     const gamesDataFiltered = games.filter((games) => games.showGame === true);
     setListOfGames(gamesDataFiltered);
     setIsLoading(false);

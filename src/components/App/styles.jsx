@@ -287,7 +287,7 @@ class Styles extends Component {
 
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
   async saveEventImage(imageUrl, imageFieldName) {
-    let styles = { ...this.state.styles };
+    const styles = { ...this.state.styles };
     styles[imageFieldName] = imageUrl;
 
     this.setState({ styles: styles });
@@ -313,7 +313,7 @@ class Styles extends Component {
       if (thereIsAnOrganization) {
         info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
       } else {
-        let token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase();
         info = await Actions.put(`/api/events/${eventId}?token=${token}`, this.state.data);
       }
 
@@ -390,7 +390,7 @@ class Styles extends Component {
   }
 
   onColorChange = function(color, fieldName) {
-    let temp = { ...this.state.styles };
+    const temp = { ...this.state.styles };
     temp[fieldName] = color.hex;
     this.setState({ styles: temp });
   };
@@ -398,7 +398,7 @@ class Styles extends Component {
   handleClickSelectColor = (key) => {
     //react recomiendo copiar las cosas antes de modificarlas
     //Copiamos el array ColorDrawer a uno nuevo usando el spread operator (...)
-    let newColorDrawer = [...this.state.colorDrawer];
+    const newColorDrawer = [...this.state.colorDrawer];
     //invertimos el valor de editIsVisible del elemento clikeado indicado por key
     newColorDrawer[key].editIsVisible = !newColorDrawer[key].editIsVisible;
     //Actualizamos el estado
@@ -406,7 +406,7 @@ class Styles extends Component {
   };
 
   hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? {
           r: parseInt(result[1], 16),
@@ -422,7 +422,7 @@ class Styles extends Component {
     /* let value = e.target.value; */
     /* let value = e; */
 
-    let styles = { ...this.state.styles };
+    const styles = { ...this.state.styles };
     styles[name] = value;
     /* console.log(styles[name], styles) */
 

@@ -19,12 +19,12 @@ const StreamingActivity = (props) => {
 
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
 
-  let { transmition, setTransmition } = useContext(AgendaContext);
-  let { currentActivity } = useHelper();
+  const { transmition, setTransmition } = useContext(AgendaContext);
+  const { currentActivity } = useHelper();
 
   async function listeningStateStreamingRoom(event_id, activity_id) {
     if (!fnCiclo) {
-      let tempActivity = currentActivity;
+      const tempActivity = currentActivity;
       firestore
         .collection('events')
         .doc(event_id)

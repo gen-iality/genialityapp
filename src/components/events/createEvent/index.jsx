@@ -20,7 +20,7 @@ class NewEvent extends Component {
     super(props);
     const valores = window.location.search;
     const urlParams = new URLSearchParams(valores);
-    var orgId = urlParams.get('orgId');
+    const orgId = urlParams.get('orgId');
 
     this.state = {
       orgId: orgId,
@@ -56,14 +56,14 @@ class NewEvent extends Component {
     // eslint-disable-next-line react/prop-types
     if (this.props.match?.params?.user) {
       // eslint-disable-next-line react/prop-types
-      let profileUser = await UsersApi.getProfile(this.props.match?.params?.user);
+      const profileUser = await UsersApi.getProfile(this.props.match?.params?.user);
       this.setState({ currentUser: profileUser });
     }
     const valores = window.location.search;
     const urlParams = new URLSearchParams(valores);
-    var orgId = urlParams.get('orgId');
+    const orgId = urlParams.get('orgId');
     if (orgId) {
-      let eventNewContext = this.context;
+      const eventNewContext = this.context;
       let organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
       if (organization) {
         organization = { ...organization, id: organization._id };
@@ -86,7 +86,7 @@ class NewEvent extends Component {
   };
   /*Funciones para navegar en el paso a paso */
   next = () => {
-    let eventNewContext = this.context;
+    const eventNewContext = this.context;
     switch (this.state.current) {
       case 0:
         if (
@@ -115,23 +115,23 @@ class NewEvent extends Component {
   };
 
   nextPage = () => {
-    let current = this.state.current + 1;
+    const current = this.state.current + 1;
     this.setState({ current });
   };
 
   prev = () => {
-    let eventNewContext = this.context;
+    const eventNewContext = this.context;
     if (eventNewContext.optTransmitir && this.state.current == 2) {
       eventNewContext.changeTransmision(false);
     } else {
-      let current = this.state.current - 1;
+      const current = this.state.current - 1;
       this.setState({ current });
     }
   };
 
   render() {
     const { current } = this.state;
-    let context = this.context;
+    const context = this.context;
     return (
       <div
         style={{

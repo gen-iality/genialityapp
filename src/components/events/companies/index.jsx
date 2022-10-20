@@ -57,7 +57,7 @@ class Company extends Component {
     this.setState({ shownCompanyIndex: companyIndex });
     const { eventId, eventUser } = this.props;
     const { companies } = this.state;
-    let companyItem = companies[companyIndex];
+    const companyItem = companies[companyIndex];
 
     if (eventUser && eventUser._id && companyItem.visitors_space_id) {
       fireStoreApi

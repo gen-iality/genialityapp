@@ -3,7 +3,7 @@ import { VideoCameraAddOutlined, UsergroupAddOutlined, CommentOutlined } from '@
 import { useCurrentUser } from '@context/userContext';
 
 const ContactRequest = (props) => {
-  let cUser = useCurrentUser();
+  const cUser = useCurrentUser();
 
   return (
     <Space size='middle'>

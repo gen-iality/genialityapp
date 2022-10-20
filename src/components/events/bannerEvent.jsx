@@ -4,7 +4,7 @@ import 'rc-banner-anim/assets/index.css';
 import { EnvironmentOutlined, LaptopOutlined } from '@ant-design/icons';
 import { Col } from 'antd';
 
-let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
+const BannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
   return (
     <div className='headerContainer'>
       {bgImage && (
@@ -111,4 +111,4 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
   );
 }
 
-export default bannerEvent;
+export default BannerEvent;

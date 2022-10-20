@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
   let { totalsolicitudes, eventPrivate } = useHelper();
   let event = cEvent.value;
 

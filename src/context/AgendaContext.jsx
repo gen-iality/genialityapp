@@ -153,10 +153,10 @@ export const AgendaContextProvider = ({ children }) => {
       .ref(refActivity)
       .orderByChild('date')
       .on('value', (snapshot) => {
-        let listRequest = {};
-        let listRequestArray = [];
+        const listRequest = {};
+        const listRequestArray = [];
         if (snapshot.exists()) {
-          let data = snapshot.val();
+          const data = snapshot.val();
           if (Object.keys(data).length > 0) {
             Object.keys(data).map((requestData) => {
               listRequest[requestData] = {

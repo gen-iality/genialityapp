@@ -10,12 +10,12 @@ import { useEventContext } from '@context/eventContext';
 
 function RankingTrivia(props) {
   const { setGameRanking, setMyScore } = useHelper();
-  let cSurveys = useSurveysContext();
-  let cUser = useCurrentUser();
-  let eventContext = useEventContext();
-  let currentSurvey = cSurveys.currentSurvey;
-  let currentUser = cUser.value;
-  let currentEvent = eventContext.value;
+  const cSurveys = useSurveysContext();
+  const cUser = useCurrentUser();
+  const eventContext = useEventContext();
+  const currentSurvey = cSurveys.currentSurvey;
+  const currentUser = cUser.value;
+  const currentEvent = eventContext.value;
 
   // useEffect(() => {
   //   let unsubscribe;
@@ -57,7 +57,7 @@ function RankingTrivia(props) {
         .orderBy('timeSpent', 'asc')
         // .limit(10)
         .onSnapshot(async (querySnapshot) => {
-          var puntajes = [];
+          const puntajes = [];
           puntajes = await Promise.all(
             querySnapshot.docs.map(async (doc, index) => {
               const result = doc.data();
@@ -101,7 +101,7 @@ function RankingTrivia(props) {
   }, [currentSurvey, currentUser]);
 
   const getDataUser = async (iduser) => {
-    let user = await firestore
+    const user = await firestore
       .collection(`${currentEvent._id}_event_attendees`)
       .where('account_id', '==', iduser)
       .get();

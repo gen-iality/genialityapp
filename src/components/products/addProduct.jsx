@@ -89,9 +89,9 @@ function AddProduct(props) {
 
   const changeImg = (file, name) => {
     let temp = imageFile;
-    let ImagenSearch = imageFile.filter((img) => img.name === name);
+    const ImagenSearch = imageFile.filter((img) => img.name === name);
     if (ImagenSearch.length > 0) {
-      let newtemp = imageFile.filter((img) => img.name !== name);
+      const newtemp = imageFile.filter((img) => img.name !== name);
       temp = newtemp;
       temp.push({ name, file });
       setImgFile(temp);
@@ -115,7 +115,7 @@ function AddProduct(props) {
       action: 'show',
     });
 
-    let validators = {};
+    const validators = {};
     validators.price = false;
     validators.creator = false;
 
@@ -134,7 +134,7 @@ function AddProduct(props) {
     // } else {
     //   validators.picture = false;
     // }
-    let ImagenFilled = imageFile.filter((img) => img.name === 'Imagen');
+    const ImagenFilled = imageFile.filter((img) => img.name === 'Imagen');
     if (ImagenFilled.length === 0) {
       validators.picture = true;
     } else {
@@ -152,7 +152,7 @@ function AddProduct(props) {
     ) {
       try {
         if (idNew !== undefined) {
-          let resp = await EventsApi.editProduct(
+          const resp = await EventsApi.editProduct(
             {
               name,
               by: creator,

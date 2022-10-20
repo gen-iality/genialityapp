@@ -3,9 +3,9 @@ import { CheckCircleTwoTone } from '@ant-design/icons';
 import { ButtonPayment } from '../registrationForm/payRegister';
 
 const ModalRegister = ({ register, setRegister, event }) => {
-  let titleModal = register == 4 ? `¡Información Actualizada!` : `Inscripción Exitosa!`;
+  const titleModal = register == 4 ? `¡Información Actualizada!` : `Inscripción Exitosa!`;
 
-  let message =
+  const message =
     register == 1
       ? `Se ha mandado un correo de confirmación que te permitirá acceder al curso`
       : register == 2
@@ -16,7 +16,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
         : `Estás listo para recargarte de ELECTRIC LOVE el próximo 10 de noviembre.`
       : register == 3 && `Su registro ha sido exitoso, click al siguiente enlace para realizar la donación`;
   // Recibirá en su correo el link de acceso al curso
-  let infoButton =
+  const infoButton =
     register == 1
       ? 'Cerrar'
       : register == 2

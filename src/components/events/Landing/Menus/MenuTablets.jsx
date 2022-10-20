@@ -6,7 +6,7 @@ import { useEventContext } from '@context/eventContext';
 import MenuEvent from './MenuEvent';
 const MenuTablets = () => {
   const [isOpen, setisOpen] = useState(false);
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
 
   return (
     <>

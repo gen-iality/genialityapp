@@ -181,7 +181,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'vimeo':
         //PERMITE AGREGAR ID O URL COMPLETA DE VIMEO
         try {
-          let newDataVimeo = typeActivityState.data;
+          const newDataVimeo = typeActivityState.data;
           resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
           setTypeActivity('vimeo');
           setPlatform('vimeo');
@@ -194,7 +194,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'youTube':
         //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
         try {
-          let newData = typeActivityState.data.includes('https://youtu.be/')
+          const newData = typeActivityState.data.includes('https://youtu.be/')
             ? typeActivityState.data
             : 'https://youtu.be/' + typeActivityState.data;
           resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: newData });

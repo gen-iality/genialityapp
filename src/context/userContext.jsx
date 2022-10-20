@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import privateInstance from '@helpers/request';
 
 export const CurrentUserContext = createContext();
-let initialContextState = { status: 'LOADING', value: undefined };
+const initialContextState = { status: 'LOADING', value: undefined };
 
 export function CurrentUserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(initialContextState);

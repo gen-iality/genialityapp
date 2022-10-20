@@ -5,7 +5,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useState, useEffect } from 'react';
 
 const ListVideoCard = () => {
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
   let { activitiesEvent } = useHelper();
   const [existActivity, setexistActivity] = useState(0);
   function ExistvideoInActivity() {

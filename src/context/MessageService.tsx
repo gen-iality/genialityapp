@@ -40,9 +40,9 @@ export const DispatchMessageService = ({ type, msj, duration, action, key }: Pro
 };
 
 const MessageReducer = ({ type, msj }: PropsOptions) => {
-  let ramdon = Math.floor(Math.random() * PositiveAnswer.length);
-  let ramdonN = Math.floor(Math.random() * NegativeAnswer.length);
-  let ramdonLoading = Math.floor(Math.random() * LoadingAnswer.length);
+  const ramdon = Math.floor(Math.random() * PositiveAnswer.length);
+  const ramdonN = Math.floor(Math.random() * NegativeAnswer.length);
+  const ramdonLoading = Math.floor(Math.random() * LoadingAnswer.length);
   let iconRender = '';
   let finalMsj = '';
 

@@ -13,7 +13,7 @@ export const uploadImagedummyRequest = ({ file, onSuccess }: any) => {
  * @param {any} - setImage - set de image url preview
  */
 export function readUrlImg({ files, setImage }: any) {
-  var reader = new FileReader();
+  const reader = new FileReader();
   reader.onloadend = function async() {
     const imageData = reader.result;
     setImage(imageData);
@@ -32,7 +32,7 @@ export function readUrlImg({ files, setImage }: any) {
 export const handleImageName = (imageUrl: string) => {
   if (imageUrl && typeof imageUrl === 'string') {
     const url = new URL(imageUrl);
-    let name = url.pathname.split('/');
+    const name = url.pathname.split('/');
     return name[name.length - 1];
   }
 };
@@ -45,6 +45,6 @@ export const renderTypeImage = (name: string, imageFile: []): any => {
 };
 
 export const removeObjectFromArray = (name: string, array: [], callback: (data: any) => void) => {
-  let filtered = array.filter((item: any) => item.name !== name);
+  const filtered = array.filter((item: any) => item.name !== name);
   callback(filtered);
 };

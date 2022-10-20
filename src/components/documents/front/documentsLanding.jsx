@@ -35,11 +35,11 @@ class DocumentsDetail extends Component {
 
   async componentDidMount() {
     let { documents } = this.state;
-    let data = [];
+    const data = [];
 
     try {
-      let eventId = this.props.cEvent.value?._id;
-      let folders = await DocumentsApi.getAll(eventId);
+      const eventId = this.props.cEvent.value?._id;
+      const folders = await DocumentsApi.getAll(eventId);
       documents = await getFiles(eventId);
 
       this.setState({
@@ -207,5 +207,5 @@ class DocumentsDetail extends Component {
   }
 }
 
-let DocumentsWithContext = withContext(DocumentsDetail);
+const DocumentsWithContext = withContext(DocumentsDetail);
 export default DocumentsWithContext;

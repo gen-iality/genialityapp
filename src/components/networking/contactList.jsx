@@ -17,9 +17,9 @@ const ContactList = ({ tabActive, agendarCita }) => {
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  let userEventContext = useUserEvent();
-  let eventContext = useEventContext();
-  let userCurrentContext = useCurrentUser();
+  const userEventContext = useUserEvent();
+  const eventContext = useEventContext();
+  const userCurrentContext = useCurrentUser();
 
   useEffect(() => {
     setLoading(true);
@@ -39,7 +39,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
       });
     };
     const getProperties = async () => {
-      let properties = await EventFieldsApi.getAll(eventContext.value._id);
+      const properties = await EventFieldsApi.getAll(eventContext.value._id);
       setUserProperties(properties);
     };
 

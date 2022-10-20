@@ -3,8 +3,8 @@ import { PhoneOutlined, MailOutlined, CopyOutlined, CheckCircleOutlined } from '
 import { DispatchMessageService } from '@context/MessageService';
 
 function Contact(props) {
-  let numWhatsapp = props.codPais + props.tel;
-  let urlNum = `https://wa.me/${numWhatsapp}`;
+  const numWhatsapp = props.codPais + props.tel;
+  const urlNum = `https://wa.me/${numWhatsapp}`;
 
   const { Text } = Typography;
 

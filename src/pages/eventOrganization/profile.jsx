@@ -13,7 +13,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 function OrganizationInformation(props) {
-  let { name, description, _id: organizationId, type_event } = props.org;
+  const { name, description, _id: organizationId, type_event } = props.org;
   const [typeEvents, setTypeEvents] = useState([]);
 
   async function updateOrganization(values) {
@@ -40,7 +40,7 @@ function OrganizationInformation(props) {
   }
 
   async function obtenerTypeEvents() {
-    let resp = await TypesApi.getAll();
+    const resp = await TypesApi.getAll();
     if (resp) {
       setTypeEvents(resp);
     }

@@ -93,7 +93,7 @@ export const NewEventProvider = ({ children }) => {
 
   const createOrganization = async (data) => {
     //CREAR ORGANIZACION------------------------------
-    let create = await OrganizationApi.createOrganization(data);
+    const create = await OrganizationApi.createOrganization(data);
     if (create) {
       return create;
     }
@@ -175,7 +175,7 @@ export const NewEventProvider = ({ children }) => {
     setSelectedDay(day);
   };
   const handleInput = (event, name) => {
-    let listerrors = errorInputs.filter((err) => err.name !== name);
+    const listerrors = errorInputs.filter((err) => err.name !== name);
     setValueInputs({ ...valueInputs, [name]: event.target.value });
     if (name == 'name') {
       if (event.target.value.length >= 4) {
@@ -195,7 +195,7 @@ export const NewEventProvider = ({ children }) => {
   };
 
   const containsError = (field) => {
-    let errorField = errorInputs.filter((error) => error.name == field);
+    const errorField = errorInputs.filter((error) => error.name == field);
     if (errorField.length > 0 && errorField[0].value) {
       return true;
     }
@@ -203,7 +203,7 @@ export const NewEventProvider = ({ children }) => {
   };
 
   const validateField = (validatorsInput) => {
-    let listerrors = [];
+    const listerrors = [];
 
     validatorsInput.map((validator) => {
       if (validator) {
@@ -315,13 +315,13 @@ export const NewEventProvider = ({ children }) => {
       console.log('DATA A VERIFICAR===>', state.selectOrganization?.itemsMenu, templateId, data);
       //CREAR CURSO
       try {
-        let token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase();
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
           //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
-          let sectionsDefault = state.selectOrganization?.itemsMenu
+          const sectionsDefault = state.selectOrganization?.itemsMenu
             ? { itemsMenu: state.selectOrganization?.itemsMenu }
             : newMenu;
           //HABILTAR SECCIONES POR DEFECTO
@@ -456,7 +456,7 @@ export const NewEventProvider = ({ children }) => {
 };
 
 export const useContextNewEvent = () => {
-  let context = useContext(cNewEventContext);
+  const context = useContext(cNewEventContext);
   if (!context) {
     throw new Error('useContextNewEvent debe estar dentro del proveedor');
   }

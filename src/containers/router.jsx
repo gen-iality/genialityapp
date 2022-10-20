@@ -27,7 +27,7 @@ const NotFoundPage = loadable(() => import('../components/notFoundPage'));
 const Header = loadable(() => import('./header'));
 
 const MainRouter = (props) => {
-  let cUser = useCurrentUser();
+  const cUser = useCurrentUser();
   useEffect(() => {
     props.dispatch(fetchCategories());
     props.dispatch(fetchTypes());

@@ -9,7 +9,7 @@ import NoticiasDetailsConnect from './NoticiasDetails';
 
 const NoticiasSectionRoutes = () => {
   let { path } = useRouteMatch();
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;
   return (

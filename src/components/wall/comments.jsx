@@ -19,7 +19,7 @@ class CommentsList extends Component {
     };
   }
   async getDataUser(iduser) {
-    let user = await UsersApi.getProfile(iduser);
+    const user = await UsersApi.getProfile(iduser);
     if (user) {
       return user.picture;
     } else {
@@ -31,7 +31,7 @@ class CommentsList extends Component {
     try {
       let dataComment = [];
 
-      let admincommentsRef = firestore
+      const admincommentsRef = firestore
         .collection('adminPost')
         .doc(eventId)
         .collection('comment')
@@ -39,11 +39,11 @@ class CommentsList extends Component {
         .collection('comments')
         .orderBy('date', 'asc');
 
-      let snapshot = await admincommentsRef.get();
+      const snapshot = await admincommentsRef.get();
 
       dataComment = await Promise.all(
         snapshot.docs.map(async (doc) => {
-          let picture =
+          const picture =
             this.props.cEvent.value.visibility !== 'ANONYMOUS' && (await this.getDataUser(doc.data().author));
           return { id: doc.id, ...doc.data(), picture: picture };
         })

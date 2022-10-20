@@ -4,10 +4,10 @@ import { firestore } from './firebase';
 import { GetTokenUserFirebase } from './HelperAuth';
 
 export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActual, event) => {
-  let eventUserId = userActual._id;
+  const eventUserId = userActual._id;
 
-  let currentUserName = userActual.names || userActual.email;
-  let currentUser = await GetTokenUserFirebase();
+  const currentUserName = userActual.names || userActual.email;
+  const currentUser = await GetTokenUserFirebase();
 
   if (currentUser) {
     // Se valida si el usuario esta suscrito al curso
@@ -24,10 +24,10 @@ export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActu
 
       // Se ejecuta el servicio del api de evius
       try {
-        var respInvitation = await EventsApi.sendInvitation(event._id, data);
+        const respInvitation = await EventsApi.sendInvitation(event._id, data);
         return respInvitation;
       } catch (err) {
-        let { data } = err.response;
+        const { data } = err.response;
         return null;
       }
     } else {
@@ -91,7 +91,7 @@ export const isMyContacts = (contact, listContacts) => {
 
 export const haveRequest = (user, listRequest, socialZone = 0) => {
   if (listRequest.length > 0) {
-    let request = listRequest?.filter((userRequest) => socialZone == 0 ? userRequest.id_user_requesting == user?._id : userRequest?.id_user_requesting == user?.eventUserId);
+    const request = listRequest?.filter((userRequest) => socialZone == 0 ? userRequest.id_user_requesting == user?._id : userRequest?.id_user_requesting == user?.eventUserId);
     if (request.length > 0) {
       return true;
     }

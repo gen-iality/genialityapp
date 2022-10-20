@@ -13,7 +13,7 @@ import WowzaStreamingPlayer from './wowzaStreamingPlayer';
 import AgendaContext from '@context/AgendaContext';
 
 const RenderComponent = (props) => {
-  let tabsdefault = {
+  const tabsdefault = {
     attendees: false,
     chat: true,
     games: true,
@@ -27,12 +27,12 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  let { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
-  let { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
+  const { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
+  const { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     if (!fnCiclo) {
-      let tempactivty = currentActivity;
+      const tempactivty = currentActivity;
       firestore
         .collection('events')
         .doc(event_id)

@@ -38,7 +38,7 @@ class Wall extends Component {
     await saveFirebase.deletePost(postId, this.props.cEvent.value._id);
 
     //se borra local
-    var updatedPost = this.state.dataPost.filter(function(value) {
+    const updatedPost = this.state.dataPost.filter(function(value) {
       return value.id !== postId;
     });
     //this.setState({ dataPost: updatedPost });
@@ -46,7 +46,7 @@ class Wall extends Component {
   };
 
   increaseLikes = async (postId, userId) => {
-    var updatedPost = await saveFirebase.increaseLikes(postId, this.props.cEvent.value._id, userId);
+    const updatedPost = await saveFirebase.increaseLikes(postId, this.props.cEvent.value._id, userId);
     //se actualiza local
     /* updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;
@@ -55,7 +55,7 @@ class Wall extends Component {
     return true;*/
   };
   createComment = async (postId, message) => {
-    var updatedPost = await saveFirebase.createComment(
+    const updatedPost = await saveFirebase.createComment(
       postId,
       this.props.cEvent.value._id,
       message,
@@ -104,5 +104,5 @@ const mapDispatchToProps = {
   setVirtualConference,
 };
 
-let WallWithContext = withContext(Wall);
+const WallWithContext = withContext(Wall);
 export default connect(null, mapDispatchToProps)(WallWithContext);

@@ -33,7 +33,7 @@ export const useApiMultiple = () => {
     });
     setIsSuccess(false); */
     try {
-      let requestToMake = requests.map((request, index) => {
+      const requestToMake = requests.map((request, index) => {
         return [request, methods[index], keys[index], payloads[index], withCredentials[index]];
       });
 

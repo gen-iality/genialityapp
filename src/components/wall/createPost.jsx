@@ -90,7 +90,7 @@ class CreatePost extends Component {
       this.setState({
         loadingsave: true,
       });
-      let data = {
+      const data = {
         urlImage: this.state.image,
         post: values.post || '',
         author: this.props.cUser.value._id,
@@ -106,7 +106,7 @@ class CreatePost extends Component {
       };
 
       //savepost se realiza para publicar el post
-      var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
+      const newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
       if (newPost) {
         this.setState({ value: '', image: '' }, () =>
           this.setState({
@@ -144,8 +144,8 @@ class CreatePost extends Component {
     console.log(event);
     const permitFile = ['png', 'jpg', 'jpeg', 'gif'];
     //event.preventDefault();
-    let file = event.fileList[0];
-    let extension = file.name.split('.').pop();
+    const file = event.fileList[0];
+    const extension = file.name.split('.').pop();
     /* if (permitFile.indexOf(extension) > -1) {
       let reader = new FileReader();
       reader.readAsDataURL(file);
@@ -156,7 +156,7 @@ class CreatePost extends Component {
       this.setState({ errimage: true });
     } */
     if (file) {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(file.originFileObj);
       reader.onloadend = () => {
         this.setState({ image: reader.result, inputKey: Date.now(), errimage: false });
@@ -327,5 +327,5 @@ class CreatePost extends Component {
   }
 }
 
-let CreatePostWithContext = withContext(CreatePost);
+const CreatePostWithContext = withContext(CreatePost);
 export default CreatePostWithContext;

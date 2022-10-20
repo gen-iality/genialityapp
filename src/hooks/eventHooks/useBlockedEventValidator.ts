@@ -7,17 +7,17 @@ export const useBlockedEventValidator = (event: any, cUser: any) => {
 
   if (!cUser) return null;
 
-  let actualDate = new Date(event.value?.datetime_to);
-  let dayUserOrEvent = cUser?.value?.plan ? cUser?.value?.plan?.availables?.later_days : event.value?.later_days;
+  const actualDate = new Date(event.value?.datetime_to);
+  const dayUserOrEvent = cUser?.value?.plan ? cUser?.value?.plan?.availables?.later_days : event.value?.later_days;
 
-  let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + dayUserOrEvent));
-  let formatDate = dayjs(blockedDate).format('DD-MM-YYYY');
+  const blockedDate = new Date(actualDate.setDate(actualDate.getDate() + dayUserOrEvent));
+  const formatDate = dayjs(blockedDate).format('DD-MM-YYYY');
   const blockedEventDate = formatDate;
 
   if (new Date() > blockedDate) {
     const blockedMessage = async () => {
       try {
-        let message = await AlertsPlanApi.createOne({
+        const message = await AlertsPlanApi.createOne({
           message: 'Curso bloqueado sin días posteriores',
           status: 'ACTIVE',
           user_id: cUser.value?._id,

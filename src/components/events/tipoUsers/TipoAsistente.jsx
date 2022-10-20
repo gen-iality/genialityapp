@@ -28,7 +28,7 @@ const TipoAsistente = (props) => {
 
   const getOne = async () => {
     const response = await RolAttApi.getOne(eventID, locationState.edit);
-    let data = response.find((tipoAsistentes) => tipoAsistentes._id === locationState.edit);
+    const data = response.find((tipoAsistentes) => tipoAsistentes._id === locationState.edit);
 
     // setTipoAsistente({ event_id: '6219441bcac07f74232f5d60', name: 'nuevo hola', type: 'attendee' });
     setTipoAsistente(data);

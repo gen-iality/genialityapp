@@ -228,7 +228,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           console.error('ActivityTypeProvider: contentSource is none');
           return;
         }
-        let newData = inputContentSource.includes('https://youtu.be/')
+        const newData = inputContentSource.includes('https://youtu.be/')
           ? inputContentSource
           : 'https://youtu.be/' + inputContentSource;
         const resp = await saveConfig({ platformNew: 'wowza', type: activityContentValues.youtube, data: newData });

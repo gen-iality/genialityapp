@@ -27,13 +27,13 @@ const { setHasOpenSurveys } = SurveyActions;
 const AgendaActividadDetalle = props => {
   let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
   let [orderedHost, setOrderedHost] = useState([]);
-  let cSurveys = useSurveysContext();
+  const cSurveys = useSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);
   const [activity, setactivity] = useState('');
   const cUser = useCurrentUser();
-  let cEventUser = useUserEvent();
+  const cEventUser = useUserEvent();
   const cEvent = useEventContext();
 
   const intl = useIntl();

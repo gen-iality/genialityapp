@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Button, notification, Drawer } from 'antd';
 
-let surveyNotification = () => {
-  let [drawerVisible, setDrawerVisible] = useState(false);
+const surveyNotification = () => {
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   // función que abre el drawer
   function clearStates(visible) {

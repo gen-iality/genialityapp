@@ -9,8 +9,8 @@ import { async } from 'ramda-adjunct';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useUserEvent } from '@context/eventUserContext';
 const ModalUpdate = (props: any) => {
-  let cEvent = useEventContext();
-  let cEventUser = useUserEvent();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
 
   const [isVisible, setIsVisible] = useState(false);
   let { handleChangeTypeModal } = useHelper();

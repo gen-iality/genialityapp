@@ -71,8 +71,8 @@ function reducer(state: SurveyContextType, action: SurveyContextReducerActionTyp
 }
 
 export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
-  let cEventContext = useEventContext();
-  let cUser = useCurrentUser();
+  const cEventContext = useEventContext();
+  const cUser = useCurrentUser();
 
   const [state, dispatch] = useReducer(reducer, initialContextState);
 

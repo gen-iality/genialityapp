@@ -5,23 +5,23 @@ export const saveFirebase = {
   async savePost(data, eventId) {
     try {
       if (data.urlImage) {
-        var storageRef = fireStorage.ref();
-        var imageName = Date.now();
-        var imageRef = storageRef.child('images/' + imageName + '.png');
-        var snapshot = await imageRef.putString(data.urlImage, 'data_url');
-        var imageUrl = await snapshot.ref.getDownloadURL();
+        const storageRef = fireStorage.ref();
+        const imageName = Date.now();
+        const imageRef = storageRef.child('images/' + imageName + '.png');
+        const snapshot = await imageRef.putString(data.urlImage, 'data_url');
+        const imageUrl = await snapshot.ref.getDownloadURL();
 
         data.urlImage = imageUrl;
       }
 
-      var docRef = await firestore
+      const docRef = await firestore
         .collection('adminPost')
         .doc(`${eventId}`)
         .collection('posts')
         .add(data);
 
-      var postSnapShot = await docRef.get();
-      var post = postSnapShot.data();
+      const postSnapShot = await docRef.get();
+      const post = postSnapShot.data();
       post.id = postSnapShot.id;
 
       return post;
@@ -35,16 +35,16 @@ export const saveFirebase = {
   },
 
   async increaseLikes(postId, eventId, userId) {
-    var docRef = firestore
+    const docRef = firestore
       .collection('adminPost')
       .doc(eventId)
       .collection('posts')
       .doc(postId);
 
-    var docSnap = await docRef.get();
-    var doc = docSnap.data();
+    const docSnap = await docRef.get();
+    const doc = docSnap.data();
 
-    var count = doc['usersLikes'].length; //cuenta la cantidad de usuarios que han dado like
+    const count = doc['usersLikes'].length; //cuenta la cantidad de usuarios que han dado like
     const array = doc['usersLikes']; //asigna a un array los uauruarios que han dado like
 
     // si el usuario actual no se encuntra en el array, lo guarda y suma al contador de like
@@ -72,24 +72,24 @@ export const saveFirebase = {
   async createComment(postId, eventId, comment, user) {
     console.log('USER COMMENTARIO==>', user);
     const dataPost = [];
-    var docRef = await firestore
+    const docRef = await firestore
       .collection('adminPost')
       .doc(eventId)
       .collection('posts')
       .doc(postId);
-    var docSnap = await docRef.get();
-    var doc = docSnap.data();
+    const docSnap = await docRef.get();
+    const doc = docSnap.data();
 
     doc['comments'] = doc.comments ? doc.comments + 1 : 1;
     doc['id'] = docRef.id;
     await docRef.update(doc);
-    let posts = await firestore
+    const posts = await firestore
       .collection('adminPost')
       .doc(eventId)
       .collection('posts')
       .orderBy('datePost', 'desc');
     //GUARDAR COMENTARIO
-    let admincommentsRef = firestore
+    const admincommentsRef = firestore
       .collection('adminPost')
       .doc(eventId)
       .collection('comment')
@@ -123,20 +123,20 @@ export const saveFirebase = {
         .doc(postId)
         .delete();
 
-      var query = firestore
+      const query = firestore
         .collection('adminPost')
         .doc(eventId)
         .collection('comment')
         .doc(postId)
         .collection('comments');
 
-      var queryPostId = firestore
+      const queryPostId = firestore
         .collection('adminPost')
         .doc(eventId)
         .collection('comment')
         .doc(postId);
 
-      var querySnapshot = await query.get();
+      const querySnapshot = await query.get();
       if (querySnapshot) {
         querySnapshot.forEach(async function(doc) {
           await doc.ref.delete();

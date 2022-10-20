@@ -56,7 +56,7 @@ const Headers = (props) => {
   });
   const [fixed, setFixed] = useState(false);
   const screens = useBreakpoint();
-  let history = useHistory();
+  const history = useHistory();
   const intl = useIntl();
   const openMenu = () => {
     setdataGeneral({
@@ -83,7 +83,7 @@ const Headers = (props) => {
   };
 
   async function LoadCurrentUser() {
-    let { value, status } = cUser;
+    const { value, status } = cUser;
 
     if (!value && status === 'LOADED') return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral);
     if (!value) return;
@@ -104,7 +104,7 @@ const Headers = (props) => {
   }
 
   const WhereHerePath = () => {
-    let containtorganization = window.location.pathname.includes('/organization');
+    const containtorganization = window.location.pathname.includes('/organization');
     return containtorganization ? 'organization' : 'landing';
   };
 
@@ -149,7 +149,7 @@ const Headers = (props) => {
 
   useEffect(() => {
     async function RenderButtonsForTypeEvent() {
-      let typeEvent = recordTypeForThisEvent(cEvent);
+      const typeEvent = recordTypeForThisEvent(cEvent);
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
           setshowButtons({
@@ -378,5 +378,5 @@ const mapDispatchToProps = {
   showMenu,
 };
 
-let HeaderWithContext = withContext(Headers);
+const HeaderWithContext = withContext(Headers);
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithContext);

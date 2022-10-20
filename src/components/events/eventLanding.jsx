@@ -189,5 +189,5 @@ class EventLanding extends Component {
   }
 }
 
-let EventLandingWithContext = withContext(EventLanding);
+const EventLandingWithContext = withContext(EventLanding);
 export default withRouter(EventLandingWithContext);

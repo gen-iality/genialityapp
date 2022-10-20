@@ -6,7 +6,8 @@ import { getAnswersByQuestion } from './services';
 import Header from '@antdComponents/Header';
 import Table from '@antdComponents/Table';
 
-let renderNombreUsuario = (name) => (!name ? <span>Usuario invitado</span> : <span>{name}</span>);
+const RenderNombreUsuario = (name) => (!name ? <span>Usuario invitado</span> : <span>{name}</span>);
+
 const columns = [
   {
     title: 'Creado',
@@ -17,7 +18,7 @@ const columns = [
     title: 'Nombre',
     dataIndex: 'user_name',
     key: 'user_name',
-    render: renderNombreUsuario,
+    render: RenderNombreUsuario,
   },
   {
     title: 'Respuesta',
@@ -25,6 +26,7 @@ const columns = [
     key: 'response',
   },
 ];
+
 class ReportQuestion extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +40,7 @@ class ReportQuestion extends Component {
     const { location, match } = this.props;
 
     this.setState({ nameQuestion: location.state.titleQuestion });
-    let response = await getAnswersByQuestion(location.state.surveyId, match.params.id);
+    const response = await getAnswersByQuestion(location.state.surveyId, match.params.id);
     this.setState({ listOfUserResponse: response });
   };
 
@@ -47,14 +49,15 @@ class ReportQuestion extends Component {
   }
 
   exportReport = () => {
-    let { nameQuestion, listOfUserResponse } = this.state;
+    let { nameQuestion } = this.state;
+    const { listOfUserResponse } = this.state;
     //Sheet names cannot exceed 31 chars
     nameQuestion = nameQuestion.substring(0, 30);
     const { match } = this.props;
 
     const exclude = ({ ...rest }) => rest;
 
-    let data = listOfUserResponse.map((item) => exclude(item));
+    const data = listOfUserResponse.map((item) => exclude(item));
 
     for (let i = 0; data.length > i; i++) {
       if (Array.isArray(data[i].response)) {
@@ -73,7 +76,7 @@ class ReportQuestion extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
-    let { nameQuestion, listOfUserResponse } = this.state;
+    const { nameQuestion, listOfUserResponse } = this.state;
     return (
       <>
         <Header title={nameQuestion} back />

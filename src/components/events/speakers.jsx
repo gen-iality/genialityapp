@@ -29,10 +29,10 @@ class Speakers extends Component {
 
   async componentDidMount() {
     //Se hace la consulta a la api de speakers
-    let speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
+    const speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
 
     //consultamos las categorias del curso
-    let categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
+    const categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
 
     //Recorremos las categorias si tienen el campo orden
     //en caso que no lo tengan le asignamos el ultimo orden basado en el maximo valor que exista
@@ -101,7 +101,7 @@ class Speakers extends Component {
 
   async activitySpeakers(eventId, id) {
     //Se consulta la api para traer la informacion de lecciones por conferencista
-    let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
+    const InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
     //Se manda al estado la consulta
     this.setState({
       activityesBySpeaker: InfoActivityesBySpeaker.data,
@@ -155,9 +155,9 @@ class Speakers extends Component {
       renderSpeakerCategories,
     } = this.state;
 
-    let eventId = this.props.cEvent.value._id;
+    const eventId = this.props.cEvent.value._id;
 
-    let eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
+    const eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
 
     return (
       <div style={{ padding: '20px' }}>
@@ -444,5 +444,5 @@ class Speakers extends Component {
   }
 }
 
-let SpeakerswithContext = withContext(Speakers);
+const SpeakerswithContext = withContext(Speakers);
 export default SpeakerswithContext;

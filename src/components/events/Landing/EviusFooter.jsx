@@ -1,8 +1,8 @@
 import { useEventContext } from '@context/eventContext';
 import { useHistory } from 'react-router-dom';
 const EviusFooter = () => {
-  let cEventContext = useEventContext();
-  let history = useHistory();
+  const cEventContext = useEventContext();
+  const history = useHistory();
   return (
     <>
       {cEventContext.value.styles && cEventContext.value.styles.banner_footer && (

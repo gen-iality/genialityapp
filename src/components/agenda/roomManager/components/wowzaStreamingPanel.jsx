@@ -48,7 +48,7 @@ const WowzaStreamingPanel = ({
 }) => {
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`;
-  let cUser = useCurrentUser();
+  const cUser = useCurrentUser();
   /* console.log('debug ', meeting_id); */
   const [ livestreamStatus, setLivestreamStatus ] = useState(null);
   const [ livestreamStats, setLivestreamStats ] = useState(null);
@@ -73,14 +73,14 @@ const WowzaStreamingPanel = ({
   useEffect(() => {
     if (livestreamQuery && livestreamQuery.data) {
       const { names, email, picture } = cUser.value;
-      let rtmplink = livestreamQuery.data.source_connection_information;
-      let linkAdmin =
+      const rtmplink = livestreamQuery.data.source_connection_information;
+      const linkAdmin =
         eviusmeets +
         `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name
         }&rol=1&username=${names}&email=${email}&photo=${picture ? picture : ''}`;
-      let linkProductor =
+      const linkProductor =
         eviusmeets + `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}&rol=1`;
-      let linkAsistente = eviusmeets + `?meetingId=${activityEdit}`;
+      const linkAsistente = eviusmeets + `?meetingId=${activityEdit}`;
       setLinkRolAdmin(linkAdmin);
       setLinkRolProductor(linkProductor);
       setLinkRolAsistente(linkAsistente);

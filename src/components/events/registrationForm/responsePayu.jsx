@@ -12,12 +12,12 @@ const ResponsePayu = (props) => {
     const parameters = window.location.search;
     const urlParams = new URLSearchParams(parameters);
     //Accedemos a los valores
-    var reference = urlParams.get('referenceCode');
-    var lapResponseCode = urlParams.get('lapResponseCode');
-    var polTransactionState = urlParams.get('polTransactionState');
-    var polResponseCode = urlParams.get('polResponseCode');
-    var lapTransactionState = urlParams.get('lapTransactionState');
-    var message = urlParams.get('message');
+    const reference = urlParams.get('referenceCode');
+    const lapResponseCode = urlParams.get('lapResponseCode');
+    const polTransactionState = urlParams.get('polTransactionState');
+    const polResponseCode = urlParams.get('polResponseCode');
+    const lapTransactionState = urlParams.get('lapTransactionState');
+    const message = urlParams.get('message');
     setResponse({
       reference,
       lapResponseCode,
@@ -30,7 +30,7 @@ const ResponsePayu = (props) => {
       updateRolUser();
     }
     async function updateRolUser() {
-      let updateRol = await Actions.put(`/api/events/${props.cEvent.value?._id}/eventusers/${reference}/updaterol`, {
+      const updateRol = await Actions.put(`/api/events/${props.cEvent.value?._id}/eventusers/${reference}/updaterol`, {
         rol_id: '60e8a8b7f6817c280300dc23',
       });
     }

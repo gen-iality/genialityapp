@@ -32,7 +32,7 @@ class ActividadLanguage extends Component {
 
   async loadData() {
     const { eventId, activityId } = this.props;
-    let related_meetings = await firestore
+    const related_meetings = await firestore
       .collection('languageState')
       .doc(activityId)
       .get()
@@ -57,10 +57,10 @@ class ActividadLanguage extends Component {
 
   async onFinish(related_meetings_selected) {
     const { eventId, activityId } = this.props;
-    let related_meetings = this.state.related_meetings ? this.state.related_meetings : [];
+    const related_meetings = this.state.related_meetings ? this.state.related_meetings : [];
     related_meetings.push(related_meetings_selected);
 
-    let info = { event_id: eventId, activity_id: activityId, related_meetings: related_meetings };
+    const info = { event_id: eventId, activity_id: activityId, related_meetings: related_meetings };
     try {
       await firestore
         .collection('languageState')
@@ -87,7 +87,7 @@ class ActividadLanguage extends Component {
       return i !== object;
     });
 
-    let related_meetings = dataToFilter;
+    const related_meetings = dataToFilter;
 
     this.setState({ related_meetings });
     try {
@@ -114,7 +114,7 @@ class ActividadLanguage extends Component {
 
   async onFinishModal(related_meetings_selected) {
     const { eventId, activityId } = this.props;
-    let related_meetings_original = this.state.related_meetings;
+    const related_meetings_original = this.state.related_meetings;
 
     for (let i = 0; i < related_meetings_original.length; i++) {
       if (related_meetings_original[i].meeting_id) {
@@ -138,7 +138,7 @@ class ActividadLanguage extends Component {
       }
     }
 
-    let related_meetings = related_meetings_original;
+    const related_meetings = related_meetings_original;
 
     try {
       await firestore

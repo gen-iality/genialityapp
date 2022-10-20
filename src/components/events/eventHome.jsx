@@ -9,8 +9,8 @@ import { CurrentEventUserContext } from '@context/eventUserContext';
 const EventHome = props => {
   /*Contextos*/
   let { setActivitiesAttendee } = props;
-  let cEvent = useEventContext();
-  let cEventUser = useContext(CurrentEventUserContext);
+  const cEvent = useEventContext();
+  const cEventUser = useContext(CurrentEventUserContext);
   if (!cEvent.value) {
     return <>Cargando...</>;
   }

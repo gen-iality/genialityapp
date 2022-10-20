@@ -19,7 +19,7 @@ function GameRanking(props) {
   };
 
   useEffect(() => {
-    let gameId = '0biWfCwWbUGhbZmfhkvu';
+    const gameId = '0biWfCwWbUGhbZmfhkvu';
     // let unsubscribeCurrentUserScore;
     // //Consulta del puntaje del currentUser
     // if (!(Object.keys(currentUser).length === 0)) {
@@ -38,17 +38,17 @@ function GameRanking(props) {
     //     });
     // }
     //Consulta de todos los puntajes
-    let unsubscribeAllScores = firestore
+    const unsubscribeAllScores = firestore
       .collection('juegos/' + gameId + '/puntajes/')
       .orderBy('puntaje', 'desc')
       // .limit(10)
       .onSnapshot(async (querySnapshot) => {
-        var puntajes = [];
+        const puntajes = [];
         puntajes = await Promise.all(
           querySnapshot.docs.map(async (doc, index) => {
             const result = doc.data();
 
-            let picture = await getDataUser(result.eventUser_id);
+            const picture = await getDataUser(result.eventUser_id);
             result['score'] = result.puntaje;
             result['imageProfile'] = picture;
             result['index'] = index + 1;
@@ -73,7 +73,7 @@ function GameRanking(props) {
   }, [currentUser]);
 
   const getDataUser = async (iduser) => {
-    let user = await firestore
+    const user = await firestore
       .collection(`${cEvent.value._id}_event_attendees`)
       .where('account_id', '==', iduser)
       .get();

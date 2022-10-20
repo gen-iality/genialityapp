@@ -144,5 +144,5 @@ class InformativeSection2 extends Component {
   }
 }
 
-let InformativeSection2WithContext = withContext(InformativeSection2);
+const InformativeSection2WithContext = withContext(InformativeSection2);
 export default InformativeSection2WithContext;

@@ -28,11 +28,11 @@ class EventUsersList extends Component {
 
   async componentDidMount() {
     const { eventID, event } = this.props;
-    let attendees = await UsersApi.getAll(eventID);
-    let tickets = await eventTicketsApi.getAll(eventID);
+    const attendees = await UsersApi.getAll(eventID);
+    const tickets = await eventTicketsApi.getAll(eventID);
     this.setState({ tickets });
-    let attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data);
-    let columnsTable = this.createTableColumns(event);
+    const attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data);
+    const columnsTable = this.createTableColumns(event);
 
     this.setState({ attendees: attendees.data, attendeesFormatedForTable, columnsTable });
   }
@@ -41,7 +41,7 @@ class EventUsersList extends Component {
         y de esta manera no romper la logica del filtro traida desde ant
     */
   formatAttendeesForTable(attendees) {
-    let attendeesFormatedForTable = [];
+    const attendeesFormatedForTable = [];
     let attendeeFlattenedData = '';
 
     for (let i = 0; attendees.length > i; i++) {
@@ -66,9 +66,9 @@ class EventUsersList extends Component {
   createTableColumns(event) {
     const { tickets } = this.state;
 
-    let filterTickets = [];
-    let propertiesTable = event.user_properties;
-    let columnsTable = [];
+    const filterTickets = [];
+    const propertiesTable = event.user_properties;
+    const columnsTable = [];
 
     columnsTable.push({
       title: 'Último ingreso',
@@ -280,7 +280,7 @@ class EventUsersList extends Component {
           text: 'Deselect all Data',
           width: '50%',
           onSelect: () => {
-            let newSelectedRowKeys = [];
+            const newSelectedRowKeys = [];
             this.setState({ selectedRowKeys: newSelectedRowKeys });
           },
         },

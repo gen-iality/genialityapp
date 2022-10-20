@@ -11,7 +11,7 @@ const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
 
 function FileField(rawProps) {
   const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps);
-  let [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const { name } = rawProps;
 
@@ -27,7 +27,7 @@ function FileField(rawProps) {
   const validate = useCallback(() => {
     return undefined;
   });
-  let saveEventImage = async (files, form, field) => {
+  const saveEventImage = async (files, form, field) => {
     const { status, originFileObj } = files.file;
     switch (status) {
       case 'done':

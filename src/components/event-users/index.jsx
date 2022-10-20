@@ -229,7 +229,7 @@ class ListEventUser extends Component {
 
   rol_component = (text, item, index) => {
     if (this.state.rolesList) {
-      for (let role of this.state.rolesList) {
+      for (const role of this.state.rolesList) {
         if (item.rol_id == role._id) {
           item['rol_name'] = role.name;
           return <p>{role.name}</p>;
@@ -299,7 +299,7 @@ class ListEventUser extends Component {
   };
 
   getAttendes = async () => {
-    let self = this;
+    const self = this;
 
     this.checkFirebasePersistence();
     try {
@@ -313,9 +313,9 @@ class ListEventUser extends Component {
 
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
-      let fieldsForm = Array.from(extraFields);
+      const fieldsForm = Array.from(extraFields);
       // AGREGAR EXTRAFIELDS DE ROL Y CHECKIN
-      let rolesOptions = rolesList.map((rol) => {
+      const rolesOptions = rolesList.map((rol) => {
         return {
           label: rol.name,
           value: rol._id,
@@ -355,7 +355,7 @@ class ListEventUser extends Component {
       });
 
       let columns = [];
-      let checkInColumn = {
+      const checkInColumn = {
         title: 'Ingreso',
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
@@ -366,7 +366,7 @@ class ListEventUser extends Component {
         render: self.checkedincomponent,
       };
 
-      let checkInType = {
+      const checkInType = {
         title: 'Tipo de checkIn',
         dataIndex: 'checkedin_type',
         key: 'checkedin_type',
@@ -376,7 +376,7 @@ class ListEventUser extends Component {
         render: self.checkInTypeComponent,
       };
 
-      let physicalCheckIn = {
+      const physicalCheckIn = {
         title: 'Registrar checkIn físico',
         dataIndex: 'physicalCheckIn',
         key: 'physicalCheckIn',
@@ -385,7 +385,7 @@ class ListEventUser extends Component {
         render: self.physicalCheckInComponent,
       };
 
-      let editColumn = {
+      const editColumn = {
         title: 'Editar',
         key: 'edit',
         fixed: 'right',
@@ -398,7 +398,7 @@ class ListEventUser extends Component {
 
       columns.push(checkInColumn);
 
-      let extraColumns = extraFields
+      const extraColumns = extraFields
         .filter((item) => {
           return item.type !== 'tituloseccion' && item.type !== 'password';
         })
@@ -458,7 +458,7 @@ class ListEventUser extends Component {
         )
       };
 
-      let rol = {
+      const rol = {
         title: 'Rol',
         dataIndex: 'rol_id',
         key: 'rol_id',
@@ -468,7 +468,7 @@ class ListEventUser extends Component {
         render: self.rol_component,
       };
 
-      let created_at = {
+      const created_at = {
         title: 'Creado',
         dataIndex: 'created_at',
         key: 'created_at',
@@ -478,7 +478,7 @@ class ListEventUser extends Component {
         ...self.getColumnSearchProps('created_at'),
         render: self.created_at_component,
       };
-      let updated_at = {
+      const updated_at = {
         title: 'Actualizado',
         dataIndex: 'updated_at',
         key: 'updated_at',
@@ -512,12 +512,12 @@ class ListEventUser extends Component {
           //includeMetadataChanges: true
         },
         async (snapshot) => {
-          let currentAttendees = [...this.state.usersReq];
-          let updatedAttendees = updateAttendees(currentAttendees, snapshot);
+          const currentAttendees = [...this.state.usersReq];
+          const updatedAttendees = updateAttendees(currentAttendees, snapshot);
 
-          let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
+          const totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
-          let totalCheckedInWithWeight =
+          const totalCheckedInWithWeight =
             Math.round(
               updatedAttendees.reduce(
                 (acc, item) => acc + (item.checkedin_at ? parseFloat(item.pesovoto ? item.pesovoto : 1) : 0),
@@ -525,7 +525,7 @@ class ListEventUser extends Component {
               ) * 100
             ) / 100;
           //total de pesos
-          let totalWithWeight =
+          const totalWithWeight =
             Math.round(
               updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100
             ) / 100;
@@ -561,7 +561,7 @@ class ListEventUser extends Component {
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }
               if (extraFields) {
-                let codearea = extraFields?.filter((field) => field.type == 'codearea');
+                const codearea = extraFields?.filter((field) => field.type == 'codearea');
                 if (
                   codearea[0] &&
                   updatedAttendees[i] &&
@@ -623,7 +623,7 @@ class ListEventUser extends Component {
 
   obtenerName = (fileUrl) => {
     if (typeof fileUrl == 'string') {
-      let splitUrl = fileUrl?.split('/');
+      const splitUrl = fileUrl?.split('/');
       return splitUrl[splitUrl.length - 1];
     } else {
       return null;
@@ -683,7 +683,7 @@ class ListEventUser extends Component {
       message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     } */
     //return;
-    let eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
+    const eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
 
     let userRef = null;
     try {

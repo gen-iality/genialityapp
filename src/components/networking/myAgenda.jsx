@@ -98,7 +98,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   }
 
   if (currentRoom) {
-    let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
+    const userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
     //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
     //
 
@@ -225,7 +225,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
       alert('Tenemos problemas con tu usuario, itenta recargar la página');
       return;
     }
-    let roomName = data.id;
+    const roomName = data.id;
 
     setCurrentRoom(roomName);
   };
@@ -247,7 +247,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   };
 
   const validDateRoom = (room) => {
-    let dateFrom = dayjs(room.timestamp_start).format('YYYY-MM-DD');
+    const dateFrom = dayjs(room.timestamp_start).format('YYYY-MM-DD');
 
     if (dayjs().format('YYYY-MM-DD') == dateFrom) {
       return true;

@@ -25,10 +25,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   const intl = useIntl();
   const cEvent = useEventContext();
   const cEventUser = useUserEvent();
-  let { helperDispatch } = useHelper();
+  const { helperDispatch } = useHelper();
   const [loading, setLoading] = useState(false);
   const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {};
-  let fields = fieldNameEmailFirst(user_properties);
+  const fields = fieldNameEmailFirst(user_properties);
   const handleSubmit = async (values: any) => {
     setLoading(true);
     app

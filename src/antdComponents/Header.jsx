@@ -8,7 +8,7 @@ const { Title } = Typography;
 
 const Header = (props) => {
   const history = useHistory();
-  //let cUser = useCurrentUser();
+  //const cUser = useCurrentUser();
   const { eventIsActive } = useHelper();
   const {
     title, //titulo del encabezado

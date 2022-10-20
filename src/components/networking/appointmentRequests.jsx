@@ -27,8 +27,8 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   const [sendRespuesta, setSendRespuesta] = useState(false);
 
   //contextos
-  let userEventContext = useUserEvent();
-  let eventContext = useEventContext();
+  const userEventContext = useUserEvent();
+  const eventContext = useEventContext();
 
   useEffect(() => {
     if (eventContext.value != null && userEventContext.value !== null) {
@@ -153,9 +153,9 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   const userName = data.name;
   const userEmail = data.email;
   //contextos
-  let userEventContext = useUserEvent();
-  let eventContext = useEventContext();
-  let userCurrentContext = useCurrentUser();
+  const userEventContext = useUserEvent();
+  const eventContext = useEventContext();
+  const userCurrentContext = useCurrentUser();
 
   const changeAgendaStatus = (newStatus) => {
     if (!fetching) {

@@ -39,7 +39,7 @@ const ModalAuth = (props) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
-  let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
+  const { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
  
   const cEvent = useEventContext();
   const cUser = useCurrentUser();
@@ -48,7 +48,7 @@ const ModalAuth = (props) => {
   const intl = useIntl();
 
   const isVisibleRegister = () => {
-    let typeEvent = recordTypeForThisEvent(cEvent);
+    const typeEvent = recordTypeForThisEvent(cEvent);
     switch (typeEvent) {
       case 'PRIVATE_EVENT':
         return false;
@@ -63,7 +63,7 @@ const ModalAuth = (props) => {
 
   useEffect(() => {
     async function isModalVisible() {
-      let typeEvent = recordTypeForThisEvent(cEvent);
+      const typeEvent = recordTypeForThisEvent(cEvent);
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
           setmodalVisible(true);

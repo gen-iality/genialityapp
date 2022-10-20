@@ -2,7 +2,7 @@ import { fireRealtime, app } from '@helpers/firebase';
 import { uniqueID } from '@helpers/utils';
 import dayjs from 'dayjs';
 
-let initBroadcastViewers = async (
+const initBroadcastViewers = async (
   event_id: string,
   activity_id: string,
   activity_name: string,
@@ -15,8 +15,8 @@ let initBroadcastViewers = async (
       // Set user anonimo
       initUserPresenceInner(JSON.parse(userAnonimo), event_id, activity_id, state);
     } else {
-      let uid = uniqueID();
-      let user = {
+      const uid = uniqueID();
+      const user = {
         names: activity_name + ' ' + uid.substr(-4),
         email: uid.substr(-4) + '@evius.co',
         _id: uid,
@@ -27,7 +27,7 @@ let initBroadcastViewers = async (
     }
   } else {
     if (userAnonimo) {
-      let user = JSON.parse(userAnonimo);
+      const user = JSON.parse(userAnonimo);
       const refViewer = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/uniqueUsers/${user._id}`);
       await refViewer.remove();
       window.localStorage.removeItem('userAnonimo');
@@ -37,13 +37,13 @@ let initBroadcastViewers = async (
   }
 };
 
-let initUserPresenceInner = async (user: any, event_id: string, activity_id: string, state?: string) => {
-  let uid = user._id;
-  let time = uid + dayjs().format('HH:mm:ss');
-  var uniqueUsers = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/uniqueUsers/${uid}`);
-  var totalViews = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/total/${time}`);
+const initUserPresenceInner = async (user: any, event_id: string, activity_id: string, state?: string) => {
+  const uid = user._id;
+  const time = uid + dayjs().format('HH:mm:ss');
+  const uniqueUsers = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/uniqueUsers/${uid}`);
+  const totalViews = fireRealtime.ref(`/viewers/${event_id}/activities/${activity_id}/total/${time}`);
 
-  var isOfflineForDatabase = {
+  const isOfflineForDatabase = {
     state: 'offline',
     last_changed: app.database.ServerValue.TIMESTAMP,
     names: user.names || '',
@@ -51,7 +51,7 @@ let initUserPresenceInner = async (user: any, event_id: string, activity_id: str
     id: user._id || '',
   };
 
-  var isOnlineForDatabase = {
+  const isOnlineForDatabase = {
     state: 'online',
     last_changed: app.database.ServerValue.TIMESTAMP,
     names: user.names || '',
@@ -59,7 +59,7 @@ let initUserPresenceInner = async (user: any, event_id: string, activity_id: str
     id: user._id || '',
   };
 
-  var isViewer = {
+  const isViewer = {
     state: 'viewer',
     names: user.names || '',
     email: user.email || '',

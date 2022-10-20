@@ -6,7 +6,7 @@ import NotFoundPage from '@components/notFoundPage';
 export const CurrentEventContext = createContext();
 
 export function CurrentEventProvider({ children }) {
-  let { event_id, event_name, event } = useParams();
+  const { event_id, event_name, event } = useParams();
   /* console.log('params=>>', useParams()); */
   let eventNameFormated = null;
   let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };

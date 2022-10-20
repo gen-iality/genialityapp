@@ -98,7 +98,7 @@ class Event extends Component {
 
     try {
       await this.props.dispatch(fetchRol());
-      let eventId = this.props.match.params.event;
+      const eventId = this.props.match.params.event;
       await this.props.dispatch(fetchPermissions(eventId));
       const event = await EventsApi.getOne(eventId);
       const eventWithExtraFields = this.addNewFieldsToEvent(event);
@@ -164,7 +164,7 @@ class Event extends Component {
       formatupperorlowercase = url.toString();
     }
 
-    var encodedUrl = formatupperorlowercase;
+    const encodedUrl = formatupperorlowercase;
     encodedUrl = encodedUrl.split(/\&+/).join('-and-');
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');

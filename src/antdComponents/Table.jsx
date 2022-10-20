@@ -21,9 +21,9 @@ const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = (props) => {
-  //let cUser = useCurrentUser();
+  //const cUser = useCurrentUser();
   const { eventIsActive } = useHelper();
-  let {
+  const {
     header,
     list,
     key,
@@ -63,7 +63,7 @@ const Table = (props) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [components, setComponents] = useState('');
-  let [headerState, setHeaderState] = useState(header);
+  const [headerState, setHeaderState] = useState(header);
 
   useEffect(() => {
     const options = {
@@ -200,7 +200,7 @@ const Table = (props) => {
       },
     };
     if (actions) {
-      let auxHeader = header;
+      const auxHeader = header;
       if (!auxHeader.includes(options)) {
         auxHeader.push(options);
         setHeaderState(auxHeader);

@@ -20,7 +20,7 @@ function SpeakersList(props) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [dataSpeakers, setdataSpeakers] = useState([]);
-  let { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
+  const { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
   const { eventIsActive } = useHelper();
   const cEventIsActive = eventIsActive;
 
@@ -33,7 +33,7 @@ function SpeakersList(props) {
 
   function sortAndIndexSpeakers() {
     //  let { data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
-    let data = dataSpeakers;
+    const data = dataSpeakers;
     let list = [];
     if (data) {
       list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : true));
@@ -125,7 +125,7 @@ function SpeakersList(props) {
       if (queryData.state === 'update') {
         await Promise.all(
           queryData.newData.map(async (speaker, index) => {
-            let speakerChange = { ...speaker, order: index + 1 };
+            const speakerChange = { ...speaker, order: index + 1 };
             const data = await SpeakersApi.editOne(speakerChange, speaker._id, queryData.eventId);
           })
         );

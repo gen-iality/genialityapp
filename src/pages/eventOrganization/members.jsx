@@ -24,7 +24,7 @@ function OrgMembers(props) {
   const [roleList, setRoleList] = useState([]);
   const [selectedUser, setSelectedUser] = useState({});
   const [editMember, setEditMember] = useState(false);
-  let { _id: organizationId } = props.org;
+  const { _id: organizationId } = props.org;
   const history = useHistory();
 
   async function getEventsStatisticsData() {

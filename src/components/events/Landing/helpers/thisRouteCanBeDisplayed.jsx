@@ -9,7 +9,7 @@ import { useIntl } from 'react-intl';
 export function iAmRegisteredInThisEvent(cEventUser) {
   if (!cEventUser) return;
 
-  let { value, status } = cEventUser;
+  const { value, status } = cEventUser;
   if (!value && status === 'LOADING') return 'LOADING';
   if (!value && status === 'LOADED') return 'NOT_REGISTERED';
   if (value?._id && status === 'LOADED') return 'REGISTERED';
@@ -18,7 +18,7 @@ export function iAmRegisteredInThisEvent(cEventUser) {
 export function recordTypeForThisEvent(cEvent) {
   if (!cEvent) return;
 
-  let event = cEvent?.value;
+  const event = cEvent?.value;
   if (!event) return 'LOADING';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
@@ -29,11 +29,11 @@ export function recordTypeForThisEvent(cEvent) {
 
 function ThisRouteCanBeDisplayed({ children }) {
   const intl = useIntl();
-  let cEventUser = useUserEvent();
-  let eventUserId = cEventUser?.value?._id;
-  let eventUserStatus = cEventUser.status;
-  let cEvent = useEventContext();
-  let { handleChangeTypeModal } = useHelper();
+  const cEventUser = useUserEvent();
+  const eventUserId = cEventUser?.value?._id;
+  const eventUserStatus = cEventUser.status;
+  const cEvent = useEventContext();
+  const { handleChangeTypeModal } = useHelper();
 
   useEffect(() => {
     /** Abrir modal de registro al evento automaticamente para eventos con registro obligatorio */

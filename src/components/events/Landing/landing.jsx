@@ -84,20 +84,20 @@ const IconRender = type => {
 };
 
 const Landing = props => {
-  let cEventContext = useEventContext();
-  let cUser = useCurrentUser();
-  let cEventUser = useUserEvent();
-  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
+  const cEventContext = useEventContext();
+  const cUser = useCurrentUser();
+  const cEventUser = useUserEvent();
+  const { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
   const [activitiesAttendee, setActivitiesAttendee] = useState([]);
   const [activities, setActivities] = useState([]);
-  let history = useHistory();
+  const history = useHistory();
 
   const loadData = async () => {
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data);
     const existentActivities = data.map(async activity => {
-      let activity_attendee = await firestore
+      const activity_attendee = await firestore
         .collection(`${activity._id}_event_attendees`)
         .doc(cEventUser.value?._id)
         .get(); //checkedin_at
@@ -177,7 +177,8 @@ const Landing = props => {
     }
   }, [isNotification]);
 
-  let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
+  const [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
+  // eslint-disable-next-line prefer-const
   let [totalNewMessages, settotalnewmessages] = useState(0);
 
   useEffect(() => {

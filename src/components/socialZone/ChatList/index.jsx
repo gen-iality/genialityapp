@@ -24,11 +24,11 @@ const styleList = {
 };
 
 const ChatList = (props) => {
-  let cUser = useCurrentUser();
-  let cEvent = useEventContext();
-  let cEventUser = useUserEvent();
+  const cUser = useCurrentUser();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
 
-  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useHelper();
+  const { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useHelper();
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
@@ -56,8 +56,8 @@ const ChatList = (props) => {
     return <AnonymousEvenUserForm />;
   }
 
-  let userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
-  let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
+  const userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
+  const anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
 
   return (
     <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>

@@ -11,10 +11,10 @@ import { useEventContext } from '@context/eventContext';
 import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed';
 
 const MenuRigth = (props) => {
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
   const [typeEvent, settypeEvent] = useState();
 
-  let {
+  const {
     HandleOpenCloseMenuRigth,
     HandleChatOrAttende,
     eventPrivate,
@@ -143,5 +143,5 @@ const MenuRigth = (props) => {
   );
 };
 
-let MenuRigthWithContext = withContext(MenuRigth);
+const MenuRigthWithContext = withContext(MenuRigth);
 export default connect(null, null)(withRouter(MenuRigthWithContext));

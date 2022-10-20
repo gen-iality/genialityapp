@@ -40,12 +40,12 @@ const styleListPointer = {
 };
 
 function UsersCard(props) {
-  let cUser = useCurrentUser();
-  let cEvent = useEventContext();
-  let eventValues = cEvent.value;
+  const cUser = useCurrentUser();
+  const cEvent = useEventContext();
+  const eventValues = cEvent.value;
 
-  let eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';
-  let { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, HandleGoToChat, setGameData } = useHelper();
+  const eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';
+  const { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, HandleGoToChat, setGameData } = useHelper();
   const [actionCapture, setActionCapture] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');

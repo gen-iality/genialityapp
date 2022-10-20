@@ -4,13 +4,13 @@ import { useEventContext } from './eventContext';
 import { app } from '@helpers/firebase';
 import { useCurrentUser } from './userContext';
 export const CurrentEventUserContext = createContext();
-let initialContextState = { status: 'LOADING', value: null };
+const initialContextState = { status: 'LOADING', value: null };
 
 export function CurrentUserEventProvider({ children }) {
-  let cEvent = useEventContext();
-  let cUser = useCurrentUser();
+  const cEvent = useEventContext();
+  const cUser = useCurrentUser();
   const [userEvent, setuserEvent] = useState(initialContextState);
-  let [updateUser, setUpdateUser] = useState(true);
+  const [updateUser, setUpdateUser] = useState(true);
 
   useEffect(() => {
     app.auth().onAuthStateChanged((user) => {
@@ -21,7 +21,7 @@ export function CurrentUserEventProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    let event_id = cEvent.value?._id;
+    const event_id = cEvent.value?._id;
     if (cUser.value == null || cUser.value == undefined || updateUser == false) return;
     async function asyncdata() {
       try {

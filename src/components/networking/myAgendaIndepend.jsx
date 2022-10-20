@@ -17,9 +17,9 @@ class AgendaIndepent extends Component {
   }
 
   async componentDidMount() {
-    let evius_token = await GetTokenUserFirebase();
+    const evius_token = await GetTokenUserFirebase();
     if (this.props.cUser) {
-      let eventUserList = await userRequest.getEventUserList(
+      const eventUserList = await userRequest.getEventUserList(
         this.props.cEvent.value._id,
         evius_token,
         this.props.cUser
@@ -51,5 +51,5 @@ class AgendaIndepent extends Component {
   }
 }
 
-let AgendaIndepentWithContext = withContext(AgendaIndepent);
+const AgendaIndepentWithContext = withContext(AgendaIndepent);
 export default withRouter(AgendaIndepentWithContext);

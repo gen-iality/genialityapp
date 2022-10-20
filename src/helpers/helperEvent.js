@@ -3,7 +3,7 @@ import { EventFieldsApi } from './request';
 
 //METODO PARA SABER SI ESTA EN EL HOME DE GENIALITY O EN UN CURSO
 export function isHome() {
-  let isHome = window.location.pathname.includes('/landing');
+  const isHome = window.location.pathname.includes('/landing');
   if (isHome) {
     return false;
   } else {
@@ -25,13 +25,13 @@ export function listenSurveysData(
     .where('eventId', '==', event_id)
     .where('isPublished', '==', 'true')
     .onSnapshot(querySnapshot => {
-      let eventSurveys = [];
+      const eventSurveys = [];
       querySnapshot.forEach(doc => {
         eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 
       const changeInSurvey = changeInSurveyDocChanges(querySnapshot.docChanges());
-      let publishedSurveys = eventSurveys;
+      const publishedSurveys = eventSurveys;
 
       dispatch({ type: 'data_loaded', payload: { publishedSurveys, changeInSurvey } });
       //if (activity)
@@ -42,7 +42,7 @@ export function listenSurveysData(
 function changeInSurveyDocChanges(docChanges) {
   let changeInSurvey = null;
   if (docChanges.length) {
-    let lastChange = docChanges[docChanges.length - 1];
+    const lastChange = docChanges[docChanges.length - 1];
     switch (lastChange.type) {
       case 'removed':
         changeInSurvey = null;
@@ -77,7 +77,7 @@ export function publishedSurveysByActivity(currentActivity, eventSurveys, curren
 }
 
 //monitorear nuevos mensajes
-export let monitorNewChatMessages = (event, user) => {
+export const monitorNewChatMessages = (event, user) => {
   let totalNewMessages = 0;
   firestore
     .collection('eventchats/' + event._id + '/userchats/' + user.uid + '/' + 'chats/')
@@ -95,8 +95,8 @@ export let monitorNewChatMessages = (event, user) => {
 };
 
 //obtener propiedades del curso
-export let getProperties = async event => {
-  let properties = await EventFieldsApi.getAll(event._id);
+export const getProperties = async event => {
+  const properties = await EventFieldsApi.getAll(event._id);
   let propertiesdata;
   if (properties.length > 0) {
     propertiesdata = properties;

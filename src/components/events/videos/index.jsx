@@ -6,7 +6,7 @@ import VideoCard from '../../shared/videoCard';
 import Feedback from '../ferias/feedback';
 
 const Videos = () => {
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
   let { activitiesEvent } = useHelper();
   const [existActivity, setexistActivity] = useState(0);
 

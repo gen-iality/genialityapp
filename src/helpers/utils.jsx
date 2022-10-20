@@ -4,7 +4,7 @@ import { Actions } from './request';
 import { Modal, Spin } from 'antd';
 
 export function GetIdEvent() {
-  let path = window.location.pathname;
+  const path = window.location.pathname;
   return path.substr(9);
 }
 
@@ -25,7 +25,7 @@ export function fieldsSelect(options, list) {
 }
 
 export function handleSelect(data) {
-  let list = [];
+  const list = [];
   data.map((item) => {
     return list.push({ value: item._id, label: item.name, item });
   });
@@ -35,7 +35,7 @@ export function handleSelect(data) {
 export function loadImage(src, cb) {
   const i = new Image();
   i.onload = () => {
-    let reader = new FileReader();
+    const reader = new FileReader();
     reader.readAsDataURL(src);
     reader.onload = () => cb(reader.result);
   };
@@ -44,7 +44,7 @@ export function loadImage(src, cb) {
 
 export function uploadImage(file) {
   return new Promise((resolve, reject) => {
-    let data = new FormData();
+    const data = new FormData();
     data.append('file', file);
     Actions.post('/api/files/upload', data)
       .then((image) => resolve(image))
@@ -53,7 +53,7 @@ export function uploadImage(file) {
 }
 
 export function fieldNameEmailFirst(array) {
-  let fields = [...array];
+  const fields = [...array];
   const idxName = array.findIndex(({ name }) => name === 'names');
   fields.splice(0, 0, fields.splice(idxName, 1)[0]);
   const idxEmail = fields.findIndex(({ name }) => name === 'email');
@@ -79,15 +79,15 @@ export function handleRequestError(error) {
 }
 
 export async function parseData2Excel(data, fields, roles = null) {
-  let info = [];
+  const info = [];
 
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    let checkedInAt = typeof item.checkedin_at === 'object' ? item.checkedin_at?.toDate() : item.checkedin_at;
-    let updatedAt = typeof item.updated_at === 'object' ? item.updated_at?.toDate() : item.updated_at;
-    let createdAt = typeof item.created_at === 'object' ? item.created_at?.toDate() : item.created_at;
+    const checkedInAt = typeof item.checkedin_at === 'object' ? item.checkedin_at?.toDate() : item.checkedin_at;
+    const updatedAt = typeof item.updated_at === 'object' ? item.updated_at?.toDate() : item.updated_at;
+    const createdAt = typeof item.created_at === 'object' ? item.created_at?.toDate() : item.created_at;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] =
@@ -114,7 +114,7 @@ export async function parseData2Excel(data, fields, roles = null) {
             break;
           case 'complex':
             if (item.properties[name]?.includes('url')) {
-              let document =
+              const document =
                 item.properties[name] && item.properties[name]?.includes('url') && JSON.parse(item.properties[name]);
               str = (document[0]
                 ? document[0]?.url

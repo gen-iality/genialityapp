@@ -8,8 +8,8 @@ import RankingTrivia from '../rankingTrivia';
 import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed';
 
 function SurveyDrawer(props) {
-  let cSurveys = useSurveysContext();
-  let cUser = useCurrentUser();
+  const cSurveys = useSurveysContext();
+  const cUser = useCurrentUser();
 
   // Estado para hacer visible el ranking
   const [rankingVisible, setRankingVisible] = useState(true);

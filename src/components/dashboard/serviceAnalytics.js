@@ -22,7 +22,7 @@ const backgroud = "rgba(80, 211, 201, 0.7)";
 const lineBackground = "rgba(80, 211, 201, 1)";
 
 export const totalsMetricasMail = async (eventId) => {
-  let token = await GetTokenUserFirebase();
+  const token = await GetTokenUserFirebase();
   return new Promise((resolve, reject) => {
     fetch(
       `https://devapi.evius.co/api/events/${eventId}/messages/?token=${token}`
@@ -63,9 +63,9 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 };
 
 export const metricasRegisterByDate = async (eventId) => {
-  let listmetric = [];
-  let fechaActual = dayjs().format("YYYY-MM-DD");
-  let metrics = await EventsApi.metricsRegisterBydate(
+  const listmetric = [];
+  const fechaActual = dayjs().format("YYYY-MM-DD");
+  const metrics = await EventsApi.metricsRegisterBydate(
     eventId,
     "created_at",
     "2016-01-01",
@@ -90,7 +90,7 @@ export const metricasCheckedByDate = async (eventId) => {
 //Esta funcion realiza la consulta de los datos a la API de analytics
 export const queryReportGnal = async (eventID) => {
   const devEvius = "https://api.evius.co/api/googleanalytics";
-  let fechaActual = dayjs().format("YYYY-MM-DD");
+  const fechaActual = dayjs().format("YYYY-MM-DD");
   const data = {
     startDate: "2021-06-01",
     endDate: fechaActual,
@@ -103,7 +103,7 @@ export const queryReportGnal = async (eventID) => {
   };
   //paveview=impresiones
   //Usuarios totales del curso ga:sessions
-  let resp = await fetch(devEvius, {
+  const resp = await fetch(devEvius, {
     headers: {
       "content-type": "application/json",
       Accept: "application/json",
@@ -111,19 +111,19 @@ export const queryReportGnal = async (eventID) => {
     body: JSON.stringify(data),
     method: "POST",
   });
-  let respjson = await resp.json();
+  const respjson = await resp.json();
   const dataEvents = respjson.rows;
   const totalMetrics = respjson.totalsForAllResults;
-  let metrics = [];
+  const metrics = [];
   if (dataEvents != null) {
     dataEvents.map((data, i) => {
-      let objeto = {
+      const objeto = {
         view: dataEvents[i][0],
         metrics: Array.from(dataEvents[i].slice(1, dataEvents[i].length)),
       };
       metrics.push(objeto);
     });
-    let totalAvg = parseFloat(
+    const totalAvg = parseFloat(
       totalMetrics["ga:sessionDuration"] / totalMetrics["ga:users"]
     );
     return { metrics, totalAvg, totalMetrics };
@@ -133,7 +133,7 @@ export const queryReportGnal = async (eventID) => {
 //Esta funcion trae datos por fecha
 export const queryReportGnalByMoth = async (eventID) => {
   const devEvius = "https://api.evius.co/api/googleanalytics";
-  let fechaActual = dayjs().format("YYYY-MM-DD");
+  const fechaActual = dayjs().format("YYYY-MM-DD");
   const data = {
     startDate: "2019-01-01",
     endDate: fechaActual,
@@ -144,7 +144,7 @@ export const queryReportGnalByMoth = async (eventID) => {
     fieldName: "ga:date",
     sortOrder: "ASCENDING",
   };
-  let resp = await fetch(devEvius, {
+  const resp = await fetch(devEvius, {
     headers: {
       "content-type": "application/json",
       Accept: "application/json",
@@ -152,11 +152,11 @@ export const queryReportGnalByMoth = async (eventID) => {
     body: JSON.stringify(data),
     method: "POST",
   });
-  let respjson = await resp.json();
-  let datos = respjson.rows;
-  let totalMetrics = [];
+  const respjson = await resp.json();
+  const datos = respjson.rows;
+  const totalMetrics = [];
   datos.map((dat) => {
-    let metric = {
+    const metric = {
       month: dayjs(dat[0]).format("YYYY/MM/DD"),
       view: dat[2],
       time: dat[1] ? parseInt(dat[1]) : 0,
@@ -168,7 +168,7 @@ export const queryReportGnalByMoth = async (eventID) => {
 
 //FUNCION QUE PERMITE CREAR OBJETO PARA ASIGNAR A LA GRAFICA
 export const setDataGraphic = (labels, values, name) => {
-  let data = {
+  const data = {
     labels: labels,
     datasets: [
       {
@@ -185,7 +185,7 @@ export const setDataGraphic = (labels, values, name) => {
 };
 //Función que permite obtener metricas por vistas de lección
 export const obtenerMetricasByView = (view, metricsGnal) => {
-  let metrics = metricsGnal?.filter((m) => m.view == view)[0];
+  const metrics = metricsGnal?.filter((m) => m.view == view)[0];
   return metrics;
 };
 
@@ -222,13 +222,13 @@ export const exportDataReport = (datos, type) => {
 //Función que permite obtener las métricas por cada lección
 export const updateMetricasActivity = (data, eventId, metricsGActivity) => {
   if (data.length > 0) {
-    let metricsActivity = [];
+    const metricsActivity = [];
     data.map((activity) => {
-      let metricsView = obtenerMetricasByView(
+      const metricsView = obtenerMetricasByView(
         "/landing/" + eventId + "/activity/" + activity._id,
         metricsGActivity
       );
-      let metricaActivity = {
+      const metricaActivity = {
         name: activity.name,
         view: metricsView ? metricsView.metrics[1] : 0,
         prints: metricsView ? metricsView.metrics[0] : 0,

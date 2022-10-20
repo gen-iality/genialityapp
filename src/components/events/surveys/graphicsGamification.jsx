@@ -36,8 +36,8 @@ class Graphics extends Component {
 
     let totalPesoVoto = 0;
     let pesoVotoCheked = 0;
-    let pointsPercent = [];
-    let pointsList = [];
+    const pointsPercent = [];
+    const pointsList = [];
     const users = await Users.getUsers(eventId);
 
     users.forEach(function(a) {
@@ -60,10 +60,10 @@ class Graphics extends Component {
   };
 
   mountChart = async () => {
-    let { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
+    const { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
     // Se ejecuta servicio para tener la informacion del ranking
-    let { verticalBar } = graphicsFrame;
-    let { userList, pointsList } = dataGamification;
+    const { verticalBar } = graphicsFrame;
+    const { userList, pointsList } = dataGamification;
 
     // Se condiciona si el grafico ya fue creado
     // En caso de que aun no este creado se crea, de lo contrario se actualizara
@@ -124,7 +124,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataGamification } = this.state;
+    const { dataGamification } = this.state;
 
     if (dataGamification !== null)
       return (

@@ -19,13 +19,13 @@ const Configuration = (props) => {
       obtenerConfig();
     }
     async function obtenerConfig() {
-      let resp = await firestore
+      const resp = await firestore
         .collection('config')
         .doc(props.eventId)
         .get();
       if (resp.exists) {
         console.log('respuesta firebase=>', resp.data());
-        let data = resp.data();
+        const data = resp.data();
         setCheckSubasta(data.data.habilitar_subasta);
         setMessage(data.data.message);
       }
@@ -49,13 +49,13 @@ const Configuration = (props) => {
       action: 'show',
     });
     setLoading(true)     
-    let data={
+    const data={
       habilitar_subasta:checkSubasta,
       message:messageF
     }
 
     try{
-      let resp = await firestore
+      const resp = await firestore
       .collection('config')
       .doc(props.eventId).set({data});
       DispatchMessageService({

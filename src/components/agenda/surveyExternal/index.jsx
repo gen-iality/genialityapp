@@ -19,9 +19,9 @@ export default class SurveyExternal extends Component {
 
   listenActivitySurveysExternal = async () => {
     try {
-      let resp = await ExternalSurvey(this.props.meeting_id, true);
+      const resp = await ExternalSurvey(this.props.meeting_id, true);
       if (resp != null) {
-        let surveyList = resp.polls;
+        const surveyList = resp.polls;
         this.setState({ publishedSurveys: surveyList, loading: true });
       }
     } catch (error) {

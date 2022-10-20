@@ -51,7 +51,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   };
   useEffect(() => {
     if (requestList) {
-      let approvedRequest = requestList.filter((request) => request.active).map((item) => item.key);
+      const approvedRequest = requestList.filter((request) => request.active).map((item) => item.key);
       setDataRequest(requestList);
       setTargetKeys(approvedRequest);
     }

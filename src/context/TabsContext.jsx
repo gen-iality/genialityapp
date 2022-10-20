@@ -10,8 +10,8 @@
 // export const TabsContext = createContext();
 
 // export const HelperTabsProvider = ({ children }) => {
-//   let cEvent = useEventContext();
-//   let cUser = useCurrentUser();
+//   const cEvent = useEventContext();
+//   const cUser = useCurrentUser();
 //   const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
 //   const [chatActual, setchatActual] = useState({
 //     chatid: null,

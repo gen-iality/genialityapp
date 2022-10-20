@@ -26,15 +26,15 @@ class DateEvent extends Component {
 
   async getDates() {
     const info = await EventsApi.getOne(this.props.eventId);
-    let dates = info.dates;
+    const dates = info.dates;
 
-    let date = [];
+    const date = [];
     if (dates !== undefined) {
       for (let i = 0; i < dates.length; i++) {
         if (dates[i] !== '') {
-          let dateUTC = Date.parse(dates[i]);
-          var dateUtc = new Date(dateUTC);
-          var utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
+          const dateUTC = Date.parse(dates[i]);
+          const dateUtc = new Date(dateUTC);
+          const utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
           date.push(utc);
         }
       }
@@ -58,8 +58,8 @@ class DateEvent extends Component {
     }
 
     dates.sort(function(a, b) {
-      let dateA = new Date(a);
-      let dateB = new Date(b);
+      const dateA = new Date(a);
+      const dateB = new Date(b);
       return dateA - dateB;
     });
 

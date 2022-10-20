@@ -12,11 +12,11 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
     "https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts";
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`;
-  let cUser = useCurrentUser();
+  const cUser = useCurrentUser();
   //   const eventContext = useContext(CurrentEventContext);
   const { transmition } = useContext(AgendaContext);
   const { names, email, picture } = cUser.value;
-  let linkAdmin =
+  const linkAdmin =
     eviusmeets +
     `?meetingId=${activityEdit}&rol=1&username=${names}&email=${email}&photo=${picture ? picture : ""
     }`;

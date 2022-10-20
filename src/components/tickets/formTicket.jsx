@@ -37,11 +37,11 @@ class TicketsForm extends Component {
 
     const haspayments = !!this.props.cEvent.value.tickets.find((item) => item.price !== '0');
     async function GetUserToken() {
-      let token = await GetTokenUserFirebase();
+      const token = await GetTokenUserFirebase();
       return token;
     }
 
-    let evius_token = GetUserToken();
+    const evius_token = GetUserToken();
 
     //Arreglo de tiquetes
     const tickets = this.props.cEvent.value.tickets.map((ticket) => {
@@ -103,7 +103,8 @@ class TicketsForm extends Component {
 
   //Función para el select tiquetes
   handleQuantity = (e) => {
-    let { name, value } = e.target;
+    let { name } = e.target;
+    const { value } = e.target;
     name = name.split('_')[1];
     const ticketsadded = Object.assign(this.state.ticketsadded);
     if (value === '0') this.removeTicket(name);
@@ -315,5 +316,5 @@ class TicketsForm extends Component {
   }
 }
 
-let TicketsFormwithContext = withContext(TicketsForm);
+const TicketsFormwithContext = withContext(TicketsForm);
 export default TicketsFormwithContext;

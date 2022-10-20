@@ -37,7 +37,7 @@ export const ButtonPayment = ({ eventId, user }) => {
 
   //Función que permite crear la orden
   const createOrder = async (amount, user) => {
-    let order = {
+    const order = {
       items: [eventId],
       account_id: user?.account_id,
       amount: amount,
@@ -45,7 +45,7 @@ export const ButtonPayment = ({ eventId, user }) => {
       discount_codes: [],
       event_id: eventId,
     };
-    let respOrder = await OrderFunctions.createOrder(order);
+    const respOrder = await OrderFunctions.createOrder(order);
     if (respOrder) {
       return respOrder?._id;
     }
@@ -71,10 +71,10 @@ export const ButtonPayment = ({ eventId, user }) => {
     const hash = await crypto.subtle.digest('SHA-256', data);
 
     // If you want to display the digest as a hexadecimal string, this will work:
-    var view = new DataView(hash);
-    var hexstr = '';
-    for (var i = 0; i < view.byteLength; i++) {
-      var b = view.getUint8(i);
+    const view = new DataView(hash);
+    const hexstr = '';
+    for (let i = 0; i < view.byteLength; i++) {
+      const b = view.getUint8(i);
       hexstr += '0123456789abcdef'[(b & 0xf0) >> 4];
       hexstr += '0123456789abcdef'[b & 0x0f];
     }

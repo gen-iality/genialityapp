@@ -18,14 +18,14 @@ function DetailsProduct(props) {
   const [updateValue, setUpdateValue] = useState();
   //currency
   useEffect(() => {
-    let idProduct = props.match.params.id;
-    let eventId = props.match.params.event_id;
+    const idProduct = props.match.params.id;
+    const eventId = props.match.params.event_id;
     firestore
       .collection('config')
       .doc(eventId)
       .onSnapshot((onSnapshot) => {
         if (onSnapshot.exists) {
-          let doc = onSnapshot.data();
+          const doc = onSnapshot.data();
           setHability(doc.data.habilitar_subasta);
           setMessage(doc.data.message);
         } else {
@@ -38,7 +38,7 @@ function DetailsProduct(props) {
       obtenerDetalleProduct();
     }
     async function obtenerDetalleProduct() {
-      let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);
+      const detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct);
       }

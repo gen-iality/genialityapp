@@ -34,7 +34,7 @@ const { Dragger } = Upload;
 
 const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const intl = useIntl();
-  let attendeeProperties = attendee?.properties || {};
+  const attendeeProperties = attendee?.properties || {};
   let areacodeselected = attendeeProperties['code'] || '+57';
   let onlyAreacodeselected = attendeeProperties['onlyCodearea'] || '+57';
   const dateFormat = 'YYYY/MM/DD';
@@ -103,7 +103,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   //console.log(locationState.getStatesByShort('CO'), country, region);
   if (fields?.lenght === 0) return [];
 
-  let additionalFormFields = fields.map((field: any, key: any) => {
+  const additionalFormFields = fields.map((field: any, key: any) => {
     // se valida si el campo es visible solo el en cms,
     if (field.visibleByAdmin == true && !visibleInCms) return;
 
@@ -111,13 +111,13 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
     if (field.name !== 'contrasena' && field.name !== 'password') {
       let ImgUrl: any = '';
       let rule = {};
-      let type = field.type || 'text';
-      let name = field.name;
-      let label = field.label;
-      let mandatory = field.mandatory;
-      let description = field.description;
-      let labelPosition = field.labelPosition;
-      let target = name;
+      const type = field.type || 'text';
+      const name = field.name;
+      const label = field.label;
+      const mandatory = field.mandatory;
+      const description = field.description;
+      const labelPosition = field.labelPosition;
+      const target = name;
 
       let value = attendeeProperties.email || attendeeProperties.names ? attendeeProperties[target] : null;
 
@@ -134,7 +134,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           : rule;
       rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
       console.log('sss', cities.length, type, regiones.length, regiones, rule);
-      let validations =
+      const validations =
         (type === 'region' && regiones.length == 0) ||
         (type === 'country' && countries.length == 0) ||
         (type === 'city' && cities.length == 0);
@@ -519,7 +519,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       }
 
       if (type === 'date') {
-        let defaultValue = value ? dayjs(value, dateFormat) : null;
+        const defaultValue = value ? dayjs(value, dateFormat) : null;
         input = (
           <Form.Item initialValue={defaultValue} name={name} noStyle>
             {/*  @ts-ignore: Unreachable code error */}

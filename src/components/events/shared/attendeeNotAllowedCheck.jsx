@@ -3,9 +3,9 @@ import { AuthUrl } from '@helpers/constants';
 import { useIntl } from 'react-intl';
 
 const AttendeeNotAllowedCheck = (props) => {
-  let event = props.event;
-  let currentUser = props.currentUser;
-  let usuarioRegistrado = props.usuarioRegistrado;
+  const event = props.event;
+  const currentUser = props.currentUser;
+  const usuarioRegistrado = props.usuarioRegistrado;
 
   const intl = useIntl();
 

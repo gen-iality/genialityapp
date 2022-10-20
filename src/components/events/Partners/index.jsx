@@ -6,7 +6,7 @@ import PartnersDetail from '../PartnersDetail';
 import { useEventContext } from '@context/eventContext';
 
 export default function Partners() {
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
 
   const [companies, loadingCompanies] = useGetEventCompanies((cEvent.value && cEvent.value._id) || null);
   const [viewPartnerDetail, setViewPartnerDetail] = useState(false);

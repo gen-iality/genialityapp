@@ -348,11 +348,11 @@ class TriviaEdit extends Component {
 
     let isValid = true;
     let isValidInitial = true;
-    let initialMessage = this.state.initialMessage;
+    const initialMessage = this.state.initialMessage;
     if (this.state.allow_gradable_survey === 'true') {
       if (this.state.question) {
         if (this.state.question.length > 0) {
-          for (let preg of this.state.question) {
+          for (const preg of this.state.question) {
             if (!preg.correctAnswer) {
               isValid = false;
               break;
@@ -415,7 +415,7 @@ class TriviaEdit extends Component {
       SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id)
         .then(async () => {
           // Esto permite almacenar los estados en firebase
-          let setDataInFire = await createOrUpdateSurvey(
+          const setDataInFire = await createOrUpdateSurvey(
             this.state.idSurvey,
             {
               name: data.survey,
@@ -493,8 +493,8 @@ class TriviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      let r = (d + Math.random() * 16) % 16 | 0;
+    const uuid = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
@@ -504,7 +504,7 @@ class TriviaEdit extends Component {
 
   // Funcion para agregar el formulario de las preguntas
   addNewQuestion = () => {
-    let uid = this.generateUUID();
+    const uid = this.generateUUID();
     this.setState({ visibleModal: true, currentQuestion: { id: uid } });
   };
 
@@ -512,17 +512,17 @@ class TriviaEdit extends Component {
 
   // Borrar pregunta
   deleteOneQuestion = async (questionId) => {
-    let self = this;
+    const self = this;
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
     });
-    let { question, _id } = self.state;
+    const { question, _id } = self.state;
     const { event } = self.props;
 
-    let questionIndex = question.findIndex((question) => question.id === questionId);
+    const questionIndex = question.findIndex((question) => question.id === questionId);
     confirm({
       title: `¿Está seguro de eliminar la pregunta?`,
       icon: <ExclamationCircleOutlined />,
@@ -535,7 +535,7 @@ class TriviaEdit extends Component {
           try {
             SurveysApi.deleteQuestion(event._id, _id, questionIndex).then((response) => {
               // Se actualiza el estado local, borrando la pregunta de la tabla
-              let newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
+              const newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
 
               self.setState({ question: newListQuestion });
               DispatchMessageService({
@@ -567,8 +567,9 @@ class TriviaEdit extends Component {
 
   // Editar pregunta
   editQuestion = (questionId) => {
-    let { question, currentQuestion } = this.state;
-    let questionIndex = question.findIndex((question) => question.id === questionId);
+    let { currentQuestion } = this.state;
+    const { question } = this.state;
+    const questionIndex = question.findIndex((question) => question.id === questionId);
 
     currentQuestion = question.find((infoQuestion) => infoQuestion.id === questionId);
     currentQuestion['questionIndex'] = questionIndex;
@@ -585,13 +586,13 @@ class TriviaEdit extends Component {
   };
 
   closeModal = (info, state) => {
-    let { question } = this.state;
+    const { question } = this.state;
 
     // Condicional que actualiza el estado local
     // Con esto se ve reflejado el cambio en la tabla
     if (Object.entries(info).length === 2) {
-      let { questionIndex, data } = info;
-      let updateQuestion = question;
+      const { questionIndex, data } = info;
+      const updateQuestion = question;
       this.setState({ question: [] });
 
       // Se iteran las opciones y se asigna el texto para el tipo de pregunta
@@ -653,7 +654,7 @@ class TriviaEdit extends Component {
 
   // Funcion usada para determinar el tiempo limite en segundos de la emcuesta
   setTime_limit = (e) => {
-    var reg = new RegExp('^\\d+$');
+    const reg = new RegExp('^\\d+$');
     const { value } = e.target;
     if (reg.test(value)) {
       this.setState({ time_limit: value });
@@ -662,7 +663,7 @@ class TriviaEdit extends Component {
   };
 
   toggleSwitch = (variable, state) => {
-    let { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInSurveys } = this.state;
+    const { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInSurveys } = this.state;
     console.debug('variable:', variable, state);
     switch (variable) {
       case 'allow_gradable_survey':
@@ -699,7 +700,7 @@ class TriviaEdit extends Component {
   };
 
   remove = () => {
-    let self = this;
+    const self = this;
     DispatchMessageService({
       type: 'loading',
       key: 'loading',

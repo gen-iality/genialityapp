@@ -14,14 +14,14 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 import UserLoginContainer from '../UserLoginContainer';
 
 const PageNotPermissions = (props) => {
-  let EventUser = useUserEvent();
-  let EventContext = useEventContext();
+  const EventUser = useUserEvent();
+  const EventContext = useEventContext();
   let redirect;
-  let urlsection = `/landing/${EventContext.value._id}/`;
+  const urlsection = `/landing/${EventContext.value._id}/`;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  let history = useHistory();
-  let { eventPrivate } = useHelper();
+  const history = useHistory();
+  const { eventPrivate } = useHelper();
 
   const center = {
     margin: '30px auto',
@@ -32,7 +32,7 @@ const PageNotPermissions = (props) => {
     setLoading(true);
     EventsApi.getProducts(EventContext.value._id).then((resp) => {
       if (resp && resp.data) {
-        let threeList = resp.data.slice(0, 3);
+        const threeList = resp.data.slice(0, 3);
         setProducts(threeList);
         setLoading(false);
       }

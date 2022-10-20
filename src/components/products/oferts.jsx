@@ -15,12 +15,12 @@ const OfertProduts = (props) => {
       obtenerOrdenes();
     }
     async function obtenerOrdenes() {
-      let data = await API.get(
+      const data = await API.get(
         `api/events/${props.eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${props.match.params.id}"}]`
       );
 
       if (data) {
-        let orderOferts = data.data.data.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
+        const orderOferts = data.data.data.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
         setOferts(orderOferts);
       }
     }

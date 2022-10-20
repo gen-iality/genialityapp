@@ -103,7 +103,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'toggleVideo':
-      let preValidateState: [] = state.typeOptions?.typeOptions ? state.typeOptions.typeOptions : [];
+      const preValidateState: [] = state.typeOptions?.typeOptions ? state.typeOptions.typeOptions : [];
       const selectedToggleVideoData = preValidateState.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
       });
@@ -166,7 +166,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       };
 
     case 'toggleUrl':
-      let preValidateStates: [] = state.typeOptions?.typeOptions.length > 1 ? state.typeOptions.typeOptions : [];
+      const preValidateStates: [] = state.typeOptions?.typeOptions.length > 1 ? state.typeOptions.typeOptions : [];
       const selectedToggleUrl = preValidateStates.find((item: { key: string }) => {
         if (item.key === action.payload.id) return item;
       });
@@ -334,7 +334,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       let disableButton: boolean = true;
 
       const sendDataPayload = action?.payload?.sendData;
-      let regUrl = new RegExp(/^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
+      const regUrl = new RegExp(/^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
       const isUrl = regUrl.test(sendDataPayload);
 
       if ((sendDataPayload?.length > 12 && sendDataPayload !== '' && isUrl) || sendDataPayload == undefined) {

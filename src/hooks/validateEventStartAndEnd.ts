@@ -27,8 +27,8 @@ export const ValidateEventStart = ({
   user,
 }: EventInitialDates) => {
   /**NOTE: callBackTheEventIsActive params: true indicates function blocking, false indicates function is still available. */
-  let eventStartDate = new Date(`${startDate}`);
-  var localDate = new Date();
+  const eventStartDate = new Date(`${startDate}`);
+  const localDate = new Date();
 
   /** If I do not have an assigned plan, the dates of the event are not blocked. */
   if (!user?.plan) {
@@ -69,8 +69,8 @@ export const ValidateEndEvent = ({
   user,
 }: EventInitialDates) => {
   /**NOTE: callBackTheEventIsActive params: true indicates that the event is about to start or in progress, false indicates that the event has already passed, therefore everything is blocked. */
-  let eventEndDate = new Date(`${endDate}`);
-  var localDate = new Date();
+  const eventEndDate = new Date(`${endDate}`);
+  const localDate = new Date();
 
   /** If I do not have an assigned plan, the buttons will not be blocked or the text that indicates a block will be displayed. */
   if (!user?.plan) {

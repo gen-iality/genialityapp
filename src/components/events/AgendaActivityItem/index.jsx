@@ -25,7 +25,7 @@ const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
 
 function AgendaActivityItem(props) {
-  let history = useHistory();
+  const history = useHistory();
   const cEvent = useEventContext();
   let urlactivity =
     cEvent && !cEvent?.isByname ? `/landing/${props.event._id}/activity/` : `/event/${cEvent?.nameEvent}/activity/`;

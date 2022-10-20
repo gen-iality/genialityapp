@@ -28,7 +28,7 @@ const Espacio = (props) => {
 
   const getOne = async () => {
     const response = await SpacesApi.getOne(locationState.edit, eventID);
-    let data = response.data.find((espacios) => espacios._id === locationState.edit);
+    const data = response.data.find((espacios) => espacios._id === locationState.edit);
     setEspacio(data);
   };
 

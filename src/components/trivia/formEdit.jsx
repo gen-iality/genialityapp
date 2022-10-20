@@ -160,20 +160,20 @@ const FormEdit = (
    * @returns The return value is the boolean value of the validation.
    */
   function validatingImageDimensions(blobImage) {
-    var reader = new FileReader(); //Initiate the FileReader object.
+    const reader = new FileReader(); //Initiate the FileReader object.
     //Read the contents of Image File.
     reader.readAsDataURL(blobImage);
     reader.onload = function(e) {
       //Initiate the JavaScript Image object.
-      var image = new Image();
+      const image = new Image();
 
       //Set the Base64 string return from FileReader as source.
       image.src = e.target.result;
 
       //Validate the File Height and Width.
       image.onload = function() {
-        var height = this.height;
-        var width = this.width;
+        const height = this.height;
+        const width = this.width;
         if (height > 300 || width > 600) {
           setDimensions({
             width: width,
@@ -191,7 +191,7 @@ const FormEdit = (
 
   useEffect(() => {
     setLoading(true);
-    let state = gradableSurvey === 'true' ? true : false;
+    const state = gradableSurvey === 'true' ? true : false;
     console.log('valuesQuestion', valuesQuestion)
 
     setDefaultValues(valuesQuestion);
@@ -199,7 +199,7 @@ const FormEdit = (
     setQuestionIndex(valuesQuestion.questionIndex);
 
     if (valuesQuestion.type) {
-      let choice = selectOptions.find((option) => option.text === valuesQuestion.type);
+      const choice = selectOptions.find((option) => option.text === valuesQuestion.type);
       setQuestionType(choice.value);
     }
 

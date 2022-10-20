@@ -7,12 +7,12 @@ import { DispatchMessageService } from '@context/MessageService';
 
 const ModalCreateTemplate = (props) => {
   const [loading, setloading] = useState(false);
-  let { helperDispatch } = useHelper();
+  const { helperDispatch } = useHelper();
 
   const onFinish = async (values) => {
     //por defecto
     values.user_properties = DefaultProperties;
-    let organizerid = props.organizationid;
+    const organizerid = props.organizationid;
     setloading(true);
     await OrganizationPlantillaApi.createTemplate(organizerid, { template_properties: [values] });
     DispatchMessageService({

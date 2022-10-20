@@ -17,7 +17,7 @@ export interface StepProps {
 function Step(props: StepProps) {
   const { children, isActive, isSurvey, key, currentId, setCurrentId, id, ...rest } = props;
 
-  let className = useMemo(() => {
+  const className = useMemo(() => {
     if (isActive) {
       return 'Step active';
     }

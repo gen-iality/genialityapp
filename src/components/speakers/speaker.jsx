@@ -71,7 +71,7 @@ function Speaker(props) {
   async function dataTheLoaded() {
     console.log('getting data to eventID:', eventID)
     let categoriesData = await CategoriesAgendaApi.byEvent(eventID);
-    let event = await EventsApi.getOne(eventID);
+    const event = await EventsApi.getOne(eventID);
     //const typeEvent = await TypesApi.getAll();
     if (event) {
       setEvent(event);

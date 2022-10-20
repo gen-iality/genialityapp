@@ -61,7 +61,7 @@ export default function AdmininformativeSection1(props) {
     async function getContent() {
       const result = await EventsApi.getOne(eventContext.value._id);
       console.log('data', result);
-      let markup = result?.itemsMenu?.informativeSection1?.markup || '';
+      const markup = result?.itemsMenu?.informativeSection1?.markup || '';
       setContent(markup);
     }
     getContent();

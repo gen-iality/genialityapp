@@ -94,7 +94,7 @@ class Product extends Component {
       if (this.state.list) {
         await Promise.all(
           this.state.list.map(async (product, index) => {
-            let productChange = { ...product, position: product.index + 1 };
+            const productChange = { ...product, position: product.index + 1 };
             await EventsApi.editProduct(productChange, this.props.eventId, product._id);
           })
         );
@@ -132,7 +132,7 @@ class Product extends Component {
       msj: ' Por favor espere mientras se borra la configuración...',
       action: 'show',
     });
-    let self = this;
+    const self = this;
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,

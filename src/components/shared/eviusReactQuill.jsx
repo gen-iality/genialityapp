@@ -16,7 +16,7 @@ Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
 const { TextArea } = Input;
 
 function EviusReactQuill(props) {
-  let reactQuilllRef = useRef(null);
+  const reactQuilllRef = useRef(null);
   const [modules, setModules] = useState({});
   const [codeBlock, setCodeBlock] = useState(false);
   //Habilitar solo para efectos de testeo del funcionamiento del componente
@@ -30,16 +30,16 @@ function EviusReactQuill(props) {
   }
 
   useEffect(() => {
-    let imageHandler = async (imageDataUrl, type, imageData, reactQuilllRef) => {
+    const imageHandler = async (imageDataUrl, type, imageData, reactQuilllRef) => {
       if (reactQuilllRef.current.getEditor) {
-        let editor = reactQuilllRef.current.getEditor();
+        const editor = reactQuilllRef.current.getEditor();
         //no se cómo definir el nombre de la imagen
-        var filename = 'default.png';
-        var blob = imageData.toBlob();
-        var file = imageData.toFile(filename);
+        const filename = 'default.png';
+        const blob = imageData.toBlob();
+        const file = imageData.toFile(filename);
 
         // generate a form data
-        var formData = new FormData();
+        const formData = new FormData();
 
         // append blob data
         formData.append('filename', filename);
@@ -51,15 +51,15 @@ function EviusReactQuill(props) {
         const url = '/api/files/upload';
         // upload image to your server
 
-        let image = await Actions.post(url, formData);
+        const image = await Actions.post(url, formData);
 
-        let index = (editor.getSelection() || {}).index;
+        const index = (editor.getSelection() || {}).index;
         editor.insertEmbed(index, 'image', image, 'user');
       }
     };
 
-    let imageHandlerUpload = () => {
-      let editor = reactQuilllRef.current.getEditor();
+    const imageHandlerUpload = () => {
+      const editor = reactQuilllRef.current.getEditor();
       const input = document.createElement('input');
 
       input.setAttribute('type', 'file');
@@ -70,7 +70,7 @@ function EviusReactQuill(props) {
         const fileUpload = input.files[0];
 
         // generate a form data
-        var formData = new FormData();
+        const formData = new FormData();
 
         // // append blob data
         formData.append('filename', fileUpload.name);
@@ -79,9 +79,9 @@ function EviusReactQuill(props) {
         const url = '/api/files/upload';
 
         // upload image to your server
-        let image = await Actions.post(url, formData);
+        const image = await Actions.post(url, formData);
 
-        let index = (editor.getSelection() || {}).index;
+        const index = (editor.getSelection() || {}).index;
         editor.insertEmbed(index, 'image', image, 'user');
       };
     };
@@ -111,28 +111,28 @@ function EviusReactQuill(props) {
         },
       },
     });
-    let setupToolBarImageUploadInput = (reactQuilllRef) => {
-      var ImageData = QuillImageDropAndPaste.ImageData;
-      let editor = reactQuilllRef.current.getEditor();
+    const setupToolBarImageUploadInput = (reactQuilllRef) => {
+      const ImageData = QuillImageDropAndPaste.ImageData;
+      const editor = reactQuilllRef.current.getEditor();
 
       editor.getModule('toolbar').addHandler('image', function(clicked) {
         if (clicked) {
-          var fileInput = this.container.querySelector('input.ql-image[type=file]');
+          const fileInput = this.container.querySelector('input.ql-image[type=file]');
           if (fileInput == null) {
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
             fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', function(e) {
-              var files = e.target.files,
+              const files = e.target.files,
                 file;
               if (files.length > 0) {
                 file = files[0];
-                var type = file.type;
-                var reader = new FileReader();
+                const type = file.type;
+                const reader = new FileReader();
                 reader.onload = (e) => {
                   // handle the inserted image
-                  var dataUrl = e.target.result;
+                  const dataUrl = e.target.result;
                   imageHandler(dataUrl, type, new ImageData(dataUrl, type), reactQuilllRef);
                   fileInput.value = '';
                 };

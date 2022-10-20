@@ -31,7 +31,7 @@ class EventOrganization extends Component {
   }
 
   componentDidMount() {
-    let orgId = this.props.match.params.id;
+    const orgId = this.props.match.params.id;
     if (orgId) {
       this.fetchItem(orgId).then((respuesta) =>
         this.setState({
@@ -44,9 +44,9 @@ class EventOrganization extends Component {
   //Obtener los datos necesarios de la organización
   fetchItem = async (orgId) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
-    let proximos = [];
-    let pasados = [];
-    let fechaActual = dayjs();
+    const proximos = [];
+    const pasados = [];
+    const fechaActual = dayjs();
     events.map((event) => {
       if (dayjs(event.datetime_from).isAfter(fechaActual)) {
         proximos.push(event);
@@ -67,7 +67,7 @@ class EventOrganization extends Component {
   };
 
   handleView = () => {
-    let ver = this.state.view;
+    const ver = this.state.view;
     this.setState({ view: !ver });
   };
 

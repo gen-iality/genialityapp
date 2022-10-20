@@ -50,12 +50,12 @@ const ThisRouteCanBeDisplayed = loadable(() => import('./helpers/thisRouteCanBeD
 
 const EventSectionRoutes = props => {
   const { setActivitiesAttendee } = props;
-  let { path } = useRouteMatch();
-  let { event_id, event_name } = useParams();
-  let { GetPermissionsEvent } = useHelper();
-  let cEventUser = useUserEvent();
-  let cUser = useCurrentUser();
-  let history = useHistory();
+  const { path } = useRouteMatch();
+  const { event_id, event_name } = useParams();
+  const { GetPermissionsEvent } = useHelper();
+  const cEventUser = useUserEvent();
+  const cUser = useCurrentUser();
+  const history = useHistory();
 
   //redirigir a curso Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -64,8 +64,8 @@ const EventSectionRoutes = props => {
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return;
-    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(item => item !== 'tickets');
-    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(item => item.section !== 'tickets');
+    const firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(item => item !== 'tickets');
+    const firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(item => item.section !== 'tickets');
 
     let index = -1;
     if (firstroute && firstrouteValues) {
@@ -356,5 +356,5 @@ const mapDispatchToProps = {
   setSectionPermissions,
 };
 
-let eventSectionsContext = withRouter(withContext(EventSectionRoutes));
+const eventSectionsContext = withRouter(withContext(EventSectionRoutes));
 export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext);

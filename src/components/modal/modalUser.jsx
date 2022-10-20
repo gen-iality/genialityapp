@@ -54,7 +54,7 @@ class UserModal extends Component {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
-        let checked_in = value.checkedin_at ? true : false;
+        const checked_in = value.checkedin_at ? true : false;
         user = { ...user, _id: value._id };
         this.setState({
           user,
@@ -70,7 +70,7 @@ class UserModal extends Component {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
-        let checked_in = value.checkedin_at ? true : false;
+        const checked_in = value.checkedin_at ? true : false;
         this.setState({
           user,
           ticket_id: value.ticket_id,
@@ -106,7 +106,7 @@ class UserModal extends Component {
 
   deleteUser = async (user) => {
     // const { substractSyncQuantity } = this.props;
-    let messages = {};
+    const messages = {};
     // let resultado = null;
     const self = this;
 
@@ -134,7 +134,7 @@ class UserModal extends Component {
         self.setState({ loadingregister: true });
         const onHandlerRemove = async () => {
           try {
-            let token = await GetTokenUserFirebase();
+            const token = await GetTokenUserFirebase();
             !self.props.byActivity &&
               (await Actions.delete(
                 `/api/events/${self.props.cEvent.value?._id}/eventusers`,
@@ -249,7 +249,7 @@ class UserModal extends Component {
   };
 
   closeModal = () => {
-    let message = { class: '', content: '' };
+    const message = { class: '', content: '' };
     this.setState({ user: {}, valid: true, modal: false, uncheck: false, message }, this.props.handleModal());
   };
 

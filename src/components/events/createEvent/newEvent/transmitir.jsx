@@ -41,11 +41,11 @@ function Transmitir(props) {
   }, [props.currentUser]);
 
   const createOrganization = async () => {
-    let newOrganization = {
+    const newOrganization = {
       name: props.currentUser?.names || props.currentUser?.name,
     };
     //CREAR ORGANIZACION------------------------------
-    let create = await OrganizationApi.createOrganization(newOrganization);
+    const create = await OrganizationApi.createOrganization(newOrganization);
     console.log('CREATE==>', create);
     if (create) {
       return create;

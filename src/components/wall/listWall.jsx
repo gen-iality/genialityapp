@@ -60,11 +60,11 @@ class WallList extends Component {
   };
 
   innershowComments = async (postId, commentsCount) => {
-    let newdisplayedComments = { ...this.state.displayedComments };
+    const newdisplayedComments = { ...this.state.displayedComments };
     this.state.displayedComments[postId];
     //Mostramos los comentarios
     if (!this.state.displayedComments[postId]) {
-      let content = (
+      const content = (
         <div>
           <Comments postId={postId} commentsCount={commentsCount} eventId={this.state.event._id} />
         </div>
@@ -81,7 +81,7 @@ class WallList extends Component {
 
   innerDeletePost = async (postId) => {
     await this.setState({ deleting: postId });
-    let eventId = this.state.event._id;
+    const eventId = this.state.event._id;
     const dataPostOld = this.state.dataPost;
     await saveFirebase.deletePost(postId, eventId);
     await this.setState({ deleting: null });
@@ -98,7 +98,7 @@ class WallList extends Component {
     this.getPosts();
   }
   async getDataUser(iduser) {
-    let user = await firestore
+    const user = await firestore
       .collection(`${this.props.cEvent.value._id}_event_attendees`)
       .where('account_id', '==', iduser)
       .get();
@@ -112,7 +112,7 @@ class WallList extends Component {
   //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
   getPosts() {
     try {
-      let adminPostRef = firestore
+      const adminPostRef = firestore
         .collection('adminPost')
         .doc(this.props.cEvent.value._id)
         .collection('posts')
@@ -126,8 +126,8 @@ class WallList extends Component {
 
         dataPost = await Promise.all(
           snapshot.docs.map(async (doc) => {
-            var data = doc.data();
-            let picture = await this.getDataUser(doc.data().author);
+            // data = doc.data();
+            const picture = await this.getDataUser(doc.data().author);
             return { ...doc.data(), id: doc.id, picture: picture };
           })
         );
@@ -294,5 +294,5 @@ class WallList extends Component {
   }
 }
 
-let WallListwithContext = withContext(WallList);
+const WallListwithContext = withContext(WallList);
 export default WallListwithContext;

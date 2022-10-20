@@ -23,7 +23,7 @@ class Faqs extends Component {
   }
 
   async getFaqs() {
-    let eventId = this.props.cEvent.value?._id;
+    const eventId = this.props.cEvent.value?._id;
     const faqsData = await FaqsApi.byEvent(eventId);
     if (this.props.cEvent.value.styles) {
       this.setState({
@@ -83,5 +83,5 @@ class Faqs extends Component {
   }
 }
 
-let FaqsWithContext = withContext(Faqs);
+const FaqsWithContext = withContext(Faqs);
 export default FaqsWithContext;

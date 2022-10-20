@@ -40,13 +40,13 @@ const ModalAuthAnonymous = (props: any) => {
 
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
-  let { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
+  const { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
   const cEvent = useEventContext();
   const cUser = useCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
 
   const isVisibleRegister = () => {
-    let typeEvent = recordTypeForThisEvent(cEvent);
+    const typeEvent = recordTypeForThisEvent(cEvent);
     switch (typeEvent) {
       case 'PRIVATE_EVENT':
         return false;
@@ -61,7 +61,7 @@ const ModalAuthAnonymous = (props: any) => {
 
   useEffect(() => {
     async function isModalVisible() {
-      let typeEvent = recordTypeForThisEvent(cEvent);
+      const typeEvent = recordTypeForThisEvent(cEvent);
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
           setmodalVisible(false);

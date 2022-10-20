@@ -141,7 +141,7 @@ class General extends Component {
       const { itemsMenu } = this.state.event;
       const { registerForm } = this.state;
 
-      let registerSection = registerForm;
+      const registerSection = registerForm;
 
       if (Object.keys(itemsMenu).length > 0) {
         Object.keys(itemsMenu).forEach((index) => {
@@ -374,11 +374,11 @@ class General extends Component {
   upsertTabs = async () => {
     const { event, intl } = this.props;
     const { tabs } = this.state;
-    let response = await this.validateTabs();
+    const response = await this.validateTabs();
 
     return new Promise(function(resolve) {
       if (response) {
-        let updateData = { ...response, tabs: { ...tabs } };
+        const updateData = { ...response, tabs: { ...tabs } };
 
         firestore
           .collection('events')
@@ -1212,12 +1212,12 @@ class General extends Component {
 
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
 function handleFields(organizers, types, categories, event) {
-  let selectedCategories = [];
+  const selectedCategories = [];
   let selectedType = {};
   const { category_ids, organizer_id, event_type_id } = event;
   if (category_ids) {
     categories.map((item) => {
-      let pos = category_ids.indexOf(item.value);
+      const pos = category_ids.indexOf(item.value);
       return pos >= 0 ? selectedCategories.push(item) : '';
     });
   }

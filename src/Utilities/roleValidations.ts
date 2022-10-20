@@ -7,7 +7,7 @@ import { RolAttApi } from '@helpers/request';
  */
 export async function rolHasPermissions(rolId: string) {
   if (!rolId) return;
-  let permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId);
+  const permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId);
   return permissionsForThisRole;
 }
 
@@ -18,7 +18,7 @@ export async function rolHasPermissions(rolId: string) {
  */
 export async function theRoleExists(rolId: string) {
   if (!rolId) return;
-  let ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
+  const ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
 
   return ifTheRoleExists;
 }

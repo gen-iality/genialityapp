@@ -4,8 +4,8 @@ import { useEventContext } from '@context/eventContext';
 
 export function EnableFacebookPixelByEVENT() {
   const [trackSingleCustom, setTrackSingleCustom] = useState(false);
-  let cEventContext = useEventContext();
-  let pixelId = cEventContext.value.facebookpixelid;
+  const cEventContext = useEventContext();
+  const pixelId = cEventContext.value.facebookpixelid;
 
   const options = {
     autoConfig: true,

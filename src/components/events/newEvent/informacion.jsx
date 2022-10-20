@@ -93,11 +93,11 @@ const Informacion = (props) => {
     }
   };
   const createOrganization = async (name) => {
-    let newOrganization = {
+    const newOrganization = {
       name: !name ? props.currentUser?.names || props.currentUser?.name : name,
     };
     //CREAR ORGANIZACION------------------------------
-    let create = await OrganizationApi.createOrganization(newOrganization);
+    const create = await OrganizationApi.createOrganization(newOrganization);
 
     /* console.log('CREATE==>', create); */
     if (create) {
@@ -129,7 +129,7 @@ const Informacion = (props) => {
       );
     }
     async function obtenerTemplates() {
-      let resp = await obtainTemplates(selectOrganization?._id);
+      const resp = await obtainTemplates(selectOrganization?._id);
       //console.log("TEMPLATES==>",resp,selectOrganization)
     }
   }, [selectOrganization]);

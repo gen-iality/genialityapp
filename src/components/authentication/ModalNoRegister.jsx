@@ -7,7 +7,7 @@ import { useEventContext } from '@context/eventContext';
 import { useUserEvent } from '@context/eventUserContext';
 
 const ModalNoRegister = (props) => {
-  let cEvent = useEventContext();
+  const cEvent = useEventContext();
   const cEventUser = useUserEvent();
   const intl = useIntl();
 

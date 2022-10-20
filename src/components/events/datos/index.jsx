@@ -76,8 +76,8 @@ class Datos extends Component {
     try {
       const organizationId = this?.organization?._id;
       let fields = [];
-      let fieldsReplace = [];
-      let checkInFieldsIds = [];
+      const fieldsReplace = [];
+      const checkInFieldsIds = [];
       if (
         (organizationId && !this.props.eventId && this.props.edittemplate) ||
         (organizationId && !this.props.eventId && !this.props.edittemplate)
@@ -122,7 +122,7 @@ class Datos extends Component {
   };
   //Permite asignarle un index a los elementos
   updateIndex = (fields) => {
-    for (var i = 0; i < fields.length; i++) {
+    for (let i = 0; i < fields.length; i++) {
       fields[i].index = i;
       fields[i].order_weight = i + 1;
     }
@@ -161,9 +161,9 @@ class Datos extends Component {
           .then((resp) => {
             if (resp.docs.length > 0) {
               resp.docs.map((doc) => {
-                var datos = doc.data();
-                var objectP = datos.properties;
-                var properties = objectP;
+                const datos = doc.data();
+                const objectP = datos.properties;
+                const properties = objectP;
                 objectP = { ...objectP, pesovoto: properties && properties.pesovoto ? properties.pesovoto : 1 };
                 datos.properties = objectP;
                 firestore
@@ -213,7 +213,7 @@ class Datos extends Component {
         await this.props.orderFields(this.state.properties);
       } else if (this.eventId && !organizationId) {
         // && this.props.byEvent condición que no esta llegando
-        let token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase();
         await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
       } else {
         await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
@@ -282,7 +282,7 @@ class Datos extends Component {
   };
   //Borrar dato de la lista
   removeField = async (item, checkInFieldsDelete) => {
-    let self = this;
+    const self = this;
 
     const onHandlerRemove = async () => {
       try {

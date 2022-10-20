@@ -6,9 +6,9 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = () => {
-  let cEvent = useEventContext();
-  let event = cEvent.value;
-  let { eventPrivate } = useHelper();
+  const cEvent = useEventContext();
+  const event = cEvent.value;
+  const { eventPrivate } = useHelper();
 
   if (!event) return <Spin size='small' />;
   return (

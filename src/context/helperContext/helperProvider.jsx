@@ -25,10 +25,10 @@ const initialStateNotification = {
 export const HelperContextProvider = ({ children }) => {
   const [helperState, helperDispatch] = useReducer(helperReducer, helperInitialState);
 
-  let cEvent = useEventContext();
-  let cUser = useCurrentUser();
-  let cEventuser = useUserEvent();
-  let history = useHistory();
+  const cEvent = useEventContext();
+  const cUser = useCurrentUser();
+  const cEventuser = useUserEvent();
+  const history = useHistory();
   const intl = useIntl();
 
   const [containtNetworking, setcontaintNetworking] = useState(false);
@@ -92,13 +92,13 @@ export const HelperContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (!cEvent.value) return;
-    let firstroute = Object.keys(cEvent.value.itemsMenu);
+    const firstroute = Object.keys(cEvent.value.itemsMenu);
     if (firstroute[0] != undefined) {
       seteventPrivate({ private: false, section: firstroute[0] });
     }
   }, []);
 
-  let generateUniqueIdFromOtherIds = (ida, idb) => {
+  const generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;
     if (ida !== null && idb !== null) {
       if (ida < idb) {
@@ -136,12 +136,12 @@ export const HelperContextProvider = ({ children }) => {
   function ReadMessages(data) {
     if (data == null) return;
 
-    let messages = data.participants.filter((participant) => participant.idparticipant != cUser.value.uid);
+    const messages = data.participants.filter((participant) => participant.idparticipant != cUser.value.uid);
     settotalPrivateMessages(parseInt(totalPrivateMessages - messages[0].countmessajes));
     messages[0].countmessajes = 0;
     //otro participante
-    let otherparticipant = data.participants.filter((participant) => participant.idparticipant == cUser.value.uid);
-    let participants = [messages[0], otherparticipant[0]];
+    const otherparticipant = data.participants.filter((participant) => participant.idparticipant == cUser.value.uid);
+    const participants = [messages[0], otherparticipant[0]];
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/' + data.id)
       .set({ participants: participants, ultimo_mensaje: '' }, { merge: true });
@@ -200,7 +200,7 @@ export const HelperContextProvider = ({ children }) => {
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, section, callbackdata) {
     let data = {};
-    let idactualuserEvent = cEventuser.value?._id;
+    const idactualuserEvent = cEventuser.value?._id;
     if (!idactualuserEvent) return;
     switch (section) {
       case 'private':
@@ -230,7 +230,7 @@ export const HelperContextProvider = ({ children }) => {
   }
 
   const getProperties = async (eventId) => {
-    let properties = await EventFieldsApi.getAll(eventId);
+    const properties = await EventFieldsApi.getAll(eventId);
     if (properties.length > 0) {
       setpropertiesProfile({
         propertiesUserPerfil: properties,
@@ -241,22 +241,22 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   const GetActivitiesEvent = async (eventId) => {
-    let activities = await AgendaApi.byEvent(eventId);
+    const activities = await AgendaApi.byEvent(eventId);
 
     if (activities.data.length > 0) {
       setactivitiesEvent(activities.data);
     }
   };
 
-  let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName, imageOtherprofile) => {
+  const createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName, imageOtherprofile) => {
     if (cEventuser.value == null) {
       handleChangeTypeModal('register');
       return;
     }
 
-    let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
+    const newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
-    let imageProfileUseractual = cEventuser.value?.user?.picture
+    const imageProfileUseractual = cEventuser.value?.user?.picture
       ? cEventuser.value?.user?.picture
       : imageforDefaultProfile;
     //agregamos una referencia al chat para el usuario actual
@@ -306,16 +306,16 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   const monitorEventPresence = (event_id, attendeeListPresence, setAttendeeListPresence) => {
-    var eventpresenceRef = fireRealtime.ref('status/' + event_id);
+    const eventpresenceRef = fireRealtime.ref('status/' + event_id);
     eventpresenceRef.on('value', (snapshot) => {
       const data = snapshot.val();
-      let datalist = [];
-      let attendeeListClone = { ...attendeeListPresence };
+      const datalist = [];
+      const attendeeListClone = { ...attendeeListPresence };
 
       if (data === null) return;
 
       Object.keys(data).map((key) => {
-        let attendee = attendeeListClone[key] || {};
+        const attendee = attendeeListClone[key] || {};
         attendee['state'] = data[key]['state'];
         attendee['last_changed'] = data[key]['last_changed'];
         attendeeListClone[key] = attendee;
@@ -340,7 +340,7 @@ export const HelperContextProvider = ({ children }) => {
 
   const obtenerContactos = async () => {
     // Servicio que trae los contactos
-    let contacts = await Networking.getContactList(cEvent.value._id, cEventuser.value?._id);
+    const contacts = await Networking.getContactList(cEvent.value._id, cEventuser.value?._id);
     let { data } = await Networking.getInvitationsSent(cEvent.value._id, cEventuser.value?._id);
     if (contacts) {
       setContacts(contacts);
@@ -378,7 +378,7 @@ export const HelperContextProvider = ({ children }) => {
     firestore
       .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
-        let list = [];
+        const list = [];
         let data;
         let newmsj = 0;
         querySnapshot.forEach((doc) => {
@@ -392,7 +392,7 @@ export const HelperContextProvider = ({ children }) => {
         });
         let totalNewMessages = 0;
         list.map((privateuser) => {
-          let countsmsj =
+          const countsmsj =
             privateuser?.participants &&
             privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
           if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
@@ -406,18 +406,18 @@ export const HelperContextProvider = ({ children }) => {
 
     /*  CARGAR CHATS ATTENDES DEL USURIO*/
     if (cEvent.value == null) return;
-    let colletion_name = cEvent.value._id + '_event_attendees';
+    const colletion_name = cEvent.value._id + '_event_attendees';
     let attendee;
     firestore
       .collection(colletion_name)
       .orderBy('state_id', 'asc')
       .limit(100)
       .onSnapshot(function(querySnapshot) {
-        let list = {};
+        const list = {};
 
         querySnapshot.forEach((doc) => {
           attendee = doc.data();
-          let localattendee = attendeeList[attendee.user?.uid] || {};
+          const localattendee = attendeeList[attendee.user?.uid] || {};
           list[attendee.user?.uid] = { ...localattendee, ...attendee };
         });
 
@@ -462,27 +462,27 @@ export const HelperContextProvider = ({ children }) => {
         .collection('activities')
         .onSnapshot((querySnapshot) => {
           if (querySnapshot.empty) return;
-          let change = querySnapshot.docChanges()[0];
+          const change = querySnapshot.docChanges()[0];
           if (
             change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
             obtenerNombreActivity(change.doc.id)?.name != null &&
             change.type === 'modified'
           ) {
-            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' + ' está en vivo..';
+            const message = obtenerNombreActivity(change.doc.id)?.name + ' ' + ' está en vivo..';
             ChangeActiveNotification(true, message, 'open', change.doc.id);
           } else if (
             change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
             obtenerNombreActivity(change.doc.id)?.name != null &&
             change.type === 'modified'
           ) {
-            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' + 'ha terminado..';
+            const message = obtenerNombreActivity(change.doc.id)?.name + ' ' + 'ha terminado..';
             ChangeActiveNotification(true, message, 'ended', change.doc.id);
           } else if (
             change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
             change.type === 'modified' &&
             obtenerNombreActivity(change.doc.id)?.name != null
           ) {
-            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' + 'está por iniciar';
+            const message = obtenerNombreActivity(change.doc.id)?.name + ' ' + 'está por iniciar';
             ChangeActiveNotification(true, message, 'close', change.doc.id);
           }
         });
@@ -503,12 +503,12 @@ export const HelperContextProvider = ({ children }) => {
         .collection('notifications')
         .onSnapshot((querySnapshot) => {
           let contNotifications = 0;
-          let notAg = [];
-          let notAm = [];
-          let change = querySnapshot.docChanges()[0];
+          const notAg = [];
+          const notAm = [];
+          const change = querySnapshot.docChanges()[0];
 
           querySnapshot.docs.forEach((doc) => {
-            let notification = doc.data();
+            const notification = doc.data();
 
             if (notification.state === '0') {
               contNotifications++;
@@ -549,7 +549,7 @@ export const HelperContextProvider = ({ children }) => {
   /*VALIDACION DE CURSO TOTALMENTE PRIVADO*/
   function GetPermissionsEvent() {
     if (cEvent.value != null) {
-      let routePermissions =
+      const routePermissions =
         cEvent.value &&
         cEvent.value.itemsMenu &&
         Object.values(cEvent.value.itemsMenu)?.filter((item) => item.section === 'tickets');
