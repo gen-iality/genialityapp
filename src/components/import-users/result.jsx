@@ -84,7 +84,7 @@ class Result extends Component {
               });
           } else {
             const activityId = this.props.locationParams?.state?.activityId;
-            let activity = activityId ? `activity_id=${activityId}` : '';
+            const activity = activityId ? `activity_id=${activityId}` : '';
             Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}/?${activity}`, user)
               .then((resp) => {
                 if (resp.message === 'OK') {

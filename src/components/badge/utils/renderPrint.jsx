@@ -1,7 +1,7 @@
 import QRCode from 'qrcode.react';
 
 const renderPrint = (badges) => {
-  let items = [];
+  const items = [];
   let i = 0;
   for (; i < badges.length; ) {
     let item;

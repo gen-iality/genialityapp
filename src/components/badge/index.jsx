@@ -50,7 +50,7 @@ export default function Index(props) {
     };
     if (event) {
       const properties = event.user_properties;
-      let labelFound = properties.find((propertie) => propertie.name === values.id_properties);
+      const labelFound = properties.find((propertie) => propertie.name === values.id_properties);
       dataAdd = {
         edit: true,
         id_properties: {
@@ -66,7 +66,7 @@ export default function Index(props) {
     // badges.push({ edit: true, id_properties: '', size: 18 });
   };
   const editField = () => {
-    let dataEdit = {
+    const dataEdit = {
       edit: true,
       id_properties: badge.id_properties,
       size: badge.size,
@@ -79,7 +79,7 @@ export default function Index(props) {
   const removeField = (field) => {
     if (field.qr) setQrExist(false);
     setExtraFields([...extraFields, field.id_properties]);
-    let badgesFilter = badges.filter((item) => item.id_properties != field.id_properties);
+    const badgesFilter = badges.filter((item) => item.id_properties != field.id_properties);
     setBadges(badgesFilter);
   };
   const actionEditField = (values, index) => {

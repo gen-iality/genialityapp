@@ -21,7 +21,7 @@ const sortUsersArray = async (users: {}[]) => {
 };
 
 export const UsersPerEventOrActivity = async (updatedAttendees: [], activityId: string) => {
-  let usersInTheActivity: {}[] = [];
+  const usersInTheActivity: {}[] = [];
 
   updatedAttendees?.forEach((user: { activityProperties: [] }) => {
     user?.activityProperties?.filter((userInActivity: { activity_id: string }) => {

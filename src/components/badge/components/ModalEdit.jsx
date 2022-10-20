@@ -24,7 +24,7 @@ export default function ModalEdit({
               setBadge({
                 ...badge,
                 id_properties: {
-                  ...id_properties,
+                  // ...id_properties,
                   value,
                 },
               })

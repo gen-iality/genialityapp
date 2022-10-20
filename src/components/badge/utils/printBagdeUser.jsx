@@ -1,7 +1,7 @@
 const printBagdeUser = (ifrmPrint, badge, user) => {
   const canvas = document.getElementsByTagName('CANVAS')[0];
-  let qr = canvas ? canvas.toDataURL() : '';
-  let oIframe = ifrmPrint.current;
+  const qr = canvas ? canvas.toDataURL() : '';
+  const oIframe = ifrmPrint.current;
   let oDoc = oIframe.contentWindow || oIframe.contentDocument;
   if (oDoc.document) {
     oDoc = oDoc.document;

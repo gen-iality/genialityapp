@@ -4,9 +4,9 @@ export const getInitialValues = async (event, setValues, setQrExist) => {
   if (event) {
     const resp = await BadgeApi.get(event._id);
     if (resp._id) {
-      let badgesFilter = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
+      const badgesFilter = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
       setValues(badgesFilter);
-      let qr = badgesFilter.find((bagde) => bagde.qr === true);
+      const qr = badgesFilter.find((bagde) => bagde.qr === true);
       if (qr) setQrExist(true);
     }
   }
@@ -14,7 +14,7 @@ export const getInitialValues = async (event, setValues, setQrExist) => {
 
 export const saveBadge = async (event, badges, message) => {
   if (event) {
-    let data = {
+    const data = {
       fields_id: event._id,
       BadgeFields: badges,
     };
