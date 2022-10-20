@@ -25,6 +25,8 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "no-undef": "error"
+        "no-undef": "error",
+        "prefer-const": "error",
+        "no-var": "error"
     }
 }
