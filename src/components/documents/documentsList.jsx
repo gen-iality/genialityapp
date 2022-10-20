@@ -40,7 +40,7 @@ const IconText = ({ icon, text, onSubmit }) => (
   </Button>
 );
 
-class documentsList extends Component {
+class DocumentsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -195,4 +195,4 @@ class documentsList extends Component {
     );
   }
 }
-export default documentsList;
+export default DocumentsList;

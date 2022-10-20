@@ -46,7 +46,8 @@ const formLayout = {
 const { Option } = Select;
 const { confirm } = Modal;
 const { Title } = Typography;
-class triviaEdit extends Component {
+
+class TriviaEdit extends Component {
   constructor(props) {
     super(props);
     this.formEditRef = createRef();
@@ -1202,4 +1203,4 @@ class triviaEdit extends Component {
   }
 }
 
-export default withRouter(triviaEdit);
+export default withRouter(TriviaEdit);

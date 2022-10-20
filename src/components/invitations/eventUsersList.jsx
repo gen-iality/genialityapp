@@ -11,7 +11,7 @@ import ModalAdvise from './modal';
 import Header from '@antdComponents/Header';
 import { HelperContext } from '@context/helperContext/helperContext';
 
-class eventUsersList extends Component {
+class EventUsersList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -358,4 +358,4 @@ class eventUsersList extends Component {
   }
 }
 
-export default withRouter(eventUsersList);
+export default withRouter(EventUsersList);

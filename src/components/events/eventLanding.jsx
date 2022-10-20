@@ -13,7 +13,8 @@ import HostList from '@components/agenda/components/HostList';
 import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress';
 import { activityContentValues } from '@context/activityType/constants/ui';
 import QuizApprovedStatus from '../quiz/QuizApprovedStatus';
-class eventLanding extends Component {
+
+class EventLanding extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -188,5 +189,5 @@ class eventLanding extends Component {
   }
 }
 
-let EventLandingWithContext = withContext(eventLanding);
+let EventLandingWithContext = withContext(EventLanding);
 export default withRouter(EventLandingWithContext);

@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react';
 import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import { List, Avatar } from 'antd';
+
 const data = [
   {
     title: 'Ant design title 1',
@@ -16,7 +17,7 @@ const data = [
   },
 ];
 
-class componentTest extends Component {
+class ComponentTest extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,4 +46,4 @@ class componentTest extends Component {
   }
 }
 
-export default WithUserEventRegistered(componentTest);
+export default WithUserEventRegistered(ComponentTest);

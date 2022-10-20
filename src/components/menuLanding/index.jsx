@@ -14,7 +14,7 @@ const formLayout = {
   size: 'small',
 };
 
-class menuLanding extends Component {
+class MenuLanding extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -452,4 +452,4 @@ class menuLanding extends Component {
   }
 }
 
-export default menuLanding;
+export default MenuLanding;

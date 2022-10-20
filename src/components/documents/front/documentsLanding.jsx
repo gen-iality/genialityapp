@@ -11,7 +11,7 @@ import withContext from '@context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 const { TabPane } = Tabs;
 
-class documentsDetail extends Component {
+class DocumentsDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -207,5 +207,5 @@ class documentsDetail extends Component {
   }
 }
 
-let DocumentsWithContext = withContext(documentsDetail);
+let DocumentsWithContext = withContext(DocumentsDetail);
 export default DocumentsWithContext;
