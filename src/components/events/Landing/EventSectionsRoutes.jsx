@@ -57,11 +57,6 @@ const EventSectionRoutes = props => {
   const cUser = useCurrentUser();
   const history = useHistory();
 
-  //redirigir a curso Cancilleria
-  if (event_id === '610976f24e10472fb738d65b') {
-    window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
-  }
-
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return;
     const firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(item => item !== 'tickets');
@@ -182,9 +177,10 @@ const EventSectionRoutes = props => {
 
   return (
     <>
-      {cUser.value?._id && (
+      {(cUser.value?._id && event_id) && (
         <Presence
           global
+          data={{ eventId: event_id }}
           debuglog={LOG}
           errorlog={ERROR}
           realtimeDB={fireRealtime}
