@@ -31,7 +31,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({} as OrganizationUserInfo);
   const [logs, setLogs] = useState<SessionPayload[]>([]);
-  const [timeMode, setTimeMode] = useState<'seconds'|'hours'|'days'>('seconds');
+  const [timeMode, setTimeMode] = useState<'minutes'|'hours'|'days'>('minutes');
 
   useEffect(() => {
     if (!memberId) return;
@@ -84,11 +84,11 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
 
   const loggedTime = useMemo(() => {
     let divisor = 1;
-    let description = 'segundo(s)';
+    let description = 'minuto(s)';
     switch(timeMode) {
-      case 'seconds':
-        divisor = 1;
-        description = 'segundo(s)';
+      case 'minutes':
+        divisor = 60;
+        description = 'minuto(s)';
         break;
       case 'hours':
         divisor = 3600;
@@ -135,7 +135,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
           <Space direction='horizontal'>
             <Typography.Text>Modo:</Typography.Text>
             <Select onChange={(mode) => setTimeMode(mode)} defaultValue={timeMode} style={{minWidth: 120}}>
-              <Select.Option value='seconds'>Segundos</Select.Option>
+              <Select.Option value='minutes'>Minutos</Select.Option>
               <Select.Option value='hours'>Horas</Select.Option>
               <Select.Option value='days'>Días</Select.Option>
             </Select>
@@ -152,9 +152,9 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       >
       </Space>
       <Space direction='vertical'>
-        <Typography.Text>{logs.length} registros globales cerrados</Typography.Text>
+        <Typography.Text>{logs.length} ingresos</Typography.Text>
         <Space direction='horizontal'>
-          <Card>{loggedTime.time < 10 ? loggedTime.time.toPrecision(4) : loggedTime.time} {loggedTime.description}</Card>
+          <Card>{loggedTime.time.toFixed(2)} {loggedTime.description}</Card>
         </Space>
       </Space>
       <Divider/>

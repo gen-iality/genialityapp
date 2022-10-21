@@ -10,7 +10,7 @@ export interface TimeTrackingByEventProps {
   eventId: string,
   eventName: string,
   userId: string,
-  timeMode: 'seconds' | 'hours' | 'days',
+  timeMode: 'minutes' | 'hours' | 'days',
 }
 
 const TimeTrackingByEvent: FunctionComponent<TimeTrackingByEventProps> = (props) => {
@@ -36,11 +36,11 @@ const TimeTrackingByEvent: FunctionComponent<TimeTrackingByEventProps> = (props)
 
   const loggedTime = useMemo(() => {
     let divisor = 1;
-    let description = 'segundo(s)';
+    let description = 'minuto(s)';
     switch(props.timeMode) {
-      case 'seconds':
-        divisor = 1;
-        description = 'segundo(s)';
+      case 'minutes':
+        divisor = 60;
+        description = 'minuto(s)';
         break;
       case 'hours':
         divisor = 3600;
@@ -65,7 +65,7 @@ const TimeTrackingByEvent: FunctionComponent<TimeTrackingByEventProps> = (props)
         </Typography.Text>
         {loadSessionPayloadItems.length > 0 && (
           <Space direction='horizontal'>
-          <Card>{loggedTime.time < 10 ? loggedTime.time.toPrecision(4) : loggedTime.time} {loggedTime.description}</Card>
+          <Card>{loggedTime.time.toFixed(2)} {loggedTime.description}</Card>
           </Space>
         )}
       </Space>
